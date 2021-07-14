@@ -171,31 +171,33 @@ class ToDo {
             title: model.title,
             subTitle: model.description,
             timeInMilliseconds: model.requestStart,
-            onTap: model.isSpeakerCompleted
-                ? CompletedTasks.showMyTaskDialog(
-                    context: context,
-                    title:
-                        L.of(context).to_do_one_to_many_request_speaker_title,
-                    subTitle: L
-                        .of(context)
-                        .to_do_one_to_many_request_speaker_subtitle,
-                  )
-                : () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return OneToManySpeakerTimeEntryComplete(
-                            requestModel: model,
-                            onFinish: () async {
-                              await oneToManySpeakerCompletesRequest(
-                                  context, model);
-                            },
-                            fromNotification: false,
-                          );
-                        },
-                      ),
-                    );
-                  },
+            onTap: () {
+              model.isSpeakerCompleted
+                  ? CompletedTasks.showMyTaskDialog(
+                      context: context,
+                      title:
+                          L.of(context).to_do_one_to_many_request_speaker_title,
+                      subTitle: L
+                          .of(context)
+                          .to_do_one_to_many_request_speaker_subtitle,
+                    )
+                  : () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return OneToManySpeakerTimeEntryComplete(
+                              requestModel: model,
+                              onFinish: () async {
+                                await oneToManySpeakerCompletesRequest(
+                                    context, model);
+                              },
+                              fromNotification: false,
+                            );
+                          },
+                        ),
+                      );
+                    };
+            },
             tag: L.of(context).one_to_many_request_speaker,
           ),
         );
