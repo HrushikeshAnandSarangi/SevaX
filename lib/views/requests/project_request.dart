@@ -8,6 +8,7 @@ import 'package:sevaexchange/components/repeat_availability/recurring_listing.da
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/screens/projects/bloc/project_description_bloc.dart';
@@ -466,7 +467,9 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                     child: Text(
                       S.of(context).add_requests,
                       style: (TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 18)),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          color: Colors.black)),
                     ),
                   ),
                 ),
@@ -490,18 +493,34 @@ class ProjectRequestListState extends State<ProjectRequestList> {
             margin: EdgeInsets.only(left: 10),
           ),
           GestureDetector(
-            child: Container(
-              child: CircleAvatar(
-                backgroundColor: Colors.white,
-                radius: 10,
-                child: Icon(
-                  Icons.add_circle_outline,
-                  color: FlavorConfig.values.theme.primaryColor,
+              child: Container(
+                child: CircleAvatar(
+                  backgroundColor: Colors.white,
+                  radius: 10,
+                  child: Icon(
+                    Icons.add_circle_outline,
+                    color: FlavorConfig.values.theme.primaryColor,
+                  ),
                 ),
               ),
-            ),
-            onTap: () => createProjectRequest(),
-          ),
+              onTap: () {
+                if (widget.projectModel.requestedSoftDelete) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      duration: Duration(seconds: 6),
+                      content: Text(
+                          L.of(context).deleted_events_create_request_message),
+                      action: SnackBarAction(
+                        label: S.of(context).dismiss,
+                        onPressed: () =>
+                            ScaffoldMessenger.of(context).hideCurrentSnackBar(),
+                      ),
+                    ),
+                  );
+                } else {
+                  createProjectRequest();
+                }
+              }),
           Spacer(),
           // Container(
           //   height: 40,

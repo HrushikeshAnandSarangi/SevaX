@@ -353,7 +353,7 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
               ),
               Container(
                 margin: EdgeInsets.only(left: 10, bottom: 10, top: 20),
-                alignment: Alignment.centerLeft,
+                alignment: Alignment.center,
                 child: Text(
                   getQuestions(widget.feedbackType)[questionIndex]
                       [FeedbackConstants.FEEDBACK_TITLE],
@@ -490,6 +490,7 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
                 keyboardType: TextInputType.multiline,
                 maxLines: 5,
               ),
+              SizedBox(height: 15),
               Container(
                 width: double.infinity,
                 child: CustomElevatedButton(

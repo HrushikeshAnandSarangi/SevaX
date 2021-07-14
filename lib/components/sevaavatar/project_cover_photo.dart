@@ -35,7 +35,8 @@ class _ProjectCoverPhotoState extends State<ProjectCoverPhoto>
   bool _isImageBeingUploaded = false;
   ProfanityImageModel profanityImageModel = ProfanityImageModel();
   ProfanityStatusModel profanityStatusModel = ProfanityStatusModel();
-  Future<String> _uploadImage() async {
+
+  Future<String> _uploadImage(File croppedImage) async {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     String timestampString = timestamp.toString();
     Reference ref = FirebaseStorage.instance
@@ -44,16 +45,17 @@ class _ProjectCoverPhotoState extends State<ProjectCoverPhoto>
         .child(
             SevaCore.of(context).loggedInUser.email + timestampString + '.jpg');
     UploadTask uploadTask = ref.putFile(
-      _image,
+      croppedImage,
       SettableMetadata(
         contentLanguage: 'en',
         customMetadata: <String, String>{'activity': 'Cover Photo'},
       ),
     );
     String imageURL = '';
-    uploadTask.whenComplete(() async {
+    await uploadTask.whenComplete(() async {
       imageURL = await ref.getDownloadURL();
     });
+    log("user cover image $imageURL");
 
     await profanityCheck(imageURL: imageURL);
 
@@ -96,6 +98,7 @@ class _ProjectCoverPhotoState extends State<ProjectCoverPhoto>
 
   @override
   void userImage(dynamic _image, type) {
+    log('user image cropped file ${_image.path}');
     if (type == 'stock_image') {
       setState(() {
         globals.projectsCoverURL = _image;
@@ -104,7 +107,7 @@ class _ProjectCoverPhotoState extends State<ProjectCoverPhoto>
       setState(() {
         this._image = _image;
         this._isImageBeingUploaded = true;
-        _uploadImage().then((_) {
+        _uploadImage(_image).then((_) {
           this._isImageBeingUploaded = false;
         });
       });

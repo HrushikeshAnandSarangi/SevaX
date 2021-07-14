@@ -165,42 +165,45 @@ class RequestCardWidget extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
-                  Container(
-                    /*  decoration: BoxDecoration(
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 12.0),
+                    child: Container(
+                      /*  decoration: BoxDecoration(
 
-                        boxShadow: [BoxShadow(
-                            color: Colors.indigo[50],
-                            blurRadius: 1,
-                            offset: Offset(0.0, 0.50)
-                        )]
-                    ),*/
-                    height: 40,
-                    padding: EdgeInsets.only(bottom: 10),
-                    child: CustomElevatedButton(
-                      shape: StadiumBorder(),
-                      color: Colors.indigo,
-                      textColor: Colors.white,
-                      elevation: 5,
-                      onPressed: reqStatus != S.of(context).invite
-                          ? null
-                          : () async {
-                              await timeBankBloc.updateInvitedUsersForRequest(
-                                requestModel.id,
-                                userModel.sevaUserID,
-                                userModel.email,
-                              );
+                          boxShadow: [BoxShadow(
+                              color: Colors.indigo[50],
+                              blurRadius: 1,
+                              offset: Offset(0.0, 0.50)
+                          )]
+                      ),*/
+                      height: 38,
+                      width: 85,
+                      child: CustomElevatedButton(
+                        shape: StadiumBorder(),
+                        color: Colors.indigo,
+                        textColor: Colors.white,
+                        elevation: 2,
+                        onPressed: reqStatus != S.of(context).invite
+                            ? null
+                            : () async {
+                                await timeBankBloc.updateInvitedUsersForRequest(
+                                  requestModel.id,
+                                  userModel.sevaUserID,
+                                  userModel.email,
+                                );
 
-                              sendNotification(
-                                requestModel: requestModel,
-                                userModel: userModel,
-                                timebankModel: timebankModel,
-                                currentCommunity: currentCommunity,
-                                sevaUserID: loggedUserId,
-                              );
-                            },
-                      child: Text(
-                        reqStatus ?? "",
-                        style: TextStyle(fontSize: 14),
+                                sendNotification(
+                                  requestModel: requestModel,
+                                  userModel: userModel,
+                                  timebankModel: timebankModel,
+                                  currentCommunity: currentCommunity,
+                                  sevaUserID: loggedUserId,
+                                );
+                              },
+                        child: Text(
+                          reqStatus ?? "",
+                          style: TextStyle(fontSize: 14),
+                        ),
                       ),
                     ),
                   ),

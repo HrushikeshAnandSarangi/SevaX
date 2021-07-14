@@ -31,7 +31,7 @@ class MessageBloc extends BlocBase {
   Future<void> fetchAllMessage(
     String communityId,
     UserModel userModel,
-    List<UserModel> membersInCommunity,
+    // List<UserModel> membersInCommunity,
   ) async {
     ChatModelSync chatModelSync = ChatModelSync();
     ChatsRepository.getPersonalChats(

@@ -45,14 +45,14 @@ class L {
       "This one to many offer has completed.";
 
   String get to_do_one_to_many_request_attende_title =>
-      "This one to many offer has completed.";
+      "This one to many request has completed.";
   String get to_do_one_to_many_request_attende_subtitle =>
-      "This one to many offer has completed.";
+      "This one to many request has completed.";
 
   String get to_do_one_to_many_request_speaker_title =>
-      "This one to many offer has completed.";
+      "This one to many request has completed.";
   String get to_do_one_to_many_request_speaker_subtitle =>
-      "This one to many offer has completed.";
+      "This one to many request has completed.";
 
   //RECURRING EVENTS
   String get do_not_copy => "Do not copy";
@@ -641,6 +641,8 @@ class L {
   String get cover_picture_label_group => "Group Cover Picture";
   String get cover_picture_label_event => "Event Cover Picture";
   String get occurrences => "Occurrences";
+  String get deleted_events_create_request_message =>
+      "This event is going to be deleted. As a result, requests cannot be created.";
 }
 
 // // <--------  IRRELEVANT FOR NOW  --------->
