@@ -80,15 +80,15 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
             user.currentCommunity,
           );
 
-          var membersList =
-              await Provider.of<MembersBloc>(context, listen: false)
-                  .members
-                  .first;
+          // var membersList =
+          //     await Provider.of<MembersBloc>(context, listen: false)
+          //         .members
+          //         .first;
 
           _messageBloc.fetchAllMessage(
             user.currentCommunity,
             user,
-            membersList,
+            // membersList,
           );
         });
       },
