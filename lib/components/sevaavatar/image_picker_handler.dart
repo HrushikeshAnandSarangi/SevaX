@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -30,8 +31,12 @@ class ImagePickerHandler {
   void openGallery() async {
     imagePicker.dismissDialog();
     final picker = ImagePicker();
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
-    cropImage(pickedFile.path);
+    final pickedFile =
+        await picker.getImage(source: ImageSource.gallery).then((value) {
+      log('open gallery image ${value.path}');
+      cropImage(value.path);
+    });
+    
   }
 
 //  void openStockImages(context) async {
@@ -85,6 +90,8 @@ class ImagePickerHandler {
   }
 
   Future cropImage(String path) async {
+    log('event cover cropImage path ${path}');
+
     File croppedFile;
     ImageCropper.cropImage(
       sourcePath: path,
@@ -97,6 +104,7 @@ class ImagePickerHandler {
     ).then((value) {
       if (value != null) {
         croppedFile = value;
+        log('event cover cropedImage path ${croppedFile.path}');
         _listener.userImage(croppedFile, '');
       }
     });
