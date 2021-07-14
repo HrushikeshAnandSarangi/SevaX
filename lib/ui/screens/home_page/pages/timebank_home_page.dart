@@ -160,6 +160,7 @@ class _TimebankHomePageState extends State<TimebankHomePage>
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
+                                      color: Colors.black,
                                     ),
                                   ),
                                 ),
