@@ -344,12 +344,11 @@ class EditGroupFormState extends State<EditGroupForm> {
                     Checkbox(
                       value: widget.timebankModel.sponsored,
                       onChanged: (bool value) {
-                        if (!widget.timebankModel.sponsored) {
-                          setState(() {
-                            widget.timebankModel.sponsored =
-                                !widget.timebankModel.sponsored;
-                          });
-                        }
+                        // if (!widget.timebankModel.sponsored) {
+                        setState(() {
+                          widget.timebankModel.sponsored = value;
+                        });
+                        // }
                       },
                     ),
                   ],
