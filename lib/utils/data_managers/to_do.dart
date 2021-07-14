@@ -181,29 +181,27 @@ class ToDo {
                           .of(context)
                           .to_do_one_to_many_request_speaker_subtitle,
                     )
-                  : () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return OneToManySpeakerTimeEntryComplete(
-                              requestModel: model,
-                              onFinish: () async {
-                                await oneToManySpeakerCompletesRequest(
-                                    context, model);
-                              },
-                              fromNotification: false,
-                            );
-                          },
-                        ),
-                      );
-                    };
+                  : Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return OneToManySpeakerTimeEntryComplete(
+                            requestModel: model,
+                            onFinish: () async {
+                              await oneToManySpeakerCompletesRequest(
+                                  context, model);
+                            },
+                            fromNotification: false,
+                          );
+                        },
+                      ),
+                    );
             },
             tag: L.of(context).one_to_many_request_speaker,
           ),
         );
-      } else if (model.requestType == RequestType.ONE_TO_MANY_REQUEST &&
-          model.accepted == true) {
-        //
+        // } else if (model.requestType == RequestType.ONE_TO_MANY_REQUEST &&
+        //     model.accepted == true) {
+        //   //
       } else {
         widgetList.add(
           ToDoCard(

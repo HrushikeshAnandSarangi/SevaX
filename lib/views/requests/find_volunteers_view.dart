@@ -38,7 +38,7 @@ class _FindVolunteersViewState extends State<FindVolunteersView> {
   TimeBankModelSingleton timebankModel = TimeBankModelSingleton();
 
   final searchOnChange = BehaviorSubject<String>();
-  var validItems = [];
+  List<String> validItems = [];
   List<UserModel> users = [];
   final _searchText = BehaviorSubject<String>();
   final _debouncer = Debouncer(milliseconds: 400);

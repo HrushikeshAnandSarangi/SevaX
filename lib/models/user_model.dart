@@ -380,15 +380,15 @@ class UserModel extends DataModel {
     }
   }
 
-  UserModel.fromDynamic(dynamic user) {
-    this.fullname = user['fullname'] == null || user['fullname'].isEmpty
+  UserModel.fromDynamic(UserModel user) {
+    this.fullname = user.fullname == null || user.fullname.isEmpty
         ? "Anonymous"
-        : user['fullname'];
-    this.photoURL = user['photourl'];
-    this.sevaUserID = user['sevauserid'];
-    this.bio = user['bio'];
-    this.email = user['email'];
-    this.communities = List.castFrom(user['communities']);
+        : user.fullname;
+    this.photoURL = user.photoURL;
+    this.sevaUserID = user.sevaUserID;
+    this.bio = user.bio;
+    this.email = user.email;
+    this.communities = List.castFrom(user.communities);
   }
 
   bool operator ==(o) => o is UserModel && o.sevaUserID == sevaUserID;

@@ -615,7 +615,7 @@ class _DonationViewState extends State<DonationView> {
                     return S.of(context).request_amount_cannot_be_greater;
                   }
                   if (int.parse(value) > offerModel.cashModel.targetAmount) {
-                    return  S.of(context).request_amount_cannot_be_greater;
+                    return S.of(context).request_amount_cannot_be_greater;
                   }
                   donationsModel.cashDetails.cashDetails.amountRaised =
                       int.parse(value);
@@ -1366,9 +1366,9 @@ class _DonationViewState extends State<DonationView> {
     Color textColor,
   }) {
     return Padding(
-      padding: const EdgeInsets.only(top: 5),
+      padding: const EdgeInsets.only(top: 0),
       child: Container(
-        height: 30,
+        height: 37,
         child: CustomElevatedButton(
           textColor: textColor ?? Colors.white,
           onPressed: onPressed,

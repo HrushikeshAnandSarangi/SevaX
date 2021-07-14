@@ -442,7 +442,7 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(height: 15),
                     Container(
                       width: 145,
-                      height: 39,
+                      height: 47,
                       child: CustomElevatedButton(
                         shape: StadiumBorder(),
                         color: Color(0x0FF766FE0),

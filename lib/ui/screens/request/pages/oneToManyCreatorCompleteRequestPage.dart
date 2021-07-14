@@ -592,7 +592,9 @@ class OneToManyCreatorCompleteRequestPageState
                             },
                             child: Text(
                               S.of(context).accept,
-                              style: TextStyle(fontWeight: FontWeight.w600),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black),
                             ),
                             elevation: 0,
                             color: Colors.grey[200],
@@ -635,7 +637,9 @@ class OneToManyCreatorCompleteRequestPageState
                             },
                             child: Text(
                               S.of(context).message,
-                              style: TextStyle(fontWeight: FontWeight.w600),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black),
                             ),
                             elevation: 0,
                             color: Colors.grey[200],
