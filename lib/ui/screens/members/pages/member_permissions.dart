@@ -93,7 +93,7 @@ class _MemberPermissionsState extends State<MemberPermissions> {
         ),
         centerTitle: true,
         title: Text(
-         S.of(context).manage_permissions,
+          S.of(context).manage_permissions,
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w700,
@@ -188,8 +188,9 @@ class _MemberPermissionsState extends State<MemberPermissions> {
               SizedBox(
                 height: 10,
               ),
-              Container(
-                child: Center(
+              Center(
+                child: SizedBox(
+                  width: 95,
                   child: CustomElevatedButton(
                     onPressed: () {
                       updateConfigurations().then(
@@ -199,7 +200,10 @@ class _MemberPermissionsState extends State<MemberPermissions> {
                     child: Text(S.of(context).save),
                   ),
                 ),
-              )
+              ),
+              SizedBox(
+                height: 20,
+              ),
             ],
           ),
         ),

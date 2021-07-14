@@ -618,14 +618,16 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               HideWidget(
                 hide: AppConfig.isTestCommunity,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  padding: const EdgeInsets.symmetric(vertical: 2),
                   child: ConfigurationCheck(
                     actionType: 'create_virtual_event',
                     role: memberType(timebankModel,
                         SevaCore.of(context).loggedInUser.sevaUserID),
                     child: OpenScopeCheckBox(
                         infoType: InfoType.VirtualRequest,
-                        isChecked: projectModel.virtualProject,
+                        isChecked: widget.isCreateProject
+                            ? false
+                            : projectModel.virtualProject,
                         checkBoxTypeLabel: CheckBoxType.type_VirtualRequest,
                         onChangedCB: (bool val) {
                           if (projectModel.virtualProject != val) {
@@ -661,7 +663,9 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                         SevaCore.of(context).loggedInUser.sevaUserID),
                     child: OpenScopeCheckBox(
                         infoType: InfoType.OpenScopeEvent,
-                        isChecked: projectModel.public,
+                        isChecked: widget.isCreateProject
+                            ? false
+                            : projectModel.public,
                         checkBoxTypeLabel: CheckBoxType.type_Events,
                         onChangedCB: (bool val) {
                           if (projectModel.public != val) {
