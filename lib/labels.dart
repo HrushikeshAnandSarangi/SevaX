@@ -45,14 +45,14 @@ class L {
       "This one to many offer has completed.";
 
   String get to_do_one_to_many_request_attende_title =>
-      "This one to many offer has completed.";
+      "This one to many request has completed.";
   String get to_do_one_to_many_request_attende_subtitle =>
-      "This one to many offer has completed.";
+      "This one to many request has completed.";
 
   String get to_do_one_to_many_request_speaker_title =>
-      "This one to many offer has completed.";
+      "This one to many request has completed.";
   String get to_do_one_to_many_request_speaker_subtitle =>
-      "This one to many offer has completed.";
+      "This one to many request has completed.";
 
   //RECURRING EVENTS
   String get do_not_copy => "Do not copy";

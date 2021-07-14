@@ -594,7 +594,7 @@ class _RegisterPageState extends State<RegisterPage>
 
   Widget get registerButton {
     return SizedBox(
-      height: 39,
+      height: 47,
       width: 134,
       child: CustomElevatedButton(
         onPressed: isLoading

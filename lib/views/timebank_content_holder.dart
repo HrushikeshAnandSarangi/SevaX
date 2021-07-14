@@ -563,7 +563,7 @@ class DiscussionListState extends State<DiscussionList> {
               ),
               Text(
                 S.of(context).feeds,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
               ),
               Spacer(),
               DropdownButtonHideUnderline(

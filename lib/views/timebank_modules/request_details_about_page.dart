@@ -274,9 +274,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                       ? addressComponentBorrowRequest
                       : Container(),
                   getRequestModeComponent,
-                  widget.requestItem.requestType == RequestType.BORROW
-                      ? Container()
-                      : timestampComponent,
+                  timestampComponent,
                   widget.requestItem.requestType == RequestType.BORROW
                       ? timestampComponentBorrowRequest
                       : Container(),
@@ -311,9 +309,9 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                Text('${widget.requestItem.oneToManyRequestAttenders.length}' +
+                                Text('${widget.requestItem.oneToManyRequestAttenders.length} ' +
                                     S.of(context).of_text +
-                                    '${widget.requestItem.numberOfApprovals}' +
+                                    ' ${widget.requestItem.numberOfApprovals}' +
                                     S.of(context).people_applied_for_request),
                                 StreamBuilder(
                                     stream: CollectionRef.requests
@@ -333,15 +331,16 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                                             shrinkWrap: true,
                                             scrollDirection: Axis.horizontal,
                                             itemCount:
-                                                snapshot.data.documents.length,
+                                                snapshot.data.docs.length,
                                             itemBuilder: (context, index) {
                                               return Padding(
                                                 padding:
                                                     const EdgeInsets.all(4.0),
                                                 child: CircleAvatar(
-                                                    backgroundImage: NetworkImage(
-                                                        snapshot.data.documents[
-                                                                    index]
+                                                    backgroundImage:
+                                                        NetworkImage(snapshot
+                                                                    .data
+                                                                    .docs[index]
                                                                 ['photoURL'] ??
                                                             defaultUserImageURL),
                                                     minRadius: 23.0),
@@ -2527,7 +2526,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
 
   Widget get trailingComponent {
     return Container(
-      height: 25,
+      height: 39,
       width: 90,
       child: widget.requestItem.sevaUserId ==
               SevaCore.of(context).loggedInUser.sevaUserID
@@ -2619,7 +2618,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                             left: 7.0, right: 7, top: 5, bottom: 5),
                         child: Text(
                           S.of(context).request_approved_by_msg +
-                              snapshot.data.documents[0]['acceptorName'],
+                              snapshot.data.docs[0]['acceptorName'],
                           style: TextStyle(
                               fontSize: 15,
                               color: Colors.black,
@@ -2629,7 +2628,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                     ),
                     SizedBox(height: 5),
                     addressComponentBorrowRequestForApproved(
-                        snapshot.data.documents[0]['selectedAddress']),
+                        snapshot.data.docs[0]['selectedAddress']),
                     Text(
                       S.of(context).instruction_for_stay,
                       style: TextStyle(
@@ -2639,7 +2638,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                     ),
                     SizedBox(height: 5),
                     Text(
-                      snapshot.data.documents[0]['doAndDonts'],
+                      snapshot.data.docs[0]['doAndDonts'],
                       style: TextStyle(fontSize: 16, color: Colors.grey),
                     ),
                   ],
@@ -3007,7 +3006,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
 
   WriteBatch deleteParentRequest(RequestModel requestItem) {
     WriteBatch batch = CollectionRef.batch;
-    var docs = recurringRequestsDocs.documents;
+    var docs = recurringRequestsDocs.docs;
 
 //below if condition for, if only one request is remaining in the recurring request list.
 //To avoid index error.

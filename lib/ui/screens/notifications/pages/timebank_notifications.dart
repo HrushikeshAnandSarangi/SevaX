@@ -899,6 +899,9 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   photoUrl: null,
                   title: S.of(context).notifications_credited,
                   subTitle: notification.data['credits'].toString() +
+                      " " +
+                      S.of(context).seva_credits +
+                      ' ' +
                       S.of(context).notifications_credited_to,
                   onDismissed: () {
                     dismissTimebankNotification(
