@@ -31,6 +31,7 @@ import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/configuration_check.dart';
 import 'package:sevaexchange/utils/helpers/projects_helper.dart';
+import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -617,14 +618,16 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               HideWidget(
                 hide: AppConfig.isTestCommunity,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  padding: const EdgeInsets.symmetric(vertical: 2),
                   child: ConfigurationCheck(
                     actionType: 'create_virtual_event',
                     role: memberType(timebankModel,
                         SevaCore.of(context).loggedInUser.sevaUserID),
                     child: OpenScopeCheckBox(
                         infoType: InfoType.VirtualRequest,
-                        isChecked: projectModel.virtualProject,
+                        isChecked: widget.isCreateProject
+                            ? false
+                            : projectModel.virtualProject,
                         checkBoxTypeLabel: CheckBoxType.type_VirtualRequest,
                         onChangedCB: (bool val) {
                           if (projectModel.virtualProject != val) {
@@ -649,21 +652,29 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               //   child:
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 3),
-                child: ConfigurationCheck(
-                  actionType: 'create_public_event',
-                  role: memberType(timebankModel,
-                      SevaCore.of(context).loggedInUser.sevaUserID),
-                  child: OpenScopeCheckBox(
-                      infoType: InfoType.OpenScopeEvent,
-                      isChecked: projectModel.public,
-                      checkBoxTypeLabel: CheckBoxType.type_Events,
-                      onChangedCB: (bool val) {
-                        if (projectModel.public != val) {
-                          this.projectModel.public = val;
-                          log('value ${projectModel.public}');
-                          setState(() {});
-                        }
-                      }),
+                child: TransactionsMatrixCheck(
+                  comingFrom: ComingFrom.Projects,
+                  upgradeDetails:
+                      AppConfig.upgradePlanBannerModel.public_to_sevax_global,
+                  transaction_matrix_type: 'public_to_sevax_global',
+                  child: ConfigurationCheck(
+                    actionType: 'create_public_event',
+                    role: memberType(timebankModel,
+                        SevaCore.of(context).loggedInUser.sevaUserID),
+                    child: OpenScopeCheckBox(
+                        infoType: InfoType.OpenScopeEvent,
+                        isChecked: widget.isCreateProject
+                            ? false
+                            : projectModel.public,
+                        checkBoxTypeLabel: CheckBoxType.type_Events,
+                        onChangedCB: (bool val) {
+                          if (projectModel.public != val) {
+                            this.projectModel.public = val;
+                            log('value ${projectModel.public}');
+                            setState(() {});
+                          }
+                        }),
+                  ),
                 ),
               ),
               // ),

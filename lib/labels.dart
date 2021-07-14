@@ -641,6 +641,8 @@ class L {
   String get cover_picture_label_group => "Group Cover Picture";
   String get cover_picture_label_event => "Event Cover Picture";
   String get occurrences => "Occurrences";
+  String get deleted_events_create_request_message =>
+      "This event is going to be deleted. As a result, requests cannot be created.";
 }
 
 // // <--------  IRRELEVANT FOR NOW  --------->
