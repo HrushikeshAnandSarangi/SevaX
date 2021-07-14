@@ -273,31 +273,36 @@ class EditGroupFormState extends State<EditGroupForm> {
               ),
             ],
           ),
-          Row(
-            children: <Widget>[
-              headingText(S.of(context).private_group, false),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
-                child: infoButton(
-                  context: context,
-                  key: GlobalKey(),
-                  type: InfoType.PRIVATE_GROUP,
-                ),
-              ),
-              Column(
-                children: <Widget>[
-                  Divider(),
-                  Checkbox(
-                    value: widget.timebankModel.private,
-                    onChanged: (bool value) {
-                      setState(() {
-                        widget.timebankModel.private = value;
-                      });
-                    },
+          TransactionsMatrixCheck(
+            comingFrom: ComingFrom.Groups,
+            upgradeDetails: AppConfig.upgradePlanBannerModel.private_groups,
+            transaction_matrix_type: "private_groups",
+            child: Row(
+              children: <Widget>[
+                headingText(S.of(context).private_group, false),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
+                  child: infoButton(
+                    context: context,
+                    key: GlobalKey(),
+                    type: InfoType.PRIVATE_GROUP,
                   ),
-                ],
-              ),
-            ],
+                ),
+                Column(
+                  children: <Widget>[
+                    Divider(),
+                    Checkbox(
+                      value: widget.timebankModel.private,
+                      onChanged: (bool value) {
+                        setState(() {
+                          widget.timebankModel.private = value;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
           headingText(S.of(context).is_pin_at_right_place, false),
           Container(
