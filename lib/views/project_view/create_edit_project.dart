@@ -625,9 +625,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                         SevaCore.of(context).loggedInUser.sevaUserID),
                     child: OpenScopeCheckBox(
                         infoType: InfoType.VirtualRequest,
-                        isChecked: widget.isCreateProject
-                            ? false
-                            : projectModel.virtualProject,
+                        isChecked: projectModel.virtualProject,
                         checkBoxTypeLabel: CheckBoxType.type_VirtualRequest,
                         onChangedCB: (bool val) {
                           if (projectModel.virtualProject != val) {
@@ -663,9 +661,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                         SevaCore.of(context).loggedInUser.sevaUserID),
                     child: OpenScopeCheckBox(
                         infoType: InfoType.OpenScopeEvent,
-                        isChecked: widget.isCreateProject
-                            ? false
-                            : projectModel.public,
+                        isChecked: projectModel.public,
                         checkBoxTypeLabel: CheckBoxType.type_Events,
                         onChangedCB: (bool val) {
                           if (projectModel.public != val) {
