@@ -1021,7 +1021,7 @@ class FeedbackConstants {
     }
   ];
 
-  //FEEDBACK QUESTION FOR ONE TO MANY
+  //FEEDBACK QUESTION FOR ONE TO MANY OFFER
   static const FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_EN = const [
     {
       FEEDBACK_TITLE: "What is your overall rating of the class?",
@@ -1354,11 +1354,17 @@ class FeedbackConstants {
     },
   ];
 
-  //FEEDBACK QUESTION FOR ONE TO MANY
+  //
+  //
+  //
+  //==========> FEEDBACK QUESTION FOR ONE TO MANY REQUEST ATTENDEES
+  //
+  //
+  //
   static const FEEDBACK_QUESTION_FOR_ONE_TO_MANY_REQUEST_ATTENDEE_EN = const [
     {
       FEEDBACK_TITLE:
-          "How likely are you to recommend this webinar to a friend?",
+          "How likely are you to recommend this webinar to a friend?", //1
       ANSWERS: [
         {ANSWER_TEXT: "Excellent", SCORE: 5},
         {ANSWER_TEXT: "Good", SCORE: 4},
@@ -1367,7 +1373,7 @@ class FeedbackConstants {
       ]
     },
     {
-      FEEDBACK_TITLE: "Your overall rating of the webinar.",
+      FEEDBACK_TITLE: "Your overall rating of the webinar.", //2
       ANSWERS: [
         {ANSWER_TEXT: "Excellent", SCORE: 5},
         {ANSWER_TEXT: "Good", SCORE: 4},
@@ -1376,7 +1382,7 @@ class FeedbackConstants {
       ]
     },
     {
-      FEEDBACK_TITLE: "Your rating on the content of the class.",
+      FEEDBACK_TITLE: "Your rating on the content of the class.", //3
       ANSWERS: [
         {ANSWER_TEXT: "Excellent", SCORE: 5},
         {ANSWER_TEXT: "Good", SCORE: 4},
@@ -1385,7 +1391,7 @@ class FeedbackConstants {
       ]
     },
     {
-      FEEDBACK_TITLE: "Your rating on the length of the class.",
+      FEEDBACK_TITLE: "Your rating on the length of the class.", //4
       ANSWERS: [
         {ANSWER_TEXT: "Excellent", SCORE: 5},
         {ANSWER_TEXT: "Good", SCORE: 4},
@@ -1394,7 +1400,7 @@ class FeedbackConstants {
       ]
     },
     {
-      FEEDBACK_TITLE: "Your overall rating of the speaker.",
+      FEEDBACK_TITLE: "Your overall rating of the speaker.", //5
       ANSWERS: [
         {ANSWER_TEXT: "Excellent", SCORE: 5},
         {ANSWER_TEXT: "Good", SCORE: 4},
@@ -1404,12 +1410,418 @@ class FeedbackConstants {
     },
     {
       FEEDBACK_TITLE:
-          "How would you rate the speaker's knowledge of the subject?",
+          "How would you rate the speaker's knowledge of the subject?", //6
       ANSWERS: [
         {ANSWER_TEXT: "Excellent", SCORE: 5},
         {ANSWER_TEXT: "Good", SCORE: 4},
         {ANSWER_TEXT: "Average", SCORE: 3},
         {ANSWER_TEXT: "Poor", SCORE: 2},
+      ]
+    },
+  ];
+
+  static const FEEDBACK_QUESTION_FOR_ONE_TO_MANY_REQUEST_ATTENDEE_AF = const [
+    {
+      FEEDBACK_TITLE:
+          "Hoe waarskynlik is dit dat u hierdie webinar by 'n vriend aanbeveel?",
+      ANSWERS: [
+        {ANSWER_TEXT: "Uitstekende", SCORE: 5},
+        {ANSWER_TEXT: "Goeie", SCORE: 4},
+        {ANSWER_TEXT: "Gemiddelde", SCORE: 3},
+        {ANSWER_TEXT: "Swak", SCORE: 2},
+      ]
+    },
+    {
+      FEEDBACK_TITLE: "U algemene beoordeling van die webinar.",
+      ANSWERS: [
+        {ANSWER_TEXT: "Uitstekende", SCORE: 5},
+        {ANSWER_TEXT: "Goeie", SCORE: 4},
+        {ANSWER_TEXT: "Gemiddelde", SCORE: 3},
+        {ANSWER_TEXT: "Swak", SCORE: 2},
+      ]
+    },
+    {
+      FEEDBACK_TITLE: "U beoordeling oor die inhoud van die klas.",
+      ANSWERS: [
+        {ANSWER_TEXT: "Uitstekende", SCORE: 5},
+        {ANSWER_TEXT: "Goeie", SCORE: 4},
+        {ANSWER_TEXT: "Gemiddelde", SCORE: 3},
+        {ANSWER_TEXT: "Swak", SCORE: 2},
+      ]
+    },
+    {
+      FEEDBACK_TITLE: "U beoordeling oor die lengte van die klas.",
+      ANSWERS: [
+        {ANSWER_TEXT: "Uitstekende", SCORE: 5},
+        {ANSWER_TEXT: "Goeie", SCORE: 4},
+        {ANSWER_TEXT: "Gemiddelde", SCORE: 3},
+        {ANSWER_TEXT: "Swak", SCORE: 2},
+      ]
+    },
+    {
+      FEEDBACK_TITLE: "U algemene beoordeling van die spreker.",
+      ANSWERS: [
+        {ANSWER_TEXT: "Uitstekende", SCORE: 5},
+        {ANSWER_TEXT: "Goeie", SCORE: 4},
+        {ANSWER_TEXT: "Gemiddelde", SCORE: 3},
+        {ANSWER_TEXT: "Swak", SCORE: 2},
+      ]
+    },
+    {
+      FEEDBACK_TITLE:
+          "Hoe sou u die spreker se kennis van die onderwerp beoordeel?",
+      ANSWERS: [
+        {ANSWER_TEXT: "Uitstekende", SCORE: 5},
+        {ANSWER_TEXT: "Goeie", SCORE: 4},
+        {ANSWER_TEXT: "Gemiddelde", SCORE: 3},
+        {ANSWER_TEXT: "Swak", SCORE: 2},
+      ]
+    },
+  ];
+
+  static const FEEDBACK_QUESTION_FOR_ONE_TO_MANY_REQUEST_ATTENDEE_SW = const [
+    {
+      FEEDBACK_TITLE:
+          "Je! Una uwezekano gani kupendekeza tovuti hii kwa rafiki?",
+      ANSWERS: [
+        {ANSWER_TEXT: "Bora", SCORE: 5},
+        {ANSWER_TEXT: "Nzuri", SCORE: 4},
+        {ANSWER_TEXT: "Wastani", SCORE: 3},
+        {ANSWER_TEXT: "Maskini", SCORE: 2},
+      ]
+    },
+    {
+      FEEDBACK_TITLE: "Ukadiriaji wako wa jumla wa wavuti.",
+      ANSWERS: [
+        {ANSWER_TEXT: "Bora", SCORE: 5},
+        {ANSWER_TEXT: "Nzuri", SCORE: 4},
+        {ANSWER_TEXT: "Wastani", SCORE: 3},
+        {ANSWER_TEXT: "Maskini", SCORE: 2},
+      ]
+    },
+    {
+      FEEDBACK_TITLE: "Ukadiriaji wako juu ya yaliyomo darasani.",
+      ANSWERS: [
+        {ANSWER_TEXT: "Bora", SCORE: 5},
+        {ANSWER_TEXT: "Nzuri", SCORE: 4},
+        {ANSWER_TEXT: "Wastani", SCORE: 3},
+        {ANSWER_TEXT: "Maskini", SCORE: 2},
+      ]
+    },
+    {
+      FEEDBACK_TITLE: "Ukadiriaji wako kwa urefu wa darasa.",
+      ANSWERS: [
+        {ANSWER_TEXT: "Bora", SCORE: 5},
+        {ANSWER_TEXT: "Nzuri", SCORE: 4},
+        {ANSWER_TEXT: "Wastani", SCORE: 3},
+        {ANSWER_TEXT: "Maskini", SCORE: 2},
+      ]
+    },
+    {
+      FEEDBACK_TITLE: "Ukadiriaji wako wa jumla wa spika.",
+      ANSWERS: [
+        {ANSWER_TEXT: "Bora", SCORE: 5},
+        {ANSWER_TEXT: "Nzuri", SCORE: 4},
+        {ANSWER_TEXT: "Wastani", SCORE: 3},
+        {ANSWER_TEXT: "Maskini", SCORE: 2},
+      ]
+    },
+    {
+      FEEDBACK_TITLE: "Je! Ungepima vipi ujuzi wa msemaji wa mada hiyo?",
+      ANSWERS: [
+        {ANSWER_TEXT: "Bora", SCORE: 5},
+        {ANSWER_TEXT: "Nzuri", SCORE: 4},
+        {ANSWER_TEXT: "Wastani", SCORE: 3},
+        {ANSWER_TEXT: "Maskini", SCORE: 2},
+      ]
+    },
+  ];
+
+  static const FEEDBACK_QUESTION_FOR_ONE_TO_MANY_REQUEST_ATTENDEE_SN = const [
+    {
+      FEEDBACK_TITLE: "Iwe unogona sei kukurudzira iyi webinar kushamwari?",
+      ANSWERS: [
+        {ANSWER_TEXT: "Zvakanaka", SCORE: 5},
+        {ANSWER_TEXT: "Kugona", SCORE: 4},
+        {ANSWER_TEXT: "Avhareji", SCORE: 3},
+        {ANSWER_TEXT: "Varombo", SCORE: 2},
+      ]
+    },
+    {
+      FEEDBACK_TITLE: "Yako yakazara chiyero chewebhu.",
+      ANSWERS: [
+        {ANSWER_TEXT: "Zvakanaka", SCORE: 5},
+        {ANSWER_TEXT: "Kugona", SCORE: 4},
+        {ANSWER_TEXT: "Avhareji", SCORE: 3},
+        {ANSWER_TEXT: "Varombo", SCORE: 2},
+      ]
+    },
+    {
+      FEEDBACK_TITLE: "Chiyero chako pane zvirimo mukirasi.",
+      ANSWERS: [
+        {ANSWER_TEXT: "Zvakanaka", SCORE: 5},
+        {ANSWER_TEXT: "Kugona", SCORE: 4},
+        {ANSWER_TEXT: "Avhareji", SCORE: 3},
+        {ANSWER_TEXT: "Varombo", SCORE: 2},
+      ]
+    },
+    {
+      FEEDBACK_TITLE: "Chiyero chako pahurefu hwekirasi.",
+      ANSWERS: [
+        {ANSWER_TEXT: "Zvakanaka", SCORE: 5},
+        {ANSWER_TEXT: "Kugona", SCORE: 4},
+        {ANSWER_TEXT: "Avhareji", SCORE: 3},
+        {ANSWER_TEXT: "Varombo", SCORE: 2},
+      ]
+    },
+    {
+      FEEDBACK_TITLE: "Yako yakazara chiyero chemutauri.",
+      ANSWERS: [
+        {ANSWER_TEXT: "Zvakanaka", SCORE: 5},
+        {ANSWER_TEXT: "Kugona", SCORE: 4},
+        {ANSWER_TEXT: "Avhareji", SCORE: 3},
+        {ANSWER_TEXT: "Varombo", SCORE: 2},
+      ]
+    },
+    {
+      FEEDBACK_TITLE: "Ungaita sei kuyera ruzivo rwemutauri wenyaya?",
+      ANSWERS: [
+        {ANSWER_TEXT: "Zvakanaka", SCORE: 5},
+        {ANSWER_TEXT: "Kugona", SCORE: 4},
+        {ANSWER_TEXT: "Avhareji", SCORE: 3},
+        {ANSWER_TEXT: "Varombo", SCORE: 2},
+      ]
+    },
+  ];
+  static const FEEDBACK_QUESTION_FOR_ONE_TO_MANY_REQUEST_ATTENDEE_FR = const [
+    {
+      FEEDBACK_TITLE:
+          "Quelle est la probabilité que vous recommandiez ce webinaire à un ami ?",
+      ANSWERS: [
+        {ANSWER_TEXT: "Excellent", SCORE: 5},
+        {ANSWER_TEXT: "Bien", SCORE: 4},
+        {ANSWER_TEXT: "Moyenne", SCORE: 3},
+        {ANSWER_TEXT: "Pauvres", SCORE: 2},
+      ]
+    },
+    {
+      FEEDBACK_TITLE: "Votre note globale du webinaire.",
+      ANSWERS: [
+        {ANSWER_TEXT: "Excellent", SCORE: 5},
+        {ANSWER_TEXT: "Bien", SCORE: 4},
+        {ANSWER_TEXT: "Moyenne", SCORE: 3},
+        {ANSWER_TEXT: "Pauvres", SCORE: 2},
+      ]
+    },
+    {
+      FEEDBACK_TITLE: "Votre note sur le contenu du cours.",
+      ANSWERS: [
+        {ANSWER_TEXT: "Excellent", SCORE: 5},
+        {ANSWER_TEXT: "Bien", SCORE: 4},
+        {ANSWER_TEXT: "Moyenne", SCORE: 3},
+        {ANSWER_TEXT: "Pauvres", SCORE: 2},
+      ]
+    },
+    {
+      FEEDBACK_TITLE: "Votre note sur la durée du cours.",
+      ANSWERS: [
+        {ANSWER_TEXT: "Excellent", SCORE: 5},
+        {ANSWER_TEXT: "Bien", SCORE: 4},
+        {ANSWER_TEXT: "Moyenne", SCORE: 3},
+        {ANSWER_TEXT: "Pauvres", SCORE: 2},
+      ]
+    },
+    {
+      FEEDBACK_TITLE: "Votre note globale de l'orateur.",
+      ANSWERS: [
+        {ANSWER_TEXT: "Excellent", SCORE: 5},
+        {ANSWER_TEXT: "Bien", SCORE: 4},
+        {ANSWER_TEXT: "Moyenne", SCORE: 3},
+        {ANSWER_TEXT: "Pauvres", SCORE: 2},
+      ]
+    },
+    {
+      FEEDBACK_TITLE:
+          "Comment évalueriez-vous la connaissance du sujet par l'orateur ?",
+      ANSWERS: [
+        {ANSWER_TEXT: "Excellent", SCORE: 5},
+        {ANSWER_TEXT: "Bien", SCORE: 4},
+        {ANSWER_TEXT: "Moyenne", SCORE: 3},
+        {ANSWER_TEXT: "Pauvres", SCORE: 2},
+      ]
+    },
+  ];
+  static const FEEDBACK_QUESTION_FOR_ONE_TO_MANY_REQUEST_ATTENDEE_PT = const [
+    {
+      FEEDBACK_TITLE:
+          "Qual é a probabilidade de você recomendar este webinar a um amigo?",
+      ANSWERS: [
+        {ANSWER_TEXT: "Excelente", SCORE: 5},
+        {ANSWER_TEXT: "Boa", SCORE: 4},
+        {ANSWER_TEXT: "Média", SCORE: 3},
+        {ANSWER_TEXT: "Pobre", SCORE: 2},
+      ]
+    },
+    {
+      FEEDBACK_TITLE: "Sua classificação geral do webinar.",
+      ANSWERS: [
+        {ANSWER_TEXT: "Excelente", SCORE: 5},
+        {ANSWER_TEXT: "Boa", SCORE: 4},
+        {ANSWER_TEXT: "Média", SCORE: 3},
+        {ANSWER_TEXT: "Pobre", SCORE: 2},
+      ]
+    },
+    {
+      FEEDBACK_TITLE: "Sua avaliação sobre o conteúdo da aula.",
+      ANSWERS: [
+        {ANSWER_TEXT: "Excelente", SCORE: 5},
+        {ANSWER_TEXT: "Boa", SCORE: 4},
+        {ANSWER_TEXT: "Média", SCORE: 3},
+        {ANSWER_TEXT: "Pobre", SCORE: 2},
+      ]
+    },
+    {
+      FEEDBACK_TITLE: "Sua avaliação sobre a duração da aula.",
+      ANSWERS: [
+        {ANSWER_TEXT: "Excelente", SCORE: 5},
+        {ANSWER_TEXT: "Boa", SCORE: 4},
+        {ANSWER_TEXT: "Média", SCORE: 3},
+        {ANSWER_TEXT: "Pobre", SCORE: 2},
+      ]
+    },
+    {
+      FEEDBACK_TITLE: "Sua avaliação geral do alto-falante.",
+      ANSWERS: [
+        {ANSWER_TEXT: "Excelente", SCORE: 5},
+        {ANSWER_TEXT: "Boa", SCORE: 4},
+        {ANSWER_TEXT: "Média", SCORE: 3},
+        {ANSWER_TEXT: "Pobre", SCORE: 2},
+      ]
+    },
+    {
+      FEEDBACK_TITLE:
+          "Como você avaliaria o conhecimento do palestrante sobre o assunto?",
+      ANSWERS: [
+        {ANSWER_TEXT: "Excelente", SCORE: 5},
+        {ANSWER_TEXT: "Boa", SCORE: 4},
+        {ANSWER_TEXT: "Média", SCORE: 3},
+        {ANSWER_TEXT: "Pobre", SCORE: 2},
+      ]
+    },
+  ];
+
+  static const FEEDBACK_QUESTION_FOR_ONE_TO_MANY_REQUEST_ATTENDEE_CN = const [
+    {
+      FEEDBACK_TITLE: "您向朋友推荐此网络研讨会的可能性有多大？",
+      ANSWERS: [
+        {ANSWER_TEXT: "优秀的", SCORE: 5},
+        {ANSWER_TEXT: "好", SCORE: 4},
+        {ANSWER_TEXT: "平均", SCORE: 3},
+        {ANSWER_TEXT: "较差的", SCORE: 2}
+      ]
+    },
+    {
+      FEEDBACK_TITLE: "您对网络研讨会的总体评分。",
+      ANSWERS: [
+        {ANSWER_TEXT: "优秀的", SCORE: 5},
+        {ANSWER_TEXT: "好", SCORE: 4},
+        {ANSWER_TEXT: "平均", SCORE: 3},
+        {ANSWER_TEXT: "较差的", SCORE: 2}
+      ]
+    },
+    {
+      FEEDBACK_TITLE: "您对课程内容的评分。",
+      ANSWERS: [
+        {ANSWER_TEXT: "优秀的", SCORE: 5},
+        {ANSWER_TEXT: "好", SCORE: 4},
+        {ANSWER_TEXT: "平均", SCORE: 3},
+        {ANSWER_TEXT: "较差的", SCORE: 2}
+      ]
+    },
+    {
+      FEEDBACK_TITLE: "您对课程长度的评分。",
+      ANSWERS: [
+        {ANSWER_TEXT: "优秀的", SCORE: 5},
+        {ANSWER_TEXT: "好", SCORE: 4},
+        {ANSWER_TEXT: "平均", SCORE: 3},
+        {ANSWER_TEXT: "较差的", SCORE: 2}
+      ]
+    },
+    {
+      FEEDBACK_TITLE: "您对演讲者的总体评价。",
+      ANSWERS: [
+        {ANSWER_TEXT: "优秀的", SCORE: 5},
+        {ANSWER_TEXT: "好", SCORE: 4},
+        {ANSWER_TEXT: "平均", SCORE: 3},
+        {ANSWER_TEXT: "较差的", SCORE: 2}
+      ]
+    },
+    {
+      FEEDBACK_TITLE: "您如何评价演讲者对该主题的了解？",
+      ANSWERS: [
+        {ANSWER_TEXT: "优秀的", SCORE: 5},
+        {ANSWER_TEXT: "好", SCORE: 4},
+        {ANSWER_TEXT: "平均", SCORE: 3},
+        {ANSWER_TEXT: "较差的", SCORE: 2}
+      ]
+    },
+  ];
+
+  static const FEEDBACK_QUESTION_FOR_ONE_TO_MANY_REQUEST_ATTENDEE_ES = const [
+    {
+      FEEDBACK_TITLE:
+          "¿Qué probabilidades hay de que recomiende este seminario web a un amigo?",
+      ANSWERS: [
+        {ANSWER_TEXT: "Excelente", SCORE: 5},
+        {ANSWER_TEXT: "Buena", SCORE: 4},
+        {ANSWER_TEXT: "Promedio", SCORE: 3},
+        {ANSWER_TEXT: "Pobre", SCORE: 2},
+      ]
+    },
+    {
+      FEEDBACK_TITLE: "Su calificación general del seminario web.",
+      ANSWERS: [
+        {ANSWER_TEXT: "Excelente", SCORE: 5},
+        {ANSWER_TEXT: "Buena", SCORE: 4},
+        {ANSWER_TEXT: "Promedio", SCORE: 3},
+        {ANSWER_TEXT: "Pobre", SCORE: 2},
+      ]
+    },
+    {
+      FEEDBACK_TITLE: "Tu calificación sobre el contenido de la clase.",
+      ANSWERS: [
+        {ANSWER_TEXT: "Excelente", SCORE: 5},
+        {ANSWER_TEXT: "Buena", SCORE: 4},
+        {ANSWER_TEXT: "Promedio", SCORE: 3},
+        {ANSWER_TEXT: "Pobre", SCORE: 2},
+      ]
+    },
+    {
+      FEEDBACK_TITLE: "Tu calificación sobre la duración de la clase.",
+      ANSWERS: [
+        {ANSWER_TEXT: "Excelente", SCORE: 5},
+        {ANSWER_TEXT: "Buena", SCORE: 4},
+        {ANSWER_TEXT: "Promedio", SCORE: 3},
+        {ANSWER_TEXT: "Pobre", SCORE: 2},
+      ]
+    },
+    {
+      FEEDBACK_TITLE: "Tu calificación general del orador.",
+      ANSWERS: [
+        {ANSWER_TEXT: "Excelente", SCORE: 5},
+        {ANSWER_TEXT: "Buena", SCORE: 4},
+        {ANSWER_TEXT: "Promedio", SCORE: 3},
+        {ANSWER_TEXT: "Pobre", SCORE: 2},
+      ]
+    },
+    {
+      FEEDBACK_TITLE:
+          "¿Cómo calificaría el conocimiento del hablante sobre el tema?",
+      ANSWERS: [
+        {ANSWER_TEXT: "Excelente", SCORE: 5},
+        {ANSWER_TEXT: "Buena", SCORE: 4},
+        {ANSWER_TEXT: "Promedio", SCORE: 3},
+        {ANSWER_TEXT: "Pobre", SCORE: 2},
       ]
     },
   ];

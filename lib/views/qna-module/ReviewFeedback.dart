@@ -307,27 +307,35 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
         return FeedbackConstants
             .FEEDBACK_QUESTION_FOR_ONE_TO_MANY_REQUEST_ATTENDEE_EN;
       case 'af':
-        return FeedbackConstants.FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_AF;
+        return FeedbackConstants
+            .FEEDBACK_QUESTION_FOR_ONE_TO_MANY_REQUEST_ATTENDEE_AF;
       case 'sn':
-        return FeedbackConstants.FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_SN;
+        return FeedbackConstants
+            .FEEDBACK_QUESTION_FOR_ONE_TO_MANY_REQUEST_ATTENDEE_SN;
 
       case 'sw':
-        return FeedbackConstants.FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_SW;
+        return FeedbackConstants
+            .FEEDBACK_QUESTION_FOR_ONE_TO_MANY_REQUEST_ATTENDEE_SW;
 
       case 'fr':
-        return FeedbackConstants.FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_FR;
+        return FeedbackConstants
+            .FEEDBACK_QUESTION_FOR_ONE_TO_MANY_REQUEST_ATTENDEE_FR;
 
       case 'pt':
-        return FeedbackConstants.FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_PT;
+        return FeedbackConstants
+            .FEEDBACK_QUESTION_FOR_ONE_TO_MANY_REQUEST_ATTENDEE_PT;
 
       case 'es':
-        return FeedbackConstants.FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_ES;
+        return FeedbackConstants
+            .FEEDBACK_QUESTION_FOR_ONE_TO_MANY_REQUEST_ATTENDEE_ES;
 
       case 'zh':
-        return FeedbackConstants.FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_CN;
+        return FeedbackConstants
+            .FEEDBACK_QUESTION_FOR_ONE_TO_MANY_REQUEST_ATTENDEE_CN;
 
       default:
-        return FeedbackConstants.FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_EN;
+        return FeedbackConstants
+            .FEEDBACK_QUESTION_FOR_ONE_TO_MANY_REQUEST_ATTENDEE_EN;
     }
   }
 
