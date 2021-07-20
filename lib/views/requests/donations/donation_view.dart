@@ -62,7 +62,9 @@ class _DonationViewState extends State<DonationView> {
 
   var focusNodes = List.generate(16, (_) => FocusNode());
   final profanityDetector = ProfanityDetector();
-
+  String mobilePattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
+  RegExp emailPattern = RegExp(
+      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
   @override
   void initState() {
     donationsModel.id = Utils.getUuid();
@@ -284,7 +286,7 @@ class _DonationViewState extends State<DonationView> {
             textInputAction: TextInputAction.next,
             decoration: InputDecoration(
               errorMaxLines: 2,
-              hintText: S.of(context).email_hint,
+              hintText: 'Ex: Paypal ID (phone or email)',
               hintStyle: hintTextStyle,
             ),
             initialValue: donationsModel.cashDetails.cashDetails != null
@@ -296,8 +298,17 @@ class _DonationViewState extends State<DonationView> {
               donationsModel.cashDetails.cashDetails.paypalId = value;
             },
             validator: (value) {
-              donationsModel.cashDetails.cashDetails.paypalId = value;
-              return _validateEmailId(value);
+              RegExp regExp = RegExp(mobilePattern);
+              if (value.isEmpty) {
+                return S.of(context).validation_error_general_text;
+              } else if (emailPattern.hasMatch(value) ||
+                  regExp.hasMatch(value)) {
+                donationsModel.cashDetails.cashDetails.paypalId = value;
+
+                return null;
+              } else {
+                return S.of(context).enter_valid_link;
+              }
             },
           )
         ]);
@@ -605,6 +616,10 @@ class _DonationViewState extends State<DonationView> {
               },
               textInputAction: TextInputAction.next,
               keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                prefixIcon: Icon(Icons.attach_money),
+                // labelText: 'No. of volunteers',
+              ),
               validator: (value) {
                 if (value.isEmpty) {
                   return S.of(context).validation_error_general_text;
@@ -615,7 +630,7 @@ class _DonationViewState extends State<DonationView> {
                     return S.of(context).request_amount_cannot_be_greater;
                   }
                   if (int.parse(value) > offerModel.cashModel.targetAmount) {
-                    return  S.of(context).request_amount_cannot_be_greater;
+                    return S.of(context).request_amount_cannot_be_greater;
                   }
                   donationsModel.cashDetails.cashDetails.amountRaised =
                       int.parse(value);
@@ -1141,6 +1156,7 @@ class _DonationViewState extends State<DonationView> {
                               : '',
                       hintStyle: subTitleStyle,
                       hintText: S.of(context).add_amount_donated,
+                      prefixIcon: Icon(Icons.attach_money),
                     ),
                   ));
             },

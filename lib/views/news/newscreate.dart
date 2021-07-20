@@ -156,6 +156,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     super.initState();
     dataList.add(EntityModel(entityType: EntityType.general));
     selectedTimebanks.add(this.widget.timebankModel.id);
+    selectedAddress = widget.timebankModel.address;
+    location = widget.timebankModel.location;
   }
 
   @override

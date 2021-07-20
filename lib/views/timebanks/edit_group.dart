@@ -74,6 +74,9 @@ class EditGroupFormState extends State<EditGroupForm> {
     if (widget.timebankModel.location != null) {
       location = widget.timebankModel.location;
       selectedAddress = widget.timebankModel.address;
+    } else {
+      location = parentTimebankModel.location;
+      selectedAddress = parentTimebankModel.address;
     }
 
     searchTextController =

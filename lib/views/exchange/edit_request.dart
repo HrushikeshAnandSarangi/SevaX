@@ -506,6 +506,11 @@ class RequestEditFormState extends State<RequestEditForm> {
           //   return LoadingIndicator();
           // }
           log("timebank ${snapshot.data}");
+          if (widget.requestModel.location == null ||
+              widget.requestModel.address == null) {
+            location = timebankModel.location;
+            selectedAddress = timebankModel.address;
+          }
           return FutureBuilder<List<ProjectModel>>(
               future: getProjectsByFuture,
               builder: (projectscontext, projectListSnapshot) {
@@ -1214,7 +1219,7 @@ class RequestEditFormState extends State<RequestEditForm> {
         ]);
   }
 
-  Widget RequestPaymentACH(RequestModel requestModel) {
+  Widget RequestPaymentACH() {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -1364,7 +1369,7 @@ class RequestEditFormState extends State<RequestEditForm> {
       r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
   String mobilePattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
 
-  Widget RequestPaymentZellePay(RequestModel requestModel) {
+  Widget RequestPaymentZellePay() {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -1413,7 +1418,7 @@ class RequestEditFormState extends State<RequestEditForm> {
     return null;
   }
 
-  Widget RequestPaymentPaypal(RequestModel requestModel) {
+  Widget RequestPaymentPaypal() {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -1429,7 +1434,7 @@ class RequestEditFormState extends State<RequestEditForm> {
             textInputAction: TextInputAction.next,
             decoration: InputDecoration(
               errorMaxLines: 2,
-              hintText: S.of(context).email_hint,
+              hintText: 'Ex: Paypal ID (phone or email)',
               hintStyle: hintTextStyle,
             ),
             initialValue: requestModel.cashModel.paypalId ?? '',
@@ -1439,21 +1444,22 @@ class RequestEditFormState extends State<RequestEditForm> {
               widget.requestModel.cashModel.paypalId = value;
             },
             validator: (value) {
+              RegExp regExp = RegExp(mobilePattern);
               if (value.isEmpty) {
                 return S.of(context).validation_error_general_text;
-              } else if (!emailPattern.hasMatch(value)) {
-                return S.of(context).enter_valid_link;
-              } else {
+              } else if (emailPattern.hasMatch(value) ||
+                  regExp.hasMatch(value)) {
                 widget.requestModel.cashModel.paypalId = value;
-
                 return null;
+              } else {
+                return S.of(context).enter_valid_link;
               }
             },
           )
         ]);
   }
 
-  Widget RequestPaymentVenmo(RequestModel requestModel) {
+  Widget RequestPaymentVenmo() {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -1608,25 +1614,25 @@ class RequestEditFormState extends State<RequestEditForm> {
   Widget get getPaymentInformation {
     switch (widget.requestModel.cashModel.paymentType) {
       case RequestPaymentType.ACH:
-        return RequestPaymentACH(widget.requestModel);
+        return RequestPaymentACH();
 
       case RequestPaymentType.PAYPAL:
-        return RequestPaymentPaypal(widget.requestModel);
+        return RequestPaymentPaypal();
 
       case RequestPaymentType.ZELLEPAY:
-        return RequestPaymentZellePay(widget.requestModel);
+        return RequestPaymentZellePay();
 
       case RequestPaymentType.VENMO:
-        return RequestPaymentVenmo(widget.requestModel);
+        return RequestPaymentVenmo();
       case RequestPaymentType.SWIFT:
-        return RequestPaymentSwift(widget.requestModel);
+        return RequestPaymentSwift();
 
       default:
-        return RequestPaymentACH(widget.requestModel);
+        return RequestPaymentACH();
     }
   }
 
-  Widget RequestPaymentSwift(RequestModel requestModel) {
+  Widget RequestPaymentSwift() {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -2274,8 +2280,15 @@ class RequestEditFormState extends State<RequestEditForm> {
             decoration: InputDecoration(
               hintText: S.of(context).request_target_donation_hint,
               hintStyle: hintTextStyle,
+              prefixIcon: Icon(Icons.attach_money),
+
               // labelText: 'No. of volunteers',
             ),
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(
+                (RegExp("[0-9]")),
+              ),
+            ],
             keyboardType: TextInputType.number,
             validator: (value) {
               if (value.isEmpty) {
@@ -2322,7 +2335,15 @@ class RequestEditFormState extends State<RequestEditForm> {
               hintText: S.of(context).request_min_donation_hint,
               hintStyle: hintTextStyle,
               // labelText: 'No. of volunteers',
+              prefixIcon: Icon(Icons.attach_money),
+
+              // labelText: 'No. of volunteers',
             ),
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(
+                (RegExp("[0-9]")),
+              ),
+            ],
             keyboardType: TextInputType.number,
             validator: (value) {
               if (value.isEmpty) {

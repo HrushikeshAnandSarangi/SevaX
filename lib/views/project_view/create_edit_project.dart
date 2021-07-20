@@ -151,6 +151,18 @@ class _CreateEditProjectState extends State<CreateEditProject> {
     );
     communityModel = await FirestoreManager.getCommunityDetailsByCommunityId(
         communityId: timebankModel.communityId);
+    if (widget.isCreateProject) {
+      location = communityModel.location;
+      selectedAddress = timebankModel.address;
+    } else {
+      if (projectModel.location == null ||
+          projectModel.address == null ||
+          projectModel.address == '') {
+        location = communityModel.location;
+        selectedAddress = timebankModel.address;
+      }
+    }
+    setState(() {});
   }
 
   void getData() async {

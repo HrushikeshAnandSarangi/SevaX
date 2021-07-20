@@ -502,6 +502,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
                 } else if (snapshot.hasError) {
                   return Text(S.of(context).error_loading_data);
                 } else {
+                  selectedAddress = snapshot.data.address;
+                  location = snapshot.data.location;
                   return Form(
                     key: _formKey,
                     child: Container(
@@ -1591,10 +1593,10 @@ class RequestCreateFormState extends State<RequestCreateForm>
         ]);
   }
 
+  String mobilePattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
+  RegExp emailPattern = RegExp(
+      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
   String _validateEmailAndPhone(String value) {
-    String mobilePattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
-    RegExp emailPattern = RegExp(
-        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
     RegExp regExp = RegExp(mobilePattern);
     if (value.isEmpty) {
       return S.of(context).validation_error_general_text;
@@ -1630,7 +1632,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
             textInputAction: TextInputAction.next,
             decoration: InputDecoration(
               errorMaxLines: 2,
-              hintText: S.of(context).email_hint,
+              hintText: 'Ex: Paypal ID (phone or email)',
               hintStyle: hintTextStyle,
             ),
             initialValue: widget.offer != null && widget.isOfferRequest
@@ -1644,8 +1646,16 @@ class RequestCreateFormState extends State<RequestCreateForm>
               requestModel.cashModel.paypalId = value;
             },
             validator: (value) {
-              requestModel.cashModel.paypalId = value;
-              return _validateEmailId(value);
+              RegExp regExp = RegExp(mobilePattern);
+              if (value.isEmpty) {
+                return S.of(context).validation_error_general_text;
+              } else if (emailPattern.hasMatch(value) ||
+                  regExp.hasMatch(value)) {
+                requestModel.cashModel.paypalId = value;
+                return null;
+              } else {
+                return S.of(context).enter_valid_link;
+              }
             },
           )
         ]);
@@ -2764,8 +2774,15 @@ class RequestCreateFormState extends State<RequestCreateForm>
             decoration: InputDecoration(
               hintText: S.of(context).request_target_donation_hint,
               hintStyle: hintTextStyle,
+              prefixIcon: Icon(Icons.attach_money),
+
               // labelText: 'No. of volunteers',
             ),
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(
+                (RegExp("[0-9]")),
+              ),
+            ],
             keyboardType: TextInputType.number,
             validator: (value) {
               if (value.isEmpty) {
@@ -2811,7 +2828,15 @@ class RequestCreateFormState extends State<RequestCreateForm>
               hintText: S.of(context).request_min_donation_hint,
               hintStyle: hintTextStyle,
               // labelText: 'No. of volunteers',
+              prefixIcon: Icon(Icons.attach_money),
+
+              // labelText: 'No. of volunteers',
             ),
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(
+                (RegExp("[0-9]")),
+              ),
+            ],
             keyboardType: TextInputType.number,
             validator: (value) {
               if (value.isEmpty) {

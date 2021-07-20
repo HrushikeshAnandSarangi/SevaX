@@ -4,6 +4,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:sevaexchange/components/common_help_icon.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
 import 'package:sevaexchange/components/goods_dynamic_selection_editRequest.dart';
@@ -156,9 +157,25 @@ class _IndividualOfferState extends State<IndividualOffer> {
   }
 
   Future<void> getCommunity() async {
-    communityModel = await FirestoreManager.getCommunityDetailsByCommunityId(
-        communityId: widget.timebankModel.communityId);
-    setState(() {});
+    Future.delayed(Duration.zero, () async {
+      communityModel = await FirestoreManager.getCommunityDetailsByCommunityId(
+          communityId: SevaCore.of(context).loggedInUser.currentCommunity);
+
+      if (widget.offerModel == null ||
+          (widget.offerModel != null &&
+              widget.offerModel.location == null &&
+              widget.offerModel.selectedAdrress == null)) {
+        _bloc.onLocatioChanged(CustomLocation(
+          widget.timebankModel.location,
+          widget.timebankModel.address,
+        ));
+        _one_to_many_bloc.onLocatioChanged(CustomLocation(
+          widget.timebankModel.location,
+          widget.timebankModel.address,
+        ));
+      }
+      setState(() {});
+    });
   }
 
   void showScaffold(String message) {
@@ -427,12 +444,17 @@ class _IndividualOfferState extends State<IndividualOffer> {
                 focusNode: _availability,
                 onChanged: (String data) =>
                     _bloc.onDonationAmountChanged(int.tryParse(data)),
-                inputFormatters: null,
                 textCapitalization: TextCapitalization.sentences,
                 decoration: InputDecoration(
                   hintText: S.of(context).add_amount_donate ?? '',
                   errorText: getValidationError(context, snapshot.error),
+                  prefixIcon: Icon(Icons.attach_money),
                 ),
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(
+                    (RegExp("[0-9]")),
+                  ),
+                ],
                 keyboardType: TextInputType.number,
                 initialValue: widget.offerModel != null
                     ? widget.offerModel.cashModel.targetAmount.toString()
