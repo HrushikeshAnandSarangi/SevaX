@@ -343,7 +343,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                   _openFileExplorer();
                 },
                 child: Container(
-                  height: 150,
+                  height: csvFileModel.csvUrl == null ? 150 : 200,
                   width: double.infinity,
                   decoration: BoxDecoration(
                     border: DashPathBorder.all(
@@ -414,6 +414,9 @@ class InviteAddMembersState extends State<InviteAddMembers> {
             style: TextStyle(color: Colors.grey),
           ),
         ),
+        // csvFileModel.csvUrl == null
+        //     ? Offstage()
+        // :
         Padding(
           padding: const EdgeInsets.only(left: 8.0),
           child: Text(
@@ -427,7 +430,8 @@ class InviteAddMembersState extends State<InviteAddMembers> {
             Padding(
               padding: const EdgeInsets.only(top: 5),
               child: Container(
-                height: 30,
+                height: 40,
+                width: 80,
                 child: CustomElevatedButton(
                   onPressed: () async {
                     var connResult = await Connectivity().checkConnectivity();
@@ -447,7 +451,11 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                     if (csvFileModel.csvUrl == null ||
                         csvFileModel.csvUrl == '' ||
                         csvFileModel.csvTitle == '' ||
-                        csvFileModel.csvTitle == null) {
+                        csvFileModel.csvTitle == null ||
+                        csvFileModel.csvUrl == null &&
+                            csvFileModel.csvTitle == null) {
+                      logger.e(
+                          'csvFileModel.csvUrl :  ${csvFileModel.csvUrl}\n csvFileModel.csvTitle : ${csvFileModel.csvTitle}');
                       setState(() {
                         this.csvFileError = S.of(context).csv_error;
                       });
@@ -558,10 +566,13 @@ class InviteAddMembersState extends State<InviteAddMembers> {
 
     uploadTask.whenComplete(() async {
       documentURL = await ref.getDownloadURL();
+      csvFileModel.csvUrl = documentURL;
+      logger.e(
+          'csvFileModel.csvUrl :  ${csvFileModel.csvUrl} \n documentURL : ${documentURL}');
     });
 
     csvFileModel.csvTitle = name;
-    csvFileModel.csvUrl = documentURL;
+    // csvFileModel.csvUrl = documentURL;
     // _setAvatarURL();
     // _updateDB();
     return documentURL;

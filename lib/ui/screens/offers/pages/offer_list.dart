@@ -68,7 +68,7 @@ class _OfferListState extends State<OfferList> {
               S.of(context).offers,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 18,
+                fontSize: 24,
               ),
             ),
             infoButton(
@@ -174,7 +174,7 @@ class _OfferListState extends State<OfferList> {
                           Padding(
                             padding: const EdgeInsets.only(left: 8, top: 8),
                             child: Text(
-                             S.of(context).timebank_offers,
+                              S.of(context).timebank_offers,
                               style: TextStyle(
                                 fontSize: 18,
                               ),

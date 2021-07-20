@@ -59,47 +59,22 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
             margin: EdgeInsets.only(top: 10, bottom: 10, left: 0, right: 10),
             alignment: Alignment.centerLeft,
             child: Row(
-              children: <Widget>[
-                ButtonTheme(
-                  minWidth: 110.0,
-                  height: 50.0,
-                  buttonColor: Color.fromRGBO(234, 135, 137, 1.0),
-                  child: Stack(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.only(
-                          right: 0,
-                        ),
-                        child: CustomTextButton(
-                          onPressed: () {},
-                          child: Text(
-                            S.of(context).projects,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        // will be positioned in the top right of the container
-                        top: 0,
-                        right: -20,
-                        child: Container(
-                          padding: EdgeInsets.only(left: 4, right: 4),
-                          child: infoButton(
-                            context: context,
-                            key: GlobalKey(),
-                            type: InfoType.PROJECTS,
-                            // text: infoDetails['projectsInfo'] ?? description,
-                          ),
-                        ),
-                      ),
-                    ],
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Text(
+                    S.of(context).projects,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 24,
+                    ),
                   ),
                 ),
-                SizedBox(
-                  width: 8,
+                infoButton(
+                  context: context,
+                  key: GlobalKey(),
+                  type: InfoType.PROJECTS,
+                  // text: infoDetails['projectsInfo'] ?? description,
                 ),
                 Visibility(
                   visible: isAdminOrOwner,
@@ -127,7 +102,6 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                     ),
                   ),
                 ),
-                Spacer(),
               ],
             ),
           ),

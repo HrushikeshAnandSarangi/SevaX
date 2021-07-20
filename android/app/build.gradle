@@ -55,10 +55,10 @@ android {
         release {
             keyAlias keystoreProperties['keyAlias']
             keyPassword keystoreProperties['keyPassword']
-            storeFile file(keystoreProperties['storeFile'])
+            // storeFile file(keystoreProperties['storeFile'])
             // storeFile file('/Users/xyz/Desktop/seva-exchange/android/key.jks')
-            // storeFile file('Keystore')
-            storePassword keystoreProperties['storePassword']
+//            storeFile file('Keystore')
+//            storePassword keystoreProperties['storePassword']
         }
     }
 
@@ -77,26 +77,26 @@ android {
     flavorDimensions "flavor-type"
 
     productFlavors {
-        HumanityFirst {
-            dimension "flavor-type"
-            applicationIdSuffix ".humanityfirst"
-            resValue "string", "app_name", "Humanity First"
-        }
+//        HumanityFirst {
+//            dimension "flavor-type"
+//            applicationIdSuffix ".humanityfirst"
+//            resValue "string", "app_name", "Humanity First"
+//        }
         App {
             dimension "flavor-type"
             applicationIdSuffix ".sevax"
             resValue "string", "app_name", "SevaX"
         }
-        Tulsi {
-            dimension "flavor-type"
-            applicationIdSuffix ".tulsi_2020"
-            resValue "string", "app_name", "Tulsi 2020"
-        }
-        Tom {
-            dimension "flavor-type"
-            applicationIdSuffix ".tom_2020"
-            resValue "string", "app_name", "Tom 2020"
-        }
+//        Tulsi {
+//            dimension "flavor-type"
+//            applicationIdSuffix ".tulsi_2020"
+//            resValue "string", "app_name", "Tulsi 2020"
+//        }
+//        Tom {
+//            dimension "flavor-type"
+//            applicationIdSuffix ".tom_2020"
+//            resValue "string", "app_name", "Tom 2020"
+//        }
 
         dev {
             dimension "flavor-type"

@@ -121,9 +121,7 @@ class OneToManySpeakerTimeEntryCompleteState
                                             selectedHoursPrepTimeController,
                                         keyboardType: TextInputType.number,
                                         inputFormatters: [
-                                          BlacklistingTextInputFormatter(
-                                            RegExp('[\\.|\\,|\\ |\\-]'),
-                                          ),
+                                          FilteringTextInputFormatter.digitsOnly
                                         ],
                                         decoration: InputDecoration(
                                           //errorText: S.of(context).enter_hours,
@@ -314,7 +312,9 @@ class OneToManySpeakerTimeEntryCompleteState
                             },
                             child: Text(
                               S.of(context).accept,
-                              style: TextStyle(fontWeight: FontWeight.w600),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black),
                             ),
                             elevation: 0,
                             color: Colors.grey[200],
@@ -362,7 +362,9 @@ class OneToManySpeakerTimeEntryCompleteState
                             },
                             child: Text(
                               S.of(context).message,
-                              style: TextStyle(fontWeight: FontWeight.w600),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black),
                             ),
                             elevation: 0,
                             color: Colors.grey[200],

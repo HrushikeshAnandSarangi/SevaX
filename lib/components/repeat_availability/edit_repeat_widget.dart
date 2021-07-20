@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/models.dart';
 
 class A {
@@ -384,7 +385,7 @@ class EditRepeatWidgetState extends State<EditRepeatWidget> {
                                     }).toList(),
                                   ),
                                 ),
-                                Text("${S.of(context).occurences}",
+                                Text("${L.of(context).occurrences}",
                                     textAlign: TextAlign.end,
                                     style: TextStyle(
                                       fontSize: 14,

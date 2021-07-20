@@ -158,8 +158,9 @@ class _TimebankHomePageState extends State<TimebankHomePage>
                                   child: Text(
                                     S.of(context).your_groups,
                                     style: TextStyle(
-                                      fontSize: 16,
+                                      fontSize: 24,
                                       fontWeight: FontWeight.bold,
+                                      color: Colors.black,
                                     ),
                                   ),
                                 ),

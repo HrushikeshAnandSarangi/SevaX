@@ -27,7 +27,7 @@ class CustomTextButton extends StatelessWidget {
         // onSurface: Colors.black,
         // textStyle: TextStyle(color: textColor),
         shape: shape,
-        padding: padding,
+        padding: padding ?? const EdgeInsets.all(12),
       ),
       onPressed: onPressed,
       child: child,
@@ -58,8 +58,8 @@ class CustomElevatedButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        padding: padding,
-        shape: shape,
+        padding: padding ?? const EdgeInsets.all(12),
+        shape: shape ?? StadiumBorder(),
         textStyle: TextStyle(color: textColor ?? Colors.black),
         primary: color ?? Theme.of(context).primaryColor,
         elevation: elevation,

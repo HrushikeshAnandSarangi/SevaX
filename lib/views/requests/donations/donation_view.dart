@@ -1382,9 +1382,9 @@ class _DonationViewState extends State<DonationView> {
     Color textColor,
   }) {
     return Padding(
-      padding: const EdgeInsets.only(top: 5),
+      padding: const EdgeInsets.only(top: 0),
       child: Container(
-        height: 30,
+        height: 37,
         child: CustomElevatedButton(
           textColor: textColor ?? Colors.white,
           onPressed: onPressed,

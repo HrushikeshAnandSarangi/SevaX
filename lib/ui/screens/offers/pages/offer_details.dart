@@ -12,7 +12,6 @@ import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_page_base_bloc.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/bookmarked_offers.dart';
-import 'package:sevaexchange/ui/screens/offers/widgets/images_slider.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/users_circle_avatar_list.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/ui/utils/icons.dart';
@@ -56,22 +55,22 @@ class OfferDetails extends StatelessWidget {
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.topLeft,
-      child: Container(
-        color: Colors.teal,
-        child: ImagesPreview(
-          urls: [
-            "https://picsum.photos/200",
-            "https://picsum.photos/200",
-            "https://picsum.photos/200",
-            "https://picsum.photos/200",
-            "https://picsum.photos/200",
-            "https://picsum.photos/200",
-          ],
-        ),
-      ),
-    );
+    // return Align(
+    //   alignment: Alignment.topLeft,
+    //   child: Container(
+    //     color: Colors.teal,
+    //     child: ImagesPreview(
+    //       urls: [
+    //         "https://picsum.photos/200",
+    //         "https://picsum.photos/200",
+    //         "https://picsum.photos/200",
+    //         "https://picsum.photos/200",
+    //         "https://picsum.photos/200",
+    //         "https://picsum.photos/200",
+    //       ],
+    //     ),
+    //   ),
+    // );
 
     return Column(
       children: <Widget>[

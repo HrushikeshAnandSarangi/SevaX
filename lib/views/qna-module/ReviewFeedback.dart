@@ -304,29 +304,38 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
   ) {
     switch (languageCode) {
       case 'en':
-        return FeedbackConstants.FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_EN;
+        return FeedbackConstants
+            .FEEDBACK_QUESTION_FOR_ONE_TO_MANY_REQUEST_ATTENDEE_EN;
       case 'af':
-        return FeedbackConstants.FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_AF;
+        return FeedbackConstants
+            .FEEDBACK_QUESTION_FOR_ONE_TO_MANY_REQUEST_ATTENDEE_AF;
       case 'sn':
-        return FeedbackConstants.FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_SN;
+        return FeedbackConstants
+            .FEEDBACK_QUESTION_FOR_ONE_TO_MANY_REQUEST_ATTENDEE_SN;
 
       case 'sw':
-        return FeedbackConstants.FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_SW;
+        return FeedbackConstants
+            .FEEDBACK_QUESTION_FOR_ONE_TO_MANY_REQUEST_ATTENDEE_SW;
 
       case 'fr':
-        return FeedbackConstants.FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_FR;
+        return FeedbackConstants
+            .FEEDBACK_QUESTION_FOR_ONE_TO_MANY_REQUEST_ATTENDEE_FR;
 
       case 'pt':
-        return FeedbackConstants.FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_PT;
+        return FeedbackConstants
+            .FEEDBACK_QUESTION_FOR_ONE_TO_MANY_REQUEST_ATTENDEE_PT;
 
       case 'es':
-        return FeedbackConstants.FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_ES;
+        return FeedbackConstants
+            .FEEDBACK_QUESTION_FOR_ONE_TO_MANY_REQUEST_ATTENDEE_ES;
 
       case 'zh':
-        return FeedbackConstants.FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_CN;
+        return FeedbackConstants
+            .FEEDBACK_QUESTION_FOR_ONE_TO_MANY_REQUEST_ATTENDEE_CN;
 
       default:
-        return FeedbackConstants.FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_EN;
+        return FeedbackConstants
+            .FEEDBACK_QUESTION_FOR_ONE_TO_MANY_REQUEST_ATTENDEE_EN;
     }
   }
 
@@ -352,7 +361,7 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
               ),
               Container(
                 margin: EdgeInsets.only(left: 10, bottom: 10, top: 20),
-                alignment: Alignment.centerLeft,
+                alignment: Alignment.center,
                 child: Text(
                   getQuestions(widget.feedbackType)[questionIndex]
                       [FeedbackConstants.FEEDBACK_TITLE],
@@ -489,6 +498,7 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
                 keyboardType: TextInputType.multiline,
                 maxLines: 5,
               ),
+              SizedBox(height: 15),
               Container(
                 width: double.infinity,
                 child: CustomElevatedButton(
