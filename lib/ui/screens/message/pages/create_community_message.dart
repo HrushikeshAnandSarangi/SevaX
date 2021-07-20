@@ -34,30 +34,44 @@ class CreateCommunityMessage extends StatefulWidget {
 }
 
 class _CreateCommunityMessageState extends State<CreateCommunityMessage> {
-  final ParentCommunityMessageBloc bloc = ParentCommunityMessageBloc();
+  ParentCommunityMessageBloc bloc;
 
   final TextEditingController _controller = TextEditingController();
   BuildContext dialogContext;
   List<String> ids = [];
-
+  bool editable = false;
   @override
   void initState() {
     // TODO: implement initState
+    if (widget.bloc != null) {
+      bloc = widget.bloc;
+    } else {
+      bloc = ParentCommunityMessageBloc();
+    }
     WidgetsBinding.instance.addPostFrameCallback(
       (timeStamp) {
-        widget.bloc.init(
+        bloc.init(
           Provider.of<HomePageBaseBloc>(context, listen: false)
               .primaryTimebankModel()
               .id,
         );
+        if (widget.chatModel != null &&
+            !widget.chatModel.groupDetails.admins
+                .contains(SevaCore.of(context).loggedInUser.currentTimebank)) {
+          editable = false;
+        } else {
+          editable = true;
+        }
       },
     );
     if (widget.chatModel != null) {
       bloc.onGroupNameChanged(widget.chatModel.groupDetails.name);
       _controller.text = widget.chatModel.groupDetails.name;
-      widget.bloc.addCurrentParticipants(List<String>.from(
+      bloc.addCurrentParticipants(List<String>.from(
           widget.chatModel.participants.map((x) => x).toList()));
-      widget.bloc.addParticipants(
+      bloc.addPreviousParticipants(List<String>.from(
+          widget.chatModel.participants.map((x) => x).toList()));
+      bloc.addParticipants(
         widget.chatModel.participantInfo
             .where(
               (p) => widget.chatModel.participants.contains(p.id),
@@ -65,7 +79,7 @@ class _CreateCommunityMessageState extends State<CreateCommunityMessage> {
             .toList(),
       );
 
-      widget.bloc.onImageChanged(
+      bloc.onImageChanged(
         MessageRoomImageModel(
           stockImageUrl: widget.chatModel.groupDetails.imageUrl,
         ),
@@ -92,7 +106,9 @@ class _CreateCommunityMessageState extends State<CreateCommunityMessage> {
       appBar: AppBar(
         titleSpacing: 0,
         title: Text(
-          S.of(context).new_message_room,
+          widget.chatModel == null
+              ? S.of(context).new_message_room
+              : widget.chatModel.groupDetails.name,
           style: TextStyle(fontSize: 18),
         ),
         actions: <Widget>[
@@ -113,7 +129,7 @@ class _CreateCommunityMessageState extends State<CreateCommunityMessage> {
                     Provider.of<HomePageBaseBloc>(context, listen: false)
                         .primaryTimebankModel();
                 if (widget.chatModel == null) {
-                  widget.bloc
+                  bloc
                       .createMultiUserMessaging(
                     context,
                     ParticipantInfo(
@@ -131,14 +147,15 @@ class _CreateCommunityMessageState extends State<CreateCommunityMessage> {
                     }
                   });
                 } else {
-                  widget.bloc
+                  bloc
                       .updateCommunityChat(
                           ParticipantInfo(
                               name: timebank.name,
                               id: timebank.id,
                               photoUrl: timebank.photoUrl,
                               type: ChatType.TYPE_MULTI_USER_MESSAGING),
-                          widget.chatModel)
+                          widget.chatModel,
+                          context)
                       .then((_) {
                     if (dialogContext != null) {
                       Navigator.of(dialogContext).pop();
@@ -192,7 +209,7 @@ class _CreateCommunityMessageState extends State<CreateCommunityMessage> {
                               ),
                         onStockImageChanged: (String stockImageUrl) {
                           if (stockImageUrl != null) {
-                            widget.bloc.onImageChanged(MessageRoomImageModel(
+                            bloc.onImageChanged(MessageRoomImageModel(
                                 stockImageUrl: stockImageUrl));
                           }
                         },
@@ -211,7 +228,7 @@ class _CreateCommunityMessageState extends State<CreateCommunityMessage> {
                     children: <Widget>[
                       Divider(),
                       StreamBuilder<String>(
-                        stream: widget.bloc.groupName,
+                        stream: bloc.groupName,
                         builder: (context, snapshot) {
                           // _controller.value = _controller.value.copyWith(
                           //   text: snapshot.data,
@@ -221,7 +238,7 @@ class _CreateCommunityMessageState extends State<CreateCommunityMessage> {
                           return CustomTextField(
                             value: snapshot.data != null ? snapshot.data : null,
                             controller: _controller,
-                            onChanged: widget.bloc.onGroupNameChanged,
+                            onChanged: bloc.onGroupNameChanged,
                             decoration: InputDecoration(
                               errorMaxLines: 2,
                               border: InputBorder.none,
@@ -256,7 +273,7 @@ class _CreateCommunityMessageState extends State<CreateCommunityMessage> {
               ],
             ),
             StreamBuilder<List<String>>(
-                stream: widget.bloc.selectedTimebanks,
+                stream: bloc.selectedTimebanks,
                 builder: (context, snapshot) {
                   log('len  ${snapshot.data.length}');
                   return Container(
@@ -275,7 +292,7 @@ class _CreateCommunityMessageState extends State<CreateCommunityMessage> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: StreamBuilder<List<ParticipantInfo>>(
-                stream: widget.bloc.selectedTimebanksInfo,
+                stream: bloc.selectedTimebanksInfo,
                 builder: (context, snapshot) {
                   if ((snapshot.data?.length ?? 0) <= 0) {
                     return Container();
@@ -287,8 +304,7 @@ class _CreateCommunityMessageState extends State<CreateCommunityMessage> {
                         (index) => SelectedMemberWidget(
                           info: snapshot.data[index],
                           onRemovePressed: () {
-                            widget.bloc
-                                .selectParticipant(snapshot.data[index].id);
+                            bloc.selectParticipant(snapshot.data[index].id);
                           },
                         ),
                       ),
@@ -374,7 +390,7 @@ class _CreateCommunityMessageState extends State<CreateCommunityMessage> {
         deleteFireBaseImage(imageUrl: imageUrl).then((value) {
           if (value) {}
         }).catchError((e) => log(e));
-        widget.bloc.onImageChanged(MessageRoomImageModel(selectedImage: file));
+        bloc.onImageChanged(MessageRoomImageModel(selectedImage: file));
         progressDialog.hide();
       }
     }

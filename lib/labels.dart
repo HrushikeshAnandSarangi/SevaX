@@ -643,6 +643,11 @@ class L {
   String get occurrences => "Occurrences";
   String get deleted_events_create_request_message =>
       "This event is going to be deleted. As a result, requests cannot be created.";
+  String get occurrence => 'Occurrence';
+  String get new_comminity_message => "New Community Message";
+  String get go_to_community_chat => "Go To Community Chats";
+  String get no_child_communities => "No Child Communities";
+  String get community_chat => "Community Chat";
 }
 
 // // <--------  IRRELEVANT FOR NOW  --------->
