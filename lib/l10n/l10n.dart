@@ -1631,7 +1631,7 @@ class S {
       );
 
   String get occurences => Intl.message(
-        'Occurences',
+        'Occurrence',
         name: 'occurences',
       );
 
@@ -3836,56 +3836,70 @@ class S {
       );
 
   String timebank_project(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Seva Community Project', other: 'Seva Community Projects', args: [count])}',
-        name: 'timebank_project',        
+        '${Intl.plural(count, one: 'Seva Community Project', other: 'Seva Community Projects', args: [
+              count
+            ])}',
+        name: 'timebank_project',
         args: [count],
       );
 
   String personal_project(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Personal Project', other: 'Personal Projects', args: [count])}',
-        name: 'personal_project',        
+        '${Intl.plural(count, one: 'Personal Project', other: 'Personal Projects', args: [
+              count
+            ])}',
+        name: 'personal_project',
         args: [count],
       );
 
   String personal_request(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Personal Request', other: 'Personal Requests', args: [count])}',
-        name: 'personal_request',        
+        '${Intl.plural(count, one: 'Personal Request', other: 'Personal Requests', args: [
+              count
+            ])}',
+        name: 'personal_request',
         args: [count],
       );
 
   String timebank_request(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Seva Community Request', other: 'Seva Community Requests', args: [count])}',
-        name: 'timebank_request',        
+        '${Intl.plural(count, one: 'Seva Community Request', other: 'Seva Community Requests', args: [
+              count
+            ])}',
+        name: 'timebank_request',
         args: [count],
       );
 
   String members_selected(num count) => Intl.message(
-        '${Intl.plural(count, one: 'member selected', other: 'members selected', args: [count])}',
-        name: 'members_selected',        
+        '${Intl.plural(count, one: 'member selected', other: 'members selected', args: [
+              count
+            ])}',
+        name: 'members_selected',
         args: [count],
       );
 
   String volunteers_selected(num count) => Intl.message(
-        '${Intl.plural(count, one: 'volunteer selected', other: 'volunteers selected', args: [count])}',
-        name: 'volunteers_selected',        
+        '${Intl.plural(count, one: 'volunteer selected', other: 'volunteers selected', args: [
+              count
+            ])}',
+        name: 'volunteers_selected',
         args: [count],
       );
 
   String user(num count) => Intl.message(
         '${Intl.plural(count, one: 'user', other: 'users', args: [count])}',
-        name: 'user',        
+        name: 'user',
         args: [count],
       );
 
   String other(num count) => Intl.message(
         '${Intl.plural(count, one: 'Other', other: 'Others', args: [count])}',
-        name: 'other',        
+        name: 'other',
         args: [count],
       );
 
   String subscription(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Subscription', other: 'Subscriptions', args: [count])}',
-        name: 'subscription',        
+        '${Intl.plural(count, one: 'Subscription', other: 'Subscriptions', args: [
+              count
+            ])}',
+        name: 'subscription',
         args: [count],
       );
 
@@ -4021,13 +4035,13 @@ class S {
 
   String day(num count) => Intl.message(
         '${Intl.plural(count, one: 'Day', other: 'Days', args: [count])}',
-        name: 'day',        
+        name: 'day',
         args: [count],
       );
 
   String year(num count) => Intl.message(
         '${Intl.plural(count, one: 'Year', other: 'Years', args: [count])}',
-        name: 'year',        
+        name: 'year',
         args: [count],
       );
 
@@ -6901,7 +6915,7 @@ class S {
         name: 'camera_not_available',
       );
 
-  String get loading_camera  => Intl.message(
+  String get loading_camera => Intl.message(
         'Loading Camera...',
         name: 'loading_camera ',
       );
@@ -6926,7 +6940,7 @@ class S {
         name: 'update_msg',
       );
 
-  String get member_permission  => Intl.message(
+  String get member_permission => Intl.message(
         'Member Permission',
         name: 'member_permission ',
       );
@@ -6986,7 +7000,7 @@ class S {
         name: 'click_to_view_request_agreement',
       );
 
-  String get enter_prep_time  => Intl.message(
+  String get enter_prep_time => Intl.message(
         'Enter Prep Time',
         name: 'enter_prep_time ',
       );
@@ -7026,7 +7040,7 @@ class S {
         name: 'reliabilitysocre',
       );
 
-  String get cv_not_available  => Intl.message(
+  String get cv_not_available => Intl.message(
         'CV not available',
         name: 'cv_not_available ',
       );
@@ -7561,7 +7575,7 @@ class S {
         name: 'and_complete_task',
       );
 
-  String get remove_from_bookmark  => Intl.message(
+  String get remove_from_bookmark => Intl.message(
         'Remove from bookmarks',
         name: 'remove_from_bookmark ',
       );
@@ -7655,7 +7669,7 @@ class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {
         Locale.fromSubtags(languageCode: 'sw'),
         Locale.fromSubtags(languageCode: 'en'),
         Locale.fromSubtags(languageCode: 'fr'),
-  ];
+      ];
 
   @override
   bool isSupported(Locale locale) => [

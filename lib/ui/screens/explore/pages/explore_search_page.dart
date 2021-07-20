@@ -189,7 +189,7 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
         "Hobbies & Crafts",
         "Fashion & Beauty",
         "Social",
-        "Career & Buisness",
+        "Career & Business",
       ];
 
   List<String> get _tabsText => ["Communities", "Events", "Requests", "Offers"];
