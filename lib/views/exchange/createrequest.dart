@@ -1555,7 +1555,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
         ]);
   }
 
-  Widget RequestPaymentZellePay(RequestModel requestModel) {
+  Widget RequestPaymentZellePay() {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -1700,7 +1700,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
         ]);
   }
 
-  Widget RequestPaymentSwift(RequestModel requestModel) {
+  Widget RequestPaymentSwift() {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -1748,26 +1748,17 @@ class RequestCreateFormState extends State<RequestCreateForm>
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(
-            S.of(context).other_details,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Europa',
-              color: Colors.black,
-            ),
-          ),
           TextFormField(
             autovalidateMode: AutovalidateMode.onUserInteraction,
             onChanged: (value) {},
             focusNode: focusNodes[0],
             onFieldSubmitted: (v) {
-              FocusScope.of(context).requestFocus(focusNodes[1]);
+              FocusScope.of(context).unfocus();
             },
             textInputAction: TextInputAction.next,
             decoration: InputDecoration(
               errorMaxLines: 2,
-              hintText: S.of(context).other_details,
+              hintText: 'Provide other payment mode details',
               hintStyle: hintTextStyle,
             ),
             keyboardType: TextInputType.multiline,
@@ -1776,6 +1767,9 @@ class RequestCreateFormState extends State<RequestCreateForm>
               requestModel.cashModel.others = value;
             },
             validator: (value) {
+              if (value.isEmpty || value == null) {
+                return S.of(context).validation_error_general_text;
+              }
               if (!value.isEmpty && profanityDetector.isProfaneString(value)) {
                 return S.of(context).profanity_text_alert;
               } else {
@@ -1852,6 +1846,15 @@ class RequestCreateFormState extends State<RequestCreateForm>
             setState(() => {});
           },
         ),
+        _optionRadioButton<RequestPaymentType>(
+          title: S.of(context).other(2),
+          value: RequestPaymentType.OTHER,
+          groupvalue: requestModel.cashModel.paymentType,
+          onChanged: (value) {
+            requestModel.cashModel.paymentType = value;
+            setState(() => {});
+          },
+        ),
         requestModel.cashModel.paymentType == RequestPaymentType.ACH
             ? RequestPaymentACH(requestModel)
             : requestModel.cashModel.paymentType == RequestPaymentType.PAYPAL
@@ -1860,12 +1863,11 @@ class RequestCreateFormState extends State<RequestCreateForm>
                     ? RequestPaymentVenmo(requestModel)
                     : requestModel.cashModel.paymentType ==
                             RequestPaymentType.SWIFT
-                        ? RequestPaymentSwift(requestModel)
-                        : RequestPaymentZellePay(requestModel),
-        SizedBox(
-          height: 15,
-        ),
-        OtherDetailsWidget()
+                        ? RequestPaymentSwift()
+                        : requestModel.cashModel.paymentType ==
+                                RequestPaymentType.OTHER
+                            ? OtherDetailsWidget()
+                            : RequestPaymentZellePay(),
       ],
     );
   }

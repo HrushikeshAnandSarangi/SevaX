@@ -78,7 +78,9 @@ class CashModel {
                         ? RequestPaymentType.VENMO
                         : json["paymentType"] == 'RequestPaymentType.SWIFT'
                             ? RequestPaymentType.SWIFT
-                            : RequestPaymentType.PAYPAL,
+                            : json["paymentType"] == 'RequestPaymentType.OTHER'
+                                ? RequestPaymentType.OTHER
+                                : RequestPaymentType.PAYPAL,
         amountRaised:
             json["amountRaised"] == null ? null : json["amountRaised"],
         donors: json["donors"] == null
