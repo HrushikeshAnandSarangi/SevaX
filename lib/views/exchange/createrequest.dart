@@ -3260,6 +3260,10 @@ class RequestCreateFormState extends State<RequestCreateForm>
             //selectedInstructorModel.sevaUserID != requestModel.sevaUserId &&
             requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
           if (selectedInstructorModel.sevaUserID == requestModel.sevaUserId) {
+            requestModel.approvedUsers = [];
+            List<String> approvedUsers = [];
+            approvedUsers.add(requestModel.email);
+            requestModel.approvedUsers = approvedUsers;
             log('speaker is creator');
           } else if (selectedInstructorModel.communities
                   .contains(requestModel.communityId) &&
@@ -3309,6 +3313,10 @@ class RequestCreateFormState extends State<RequestCreateForm>
             //selectedInstructorModel.sevaUserID != requestModel.sevaUserId &&
             requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
           if (selectedInstructorModel.sevaUserID == requestModel.sevaUserId) {
+            requestModel.approvedUsers = [];
+            List<String> approvedUsers = [];
+            approvedUsers.add(requestModel.email);
+            requestModel.approvedUsers = approvedUsers;
             log('speaker is creator');
           } else if (selectedInstructorModel.communities
                   .contains(requestModel.communityId) &&

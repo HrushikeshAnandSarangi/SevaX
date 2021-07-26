@@ -17,6 +17,7 @@ import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/tasks/my_tasks_list.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
 
 import '../../flavor_config.dart';
@@ -168,29 +169,27 @@ class ToDo {
           model.accepted == false) {
         widgetList.add(
           ToDoCard(
+            requestModel: model,
+            isSpeaker: true,
             title: model.title,
             subTitle: model.description,
             timeInMilliseconds: model.requestStart,
             onTap: () {
               model.isSpeakerCompleted
-                  ? CompletedTasks.showMyTaskDialog(
-                      context: context,
-                      title:
-                          L.of(context).to_do_one_to_many_request_speaker_title,
-                      subTitle: L
-                          .of(context)
-                          .to_do_one_to_many_request_speaker_subtitle,
-                    )
+                  ? log("")
                   : Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) {
                           return OneToManySpeakerTimeEntryComplete(
+                            fromNotification: false,
+                            userModel: SevaCore.of(context).loggedInUser,
                             requestModel: model,
                             onFinish: () async {
                               await oneToManySpeakerCompletesRequest(
-                                  context, model);
+                                context,
+                                model,
+                              );
                             },
-                            fromNotification: false,
                           );
                         },
                       ),
@@ -333,13 +332,16 @@ class ToDoTag extends StatelessWidget {
 
 class ToDoCard extends StatelessWidget {
   ToDoCard({
+    this.requestModel,
+    this.isSpeaker = false,
     this.onTap,
     this.tag,
     this.title,
     this.subTitle,
     this.timeInMilliseconds,
   });
-
+  final RequestModel requestModel;
+  final bool isSpeaker;
   final Function onTap;
   final String tag;
   final String title;
@@ -375,9 +377,46 @@ class ToDoCard extends StatelessWidget {
               padding: const EdgeInsets.only(
                 left: 8.0,
                 right: 8.0,
-                bottom: 12,
+                bottom: 8,
               ),
               child: Text(subTitle),
+            ),
+          ),
+          HideWidget(
+            hide: !isSpeaker,
+            child: Padding(
+              padding: const EdgeInsets.only(
+                left: 5.0,
+                right: 5.0,
+                bottom: 10,
+              ),
+              child: CustomElevatedButton(
+                color: Theme.of(context).accentColor,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 7, right: 7),
+                  child: Text(
+                    S.of(context).speaker_claim_credits,
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return OneToManySpeakerTimeEntryComplete(
+                          userModel: SevaCore.of(context).loggedInUser,
+                          requestModel: requestModel,
+                          onFinish: () async {
+                            await ToDo.oneToManySpeakerCompletesRequest(
+                                context, requestModel);
+                          },
+                          fromNotification: false,
+                        );
+                      },
+                    ),
+                  );
+                },
+              ),
             ),
           ),
           Padding(
