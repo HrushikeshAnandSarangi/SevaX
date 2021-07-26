@@ -11,6 +11,7 @@ import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/request/pages/oneToManySpeakerTimeEntryComplete_page.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
+import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/completed_tasks.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 
@@ -20,8 +21,8 @@ import 'package:sevaexchange/views/tasks/my_tasks_list.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
 
-import '../../flavor_config.dart';
-import '../../labels.dart';
+import '../../../../flavor_config.dart';
+import '../../../../labels.dart';
 
 class ToDo {
   static Stream<List<RequestModel>> getSignedUpOneToManyRequests({
@@ -50,6 +51,7 @@ class ToDo {
   }) async* {
     var data = CollectionRef.requests
         .where('approvedUsers', arrayContains: userEmail)
+        .where('isSpeakerCompleted', isEqualTo: false)
         .where("root_timebank_id", isEqualTo: FlavorConfig.values.timebankId)
         .snapshots();
 
@@ -181,7 +183,6 @@ class ToDo {
                       MaterialPageRoute(
                         builder: (context) {
                           return OneToManySpeakerTimeEntryComplete(
-                            fromNotification: false,
                             userModel: SevaCore.of(context).loggedInUser,
                             requestModel: model,
                             onFinish: () async {
@@ -190,6 +191,7 @@ class ToDo {
                                 model,
                               );
                             },
+                            isFromtasks: true,
                           );
                         },
                       ),
@@ -198,9 +200,9 @@ class ToDo {
             tag: L.of(context).one_to_many_request_speaker,
           ),
         );
-        // } else if (model.requestType == RequestType.ONE_TO_MANY_REQUEST &&
-        //     model.accepted == true) {
-        //   //
+      } else if (model.requestType == RequestType.ONE_TO_MANY_REQUEST &&
+          model.accepted == true) {
+        //
       } else {
         widgetList.add(
           ToDoCard(
@@ -249,17 +251,19 @@ class ToDo {
     //Created One to many Offers
     List<OfferModel> createdOneToManyOffers = toDoSink[2];
     createdOneToManyOffers.forEach((element) {
-      widgetList.add(ToDoCard(
-        onTap: () => CompletedTasks.showMyTaskDialog(
-          context: context,
-          title: L.of(context).to_do_one_to_many_request_speaker_title,
-          subTitle: L.of(context).to_do_one_to_many_request_speaker_subtitle,
+      widgetList.add(
+        ToDoCard(
+          onTap: () => CompletedTasks.showMyTaskDialog(
+            context: context,
+            title: L.of(context).to_do_one_to_many_reuqest_speaker_title,
+            subTitle: L.of(context).to_do_one_to_many_reuqest_speaker_subtitle,
+          ),
+          title: element.groupOfferDataModel.classTitle,
+          subTitle: element.groupOfferDataModel.classDescription,
+          tag: L.of(context).one_to_many_offer_speaker,
+          timeInMilliseconds: element.groupOfferDataModel.startDate,
         ),
-        title: element.groupOfferDataModel.classTitle,
-        subTitle: element.groupOfferDataModel.classDescription,
-        tag: L.of(context).one_to_many_offer_speaker,
-        timeInMilliseconds: element.groupOfferDataModel.startDate,
-      ));
+      );
     });
 
     //Attendee for one to many request
@@ -313,8 +317,12 @@ class ToDo {
 }
 
 class ToDoTag extends StatelessWidget {
-  ToDoTag({this.tag});
+  ToDoTag({
+    this.tag,
+    this.color,
+  });
   final String tag;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
@@ -322,7 +330,7 @@ class ToDoTag extends StatelessWidget {
       text: TextSpan(
         style: TextStyle(
           fontWeight: FontWeight.bold,
-          color: Colors.blue,
+          color: color ?? Theme.of(context).primaryColor,
         ),
         text: tag,
       ),
@@ -365,6 +373,8 @@ class ToDoCard extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: Text(
               title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -377,23 +387,27 @@ class ToDoCard extends StatelessWidget {
               padding: const EdgeInsets.only(
                 left: 8.0,
                 right: 8.0,
-                bottom: 8,
+                bottom: 12,
               ),
-              child: Text(subTitle),
+              child: Text(
+                subTitle,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
           ),
           HideWidget(
             hide: !isSpeaker,
             child: Padding(
               padding: const EdgeInsets.only(
-                left: 5.0,
-                right: 5.0,
-                bottom: 10,
+                left: 8.0,
+                right: 8.0,
+                bottom: 12,
               ),
               child: CustomElevatedButton(
                 color: Theme.of(context).accentColor,
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 7, right: 7),
+                  padding: const EdgeInsets.only(left: 10, right: 10),
                   child: Text(
                     S.of(context).speaker_claim_credits,
                     style: TextStyle(color: Colors.white),
@@ -410,7 +424,7 @@ class ToDoCard extends StatelessWidget {
                             await ToDo.oneToManySpeakerCompletesRequest(
                                 context, requestModel);
                           },
-                          fromNotification: false,
+                          isFromtasks: true,
                         );
                       },
                     ),

@@ -9,20 +9,23 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class OneToManySpeakerTimeEntryComplete extends StatefulWidget {
   final RequestModel requestModel;
   final VoidCallback onFinish;
   final UserModel userModel;
-  final bool fromNotification;
-  // TODO needs flow correction to tasks model
+  final bool isFromtasks;
+
   OneToManySpeakerTimeEntryComplete(
       {@required this.requestModel,
       @required this.onFinish,
       this.userModel,
-      @required this.fromNotification});
+      @required this.isFromtasks});
 
   @override
   OneToManySpeakerTimeEntryCompleteState createState() =>
@@ -302,6 +305,18 @@ class OneToManySpeakerTimeEntryCompleteState
                                     .pop(); //this is to pop loader
 
                                 widget.onFinish();
+
+                                if (widget.isFromtasks) {
+                                  await FirestoreManager
+                                      .readUserNotificationOneToManyWhenSpeakerIsRejectedCompletion(
+                                          requestModel: requestModel,
+                                          userEmail: SevaCore.of(context)
+                                              .loggedInUser
+                                              .email,
+                                          fromNotification: false);
+
+                                  Navigator.of(context).pop();
+                                }
 
                                 Navigator.of(context).pop();
                                 //Navigator.of(context).pop();

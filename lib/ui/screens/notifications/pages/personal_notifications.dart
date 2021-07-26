@@ -453,7 +453,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                         oneToManyRequestModel);
                                     await onDismissed();
                                   },
-                                  fromNotification: true,
+                                  isFromtasks: false,
                                 );
                               },
                             ),
