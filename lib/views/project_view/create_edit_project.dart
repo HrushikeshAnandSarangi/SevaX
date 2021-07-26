@@ -196,8 +196,16 @@ class _CreateEditProjectState extends State<CreateEditProject> {
       child: Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              globals.projectsAvtaarURL = null;
+              globals.projectsCoverURL = null;
+              Navigator.of(context).pop();
+            },
+          ),
           elevation: 0.5,
-          automaticallyImplyLeading: true,
+          // automaticallyImplyLeading: true,
           centerTitle: true,
           title: Text(
             widget.isCreateProject

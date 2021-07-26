@@ -61,7 +61,7 @@ class OneToManySpeakerTimeEntryCompleteState
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(
-          color: Colors.black, //change your color here
+          color: Colors.white, //change your color here
         ),
         backgroundColor: Theme.of(context).primaryColor,
         title: Text(
