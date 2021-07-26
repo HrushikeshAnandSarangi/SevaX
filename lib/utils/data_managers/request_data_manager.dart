@@ -2106,6 +2106,32 @@ Future oneToManyCreatorRequestCompletionRejected(
   log('oneToManyCreatorRequestCompletionRejected end of function');
 }
 
+//for one to many request when speaker has already claimed credits, so pending task
+Stream<List<RequestModel>> getSpeakerClaimedCompletionRequestStream({
+  @required String userEmail,
+  @required String userId,
+}) async* {
+  var data = CollectionRef.requests
+      .where('approvedUsers', arrayContains: userEmail)
+      .where('isSpeakerCompleted', isEqualTo: true)
+      .where('accepted', isEqualTo: false)
+      // .where('timebankId', isEqualTo: FlavorConfig.values.timebankId)
+      .snapshots();
+
+  yield* data.transform(
+    StreamTransformer<QuerySnapshot, List<RequestModel>>.fromHandlers(
+      handleData: (snapshot, requestSink) {
+        List<RequestModel> requestListSpeakerClaimed = [];
+        snapshot.docs.forEach((document) {
+          RequestModel model = RequestModel.fromMap(document.data());
+          requestListSpeakerClaimed.add(model);
+        });
+        requestSink.add(requestListSpeakerClaimed);
+      },
+    ),
+  );
+}
+
 //getALl the categories
 Stream<List<CategoryModel>> getAllCategoriesStream() async* {
   var data = CollectionRef.requestCategories

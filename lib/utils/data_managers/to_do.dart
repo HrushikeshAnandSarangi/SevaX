@@ -252,8 +252,8 @@ class ToDo {
       widgetList.add(ToDoCard(
         onTap: () => CompletedTasks.showMyTaskDialog(
           context: context,
-          title: L.of(context).to_do_one_to_many_offer_speaker_title,
-          subTitle: L.of(context).to_do_one_to_many_offer_speaker_subtitle,
+          title: L.of(context).to_do_one_to_many_request_speaker_title,
+          subTitle: L.of(context).to_do_one_to_many_request_speaker_subtitle,
         ),
         title: element.groupOfferDataModel.classTitle,
         subTitle: element.groupOfferDataModel.classDescription,

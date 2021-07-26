@@ -11,6 +11,7 @@ import 'package:meta/meta.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/invitation_model.dart';
 import 'package:sevaexchange/models/models.dart' as prefix0;
+import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/reports_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/card_model.dart';
@@ -396,6 +397,20 @@ Future<TimebankModel> getTimeBankForId({@required String timebankId}) async {
   });
 
   return timeBankModel;
+}
+
+/// Get a particular Timebank by it's ID
+Future<OfferModel> getOfferFromId({@required String offerId}) async {
+  OfferModel offerModel;
+  await CollectionRef.offers.doc(offerId).get().then(
+      (DocumentSnapshot documentSnapshot) {
+    Map<String, dynamic> dataMap = documentSnapshot.data();
+    offerModel = OfferModel.fromMap(dataMap);
+    offerModel.id = offerModel.id;
+  }).catchError(
+      (value) => logger.e('ERROR CATCH Timebank Details: ' + value.toString()));
+
+  return offerModel;
 }
 
 Future updateCommunity({@required CommunityModel communityModel}) async {

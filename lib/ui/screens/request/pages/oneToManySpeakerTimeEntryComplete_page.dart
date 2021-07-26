@@ -58,12 +58,12 @@ class OneToManySpeakerTimeEntryCompleteState
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(
-          color: Colors.white, //change your color here
+          color: Colors.black, //change your color here
         ),
         backgroundColor: Theme.of(context).primaryColor,
         title: Text(
           requestModel.title,
-          style: TextStyle(fontSize: 18, color: Colors.white),
+          style: TextStyle(fontSize: 18),
         ),
       ),
       body: GestureDetector(
