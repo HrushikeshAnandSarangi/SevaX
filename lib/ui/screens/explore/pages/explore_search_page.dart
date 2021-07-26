@@ -122,7 +122,10 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
                 onChanged: _bloc.onSearchChange,
                 decoration: InputDecoration(
                   hintText: S.of(context).explore_search_hint,
-                  hintStyle: TextStyle(color: Colors.grey, fontSize: 12),
+                  hintStyle: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 12,
+                  ),
                   border: OutlineInputBorder(
                     borderSide: BorderSide.none,
                     borderRadius: BorderRadius.circular(40),
@@ -134,19 +137,27 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
                   filled: true,
                   fillColor: Colors.white,
                   prefixIcon: Icon(Icons.search),
-                  suffixIcon: CustomTextButton(
-                    child: Text(
-                      S.of(context).search,
-                      style: TextStyle(color: Colors.white),
+                  suffixIcon: Padding(
+                    padding: const EdgeInsets.fromLTRB(2, 5, 5, 5),
+                    child: CustomTextButton(
+                      padding: EdgeInsets.all(2),
+                      child: Text(
+                        S.of(context).search,
+                        style: TextStyle(
+                          color: Colors.white,
+                          // fontSize: 10,
+                        ),
+                      ),
+                      textColor: Colors.white,
+                      color: Colors.orange,
+                      shape: StadiumBorder(),
+                      // RoundedRectangleBorder(
+                      //   borderRadius: BorderRadius.circular(20),
+                      // ),
+                      onPressed: () {
+                        FocusScope.of(context).unfocus();
+                      },
                     ),
-                    textColor: Colors.white,
-                    color: Colors.orange,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    onPressed: () {
-                      FocusScope.of(context).unfocus();
-                    },
                   ),
                   contentPadding: const EdgeInsets.symmetric(vertical: 4),
                 ),

@@ -51,6 +51,11 @@ class ExplorePage extends StatefulWidget {
   _ExplorePageState createState() => _ExplorePageState();
 }
 
+final searchBorder = OutlineInputBorder(
+  borderSide: BorderSide(color: Colors.grey),
+  borderRadius: BorderRadius.circular(40),
+);
+
 List findCardsData = [
   {
     'imageUrl':
@@ -156,52 +161,111 @@ class _ExplorePageState extends State<ExplorePage> {
                       ),
                     ),
                     SizedBox(height: 20),
-                    Stack(
-                      children: [
-                        SearchBar(
-                          controller: _searchController,
+                    SizedBox(
+                      height: 40,
+                      child: TextField(
+                        controller: _searchController,
+                        onChanged: _bloc.onSearchChange,
+                        decoration: InputDecoration(
                           hintText: S.of(context).explore_search_hint,
-                          onChanged: null,
-                        ),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 7, right: 10),
-                            child: Container(
-                              width: 120,
-                              height: 32,
-                              child: CustomElevatedButton(
-                                padding: EdgeInsets.only(left: 8, right: 8),
-                                color: Color.fromRGBO(245, 166, 35, 1),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
+                          hintStyle: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 12,
+                          ),
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide.none,
+                            borderRadius: BorderRadius.circular(40),
+                          ),
+                          enabledBorder: searchBorder,
+                          focusedBorder: searchBorder,
+                          disabledBorder: searchBorder,
+                          errorBorder: searchBorder,
+                          filled: true,
+                          fillColor: Colors.white,
+                          prefixIcon: Icon(Icons.search),
+                          suffixIcon: Padding(
+                            padding: const EdgeInsets.fromLTRB(2, 5, 5, 5),
+                            child: CustomTextButton(
+                              padding: EdgeInsets.all(2),
+                              child: Text(
+                                S.of(context).search,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  // fontSize: 10,
                                 ),
-                                child: Text(
-                                  S.of(context).search,
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                                onPressed: () {
-                                  if (_searchController.text != null ||
-                                      _searchController.text.isNotEmpty) {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) => ExploreSearchPage(
-                                          searchText: _searchController.text,
-                                          isUserSignedIn: widget.isUserSignedIn,
-                                        ),
-                                      ),
-                                    );
-                                  }
-                                },
                               ),
+                              textColor: Colors.white,
+                              color: Colors.orange,
+                              shape: StadiumBorder(),
+                              // RoundedRectangleBorder(
+                              //   borderRadius: BorderRadius.circular(20),
+                              // ),
+                              onPressed: () {
+                                if (_searchController.text != null ||
+                                    _searchController.text.isNotEmpty) {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => ExploreSearchPage(
+                                        searchText: _searchController.text,
+                                        isUserSignedIn: widget.isUserSignedIn,
+                                      ),
+                                    ),
+                                  );
+                                }
+                              },
                             ),
                           ),
+                          contentPadding:
+                              const EdgeInsets.symmetric(vertical: 4),
                         ),
-                      ],
+                      ),
                     ),
+                    // Stack(
+                    //   children: [
+                    //     SearchBar(
+                    //       controller: _searchController,
+                    //       hintText: S.of(context).explore_search_hint,
+                    //       onChanged: null,
+                    //     ),
+                    //     Align(
+                    //       alignment: Alignment.centerRight,
+                    //       child: Padding(
+                    //         padding: const EdgeInsets.only(top: 7, right: 10),
+                    //         child: Container(
+                    //           width: 120,
+                    //           height: 32,
+                    //           child: CustomElevatedButton(
+                    //             padding: EdgeInsets.only(left: 8, right: 8),
+                    //             color: Color.fromRGBO(245, 166, 35, 1),
+                    //             shape: RoundedRectangleBorder(
+                    //               borderRadius: BorderRadius.circular(20),
+                    //             ),
+                    //             child: Text(
+                    //               S.of(context).search,
+                    //               style: TextStyle(
+                    //                 color: Colors.white,
+                    //                 fontSize: 14,
+                    //               ),
+                    //             ),
+                    //             onPressed: () {
+                    //               if (_searchController.text != null ||
+                    //                   _searchController.text.isNotEmpty) {
+                    //                 Navigator.of(context).push(
+                    //                   MaterialPageRoute(
+                    //                     builder: (context) => ExploreSearchPage(
+                    //                       searchText: _searchController.text,
+                    //                       isUserSignedIn: widget.isUserSignedIn,
+                    //                     ),
+                    //                   ),
+                    //                 );
+                    //               }
+                    //             },
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
                   ],
                 ),
                 SizedBox(height: 40),

@@ -194,7 +194,7 @@ class _NearbySettingsWidgetState extends State<NearbySettingsWidget> {
 
   Container titleAndSubTitle() {
     return Container(
-      margin: EdgeInsets.only(left: 10, right: 20),
+      margin: EdgeInsets.only(left: 10, right: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
