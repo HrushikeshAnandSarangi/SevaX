@@ -655,6 +655,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                   S.of(context).cancel,
                   style: TextStyle(
                     fontSize: 16,
+                    color: Colors.white,
                   ),
                 ),
                 onPressed: () {
