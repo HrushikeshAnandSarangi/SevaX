@@ -63,6 +63,7 @@ import 'package:sevaexchange/widgets/user_profile_image.dart';
 import 'package:usage/uuid/uuid.dart';
 
 import '../../flavor_config.dart';
+import '../../labels.dart';
 
 class EditRequest extends StatefulWidget {
   final bool isOfferRequest;
@@ -187,7 +188,7 @@ class RequestEditFormState extends State<RequestEditForm> {
   String tempProjectId = '';
 
   End end = End();
-  var focusNodes = List.generate(16, (_) => FocusNode());
+  var focusNodes = List.generate(17, (_) => FocusNode());
 
   double sevaCoinsValue = 0;
   String hoursMessage = ' Click to Set Duration';
@@ -1574,12 +1575,20 @@ class RequestEditFormState extends State<RequestEditForm> {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
+          Text(
+            L.of(context).other_payment_name,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
           TextFormField(
             autovalidateMode: AutovalidateMode.onUserInteraction,
             onChanged: (value) {},
             focusNode: focusNodes[0],
             onFieldSubmitted: (v) {
-              FocusScope.of(context).unfocus();
+              FocusScope.of(context).autofocus(focusNodes[17]);
             },
             textInputAction: TextInputAction.next,
             decoration: InputDecoration(
@@ -1603,6 +1612,49 @@ class RequestEditFormState extends State<RequestEditForm> {
                 return S.of(context).profanity_text_alert;
               } else {
                 widget.requestModel.cashModel.others = value;
+                return null;
+              }
+            },
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Text(
+            L.of(context).other_payment_details,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
+          TextFormField(
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            focusNode: focusNodes[17],
+            onChanged: (value) {},
+            onFieldSubmitted: (v) {
+              FocusScope.of(context).unfocus();
+            },
+            textInputAction: TextInputAction.next,
+            keyboardType: TextInputType.multiline,
+            maxLines: 1,
+            onSaved: (value) {
+              widget.requestModel.cashModel.other_details = value;
+            },
+            decoration: InputDecoration(
+              errorMaxLines: 2,
+              hintText: L.of(context).other_payment_details_hint,
+            ),
+            initialValue: widget.requestModel.cashModel.other_details != null
+                ? widget.requestModel.cashModel.other_details
+                : '',
+            validator: (value) {
+              if (value.isEmpty || value == null) {
+                return S.of(context).validation_error_general_text;
+              }
+              if (!value.isEmpty && profanityDetector.isProfaneString(value)) {
+                return S.of(context).profanity_text_alert;
+              } else {
+                widget.requestModel.cashModel.other_details = value;
                 return null;
               }
             },
