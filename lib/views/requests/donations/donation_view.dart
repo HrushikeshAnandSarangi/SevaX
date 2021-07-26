@@ -20,6 +20,8 @@ import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../labels.dart';
+
 class DonationView extends StatefulWidget {
   final RequestModel requestModel;
   final OfferModel offerModel;
@@ -42,7 +44,9 @@ class _DonationViewState extends State<DonationView> {
   final GlobalKey<FormState> _formKey = GlobalKey();
   final DonationBloc donationBloc = DonationBloc();
   ProgressDialog progressDialog;
-
+  RegExp emailPattern = RegExp(
+      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+  String mobilePattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
   List<String> donationsCategories = [];
   int amountEntered = 0;
   Map selectedList = {};
@@ -60,13 +64,14 @@ class _DonationViewState extends State<DonationView> {
   UserModel sevaUser = UserModel();
   String none = '';
 
-  var focusNodes = List.generate(16, (_) => FocusNode());
+  var focusNodes = List.generate(17, (_) => FocusNode());
   final profanityDetector = ProfanityDetector();
 
   @override
   void initState() {
     donationsModel.id = Utils.getUuid();
     donationsModel.notificationId = Utils.getUuid();
+
     if (none == '') {}
     var temp = (widget.offerModel != null
         ? (widget.offerModel.type == RequestType.GOODS
@@ -284,7 +289,7 @@ class _DonationViewState extends State<DonationView> {
             textInputAction: TextInputAction.next,
             decoration: InputDecoration(
               errorMaxLines: 2,
-              hintText: S.of(context).email_hint,
+              hintText: 'Ex: Paypal ID (phone or email)',
               hintStyle: hintTextStyle,
             ),
             initialValue: donationsModel.cashDetails.cashDetails != null
@@ -296,8 +301,17 @@ class _DonationViewState extends State<DonationView> {
               donationsModel.cashDetails.cashDetails.paypalId = value;
             },
             validator: (value) {
-              donationsModel.cashDetails.cashDetails.paypalId = value;
-              return _validateEmailId(value);
+              RegExp regExp = RegExp(mobilePattern);
+              if (value.isEmpty) {
+                return S.of(context).validation_error_general_text;
+              } else if (emailPattern.hasMatch(value) ||
+                  regExp.hasMatch(value)) {
+                donationsModel.cashDetails.cashDetails.paypalId = value;
+
+                return null;
+              } else {
+                return S.of(context).enter_valid_link;
+              }
             },
           )
         ]);
@@ -605,6 +619,10 @@ class _DonationViewState extends State<DonationView> {
               },
               textInputAction: TextInputAction.next,
               keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                prefixIcon: Icon(Icons.attach_money),
+                // labelText: 'No. of volunteers',
+              ),
               validator: (value) {
                 if (value.isEmpty) {
                   return S.of(context).validation_error_general_text;
@@ -1141,6 +1159,7 @@ class _DonationViewState extends State<DonationView> {
                               : '',
                       hintStyle: subTitleStyle,
                       hintText: S.of(context).add_amount_donated,
+                      prefixIcon: Icon(Icons.attach_money),
                     ),
                   ));
             },
@@ -1245,26 +1264,6 @@ class _DonationViewState extends State<DonationView> {
             SizedBox(
               height: 20,
             ),
-            HideWidget(
-              hide: widget.requestModel.cashModel.others == null,
-              child: Text(
-                'Other Details',
-                style: TextStyle(
-                    fontSize: 11,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold),
-              ),
-            ),
-            SizedBox(
-              height: 5,
-            ),
-            Text(
-              widget.requestModel.cashModel.others ?? '',
-              style: TextStyle(
-                  fontSize: 11,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold),
-            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
@@ -1323,8 +1322,27 @@ class _DonationViewState extends State<DonationView> {
         case RequestPaymentType.VENMO:
           return widget.requestModel.cashModel.venmoId ?? '';
 
+        case RequestPaymentType.ACH:
+          return S.of(context).account_information +
+                  '\n' +
+                  widget.requestModel.cashModel.achdetails.account_number +
+                  '\n' +
+                  widget.requestModel.cashModel.achdetails.bank_name +
+                  '\n' +
+                  widget.requestModel.cashModel.achdetails.bank_address +
+                  '\n' +
+                  widget.requestModel.cashModel.achdetails.routing_number ??
+              '';
+        case RequestPaymentType.OTHER:
+          return L.of(context).other_payment_details +
+                  '\n' +
+                  widget.requestModel.cashModel.others +
+                  '\n' +
+                  widget.requestModel.cashModel.other_details ??
+              '';
+
         default:
-          return "Link not registered!";
+          return "Link not provided!";
       }
     }
     return "";
@@ -1451,38 +1469,76 @@ class _DonationViewState extends State<DonationView> {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
+          TextFormField(
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            initialValue: donationsModel.cashDetails.cashDetails != null
+                ? donationsModel.cashDetails.cashDetails.others
+                : "",
+            textInputAction: TextInputAction.next,
+            decoration: InputDecoration(
+              errorMaxLines: 2,
+              hintText: 'Provide other payment mode details',
+              hintStyle: hintTextStyle,
+            ),
+            keyboardType: TextInputType.multiline,
+            maxLines: 1,
+            onFieldSubmitted: (value) {
+              FocusScope.of(context).autofocus(focusNodes[17]);
+            },
+            onSaved: (value) {
+              donationsModel.cashDetails.cashDetails.others = value;
+            },
+            validator: (value) {
+              if (value.isEmpty || value == null) {
+                return S.of(context).validation_error_general_text;
+              } else if (!value.isEmpty &&
+                  profanityDetector.isProfaneString(value)) {
+                return S.of(context).profanity_text_alert;
+              } else {
+                donationsModel.cashDetails.cashDetails.others = value;
+                return null;
+              }
+            },
+          ),
+          SizedBox(
+            height: 10,
+          ),
           Text(
-            S.of(context).other_details,
+            L.of(context).other_payment_details,
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              fontFamily: 'Europa',
               color: Colors.black,
             ),
           ),
           TextFormField(
             autovalidateMode: AutovalidateMode.onUserInteraction,
             onChanged: (value) {},
-            focusNode: focusNodes[0],
-            onFieldSubmitted: (v) {
-              FocusScope.of(context).requestFocus(focusNodes[1]);
+            focusNode: focusNodes[17],
+            onFieldSubmitted: (value) {
+              FocusScope.of(context).unfocus();
             },
             textInputAction: TextInputAction.next,
             decoration: InputDecoration(
               errorMaxLines: 2,
-              hintText: S.of(context).other_details,
-              hintStyle: hintTextStyle,
+              hintText: L.of(context).other_payment_details_hint,
             ),
             keyboardType: TextInputType.multiline,
+            initialValue: donationsModel.cashDetails.cashDetails != null
+                ? donationsModel.cashDetails.cashDetails.other_details
+                : "",
             maxLines: 1,
             onSaved: (value) {
-              donationsModel.cashDetails.cashDetails.others = value;
+              donationsModel.cashDetails.cashDetails.other_details = value;
             },
             validator: (value) {
+              if (value.isEmpty || value == null) {
+                return S.of(context).validation_error_general_text;
+              }
               if (!value.isEmpty && profanityDetector.isProfaneString(value)) {
                 return S.of(context).profanity_text_alert;
               } else {
-                donationsModel.cashDetails.cashDetails.others = value;
+                donationsModel.cashDetails.cashDetails.other_details = value;
                 return null;
               }
             },

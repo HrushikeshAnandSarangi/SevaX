@@ -352,7 +352,7 @@ class MyTasksListState extends State<MyTaskList> {
                                           await oneToManySpeakerCompletesRequest(
                                               context, model);
                                         },
-                                        fromNotification: false,
+                                        isFromtasks: true,
                                       );
                                     },
                                   ),

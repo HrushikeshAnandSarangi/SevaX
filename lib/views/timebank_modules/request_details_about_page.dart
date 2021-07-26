@@ -947,7 +947,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                         widget.requestItem, context);
                     Navigator.of(context).pop();
                   },
-                  fromNotification: false,
+                  isFromtasks: false,
                 );
               },
             ),
@@ -1434,7 +1434,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                                     widget.requestItem, context);
                                 Navigator.of(context).pop();
                               },
-                              fromNotification: false,
+                              isFromtasks: false,
                             );
                           },
                         ),

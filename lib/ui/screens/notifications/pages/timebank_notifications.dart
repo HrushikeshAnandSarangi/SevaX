@@ -57,6 +57,8 @@ import 'package:sevaexchange/views/timebanks/widgets/timebank_member_insufficent
 import 'package:sevaexchange/views/timebanks/widgets/timebank_user_exit_dialog.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 
+import '../../../../labels.dart';
+
 class TimebankNotifications extends StatefulWidget {
   final TimebankModel timebankModel;
   final ScrollPhysics physics;
@@ -950,7 +952,50 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                     );
                   },
                 );
-
+              case NotificationType.COMMUNITY_ADDED_TO_MESSAGE_ROOM:
+                var data = notification.data;
+                Map<String, dynamic> map =
+                    Map<String, dynamic>.from(data['creatorDetails']);
+                ParticipantInfo creatorDetails = ParticipantInfo.fromMap(map);
+                return NotificationCard(
+                  timestamp: notification.timestamp,
+                  entityName: creatorDetails.name,
+                  isDissmissible: true,
+                  onDismissed: () {
+                    dismissTimebankNotification(
+                      timebankId: notification.timebankId,
+                      notificationId: notification.id,
+                    );
+                  },
+                  onPressed: null,
+                  photoUrl: creatorDetails.photoUrl ?? defaultGroupImageURL,
+                  title: 'Community chat join',
+                  subTitle:
+                      '${creatorDetails.name.toLowerCase()} ${S.of(context).notifications_added_you} ${data['messageRoomName']} ${L.of(context).community_chat}.',
+                );
+                break;
+              case NotificationType.COMMUNITY_REMOVED_FROM_MESSAGE_ROOM:
+                var data = notification.data;
+                Map<String, dynamic> map =
+                    Map<String, dynamic>.from(data['creatorDetails']);
+                ParticipantInfo creatorDetails = ParticipantInfo.fromMap(map);
+                return NotificationCard(
+                  timestamp: notification.timestamp,
+                  entityName: creatorDetails.name,
+                  isDissmissible: true,
+                  onDismissed: () {
+                    dismissTimebankNotification(
+                      timebankId: notification.timebankId,
+                      notificationId: notification.id,
+                    );
+                  },
+                  onPressed: null,
+                  photoUrl: creatorDetails.photoUrl,
+                  title: 'Community chat remove',
+                  subTitle:
+                      '${creatorDetails.name.toLowerCase()} removed you from ${data['messageRoomName']}.',
+                );
+                break;
               default:
                 log("Unhandled timebank notification type ${notification.type} ${notification.id}");
                 FirebaseCrashlytics.instance.log(

@@ -10,9 +10,19 @@ import 'package:sevaexchange/ui/screens/search/widgets/network_image.dart';
 import 'package:sevaexchange/ui/utils/avatar.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
+import '../../../../labels.dart';
+
 class CommunityMessageCreate extends StatefulWidget {
   final String primaryTimebankId;
-  const CommunityMessageCreate({Key key, this.primaryTimebankId})
+  final bool isEditing;
+  final ParentCommunityMessageBloc bloc;
+  final Function(List<String> selectedTimebanks) onSelected;
+  const CommunityMessageCreate(
+      {Key key,
+      this.primaryTimebankId,
+      this.isEditing,
+      this.bloc,
+      this.onSelected})
       : super(key: key);
 
   @override
@@ -20,19 +30,29 @@ class CommunityMessageCreate extends StatefulWidget {
 }
 
 class _CommunityMessageCreateState extends State<CommunityMessageCreate> {
-  ParentCommunityMessageBloc bloc = ParentCommunityMessageBloc();
+  ParentCommunityMessageBloc bloc;
   List<String> selectedList = [];
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback(
-      (timeStamp) {
-        bloc.init(
-          Provider.of<HomePageBaseBloc>(context, listen: false)
-              .primaryTimebankModel()
-              .id,
-        );
-      },
-    );
+    if (widget.bloc != null) {
+      bloc = widget.bloc;
+    } else {
+      bloc = ParentCommunityMessageBloc();
+    }
+    if (!widget.isEditing) {
+      WidgetsBinding.instance.addPostFrameCallback(
+        (timeStamp) {
+          bloc.init(
+            widget.primaryTimebankId,
+          );
+        },
+      );
+    } else {
+      List<String> list = widget.bloc.getAllSelectedTimebanks();
+      selectedList.addAll(list);
+      setState(() {});
+    }
+
     super.initState();
   }
 
@@ -58,27 +78,32 @@ class _CommunityMessageCreateState extends State<CommunityMessageCreate> {
                 if ((snapshot.data?.length ?? 0) > 0) {
                   return GestureDetector(
                     onTap: () async {
-                      var timebanks = await bloc.selectedTimebanks.first;
-                      if (timebanks.length == 1) {
-                        var timebank = Provider.of<HomePageBaseBloc>(context,
-                                listen: false)
-                            .primaryTimebankModel();
-                        bloc.createSingleCommunityChat(
-                          context,
-                          ParticipantInfo(
-                            id: timebank.id,
-                            name: timebank.name,
-                            photoUrl: timebank.photoUrl,
-                          ),
-                        );
+                      if (widget.isEditing) {
+                        Navigator.of(context).pop();
+                        widget.onSelected(selectedList);
                       } else {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => CreateCommunityMessage(
-                              bloc: bloc,
+                        var timebanks = await bloc.selectedTimebanks.first;
+                        if (timebanks.length == 1) {
+                          var timebank = Provider.of<HomePageBaseBloc>(context,
+                                  listen: false)
+                              .primaryTimebankModel();
+                          bloc.createSingleCommunityChat(
+                            context,
+                            ParticipantInfo(
+                              id: timebank.id,
+                              name: timebank.name,
+                              photoUrl: timebank.photoUrl,
                             ),
-                          ),
-                        );
+                          );
+                        } else {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => CreateCommunityMessage(
+                                bloc: bloc,
+                              ),
+                            ),
+                          );
+                        }
                       }
                     },
                     child: Center(
@@ -106,7 +131,9 @@ class _CommunityMessageCreateState extends State<CommunityMessageCreate> {
           }
           if (snapshot.data == null || snapshot.data.isEmpty) {
             return Center(
-              child: Text('No Child Communities'),
+              child: Text(
+                L.of(context).no_child_communities,
+              ),
             );
           }
           return ListView.builder(

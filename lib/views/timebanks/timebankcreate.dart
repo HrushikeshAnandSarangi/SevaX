@@ -151,8 +151,10 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     Future.delayed(Duration.zero, () async {
       parentTimebankModel = await FirestoreManager.getTimeBankForId(
           timebankId: widget.timebankId);
+      location = parentTimebankModel.location;
+      selectedAddress = parentTimebankModel.address;
+      setState(() {});
     });
-    setState(() {});
   }
 
   HashMap<String, UserModel> selectedUsers = HashMap();

@@ -52,4 +52,40 @@ class MessageRoomManager {
       return false;
     });
   }
+
+  static Future<void> addRemoveCommunityChatParticipant({
+    String communityId,
+    String timebankId,
+    NotificationType notificationType,
+    String messageRoomName,
+    String messageRoomImageUrl,
+    String participantId,
+    ParticipantInfo creatorDetails,
+    BuildContext context,
+  }) async {
+    NotificationsModel notification = NotificationsModel(
+      communityId: communityId,
+      id: utils.Utils.getUuid(),
+      isRead: false,
+      isTimebankNotification: true,
+      senderUserId: creatorDetails.id,
+      targetUserId: participantId,
+      type: notificationType,
+      timebankId: timebankId,
+      timestamp: DateTime.now().millisecondsSinceEpoch,
+      data: {
+        'creatorDetails': creatorDetails.toMap(),
+        'messageRoomName': messageRoomName,
+        'messageRoomUrl': messageRoomImageUrl,
+      },
+    );
+
+    return await CollectionRef.timebankNotification(participantId)
+        .doc(notification.id)
+        .set(notification.toMap())
+        .then((value) => true)
+        .catchError((onError) {
+      return false;
+    });
+  }
 }

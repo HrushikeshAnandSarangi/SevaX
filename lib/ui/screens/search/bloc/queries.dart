@@ -263,6 +263,9 @@ class Searches {
         '//elasticsearch/sevaxprojects/_doc/_search';
     dynamic body = json.encode(
       {
+        "sort": {
+          "created_at": {"order": "desc"}
+        },
         "size": 3000,
         "query": {
           "bool": {
@@ -355,6 +358,9 @@ class Searches {
     String url = FlavorConfig.values.elasticSearchBaseURL +
         '//elasticsearch/sevaxprojects/_doc/_search';
     dynamic body = json.encode({
+      "sort": {
+        "start_time": {"order": "desc"}
+      },
       "query": {
         "match": {'public': true}
       }
@@ -882,6 +888,9 @@ class Searches {
         '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/sevaxprojects/_doc/_search';
 
     dynamic body = json.encode({
+      "sort": {
+        "start_time": {"order": "desc"}
+      },
       "query": {
         "bool": {
           "must": [

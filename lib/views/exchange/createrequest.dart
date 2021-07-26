@@ -24,6 +24,7 @@ import 'package:sevaexchange/components/pdf_screen.dart';
 import 'package:sevaexchange/components/repeat_availability/repeat_widget.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/basic_user_details.dart';
 import 'package:sevaexchange/models/cash_model.dart';
 import 'package:sevaexchange/models/category_model.dart';
@@ -191,7 +192,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
   RequestModel requestModel;
   bool isPulicCheckboxVisible = false;
   End end = End();
-  var focusNodes = List.generate(16, (_) => FocusNode());
+  var focusNodes = List.generate(17, (_) => FocusNode());
   List<String> eventsIdsArr = [];
   List<String> selectedCategoryIds = [];
   bool comingFromDynamicLink = false;
@@ -502,6 +503,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
                 } else if (snapshot.hasError) {
                   return Text(S.of(context).error_loading_data);
                 } else {
+                  selectedAddress = snapshot.data.address;
+                  location = snapshot.data.location;
                   return Form(
                     key: _formKey,
                     child: Container(
@@ -1553,7 +1556,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
         ]);
   }
 
-  Widget RequestPaymentZellePay(RequestModel requestModel) {
+  Widget RequestPaymentZellePay() {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -1591,10 +1594,10 @@ class RequestCreateFormState extends State<RequestCreateForm>
         ]);
   }
 
+  String mobilePattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
+  RegExp emailPattern = RegExp(
+      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
   String _validateEmailAndPhone(String value) {
-    String mobilePattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
-    RegExp emailPattern = RegExp(
-        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
     RegExp regExp = RegExp(mobilePattern);
     if (value.isEmpty) {
       return S.of(context).validation_error_general_text;
@@ -1630,7 +1633,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
             textInputAction: TextInputAction.next,
             decoration: InputDecoration(
               errorMaxLines: 2,
-              hintText: S.of(context).email_hint,
+              hintText: 'Ex: Paypal ID (phone or email)',
               hintStyle: hintTextStyle,
             ),
             initialValue: widget.offer != null && widget.isOfferRequest
@@ -1644,8 +1647,16 @@ class RequestCreateFormState extends State<RequestCreateForm>
               requestModel.cashModel.paypalId = value;
             },
             validator: (value) {
-              requestModel.cashModel.paypalId = value;
-              return _validateEmailId(value);
+              RegExp regExp = RegExp(mobilePattern);
+              if (value.isEmpty) {
+                return S.of(context).validation_error_general_text;
+              } else if (emailPattern.hasMatch(value) ||
+                  regExp.hasMatch(value)) {
+                requestModel.cashModel.paypalId = value;
+                return null;
+              } else {
+                return S.of(context).enter_valid_link;
+              }
             },
           )
         ]);
@@ -1690,7 +1701,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
         ]);
   }
 
-  Widget RequestPaymentSwift(RequestModel requestModel) {
+  Widget RequestPaymentSwift() {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -1739,25 +1750,24 @@ class RequestCreateFormState extends State<RequestCreateForm>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            S.of(context).other_details,
+            L.of(context).other_payment_name,
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              fontFamily: 'Europa',
               color: Colors.black,
             ),
           ),
           TextFormField(
             autovalidateMode: AutovalidateMode.onUserInteraction,
             onChanged: (value) {},
-            focusNode: focusNodes[0],
+            focusNode: focusNodes[16],
             onFieldSubmitted: (v) {
-              FocusScope.of(context).requestFocus(focusNodes[1]);
+              FocusScope.of(context).autofocus(focusNodes[17]);
             },
             textInputAction: TextInputAction.next,
             decoration: InputDecoration(
               errorMaxLines: 2,
-              hintText: S.of(context).other_details,
+              hintText: L.of(context).other_payment_title_hint,
               hintStyle: hintTextStyle,
             ),
             keyboardType: TextInputType.multiline,
@@ -1766,10 +1776,53 @@ class RequestCreateFormState extends State<RequestCreateForm>
               requestModel.cashModel.others = value;
             },
             validator: (value) {
+              if (value.isEmpty || value == null) {
+                return S.of(context).validation_error_general_text;
+              }
               if (!value.isEmpty && profanityDetector.isProfaneString(value)) {
                 return S.of(context).profanity_text_alert;
               } else {
                 requestModel.cashModel.others = value;
+                return null;
+              }
+            },
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Text(
+            L.of(context).other_payment_details,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
+          TextFormField(
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            focusNode: focusNodes[17],
+            onChanged: (value) {},
+            onFieldSubmitted: (v) {
+              FocusScope.of(context).unfocus();
+            },
+            textInputAction: TextInputAction.next,
+            keyboardType: TextInputType.multiline,
+            maxLines: 1,
+            onSaved: (value) {
+              requestModel.cashModel.other_details = value;
+            },
+            decoration: InputDecoration(
+              errorMaxLines: 2,
+              hintText: L.of(context).other_payment_details_hint,
+            ),
+            validator: (value) {
+              if (value.isEmpty || value == null) {
+                return S.of(context).validation_error_general_text;
+              }
+              if (!value.isEmpty && profanityDetector.isProfaneString(value)) {
+                return S.of(context).profanity_text_alert;
+              } else {
+                requestModel.cashModel.other_details = value;
                 return null;
               }
             },
@@ -1842,6 +1895,15 @@ class RequestCreateFormState extends State<RequestCreateForm>
             setState(() => {});
           },
         ),
+        _optionRadioButton<RequestPaymentType>(
+          title: S.of(context).other(2),
+          value: RequestPaymentType.OTHER,
+          groupvalue: requestModel.cashModel.paymentType,
+          onChanged: (value) {
+            requestModel.cashModel.paymentType = value;
+            setState(() => {});
+          },
+        ),
         requestModel.cashModel.paymentType == RequestPaymentType.ACH
             ? RequestPaymentACH(requestModel)
             : requestModel.cashModel.paymentType == RequestPaymentType.PAYPAL
@@ -1850,12 +1912,11 @@ class RequestCreateFormState extends State<RequestCreateForm>
                     ? RequestPaymentVenmo(requestModel)
                     : requestModel.cashModel.paymentType ==
                             RequestPaymentType.SWIFT
-                        ? RequestPaymentSwift(requestModel)
-                        : RequestPaymentZellePay(requestModel),
-        SizedBox(
-          height: 15,
-        ),
-        OtherDetailsWidget()
+                        ? RequestPaymentSwift()
+                        : requestModel.cashModel.paymentType ==
+                                RequestPaymentType.OTHER
+                            ? OtherDetailsWidget()
+                            : RequestPaymentZellePay(),
       ],
     );
   }
@@ -2764,8 +2825,15 @@ class RequestCreateFormState extends State<RequestCreateForm>
             decoration: InputDecoration(
               hintText: S.of(context).request_target_donation_hint,
               hintStyle: hintTextStyle,
+              prefixIcon: Icon(Icons.attach_money),
+
               // labelText: 'No. of volunteers',
             ),
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(
+                (RegExp("[0-9]")),
+              ),
+            ],
             keyboardType: TextInputType.number,
             validator: (value) {
               if (value.isEmpty) {
@@ -2811,7 +2879,15 @@ class RequestCreateFormState extends State<RequestCreateForm>
               hintText: S.of(context).request_min_donation_hint,
               hintStyle: hintTextStyle,
               // labelText: 'No. of volunteers',
+              prefixIcon: Icon(Icons.attach_money),
+
+              // labelText: 'No. of volunteers',
             ),
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(
+                (RegExp("[0-9]")),
+              ),
+            ],
             keyboardType: TextInputType.number,
             validator: (value) {
               if (value.isEmpty) {
@@ -3233,6 +3309,10 @@ class RequestCreateFormState extends State<RequestCreateForm>
             //selectedInstructorModel.sevaUserID != requestModel.sevaUserId &&
             requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
           if (selectedInstructorModel.sevaUserID == requestModel.sevaUserId) {
+            requestModel.approvedUsers = [];
+            List<String> approvedUsers = [];
+            approvedUsers.add(requestModel.email);
+            requestModel.approvedUsers = approvedUsers;
             log('speaker is creator');
           } else if (selectedInstructorModel.communities
                   .contains(requestModel.communityId) &&
@@ -3282,6 +3362,10 @@ class RequestCreateFormState extends State<RequestCreateForm>
             //selectedInstructorModel.sevaUserID != requestModel.sevaUserId &&
             requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
           if (selectedInstructorModel.sevaUserID == requestModel.sevaUserId) {
+            requestModel.approvedUsers = [];
+            List<String> approvedUsers = [];
+            approvedUsers.add(requestModel.email);
+            requestModel.approvedUsers = approvedUsers;
             log('speaker is creator');
           } else if (selectedInstructorModel.communities
                   .contains(requestModel.communityId) &&
