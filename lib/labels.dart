@@ -301,6 +301,11 @@ class L {
   String get share_post_new => 'Share Post';
 
   String get this_is_a_repeating_request => "This is a repeating request";
+
+  String get other_payment_title_hint => "Ex: IndieGoGo or Revolut";
+  String get other_payment_details_hint => "Ex: Email, Phone Number, ID";
+  String get other_payment_details => "Payment Method Details";
+  String get other_payment_name => "Payment Method Name";
   String get deleted_events_create_request_message =>
       "This event is going to be deleted. As a result, requests cannot be created.";
 }

@@ -24,6 +24,7 @@ import 'package:sevaexchange/components/pdf_screen.dart';
 import 'package:sevaexchange/components/repeat_availability/repeat_widget.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/basic_user_details.dart';
 import 'package:sevaexchange/models/cash_model.dart';
 import 'package:sevaexchange/models/category_model.dart';
@@ -191,7 +192,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
   RequestModel requestModel;
   bool isPulicCheckboxVisible = false;
   End end = End();
-  var focusNodes = List.generate(16, (_) => FocusNode());
+  var focusNodes = List.generate(17, (_) => FocusNode());
   List<String> eventsIdsArr = [];
   List<String> selectedCategoryIds = [];
   bool comingFromDynamicLink = false;
@@ -1748,17 +1749,25 @@ class RequestCreateFormState extends State<RequestCreateForm>
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
+          Text(
+            L.of(context).other_payment_name,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
           TextFormField(
             autovalidateMode: AutovalidateMode.onUserInteraction,
             onChanged: (value) {},
-            focusNode: focusNodes[0],
+            focusNode: focusNodes[16],
             onFieldSubmitted: (v) {
-              FocusScope.of(context).unfocus();
+              FocusScope.of(context).autofocus(focusNodes[17]);
             },
             textInputAction: TextInputAction.next,
             decoration: InputDecoration(
               errorMaxLines: 2,
-              hintText: 'Provide other payment mode details',
+              hintText: L.of(context).other_payment_title_hint,
               hintStyle: hintTextStyle,
             ),
             keyboardType: TextInputType.multiline,
@@ -1774,6 +1783,46 @@ class RequestCreateFormState extends State<RequestCreateForm>
                 return S.of(context).profanity_text_alert;
               } else {
                 requestModel.cashModel.others = value;
+                return null;
+              }
+            },
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Text(
+            L.of(context).other_payment_details,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
+          TextFormField(
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            focusNode: focusNodes[17],
+            onChanged: (value) {},
+            onFieldSubmitted: (v) {
+              FocusScope.of(context).unfocus();
+            },
+            textInputAction: TextInputAction.next,
+            keyboardType: TextInputType.multiline,
+            maxLines: 1,
+            onSaved: (value) {
+              requestModel.cashModel.other_details = value;
+            },
+            decoration: InputDecoration(
+              errorMaxLines: 2,
+              hintText: L.of(context).other_payment_details_hint,
+            ),
+            validator: (value) {
+              if (value.isEmpty || value == null) {
+                return S.of(context).validation_error_general_text;
+              }
+              if (!value.isEmpty && profanityDetector.isProfaneString(value)) {
+                return S.of(context).profanity_text_alert;
+              } else {
+                requestModel.cashModel.other_details = value;
                 return null;
               }
             },
