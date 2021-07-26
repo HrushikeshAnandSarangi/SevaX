@@ -38,10 +38,19 @@ class ProjectMessagingRoomHelper {
           ),
           actions: [
             CustomTextButton(
+              shape: StadiumBorder(),
+              color: Theme.of(context).accentColor,
               onPressed: () async {
                 Navigator.pop(_);
               },
-              child: Text('Okay'),
+              child: Text(
+                'Okay',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontFamily: 'Europa',
+                  fontSize: 16,
+                ),
+              ),
             ),
           ],
         );

@@ -488,6 +488,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                       });
                     }
                   },
+                  padding: EdgeInsets.all(3),
                   child: Text(
                     S.of(context).upload,
                     textAlign: TextAlign.center,
@@ -1071,12 +1072,16 @@ class _EditProfilePageState extends State<EditProfilePage>
                 children: <Widget>[
                   Spacer(),
                   CustomTextButton(
+                    shape: StadiumBorder(),
                     padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                     color: Theme.of(context).accentColor,
                     textColor: FlavorConfig.values.buttonTextColor,
                     child: Text(
                       S.of(context).log_out,
-                      style: TextStyle(fontFamily: 'Europa'),
+                      style: TextStyle(
+                        fontFamily: 'Europa',
+                        color: Colors.white,
+                      ),
                     ),
                     onPressed: () async {
                       FCMNotificationManager.removeDeviceRegisterationForMember(

@@ -29,19 +29,33 @@ class CalenderEventConfirmationDialog extends StatelessWidget {
             children: <Widget>[
               Spacer(),
               CustomTextButton(
-                padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                shape: StadiumBorder(),
+                // padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                 color: Theme.of(context).accentColor,
-                textColor: FlavorConfig.values.buttonTextColor,
+                // textColor: FlavorConfig.values.buttonTextColor,
                 child: Text(
                   S.of(context).yes,
-                  style: TextStyle(fontFamily: 'Europa'),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontFamily: 'Europa',
+                    fontSize: 16,
+                  ),
                 ),
                 onPressed: addToCalender,
               ),
+              SizedBox(
+                width: 10,
+              ),
               CustomTextButton(
+                shape: StadiumBorder(),
+                color: Colors.grey,
                 child: Text(
                   S.of(context).no,
-                  style: TextStyle(color: Colors.red, fontFamily: 'Europa'),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontFamily: 'Europa',
+                    fontSize: 16,
+                  ),
                 ),
                 onPressed: cancelled,
               ),

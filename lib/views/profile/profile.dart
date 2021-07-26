@@ -481,10 +481,14 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             actions: <Widget>[
               CustomTextButton(
+                shape: StadiumBorder(),
+                color: Colors.grey,
                 child: Text(
                   S.of(context).cancel,
                   style: TextStyle(
                     fontSize: 16,
+                    fontFamily: 'Europa',
+                    color: Colors.white,
                   ),
                 ),
                 onPressed: () {
@@ -492,10 +496,14 @@ class _ProfilePageState extends State<ProfilePage> {
                 },
               ),
               CustomTextButton(
+                shape: StadiumBorder(),
+                color: Theme.of(context).accentColor,
                 child: Text(
                   S.of(context).proceed,
                   style: TextStyle(
                     fontSize: 16,
+                    fontFamily: 'Europa',
+                    color: Colors.white,
                   ),
                 ),
                 onPressed: () {
