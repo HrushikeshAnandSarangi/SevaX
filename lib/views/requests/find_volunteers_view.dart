@@ -68,7 +68,6 @@ class _FindVolunteersViewState extends State<FindVolunteersView> {
         if (s.isEmpty) {
           setState(() {});
         } else {
-          volunteerUsersBloc.fetchUsers(s);
           setState(() {});
         }
       });

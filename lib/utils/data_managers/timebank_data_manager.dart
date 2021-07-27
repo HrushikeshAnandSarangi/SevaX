@@ -511,14 +511,13 @@ Stream<CardModel> getCardModelStream({@required String communityId}) async* {
 Future<TimebankParticipantsDataHolder> getAllTimebankIdStream(
     {@required String timebankId}) async {
   DocumentSnapshot onValue = await CollectionRef.timebank.doc(timebankId).get();
+  TimebankModel model = TimebankModel.fromMap(onValue.data());
 
-  prefix0.TimebankModel model = prefix0.TimebankModel(onValue.data);
-
-  var admins = model.admins;
-  var coordinators = model.coordinators;
-  var organizers = model.organizers;
-  var members = model.members;
-  var allItems = [];
+  List<String> admins = model.admins;
+  List<String> coordinators = model.coordinators;
+  List<String> organizers = model.organizers;
+  List<String> members = model.members;
+  List<String> allItems = [];
   allItems.addAll(admins);
   allItems.addAll(coordinators);
   allItems.addAll(members);
