@@ -308,4 +308,6 @@ class L {
   String get other_payment_name => "Payment Method Name";
   String get deleted_events_create_request_message =>
       "This event is going to be deleted. As a result, requests cannot be created.";
+
+  String get communities => "Communities";
 }

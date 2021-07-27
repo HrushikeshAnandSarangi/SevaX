@@ -307,7 +307,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
             _searchText = "";
           });
         } else {
-          volunteerUsersBloc.fetchUsers(s);
           setState(() {
             _searchText = s;
           });
@@ -1906,7 +1905,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
           },
         ),
         _optionRadioButton<RequestPaymentType>(
-          title: S.of(context).other(2),
+          title: S.of(context).other(1),
           value: RequestPaymentType.OTHER,
           groupvalue: requestModel.cashModel.paymentType,
           onChanged: (value) {

@@ -8,6 +8,9 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/offer_card.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
+import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
+
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/create_offer_request.dart';
@@ -29,23 +32,39 @@ class BookmarkedOffers extends StatelessWidget {
       : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: CollectionRef.offers
-          .where('individualOfferDataModeferAcceptors',
-              arrayContains: sevaUserId)
-          .snapshots(),
-      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+    return StreamBuilder<List<OfferModel>>(
+      stream: getBookMarkedOffers(
+          timebankid: timebankModel.id, sevaUserId: sevaUserId),
+      builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return LoadingIndicator();
         }
+
+        if (snapshot.hasError) {
+          return Center(
+            child: Text(
+              snapshot.error.toString(),
+            ),
+          );
+        }
+        if (snapshot.data == null) {
+          return Center(
+            child: Text(
+              S.of(context).no_bookmarked_offers,
+            ),
+          );
+        }
+
         List<OfferModel> bookmarkedOffers = [];
-        OfferModel model;
-        snapshot.data.docs.forEach((offer) {
-          model = OfferModel.fromMap(offer.data());
-          if (model.timebanksPosted != null &&
-              model.timebanksPosted.contains(timebankModel.id))
-            bookmarkedOffers.add(model);
-        });
+        bookmarkedOffers = snapshot.data;
+
+        // OfferModel model;
+        // snapshot.data.docs.forEach((offer) {
+        //   model = OfferModel.fromMap(offer.data());
+        //   if (model.timebanksPosted != null &&
+        //       model.timebanksPosted.contains(timebankModel.id))
+        //     bookmarkedOffers.add(model);
+        // });
 
         if (bookmarkedOffers.length == 0) {
           return Center(

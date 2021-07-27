@@ -58,7 +58,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   Future<TimebankModel> getTimebankDetails;
   TimebankModel timebankModel;
 
-  var validItems = [];
+  List<String> validItems = [];
   InvitationManager inivitationManager = InvitationManager();
   bool _isDocumentBeingUploaded = false;
 
@@ -101,6 +101,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
     ).then((onValue) {
       setState(() {
         validItems = onValue.listOfElement;
+        logger.i('validItems len ${validItems.length}');
       });
     });
   }
