@@ -2155,7 +2155,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                   TransactionsMatrixCheck(
                     upgradeDetails:
                         AppConfig.upgradePlanBannerModel.onetomany_requests,
-                    transaction_matrix_type: 'cash_goods_requests',
+                    transaction_matrix_type: 'onetomany_requests',
                     comingFrom: widget.comingFrom,
                     child: _optionRadioButton<RequestType>(
                       title: S.of(context).one_to_many.sentenceCase(),
