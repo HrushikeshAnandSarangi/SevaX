@@ -615,51 +615,56 @@ class OfferDetails extends StatelessWidget {
                               offerModel),
                       role: memberType(timebankModel,
                           SevaCore.of(context).loggedInUser.sevaUserID),
-                      child: CustomTextButton(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                          left: 2,
                         ),
-                        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                        color: Color.fromRGBO(44, 64, 140, 0.7),
-                        child: Row(
-                          children: <Widget>[
-                            SizedBox(width: 1),
-                            Container(
-                              width: 30,
-                              height: 30,
-                              decoration: BoxDecoration(
-                                color: Color.fromRGBO(44, 64, 140, 1),
-                                shape: BoxShape.circle,
+                        child: CustomTextButton(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                          color: Color.fromRGBO(44, 64, 140, 0.7),
+                          child: Row(
+                            children: <Widget>[
+                              SizedBox(width: 1),
+                              Container(
+                                width: 30,
+                                height: 30,
+                                decoration: BoxDecoration(
+                                  color: Color.fromRGBO(44, 64, 140, 1),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  Icons.check,
+                                  color: Colors.white,
+                                ),
                               ),
-                              child: Icon(
-                                Icons.check,
-                                color: Colors.white,
+                              Spacer(),
+                              Text(
+                                S.of(context).accept_offer,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
                               ),
-                            ),
-                            Spacer(),
-                            Text(
-                              S.of(context).accept_offer,
-                              style: TextStyle(
-                                color: Colors.white,
+                              Spacer(
+                                flex: 2,
                               ),
-                            ),
-                            Spacer(
-                              flex: 2,
-                            ),
-                          ],
-                        ),
-                        onPressed: () async {
-                          logger.i("INDIVIDUAL ========== || =======");
+                            ],
+                          ),
+                          onPressed: () async {
+                            logger.i("INDIVIDUAL ========== || =======");
 
-                          showDialogForMakingAnOffer(
-                            model: offerModel,
-                            parentContext: context,
-                            timebankModel: timebankModel,
-                            sevaUserId:
-                                SevaCore.of(context).loggedInUser.sevaUserID,
-                            hideCancelBookMark: true,
-                          );
-                        },
+                            showDialogForMakingAnOffer(
+                              model: offerModel,
+                              parentContext: context,
+                              timebankModel: timebankModel,
+                              sevaUserId:
+                                  SevaCore.of(context).loggedInUser.sevaUserID,
+                              hideCancelBookMark: true,
+                            );
+                          },
+                        ),
                       ),
                     ),
                   ),

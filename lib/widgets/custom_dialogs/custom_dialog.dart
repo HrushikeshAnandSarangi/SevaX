@@ -13,16 +13,34 @@ class CustomDialogs {
             title: Text(title),
             actions: [
               CustomTextButton(
+                shape: StadiumBorder(),
+                color: Colors.grey,
                 onPressed: () {
                   Navigator.of(_context).pop(false);
                 },
-                child: Text(S.of(context).no),
+                child: Text(
+                  S.of(context).no,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontFamily: 'Europa',
+                  ),
+                ),
               ),
               CustomTextButton(
+                shape: StadiumBorder(),
+                color: Theme.of(context).accentColor,
                 onPressed: () {
                   Navigator.of(_context).pop(true);
                 },
-                child: Text(S.of(context).yes),
+                child: Text(
+                  S.of(context).yes,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontFamily: 'Europa',
+                  ),
+                ),
               ),
             ],
           ),
