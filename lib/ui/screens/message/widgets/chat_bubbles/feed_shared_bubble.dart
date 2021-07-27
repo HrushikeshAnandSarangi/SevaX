@@ -43,13 +43,19 @@ class FeedBubble extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: <Widget>[
                 getFeedCard(context),
-                Text(
-                  formatChatDate(
-                    messageModel.timestamp,
-                    SevaCore.of(context).loggedInUser.timezone,
-                    S.of(context).localeName,
+                Padding(
+                  padding: const EdgeInsets.only(
+                    right: 5,
+                    bottom: 3,
                   ),
-                  style: TextStyle(fontSize: 10, color: Colors.grey[700]),
+                  child: Text(
+                    formatChatDate(
+                      messageModel.timestamp,
+                      SevaCore.of(context).loggedInUser.timezone,
+                      S.of(context).localeName,
+                    ),
+                    style: TextStyle(fontSize: 10, color: Colors.grey[700]),
+                  ),
                 ),
               ],
             ),
@@ -73,7 +79,8 @@ class FeedBubble extends StatelessWidget {
           MaterialPageRoute(
             builder: (_context) {
               return BlocProvider(
-                  bloc: BlocProvider.of<HomeDashBoardBloc>(context),child: NewsCardView(newsModel: news, isFocused: false));
+                  bloc: BlocProvider.of<HomeDashBoardBloc>(context),
+                  child: NewsCardView(newsModel: news, isFocused: false));
             },
           ),
         );

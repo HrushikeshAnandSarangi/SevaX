@@ -48,7 +48,7 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: double.infinity,
+      width: MediaQuery.of(context).size.width,
       color: Theme.of(context).primaryColor,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 20),
@@ -60,6 +60,7 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
               children: [
                 Container(
                   height: 40,
+                  width: MediaQuery.of(context).size.width / 2 - 14,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(4),
                     color: Colors.white,
@@ -95,9 +96,10 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
                     ),
                   ),
                 ),
-                SizedBox(width: 12),
+                // SizedBox(width: 12),
                 Container(
                   height: 40,
+                  width: MediaQuery.of(context).size.width / 2,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(4),
                     color: Colors.white,
@@ -115,7 +117,7 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
                           .map(
                             (model) => DropdownMenuItem(
                               child: Padding(
-                                padding: const EdgeInsets.only(left: 8.0),
+                                padding: const EdgeInsets.only(right: 8.0),
                                 child: Text(
                                   model.timezoneName,
                                 ),

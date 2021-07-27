@@ -41,10 +41,19 @@ class CustomDialogs {
             title: Text(title),
             actions: [
               CustomTextButton(
+                shape: StadiumBorder(),
+                color: Theme.of(context).accentColor,
                 onPressed: () {
                   Navigator.of(_context).pop(true);
                 },
-                child: Text(S.of(context).close),
+                child: Text(
+                  S.of(context).close,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontFamily: 'Europa',
+                    fontSize: 16,
+                  ),
+                ),
               ),
             ],
           ),

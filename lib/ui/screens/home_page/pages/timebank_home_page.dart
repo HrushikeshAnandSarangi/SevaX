@@ -286,7 +286,16 @@ class _TimebankHomePageState extends State<TimebankHomePage>
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             CustomTextButton(
-              child: Text(S.of(context).close),
+              shape: StadiumBorder(),
+              color: Theme.of(context).accentColor,
+              child: Text(
+                S.of(context).close,
+                style: TextStyle(
+                  fontSize: 16.0,
+                  fontFamily: 'Europa',
+                  color: Colors.white,
+                ),
+              ),
               onPressed: () {
                 Navigator.of(_context).pop();
               },

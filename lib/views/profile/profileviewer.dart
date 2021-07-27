@@ -784,11 +784,11 @@ class ProfileHeader extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        StreamBuilder(
+        StreamBuilder<QuerySnapshot>(
           stream: CollectionRef.reviews
               .where("reviewed", isEqualTo: email)
               .snapshots(),
-          builder: (context, AsyncSnapshot snapshot) {
+          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
             double r = 0;
             if (snapshot.data != null) {
               snapshot.data.docs.forEach((data) {
@@ -803,7 +803,7 @@ class ProfileHeader extends StatelessWidget {
                   Text(
                     r != null
                         ? r > 0
-                            ? '${(r / snapshot.data.documents.length).toStringAsFixed(1)}'
+                            ? '${(r / snapshot.data.docs.length).toStringAsFixed(1)}'
                             : S.of(context).no_ratings_yet
                         : S.of(context).loading,
                     style: TextStyle(

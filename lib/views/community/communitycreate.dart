@@ -706,6 +706,13 @@ class CreateEditCommunityViewFormState
                                                     "You are on Enterprise Plan",
                                                 "status": 200,
                                               };
+
+                                              snapshot.data.community
+                                                  .updateValueByKey(
+                                                'payment',
+                                                communityModel.payment,
+                                              );
+
                                               communityModel.testCommunity =
                                                   true;
                                               snapshot.data.community

@@ -587,6 +587,7 @@ class DiscussionListState extends State<DiscussionList> {
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 16,
+                          fontFamily: 'Europa',
                           color: FlavorConfig.values.theme.primaryColor,
                         ),
                       ),
