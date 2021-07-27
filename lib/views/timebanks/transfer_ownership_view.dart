@@ -40,11 +40,11 @@ class TransferOwnerShipView extends StatefulWidget {
 class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
   SuggestionsBoxController controller = SuggestionsBoxController();
   TextEditingController _textEditingController = TextEditingController();
-  var groupMembersList = [];
+  List<String> groupMembersList = [];
   var ownerGroupsArr;
   UserModel selectedNewOwner = null;
-  var allItems = [];
-  var admins, coordinators, members;
+  List<String> allItems = [];
+  List<String> admins, coordinators, members;
   TimebankModel tbmodel;
   var futures = <Future>[];
   @override
