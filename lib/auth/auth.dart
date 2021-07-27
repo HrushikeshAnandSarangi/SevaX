@@ -124,7 +124,7 @@ class Auth {
         password: password,
       );
       return _processEmailPasswordUser(result.user, displayName);
-    } on PlatformException catch (error) {
+    } on FirebaseAuthException catch (error) {
       logger.i(
           "${error.code} ==================================================");
       if (error.code == 'ERROR_EMAIL_ALREADY_IN_USE')

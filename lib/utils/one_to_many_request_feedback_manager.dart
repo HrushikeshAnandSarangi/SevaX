@@ -36,7 +36,7 @@ Future<void> sendFeedbackNotificationsToAttendees(
         notification.toMap());
   }
 
-  batch.commit();
+  await batch.commit();
 
   logger.e('Feedback Notifications sent to one to many request Attendees');
 }

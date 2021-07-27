@@ -288,7 +288,7 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
   Widget recommendedUsers() {
     return StreamBuilder<List<UserModel>>(
       stream: FirestoreManager.getRecommendedUsersStream(
-        requestId: requestModel.id,
+        requestId: requestModel?.id,
       ),
       builder: (context, snapshot) {
         if (snapshot.hasError) {

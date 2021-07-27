@@ -313,10 +313,17 @@ class ExploreCommunityCard extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 4),
-                  Text(
-                    S.of(context).new_york,
-                    style: TextStyle(
-                      color: Theme.of(context).accentColor,
+                  HideWidget(
+                    hide: (model.billing_address == null ||
+                        model.billing_address.city == null ||
+                        model.billing_address.country == null),
+                    child: Text(
+                      model.billing_address.city +
+                          ' | ' +
+                          model.billing_address.country,
+                      style: TextStyle(
+                        color: Theme.of(context).accentColor,
+                      ),
                     ),
                   ),
                   SizedBox(height: 12),

@@ -674,7 +674,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   comingFrom: ComingFrom.Projects,
                   upgradeDetails:
                       AppConfig.upgradePlanBannerModel.public_to_sevax_global,
-                  transaction_matrix_type: 'public_to_sevax_global',
+                  transaction_matrix_type: 'create_public_event',
                   child: ConfigurationCheck(
                     actionType: 'create_public_event',
                     role: memberType(timebankModel,

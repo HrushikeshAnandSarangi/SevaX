@@ -39,6 +39,7 @@ import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/mailer.dart';
+import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/svea_credits_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
@@ -1097,18 +1098,26 @@ class RequestEditFormState extends State<RequestEditForm> {
                               child: Padding(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 10),
-                                child: OpenScopeCheckBox(
-                                    infoType: InfoType.OpenScopeRequest,
-                                    isChecked: widget.requestModel.public,
-                                    checkBoxTypeLabel:
-                                        CheckBoxType.type_Requests,
-                                    onChangedCB: (bool val) {
-                                      if (widget.requestModel.public != val) {
-                                        widget.requestModel.public = val;
-                                        log('value ${widget.requestModel.public}');
-                                        setState(() {});
-                                      }
-                                    }),
+                                child: TransactionsMatrixCheck(
+                                  comingFrom: ComingFrom.Requests,
+                                  upgradeDetails: AppConfig
+                                      .upgradePlanBannerModel
+                                      .public_to_sevax_global,
+                                  transaction_matrix_type:
+                                      'create_public_request',
+                                  child: OpenScopeCheckBox(
+                                      infoType: InfoType.OpenScopeRequest,
+                                      isChecked: widget.requestModel.public,
+                                      checkBoxTypeLabel:
+                                          CheckBoxType.type_Requests,
+                                      onChangedCB: (bool val) {
+                                        if (widget.requestModel.public != val) {
+                                          widget.requestModel.public = val;
+                                          log('value ${widget.requestModel.public}');
+                                          setState(() {});
+                                        }
+                                      }),
+                                ),
                               ),
                             ),
 

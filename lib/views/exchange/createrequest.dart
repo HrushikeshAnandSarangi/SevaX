@@ -1265,24 +1265,32 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                 child: Padding(
                                   padding:
                                       const EdgeInsets.symmetric(vertical: 10),
-                                  child: ConfigurationCheck(
-                                    actionType: 'create_public_request',
-                                    role: memberType(
-                                        timebankModel,
-                                        SevaCore.of(context)
-                                            .loggedInUser
-                                            .sevaUserID),
-                                    child: OpenScopeCheckBox(
-                                        infoType: InfoType.OpenScopeEvent,
-                                        isChecked: requestModel.public,
-                                        checkBoxTypeLabel:
-                                            CheckBoxType.type_Requests,
-                                        onChangedCB: (bool val) {
-                                          if (requestModel.public != val) {
-                                            this.requestModel.public = val;
-                                            setState(() {});
-                                          }
-                                        }),
+                                  child: TransactionsMatrixCheck(
+                                    comingFrom: widget.comingFrom,
+                                    upgradeDetails: AppConfig
+                                        .upgradePlanBannerModel
+                                        .public_to_sevax_global,
+                                    transaction_matrix_type:
+                                        'create_public_request',
+                                    child: ConfigurationCheck(
+                                      actionType: 'create_public_request',
+                                      role: memberType(
+                                          timebankModel,
+                                          SevaCore.of(context)
+                                              .loggedInUser
+                                              .sevaUserID),
+                                      child: OpenScopeCheckBox(
+                                          infoType: InfoType.OpenScopeEvent,
+                                          isChecked: requestModel.public,
+                                          checkBoxTypeLabel:
+                                              CheckBoxType.type_Requests,
+                                          onChangedCB: (bool val) {
+                                            if (requestModel.public != val) {
+                                              this.requestModel.public = val;
+                                              setState(() {});
+                                            }
+                                          }),
+                                    ),
                                   ),
                                 ),
                               ),

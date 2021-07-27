@@ -128,7 +128,7 @@ class OfferDetails extends StatelessWidget {
                       child: Row(
                         children: [
                           Container(
-                            height: 30,
+                            height: 40,
                             width: 80,
                             child: CustomTextButton(
                               shape: RoundedRectangleBorder(
@@ -320,7 +320,7 @@ class OfferDetails extends StatelessWidget {
             width: 10,
           ),
           Container(
-            height: 30,
+            height: 40,
             width: 90,
             child: CustomTextButton(
               shape: RoundedRectangleBorder(
@@ -615,51 +615,56 @@ class OfferDetails extends StatelessWidget {
                               offerModel),
                       role: memberType(timebankModel,
                           SevaCore.of(context).loggedInUser.sevaUserID),
-                      child: CustomTextButton(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                          left: 2,
                         ),
-                        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                        color: Color.fromRGBO(44, 64, 140, 0.7),
-                        child: Row(
-                          children: <Widget>[
-                            SizedBox(width: 1),
-                            Container(
-                              width: 30,
-                              height: 30,
-                              decoration: BoxDecoration(
-                                color: Color.fromRGBO(44, 64, 140, 1),
-                                shape: BoxShape.circle,
+                        child: CustomTextButton(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                          color: Color.fromRGBO(44, 64, 140, 0.7),
+                          child: Row(
+                            children: <Widget>[
+                              SizedBox(width: 1),
+                              Container(
+                                width: 30,
+                                height: 30,
+                                decoration: BoxDecoration(
+                                  color: Color.fromRGBO(44, 64, 140, 1),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  Icons.check,
+                                  color: Colors.white,
+                                ),
                               ),
-                              child: Icon(
-                                Icons.check,
-                                color: Colors.white,
+                              Spacer(),
+                              Text(
+                                S.of(context).accept_offer,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
                               ),
-                            ),
-                            Spacer(),
-                            Text(
-                              S.of(context).accept_offer,
-                              style: TextStyle(
-                                color: Colors.white,
+                              Spacer(
+                                flex: 2,
                               ),
-                            ),
-                            Spacer(
-                              flex: 2,
-                            ),
-                          ],
-                        ),
-                        onPressed: () async {
-                          logger.i("INDIVIDUAL ========== || =======");
+                            ],
+                          ),
+                          onPressed: () async {
+                            logger.i("INDIVIDUAL ========== || =======");
 
-                          showDialogForMakingAnOffer(
-                            model: offerModel,
-                            parentContext: context,
-                            timebankModel: timebankModel,
-                            sevaUserId:
-                                SevaCore.of(context).loggedInUser.sevaUserID,
-                            hideCancelBookMark: true,
-                          );
-                        },
+                            showDialogForMakingAnOffer(
+                              model: offerModel,
+                              parentContext: context,
+                              timebankModel: timebankModel,
+                              sevaUserId:
+                                  SevaCore.of(context).loggedInUser.sevaUserID,
+                              hideCancelBookMark: true,
+                            );
+                          },
+                        ),
                       ),
                     ),
                   ),
@@ -774,7 +779,7 @@ class OfferDetails extends StatelessWidget {
                         comingFrom: ComingFrom.Offers,
                         upgradeDetails:
                             AppConfig.upgradePlanBannerModel.calendar_sync,
-                        transaction_matrix_type: S.of(context).calender_sync,
+                        transaction_matrix_type: "calender_sync",
                         child: GestureDetector(
                             child: CircleAvatar(
                               backgroundColor: Colors.white,
@@ -803,7 +808,7 @@ class OfferDetails extends StatelessWidget {
                         comingFrom: ComingFrom.Offers,
                         upgradeDetails:
                             AppConfig.upgradePlanBannerModel.calendar_sync,
-                        transaction_matrix_type: S.of(context).calender_sync,
+                        transaction_matrix_type: "calender_sync",
                         child: GestureDetector(
                             child: CircleAvatar(
                               backgroundColor: Colors.white,
@@ -830,7 +835,7 @@ class OfferDetails extends StatelessWidget {
                         comingFrom: ComingFrom.Offers,
                         upgradeDetails:
                             AppConfig.upgradePlanBannerModel.calendar_sync,
-                        transaction_matrix_type: S.of(context).calender_sync,
+                        transaction_matrix_type: "calender_sync",
                         child: GestureDetector(
                             child: CircleAvatar(
                               backgroundColor: Colors.white,

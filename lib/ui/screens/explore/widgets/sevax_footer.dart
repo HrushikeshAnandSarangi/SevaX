@@ -374,7 +374,7 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
         return getOnTap(
           context,
           S.of(context).help,
-          AppConfig.remoteConfig.getString('help_videos_admin'),
+          'help_videos_admin',
         );
 
       case FooterData.Hosting:

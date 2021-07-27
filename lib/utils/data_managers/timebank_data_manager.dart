@@ -133,7 +133,7 @@ Future<List<TimebankModel>> getAllTheGroups(
         .get()
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((DocumentSnapshot documentSnapshot) {
-        var timebank = TimebankModel(documentSnapshot.data);
+        var timebank = TimebankModel(documentSnapshot.data());
         timeBankModelList.add(timebank);
       });
     });

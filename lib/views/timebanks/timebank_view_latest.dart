@@ -485,10 +485,14 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
           title: Text(S.of(context).admin_cannot_create_message),
           actions: <Widget>[
             CustomTextButton(
+              color: Colors.grey,
+              shape: StadiumBorder(),
               child: Text(
                 S.of(context).close,
                 style: TextStyle(
-                  color: Colors.red,
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontFamily: 'Europa',
                 ),
               ),
               onPressed: () {

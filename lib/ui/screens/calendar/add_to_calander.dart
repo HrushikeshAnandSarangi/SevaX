@@ -273,7 +273,7 @@ class AddToCalendarState extends State<AddToCalendar> {
     return TransactionsMatrixCheck(
       comingFrom: ComingFrom.Home,
       upgradeDetails: AppConfig.upgradePlanBannerModel.calendar_sync,
-      transaction_matrix_type: S.of(context).calender_sync,
+      transaction_matrix_type: "calender_sync",
       child: Container(
         margin: EdgeInsets.only(left: 10),
         child: Row(
