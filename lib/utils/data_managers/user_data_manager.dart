@@ -309,10 +309,9 @@ Future<UserModel> getUserForEmail({
       'User Email cannot be null or empty');
 
   UserModel userModel;
-  DocumentSnapshot documentSnapshot =
-      await CollectionRef.users.doc(emailAddress).get();
+  var documentSnapshot = await CollectionRef.users.doc(emailAddress).get();
 
-  if (documentSnapshot == null || documentSnapshot.data == null) {
+  if (documentSnapshot == null || documentSnapshot.data() == null) {
     return null;
   }
   userModel = UserModel.fromMap(documentSnapshot.data(), 'user_data_manager');
