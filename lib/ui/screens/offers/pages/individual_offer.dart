@@ -770,26 +770,37 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                           initialData: false,
                                           stream: _bloc.makePublicValue,
                                           builder: (context, snapshot) {
-                                            return ConfigurationCheck(
-                                              actionType: 'create_public_offer',
-                                              role: memberType(
-                                                  widget.timebankModel,
-                                                  SevaCore.of(context)
-                                                      .loggedInUser
-                                                      .sevaUserID),
-                                              child: OpenScopeCheckBox(
-                                                  infoType:
-                                                      InfoType.OpenScopeOffer,
-                                                  isChecked: snapshot.data,
-                                                  checkBoxTypeLabel:
-                                                      CheckBoxType.type_Offers,
-                                                  onChangedCB: (bool val) {
-                                                    if (snapshot.data != val) {
-                                                      _bloc.onOfferMadePublic(
-                                                          val);
-                                                      setState(() {});
-                                                    }
-                                                  }),
+                                            return TransactionsMatrixCheck(
+                                              comingFrom: ComingFrom.Requests,
+                                              upgradeDetails: AppConfig
+                                                  .upgradePlanBannerModel
+                                                  .public_to_sevax_global,
+                                              transaction_matrix_type:
+                                                  'create_public_offer',
+                                              child: ConfigurationCheck(
+                                                actionType:
+                                                    'create_public_offer',
+                                                role: memberType(
+                                                    widget.timebankModel,
+                                                    SevaCore.of(context)
+                                                        .loggedInUser
+                                                        .sevaUserID),
+                                                child: OpenScopeCheckBox(
+                                                    infoType:
+                                                        InfoType.OpenScopeOffer,
+                                                    isChecked: snapshot.data,
+                                                    checkBoxTypeLabel:
+                                                        CheckBoxType
+                                                            .type_Offers,
+                                                    onChangedCB: (bool val) {
+                                                      if (snapshot.data !=
+                                                          val) {
+                                                        _bloc.onOfferMadePublic(
+                                                            val);
+                                                        setState(() {});
+                                                      }
+                                                    }),
+                                              ),
                                             );
                                           }),
                                     )
@@ -1104,6 +1115,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                   ),
                           ),
                         ),
+                        SizedBox(height: 20),
                       ],
                     ),
                   ),

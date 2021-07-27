@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/new_baseline/models/project_template_model.dart';
+import 'package:sevaexchange/ui/utils/debouncer.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
@@ -30,6 +31,7 @@ class _ProjectTemplateViewState extends State<ProjectTemplateView> {
   int value;
   ProjectTemplateModel selectedProjectTemplate;
   bool isProjectTemplateSelected = false;
+  final _debouncer = Debouncer(milliseconds: 400);
 
   @override
   void initState() {
@@ -37,8 +39,15 @@ class _ProjectTemplateViewState extends State<ProjectTemplateView> {
     super.initState();
 
     ///getTemplate();
-    searchTextController
-        .addListener(() => _textUpdates.add(searchTextController.text));
+    searchTextController.addListener(() {
+      _debouncer.run(() {
+        if (searchTextController.text.isEmpty) {
+          setState(() {});
+        } else {
+          setState(() {});
+        }
+      });
+    });
   }
 
   @override
@@ -145,6 +154,9 @@ class _ProjectTemplateViewState extends State<ProjectTemplateView> {
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             Text(snapshot.error.toString());
+          }
+          if (snapshot.data == null) {
+            return getEmptyWidget(S.of(context).no_templates_found);
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(

@@ -548,7 +548,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
     }
   }
 
-  Future<String> uploadDocument() async {
+  Future<void> uploadDocument() async {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     String timestampString = timestamp.toString();
     String name =
@@ -572,10 +572,11 @@ class InviteAddMembersState extends State<InviteAddMembers> {
     });
 
     csvFileModel.csvTitle = name;
+    setState(() => this._isDocumentBeingUploaded = false);
+
     // csvFileModel.csvUrl = documentURL;
     // _setAvatarURL();
     // _updateDB();
-    return documentURL;
   }
 
   void userDoc(String _doc, String fileName) {
@@ -596,9 +597,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
       this._isDocumentBeingUploaded = false;
       getAlertDialog(parentContext);
     } else {
-      uploadDocument().then((_) {
-        setState(() => this._isDocumentBeingUploaded = false);
-      });
+      uploadDocument();
     }
   }
 

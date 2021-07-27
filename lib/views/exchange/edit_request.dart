@@ -39,6 +39,7 @@ import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/mailer.dart';
+import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/svea_credits_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
@@ -188,7 +189,7 @@ class RequestEditFormState extends State<RequestEditForm> {
   String tempProjectId = '';
 
   End end = End();
-  var focusNodes = List.generate(17, (_) => FocusNode());
+  var focusNodes = List.generate(18, (_) => FocusNode());
 
   double sevaCoinsValue = 0;
   String hoursMessage = ' Click to Set Duration';
@@ -1097,18 +1098,26 @@ class RequestEditFormState extends State<RequestEditForm> {
                               child: Padding(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 10),
-                                child: OpenScopeCheckBox(
-                                    infoType: InfoType.OpenScopeRequest,
-                                    isChecked: widget.requestModel.public,
-                                    checkBoxTypeLabel:
-                                        CheckBoxType.type_Requests,
-                                    onChangedCB: (bool val) {
-                                      if (widget.requestModel.public != val) {
-                                        widget.requestModel.public = val;
-                                        log('value ${widget.requestModel.public}');
-                                        setState(() {});
-                                      }
-                                    }),
+                                child: TransactionsMatrixCheck(
+                                  comingFrom: ComingFrom.Requests,
+                                  upgradeDetails: AppConfig
+                                      .upgradePlanBannerModel
+                                      .public_to_sevax_global,
+                                  transaction_matrix_type:
+                                      'create_public_request',
+                                  child: OpenScopeCheckBox(
+                                      infoType: InfoType.OpenScopeRequest,
+                                      isChecked: widget.requestModel.public,
+                                      checkBoxTypeLabel:
+                                          CheckBoxType.type_Requests,
+                                      onChangedCB: (bool val) {
+                                        if (widget.requestModel.public != val) {
+                                          widget.requestModel.public = val;
+                                          log('value ${widget.requestModel.public}');
+                                          setState(() {});
+                                        }
+                                      }),
+                                ),
                               ),
                             ),
 
@@ -1636,13 +1645,15 @@ class RequestEditFormState extends State<RequestEditForm> {
             },
             textInputAction: TextInputAction.next,
             keyboardType: TextInputType.multiline,
-            maxLines: 1,
+            minLines: 5,
+            maxLines: null,
             onSaved: (value) {
               widget.requestModel.cashModel.other_details = value;
             },
             decoration: InputDecoration(
               errorMaxLines: 2,
               hintText: L.of(context).other_payment_details_hint,
+              hintStyle: hintTextStyle,
             ),
             initialValue: widget.requestModel.cashModel.other_details != null
                 ? widget.requestModel.cashModel.other_details

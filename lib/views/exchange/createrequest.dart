@@ -192,7 +192,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
   RequestModel requestModel;
   bool isPulicCheckboxVisible = false;
   End end = End();
-  var focusNodes = List.generate(17, (_) => FocusNode());
+  var focusNodes = List.generate(18, (_) => FocusNode());
   List<String> eventsIdsArr = [];
   List<String> selectedCategoryIds = [];
   bool comingFromDynamicLink = false;
@@ -1266,24 +1266,32 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                 child: Padding(
                                   padding:
                                       const EdgeInsets.symmetric(vertical: 10),
-                                  child: ConfigurationCheck(
-                                    actionType: 'create_public_request',
-                                    role: memberType(
-                                        timebankModel,
-                                        SevaCore.of(context)
-                                            .loggedInUser
-                                            .sevaUserID),
-                                    child: OpenScopeCheckBox(
-                                        infoType: InfoType.OpenScopeEvent,
-                                        isChecked: requestModel.public,
-                                        checkBoxTypeLabel:
-                                            CheckBoxType.type_Requests,
-                                        onChangedCB: (bool val) {
-                                          if (requestModel.public != val) {
-                                            this.requestModel.public = val;
-                                            setState(() {});
-                                          }
-                                        }),
+                                  child: TransactionsMatrixCheck(
+                                    comingFrom: widget.comingFrom,
+                                    upgradeDetails: AppConfig
+                                        .upgradePlanBannerModel
+                                        .public_to_sevax_global,
+                                    transaction_matrix_type:
+                                        'create_public_request',
+                                    child: ConfigurationCheck(
+                                      actionType: 'create_public_request',
+                                      role: memberType(
+                                          timebankModel,
+                                          SevaCore.of(context)
+                                              .loggedInUser
+                                              .sevaUserID),
+                                      child: OpenScopeCheckBox(
+                                          infoType: InfoType.OpenScopeEvent,
+                                          isChecked: requestModel.public,
+                                          checkBoxTypeLabel:
+                                              CheckBoxType.type_Requests,
+                                          onChangedCB: (bool val) {
+                                            if (requestModel.public != val) {
+                                              this.requestModel.public = val;
+                                              setState(() {});
+                                            }
+                                          }),
+                                    ),
                                   ),
                                 ),
                               ),
@@ -1807,13 +1815,15 @@ class RequestCreateFormState extends State<RequestCreateForm>
             },
             textInputAction: TextInputAction.next,
             keyboardType: TextInputType.multiline,
-            maxLines: 1,
+            minLines: 5,
+            maxLines: null,
             onSaved: (value) {
               requestModel.cashModel.other_details = value;
             },
             decoration: InputDecoration(
               errorMaxLines: 2,
               hintText: L.of(context).other_payment_details_hint,
+              hintStyle: hintTextStyle,
             ),
             validator: (value) {
               if (value.isEmpty || value == null) {
@@ -2155,7 +2165,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                   TransactionsMatrixCheck(
                     upgradeDetails:
                         AppConfig.upgradePlanBannerModel.onetomany_requests,
-                    transaction_matrix_type: 'cash_goods_requests',
+                    transaction_matrix_type: 'onetomany_requests',
                     comingFrom: widget.comingFrom,
                     child: _optionRadioButton<RequestType>(
                       title: S.of(context).one_to_many.sentenceCase(),
