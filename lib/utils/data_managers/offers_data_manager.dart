@@ -480,3 +480,33 @@ Future<void> updateOfferWithRequest({
 }) async {
   await CollectionRef.offers.doc(offer.id).update(offer.toMap());
 }
+
+Stream<List<OfferModel>> getBookMarkedOffers(
+    {@required String sevaUserId, @required String timebankid}) async* {
+  var data = CollectionRef.offers
+      .where(
+        'individualOfferDataModel.offerAcceptors',
+        arrayContains: sevaUserId,
+      )
+      .orderBy('timestamp', descending: true)
+      .snapshots();
+
+  yield* data.transform(
+    StreamTransformer<QuerySnapshot, List<OfferModel>>.fromHandlers(
+      handleData: (snapshot, offerSink) async {
+        List<OfferModel> offerList = [];
+
+        snapshot.docs.forEach((snapshot) {
+          OfferModel model = OfferModel.fromMap(snapshot.data());
+          model.id = snapshot.id;
+
+          if (model.timebanksPosted != null &&
+              model.timebanksPosted.contains(timebankid)) {
+            offerList.add(model);
+          }
+        });
+        offerSink.add(offerList);
+      },
+    ),
+  );
+}
