@@ -128,7 +128,7 @@ class OfferDetails extends StatelessWidget {
                       child: Row(
                         children: [
                           Container(
-                            height: 30,
+                            height: 40,
                             width: 80,
                             child: CustomTextButton(
                               shape: RoundedRectangleBorder(
@@ -320,7 +320,7 @@ class OfferDetails extends StatelessWidget {
             width: 10,
           ),
           Container(
-            height: 30,
+            height: 40,
             width: 90,
             child: CustomTextButton(
               shape: RoundedRectangleBorder(
