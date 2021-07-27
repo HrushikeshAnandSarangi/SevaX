@@ -10,6 +10,7 @@ import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/switch_timebank.dart';
@@ -46,7 +47,7 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
   List<String> allItems = [];
   List<String> admins, coordinators, members;
   TimebankModel tbmodel;
-  var futures = <Future>[];
+  List<Future> futures = [];
   @override
   void initState() {
     // TODO: implement initState
@@ -68,6 +69,7 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
         allItems.addAll(coordinators);
         allItems.addAll(members);
         groupMembersList = allItems;
+        logger.d(groupMembersList);
       });
     });
   }
@@ -123,10 +125,6 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
               SizedBox(
                 height: 15,
               ),
-//              getInfoWidget(),
-//              SizedBox(
-//                height: 15,
-//              ),
               Text(
                 S.of(context).transfer_to,
                 style: TextStyle(
