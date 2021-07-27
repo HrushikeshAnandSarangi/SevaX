@@ -100,9 +100,16 @@ Widget permissionsAlertDialog(BuildContext context) {
         "This action is restricted for you by the owner of this Seva Community."),
     actions: [
       CustomTextButton(
+        shape: StadiumBorder(),
+        color: Theme.of(context).accentColor,
         onPressed: () => Navigator.of(context).pop(),
         child: Text(
           S.of(context).ok,
+          style: TextStyle(
+            fontFamily: 'Europa',
+            fontSize: 16,
+            color: Colors.white,
+          ),
         ),
         textColor: Colors.deepOrange,
       )

@@ -246,6 +246,9 @@ class NewsCardViewState extends State<NewsCardView> {
                           )),
                         ),
                         labelText: S.of(context).add_comment,
+                        labelStyle: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                        ),
                         isDense: true,
                         contentPadding: EdgeInsets.all(3.0),
                       ),
@@ -355,16 +358,16 @@ class NewsCardViewState extends State<NewsCardView> {
   Widget get newsTitle {
     return Container(
       padding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 20.0),
-      child: widget.newsModel.title == null ||
-              widget.newsModel.title == "NoData"
-          ? Offstage()
-          : Text(
-              widget.newsModel.title.trim(),
-              style: TextStyle(
-                  fontSize: 28.0,
-                  fontStyle: FontStyle.normal,
-                  fontWeight: FontWeight.bold),
-            ),
+      child:
+          widget.newsModel.title == null || widget.newsModel.title == "NoData"
+              ? Offstage()
+              : Text(
+                  widget.newsModel.title.trim(),
+                  style: TextStyle(
+                      fontSize: 28.0,
+                      fontStyle: FontStyle.normal,
+                      fontWeight: FontWeight.bold),
+                ),
     );
   }
 

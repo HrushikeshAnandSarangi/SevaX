@@ -546,13 +546,17 @@ class ProfileViewerState extends State<ProfileViewer> {
                 children: <Widget>[
                   Spacer(),
                   CustomTextButton(
+                    shape: StadiumBorder(),
                     padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                     color: Theme.of(context).accentColor,
                     textColor: FlavorConfig.values.buttonTextColor,
                     child: Text(
                       isBlocked ? S.of(context).unblock : S.of(context).block,
                       style: TextStyle(
-                          fontSize: dialogButtonSize, fontFamily: 'Europa'),
+                        color: Colors.white,
+                        fontSize: dialogButtonSize,
+                        fontFamily: 'Europa',
+                      ),
                     ),
                     onPressed: () {
                       isBlocked
