@@ -774,7 +774,7 @@ class OfferDetails extends StatelessWidget {
                         comingFrom: ComingFrom.Offers,
                         upgradeDetails:
                             AppConfig.upgradePlanBannerModel.calendar_sync,
-                        transaction_matrix_type: S.of(context).calender_sync,
+                        transaction_matrix_type: "calender_sync",
                         child: GestureDetector(
                             child: CircleAvatar(
                               backgroundColor: Colors.white,
@@ -803,7 +803,7 @@ class OfferDetails extends StatelessWidget {
                         comingFrom: ComingFrom.Offers,
                         upgradeDetails:
                             AppConfig.upgradePlanBannerModel.calendar_sync,
-                        transaction_matrix_type: S.of(context).calender_sync,
+                        transaction_matrix_type: "calender_sync",
                         child: GestureDetector(
                             child: CircleAvatar(
                               backgroundColor: Colors.white,
@@ -830,7 +830,7 @@ class OfferDetails extends StatelessWidget {
                         comingFrom: ComingFrom.Offers,
                         upgradeDetails:
                             AppConfig.upgradePlanBannerModel.calendar_sync,
-                        transaction_matrix_type: S.of(context).calender_sync,
+                        transaction_matrix_type: "calender_sync",
                         child: GestureDetector(
                             child: CircleAvatar(
                               backgroundColor: Colors.white,

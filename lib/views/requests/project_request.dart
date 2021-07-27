@@ -293,7 +293,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                         comingFrom: ComingFrom.Projects,
                         upgradeDetails:
                             AppConfig.upgradePlanBannerModel.calendar_sync,
-                        transaction_matrix_type: S.of(context).calender_sync,
+                        transaction_matrix_type: "calender_sync",
                         child: GestureDetector(
                             child: CircleAvatar(
                               backgroundColor: Colors.white,
@@ -318,7 +318,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                         comingFrom: ComingFrom.Projects,
                         upgradeDetails:
                             AppConfig.upgradePlanBannerModel.calendar_sync,
-                        transaction_matrix_type: S.of(context).calender_sync,
+                        transaction_matrix_type: "calender_sync",
                         child: GestureDetector(
                             child: CircleAvatar(
                               backgroundColor: Colors.white,
@@ -343,7 +343,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                         comingFrom: ComingFrom.Projects,
                         upgradeDetails:
                             AppConfig.upgradePlanBannerModel.calendar_sync,
-                        transaction_matrix_type: S.of(context).calender_sync,
+                        transaction_matrix_type: "calender_sync",
                         child: GestureDetector(
                             child: CircleAvatar(
                               backgroundColor: Colors.white,
