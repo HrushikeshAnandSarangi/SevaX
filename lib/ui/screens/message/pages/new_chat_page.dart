@@ -163,7 +163,12 @@ class _NewChatPageState extends State<NewChatPage> {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
                                     builder: (context) =>
-                                        CommunityMessageCreate(),
+                                        CommunityMessageCreate(
+                                      isEditing: false,
+                                      primaryTimebankId: SevaCore.of(context)
+                                          .loggedInUser
+                                          .currentTimebank,
+                                    ),
                                   ),
                                 );
                               },

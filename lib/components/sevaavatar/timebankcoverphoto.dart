@@ -49,8 +49,8 @@ class _TimebankCoverPhotoState extends State<TimebankCoverPhoto>
     String imageURL = '';
     uploadTask.whenComplete(() async {
       imageURL = await ref.getDownloadURL();
+      await profanityCheck(imageURL: imageURL);
     });
-    await profanityCheck(imageURL: imageURL);
 
     return imageURL;
   }

@@ -32,7 +32,7 @@ class _TimebankAvatarState extends State<TimebankAvatar>
   bool _isImageBeingUploaded = false;
   ProfanityImageModel profanityImageModel = ProfanityImageModel();
   ProfanityStatusModel profanityStatusModel = ProfanityStatusModel();
-  Future<String> _uploadImage() async {
+  Future<void> _uploadImage() async {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     String timestampString = timestamp.toString();
     Reference ref = FirebaseStorage.instance.ref().child('timebanklogos').child(
@@ -47,15 +47,17 @@ class _TimebankAvatarState extends State<TimebankAvatar>
     String imageURL = '';
     uploadTask.whenComplete(() async {
       imageURL = await ref.getDownloadURL();
-    });
-    await profanityCheck(imageURL: imageURL);
+      log('image url ${imageURL}');
 
-    return imageURL;
+      await profanityCheck(imageURL: imageURL);
+    });
   }
 
   Future<void> profanityCheck({String imageURL}) async {
     // _newsImageURL = imageURL;
     profanityImageModel = await checkProfanityForImage(imageUrl: imageURL);
+    this._isImageBeingUploaded = false;
+
     if (profanityImageModel == null) {
       showFailedLoadImage(context: context).then((value) {
         setState(() {
@@ -98,10 +100,8 @@ class _TimebankAvatarState extends State<TimebankAvatar>
       setState(() {
         this._image = _image;
         this._isImageBeingUploaded = true;
-        _uploadImage().then((_) {
-          this._isImageBeingUploaded = false;
-        });
       });
+      _uploadImage();
     }
   }
 

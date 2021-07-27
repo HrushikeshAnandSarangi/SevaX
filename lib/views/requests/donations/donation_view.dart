@@ -64,7 +64,7 @@ class _DonationViewState extends State<DonationView> {
   UserModel sevaUser = UserModel();
   String none = '';
 
-  var focusNodes = List.generate(17, (_) => FocusNode());
+  var focusNodes = List.generate(18, (_) => FocusNode());
   final profanityDetector = ProfanityDetector();
 
   @override
@@ -1522,12 +1522,14 @@ class _DonationViewState extends State<DonationView> {
             decoration: InputDecoration(
               errorMaxLines: 2,
               hintText: L.of(context).other_payment_details_hint,
+              hintStyle: hintTextStyle,
             ),
             keyboardType: TextInputType.multiline,
             initialValue: donationsModel.cashDetails.cashDetails != null
                 ? donationsModel.cashDetails.cashDetails.other_details
                 : "",
-            maxLines: 1,
+            maxLines: null,
+            minLines: 5,
             onSaved: (value) {
               donationsModel.cashDetails.cashDetails.other_details = value;
             },
