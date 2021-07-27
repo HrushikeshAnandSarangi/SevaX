@@ -172,7 +172,14 @@ class _NewChatPageState extends State<NewChatPage> {
                                   ),
                                 );
                               },
-                              child: Text('New Community Message'),
+                              child: Text(
+                                'New Community Message',
+                                style: TextStyle(
+                                  color: Theme.of(context).primaryColor,
+                                  fontFamily: 'Europa',
+                                  fontSize: 16,
+                                ),
+                              ),
                             ),
                           ),
                         ),

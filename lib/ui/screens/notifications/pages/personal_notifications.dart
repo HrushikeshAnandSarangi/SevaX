@@ -332,41 +332,50 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         },
                         onPressedAccept: () async {
                           showDialog(
-                              context: context,
-                              builder: (BuildContext viewContext) {
-                                return AlertDialog(
-                                  title: Text(S
-                                      .of(context)
-                                      .oneToManyRequestSpeakerAcceptRequest),
-                                  actions: <Widget>[
-                                    CustomTextButton(
-                                      color: Theme.of(context).primaryColor,
-                                      child: Text(
-                                        S.of(context).yes,
-                                        style: TextStyle(
-                                            fontSize: 16, color: Colors.white),
+                            context: context,
+                            builder: (BuildContext viewContext) {
+                              return AlertDialog(
+                                title: Text(S
+                                    .of(context)
+                                    .oneToManyRequestSpeakerAcceptRequest),
+                                actions: <Widget>[
+                                  CustomTextButton(
+                                    shape: StadiumBorder(),
+                                    color: Theme.of(context).primaryColor,
+                                    child: Text(
+                                      S.of(context).yes,
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.white,
+                                        fontFamily: 'Europa',
                                       ),
-                                      onPressed: () async {
-                                        await oneToManySpeakerInviteAcceptedPersonalNotifications(
-                                            model, context);
+                                    ),
+                                    onPressed: () async {
+                                      await oneToManySpeakerInviteAcceptedPersonalNotifications(
+                                          model, context);
 
-                                        Navigator.of(viewContext).pop();
-                                      },
-                                    ),
-                                    CustomTextButton(
-                                      color: Theme.of(context).accentColor,
-                                      child: Text(
-                                        S.of(context).no,
-                                        style: TextStyle(
-                                            fontSize: 16, color: Colors.white),
+                                      Navigator.of(viewContext).pop();
+                                    },
+                                  ),
+                                  CustomTextButton(
+                                    shape: StadiumBorder(),
+                                    color: Theme.of(context).accentColor,
+                                    child: Text(
+                                      S.of(context).no,
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.white,
+                                        fontFamily: 'Europa',
                                       ),
-                                      onPressed: () {
-                                        Navigator.of(viewContext).pop();
-                                      },
                                     ),
-                                  ],
-                                );
-                              });
+                                    onPressed: () {
+                                      Navigator.of(viewContext).pop();
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
 
                           // Navigator.of(context).push(
                           //   MaterialPageRoute(
@@ -393,11 +402,15 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                       .speaker_reject_invite_dialog),
                                   actions: <Widget>[
                                     CustomTextButton(
+                                      shape: StadiumBorder(),
                                       color: Theme.of(context).primaryColor,
                                       child: Text(
                                         S.of(context).yes,
                                         style: TextStyle(
-                                            fontSize: 16, color: Colors.white),
+                                          fontSize: 16,
+                                          color: Colors.white,
+                                          fontFamily: 'Europa',
+                                        ),
                                       ),
                                       onPressed: () async {
                                         Navigator.of(viewContext).pop();
@@ -407,11 +420,15 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                       },
                                     ),
                                     CustomTextButton(
+                                      shape: StadiumBorder(),
                                       color: Theme.of(context).accentColor,
                                       child: Text(
                                         S.of(context).no,
                                         style: TextStyle(
-                                            fontSize: 16, color: Colors.white),
+                                          fontFamily: 'Europa',
+                                          fontSize: 16,
+                                          color: Colors.white,
+                                        ),
                                       ),
                                       onPressed: () {
                                         Navigator.of(viewContext).pop();
@@ -464,9 +481,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                             .of(context)
                             .speaker_completion_rejected_notification_1,
                         subTitle:
-                            S.of(context).notifications_request_rejected_by +
-                                '' +
-                                model.requestCreatorName,
+                            '${S.of(context).notifications_request_rejected_by} ${model.requestCreatorName}',
                       );
                       break;
 
