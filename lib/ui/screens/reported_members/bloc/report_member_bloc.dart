@@ -58,14 +58,9 @@ class ReportMemberBloc {
     if (_file.value != null) {
       UploadTask _uploadTask =
           _storage.ref().child("reports/$filePath.png").putFile(_file.value);
-
-      _uploadTask.whenComplete(() async {
-        attachmentUrl = await _storage.ref().getDownloadURL();
-      });
-
-      if (attachmentUrl == null || attachmentUrl == '') {
-        return Future.value(false);
-      }
+      attachmentUrl = await (await _uploadTask.whenComplete(() => null))
+          .ref
+          .getDownloadURL();
     }
     Report report = Report(
       reporterId: reportingUserModel.sevaUserID,

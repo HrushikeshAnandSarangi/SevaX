@@ -192,7 +192,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
   RequestModel requestModel;
   bool isPulicCheckboxVisible = false;
   End end = End();
-  var focusNodes = List.generate(17, (_) => FocusNode());
+  var focusNodes = List.generate(18, (_) => FocusNode());
   List<String> eventsIdsArr = [];
   List<String> selectedCategoryIds = [];
   bool comingFromDynamicLink = false;
@@ -1807,13 +1807,15 @@ class RequestCreateFormState extends State<RequestCreateForm>
             },
             textInputAction: TextInputAction.next,
             keyboardType: TextInputType.multiline,
-            maxLines: 1,
+            minLines: 5,
+            maxLines: null,
             onSaved: (value) {
               requestModel.cashModel.other_details = value;
             },
             decoration: InputDecoration(
               errorMaxLines: 2,
               hintText: L.of(context).other_payment_details_hint,
+              hintStyle: hintTextStyle,
             ),
             validator: (value) {
               if (value.isEmpty || value == null) {

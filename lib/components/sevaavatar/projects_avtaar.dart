@@ -52,8 +52,8 @@ class _ProjectsAvtaarState extends State<ProjectAvtaar>
     String imageURL = '';
     uploadTask.whenComplete(() async {
       imageURL = await ref.getDownloadURL();
+      await profanityCheck(imageURL: imageURL);
     });
-    await profanityCheck(imageURL: imageURL);
 
     return imageURL;
   }
@@ -61,9 +61,13 @@ class _ProjectsAvtaarState extends State<ProjectAvtaar>
   Future<void> profanityCheck({String imageURL}) async {
     // _newsImageURL = imageURL;
     profanityImageModel = await checkProfanityForImage(imageUrl: imageURL);
+    this._isImageBeingUploaded = false;
+
     if (profanityImageModel == null) {
       showFailedLoadImage(context: context).then((value) {
-        globals.projectsAvtaarURL = null;
+        setState(() {
+          globals.projectsAvtaarURL = null;
+        });
       });
     } else {
       profanityStatusModel =
@@ -101,9 +105,7 @@ class _ProjectsAvtaarState extends State<ProjectAvtaar>
       setState(() {
         this._image = _image;
         this._isImageBeingUploaded = true;
-        _uploadImage().then((_) {
-          this._isImageBeingUploaded = false;
-        });
+        _uploadImage();
       });
     }
   }

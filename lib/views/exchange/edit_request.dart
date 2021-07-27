@@ -188,7 +188,7 @@ class RequestEditFormState extends State<RequestEditForm> {
   String tempProjectId = '';
 
   End end = End();
-  var focusNodes = List.generate(17, (_) => FocusNode());
+  var focusNodes = List.generate(18, (_) => FocusNode());
 
   double sevaCoinsValue = 0;
   String hoursMessage = ' Click to Set Duration';
@@ -1636,13 +1636,15 @@ class RequestEditFormState extends State<RequestEditForm> {
             },
             textInputAction: TextInputAction.next,
             keyboardType: TextInputType.multiline,
-            maxLines: 1,
+            minLines: 5,
+            maxLines: null,
             onSaved: (value) {
               widget.requestModel.cashModel.other_details = value;
             },
             decoration: InputDecoration(
               errorMaxLines: 2,
               hintText: L.of(context).other_payment_details_hint,
+              hintStyle: hintTextStyle,
             ),
             initialValue: widget.requestModel.cashModel.other_details != null
                 ? widget.requestModel.cashModel.other_details

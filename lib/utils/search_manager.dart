@@ -177,7 +177,7 @@ class SearchManager {
         }
       },
       "sort": {
-        "name.keyword": {"order": "asc"}
+        "templateName.keyword": {"order": "asc"}
       }
     });
     List<Map<String, dynamic>> hitList =

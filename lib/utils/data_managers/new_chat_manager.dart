@@ -170,16 +170,16 @@ Future<void> createNewMessage({
     String attachmentUrl = '';
     _uploadTask.whenComplete(() async {
       attachmentUrl = await _storage.ref().getDownloadURL();
+      CollectionRef.chats
+          .doc(chatId)
+          .collection("messages")
+          .doc(messageRef.id)
+          .set(
+        {"data": attachmentUrl},
+        SetOptions(merge: true),
+      );
     });
     log(attachmentUrl);
-    CollectionRef.chats
-        .doc(chatId)
-        .collection("messages")
-        .doc(messageRef.id)
-        .set(
-      {"data": attachmentUrl},
-      SetOptions(merge: true),
-    );
   }
 }
 

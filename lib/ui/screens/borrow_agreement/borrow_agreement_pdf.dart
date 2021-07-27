@@ -200,6 +200,7 @@ Future<String> uploadDocument(
   String documentURL = '';
   uploadTask.whenComplete(() async {
     documentURL = await ref.getDownloadURL();
+    return documentURL;
   });
   return documentURL;
 }

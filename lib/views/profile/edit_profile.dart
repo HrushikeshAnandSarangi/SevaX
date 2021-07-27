@@ -1040,9 +1040,8 @@ class _EditProfilePageState extends State<EditProfilePage>
     // UploadTask uploadTask = ref.putFile(File.)
     String imageURL = '';
 
-    uploadTask.whenComplete(() async {
-      imageURL = await ref.getDownloadURL();
-    });
+    imageURL =
+        await (await uploadTask.whenComplete(() => null)).ref.getDownloadURL();
     return imageURL;
   }
 
