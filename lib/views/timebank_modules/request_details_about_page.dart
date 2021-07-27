@@ -3080,7 +3080,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                       TransactionsMatrixCheck(
                         upgradeDetails:
                             AppConfig.upgradePlanBannerModel.calendar_sync,
-                        transaction_matrix_type: (context).calender_sync,
+                        transaction_matrix_type: "calender_sync",
                         comingFrom: ComingFrom.Requests,
                         child: GestureDetector(
                             child: CircleAvatar(
@@ -3114,7 +3114,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                         comingFrom: ComingFrom.Requests,
                         upgradeDetails:
                             AppConfig.upgradePlanBannerModel.calendar_sync,
-                        transaction_matrix_type: (context).calender_sync,
+                        transaction_matrix_type: "calender_sync",
                         child: GestureDetector(
                             child: CircleAvatar(
                               backgroundColor: Colors.white,
@@ -3149,7 +3149,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                         comingFrom: ComingFrom.Requests,
                         upgradeDetails:
                             AppConfig.upgradePlanBannerModel.calendar_sync,
-                        transaction_matrix_type: (context).calender_sync,
+                        transaction_matrix_type: "calender_sync",
                         child: GestureDetector(
                             child: CircleAvatar(
                               backgroundColor: Colors.white,

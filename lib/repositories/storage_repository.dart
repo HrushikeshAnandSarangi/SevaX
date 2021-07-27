@@ -26,10 +26,8 @@ class StorageRepository {
         .child("$directory/${fileName ?? DateTime.now().toString()}.png")
         .putFile(file);
 
-    String attachmentUrl = '';
-    _uploadTask.whenComplete(() async {
-      attachmentUrl = await _storage.ref().getDownloadURL();
-    });
+    String attachmentUrl =
+        await (await _uploadTask.whenComplete(() => null)).ref.getDownloadURL();
     if (attachmentUrl == null || attachmentUrl == '') {
       throw Exception("Upload failed");
     }

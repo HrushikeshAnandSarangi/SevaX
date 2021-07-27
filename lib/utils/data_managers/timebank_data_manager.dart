@@ -536,7 +536,7 @@ class TimebankParticipantsDataHolder {
 Future<TimebankModel> getTimebankIdStream({@required String timebankId}) async {
   DocumentSnapshot onValue = await CollectionRef.timebank.doc(timebankId).get();
 
-  prefix0.TimebankModel model = prefix0.TimebankModel(onValue.data);
+  prefix0.TimebankModel model = prefix0.TimebankModel(onValue.data());
 
   return model;
 }

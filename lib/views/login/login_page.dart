@@ -828,7 +828,7 @@ class _LoginPageState extends State<LoginPage> {
       user = await auth.signInWithApple();
       await getAndUpdateDeviceDetailsOfUser(
           locationVal: location, userEmailId: user.email);
-    } on PlatformException catch (erorr) {
+    } on FirebaseAuthException catch (erorr) {
       handlePlatformException(erorr);
     } on Exception catch (error) {
       FirebaseCrashlytics.instance.log(error.toString());
@@ -865,7 +865,7 @@ class _LoginPageState extends State<LoginPage> {
       user = await auth.handleGoogleSignIn();
       await getAndUpdateDeviceDetailsOfUser(
           locationVal: location, userEmailId: user.email);
-    } on PlatformException catch (erorr) {
+    } on FirebaseAuthException catch (erorr) {
       handlePlatformException(erorr);
     } on Exception catch (error) {
       FirebaseCrashlytics.instance.log(error.toString());
@@ -896,7 +896,7 @@ class _LoginPageState extends State<LoginPage> {
       logger.e(error);
       handleException();
       FirebaseCrashlytics.instance.log("No Such methods error in login!");
-    } on PlatformException catch (erorr) {
+    } on FirebaseAuthException catch (erorr) {
       handlePlatformException(erorr);
     } on Exception catch (error) {
       handlePlatformException(error);
@@ -923,7 +923,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void handlePlatformException(PlatformException error) {
+  void handlePlatformException(FirebaseAuthException error) {
     if (error.message.contains("no user record")) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

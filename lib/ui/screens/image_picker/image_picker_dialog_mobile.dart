@@ -352,15 +352,14 @@ class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
 
     uploadTask.whenComplete(() async {
       imageURL = await ref.getDownloadURL();
+      await profanityCheck(
+        imageURL: imageURL,
+        storagePath: imageURL,
+      );
     });
     // imageData =
     // await uploadImageWeb(file, folderName + timestampString + '.jpg');
     // imageURL = imageData.imageUrl;
-
-    await profanityCheck(
-      imageURL: imageURL,
-      storagePath: imageURL,
-    );
 
     return imageURL;
   }

@@ -154,11 +154,13 @@ class _DocumentUploadState extends State<DocumentUpload> {
     String documentURL = '';
     uploadTask.whenComplete(() async {
       documentURL = await ref.getDownloadURL();
+      globals.newsDocumentURL = documentURL;
+      globals.newsDocumentName = _fileName;
     });
 
     // _newsImageURL = imageURL;
-    globals.newsDocumentURL = documentURL;
-    globals.newsDocumentName = _fileName;
+    // globals.newsDocumentURL = documentURL;
+    //  globals.newsDocumentName = _fileName;
     // _setAvatarURL();
     // _updateDB();
     return documentURL;
