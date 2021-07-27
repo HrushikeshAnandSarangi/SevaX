@@ -11,6 +11,7 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
@@ -37,8 +38,8 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
   final TextEditingController searchTextController = TextEditingController();
   Future<TimebankModel> getTimebankDetails;
   TimebankModel parenttimebankModel;
-  var parentTimebankMembersList = [];
-  var groupMembersList = [];
+  List<String> parentTimebankMembersList = [];
+  List<String> groupMembersList = [];
   List<InvitationModel> listInvitationModel;
   static const String INVITE = "Invite";
   static const String JOINED = "Joined";
@@ -72,6 +73,7 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
       timebankId: widget.parenttimebankid,
     ).then((onValue) {
       setState(() {
+        logger.d(onValue.listOfElement, "members");
         parentTimebankMembersList = onValue.listOfElement;
       });
     });

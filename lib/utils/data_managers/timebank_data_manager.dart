@@ -133,7 +133,7 @@ Future<List<TimebankModel>> getAllTheGroups(
         .get()
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((DocumentSnapshot documentSnapshot) {
-        var timebank = TimebankModel(documentSnapshot.data);
+        var timebank = TimebankModel(documentSnapshot.data());
         timeBankModelList.add(timebank);
       });
     });
@@ -512,13 +512,13 @@ Future<TimebankParticipantsDataHolder> getAllTimebankIdStream(
     {@required String timebankId}) async {
   DocumentSnapshot onValue = await CollectionRef.timebank.doc(timebankId).get();
 
-  prefix0.TimebankModel model = prefix0.TimebankModel(onValue.data);
+  prefix0.TimebankModel model = prefix0.TimebankModel(onValue.data());
 
   var admins = model.admins;
   var coordinators = model.coordinators;
   var organizers = model.organizers;
   var members = model.members;
-  var allItems = [];
+  List<String> allItems = [];
   allItems.addAll(admins);
   allItems.addAll(coordinators);
   allItems.addAll(members);
