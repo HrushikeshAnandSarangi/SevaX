@@ -18,6 +18,7 @@ class CustomDialogs {
                 ),
                 child: CustomTextButton(
                   shape: StadiumBorder(),
+                  padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                   color: Colors.grey,
                   onPressed: () {
                     Navigator.of(_context).pop(false);
@@ -39,6 +40,7 @@ class CustomDialogs {
                 ),
                 child: CustomTextButton(
                   shape: StadiumBorder(),
+                  padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                   color: Theme.of(context).accentColor,
                   onPressed: () {
                     Navigator.of(_context).pop(true);
