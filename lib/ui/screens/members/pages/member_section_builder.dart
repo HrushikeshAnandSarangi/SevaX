@@ -57,7 +57,7 @@ class MemberSectionBuilder extends StatelessWidget {
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
       itemCount: members.length > 100 ? 200 : members.length,
-      itemBuilder: (context, index) {
+      itemBuilder: (_context, index) {
         UserModel member = members[index];
         return member != null
             ? InkWell(

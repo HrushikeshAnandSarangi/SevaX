@@ -22,6 +22,7 @@ class CalenderEventConfirmationDialog extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           Text(S.of(context).do_you_want_to_add +
+              ' ' +
               '$title ${isrequest ? 'request' : 'offer'}' +
               S.of(context).event_to_calender),
           SizedBox(height: 10),
