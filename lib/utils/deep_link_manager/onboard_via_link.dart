@@ -13,17 +13,19 @@ import 'package:sevaexchange/widgets/custom_buttons.dart';
 //BuildContext buildContext;
 Future<void> fetchLinkData() async {
   // FirebaseDynamicLinks.getInitialLInk does a call to firebase to get us the real link because we have shortened it.
-  var link = await FirebaseDynamicLinks.instance.getInitialLink();
+  var link = await FirebaseDynamicLinks.instance
+      .getInitialLink()
+      .then((link) {
+        return link;
+      })
+      .whenComplete(() {})
+      .onError((error, stackTrace) {});
 
-  // buildContext = context;
   // This link may exist if the app was opened fresh so we'll want to handle it the same way onLink will.
   await handleLinkData(data: link);
   FirebaseDynamicLinks.instance.onLink(
       onError: (_) async {},
       onSuccess: (PendingDynamicLinkData dynamicLink) async {
-        log(">>>>>>>>>>LINK IS  ${dynamicLink.link.toString()}");
-        log("coming after syncing calendar");
-
         return handleLinkData(
           data: dynamicLink,
         );
@@ -69,9 +71,13 @@ Future<bool> handleLinkData(
         invitedMemberEmail: invitedMemberEmail,
         primaryTimebankId: primaryTimebankId,
         adminCredentials: firebaseUserCred,
-      ).then((onValue) => true).catchError((onError) => false);
+      ).then((onValue) {
+        return true;
+      }).catchError((onError) {
+        return false;
+      });
     }
-  }
+  } else {}
   return false;
 }
 
@@ -105,16 +111,32 @@ Future<bool> registerloggedInUserToCommunity({
   String communityId,
   String invitedMemberEmail,
   String primaryTimebankId,
-  var adminCredentials,
+  User adminCredentials,
 }) async {
+  log("=====Inside fetchLinkData registerloggedInUserToCommunity");
   if (loggedInUser.email != invitedMemberEmail) {
+    log("=====Inside fetchLinkData === loggedInUser.email != invitedMemberEmail");
     return false;
   }
 
   if (loggedInUser.communities != null &&
       loggedInUser.communities.contains(communityId)) {
+    log("loggedInUser.communities != null && loggedInUser.communities.contains(communityId)");
     return false;
   } else {
+    log("Inside fetchLinkData cid -> " +
+        communityId +
+        " " +
+        loggedInUser.sevaUserID +
+        " " +
+        loggedInUser.email +
+        " " +
+        loggedInUser.fullname +
+        " " +
+        loggedInUser.photoURL +
+        " " +
+        primaryTimebankId);
+
     return await initRegisterationMemberToCommunity(
       communityId: communityId,
       memberJoiningSevaUserId: loggedInUser.sevaUserID,
@@ -132,7 +154,7 @@ Future<bool> initRegisterationMemberToCommunity({
   @required String primaryTimebankId,
   @required String memberJoiningSevaUserId,
   @required String newMemberJoinedEmail,
-  @required var adminCredentials,
+  @required User adminCredentials,
   @required String newMemberFullName,
   @required String newMemberPhotoUrl,
 }) async {
