@@ -538,7 +538,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
           builder: (context, status) {
             if (status.data == Status.COMPLETE) {
               WidgetsBinding.instance.addPostFrameCallback(
-                (_) => Navigator.pop(context),
+                (_) => Navigator.of(context).pop(),
               );
             }
 
