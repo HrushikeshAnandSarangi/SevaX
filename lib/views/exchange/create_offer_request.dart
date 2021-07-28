@@ -52,7 +52,6 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
   String selectedAddress = '';
   int sharedValue = 0;
   String _selectedTimebankId;
-  bool isAdmin = false;
   TimebankModel timebankModel;
   final profanityDetector = ProfanityDetector();
   CommunityModel communityModel;
