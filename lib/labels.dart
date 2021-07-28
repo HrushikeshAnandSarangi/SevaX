@@ -310,4 +310,8 @@ class L {
       "This event is going to be deleted. As a result, requests cannot be created.";
 
   String get communities => "Communities";
+
+// 28th July
+  String get accept_offer_invitation_confirmation_to_do_tasks =>
+      "This task will be added to your To Do list, after you approve it.";
 }
