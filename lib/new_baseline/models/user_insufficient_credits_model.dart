@@ -36,7 +36,7 @@ class UserInsufficentCreditsModel extends DataModel {
       object['timebankName'] = this.timebankName;
     }
     if (this.creditsNeeded != null) {
-      object['creditsNeeded'] = this.creditsNeeded;
+      object['creditsNeeded'] = this.creditsNeeded.toDouble();
     }
     return object;
   }
@@ -63,8 +63,7 @@ class UserInsufficentCreditsModel extends DataModel {
     }
 
     if (map.containsKey('creditsNeeded')) {
-      this.creditsNeeded = map['creditsNeeded'];
+      this.creditsNeeded = map['creditsNeeded'].toDouble();
     }
-
   }
 }
