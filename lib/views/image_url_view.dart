@@ -340,10 +340,8 @@ class _ImageUrlViewState extends State<ImageUrlView> {
         customMetadata: <String, String>{'activity': 'Cover Photo'},
       ),
     );
-    String imageURL = '';
-    uploadTask.whenComplete(() async {
-      imageURL = await ref.getDownloadURL();
-    });
+    String imageURL =
+        await (await uploadTask.whenComplete(() => null)).ref.getDownloadURL();
     // await profanityCheck(imageURL: imageURL);
     //this function is called on this page and above it has gone through profanity check
 

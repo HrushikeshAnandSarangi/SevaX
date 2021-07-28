@@ -8,14 +8,13 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
-WriteBatch batch = CollectionRef.batch;
-
 Future<void> sendFeedbackNotificationsToAttendees(
     {@required List attendeesList,
     @required RequestModel requestModel,
     @required BuildContext context}) async {
   // ONETOMANY_REQUEST_ATTENDEES_FEEDBACK
 // if(requestModel.oneToManyRequestAttenders)
+  WriteBatch batch1 = CollectionRef.batch;
   for (var attendee in attendeesList) {
     NotificationsModel notification = NotificationsModel(
         id: Utils.getUuid(),
@@ -28,7 +27,7 @@ Future<void> sendFeedbackNotificationsToAttendees(
         senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
         targetUserId: attendee['sevaUserID']);
 
-    batch.set(
+    batch1.set(
         CollectionRef.users
             .doc(attendee['email'])
             .collection("notifications")
@@ -36,7 +35,7 @@ Future<void> sendFeedbackNotificationsToAttendees(
         notification.toMap());
   }
 
-  await batch.commit();
+  await batch1.commit();
 
   logger.e('Feedback Notifications sent to one to many request Attendees');
 }
