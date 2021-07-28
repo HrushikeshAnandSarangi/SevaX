@@ -398,7 +398,7 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
           timezoneAbb: SevaCore.of(context).loggedInUser.timezone),
     );
     return Text(
-      statusText + S.of(context).on + date,
+      statusText + ' ' + S.of(context).on + ' ' + date,
       style: TextStyle(
           color: groupInviteUserModel.declined ? Colors.red : Colors.blue,
           fontFamily: 'Europa'),
