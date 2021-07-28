@@ -315,7 +315,7 @@ class OneToManySpeakerTimeEntryCompleteState
                                               .email,
                                           fromNotification: false);
 
-                                  Navigator.of(context).pop();
+                                  // Navigator.of(context).pop();
                                 }
 
                                 Navigator.of(context).pop();

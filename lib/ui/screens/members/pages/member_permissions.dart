@@ -8,6 +8,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/configuration_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/helpers/configurations_list.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
@@ -427,13 +428,18 @@ class _MemberPermissionsState extends State<MemberPermissions> {
       case Role.SUPER_ADMIN:
         widget.timebankModel.timebankConfigurations.superAdmin =
             all_permissions;
+        AppConfig.timebankConfigurations.superAdmin = all_permissions;
         break;
       case Role.ADMIN:
         widget.timebankModel.timebankConfigurations.admin = all_permissions;
+        AppConfig.timebankConfigurations.admin = all_permissions;
+
         break;
 
         break;
       case Role.MEMBER:
+        AppConfig.timebankConfigurations.member = all_permissions;
+
         widget.timebankModel.timebankConfigurations.member = all_permissions;
     }
   }
