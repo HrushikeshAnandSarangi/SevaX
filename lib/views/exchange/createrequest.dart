@@ -1500,6 +1500,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
             ),
           ),
           TextFormField(
+            maxLength: 30,
             autovalidateMode: AutovalidateMode.onUserInteraction,
             onChanged: (value) {
               updateExitWithConfirmationValue(context, 5, value);
@@ -1533,6 +1534,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
             ),
           ),
           TextFormField(
+            maxLength: 30,
             autovalidateMode: AutovalidateMode.onUserInteraction,
             onChanged: (value) {
               updateExitWithConfirmationValue(context, 6, value);
