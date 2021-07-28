@@ -215,6 +215,8 @@ class _HomeDashBoardState extends State<HomeDashBoard>
                   isAccessAvailable(primaryTimebank,
                       SevaCore.of(context).loggedInUser.sevaUserID)) {
                 isAdmin = true;
+              } else {
+                isAdmin = false;
               }
               if (primaryTimebank != null &&
                   primaryTimebank.organizers
