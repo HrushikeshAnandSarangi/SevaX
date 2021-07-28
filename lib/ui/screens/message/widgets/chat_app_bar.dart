@@ -186,6 +186,7 @@ class ChatAppBar extends PreferredSize {
   Future<String> showCustomDialog(BuildContext viewContext, String title,
       String content, String buttonLabel, String cancelLabel) {
     return showDialog(
+      barrierDismissible: false,
       context: viewContext,
       builder: (BuildContext context) {
         return AlertDialog(
