@@ -7,8 +7,6 @@ class ConfigurationsList {
     ConfigurationModel(
         id: 'create_feeds', title_en: 'Create Feeds', type: 'general'),
     ConfigurationModel(
-        id: 'accept_offers', title_en: 'Accept Offers', type: 'offer'),
-    ConfigurationModel(
         id: 'accept_requests', title_en: 'Accept requests', type: 'request'),
     ConfigurationModel(
         id: 'billing_access', title_en: 'Billing Access', type: 'general'),
@@ -102,13 +100,15 @@ class ConfigurationsList {
         id: 'accept_goods_offer',
         title_en: 'Accept Goods Offer',
         type: 'offer'),
+    ConfigurationModel(
+        id: 'accept_one_to_many_offer',
+        title_en: 'Accept One To Many Offer',
+        type: 'offer'),
   ];
 
   final List<ConfigurationModel> memberConfigurationsList = [
     ConfigurationModel(
         id: 'create_feeds', title_en: 'Create Feeds', type: 'general'),
-    ConfigurationModel(
-        id: 'accept_offers', title_en: 'Accept Offers', type: 'offer'),
     ConfigurationModel(
         id: 'accept_requests', title_en: 'Accept requests', type: 'request'),
     ConfigurationModel(
@@ -162,6 +162,10 @@ class ConfigurationsList {
     ConfigurationModel(
         id: 'accept_goods_offer',
         title_en: 'Accept Goods Offer',
+        type: 'offer'),
+    ConfigurationModel(
+        id: 'accept_one_to_many_offer',
+        title_en: 'Accept One To Many Offer',
         type: 'offer'),
   ];
 

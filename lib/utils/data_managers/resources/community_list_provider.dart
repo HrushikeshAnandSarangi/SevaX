@@ -205,7 +205,7 @@ class CommunityApiProvider {
           .get()
           .then((QuerySnapshot querySnapshot) {
         querySnapshot.docs.forEach((DocumentSnapshot documentSnapshot) {
-          var timebank = TimebankModel(documentSnapshot.data);
+          var timebank = TimebankModel(documentSnapshot.data());
           timebanks.add(timebank);
         });
       });

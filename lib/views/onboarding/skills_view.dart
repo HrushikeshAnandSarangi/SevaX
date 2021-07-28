@@ -66,7 +66,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
       querySnapshot.docs.forEach((DocumentSnapshot data) {
         // suggestionText.add(data['name']);
         // suggestionID.add(data.id);
-        if (data[widget.languageCode] != null) {
+        if (data.data().containsKey(widget.languageCode)) {
           skills[data.id] = data[widget.languageCode];
         }
 
