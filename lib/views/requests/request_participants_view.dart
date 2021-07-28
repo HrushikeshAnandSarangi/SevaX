@@ -53,10 +53,10 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
     });
   }
 
-  Future<dynamic> getUserDetails({String memberEmail}) async {
+  Future<Map<String, dynamic>> getUserDetails({String memberEmail}) async {
     var user = await CollectionRef.users.doc(memberEmail).get();
 
-    return user.data;
+    return Map<String, dynamic>.from(user.data());
   }
 
   @override
@@ -100,8 +100,8 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
               child: Text(S.of(context).no_pending_requests),
             );
           }
-          var snap = snapshot.data.map((f) {
-            return UserModel.fromDynamic(f);
+          List<UserModel> snap = snapshot.data.map((f) {
+            return UserModel.fromMap(f, 'from participants view');
           }).toList();
 
           snap.sort((a, b) =>
@@ -267,7 +267,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: <Widget>[
                             Container(
-                              height: 40,
+                              height: 50,
                               padding: EdgeInsets.only(bottom: 10),
                               child: CustomElevatedButton(
                                 shape: StadiumBorder(),
