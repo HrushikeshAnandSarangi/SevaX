@@ -16,6 +16,7 @@ import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/switch_timebank.dart';
 import 'package:sevaexchange/views/timebanks/invite_members.dart';
 import 'package:sevaexchange/views/timebanks/invite_members_group.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
@@ -297,6 +298,14 @@ class _MembersPageState extends State<MembersPage> {
                               ),
                               timebank: snapshot.data.timebank,
                               progress: _progress,
+                              onMemberExit: () {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => SwitchTimebank(),
+                                  ),
+                                );
+                              },
                             ),
                           ],
                         ),
