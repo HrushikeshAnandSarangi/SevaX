@@ -34,6 +34,7 @@ class IndividualOfferBloc extends BlocBase with Validators {
   final _location = BehaviorSubject<CustomLocation>();
   final _status = BehaviorSubject<Status>.seeded(Status.IDLE);
   final _isVisible = BehaviorSubject<bool>.seeded(false);
+
   // final _isPublicVisible = BehaviorSubject<bool>.seeded(false);
   final _donationAmount = BehaviorSubject<int>();
 
@@ -48,18 +49,25 @@ class IndividualOfferBloc extends BlocBase with Validators {
       GoodsDonationDetails(address: '', donors: [], requiredGoods: {}));
 
   final profanityDetector = ProfanityDetector();
+
   Stream<String> get errorMessage => _errorMessage.stream;
 
   Function(String value) get onTitleChanged => _title.sink.add;
-  Function(String value) get onMinimumCreditsChanged =>
-      _minimumCredits.sink.add;
+
+  Function(String value) get onMinimumCreditsChanged => _minimumCredits.sink.add;
+
   Function(bool value) get onOfferMadePublic => _makePublic.sink.add;
 
   Function(String) get onOfferDescriptionChanged => _offerDescription.sink.add;
+
   Function(int) get onDonationAmountChanged => _donationAmount.sink.add;
+
   Function(String) get onAvailabilityChanged => _availabilty.sink.add;
+
   Function(CustomLocation) get onLocatioChanged => _location.sink.add;
+
   Function(RequestType) get onTypeChanged => _type.sink.add;
+
   // Function(CashModel) get onCashModelChanged => _cashModel.sink.add;
   Function(bool) get isVisibleChanged => _isVisible.sink.add;
 
@@ -73,32 +81,38 @@ class IndividualOfferBloc extends BlocBase with Validators {
     }
   }
 
-  Function(GoodsDonationDetails) get onGoodsDetailsChanged =>
-      _goodsDonationDetails.sink.add;
+  Function(GoodsDonationDetails) get onGoodsDetailsChanged => _goodsDonationDetails.sink.add;
 
   Stream<String> get title => _title.stream;
+
   Stream<bool> get makePublicValue => _makePublic.stream;
+
   Stream<bool> get makeVirtual => _makeVirtual.stream;
+
   Stream<String> get offerDescription => _offerDescription.stream;
+
   Stream<String> get availability => _availabilty.stream;
+
   Stream<String> get minimumCredits => _minimumCredits.stream;
 
   Stream<CustomLocation> get location => _location.stream;
+
   Stream<Status> get status => _status.stream;
+
   Stream<bool> get isVisible => _isVisible.stream;
+
   Stream<RequestType> get type => _type.stream;
+
   // Stream<CashModel> get cashModel => _cashModel.stream;
   Stream<int> get donationAmount => _donationAmount.stream;
 
-  Stream<GoodsDonationDetails> get goodsDonationDetails =>
-      _goodsDonationDetails.stream;
+  Stream<GoodsDonationDetails> get goodsDonationDetails => _goodsDonationDetails.stream;
 
   Stream<bool> get isPublicVisible =>
       CombineLatestStream.combine2(makeVirtual, isVisible, (a, b) => a && b);
 
   ///[Function] to create offer
-  void createOrUpdateOffer(
-      {UserModel user, String timebankId, String communityName}) {
+  void createOrUpdateOffer({UserModel user, String timebankId, String communityName}) {
     //   print(errorCheck());
     if (!errorCheck()) {
       if (_type.value == RequestType.GOODS &&
@@ -108,18 +122,15 @@ class IndividualOfferBloc extends BlocBase with Validators {
         var timestamp = DateTime.now().millisecondsSinceEpoch;
         var id = '${user.email}*$timestamp';
 
-        IndividualOfferDataModel individualOfferDataModel =
-            IndividualOfferDataModel();
+        IndividualOfferDataModel individualOfferDataModel = IndividualOfferDataModel();
 
         individualOfferDataModel.title = _title.value;
         individualOfferDataModel.description = _offerDescription.value;
         individualOfferDataModel.schedule = _availabilty.value;
-        individualOfferDataModel.minimumCredits = _minimumCredits.value != null
-            ? int.parse(_minimumCredits.value)
-            : 0;
+        individualOfferDataModel.minimumCredits =
+            _minimumCredits.value != null ? int.parse(_minimumCredits.value) : 0;
 
-        individualOfferDataModel.timeOfferType =
-            timeOfferType == 0 ? 'SPOT_ON' : 'ONE_TIME';
+        individualOfferDataModel.timeOfferType = timeOfferType == 0 ? 'SPOT_ON' : 'ONE_TIME';
 
         OfferModel offerModel = OfferModel(
             id: id,
@@ -137,15 +148,13 @@ class IndividualOfferBloc extends BlocBase with Validators {
             timestamp: DateTime.now().millisecondsSinceEpoch,
             location: _location.value == null ? null : _location.value.location,
             groupOfferDataModel: GroupOfferDataModel(),
-            selectedAdrress:
-                _location.value == null ? null : _location.value.address,
+            selectedAdrress: _location.value == null ? null : _location.value.address,
             individualOfferDataModel: IndividualOfferDataModel()
               ..title = _title.value
               ..description = _offerDescription.value
               ..schedule = _availabilty.value
-              ..minimumCredits = _minimumCredits.value != null
-                  ? int.parse(_minimumCredits.value)
-                  : 0
+              ..minimumCredits =
+                  _minimumCredits.value != null ? int.parse(_minimumCredits.value) : 0
               ..timeOfferType = timeOfferType == 0 ? 'SPOT_ON' : 'ONE_TIME',
             offerType: OfferType.INDIVIDUAL_OFFER,
             type: _type.value,
@@ -196,9 +205,7 @@ class IndividualOfferBloc extends BlocBase with Validators {
           ..description = _offerDescription.value
           ..timeOfferType = timeOfferType == 0 ? 'SPOT_ON' : 'ONE_TIME'
           ..schedule = _availabilty.value != null ? _availabilty.value : ''
-          ..minimumCredits = _minimumCredits.value != null
-              ? int.parse(_minimumCredits.value)
-              : 0;
+          ..minimumCredits = _minimumCredits.value != null ? int.parse(_minimumCredits.value) : 0;
         if (offer.cashModel != null) {
           offer.cashModel..targetAmount = _donationAmount.value;
         }
@@ -225,12 +232,8 @@ class IndividualOfferBloc extends BlocBase with Validators {
     _goodsDonationDetails.add(offerModel.goodsDonationDetails);
     _donationAmount.add(offerModel.cashModel.targetAmount);
     if (offerModel.individualOfferDataModel != null) {
-      _minimumCredits
-          .add(offerModel.individualOfferDataModel.minimumCredits.toString());
-      timeOfferType =
-          offerModel.individualOfferDataModel.timeOfferType == 'SPOT_ON'
-              ? 0
-              : 1;
+      _minimumCredits.add(offerModel.individualOfferDataModel.minimumCredits.toString());
+      timeOfferType = offerModel.individualOfferDataModel.timeOfferType == 'SPOT_ON' ? 0 : 1;
     }
     if (offerModel.individualOfferDataModel.schedule != null) {
       _availabilty.add(
@@ -284,12 +287,6 @@ class IndividualOfferBloc extends BlocBase with Validators {
       } else if (_type.value == RequestType.CASH) {
         if (_donationAmount.value == null || _donationAmount.value == 0) {
           _donationAmount.addError(ValidationErrors.emptyErrorCash);
-          flag = true;
-        }
-      } else if (_type.value == RequestType.GOODS) {
-        if (_goodsDonationDetails.value.requiredGoods == null ||
-            _goodsDonationDetails.value.requiredGoods.length == 0) {
-          _goodsDonationDetails.addError(ValidationErrors.emptyErrorCash);
           flag = true;
         }
       }
