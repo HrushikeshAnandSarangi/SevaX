@@ -219,7 +219,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: <Widget>[
                             Container(
-                              height: 40,
+                              height: 50,
                               padding: EdgeInsets.only(bottom: 10),
                               child: CustomElevatedButton(
                                 shape: StadiumBorder(),
@@ -242,7 +242,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                               width: 10,
                             ),
                             Container(
-                              height: 40,
+                              height: 50,
                               padding: EdgeInsets.only(bottom: 10),
                               child: CustomElevatedButton(
                                 shape: StadiumBorder(),
@@ -302,7 +302,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
             children: <Widget>[
               Container(
                 margin: EdgeInsets.only(bottom: 10, right: 10),
-                height: 40,
+                height: 50,
                 //width: 120,
                 padding: EdgeInsets.only(bottom: 10),
                 child: CustomElevatedButton(
@@ -325,7 +325,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                 children: <Widget>[
                   Container(
                     margin: EdgeInsets.only(bottom: 10, right: 10),
-                    height: 40,
+                    height: 50,
                     //width: 120,
                     padding: EdgeInsets.only(bottom: 10),
                     child: CustomElevatedButton(
@@ -348,7 +348,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                     children: <Widget>[
                       Container(
                         margin: EdgeInsets.only(bottom: 10, right: 10),
-                        height: 45,
+                        height: 50,
                         //width: 120,
                         padding: EdgeInsets.only(bottom: 10),
                         child: CustomElevatedButton(
