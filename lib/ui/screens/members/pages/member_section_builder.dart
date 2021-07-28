@@ -32,16 +32,17 @@ import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/custom_dialogs/custom_dialog.dart';
 
 class MemberSectionBuilder extends StatelessWidget {
-  const MemberSectionBuilder({
-    Key key,
-    this.members,
-    this.type,
-    this.section,
-    this.creatorId,
-    this.isTimebankSection = false,
-    this.timebank,
-    this.progress,
-  }) : super(key: key);
+  const MemberSectionBuilder(
+      {Key key,
+      this.members,
+      this.type,
+      this.section,
+      this.creatorId,
+      this.isTimebankSection = false,
+      this.timebank,
+      this.progress,
+      this.onMemberExit})
+      : super(key: key);
 
   final List<UserModel> members;
   final MemberType type;
@@ -50,6 +51,7 @@ class MemberSectionBuilder extends StatelessWidget {
   final isTimebankSection;
   final TimebankModel timebank;
   final ProgressDialog progress;
+  final VoidCallback onMemberExit;
 
   @override
   Widget build(BuildContext context) {
@@ -404,7 +406,6 @@ class MemberSectionBuilder extends StatelessWidget {
         },
       });
     }
-
     progress.hide();
 
     if (isTimebank) {
@@ -445,12 +446,14 @@ class MemberSectionBuilder extends StatelessWidget {
           reason: reason,
         );
 
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => SwitchTimebank(),
-          ),
-        );
+        onMemberExit();
+
+        // Navigator.pushReplacement(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => SwitchTimebank(),
+        //   ),
+        // );
       }
     } else {
       if (responseData['softDeleteCheck'] == false &&
@@ -514,12 +517,13 @@ class MemberSectionBuilder extends StatelessWidget {
           communityId: userModel.currentCommunity,
           reason: reason,
         );
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => SwitchTimebank(),
-          ),
-        );
+        onMemberExit();
+        // Navigator.pushReplacement(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => SwitchTimebank(),
+        //   ),
+        // );
       }
     } else {
       if (responseData['softDeleteCheck'] == false &&
