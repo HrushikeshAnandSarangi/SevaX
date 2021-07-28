@@ -56,20 +56,47 @@ class NotificationCard extends StatelessWidget {
                             S.of(context).delete_notification_confirmation,
                           ),
                           actions: <Widget>[
-                            CustomTextButton(
-                              onPressed: () =>
-                                  {Navigator.of(dialogContext).pop()},
-                              child: Text(
-                                S.of(context).cancel,
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                bottom: 15,
+                              ),
+                              child: CustomTextButton(
+                                shape: StadiumBorder(),
+                                color: Colors.grey,
+                                padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                                onPressed: () =>
+                                    {Navigator.of(dialogContext).pop()},
+                                child: Text(
+                                  S.of(context).cancel,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontFamily: 'Europa',
+                                  ),
+                                ),
                               ),
                             ),
-                            CustomTextButton(
-                              onPressed: () async {
-                                onDismissed();
-                                Navigator.of(dialogContext).pop();
-                              },
-                              child: Text(
-                                S.of(context).delete,
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                bottom: 15,
+                                right: 15,
+                              ),
+                              child: CustomTextButton(
+                                shape: StadiumBorder(),
+                                color: Colors.orange,
+                                padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                                onPressed: () async {
+                                  onDismissed();
+                                  Navigator.of(dialogContext).pop();
+                                },
+                                child: Text(
+                                  S.of(context).delete,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontFamily: 'Europa',
+                                  ),
+                                ),
                               ),
                             ),
                           ],
