@@ -56,7 +56,7 @@ class _InterestViewNewState extends State<InterestViewNew> {
     hasPellError = false;
     CollectionRef.interests.get().then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((DocumentSnapshot data) {
-        if (data[widget.languageCode] != null) {
+        if (data.data().containsKey(widget.languageCode) ) {
           interests[data.id] = data[widget.languageCode];
         }
       });
