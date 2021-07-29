@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/manual_time_model.dart';
@@ -118,7 +119,8 @@ class _AddMnualTimeDetailsPageState extends State<AddMnualTimeDetailsPage> {
                               ],
                               onChanged: _bloc.onHoursChanged,
                             ),
-                            Text(S.of(context).hours),
+                            Text(
+                                toBeginningOfSentenceCase(S.of(context).hours)),
                           ],
                         ),
                       ),
@@ -199,7 +201,8 @@ class _AddMnualTimeDetailsPageState extends State<AddMnualTimeDetailsPage> {
                                   .hideCurrentSnackBar();
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: Text(S.of(context).claimed_successfully),
+                                  content:
+                                      Text(S.of(context).claimed_successfully),
                                 ),
                               );
                               Future.delayed(Duration(seconds: 2), () {

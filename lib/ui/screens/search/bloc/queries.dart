@@ -843,7 +843,7 @@ class Searches {
       Map<String, dynamic> sourceMap = map['_source'];
       var timeBank = TimebankModel.fromMap(sourceMap);
 
-      timeBankList.add(timeBank);
+      if (!timeBank.private) timeBankList.add(timeBank);
     }
     return timeBankList;
   }

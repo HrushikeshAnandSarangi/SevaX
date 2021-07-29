@@ -467,8 +467,13 @@ class _DonationViewState extends State<DonationView> {
           FocusScope.of(context).requestFocus(focusNodes[15]);
         },
         textInputAction: TextInputAction.next,
-        keyboardType: TextInputType.multiline,
         maxLines: 1,
+        maxLength: 20,
+        keyboardType: TextInputType.number,
+        inputFormatters: [
+          FilteringTextInputFormatter.allow(
+              RegExp(r"^[0-9]*$"))
+        ],
         validator: (value) {
           if (value.isEmpty) {
             return S.of(context).validation_error_general_text;
@@ -504,8 +509,13 @@ class _DonationViewState extends State<DonationView> {
         initialValue: donationsModel.cashDetails.cashDetails.achdetails != null
             ? donationsModel.cashDetails.cashDetails.achdetails.account_number
             : "",
-        keyboardType: TextInputType.multiline,
         maxLines: 1,
+        maxLength: 20,
+        keyboardType: TextInputType.number,
+        inputFormatters: [
+          FilteringTextInputFormatter.allow(
+              RegExp(r"^[0-9]*$"))
+        ],
         validator: (value) {
           if (value.isEmpty) {
             return S.of(context).validation_error_general_text;

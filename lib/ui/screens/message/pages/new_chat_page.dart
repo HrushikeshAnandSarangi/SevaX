@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_page_base_bloc.dart';
@@ -173,7 +174,7 @@ class _NewChatPageState extends State<NewChatPage> {
                                 );
                               },
                               child: Text(
-                                'New Community Message',
+                                L.of(context).new_comminity_message,
                                 style: TextStyle(
                                   color: Theme.of(context).primaryColor,
                                   fontFamily: 'Europa',
