@@ -35,8 +35,8 @@ class ExploreEventCard extends StatelessWidget {
               ? 440
               : tagsToShow.length > 3 && memberList != null
                   ? 469
-                  : 410
-          : 410,
+                  : 440
+          : 440,
       child: InkWell(
         onTap: onTap,
         child: Card(
