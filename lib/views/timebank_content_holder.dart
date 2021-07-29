@@ -949,6 +949,7 @@ class DiscussionListState extends State<DiscussionList> {
                 height: 10,
               ),
               Padding(
+                key: ValueKey(news.subheading),
                 padding: const EdgeInsets.only(left: 12.0, top: 10, bottom: 15),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -960,7 +961,10 @@ class DiscussionListState extends State<DiscussionList> {
                           Container(
                             margin: EdgeInsets.only(top: 5),
                             child: Umeshify(
-                              text: news.subheading.trim(),
+                              text: news.subheading != null &&
+                                      news.subheading != ""
+                                  ? news.subheading.trim()
+                                  : '',
                               onOpen: (url) async {
                                 if (await canLaunch(url)) {
                                   launch(url);
@@ -972,6 +976,7 @@ class DiscussionListState extends State<DiscussionList> {
                           ),
                           // scraped Data
                           Container(
+                            key: ValueKey(news.title),
                             margin: EdgeInsets.only(top: 5),
                             child: Umeshify(
                               text: news.title != null && news.title != "NoData"
@@ -1202,19 +1207,19 @@ class DiscussionListState extends State<DiscussionList> {
                                 GestureDetector(
                                   onTap: () {
                                     Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (_context) => BlocProvider(
-                                                  bloc: BlocProvider.of<
-                                                          HomeDashBoardBloc>(
-                                                      context),
-                                                  child: NewsCardView(
-                                                    newsModel: news,
-                                                    isFocused: false,
-                                                    timebankModel:
-                                                        widget.timebankModel,
-                                                  ),
-                                                )));
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_context) => BlocProvider(
+                                          bloc: BlocProvider.of<
+                                              HomeDashBoardBloc>(context),
+                                          child: NewsCardView(
+                                            newsModel: news,
+                                            isFocused: false,
+                                            timebankModel: widget.timebankModel,
+                                          ),
+                                        ),
+                                      ),
+                                    );
                                   },
                                   child: Padding(
                                       padding: EdgeInsets.only(left: 3),

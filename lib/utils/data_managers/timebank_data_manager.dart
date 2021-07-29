@@ -134,7 +134,7 @@ Future<List<TimebankModel>> getAllTheGroups(
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((DocumentSnapshot documentSnapshot) {
         var timebank = TimebankModel(documentSnapshot.data());
-        timeBankModelList.add(timebank);
+        if (!timebank.private) timeBankModelList.add(timebank);
       });
     });
   }

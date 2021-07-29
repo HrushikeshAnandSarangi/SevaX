@@ -75,16 +75,16 @@ class EditRequest extends StatefulWidget {
   String projectId;
   RequestModel requestModel;
 
-  EditRequest(
-      {Key key,
-      this.isOfferRequest,
-      this.offer,
-      this.timebankId,
-      this.userModel,
-      this.projectId,
-      this.projectModel,
-      this.requestModel})
-      : super(key: key);
+  EditRequest({
+    Key key,
+    this.isOfferRequest,
+    this.offer,
+    this.timebankId,
+    this.userModel,
+    this.projectId,
+    this.projectModel,
+    @required this.requestModel,
+  }) : super(key: key);
 
   @override
   _EditRequestState createState() => _EditRequestState();
@@ -507,15 +507,26 @@ class RequestEditFormState extends State<RequestEditForm> {
     return FutureBuilder<TimebankModel>(
         future: getTimebankAdminStatus,
         builder: (context, snapshot) {
-          // if(snapshot.connectionState == ConnectionState.waiting){
-          //   return LoadingIndicator();
-          // }
-          log("timebank ${snapshot.data}");
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Container();
+          }
+          timebankModel = snapshot.data;
+
+          if (snapshot.hasError) {
+            return Text(snapshot.error);
+          }
+
           if (widget.requestModel.location == null ||
               widget.requestModel.address == null) {
+            // logger.d(selectedAddress + " =====Location " + location.toString());
+
             location = timebankModel.location;
             selectedAddress = timebankModel.address;
+          } else {
+            location = widget.requestModel.location;
+            selectedAddress = widget.requestModel.address;
           }
+
           return FutureBuilder<List<ProjectModel>>(
               future: getProjectsByFuture,
               builder: (projectscontext, projectListSnapshot) {
@@ -1069,6 +1080,24 @@ class RequestEditFormState extends State<RequestEditForm> {
                                                 snapshot, projectModelList)
                                             : GoodsRequest(
                                                 snapshot, projectModelList),
+                            Center(
+                              child: LocationPickerWidget(
+                                selectedAddress: selectedAddress,
+                                location: location,
+                                onChanged: (LocationDataModel dataModel) {
+                                  log("received data model");
+                                  setState(() {
+                                    widget.requestModel.location =
+                                        dataModel.geoPoint;
+                                    widget.requestModel.address =
+                                        dataModel.location;
+
+                                    location = dataModel.geoPoint;
+                                    this.selectedAddress = dataModel.location;
+                                  });
+                                },
+                              ),
+                            ),
 
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 10),
@@ -2219,20 +2248,6 @@ class RequestEditFormState extends State<RequestEditForm> {
         //     : Container(height: 0, width: 0),
 
         SizedBox(height: 15),
-
-        Center(
-          child: LocationPickerWidget(
-            selectedAddress: selectedAddress,
-            location: location,
-            onChanged: (LocationDataModel dataModel) {
-              log("received data model");
-              setState(() {
-                location = dataModel.geoPoint;
-                this.selectedAddress = dataModel.location;
-              });
-            },
-          ),
-        )
       ],
     );
   }

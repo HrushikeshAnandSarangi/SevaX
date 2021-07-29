@@ -19,14 +19,16 @@ class UserImagePickerHandler {
 
   void openCamera() async {
     imagePicker.dismissDialog();
-    var image = await ImagePicker.pickImage(source: ImageSource.camera);
-    cropImage(image);
+    final picker = ImagePicker();
+    final pickedFile = await picker.getImage(source: ImageSource.camera);
+    cropImage(pickedFile.path);
   }
 
   void openGallery() async {
     imagePicker.dismissDialog();
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
-    cropImage(image);
+    final picker = ImagePicker();
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+    cropImage(pickedFile.path);
   }
 
   void openStockImages(context) async {
@@ -66,15 +68,15 @@ class UserImagePickerHandler {
     imagePicker.initState(isAspectRatioFixed);
   }
 
-  Future cropImage(File image) async {
+  Future cropImage(String path) async {
     File croppedFile = await ImageCropper.cropImage(
-      sourcePath: image.path,
+      sourcePath: path,
       aspectRatio: CropAspectRatio(
-        ratioX: isAspectRatioFixed ? 1.0 : null,
-        ratioY: isAspectRatioFixed ? 1.0 : null,
+        ratioX: isAspectRatioFixed ? 1.0 : 1.0,
+        ratioY: isAspectRatioFixed ? 1.0 : 1.0,
       ),
-      maxWidth: isAspectRatioFixed ? 512 : null,
-      maxHeight: isAspectRatioFixed ? 512 : null,
+      maxWidth: isAspectRatioFixed ? 512 : 512,
+      maxHeight: isAspectRatioFixed ? 512 : 512,
     );
     _listener.userImage(croppedFile);
   }
