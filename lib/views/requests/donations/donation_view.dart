@@ -458,14 +458,22 @@ class _DonationViewState extends State<DonationView> {
         ),
       ),
       TextFormField(
+        inputFormatters: [
+          new LengthLimitingTextInputFormatter(15),
+        ],
         autovalidateMode: AutovalidateMode.onUserInteraction,
         focusNode: focusNodes[14],
         onFieldSubmitted: (v) {
           FocusScope.of(context).requestFocus(focusNodes[15]);
         },
         textInputAction: TextInputAction.next,
-        keyboardType: TextInputType.multiline,
         maxLines: 1,
+        maxLength: 20,
+        keyboardType: TextInputType.number,
+        inputFormatters: [
+          FilteringTextInputFormatter.allow(
+              RegExp(r"^[0-9]*$"))
+        ],
         validator: (value) {
           if (value.isEmpty) {
             return S.of(context).validation_error_general_text;
@@ -489,6 +497,9 @@ class _DonationViewState extends State<DonationView> {
         ),
       ),
       TextFormField(
+        inputFormatters: [
+          new LengthLimitingTextInputFormatter(15),
+        ],
         autovalidateMode: AutovalidateMode.onUserInteraction,
         focusNode: focusNodes[15],
         onFieldSubmitted: (v) {
@@ -498,8 +509,13 @@ class _DonationViewState extends State<DonationView> {
         initialValue: donationsModel.cashDetails.cashDetails.achdetails != null
             ? donationsModel.cashDetails.cashDetails.achdetails.account_number
             : "",
-        keyboardType: TextInputType.multiline,
         maxLines: 1,
+        maxLength: 20,
+        keyboardType: TextInputType.number,
+        inputFormatters: [
+          FilteringTextInputFormatter.allow(
+              RegExp(r"^[0-9]*$"))
+        ],
         validator: (value) {
           if (value.isEmpty) {
             return S.of(context).validation_error_general_text;
@@ -705,6 +721,14 @@ class _DonationViewState extends State<DonationView> {
                   donationsModel.cashDetails.cashDetails.paymentType = value;
                   setState(() => {});
                 }),
+            _optionRadioButton(
+                title: S.of(context).other(1),
+                value: RequestPaymentType.OTHER,
+                groupvalue: donationsModel.cashDetails.cashDetails.paymentType,
+                onChanged: (value) {
+                  donationsModel.cashDetails.cashDetails.paymentType = value;
+                  setState(() => {});
+                }),
             donationsModel.cashDetails.cashDetails.paymentType ==
                     RequestPaymentType.ACH
                 ? RequestPaymentACH(widget.offerModel)
@@ -717,9 +741,11 @@ class _DonationViewState extends State<DonationView> {
                         : donationsModel.cashDetails.cashDetails.paymentType ==
                                 RequestPaymentType.SWIFT
                             ? RequestPaymentSwift(widget.offerModel)
-                            : RequestPaymentZellePay(widget.offerModel),
-            SizedBox(height: 15),
-            OtherDetailsWidget(),
+                            : donationsModel
+                                        .cashDetails.cashDetails.paymentType ==
+                                    RequestPaymentType.OTHER
+                                ? OtherDetailsWidget()
+                                : RequestPaymentZellePay(widget.offerModel),
             SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,

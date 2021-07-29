@@ -518,7 +518,7 @@ class RequestEditFormState extends State<RequestEditForm> {
 
           if (widget.requestModel.location == null ||
               widget.requestModel.address == null) {
-            logger.d(selectedAddress + " =====Location " + location.toString());
+            // logger.d(selectedAddress + " =====Location " + location.toString());
 
             location = timebankModel.location;
             selectedAddress = timebankModel.address;

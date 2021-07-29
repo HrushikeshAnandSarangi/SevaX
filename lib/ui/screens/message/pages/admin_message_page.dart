@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/message_bloc.dart';
 import 'package:sevaexchange/ui/screens/message/widgets/admin_message_card.dart';
 import 'package:sevaexchange/ui/screens/message/widgets/community_messages.dart';
@@ -41,7 +42,7 @@ class AdminMessagePage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
-                      'Go To Community Chats',
+                      L.of(context).go_to_community_chat,
                       style: TextStyle(
                         fontSize: 22,
                         color: FlavorConfig.values.theme.primaryColor,
