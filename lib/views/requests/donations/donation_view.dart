@@ -459,6 +459,7 @@ class _DonationViewState extends State<DonationView> {
       ),
       TextFormField(
         inputFormatters: [
+          FilteringTextInputFormatter.allow(RegExp(r"^[0-9]*$")),
           new LengthLimitingTextInputFormatter(15),
         ],
         autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -470,10 +471,6 @@ class _DonationViewState extends State<DonationView> {
         maxLines: 1,
         maxLength: 20,
         keyboardType: TextInputType.number,
-        inputFormatters: [
-          FilteringTextInputFormatter.allow(
-              RegExp(r"^[0-9]*$"))
-        ],
         validator: (value) {
           if (value.isEmpty) {
             return S.of(context).validation_error_general_text;
@@ -498,6 +495,7 @@ class _DonationViewState extends State<DonationView> {
       ),
       TextFormField(
         inputFormatters: [
+          FilteringTextInputFormatter.allow(RegExp(r"^[0-9]*$")),
           new LengthLimitingTextInputFormatter(15),
         ],
         autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -512,10 +510,6 @@ class _DonationViewState extends State<DonationView> {
         maxLines: 1,
         maxLength: 20,
         keyboardType: TextInputType.number,
-        inputFormatters: [
-          FilteringTextInputFormatter.allow(
-              RegExp(r"^[0-9]*$"))
-        ],
         validator: (value) {
           if (value.isEmpty) {
             return S.of(context).validation_error_general_text;

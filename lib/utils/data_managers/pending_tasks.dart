@@ -142,10 +142,10 @@ class PendingTasks {
       widgetList.add(
         ToDoCard(
           onTap: () async {
-            var a =
-                await utils.getTimeBankForId(timebankId: element.timebankId);
-            var offerModel =
-                await utils.getOfferFromId(offerId: element.offerId);
+            // var a =
+            //     await utils.getTimeBankForId(timebankId: element.timebankId);
+            // var offerModel =
+            //     await utils.getOfferFromId(offerId: element.offerId);
 
             // TaskUtils.navigateToOffers(
             //   offer: offerModel,
@@ -177,7 +177,7 @@ class PendingTasks {
             //   timebankModel: a,
             // );
           },
-          tag: S.of(context).requested_for_completion,
+          tag: L.of(context).one_to_many_request_speaker,
         ),
       );
     });
