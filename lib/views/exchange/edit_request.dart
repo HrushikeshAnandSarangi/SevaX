@@ -75,16 +75,16 @@ class EditRequest extends StatefulWidget {
   String projectId;
   RequestModel requestModel;
 
-  EditRequest(
-      {Key key,
-      this.isOfferRequest,
-      this.offer,
-      this.timebankId,
-      this.userModel,
-      this.projectId,
-      this.projectModel,
-      this.requestModel})
-      : super(key: key);
+  EditRequest({
+    Key key,
+    this.isOfferRequest,
+    this.offer,
+    this.timebankId,
+    this.userModel,
+    this.projectId,
+    this.projectModel,
+    @required this.requestModel,
+  }) : super(key: key);
 
   @override
   _EditRequestState createState() => _EditRequestState();
@@ -117,6 +117,8 @@ class _EditRequestState extends State<EditRequest> {
                   return LoadingIndicator();
                 }
                 if (snapshot.data != null) {
+                  logger.e('REQUESTMODEL CHECK:   ' +
+                      widget.requestModel.toString());
                   return RequestEditForm(
                     requestModel: widget.requestModel,
                     isOfferRequest: widget.isOfferRequest,
@@ -238,6 +240,7 @@ class RequestEditFormState extends State<RequestEditForm> {
       oneToManyRequestAttenders: widget.requestModel.oneToManyRequestAttenders,
       selectedInstructor: widget.requestModel.selectedInstructor,
     );
+    logger.e('PAYPAL CHECK:  ' + widget.requestModel.cashModel.toString());
     selectedInstructorModelTemp = widget.requestModel.selectedInstructor;
     this.requestModel.timebankId = _selectedTimebankId;
     this.location = widget.requestModel.location;
@@ -504,15 +507,26 @@ class RequestEditFormState extends State<RequestEditForm> {
     return FutureBuilder<TimebankModel>(
         future: getTimebankAdminStatus,
         builder: (context, snapshot) {
-          // if(snapshot.connectionState == ConnectionState.waiting){
-          //   return LoadingIndicator();
-          // }
-          log("timebank ${snapshot.data}");
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Container();
+          }
+          timebankModel = snapshot.data;
+
+          if (snapshot.hasError) {
+            return Text(snapshot.error);
+          }
+
           if (widget.requestModel.location == null ||
               widget.requestModel.address == null) {
+            logger.d(selectedAddress + " =====Location " + location.toString());
+
             location = timebankModel.location;
             selectedAddress = timebankModel.address;
+          } else {
+            location = widget.requestModel.location;
+            selectedAddress = widget.requestModel.address;
           }
+
           return FutureBuilder<List<ProjectModel>>(
               future: getProjectsByFuture,
               builder: (projectscontext, projectListSnapshot) {
@@ -1066,6 +1080,24 @@ class RequestEditFormState extends State<RequestEditForm> {
                                                 snapshot, projectModelList)
                                             : GoodsRequest(
                                                 snapshot, projectModelList),
+                            Center(
+                              child: LocationPickerWidget(
+                                selectedAddress: selectedAddress,
+                                location: location,
+                                onChanged: (LocationDataModel dataModel) {
+                                  log("received data model");
+                                  setState(() {
+                                    widget.requestModel.location =
+                                        dataModel.geoPoint;
+                                    widget.requestModel.address =
+                                        dataModel.location;
+
+                                    location = dataModel.geoPoint;
+                                    this.selectedAddress = dataModel.location;
+                                  });
+                                },
+                              ),
+                            ),
 
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 10),
@@ -1245,7 +1277,7 @@ class RequestEditFormState extends State<RequestEditForm> {
           ),
           TextFormField(
             autovalidateMode: AutovalidateMode.onUserInteraction,
-            initialValue: requestModel.cashModel.achdetails.bank_name,
+            initialValue: widget.requestModel.cashModel.achdetails.bank_name,
             onChanged: (value) {
               updateExitWithConfirmationValue(context, 3, value);
             },
@@ -1279,7 +1311,7 @@ class RequestEditFormState extends State<RequestEditForm> {
           ),
           TextFormField(
             autovalidateMode: AutovalidateMode.onUserInteraction,
-            initialValue: requestModel.cashModel.achdetails.bank_address,
+            initialValue: widget.requestModel.cashModel.achdetails.bank_address,
             onChanged: (value) {
               updateExitWithConfirmationValue(context, 4, value);
             },
@@ -1313,7 +1345,8 @@ class RequestEditFormState extends State<RequestEditForm> {
           ),
           TextFormField(
             autovalidateMode: AutovalidateMode.onUserInteraction,
-            initialValue: requestModel.cashModel.achdetails.routing_number,
+            initialValue:
+                widget.requestModel.cashModel.achdetails.routing_number,
             onChanged: (value) {
               updateExitWithConfirmationValue(context, 5, value);
             },
@@ -1347,7 +1380,8 @@ class RequestEditFormState extends State<RequestEditForm> {
           ),
           TextFormField(
             autovalidateMode: AutovalidateMode.onUserInteraction,
-            initialValue: requestModel.cashModel.achdetails.account_number,
+            initialValue:
+                widget.requestModel.cashModel.achdetails.account_number,
             onChanged: (value) {
               updateExitWithConfirmationValue(context, 6, value);
             },
@@ -1399,8 +1433,8 @@ class RequestEditFormState extends State<RequestEditForm> {
                   S.of(context).request_payment_descriptionZelle_inputhint,
               hintStyle: hintTextStyle,
             ),
-            initialValue: requestModel.cashModel.zelleId != null
-                ? requestModel.cashModel.zelleId
+            initialValue: widget.requestModel.cashModel.zelleId != null
+                ? widget.requestModel.cashModel.zelleId
                 : '',
             keyboardType: TextInputType.multiline,
             maxLines: 1,
@@ -1447,7 +1481,9 @@ class RequestEditFormState extends State<RequestEditForm> {
               hintText: 'Ex: Paypal ID (phone or email)',
               hintStyle: hintTextStyle,
             ),
-            initialValue: requestModel.cashModel.paypalId ?? '',
+            initialValue: widget.requestModel.cashModel.paypalId != null
+                ? widget.requestModel.cashModel.paypalId
+                : '',
             keyboardType: TextInputType.multiline,
             maxLines: 1,
             onSaved: (value) {
@@ -1486,7 +1522,7 @@ class RequestEditFormState extends State<RequestEditForm> {
               hintText: S.of(context).venmo_hint,
               hintStyle: hintTextStyle,
             ),
-            initialValue: requestModel.cashModel.venmoId ?? '',
+            initialValue: widget.requestModel.cashModel.venmoId ?? '',
             keyboardType: TextInputType.multiline,
             maxLines: 1,
             onSaved: (value) {
@@ -2212,20 +2248,6 @@ class RequestEditFormState extends State<RequestEditForm> {
         //     : Container(height: 0, width: 0),
 
         SizedBox(height: 15),
-
-        Center(
-          child: LocationPickerWidget(
-            selectedAddress: selectedAddress,
-            location: location,
-            onChanged: (LocationDataModel dataModel) {
-              log("received data model");
-              setState(() {
-                location = dataModel.geoPoint;
-                this.selectedAddress = dataModel.location;
-              });
-            },
-          ),
-        )
       ],
     );
   }

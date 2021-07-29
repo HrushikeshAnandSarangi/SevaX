@@ -59,7 +59,7 @@ class RequestDetailsAboutPage extends StatefulWidget {
   RequestDetailsAboutPage({
     Key key,
     this.applied = false,
-    this.requestItem,
+    @required this.requestItem,
     this.timebankModel,
     this.isAdmin,
     this.communityModel,
