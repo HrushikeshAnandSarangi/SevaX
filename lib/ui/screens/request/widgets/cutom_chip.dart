@@ -12,11 +12,33 @@ class CustomChip extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Chip(
-        label: Text(label),
+        avatar: isSelected
+            ? Padding(
+                padding: EdgeInsets.only(left: 2.0),
+                child: Container(
+                  height: 16,
+                  width: 16,
+                  child: CircleAvatar(
+                    radius: 12,
+                    backgroundColor: Color(0xFFFFFFFF),
+                    foregroundColor: Color(0xFFF70C493),
+                    child: Icon(
+                      Icons.check,
+                      size: 14,
+                    ),
+                  ),
+                ),
+              )
+            : null,
+        label: Text(
+          label,
+          style: TextStyle(color: isSelected ? Colors.white : Colors.black),
+        ),
         side: BorderSide(
           color: isSelected ? Theme.of(context).primaryColor : Colors.grey[300],
         ),
-        backgroundColor: Colors.transparent,
+        backgroundColor:
+            isSelected ? Theme.of(context).primaryColor : Colors.transparent,
       ),
     );
   }

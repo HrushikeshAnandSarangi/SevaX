@@ -1302,7 +1302,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
         ),
         StreamBuilder<bool>(
             initialData: false,
-            stream: _bloc.isVisible,
+            stream: _one_to_many_bloc.isVisible,
             builder: (context, snapshot) {
               return snapshot.data
                   ? Padding(

@@ -266,39 +266,37 @@ class _ReportMemberPageState extends State<ReportMemberPage> {
     }
     UploadTask _uploadTask =
         _storage.ref().child("reports/$filePath.png").putFile(file);
-    String imageURL = '';
-    _uploadTask.whenComplete(() async {
-      imageURL = await _storage.ref().getDownloadURL();
-      profanityImageModel = await checkProfanityForImage(imageUrl: imageURL);
-      if (profanityImageModel == null) {
+    String imageURL =
+        await (await _uploadTask.whenComplete(() => null)).ref.getDownloadURL();
+    profanityImageModel = await checkProfanityForImage(imageUrl: imageURL);
+    if (profanityImageModel == null) {
+      progressDialog.hide();
+
+      showFailedLoadImage(context: context).then((value) {});
+    } else {
+      profanityStatusModel =
+          await getProfanityStatus(profanityImageModel: profanityImageModel);
+
+      if (profanityStatusModel.isProfane) {
         progressDialog.hide();
 
-        showFailedLoadImage(context: context).then((value) {});
+        showProfanityImageAlert(
+                context: context, content: profanityStatusModel.category)
+            .then((status) {
+          if (status == 'Proceed') {
+            deleteFireBaseImage(imageUrl: imageURL).then((value) {
+              if (value) {}
+            }).catchError((e) => log(e));
+          }
+        });
       } else {
-        profanityStatusModel =
-            await getProfanityStatus(profanityImageModel: profanityImageModel);
-
-        if (profanityStatusModel.isProfane) {
-          progressDialog.hide();
-
-          showProfanityImageAlert(
-                  context: context, content: profanityStatusModel.category)
-              .then((status) {
-            if (status == 'Proceed') {
-              deleteFireBaseImage(imageUrl: imageURL).then((value) {
-                if (value) {}
-              }).catchError((e) => log(e));
-            }
-          });
-        } else {
-          deleteFireBaseImage(imageUrl: imageURL).then((value) {
-            if (value) {}
-          }).catchError((e) => log(e));
-          bloc.uploadImage(file);
-          progressDialog.hide();
-        }
+        deleteFireBaseImage(imageUrl: imageURL).then((value) {
+          if (value) {}
+        }).catchError((e) => log(e));
+        bloc.uploadImage(file);
+        progressDialog.hide();
       }
-    });
+    }
   }
 
   void _showSnackBar(String message, {bool isLongDuration = false}) {
