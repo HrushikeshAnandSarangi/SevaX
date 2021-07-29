@@ -433,7 +433,6 @@ class _MemberPermissionsState extends State<MemberPermissions> {
       case Role.ADMIN:
         widget.timebankModel.timebankConfigurations.admin = all_permissions;
         AppConfig.timebankConfigurations.admin = all_permissions;
-
         break;
 
         break;
