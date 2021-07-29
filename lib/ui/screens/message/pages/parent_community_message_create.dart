@@ -68,7 +68,7 @@ class _CommunityMessageCreateState extends State<CommunityMessageCreate> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Message community',
+          L.of(context).new_comminity_message,
           style: TextStyle(fontSize: 18),
         ),
         actions: [
