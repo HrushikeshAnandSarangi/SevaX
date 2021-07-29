@@ -314,4 +314,17 @@ class L {
 // 28th July
   String get accept_offer_invitation_confirmation_to_do_tasks =>
       "This task will be added to your To Do list, after you approve it.";
+
+//29th july
+  String get careers_explore => "Careers";
+  String get communities_explore => "Communities";
+  String get discover_explore => "Discover";
+  String get diversity_belonging_explore => "Diversity Belonging";
+  String get guidebooks_explore => "Guidebooks";
+  String get hosting_explore => "Hosting";
+  String get host_a_community_explore => "Host a community";
+  String get organize_an_event_explore => "Organize an event";
+  String get policies_explore => "Policies";
+  String get news_explore => "News";
+  String get trust_and_safety_explore => "Trust & Safety";
 }
