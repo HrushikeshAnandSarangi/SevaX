@@ -69,6 +69,8 @@ class MemberCardWithSingleAction extends StatelessWidget {
           Container(
             height: 30,
             child: CustomElevatedButton(
+              shape: StadiumBorder(),
+              padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
               color: buttonColor,
               child: Text(status),
               onPressed: action,
