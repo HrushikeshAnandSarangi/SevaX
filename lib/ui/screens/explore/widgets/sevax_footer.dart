@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/localization/applanguage.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/app_config.dart';
@@ -299,37 +300,37 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
       case FooterData.About_Us:
         return S.of(context).help_about_us;
       case FooterData.Careers:
-        return 'Careers';
+        return L.of(context).careers_explore;
       case FooterData.Communities:
-        return 'Communities';
+        return L.of(context).communities_explore;
       case FooterData.Create_offer:
         return S.of(context).create_offer;
       case FooterData.Create_request:
         return S.of(context).create_request;
       case FooterData.Discover:
-        return 'Discover';
+        return L.of(context).discover_explore;
       case FooterData.Diversity_Belonging:
-        return 'Diversity Belonging';
+        return L.of(context).diversity_belonging_explore;
       case FooterData.Events:
         return S.of(context).projects;
       case FooterData.Guidebooks:
-        return 'Guidebooks';
+        return L.of(context).guidebooks_explore;
       case FooterData.Help:
         return S.of(context).help;
       case FooterData.Hosting:
-        return 'Hosting';
+        return L.of(context).hosting_explore;
       case FooterData.Host_community:
-        return 'Host a community';
+        return L.of(context).host_a_community_explore;
       case FooterData.Organize_event:
-        return 'Organize an event';
+        return L.of(context).organize_an_event_explore;
       case FooterData.Policies:
-        return 'Policies';
+        return L.of(context).policies_explore;
       case FooterData.Press:
-        return 'News';
+        return L.of(context).news_explore;
       case FooterData.Offers:
         return S.of(context).offers;
       case FooterData.Trust_Safety:
-        return 'Trust & Safety';
+        return L.of(context).trust_and_safety_explore;
       case FooterData.SevaX:
         return 'SevaX';
       case FooterData.Requests:
