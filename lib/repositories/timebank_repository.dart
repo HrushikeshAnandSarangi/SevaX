@@ -51,10 +51,7 @@ class TimebankRepository {
 
   Stream<List<TimebankModel>> getAllTimebanksOfCommunity(
       String communityId) async* {
-    var data = _ref
-        .where("community_id", isEqualTo: communityId)
-        .orderBy("name", descending: false)
-        .snapshots();
+    var data = _ref.where("community_id", isEqualTo: communityId).snapshots();
     yield* data.transform(
       StreamTransformer<QuerySnapshot, List<TimebankModel>>.fromHandlers(
         handleData: (data, sink) {
