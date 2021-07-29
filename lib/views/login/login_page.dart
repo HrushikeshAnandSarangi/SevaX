@@ -6,7 +6,7 @@ import 'dart:ui' as ui;
 import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+// import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/gestures.dart';
@@ -831,7 +831,7 @@ class _LoginPageState extends State<LoginPage> {
     } on FirebaseAuthException catch (erorr) {
       handlePlatformException(erorr);
     } on Exception catch (error) {
-      FirebaseCrashlytics.instance.log(error.toString());
+      // FirebaseCrashlytics.instance.log(error.toString());
     }
     isLoading = false;
     _processLogin(user);
@@ -868,7 +868,7 @@ class _LoginPageState extends State<LoginPage> {
     } on FirebaseAuthException catch (erorr) {
       handlePlatformException(erorr);
     } on Exception catch (error) {
-      FirebaseCrashlytics.instance.log(error.toString());
+      // FirebaseCrashlytics.instance.log(error.toString());
     }
     isLoading = false;
     _processLogin(user);
@@ -895,12 +895,12 @@ class _LoginPageState extends State<LoginPage> {
     } on NoSuchMethodError catch (error) {
       logger.e(error);
       handleException();
-      FirebaseCrashlytics.instance.log("No Such methods error in login!");
+      // FirebaseCrashlytics.instance.log("No Such methods error in login!");
     } on FirebaseAuthException catch (erorr) {
       handlePlatformException(erorr);
     } on Exception catch (error) {
       handlePlatformException(error);
-      FirebaseCrashlytics.instance.log(error.toString());
+      // FirebaseCrashlytics.instance.log(error.toString());
     }
     isLoading = false;
     if (user == null) {

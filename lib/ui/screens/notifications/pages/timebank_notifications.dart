@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:connectivity/connectivity.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+// import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:rxdart/rxdart.dart';
@@ -998,8 +998,8 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 break;
               default:
                 log("Unhandled timebank notification type ${notification.type} ${notification.id}");
-                FirebaseCrashlytics.instance.log(
-                    "Unhandled timebank notification type ${notification.type} ${notification.id}");
+                // FirebaseCrashlytics.instance.log(
+                //     "Unhandled timebank notification type ${notification.type} ${notification.id}");
                 return Container();
                 break;
             }
