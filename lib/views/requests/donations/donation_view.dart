@@ -458,6 +458,9 @@ class _DonationViewState extends State<DonationView> {
         ),
       ),
       TextFormField(
+        inputFormatters: [
+          new LengthLimitingTextInputFormatter(15),
+        ],
         autovalidateMode: AutovalidateMode.onUserInteraction,
         focusNode: focusNodes[14],
         onFieldSubmitted: (v) {
@@ -489,6 +492,9 @@ class _DonationViewState extends State<DonationView> {
         ),
       ),
       TextFormField(
+        inputFormatters: [
+          new LengthLimitingTextInputFormatter(15),
+        ],
         autovalidateMode: AutovalidateMode.onUserInteraction,
         focusNode: focusNodes[15],
         onFieldSubmitted: (v) {
@@ -705,6 +711,14 @@ class _DonationViewState extends State<DonationView> {
                   donationsModel.cashDetails.cashDetails.paymentType = value;
                   setState(() => {});
                 }),
+            _optionRadioButton(
+                title: S.of(context).other(1),
+                value: RequestPaymentType.OTHER,
+                groupvalue: donationsModel.cashDetails.cashDetails.paymentType,
+                onChanged: (value) {
+                  donationsModel.cashDetails.cashDetails.paymentType = value;
+                  setState(() => {});
+                }),
             donationsModel.cashDetails.cashDetails.paymentType ==
                     RequestPaymentType.ACH
                 ? RequestPaymentACH(widget.offerModel)
@@ -717,9 +731,11 @@ class _DonationViewState extends State<DonationView> {
                         : donationsModel.cashDetails.cashDetails.paymentType ==
                                 RequestPaymentType.SWIFT
                             ? RequestPaymentSwift(widget.offerModel)
-                            : RequestPaymentZellePay(widget.offerModel),
-            SizedBox(height: 15),
-            OtherDetailsWidget(),
+                            : donationsModel
+                                        .cashDetails.cashDetails.paymentType ==
+                                    RequestPaymentType.OTHER
+                                ? OtherDetailsWidget()
+                                : RequestPaymentZellePay(widget.offerModel),
             SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
