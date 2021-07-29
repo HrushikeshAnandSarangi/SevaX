@@ -349,9 +349,10 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
         return getOnTap(context, S.of(context).help_about_us, 'aboutUsLink');
 
       case FooterData.Careers:
-        return getOnTap(context, 'Careers', 'careersLink');
+        return getOnTap(context, L.of(context).careers_explore, 'careersLink');
       case FooterData.Communities:
-        return getOnTap(context, 'Communities', 'aboutSeva');
+        return getOnTap(
+            context, L.of(context).communities_explore, 'aboutSeva');
 
       case FooterData.Create_offer:
         return getOnTap(context, S.of(context).create_offer, 'trainingVideo');
@@ -360,16 +361,19 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
         return getOnTap(context, S.of(context).create_request, 'trainingVideo');
 
       case FooterData.Discover:
-        return getOnTap(context, 'Discover', 'trainingVideo');
+        return getOnTap(
+            context, L.of(context).discover_explore, 'trainingVideo');
 
       case FooterData.Diversity_Belonging:
-        return getOnTap(context, 'Diversity Belonging', 'diversityLink');
+        return getOnTap(context, L.of(context).diversity_belonging_explore,
+            'diversityLink');
 
       case FooterData.Events:
         return getOnTap(context, S.of(context).projects, 'projectsInfoLink');
 
       case FooterData.Guidebooks:
-        return getOnTap(context, 'Guidebooks', 'trainingVideo');
+        return getOnTap(
+            context, L.of(context).guidebooks_explore, 'trainingVideo');
 
       case FooterData.Help:
         return getOnTap(
@@ -379,25 +383,29 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
         );
 
       case FooterData.Hosting:
-        return getOnTap(context, 'Hosting', 'aboutSeva');
+        return getOnTap(context, L.of(context).hosting_explore, 'aboutSeva');
 
       case FooterData.Host_community:
-        return getOnTap(context, 'Host a community', 'aboutSeva');
+        return getOnTap(
+            context, L.of(context).host_a_community_explore, 'aboutSeva');
 
       case FooterData.Organize_event:
-        return getOnTap(context, 'Organize an event', 'projectsInfoLink');
+        return getOnTap(context, L.of(context).organize_an_event_explore,
+            'projectsInfoLink');
 
       case FooterData.Policies:
-        return getOnTap(context, 'Policies', 'privacyPolicyLink');
+        return getOnTap(
+            context, L.of(context).policies_explore, 'privacyPolicyLink');
 
       case FooterData.Press:
-        return getOnTap(context, 'News', 'pressLink');
+        return getOnTap(context, L.of(context).news_explore, 'pressLink');
 
       case FooterData.Offers:
         return getOnTap(context, S.of(context).offers, 'offersInfoLink');
 
       case FooterData.Trust_Safety:
-        return getOnTap(context, 'Trust & Safety', 'trustAndSafetyLink');
+        return getOnTap(context, L.of(context).trust_and_safety_explore,
+            'trustAndSafetyLink');
 
       case FooterData.SevaX:
         return getOnTap(context, 'SevaX', 'aboutSeva');
