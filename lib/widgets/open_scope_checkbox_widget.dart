@@ -21,6 +21,7 @@ class OpenScopeCheckBox extends StatelessWidget {
         height: 50,
         child: Row(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Checkbox(

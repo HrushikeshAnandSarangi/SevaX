@@ -527,7 +527,6 @@ class RequestModel extends DataModel {
     } else {
       this.selectedSpeakerTimeDetails = new SelectedSpeakerTimeDetails();
     }
-
     if (map.containsKey('cashModeDetails')) {
       this.cashModel = CashModel.fromMap(map['cashModeDetails']);
     } else {

@@ -1071,6 +1071,25 @@ class _EditProfilePageState extends State<EditProfilePage>
                 children: <Widget>[
                   Spacer(),
                   CustomTextButton(
+                    padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                    shape: StadiumBorder(),
+                    color: Colors.grey,
+                    child: Text(
+                      S.of(context).cancel,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontFamily: 'Europa',
+                        fontSize: 16,
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.of(_context).pop(false);
+                    },
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  CustomTextButton(
                     shape: StadiumBorder(),
                     padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                     color: Theme.of(context).accentColor,
@@ -1080,6 +1099,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                       style: TextStyle(
                         fontFamily: 'Europa',
                         color: Colors.white,
+                        fontSize: 16,
                       ),
                     ),
                     onPressed: () async {
@@ -1090,15 +1110,6 @@ class _EditProfilePageState extends State<EditProfilePage>
 
                       // _signOut(
                       //     context, SevaCore.of(context).loggedInUser.email);
-                    },
-                  ),
-                  CustomTextButton(
-                    child: Text(
-                      S.of(context).cancel,
-                      style: TextStyle(color: Colors.red, fontFamily: 'Europa'),
-                    ),
-                    onPressed: () {
-                      Navigator.of(_context).pop(false);
                     },
                   ),
                 ],
