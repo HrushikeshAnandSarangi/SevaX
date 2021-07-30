@@ -20,31 +20,22 @@ class UserProfileBloc {
   StreamSink<bool> get changeCommunity => _communityLoaded.sink;
 
   void getAllCommunities(context, UserModel userModel) async {
-    Set<String> communitiesList = Set.from(userModel?.communities ?? []);
-    if (userModel?.sevaUserID != null)
-      FirestoreManager.getUserForIdStream(
-        sevaUserId: userModel.sevaUserID,
-      ).listen((userModel) {
-        if (communitiesList != null) {
-          var futures = communitiesList.map(
-            (e) async => await CollectionRef.communities.doc(e).get(),
-          );
-          Future.wait(futures).then((value) {
-            var models = value
-                .map<CommunityModel>(
-                  (e) => CommunityModel(e.data()),
-                )
-                .toList();
-            models.sort(
-              (a, b) => a.name.toLowerCase().compareTo(
-                    b.name.toLowerCase(),
-                  ),
-            );
-            if (!_communities.isClosed) _communities.add(models);
-          });
-        } else {
-          if (!_communities.isClosed) _communities.addError('No Communities');
-        }
+    FirestoreManager.getUserForIdStream(
+      sevaUserId: userModel.sevaUserID,
+    ).listen((userModel) {
+      CollectionRef.communities
+          .where("members", arrayContains: userModel.sevaUserID)
+          .get()
+          .then((results) {
+        List<CommunityModel> models = [];
+        results.docs.forEach((element) {
+          models.add(CommunityModel(element.data()));
+        });
+        models.sort((a, b) => a.name.toLowerCase().compareTo(
+              b.name.toLowerCase(),
+            ));
+
+        if (!_communities.isClosed) _communities.add(models);
         Future.delayed(
           Duration(milliseconds: 300),
           () {
@@ -52,6 +43,39 @@ class UserProfileBloc {
           },
         );
       });
+    });
+    // Set<String> communitiesList = Set.from(userModel?.communities ?? []);
+    // if (userModel?.sevaUserID != null)
+    //   FirestoreManager.getUserForIdStream(
+    //     sevaUserId: userModel.sevaUserID,
+    //   ).listen((userModel) {
+    //     if (communitiesList != null) {
+    //       var futures = communitiesList.map(
+    //         (e) async => await CollectionRef.communities.doc(e).get(),
+    //       );
+    //       Future.wait(futures).then((value) {
+    //         var models = value
+    //             .map<CommunityModel>(
+    //               (e) => CommunityModel(e.data()),
+    //             )
+    //             .toList();
+    //         models.sort(
+    //           (a, b) => a.name.toLowerCase().compareTo(
+    //                 b.name.toLowerCase(),
+    //               ),
+    //         );
+    //         if (!_communities.isClosed) _communities.add(models);
+    //       });
+    //     } else {
+    //       if (!_communities.isClosed) _communities.addError('No Communities');
+    //     }
+    //     Future.delayed(
+    //       Duration(milliseconds: 300),
+    //       () {
+    //         if (!_communityLoaded.isClosed) _communityLoaded.add(true);
+    //       },
+    //     );
+    //   });
   }
 
   void setDefaultCommunity(

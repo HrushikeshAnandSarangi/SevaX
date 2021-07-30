@@ -9,6 +9,7 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/core.dart';
 
 class HomeDashBoardBloc extends BlocBase {
@@ -43,17 +44,19 @@ class HomeDashBoardBloc extends BlocBase {
     if (communitiesList != null) {
       communitiesList.forEach((id) async {
         var value = await CollectionRef.communities.doc(id).get();
-        c.add(CommunityModel(value.data()));
-        if (id == user.currentCommunity) {
-          _selectedCommunity.drain();
-          _selectedCommunity.add(CommunityModel(value.data()));
+        if (value.exists) {
+          c.add(CommunityModel(value.data()));
+          if (id == user.currentCommunity) {
+            _selectedCommunity.drain();
+            _selectedCommunity.add(CommunityModel(value.data()));
+          }
+          c.sort(
+            (a, b) => a.name.toLowerCase().compareTo(
+                  b.name.toLowerCase(),
+                ),
+          );
+          if (!_communities.isClosed) _communities.add(c);
         }
-        c.sort(
-          (a, b) => a.name.toLowerCase().compareTo(
-                b.name.toLowerCase(),
-              ),
-        );
-        if (!_communities.isClosed) _communities.add(c);
       });
     } else {
       _communities.addError('No Communities');

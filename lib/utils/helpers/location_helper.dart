@@ -8,7 +8,7 @@ GeoFirePoint getLocation(map) {
   try {
     if (map.containsKey("location")) {
       if (map['location'].containsKey('geopoint')) {
-        if (map.containsKey('_latitude')) {
+        if (map['location']['geopoint'].containsKey('_latitude')) {
           geoFirePoint = GeoFirePoint(
             map["location"]["geopoint"]["_latitude"],
             map["location"]["geopoint"]["_longitude"],
