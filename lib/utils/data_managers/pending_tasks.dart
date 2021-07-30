@@ -111,14 +111,7 @@ class PendingTasks {
           title: model.title,
           subTitle: model.description,
           timeInMilliseconds: model.requestStart,
-          onTap: () async {
-            var a = await utils.getTimeBankForId(timebankId: model.timebankId);
-            // TaskUtils.navigateToRequests(
-            //   context: context,
-            //   request: model,
-            //   timebankModel: a,
-            // );
-          },
+          onTap: () async {},
           tag: model.requestType == RequestType.ONE_TO_MANY_REQUEST
               ? L.of(context).one_to_many_attendee_request
               : model.requestType == RequestType.ONE_TO_MANY_OFFER
@@ -141,18 +134,7 @@ class PendingTasks {
     offersList.forEach((element) {
       widgetList.add(
         ToDoCard(
-          onTap: () async {
-            // var a =
-            //     await utils.getTimeBankForId(timebankId: element.timebankId);
-            // var offerModel =
-            //     await utils.getOfferFromId(offerId: element.offerId);
-
-            // TaskUtils.navigateToOffers(
-            //   offer: offerModel,
-            //   context: context,
-            //   timebankModel: a,
-            // );
-          },
+          onTap: () async {},
           title: element.requestTitle,
           subTitle: '',
           tag: L.of(context).one_to_many_attendee_offer,
@@ -169,14 +151,7 @@ class PendingTasks {
           title: model.title,
           subTitle: model.description,
           timeInMilliseconds: model.requestStart,
-          onTap: () async {
-            // var a = await utils.getTimeBankForId(timebankId: model.timebankId);
-            // TaskUtils.navigateToRequests(
-            //   context: context,
-            //   request: model,
-            //   timebankModel: a,
-            // );
-          },
+          onTap: () async {},
           tag: L.of(context).one_to_many_request_speaker,
         ),
       );
@@ -202,14 +177,7 @@ class PendingTasks {
           title: model.title,
           subTitle: model.description,
           timeInMilliseconds: model.requestStart,
-          onTap: () async {
-            // var a = await utils.getTimeBankForId(timebankId: model.timebankId);
-            // TaskUtils.navigateToRequests(
-            //   context: context,
-            //   request: model,
-            //   timebankModel: a,
-            // );
-          },
+          onTap: () async {},
           tag: L.of(context).time_request_volunteer,
         ),
       );

@@ -267,7 +267,7 @@ class L {
   String get choose_plan => "Choose Plan";
 
   String get new_comminity_message => "Select a child or branch community";
-  String get go_to_community_chat => "View child community\nMessaging Rooms";
+  String get go_to_community_chat => "View child community Messaging Rooms";
   String get no_child_communities => "No child existing communities";
   String get community_chat => "Child Messaging Rooms";
 // }

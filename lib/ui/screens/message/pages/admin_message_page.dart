@@ -44,11 +44,12 @@ class AdminMessagePage extends StatelessWidget {
                     Text(
                       L.of(context).go_to_community_chat,
                       style: TextStyle(
-                        fontSize: 22,
+                        fontSize: 18,
                         color: FlavorConfig.values.theme.primaryColor,
                         fontFamily: 'Europa',
                         fontWeight: FontWeight.bold,
                       ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                     Spacer(),
                     Icon(
