@@ -6,6 +6,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
@@ -222,14 +223,14 @@ class _TimebankCoverPhotoState extends State<TimebankCoverPhoto>
                     height: 8,
                   ),
                   Text(
-                    L.of(context).add_cover_picture,
+                    S.of(context).add_cover_picture,
                     style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
                   ),
                   // SizedBox(
                   //   height: 8,
                   // ),
                   // Text(
-                  //   L.of(context).or_drag_and_drop,
+                  //   S.of(context).or_drag_and_drop,
                   //   style: TextStyle(fontSize: 12),
                   // ),
                 ],

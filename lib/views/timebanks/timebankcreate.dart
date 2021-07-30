@@ -268,7 +268,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
               TimebankCoverPhoto(),
               SizedBox(height: 10),
               Text(
-                "${L.of(context).cover_picture_label_group}",
+                "${S.of(context).cover_picture_label_group}",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Colors.grey,

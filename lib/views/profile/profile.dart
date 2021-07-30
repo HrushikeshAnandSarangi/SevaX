@@ -398,7 +398,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           },
                         ),
                         ProfileSettingsCard(
-                          title: L.of(context).my_request_categories,
+                          title: S.of(context).my_request_categories,
                           onTap: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(

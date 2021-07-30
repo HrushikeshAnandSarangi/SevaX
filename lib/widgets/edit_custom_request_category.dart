@@ -61,7 +61,7 @@ class _EditRequestCustomCategoryState extends State<EditRequestCustomCategory> {
         ).then((categoryFound) {
           if (categoryFound) {
             setState(() {
-              errTxt = L.of(context).request_category_exists;
+              errTxt = S.of(context).request_category_exists;
             });
             logger.e('DUPLICATE FOUND');
           } else {
@@ -96,7 +96,7 @@ class _EditRequestCustomCategoryState extends State<EditRequestCustomCategory> {
               ),
               SizedBox(width: 12),
               Text(
-                L.of(context).edit_request_category,
+                S.of(context).edit_request_category,
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
                   color: Colors.black,
@@ -140,7 +140,7 @@ class _EditRequestCustomCategoryState extends State<EditRequestCustomCategory> {
                                 left: 0.0, right: 8.0, bottom: 10.0),
                             border: InputBorder.none,
                             hintText:
-                                L.of(context).add_new_subcategory_hint + '*',
+                                S.of(context).add_new_subcategory_hint + '*',
                             hintStyle: TextStyle(color: Colors.grey),
                             errorStyle: TextStyle(height: 0.85),
                             // errorText: errTxt,
@@ -148,7 +148,7 @@ class _EditRequestCustomCategoryState extends State<EditRequestCustomCategory> {
                           validator: (value) {
                             final profanityDetector = ProfanityDetector();
                             if (value == '') {
-                              return L.of(context).please_enter_title;
+                              return S.of(context).please_enter_title;
                             }
                             if (errTxt != null) {
                               return errTxt;
@@ -199,11 +199,11 @@ class _EditRequestCustomCategoryState extends State<EditRequestCustomCategory> {
                     ),
                     title: newRequestCategoryLogo != null
                         ? Text(
-                            L.of(context).photo_selected,
+                            S.of(context).photo_selected,
                             style: TextStyle(color: Colors.green),
                           )
                         : Text(
-                            L.of(context).select_photo,
+                            S.of(context).select_photo,
                             style: TextStyle(color: Colors.grey),
                           ),
                   ),

@@ -113,9 +113,9 @@ class PendingTasks {
           timeInMilliseconds: model.requestStart,
           onTap: () async {},
           tag: model.requestType == RequestType.ONE_TO_MANY_REQUEST
-              ? L.of(context).one_to_many_attendee_request
+              ? S.of(context).one_to_many_attendee_request
               : model.requestType == RequestType.ONE_TO_MANY_OFFER
-                  ? L.of(context).one_to_many_attendee_offer
+                  ? S.of(context).one_to_many_attendee_offer
                   : model.requestType == RequestType.TIME
                       ? S.of(context).time
                       : model.requestType == RequestType.GOODS
@@ -137,7 +137,7 @@ class PendingTasks {
           onTap: () async {},
           title: element.requestTitle,
           subTitle: '',
-          tag: L.of(context).one_to_many_attendee_offer,
+          tag: S.of(context).one_to_many_attendee_offer,
           timeInMilliseconds: element.requestEndDate,
         ),
       );
@@ -152,7 +152,7 @@ class PendingTasks {
           subTitle: model.description,
           timeInMilliseconds: model.requestStart,
           onTap: () async {},
-          tag: L.of(context).one_to_many_request_speaker,
+          tag: S.of(context).one_to_many_request_speaker,
         ),
       );
     });
@@ -164,7 +164,7 @@ class PendingTasks {
     //     onTap: () => _showMyDialog(context),
     //     title: element.groupOfferDataModel.classTitle,
     //     subTitle: element.groupOfferDataModel.classDescription,
-    //     tag: L.of(context).one_to_many_speaker,
+    //     tag: S.of(context).one_to_many_speaker,
     //     timeInMilliseconds: element.groupOfferDataModel.startDate,
     //   ));
     // });
@@ -178,7 +178,7 @@ class PendingTasks {
           subTitle: model.description,
           timeInMilliseconds: model.requestStart,
           onTap: () async {},
-          tag: L.of(context).time_request_volunteer,
+          tag: S.of(context).time_request_volunteer,
         ),
       );
     });

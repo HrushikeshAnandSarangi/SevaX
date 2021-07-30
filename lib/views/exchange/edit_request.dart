@@ -1621,7 +1621,7 @@ class RequestEditFormState extends State<RequestEditForm> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            L.of(context).other_payment_name,
+            S.of(context).other_payment_name,
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
@@ -1665,7 +1665,7 @@ class RequestEditFormState extends State<RequestEditForm> {
             height: 10,
           ),
           Text(
-            L.of(context).other_payment_details,
+            S.of(context).other_payment_details,
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
@@ -1688,7 +1688,7 @@ class RequestEditFormState extends State<RequestEditForm> {
             },
             decoration: InputDecoration(
               errorMaxLines: 2,
-              hintText: L.of(context).other_payment_details_hint,
+              hintText: S.of(context).other_payment_details_hint,
               hintStyle: hintTextStyle,
             ),
             initialValue: widget.requestModel.cashModel.other_details != null

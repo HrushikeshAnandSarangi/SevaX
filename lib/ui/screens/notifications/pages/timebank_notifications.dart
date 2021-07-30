@@ -971,7 +971,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   photoUrl: creatorDetails.photoUrl ?? defaultGroupImageURL,
                   title: 'Community chat join',
                   subTitle:
-                      '${creatorDetails.name.toLowerCase()} ${S.of(context).notifications_added_you} ${data['messageRoomName']} ${L.of(context).community_chat}.',
+                      '${creatorDetails.name.toLowerCase()} ${S.of(context).notifications_added_you} ${data['messageRoomName']} ${S.of(context).community_chat}.',
                 );
                 break;
               case NotificationType.COMMUNITY_REMOVED_FROM_MESSAGE_ROOM:

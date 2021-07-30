@@ -68,7 +68,7 @@ class _CommunityMessageCreateState extends State<CommunityMessageCreate> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          L.of(context).new_comminity_message,
+          S.of(context).new_comminity_message,
           style: TextStyle(fontSize: 18),
         ),
         actions: [
@@ -132,7 +132,7 @@ class _CommunityMessageCreateState extends State<CommunityMessageCreate> {
           if (snapshot.data == null || snapshot.data.isEmpty) {
             return Center(
               child: Text(
-                L.of(context).no_child_communities,
+                S.of(context).no_child_communities,
               ),
             );
           }
