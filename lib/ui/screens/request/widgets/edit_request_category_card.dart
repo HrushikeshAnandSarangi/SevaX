@@ -59,7 +59,7 @@ class EditRequestCategoryCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(categoryModel.title_en),
+              Text(categoryModel.getCategoryName(context)),
               // Text(subTitle),
             ],
           ),

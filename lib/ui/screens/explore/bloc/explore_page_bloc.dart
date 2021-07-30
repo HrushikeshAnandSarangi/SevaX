@@ -35,7 +35,8 @@ class ExplorePageBloc {
         },
       );
 
-  void load({bool isUserLoggedIn = false, String sevaUserID}) {
+  void load(
+      {bool isUserLoggedIn = false, String sevaUserID, BuildContext context}) {
     ElasticSearchApi.getFeaturedCommunities().then((value) {
       _communities.add(value);
     });
@@ -63,7 +64,7 @@ class ExplorePageBloc {
       ElasticSearchApi.getPublicRequests().then((value) {
         _requests.add(value);
       });
-      ElasticSearchApi.getAllCategories().then((value) {
+      ElasticSearchApi.getAllCategories(context).then((value) {
         _categories.add(value);
       });
     }
