@@ -744,7 +744,7 @@ class _RegisterPageState extends State<RegisterPage>
           if (dialogContext != null) {
             Navigator.pop(dialogContext);
           }
-          showFailedLoadImage().then((value) {});
+          showFailedLoadImage(context: context).then((value) {});
         } else {
           profanityStatusModel = await getProfanityStatus(
               profanityImageModel: profanityImageModel);
