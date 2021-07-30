@@ -120,7 +120,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
 
   UserMode refreshUserViewMode() {
     String loggedInUser = SevaCore.of(context).loggedInUser.sevaUserID;
-    logger.i("===>>   " + widget.requestItem.requestMode.toString());
+    // logger.i("===>>   " + widget.requestItem.requestMode.toString());
 
     switch (widget.requestItem.requestMode) {
       case RequestMode.PERSONAL_REQUEST:

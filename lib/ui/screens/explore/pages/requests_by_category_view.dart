@@ -111,7 +111,7 @@ class _RequestsByCategoryViewState extends State<RequestsByCategoryView> {
                   var request = snapshot.data[index];
                   var date =
                       DateTime.fromMillisecondsSinceEpoch(request.requestStart);
-                  return SevaCore.of(context)?.loggedInUser?.sevaUserID != null
+                  return widget.isUserSignedIn
                       ? FutureBuilder<TimebankModel>(
                           future:
                               getTimeBankForId(timebankId: request.timebankId),
