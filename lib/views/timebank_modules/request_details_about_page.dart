@@ -546,7 +546,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   Future<dynamic> getUserDetails({String memberEmail}) async {
     var user = await CollectionRef.users.doc(memberEmail).get();
 
-    return user.data;
+    return user.data();
   }
 
   bool isApplied = false;
