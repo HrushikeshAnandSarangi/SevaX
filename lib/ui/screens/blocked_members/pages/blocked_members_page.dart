@@ -184,7 +184,7 @@ class _BlockedMembersPageState extends State<BlockedMembersPage> {
                                     color: Theme.of(context).accentColor,
                                     textColor: Colors.white,
                                     child: Text(
-                                      L.of(context).yes,
+                                      S.of(context).yes,
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 16,
@@ -208,7 +208,7 @@ class _BlockedMembersPageState extends State<BlockedMembersPage> {
                                     }),
                                 CustomTextButton(
                                   child: Text(
-                                    L.of(context).no,
+                                    S.of(context).no,
                                     style: TextStyle(
                                         fontSize: 16, fontFamily: 'Europa', color: Colors.red),
                                   ),
