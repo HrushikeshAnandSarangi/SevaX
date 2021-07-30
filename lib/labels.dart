@@ -332,4 +332,6 @@ class L {
   String get loan_success => "You have donated credits successfully";
   String get yes => "Yes";
   String get no => "No";
+  String get any_distance => "Any Distance";
+
 }

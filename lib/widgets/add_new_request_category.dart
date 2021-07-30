@@ -265,9 +265,7 @@ class _AddNewRequestCategoryState extends State<AddNewRequestCategory> {
                                   ),
                                 ),
                               ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
+                              shape: StadiumBorder(),
                             ),
                           ),
                         ),

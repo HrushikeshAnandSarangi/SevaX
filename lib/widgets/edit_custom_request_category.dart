@@ -255,9 +255,7 @@ class _EditRequestCustomCategoryState extends State<EditRequestCustomCategory> {
                           ),
                         ),
                       ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
+                      shape: StadiumBorder(),
                     ),
                   ),
                 )
