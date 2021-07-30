@@ -26,7 +26,7 @@ class GroupCard extends StatelessWidget {
       child: Column(
         children: <Widget>[
           AspectRatio(
-            aspectRatio: 1 / 3,
+            aspectRatio: 3 / 2,
             child: CachedNetworkImage(
               imageUrl: image != null
                   ? image ?? defaultGroupImageURL
