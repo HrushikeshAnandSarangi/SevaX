@@ -302,6 +302,17 @@ class _InputDonateDialogState extends State<InputDonateDialog> {
         ),
       ),
       actions: <Widget>[
+        CustomTextButton(
+          shape: StadiumBorder(),
+          color: HexColor("#D2D2D2"),
+          child: Text(
+            S.of(context).cancel,
+            style: TextStyle(color: Colors.white, fontSize: dialogButtonSize),
+          ),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
         CustomElevatedButton(
           padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
           color: Theme.of(context).accentColor,
@@ -327,15 +338,6 @@ class _InputDonateDialogState extends State<InputDonateDialog> {
             }
           },
         ),
-        CustomTextButton(
-          child: Text(
-            S.of(context).cancel,
-            style: TextStyle(color: Colors.red, fontSize: dialogButtonSize),
-          ),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        )
       ],
     );
   }

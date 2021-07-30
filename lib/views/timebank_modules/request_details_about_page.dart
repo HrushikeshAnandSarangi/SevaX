@@ -120,7 +120,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
 
   UserMode refreshUserViewMode() {
     String loggedInUser = SevaCore.of(context).loggedInUser.sevaUserID;
-    logger.i("===>>   " + widget.requestItem.requestMode.toString());
+    // logger.i("===>>   " + widget.requestItem.requestMode.toString());
 
     switch (widget.requestItem.requestMode) {
       case RequestMode.PERSONAL_REQUEST:
@@ -546,7 +546,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   Future<dynamic> getUserDetails({String memberEmail}) async {
     var user = await CollectionRef.users.doc(memberEmail).get();
 
-    return user.data;
+    return user.data();
   }
 
   bool isApplied = false;

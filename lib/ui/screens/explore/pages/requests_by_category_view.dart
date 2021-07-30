@@ -37,6 +37,7 @@ class RequestsByCategoryView extends StatefulWidget {
     @required this.model,
     @required this.isUserSignedIn,
   }) : super(key: key);
+
   @override
   _RequestsByCategoryViewState createState() => _RequestsByCategoryViewState();
 }
@@ -57,121 +58,123 @@ class _RequestsByCategoryViewState extends State<RequestsByCategoryView> {
       hideSearchBar: true,
       hideHeader: widget.isUserSignedIn,
       hideFooter: widget.isUserSignedIn,
-      appBarTitle: widget.model.title_en != null
-          ? widget.model.title_en
-          : '', //widget.model.getCategoryName(context),
+      appBarTitle: widget.model.title_en != null ? widget.model.title_en : '',
+      //widget.model.getCategoryName(context),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          HideWidget(
-            hide: widget.isUserSignedIn,
-            child: CustomBackButton(
-              onBackPressed: () {
-                if (Navigator.of(context).canPop()) {
-                  Navigator.of(context).pop();
-                } else {
-                  Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(
-                      builder: (context) => ExplorePage(
-                        isUserSignedIn: false,
-                      ),
-                    ),
-                    (route) => false,
-                  );
-                }
-              },
-            ),
-          ),
           FutureBuilder(
             future: requests,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Container(
-                  height: MediaQuery.of(context).size.height / 2,
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                        top: MediaQuery.of(context).size.height / 4 - 20),
-                    child: LoadingIndicator(),
-                  ),
+                return WidgetWrapper(
+                  categoryTitle: widget.model.title_en,
+                  page: 'Request Category',
+                  isUserSignedIn: widget.isUserSignedIn,
+                  children: [
+                    Container(
+                      height: MediaQuery.of(context).size.height / 2,
+                      child: Padding(
+                        padding: EdgeInsets.only(top: MediaQuery.of(context).size.height / 4 - 20),
+                        child: LoadingIndicator(),
+                      ),
+                    ),
+                  ],
                 );
               }
               if (snapshot.data == null || snapshot.data.isEmpty) {
-                return Container(
-                  alignment: Alignment.center,
-                  height: MediaQuery.of(context).size.height / 2,
-                  child: Text(S.of(context).no_result_found),
+                return WidgetWrapper(
+                  categoryTitle: widget.model.title_en,
+                  page: 'Request Category',
+                  isUserSignedIn: widget.isUserSignedIn,
+                  children: [
+                    Container(
+                      alignment: Alignment.center,
+                      height: MediaQuery.of(context).size.height / 2,
+                      child: Text(S.of(context).no_result_found),
+                    ),
+                  ],
                 );
               }
 
-              return ListView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: snapshot.data.length,
-                itemBuilder: (context, index) {
-                  var request = snapshot.data[index];
-                  var date =
-                      DateTime.fromMillisecondsSinceEpoch(request.requestStart);
-                  return SevaCore.of(context)?.loggedInUser?.sevaUserID != null
-                      ? FutureBuilder<TimebankModel>(
-                          future:
-                              getTimeBankForId(timebankId: request.timebankId),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return LoadingIndicator();
-                            }
-                            if (snapshot.hasError) {
-                              return Container();
-                            }
-                            if (snapshot.data == null) {
-                              return Container();
-                            }
-                            return ExploreEventCard(
-                              onTap: () {
-                                if (request.sevaUserId ==
-                                        SevaCore.of(context)
-                                            .loggedInUser
-                                            .sevaUserID ||
-                                    isAccessAvailable(
-                                        snapshot.data,
-                                        SevaCore.of(context)
-                                            .loggedInUser
-                                            .sevaUserID)) {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_context) => BlocProvider(
-                                        bloc:
-                                            BlocProvider.of<HomeDashBoardBloc>(
-                                                context),
-                                        child: RequestTabHolder(
-                                          //communityModel: BlocProvider.of<HomeDashBoardBloc>(context).selectedCommunityModel,
-                                          isAdmin: true,
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                } else {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_context) => BlocProvider(
-                                        bloc:
-                                            BlocProvider.of<HomeDashBoardBloc>(
-                                                context),
-                                        child: RequestDetailsAboutPage(
-                                          requestItem: request,
-                                          timebankModel: snapshot.data,
-                                          isAdmin: false,
-                                          //communityModel: BlocProvider.of<HomeDashBoardBloc>(context).selectedCommunityModel,
-                                        ),
-                                      ),
-                                    ),
-                                  );
+              return WidgetWrapper(
+                categoryTitle: widget.model.title_en,
+                page: 'Request Category',
+                isUserSignedIn: widget.isUserSignedIn,
+                children: [
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: snapshot.data.length,
+                    itemBuilder: (context, index) {
+                      var request = snapshot.data[index];
+                      var date = DateTime.fromMillisecondsSinceEpoch(request.requestStart);
+                      return widget.isUserSignedIn
+                          ? FutureBuilder<TimebankModel>(
+                              future: getTimeBankForId(timebankId: request.timebankId),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                  return LoadingIndicator();
                                 }
+                                if (snapshot.hasError) {
+                                  return Container();
+                                }
+                                if (snapshot.data == null) {
+                                  return Container();
+                                }
+                                return ExploreEventCard(
+                                  onTap: () {
+                                    if (request.sevaUserId ==
+                                            SevaCore.of(context).loggedInUser.sevaUserID ||
+                                        isAccessAvailable(snapshot.data,
+                                            SevaCore.of(context).loggedInUser.sevaUserID)) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_context) => BlocProvider(
+                                            bloc: BlocProvider.of<HomeDashBoardBloc>(context),
+                                            child: RequestTabHolder(
+                                              //communityModel: BlocProvider.of<HomeDashBoardBloc>(context).selectedCommunityModel,
+                                              isAdmin: true,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    } else {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_context) => BlocProvider(
+                                            bloc: BlocProvider.of<HomeDashBoardBloc>(context),
+                                            child: RequestDetailsAboutPage(
+                                              requestItem: request,
+                                              timebankModel: snapshot.data,
+                                              isAdmin: false,
+                                              //communityModel: BlocProvider.of<HomeDashBoardBloc>(context).selectedCommunityModel,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  },
+                                  photoUrl: request.photoUrl ?? defaultProjectImageURL,
+                                  title: request.title,
+                                  description: request.description,
+                                  location: request.address,
+                                  communityName: request.fullName ?? '',
+                                  date: DateFormat('d MMMM, y').format(date),
+                                  time: DateFormat.jm().format(date),
+                                  memberList: MemberAvatarListWithCount(
+                                    userIds: request.approvedUsers,
+                                  ),
+                                );
+                              })
+                          : ExploreEventCard(
+                              onTap: () {
+                                showSignInAlertMessage(
+                                    context: context, message: S.of(context).sign_in_alert);
                               },
-                              photoUrl:
-                                  request.photoUrl ?? defaultProjectImageURL,
+                              photoUrl: request.photoUrl ?? defaultProjectImageURL,
                               title: request.title,
                               description: request.description,
                               location: request.address,
@@ -182,30 +185,81 @@ class _RequestsByCategoryViewState extends State<RequestsByCategoryView> {
                                 userIds: request.approvedUsers,
                               ),
                             );
-                          })
-                      : ExploreEventCard(
-                          onTap: () {
-                            showSignInAlertMessage(
-                                context: context,
-                                message: S.of(context).sign_in_alert);
-                          },
-                          photoUrl: request.photoUrl ?? defaultProjectImageURL,
-                          title: request.title,
-                          description: request.description,
-                          location: request.address,
-                          communityName: request.fullName ?? '',
-                          date: DateFormat('d MMMM, y').format(date),
-                          time: DateFormat.jm().format(date),
-                          memberList: MemberAvatarListWithCount(
-                            userIds: request.approvedUsers,
-                          ),
-                        );
-                },
+                    },
+                  ),
+                ],
               );
             },
           ),
         ],
       ),
+    );
+  }
+}
+
+class WidgetWrapper extends StatelessWidget {
+  final List<Widget> children;
+  final String page;
+  final String categoryTitle;
+  final bool isUserSignedIn;
+
+  const WidgetWrapper(
+      {Key key,
+      this.children,
+      @required this.page,
+      @required this.categoryTitle,
+      this.isUserSignedIn})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        HideWidget(
+          hide: isUserSignedIn,
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      page,
+                      style: TextStyle(
+                        color: HexColor('#F5A623'),
+                        fontSize: 18,
+                      ),
+                    ),
+                  ),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    color: HexColor('#F5A623'),
+                    size: 15,
+                  ),
+                  Text(
+                    categoryTitle,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                    ),
+                  ),
+                ],
+              ),
+              // child: CustomBackButton(
+              //   onBackPressed: () {
+              //     Navigator.of(context).pop();
+              //   },
+              // ),
+            ),
+          ),
+        ),
+        ...children
+      ],
     );
   }
 }

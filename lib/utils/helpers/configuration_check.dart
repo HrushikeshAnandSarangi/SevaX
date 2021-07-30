@@ -45,7 +45,10 @@ class ConfigurationCheck extends StatelessWidget {
         : InkWell(
             onTap: () {
               log('role ${role}');
-              logger.i(actionType + " <<<<<<<<<<<<<<");
+              logger.i("y22k" +
+                  actionType +
+                  " <<<<<<<<<<<<<< " +
+                  AppConfig.timebankConfigurations.admin.toString());
               actionNotAllowedDialog(context);
             },
             child: AbsorbPointer(absorbing: true, child: child),
@@ -55,6 +58,9 @@ class ConfigurationCheck extends StatelessWidget {
   static bool checkAllowedConfiguartions(MemberType role, String actionType) {
     TimebankConfigurations configurations =
         AppConfig.timebankConfigurations ?? getConfigurationModel();
+
+    logger.d("y2k : " + configurations.admin.toString());
+
     switch (role) {
       case MemberType.CREATOR:
         return true;
@@ -62,6 +68,9 @@ class ConfigurationCheck extends StatelessWidget {
         return configurations.member != null &&
             configurations.member.contains(actionType);
       case MemberType.ADMIN:
+        logger.d(
+          ">> | Admin Configuration : " + configurations.admin.toString(),
+        );
         return configurations.admin != null &&
             configurations.admin.contains(actionType);
       case MemberType.SUPER_ADMIN:
@@ -122,7 +131,6 @@ TimebankConfigurations getConfigurationModel() {
     admin: [
       "create_feeds",
       "billing_access",
-
       "accept_requests",
       //"create_borrow_request",
       "create_events",

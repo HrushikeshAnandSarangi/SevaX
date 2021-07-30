@@ -7,6 +7,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import './image_picker_dialog.dart';
 import './imagecategorieslist.dart';
 
@@ -21,22 +22,21 @@ class ImagePickerHandler {
 
   ImagePickerHandler(this._listener, this._controller, this.isCover);
 
-  void openCamera() async {
-    imagePicker.dismissDialog();
+  void openCamera(BuildContext context) async {
+    imagePicker.dismissDialog(context);
     final picker = ImagePicker();
     final pickedFile = await picker.getImage(source: ImageSource.camera);
     cropImage(pickedFile.path);
   }
 
-  void openGallery() async {
-    imagePicker.dismissDialog();
+  void openGallery(BuildContext context) async {
+    imagePicker.dismissDialog(context);
     final picker = ImagePicker();
     final pickedFile =
         await picker.getImage(source: ImageSource.gallery).then((value) {
       log('open gallery image ${value.path}');
       cropImage(value.path);
     });
-    
   }
 
 //  void openStockImages(context) async {
@@ -62,24 +62,24 @@ class ImagePickerHandler {
 //    });
 //  }
 
-  addImageUrl() async {
-    imagePicker.dismissDialog();
+  addImageUrl(BuildContext context) async {
+    imagePicker.dismissDialog(context);
     _listener.addWebImageUrl();
   }
 
-  addStockImageUrl(String image, bool isCover) async {
+  addStockImageUrl(BuildContext context, String image, bool isCover) async {
     logger.e('HERE 1');
 
     if (isCover) {
-      isCover ? imagePicker.dismissDialog() : null;
+      isCover ? imagePicker.dismissDialog(context) : null;
       //crop functionality for stock image selection for cover photo
       File imageToCrop = await utils.urlToFile(image);
       cropImage(imageToCrop.path);
 
-      globals.isFromOnBoarding ? null : imagePicker.dismissDialog();
+      globals.isFromOnBoarding ? null : imagePicker.dismissDialog(context);
       _listener.userImage(image, 'stock_image');
     } else {
-      globals.isFromOnBoarding ? null : imagePicker.dismissDialog();
+      globals.isFromOnBoarding ? null : imagePicker.dismissDialog(context);
       _listener.userImage(image, 'stock_image');
     }
   }
@@ -118,6 +118,7 @@ class ImagePickerHandler {
 
 abstract class ImagePickerListener {
   void userImage(dynamic _image, String type);
+
   addWebImageUrl();
 }
 
@@ -143,6 +144,7 @@ class SearchStockImages extends StatefulWidget {
 class SearchStockImagesViewState extends State<SearchStockImages>
     with TickerProviderStateMixin {
   num catSelected = -1;
+
   @override
   void initState() {
     super.initState();
@@ -173,19 +175,37 @@ class SearchStockImagesViewState extends State<SearchStockImages>
         children: <Widget>[
           Stack(children: <Widget>[
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: Text(
-                this.catSelected > -1
-                    ? S.of(context).choose_image +
-                            ' from ${categories[catSelected]['name'] ?? ''}' ??
-                        ''
-                    : "Choose Category",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 20,
-                ),
-              ),
-            )
+                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                child: Row(
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        catSelected = -1;
+                        setState(() {});
+                      },
+                      child: Text(
+                        'Choose Category',
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                            color: HexColor('#F5A623')),
+                      ),
+                    ),
+                    this.catSelected > -1
+                        ? Icon(
+                            Icons.arrow_forward_ios,
+                            color: HexColor('#F5A623'),
+                            size: 20,
+                          )
+                        : Container(),
+                    Text(
+                      this.catSelected > -1
+                          ? '${categories[catSelected]['name'] ?? ''}'
+                          : '',
+                      style: TextStyle(color: Colors.black, fontSize: 20),
+                    ),
+                  ],
+                ))
           ]),
           Expanded(
             child: StockImageListingView(
@@ -203,6 +223,7 @@ class SearchStockImagesViewState extends State<SearchStockImages>
 class StockImageListingView extends StatelessWidget {
   const StockImageListingView(
       this.onCatSelected, this.catSelected, this.onChanged);
+
   final ValueChanged onChanged;
   final int catSelected;
   final ValueChanged onCatSelected;
@@ -248,6 +269,7 @@ class StockImageListingView extends StatelessWidget {
 
 class _Tile extends StatelessWidget {
   const _Tile(this.source, this.index, this.title, this.onChanged);
+
   final String source;
   final int index;
   final String title;

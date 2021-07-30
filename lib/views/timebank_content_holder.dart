@@ -71,6 +71,9 @@ class _TabarViewState extends State<TabarView> with TickerProviderStateMixin {
   void initState() {
     timebankModel = widget.timebankModel;
     AppConfig.helpIconContextMember = HelpContextMemberType.groups;
+    AppConfig.timebankConfigurations =
+        widget.timebankModel.timebankConfigurations ?? getConfigurationModel();
+
     var tempRole = determineUserRoleInAbout(
       sevaUserId: widget.userModel.sevaUserID,
       timeBankModel: timebankModel,

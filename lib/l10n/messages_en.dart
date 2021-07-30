@@ -21,2684 +21,1671 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m0(count) => "${Intl.plural(count, one: 'Day', other: 'Days')}";
 
-  static m1(count) =>
-      "${Intl.plural(count, one: 'member selected', other: 'members selected')}";
+  static m1(count) => "${Intl.plural(count, one: 'member selected', other: 'members selected')}";
 
   static m2(count) => "${Intl.plural(count, one: 'Other', other: 'Others')}";
 
-  static m3(count) =>
-      "${Intl.plural(count, one: 'Personal Project', other: 'Personal Projects')}";
+  static m3(count) => "${Intl.plural(count, one: 'Personal Project', other: 'Personal Projects')}";
 
-  static m4(count) =>
-      "${Intl.plural(count, one: 'Personal Request', other: 'Personal Requests')}";
+  static m4(count) => "${Intl.plural(count, one: 'Personal Request', other: 'Personal Requests')}";
 
-  static m5(count) =>
-      "${Intl.plural(count, one: 'Subscription', other: 'Subscriptions')}";
+  static m5(count) => "${Intl.plural(count, one: 'Subscription', other: 'Subscriptions')}";
 
-  static m6(count) =>
-      "${Intl.plural(count, one: 'Seva Community Project', other: 'Seva Community Projects')}";
+  static m6(count) => "${Intl.plural(count, one: 'Seva Community Project', other: 'Seva Community Projects')}";
 
-  static m7(count) =>
-      "${Intl.plural(count, one: 'Seva Community Request', other: 'Seva Community Requests')}";
+  static m7(count) => "${Intl.plural(count, one: 'Seva Community Request', other: 'Seva Community Requests')}";
 
   static m8(count) => "${Intl.plural(count, one: 'user', other: 'users')}";
 
-  static m9(count) =>
-      "${Intl.plural(count, one: 'volunteer selected', other: 'volunteers selected')}";
+  static m9(count) => "${Intl.plural(count, one: 'volunteer selected', other: 'volunteers selected')}";
 
   static m10(count) => "${Intl.plural(count, one: 'Year', other: 'Years')}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
-  static _notInlinedMessages(_) => <String, Function>{
-        "Login": MessageLookupByLibrary.simpleMessage("Login"),
-        "Register": MessageLookupByLibrary.simpleMessage("Register"),
-        "Suggested": MessageLookupByLibrary.simpleMessage("Suggested"),
-        "about": MessageLookupByLibrary.simpleMessage("About"),
-        "accept": MessageLookupByLibrary.simpleMessage("Accept"),
-        "accept_modified_amount_finalized":
-            MessageLookupByLibrary.simpleMessage(
-                "By Accepting this amount will be finalized"),
-        "accept_offer": MessageLookupByLibrary.simpleMessage("Accept Offer"),
-        "accept_offer_invitation_confirmation":
-            MessageLookupByLibrary.simpleMessage(
-                "This task will be added to your Pending Tasks, after you approve it."),
-        "accepted": MessageLookupByLibrary.simpleMessage("Accepted"),
-        "accepted_offer":
-            MessageLookupByLibrary.simpleMessage("Accepted Offer"),
-        "accepted_offer_msg": MessageLookupByLibrary.simpleMessage(
-            "You have accepted this offer."),
-        "accepted_this_request": MessageLookupByLibrary.simpleMessage(
-            "You have accepted this request."),
-        "access_denied": MessageLookupByLibrary.simpleMessage("Access denied."),
-        "access_not_available":
-            MessageLookupByLibrary.simpleMessage("Access not available"),
-        "accidental_delete_enabled":
-            MessageLookupByLibrary.simpleMessage("Accidental Deletion enabled"),
-        "accidental_delete_enabled_description":
-            MessageLookupByLibrary.simpleMessage(
-                "This ** has \"Prevent Accidental Delete\" enabled. Please uncheck that box (in the \"Manage\" tab) before attempting to delete the **."),
-        "account_information":
-            MessageLookupByLibrary.simpleMessage("Account Information"),
-        "account_no": MessageLookupByLibrary.simpleMessage("Account Number"),
-        "ack": MessageLookupByLibrary.simpleMessage("Ack"),
-        "acknowledge": MessageLookupByLibrary.simpleMessage("Acknowledge"),
-        "acknowledge_desc_donor_one": MessageLookupByLibrary.simpleMessage(
-            "Note: Please be sure that the amount you transfer to"),
-        "acknowledge_desc_donor_two": MessageLookupByLibrary.simpleMessage(
-            "matches the amount pledged above (subject to any transaction fee)"),
-        "acknowledge_desc_one": MessageLookupByLibrary.simpleMessage(
-            "Note: Please check the amount that you have received from"),
-        "acknowledge_desc_two": MessageLookupByLibrary.simpleMessage(
-            "This may be more or less than the pledged amount. If there is a discrepancy in the amount, please message the member."),
-        "acknowledge_donated": MessageLookupByLibrary.simpleMessage(
-            "I acknowledge that i have donated below"),
-        "acknowledge_received": MessageLookupByLibrary.simpleMessage(
-            "I acknowledge that i have received below"),
-        "acknowledged": MessageLookupByLibrary.simpleMessage("Acknowledged"),
-        "action_not_permitted":
-            MessageLookupByLibrary.simpleMessage("Action not permitted"),
-        "action_restricted_by_owner": MessageLookupByLibrary.simpleMessage(
-            "This action is restricted for you by the owner of this Seva Community."),
-        "actions_not_allowed": MessageLookupByLibrary.simpleMessage(
-            "Actions not allowed, Please contact admin"),
-        "active": MessageLookupByLibrary.simpleMessage("Active"),
-        "add": MessageLookupByLibrary.simpleMessage("Add"),
-        "add_amount_donate": MessageLookupByLibrary.simpleMessage(
-            "Tell us the maximum amount you are willing to donate towards your community."),
-        "add_amount_donate_empty":
-            MessageLookupByLibrary.simpleMessage("Amount cannot be empty"),
-        "add_amount_donated": MessageLookupByLibrary.simpleMessage(
-            "Add the amount you have pledged to donate"),
-        "add_as_admin": MessageLookupByLibrary.simpleMessage("Add as Admin"),
-        "add_attachment":
-            MessageLookupByLibrary.simpleMessage("Add Image / Document"),
-        "add_bio": MessageLookupByLibrary.simpleMessage("Add your bio"),
-        "add_caption": MessageLookupByLibrary.simpleMessage("Add a caption"),
-        "add_comment": MessageLookupByLibrary.simpleMessage("Add a comment..."),
-        "add_document": MessageLookupByLibrary.simpleMessage("Add document"),
-        "add_event_to_calender":
-            MessageLookupByLibrary.simpleMessage("Add event to calender"),
-        "add_goods_donate_empty": MessageLookupByLibrary.simpleMessage(
-            "Please select atleast one goods to offer."),
-        "add_image": MessageLookupByLibrary.simpleMessage("Add image"),
-        "add_image_url": MessageLookupByLibrary.simpleMessage("Add Image Url"),
-        "add_location": MessageLookupByLibrary.simpleMessage("Add Location"),
-        "add_manual_time":
-            MessageLookupByLibrary.simpleMessage("Add Manual Time"),
-        "add_members": MessageLookupByLibrary.simpleMessage("Add Members"),
-        "add_new": MessageLookupByLibrary.simpleMessage("Add New Card"),
-        "add_new_card": MessageLookupByLibrary.simpleMessage("Add New Card"),
-        "add_new_feed":
-            MessageLookupByLibrary.simpleMessage("Start adding the first feed"),
-        "add_participants":
-            MessageLookupByLibrary.simpleMessage("Add Participants"),
-        "add_photo": MessageLookupByLibrary.simpleMessage("Add Photo"),
-        "add_photo_hint": MessageLookupByLibrary.simpleMessage(
-            "Do you want to add profile pic?"),
-        "add_requests": MessageLookupByLibrary.simpleMessage("Add Requests"),
-        "add_sponsor_image":
-            MessageLookupByLibrary.simpleMessage("Add Sponsor image"),
-        "add_to_calender":
-            MessageLookupByLibrary.simpleMessage("Add to calender"),
-        "add_to_existing_reqest":
-            MessageLookupByLibrary.simpleMessage("Add to Existing Request"),
-        "add_to_google_calender":
-            MessageLookupByLibrary.simpleMessage("Add to Google Calendar"),
-        "add_to_ical": MessageLookupByLibrary.simpleMessage("Add to ical"),
-        "add_to_outlook":
-            MessageLookupByLibrary.simpleMessage("Add to Outlook"),
-        "add_to_request":
-            MessageLookupByLibrary.simpleMessage("Add To Request?"),
-        "added_to_messaging_room": MessageLookupByLibrary.simpleMessage(
-            "Since you are volunteering for this event, you\'ve been added to the messaging room. You may leave this room at any time"),
-        "additional_billable_transactions":
-            MessageLookupByLibrary.simpleMessage(
-                "Additional Billable Transactions"),
-        "additional_notes":
-            MessageLookupByLibrary.simpleMessage("Additional Notes"),
-        "address_header":
-            MessageLookupByLibrary.simpleMessage("Bill to Address"),
-        "admin": MessageLookupByLibrary.simpleMessage("Admin"),
-        "adminNotificationInsufficientCredits":
-            MessageLookupByLibrary.simpleMessage(
-                " Has Insufficient Credits To Create Requests"),
-        "adminNotificationInsufficientCreditsNeeded":
-            MessageLookupByLibrary.simpleMessage("Credits Needed: "),
-        "admin_cannot_create_message": MessageLookupByLibrary.simpleMessage(
-            "Admin(s) cannot create message"),
-        "admin_msg": MessageLookupByLibrary.simpleMessage("Admin Messages"),
-        "admin_not_available":
-            MessageLookupByLibrary.simpleMessage("Admin not Available"),
-        "admin_promoted_to_owner": MessageLookupByLibrary.simpleMessage(
-            "creator_name the creator of Community community_name has made you a Super Admin for this Community. This means that you will receive notifications for approvals within the community and you can create Community Requests, among other things"),
-        "admin_tools": MessageLookupByLibrary.simpleMessage("Admin Tools"),
-        "admins": MessageLookupByLibrary.simpleMessage("Admin(s)"),
-        "admins_organizers":
-            MessageLookupByLibrary.simpleMessage("Admin(s) & Super Admin(s)"),
-        "advisory_for_projects": MessageLookupByLibrary.simpleMessage(
-            "All events associated to this request would be removed"),
-        "advisory_for_timebank": MessageLookupByLibrary.simpleMessage(
-            "All relevant information including events, requests and offers under the group will be deleted!"),
-        "after": MessageLookupByLibrary.simpleMessage("After"),
-        "agreement": MessageLookupByLibrary.simpleMessage("Agreement"),
-        "alert": MessageLookupByLibrary.simpleMessage("Alert"),
-        "alert_before_exit": MessageLookupByLibrary.simpleMessage(
-            "Please confirm that you want to cancel editing. You will lose all changes if you confirm."),
-        "allow": MessageLookupByLibrary.simpleMessage("Allow"),
-        "already_added": MessageLookupByLibrary.simpleMessage(
-            "already added to this request"),
-        "already_approved":
-            MessageLookupByLibrary.simpleMessage("Already Approved"),
-        "already_default_card": MessageLookupByLibrary.simpleMessage(
-            "This card is already added as default card"),
-        "already_exists":
-            MessageLookupByLibrary.simpleMessage("Already exists"),
-        "already_reported":
-            MessageLookupByLibrary.simpleMessage("Already reported!"),
-        "amount": MessageLookupByLibrary.simpleMessage("Amount"),
-        "amount_donated":
-            MessageLookupByLibrary.simpleMessage("Amount Donated?"),
-        "amount_lessthan_donation_amount": MessageLookupByLibrary.simpleMessage(
-            "Entered amount is less than minimum donation amount."),
-        "amount_modified_by_creator_desc": MessageLookupByLibrary.simpleMessage(
-            "The amount that you pledged for this donation is different from the amount acknowledged by the creator. Tap to change your pledge amount."),
-        "amount_modified_by_donor_desc": MessageLookupByLibrary.simpleMessage(
-            "The amount which you acknowledged for this donation is different from the amount confirmed by the Donor. Tap to change the confirmation amount."),
-        "amount_pledged":
-            MessageLookupByLibrary.simpleMessage("Amount pledged"),
-        "amount_received_from":
-            MessageLookupByLibrary.simpleMessage("Amount received from"),
-        "and": MessageLookupByLibrary.simpleMessage(" and"),
-        "and_complete_task":
-            MessageLookupByLibrary.simpleMessage("and complete the task"),
-        "and_others": MessageLookupByLibrary.simpleMessage("and Others"),
-        "anonymous": MessageLookupByLibrary.simpleMessage("Anonymous"),
-        "anonymous_user":
-            MessageLookupByLibrary.simpleMessage("Anonymous user"),
-        "any_category": MessageLookupByLibrary.simpleMessage("any category"),
-        "any_specific_conditions":
-            MessageLookupByLibrary.simpleMessage("Any specific condition(s)"),
-        "anywhere": MessageLookupByLibrary.simpleMessage("Anywhere"),
-        "applied": MessageLookupByLibrary.simpleMessage("applied"),
-        "applied_for_request": MessageLookupByLibrary.simpleMessage(
-            "You have accepetd the request"),
-        "apply": MessageLookupByLibrary.simpleMessage("Apply"),
-        "approve": MessageLookupByLibrary.simpleMessage("Approve"),
-        "approve_borrow_alert_msg1": MessageLookupByLibrary.simpleMessage(
-            "Please enter the dos and donts"),
-        "approve_borrow_hint_text1": MessageLookupByLibrary.simpleMessage(
-            "Tell your borrower do and donts"),
-        "approve_borrow_no_agreement_selected":
-            MessageLookupByLibrary.simpleMessage("No Agreement Selected"),
-        "approve_borrow_request":
-            MessageLookupByLibrary.simpleMessage("Approve Room Borrow Request"),
-        "approve_borrow_terms_acknowledgement_text1":
-            MessageLookupByLibrary.simpleMessage(
-                "I acknowledge that you can use the room on the mentioned dates."),
-        "approve_borrow_terms_acknowledgement_text2":
-            MessageLookupByLibrary.simpleMessage(
-                "I acknowledge that you can use the item on the mentioned dates."),
-        "approve_borrow_terms_acknowledgement_text3":
-            MessageLookupByLibrary.simpleMessage(
-                "Note: Please instruct on how to reach the location and do and dont accordingly."),
-        "approve_borrow_terms_acknowledgement_text4":
-            MessageLookupByLibrary.simpleMessage(
-                "Note: Please create an agreement if you have specific instructions and/or requirements."),
-        "approve_item_borrow":
-            MessageLookupByLibrary.simpleMessage("Approve Item Borrow request"),
-        "approved": MessageLookupByLibrary.simpleMessage("Approved"),
-        "approved_member":
-            MessageLookupByLibrary.simpleMessage("Approved Members"),
-        "are_you_sure":
-            MessageLookupByLibrary.simpleMessage("Are you sure want to"),
-        "are_you_sure_subs_cancel": MessageLookupByLibrary.simpleMessage(
-            "Are you sure you want to cancel your subscription ?"),
-        "assign_to_one_project":
-            MessageLookupByLibrary.simpleMessage("Please assign to one event"),
-        "assign_to_project":
-            MessageLookupByLibrary.simpleMessage("Assign to an event"),
-        "assign_to_volunteers":
-            MessageLookupByLibrary.simpleMessage("Assign to volunteers"),
-        "attachment": MessageLookupByLibrary.simpleMessage("Attachment"),
-        "attend": MessageLookupByLibrary.simpleMessage("Attend"),
-        "attended_by": MessageLookupByLibrary.simpleMessage("Attended by"),
-        "attending": MessageLookupByLibrary.simpleMessage("Attending"),
-        "available_as_needed": MessageLookupByLibrary.simpleMessage(
-            "Available as needed - Open to Offers"),
-        "availablity": MessageLookupByLibrary.simpleMessage("Availability"),
-        "availablity_description": MessageLookupByLibrary.simpleMessage(
-            "Tell us the days or times you are generally available or not available. Example, I\'m available only on weekends or weeknights after 6pm."),
-        "awesome": MessageLookupByLibrary.simpleMessage("Awesome!"),
-        "bank_address": MessageLookupByLibrary.simpleMessage("Bank Address"),
-        "bank_name": MessageLookupByLibrary.simpleMessage("Bank Name"),
-        "bill_me": MessageLookupByLibrary.simpleMessage("Bill Me"),
-        "bill_me_info1": MessageLookupByLibrary.simpleMessage(
-            "This is available only to users who have prior arrangements with Seva Exchange. Please send an email to billme@sevaexchange.com for details"),
-        "bill_me_info2": MessageLookupByLibrary.simpleMessage(
-            "Only users who have been approved a priori can check the “Bill Me” box. If you would like to do this, please send an email to billme@sevaexchange.com"),
-        "billable_transactions":
-            MessageLookupByLibrary.simpleMessage("Billable transactions"),
-        "billing": MessageLookupByLibrary.simpleMessage("Billing"),
-        "billing_stmt":
-            MessageLookupByLibrary.simpleMessage("Billing Statement"),
-        "billing_stmt_date":
-            MessageLookupByLibrary.simpleMessage("Statement Date"),
-        "billing_stmt_no":
-            MessageLookupByLibrary.simpleMessage("Statement Number"),
-        "bio": MessageLookupByLibrary.simpleMessage("Bio"),
-        "bio_description": MessageLookupByLibrary.simpleMessage(
-            "Please tell us a little bit about yourself in a few sentences.For example, you can tell us what makes you unique."),
-        "bio_hint":
-            MessageLookupByLibrary.simpleMessage("Ex: What makes me unique is"),
-        "bio_not_updated":
-            MessageLookupByLibrary.simpleMessage("Bio not yet updated"),
-        "bit_more_about_group": MessageLookupByLibrary.simpleMessage(
-            "Ex: A bit more about your group"),
-        "block": MessageLookupByLibrary.simpleMessage("Block"),
-        "blocked_members":
-            MessageLookupByLibrary.simpleMessage("Blocked Members"),
-        "bookmark": MessageLookupByLibrary.simpleMessage("Bookmark"),
-        "bookmarked": MessageLookupByLibrary.simpleMessage("bookmarked"),
-        "bookmarked_offers":
-            MessageLookupByLibrary.simpleMessage("Bookmarked Offers"),
-        "borrow": MessageLookupByLibrary.simpleMessage("Borrow"),
-        "borrow_request_for_item":
-            MessageLookupByLibrary.simpleMessage("Borrow Request for item"),
-        "borrow_request_for_place":
-            MessageLookupByLibrary.simpleMessage("Borrow request for place"),
-        "bottom_nav_explore": MessageLookupByLibrary.simpleMessage("Explore"),
-        "bottom_nav_home": MessageLookupByLibrary.simpleMessage("Home"),
-        "bottom_nav_messages": MessageLookupByLibrary.simpleMessage("Messages"),
-        "bottom_nav_notifications":
-            MessageLookupByLibrary.simpleMessage("Notifications"),
-        "bottom_nav_profile": MessageLookupByLibrary.simpleMessage("Profile"),
-        "browse_by_category": MessageLookupByLibrary.simpleMessage(
-            "Browse community by category"),
-        "browse_requests_by_category":
-            MessageLookupByLibrary.simpleMessage("Browse requests by category"),
-        "browser_support_info": MessageLookupByLibrary.simpleMessage(
-            "This browser is currently not supported in the current release. We recommend using Google Chrome for now to optimize your experience. Thank you for your patience."),
-        "bulk_invite_users_csv": MessageLookupByLibrary.simpleMessage(
-            "Bulk invite users using a CSV file"),
-        "bundlePricingInfoButton": MessageLookupByLibrary.simpleMessage(
-            "There is a limit to the number of transactions in the free tier. You will be charged \$2 for a bundle of 50 transactions."),
-        "by_accepting": MessageLookupByLibrary.simpleMessage("By accepting,"),
-        "by_accepting_group_join": MessageLookupByLibrary.simpleMessage(
-            "By accepting, you will be added to"),
-        "by_accepting_owner_timebank": MessageLookupByLibrary.simpleMessage(
-            "You have been designated the new owner of the ________ Seva Community. In order to complete the process, please select the Accept button to continue to the confirmation process."),
-        "by_approving_you_accept": MessageLookupByLibrary.simpleMessage(
-            "By approving, you accept that"),
-        "calendars_popup_desc": MessageLookupByLibrary.simpleMessage(
-            "You can sync the calendar for SevaX events with your Google, Outlook or iCal calendars. Select the appropriate icon to sync the calendar."),
-        "calender_sync": MessageLookupByLibrary.simpleMessage("calendar_sync"),
-        "camera": MessageLookupByLibrary.simpleMessage("Camera"),
-        "camera_not_available":
-            MessageLookupByLibrary.simpleMessage("Camera not available"),
-        "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
-        "cancel_editing_confirmation": MessageLookupByLibrary.simpleMessage(
-            "Please confirm that you want to cancel editing. You will lose all changes if you confirm."),
-        "cancel_offer": MessageLookupByLibrary.simpleMessage("Cancel Offer"),
-        "cancel_offer_confirmation": MessageLookupByLibrary.simpleMessage(
-            "Are you sure you want to cancel the offer?"),
-        "cancel_subscription":
-            MessageLookupByLibrary.simpleMessage("Cancel Subscription"),
-        "cancel_subscription_success_label": MessageLookupByLibrary.simpleMessage(
-            "Your subscription is now cancelled. Until beginning at the conclusion of the current subscription period, your credit card will not be charged and transactions can be made until free limit of the current plan is reached."),
-        "cancellation_failure_message": MessageLookupByLibrary.simpleMessage(
-            "We have received a request to cancel your subscription. While we are sorry to see you go, there are unpaid dues at this time. Please clear these dues and then attempt the cancelation again"),
-        "cancellation_success_message": MessageLookupByLibrary.simpleMessage(
-            "We are sorry to see you go. Your subscription is now canceled. Beginning at the conclusion of the current subscription period, your credit card will not be charged"),
-        "cancelled_subscription":
-            MessageLookupByLibrary.simpleMessage("Canceled subscription"),
-        "cannot_be_deleted":
-            MessageLookupByLibrary.simpleMessage("cannot be deleted"),
-        "cannot_be_deleted_desc": MessageLookupByLibrary.simpleMessage(
-            "Your request to delete **requestData.entityTitle cannot be completed at this time. There are pending transactions. Tap here to view the details."),
-        "cannot_create_project": MessageLookupByLibrary.simpleMessage(
-            "Events can only be created by an admin. If you wish to create an event, please send a message to your admin."),
-        "cant_exit_group": MessageLookupByLibrary.simpleMessage(
-            "You cannot exit from this group"),
-        "cant_exit_timebank": MessageLookupByLibrary.simpleMessage(
-            "cannot exit from this seva community"),
-        "cant_perfrom_action_offer": MessageLookupByLibrary.simpleMessage(
-            "You can\'t perform action before the offer ends."),
-        "card_added": MessageLookupByLibrary.simpleMessage("Card Added"),
-        "card_details": MessageLookupByLibrary.simpleMessage("CARD DETAILS"),
-        "card_holder": MessageLookupByLibrary.simpleMessage("Card Holder"),
-        "card_number": MessageLookupByLibrary.simpleMessage("Card Number"),
-        "card_sync": MessageLookupByLibrary.simpleMessage(
-            "It may take couple of minutes to synchronize your payment"),
-        "cash": MessageLookupByLibrary.simpleMessage("Money"),
-        "cash_donation_invite": MessageLookupByLibrary.simpleMessage(
-            "has a request for money donation. Tap to donate any amount that you can"),
-        "cash_offer": MessageLookupByLibrary.simpleMessage("Money Offer"),
-        "cash_offer_desc_hint": MessageLookupByLibrary.simpleMessage(
-            "Describe in detail what you are willing to offer. Please use #hashtags so members can easily search for this offer, such as #fundraiser #community"),
-        "cash_offer_title_hint": MessageLookupByLibrary.simpleMessage(
-            "Ex: \$50 for community center"),
-        "cash_request": MessageLookupByLibrary.simpleMessage("Money Request"),
-        "cash_request_data_hint_text": MessageLookupByLibrary.simpleMessage(
-            "Ex: Fundraiser to expand women’s shelter..."),
-        "cash_request_title_hint": MessageLookupByLibrary.simpleMessage(
-            "Ex: Fundraiser for women’s shelter..."),
-        "category": MessageLookupByLibrary.simpleMessage("Category"),
-        "change": MessageLookupByLibrary.simpleMessage("Change"),
-        "change_attachment":
-            MessageLookupByLibrary.simpleMessage("Change Attachment"),
-        "change_document":
-            MessageLookupByLibrary.simpleMessage("Change document"),
-        "change_image": MessageLookupByLibrary.simpleMessage("Change image"),
-        "change_ownership":
-            MessageLookupByLibrary.simpleMessage("Change Ownership"),
-        "change_ownership_advisory": MessageLookupByLibrary.simpleMessage(
-            " You are required to provide billing details for this Seva Community - including the new billing address. The transfer of ownership will not be completed until this is done."),
-        "change_ownership_already_invited":
-            MessageLookupByLibrary.simpleMessage(" already invited."),
-        "change_ownership_invite": MessageLookupByLibrary.simpleMessage(
-            "has invited you to be the new owner of the"),
-        "change_ownership_message1":
-            MessageLookupByLibrary.simpleMessage("You are the new owner of"),
-        "change_ownership_message2": MessageLookupByLibrary.simpleMessage(
-            " You need to accept it to complete the process"),
-        "change_ownership_pending_payment1":
-            MessageLookupByLibrary.simpleMessage(
-                "You have payment pending of "),
-        "change_ownership_pending_payment2": MessageLookupByLibrary.simpleMessage(
-            ". Please complete these payment before ownership can be transferred"),
-        "change_ownership_pending_task_message":
-            MessageLookupByLibrary.simpleMessage(
-                "You have pending tasks. Please complete tasks before ownership can be transferred"),
-        "change_password":
-            MessageLookupByLibrary.simpleMessage("Change password"),
-        "change_plan": MessageLookupByLibrary.simpleMessage("change plan"),
-        "change_plan_confirm":
-            MessageLookupByLibrary.simpleMessage("Change plan confirmation"),
-        "change_to": MessageLookupByLibrary.simpleMessage("Change to"),
-        "changing_ownership_of":
-            MessageLookupByLibrary.simpleMessage("Changing ownership"),
-        "changing_plan": MessageLookupByLibrary.simpleMessage("Changing plan"),
-        "charges_of": MessageLookupByLibrary.simpleMessage(
-            "yearly and additional charges of"),
-        "chat_block_warning": MessageLookupByLibrary.simpleMessage(
-            "will no longer be available to send you messages and engage with the content you create"),
-        "check_email":
-            MessageLookupByLibrary.simpleMessage("Now check your email."),
-        "check_internet": MessageLookupByLibrary.simpleMessage(
-            "Please check your internet connection."),
-        "check_met":
-            MessageLookupByLibrary.simpleMessage("Checking, if we met before"),
-        "choose": MessageLookupByLibrary.simpleMessage("Choose"),
-        "choose_category": MessageLookupByLibrary.simpleMessage(
-            "Choose Category and Sub Category"),
-        "choose_csv": MessageLookupByLibrary.simpleMessage(
-            "Please upload only CSV file with users full name and email address"),
-        "choose_document":
-            MessageLookupByLibrary.simpleMessage(" Choose Document"),
-        "choose_image": MessageLookupByLibrary.simpleMessage("Choose Image"),
-        "choose_pdf_file":
-            MessageLookupByLibrary.simpleMessage("Choose pdf file"),
-        "choose_previous_agreement":
-            MessageLookupByLibrary.simpleMessage("Choose previous agreement"),
-        "choose_skills_for_request":
-            MessageLookupByLibrary.simpleMessage("Choose skills for request"),
-        "choose_suitable_plan":
-            MessageLookupByLibrary.simpleMessage("Choose a suitable plan"),
-        "city": MessageLookupByLibrary.simpleMessage("City"),
-        "claimed_successfully":
-            MessageLookupByLibrary.simpleMessage("Claimed Successfully"),
-        "clear": MessageLookupByLibrary.simpleMessage("Clear"),
-        "clear_all": MessageLookupByLibrary.simpleMessage("Clear All"),
-        "clear_dues": MessageLookupByLibrary.simpleMessage(
-            "Please clear your dues and try again !"),
-        "clear_notications": MessageLookupByLibrary.simpleMessage(
-            "Are you sure you want to clear all notifications?"),
-        "clear_transaction": MessageLookupByLibrary.simpleMessage(
-            "Please clear the transactions and try again."),
-        "click_button_below_to_review": MessageLookupByLibrary.simpleMessage(
-            "Click button below to review"),
-        "click_for_more_info":
-            MessageLookupByLibrary.simpleMessage("Click here for more info"),
-        "click_to_see_interests": MessageLookupByLibrary.simpleMessage(
-            "Click here to see your interests"),
-        "click_to_see_skills": MessageLookupByLibrary.simpleMessage(
-            "Click here to see your skills"),
-        "click_to_view_request_agreement": MessageLookupByLibrary.simpleMessage(
-            "Click to view request agreement"),
-        "close": MessageLookupByLibrary.simpleMessage("Close"),
-        "co_ordinators": MessageLookupByLibrary.simpleMessage("Coordinators"),
-        "code_expired": MessageLookupByLibrary.simpleMessage("Code Expired!"),
-        "code_generated":
-            MessageLookupByLibrary.simpleMessage("Code generated"),
-        "code_not_found":
-            MessageLookupByLibrary.simpleMessage("Code not found"),
-        "coming_soon": MessageLookupByLibrary.simpleMessage("Coming Soon"),
-        "comments": MessageLookupByLibrary.simpleMessage("Comments"),
-        "community": MessageLookupByLibrary.simpleMessage("Community"),
-        "company_name": MessageLookupByLibrary.simpleMessage("Company Name"),
-        "completed": MessageLookupByLibrary.simpleMessage("Completed"),
-        "completed_task_in":
-            MessageLookupByLibrary.simpleMessage("completed the task in"),
-        "completed_tasks":
-            MessageLookupByLibrary.simpleMessage("Completed Tasks"),
-        "completed_the_request":
-            MessageLookupByLibrary.simpleMessage(" Completed the request"),
-        "completing_task":
-            MessageLookupByLibrary.simpleMessage("Completing task"),
-        "compose_new_msg":
-            MessageLookupByLibrary.simpleMessage("Compose new message"),
-        "computer": MessageLookupByLibrary.simpleMessage("Computer"),
-        "configure_billing":
-            MessageLookupByLibrary.simpleMessage("Configure Billing"),
-        "confirm": MessageLookupByLibrary.simpleMessage("Confirm"),
-        "confirm_location":
-            MessageLookupByLibrary.simpleMessage("CONFIRM LOCATION"),
-        "congrats": MessageLookupByLibrary.simpleMessage("Congrats"),
-        "contact_community_creator": MessageLookupByLibrary.simpleMessage(
-            "This is currently not permitted. Please contact the Community Creator for more information."),
-        "contact_for_enterprise_price": MessageLookupByLibrary.simpleMessage(
-            "To get a price estimate for Enterprise (SMB or large Enterprise), please contact our Sevax team."),
-        "contact_for_nonprofitt_price": MessageLookupByLibrary.simpleMessage(
-            "To get a price estimate for non-profit, please contact our Sevax team."),
-        "contact_seva_team": MessageLookupByLibrary.simpleMessage(
-            "Please contact Sevax support for downgrading your plan"),
-        "contact_seva_to_change_plan": MessageLookupByLibrary.simpleMessage(
-            "Please contact SevaX support to change the plans"),
-        "continue_text": MessageLookupByLibrary.simpleMessage("Continue"),
-        "continue_to_signin":
-            MessageLookupByLibrary.simpleMessage("Continue to Sign in"),
-        "copied_community_code":
-            MessageLookupByLibrary.simpleMessage("Copied Community Code"),
-        "copied_to_clipboard":
-            MessageLookupByLibrary.simpleMessage("Copied to Clipboard"),
-        "copy_and_share_code": MessageLookupByLibrary.simpleMessage(
-            "Code Generated: Copy the code and share to your friends"),
-        "copy_code": MessageLookupByLibrary.simpleMessage("Copy Code"),
-        "copy_community_code":
-            MessageLookupByLibrary.simpleMessage("Copy Community Code"),
-        "could_not_launch":
-            MessageLookupByLibrary.simpleMessage("Could not launch"),
-        "country": MessageLookupByLibrary.simpleMessage("Country Name"),
-        "create": MessageLookupByLibrary.simpleMessage("Create"),
-        "create_event": MessageLookupByLibrary.simpleMessage("Create Event"),
-        "create_feed": MessageLookupByLibrary.simpleMessage("Create Post"),
-        "create_feed_desc_hint": MessageLookupByLibrary.simpleMessage(
-            "Please share only relevant information to your Group,  Event, or Community. Example, you can talk about your latest volunteer exchange and post a photo of you or the person doing the task"),
-        "create_feed_hint":
-            MessageLookupByLibrary.simpleMessage("Ex: Text, URL and Hashtags"),
-        "create_feed_placeholder": MessageLookupByLibrary.simpleMessage(
-            "What would you like to share*"),
-        "create_group": MessageLookupByLibrary.simpleMessage("Create Group"),
-        "create_new": MessageLookupByLibrary.simpleMessage("Create New"),
-        "create_new_project":
-            MessageLookupByLibrary.simpleMessage("Create new Event"),
-        "create_offer": MessageLookupByLibrary.simpleMessage("Create Offer"),
-        "create_project":
-            MessageLookupByLibrary.simpleMessage("Create an Event"),
-        "create_project_from_template": MessageLookupByLibrary.simpleMessage(
-            "Create an Event from Template"),
-        "create_project_request":
-            MessageLookupByLibrary.simpleMessage("Create an Event Request"),
-        "create_public_offer":
-            MessageLookupByLibrary.simpleMessage("create public offer"),
-        "create_request":
-            MessageLookupByLibrary.simpleMessage("Create Request"),
-        "create_timebank":
-            MessageLookupByLibrary.simpleMessage("Create a Seva Community"),
-        "create_timebank_confirmation": MessageLookupByLibrary.simpleMessage(
-            "Are you sure you want to create a new Seva Community - as opposed to joining an existing Seva Community? Creating a new Seva Community implies that you will be responsible for administering the Seva Community - including adding members and managing members’ needs, timely replying to members questions, bringing about conflict resolutions, and hosting monthly potlucks. In order to become a member of an existing Seva Community, you will need to know the name of the Seva Community and either have an invitation code or submit a request to join the Seva Community."),
-        "create_timebank_description": MessageLookupByLibrary.simpleMessage(
-            "A Seva Community is a community where members give and receive help to each other and the greater community through time, money or goods."),
-        "create_virtual_offer":
-            MessageLookupByLibrary.simpleMessage("create virtual offer"),
-        "created_by": MessageLookupByLibrary.simpleMessage("Created by "),
-        "creating_account":
-            MessageLookupByLibrary.simpleMessage("Creating account"),
-        "creating_feed": MessageLookupByLibrary.simpleMessage("Creating post"),
-        "creating_join_request":
-            MessageLookupByLibrary.simpleMessage("Creating Join Request"),
-        "creating_messaging_room":
-            MessageLookupByLibrary.simpleMessage("Creating Room..."),
-        "creating_offer":
-            MessageLookupByLibrary.simpleMessage("Creating Offer"),
-        "creating_one": MessageLookupByLibrary.simpleMessage("creating one"),
-        "creating_project":
-            MessageLookupByLibrary.simpleMessage("Creating an event"),
-        "creating_request":
-            MessageLookupByLibrary.simpleMessage("Creating Request..."),
-        "creating_request_with_underscore_not_allowed":
-            MessageLookupByLibrary.simpleMessage(
-                "Creating request with \'_\' is not allowed "),
-        "creating_timebank":
-            MessageLookupByLibrary.simpleMessage("Creating Seva Community"),
-        "creator_creates_transaction": MessageLookupByLibrary.simpleMessage(
-            "This is currently not permitted. Please see the following link for more information: <Link_on_web_to_upgrade_plan>"),
-        "creator_of_request_message": MessageLookupByLibrary.simpleMessage(
-            "You are the creator of this request."),
-        "credits": MessageLookupByLibrary.simpleMessage("Credits:"),
-        "credits_credited":
-            MessageLookupByLibrary.simpleMessage("Seva Credits Credited"),
-        "credits_debited":
-            MessageLookupByLibrary.simpleMessage("Seva Credits Debited"),
-        "credits_debited_msg": MessageLookupByLibrary.simpleMessage(
-            "Seva Credits have been debited from your account"),
-        "csv_error": MessageLookupByLibrary.simpleMessage(
-            "Please select a CSV file first before uploading"),
-        "csv_file_sent_successfully_to": MessageLookupByLibrary.simpleMessage(
-            "CSV file sent successfully to"),
-        "csv_large_file_message": MessageLookupByLibrary.simpleMessage(
-            "Files larger than 1 MB are not allowed"),
-        "csv_message1": MessageLookupByLibrary.simpleMessage(
-            "First, create a .csv file template and add the users that you want to invite to your Seva Community. Please see the format below for the two fields to include in your file. Then, select the Upload button to add the file. Note: do not upload any extra fields nor try to upload other spreadsheet file formats other than the .csv file."),
-        "csv_message2": MessageLookupByLibrary.simpleMessage(
-            "fill the users you would like to add "),
-        "csv_message3":
-            MessageLookupByLibrary.simpleMessage("then upload the CSV."),
-        "csv_size_limit": MessageLookupByLibrary.simpleMessage(
-            "NOTE : Maximum file size is 1 MB"),
-        "current": MessageLookupByLibrary.simpleMessage("current"),
-        "current_seva_credit": MessageLookupByLibrary.simpleMessage(
-            "Your current seva credits is"),
-        "currently_active":
-            MessageLookupByLibrary.simpleMessage("Currently Active"),
-        "currently_not_permitted": MessageLookupByLibrary.simpleMessage(
-            "This is currently not permitted, Please see the following link for more information. http://www.web.sevaxapp.com/"),
-        "currently_selected":
-            MessageLookupByLibrary.simpleMessage("Currently selected"),
-        "cv_message": MessageLookupByLibrary.simpleMessage(
-            "Uploading your CV or resume helps us match you better to opportunities."),
-        "cv_resume": MessageLookupByLibrary.simpleMessage("CV/Resume"),
-        "date": MessageLookupByLibrary.simpleMessage("Date:"),
-        "date_selection_issue":
-            MessageLookupByLibrary.simpleMessage("Date Selection issue"),
-        "date_time": MessageLookupByLibrary.simpleMessage("date & time"),
-        "day": m0,
-        "days_available":
-            MessageLookupByLibrary.simpleMessage("Days Available"),
-        "debited": MessageLookupByLibrary.simpleMessage("Debited"),
-        "decline": MessageLookupByLibrary.simpleMessage("Decline"),
-        "declined": MessageLookupByLibrary.simpleMessage("Declined"),
-        "default_card": MessageLookupByLibrary.simpleMessage("Default Card"),
-        "default_card_note": MessageLookupByLibrary.simpleMessage(
-            "Note : long press to make a card default"),
-        "default_private_alert": MessageLookupByLibrary.simpleMessage(
-            "This plan is for private use only and cannot be made public."),
-        "default_text": MessageLookupByLibrary.simpleMessage("DEFAULT"),
-        "delete": MessageLookupByLibrary.simpleMessage("Delete"),
-        "delete_chat": MessageLookupByLibrary.simpleMessage("Delete chat"),
-        "delete_chat_confirmation": MessageLookupByLibrary.simpleMessage(
-            "Are you sure you want to delete this chat"),
-        "delete_comment_msg": MessageLookupByLibrary.simpleMessage(
-            "Are you sure want to delete comment?"),
-        "delete_confirmation": MessageLookupByLibrary.simpleMessage(
-            "Are your sure you want to delete "),
-        "delete_feed": MessageLookupByLibrary.simpleMessage("Delete feed"),
-        "delete_feed_confirmation": MessageLookupByLibrary.simpleMessage(
-            "Are you sure you want to delete this news feed?"),
-        "delete_group": MessageLookupByLibrary.simpleMessage("Delete Group"),
-        "delete_notification":
-            MessageLookupByLibrary.simpleMessage("Delete notification"),
-        "delete_notification_confirmation":
-            MessageLookupByLibrary.simpleMessage(
-                "Are you sure you want to delete this notification?"),
-        "delete_offer": MessageLookupByLibrary.simpleMessage("Delete Offer"),
-        "delete_offer_confirmation": MessageLookupByLibrary.simpleMessage(
-            "Are you sure you want to delete this offer?"),
-        "delete_project": MessageLookupByLibrary.simpleMessage("Delete Event"),
-        "delete_request":
-            MessageLookupByLibrary.simpleMessage("Delete Request"),
-        "delete_request_confirmation": MessageLookupByLibrary.simpleMessage(
-            "Are you sure you want to delete this request?"),
-        "delete_request_success": MessageLookupByLibrary.simpleMessage(
-            "**requestTitle you requested to delete has been successfully deleted!"),
-        "delete_timebank":
-            MessageLookupByLibrary.simpleMessage("Delete Seva Community"),
-        "deleting_feed": MessageLookupByLibrary.simpleMessage("Deleting feed"),
-        "deletion_request":
-            MessageLookupByLibrary.simpleMessage("Deletion Request"),
-        "deletion_request_being_processed":
-            MessageLookupByLibrary.simpleMessage(
-                "Your request for deletion is being processed."),
-        "deletion_request_message": MessageLookupByLibrary.simpleMessage(
-            "Deletion request could not be processed (Due to pending transactions)"),
-        "deletion_request_progress_description":
-            MessageLookupByLibrary.simpleMessage(
-                "Your request to delete has been received by us. We are processing the request. You will be notified once it is completed."),
-        "deletion_request_recieved": MessageLookupByLibrary.simpleMessage(
-            "We have received your request to delete this ***. We are sorry to see you go. We will examine your request and (in some cases) get in touch with you offline before we process the deletion of the ***"),
-        "demote": MessageLookupByLibrary.simpleMessage("Demote"),
-        "demoted": MessageLookupByLibrary.simpleMessage("DEMOTED"),
-        "demotion_from_admin_to_member": MessageLookupByLibrary.simpleMessage(
-            "Demotion from admin to member"),
-        "describe_goods": MessageLookupByLibrary.simpleMessage(
-            "Describe the type of goods or supplies you donated and select from the list of items below."),
-        "description": MessageLookupByLibrary.simpleMessage("Description"),
-        "description_not_updated":
-            MessageLookupByLibrary.simpleMessage("Description not yet updated"),
-        "description_of_item":
-            MessageLookupByLibrary.simpleMessage("Description of item(s)"),
-        "details": MessageLookupByLibrary.simpleMessage("Details"),
-        "details_updated_success": MessageLookupByLibrary.simpleMessage(
-            "Details updated successfully."),
-        "discounted_transactions_msg": MessageLookupByLibrary.simpleMessage(
-            "Discounted Billable Transactions as per your current plan"),
-        "dismiss": MessageLookupByLibrary.simpleMessage("Dismiss"),
-        "do_it_later": MessageLookupByLibrary.simpleMessage("Do it later"),
-        "do_you_want_addto_calender": MessageLookupByLibrary.simpleMessage(
-            "Do you want to add this event to your calendar?"),
-        "do_you_want_to_add":
-            MessageLookupByLibrary.simpleMessage("Do you want to add this"),
-        "doc_pdf": MessageLookupByLibrary.simpleMessage("Document.pdf"),
-        "document": MessageLookupByLibrary.simpleMessage("Document"),
-        "document_csv": MessageLookupByLibrary.simpleMessage("Document.CSV"),
-        "document_name": MessageLookupByLibrary.simpleMessage("Document Name*"),
-        "donate": MessageLookupByLibrary.simpleMessage("Donate"),
-        "donate_message": MessageLookupByLibrary.simpleMessage(
-            "On click of donate your balance will be adjusted"),
-        "donate_to_timebank": MessageLookupByLibrary.simpleMessage(
-            "Donate seva credits to Seva Community"),
-        "donated": MessageLookupByLibrary.simpleMessage("Donated"),
-        "donation_acknowledge":
-            MessageLookupByLibrary.simpleMessage("Donation acknowledge"),
-        "donation_address":
-            MessageLookupByLibrary.simpleMessage("Donation Address"),
-        "donation_completed":
-            MessageLookupByLibrary.simpleMessage("Donation completed"),
-        "donation_completed_desc": MessageLookupByLibrary.simpleMessage(
-            "Your donation is successfully completed. A receipt has been emailed to you."),
-        "donation_description_one": MessageLookupByLibrary.simpleMessage(
-            "Great! You have chosen to donate to"),
-        "donation_description_three":
-            MessageLookupByLibrary.simpleMessage(" USD."),
-        "donation_description_two":
-            MessageLookupByLibrary.simpleMessage("a donation of no less than"),
-        "donation_dispute_info": MessageLookupByLibrary.simpleMessage(
-            "If there is discrepancy in the items received, please message the number."),
-        "donation_offered":
-            MessageLookupByLibrary.simpleMessage("Donation Offered"),
-        "donation_success": MessageLookupByLibrary.simpleMessage(
-            "You have donated credits successfully"),
-        "donations": MessageLookupByLibrary.simpleMessage("Donations"),
-        "donations_cash_request":
-            MessageLookupByLibrary.simpleMessage("Request Amount*"),
-        "donations_cash_request_hint": MessageLookupByLibrary.simpleMessage(
-            "Request Amount shouldn\'t be more than the offer amount"),
-        "donations_received":
-            MessageLookupByLibrary.simpleMessage("Donations received"),
-        "donations_requested":
-            MessageLookupByLibrary.simpleMessage("Requested Donation"),
-        "done": MessageLookupByLibrary.simpleMessage("Done"),
-        "dont_allow": MessageLookupByLibrary.simpleMessage("Don\'t Allow"),
-        "download_sample_csv":
-            MessageLookupByLibrary.simpleMessage("Download sample CSV file"),
-        "downloading_report":
-            MessageLookupByLibrary.simpleMessage("Downloading Report"),
-        "duration_of_session":
-            MessageLookupByLibrary.simpleMessage("Duration of Session: "),
-        "edit": MessageLookupByLibrary.simpleMessage("Edit"),
-        "edit_group": MessageLookupByLibrary.simpleMessage("Edit Group"),
-        "edit_name": MessageLookupByLibrary.simpleMessage("Edit Name"),
-        "edit_profile_information":
-            MessageLookupByLibrary.simpleMessage("Edit Account Information"),
-        "edit_project": MessageLookupByLibrary.simpleMessage("Edit Event"),
-        "edit_request": MessageLookupByLibrary.simpleMessage("Edit Request"),
-        "edit_subsequent_event":
-            MessageLookupByLibrary.simpleMessage("Edit subsequent events"),
-        "edit_this_event":
-            MessageLookupByLibrary.simpleMessage("Edit this event only"),
-        "edit_timebank":
-            MessageLookupByLibrary.simpleMessage("Edit Seva Community"),
-        "email": MessageLookupByLibrary.simpleMessage("Email"),
-        "email_hint":
-            MessageLookupByLibrary.simpleMessage("Ex: example@example.com"),
-        "email_not_updated":
-            MessageLookupByLibrary.simpleMessage("User email not updated"),
-        "email_sent_to":
-            MessageLookupByLibrary.simpleMessage("\n\nWe sent an email to\n"),
-        "empty_credit_donation_error":
-            MessageLookupByLibrary.simpleMessage("Donate some credits"),
-        "empty_credit_loan_error":
-            MessageLookupByLibrary.simpleMessage("Loan some credits"),
-        "empty_feed":
-            MessageLookupByLibrary.simpleMessage("Your feed is empty"),
-        "enable_gps": MessageLookupByLibrary.simpleMessage(
-            "You will need to enable location services on your browser: Chrome; Edge; Firefox; Safari to allow us to display nearby Communities."),
-        "end": MessageLookupByLibrary.simpleMessage("End"),
-        "endorsed_group_request_desc": MessageLookupByLibrary.simpleMessage(
-            "user_name has created a group group_name. Please approve if this newly formed group is indeed endorsed by your organization, so it can be shown with the Endorsed Badge."),
-        "endorsed_group_request_title": MessageLookupByLibrary.simpleMessage(
-            "Endorsed Group Approval Request"),
-        "endorsed_notification_desc": MessageLookupByLibrary.simpleMessage(
-            "user_name has created a group group_name. They have requested this group to be approved - to allow the group to have an endorsed badge."),
-        "endorsed_notification_title": MessageLookupByLibrary.simpleMessage(
-            "Group group_name requires your approval"),
-        "ends": MessageLookupByLibrary.simpleMessage("Ends"),
-        "enter_bio": MessageLookupByLibrary.simpleMessage("Enter bio"),
-        "enter_code_to_verify":
-            MessageLookupByLibrary.simpleMessage("Please enter PIN to verify"),
-        "enter_delivery_time":
-            MessageLookupByLibrary.simpleMessage("Enter Delivery Time"),
-        "enter_email": MessageLookupByLibrary.simpleMessage("Enter email"),
-        "enter_feedback":
-            MessageLookupByLibrary.simpleMessage("Please enter your feedback"),
-        "enter_hours": MessageLookupByLibrary.simpleMessage("Enter hours"),
-        "enter_max_credits": MessageLookupByLibrary.simpleMessage(
-            "Please enter maximum credits"),
-        "enter_name": MessageLookupByLibrary.simpleMessage("Enter name"),
-        "enter_name_hint":
-            MessageLookupByLibrary.simpleMessage("Please enter name to update"),
-        "enter_password":
-            MessageLookupByLibrary.simpleMessage("Enter password"),
-        "enter_reason_to_delete":
-            MessageLookupByLibrary.simpleMessage("Enter reason to delete"),
-        "enter_reason_to_delete_error": MessageLookupByLibrary.simpleMessage(
-            "Please enter reason to delete"),
-        "enter_reason_to_exit":
-            MessageLookupByLibrary.simpleMessage("Enter reason to exit"),
-        "enter_reason_to_exit_hint":
-            MessageLookupByLibrary.simpleMessage("Please enter reason to exit"),
-        "enter_the_amount_received":
-            MessageLookupByLibrary.simpleMessage("Enter the amount recieved"),
-        "enter_valid_account_number":
-            MessageLookupByLibrary.simpleMessage("Enter Account Number"),
-        "enter_valid_amount":
-            MessageLookupByLibrary.simpleMessage("Enter valid amount"),
-        "enter_valid_bank_address":
-            MessageLookupByLibrary.simpleMessage("Enter Bank Address"),
-        "enter_valid_bank_name":
-            MessageLookupByLibrary.simpleMessage("Enter Bank Name"),
-        "enter_valid_link":
-            MessageLookupByLibrary.simpleMessage("Enter valid payment link"),
-        "enter_valid_routing_number":
-            MessageLookupByLibrary.simpleMessage("Enter Routing Number"),
-        "entered": MessageLookupByLibrary.simpleMessage("Entered"),
-        "error_loading_data":
-            MessageLookupByLibrary.simpleMessage("Error Loading Data"),
-        "error_occured": MessageLookupByLibrary.simpleMessage(
-            "Error occurred! Please come back later and try again."),
-        "error_was_thrown":
-            MessageLookupByLibrary.simpleMessage("Error was Thrown"),
-        "eula_delcaration": MessageLookupByLibrary.simpleMessage(
-            "I agree that I am willing to adhere to these Terms and Conditions."),
-        "eula_title": MessageLookupByLibrary.simpleMessage("EULA Agreement"),
-        "event": MessageLookupByLibrary.simpleMessage("Event"),
-        "event_description":
-            MessageLookupByLibrary.simpleMessage("Event Description"),
-        "event_to_calender":
-            MessageLookupByLibrary.simpleMessage("event to calender"),
-        "exchanges": MessageLookupByLibrary.simpleMessage("Exchanges"),
-        "exhaust_limit_admin_message": MessageLookupByLibrary.simpleMessage(
-            "please contact the creator of the Seva Community to upgrade your plan"),
-        "exhaust_limit_creator_message": MessageLookupByLibrary.simpleMessage(
-            "please upgrade your plan to continue."),
-        "exhaust_limit_user_message": MessageLookupByLibrary.simpleMessage(
-            "please contact the admin of the Seva Community to upgrade your plan"),
-        "exhausted_free_quota": MessageLookupByLibrary.simpleMessage(
-            "You have exhausted your free quota of transactions,"),
-        "existing_requests":
-            MessageLookupByLibrary.simpleMessage("Existing Requests"),
-        "exit": MessageLookupByLibrary.simpleMessage("Exit"),
-        "exit_messaging_room":
-            MessageLookupByLibrary.simpleMessage("Exit Messaging Room"),
-        "exit_messaging_room_admin_confirmation":
-            MessageLookupByLibrary.simpleMessage(
-                "You are admin of this messaging room, are you sure you want to exit the Messaging room"),
-        "exit_messaging_room_user_confirmation":
-            MessageLookupByLibrary.simpleMessage(
-                "Are you sure you want to exit the Messaging room"),
-        "exit_user": MessageLookupByLibrary.simpleMessage("Exit User"),
-        "exp_date": MessageLookupByLibrary.simpleMessage("Exp. Date"),
-        "expired": MessageLookupByLibrary.simpleMessage("Expired"),
-        "expiry_date": MessageLookupByLibrary.simpleMessage("Expiration Date"),
-        "explore_page_subtitle_text": MessageLookupByLibrary.simpleMessage(
-            "Find communities near you or online communities that interest you. You can offer to volunteer your services or request any assistance or search for Community Events."),
-        "explore_page_title_text":
-            MessageLookupByLibrary.simpleMessage("Explore Opportunities"),
-        "explore_search_hint": MessageLookupByLibrary.simpleMessage(
-            "Ex: ZIP/ Postal Code or city, state, country"),
-        "extension_alert":
-            MessageLookupByLibrary.simpleMessage("Extension alert"),
-        "extra_amount_charge": MessageLookupByLibrary.simpleMessage(
-            "There is an additional cost of \$15 / month / community to create a Private Community"),
-        "failed_load_image": MessageLookupByLibrary.simpleMessage(
-            "Failed to load image. Try different image"),
-        "failed_load_image_title":
-            MessageLookupByLibrary.simpleMessage("Failed to load"),
-        "failed_to_fetch_location":
-            MessageLookupByLibrary.simpleMessage("Failed to fetch location*"),
-        "failed_to_load_post":
-            MessageLookupByLibrary.simpleMessage("Couldn\'t load the post!"),
-        "failure": MessageLookupByLibrary.simpleMessage("Failure"),
-        "favourites": MessageLookupByLibrary.simpleMessage("Favourites"),
-        "feature_disabled": MessageLookupByLibrary.simpleMessage(
-            "This feature is disabled for your community"),
-        "featured_communities":
-            MessageLookupByLibrary.simpleMessage("Featured communities"),
-        "feed_hint_back_press": MessageLookupByLibrary.simpleMessage(
-            "Clicking on the home button takes you to the Feeds section. Double clicking on home button from the group feed will take you back to the community feed."),
-        "feed_reported": MessageLookupByLibrary.simpleMessage(
-            "You already reported this feed"),
-        "feedback": MessageLookupByLibrary.simpleMessage("Feedback"),
-        "feedback_messagae": MessageLookupByLibrary.simpleMessage(
-            "Please let us know about your valuable feedback"),
-        "feedback_one_to_many_offer": MessageLookupByLibrary.simpleMessage(
-            "Feedback for One-to-many offer"),
-        "feeds": MessageLookupByLibrary.simpleMessage("Feeds"),
-        "fetching_location":
-            MessageLookupByLibrary.simpleMessage("Fetching location"),
-        "filtering_blocked_content":
-            MessageLookupByLibrary.simpleMessage("Filtering blocked content"),
-        "filtering_past_requests_content": MessageLookupByLibrary.simpleMessage(
-            "Filtering past requests content"),
-        "find": MessageLookupByLibrary.simpleMessage("Find"),
-        "find_near_timebanks": MessageLookupByLibrary.simpleMessage(
-            "Find a Seva Community near you"),
-        "find_timebank_help_text": MessageLookupByLibrary.simpleMessage(
-            "Enter the name or location of your community."),
-        "find_timebanks":
-            MessageLookupByLibrary.simpleMessage("Find Seva Communities"),
-        "find_volunteers": MessageLookupByLibrary.simpleMessage("Find Members"),
-        "find_your_parent_timebank": MessageLookupByLibrary.simpleMessage(
-            "Find your parent Seva Community if you are part of"),
-        "find_your_timebank":
-            MessageLookupByLibrary.simpleMessage("Find your Seva Community"),
-        "fixed": MessageLookupByLibrary.simpleMessage("Fixed"),
-        "follow_link_to_upgrade": MessageLookupByLibrary.simpleMessage(
-            "This is currently not permitted. Please see the following link for more information: **link_on_web_to_upgrade_plan"),
-        "forgot_password":
-            MessageLookupByLibrary.simpleMessage("Forgot Password? "),
-        "frequently_contacted":
-            MessageLookupByLibrary.simpleMessage("FREQUENTLY CONTACTED"),
-        "from": MessageLookupByLibrary.simpleMessage("From:"),
-        "from_timebank_members": MessageLookupByLibrary.simpleMessage(
-            "from Seva Community members?"),
-        "full_name": MessageLookupByLibrary.simpleMessage("Full Name"),
-        "gallery": MessageLookupByLibrary.simpleMessage("Gallery"),
-        "general_stream_error": MessageLookupByLibrary.simpleMessage(
-            "Something went wrong, please try again"),
-        "generate_report":
-            MessageLookupByLibrary.simpleMessage("Generate Report"),
-        "generating_report":
-            MessageLookupByLibrary.simpleMessage("Generating Report"),
-        "getting_volunteers":
-            MessageLookupByLibrary.simpleMessage("Getting volunteers..."),
-        "global_timebank": MessageLookupByLibrary.simpleMessage(
-            "SevaX Global Network of Communities"),
-        "go_back": MessageLookupByLibrary.simpleMessage("Go Back"),
-        "goods": MessageLookupByLibrary.simpleMessage("Goods/Supplies"),
-        "goods_donation_invite": MessageLookupByLibrary.simpleMessage(
-            "has a request for donation of specific goods / supplies. You can tap to donate any goods that you can"),
-        "goods_modified_by_creator": MessageLookupByLibrary.simpleMessage(
-            "Your goods / supplies for donation was not acknowledged"),
-        "goods_modified_by_creator_desc": MessageLookupByLibrary.simpleMessage(
-            "The goods / supplies that you donated for this donation is different from the goods acknowledged by the creator. Tap to change your goods details."),
-        "goods_modified_by_donor": MessageLookupByLibrary.simpleMessage(
-            "Donor has modified goods / supplies"),
-        "goods_modified_by_donor_desc": MessageLookupByLibrary.simpleMessage(
-            "The goods / supplies which you acknowledged for this donation is different from the goods confirmed by the Donor. Tap to change the confirmation goods."),
-        "goods_offer": MessageLookupByLibrary.simpleMessage("Goods Offer"),
-        "goods_offer_desc_hint": MessageLookupByLibrary.simpleMessage(
-            "Describe in detail what you are willing to offer. Please use #hashtags so members can easily search for this offer, such as #homeless #clothingdrive"),
-        "goods_offer_title_hint": MessageLookupByLibrary.simpleMessage(
-            "Ex: winter coats for homeless shelter"),
-        "goods_request": MessageLookupByLibrary.simpleMessage("Goods Request"),
-        "goods_request_data_hint_text": MessageLookupByLibrary.simpleMessage(
-            "Ex: Local Food Bank has a shortage..."),
-        "goods_validation": MessageLookupByLibrary.simpleMessage(
-            "You have not selected any Goods/Supplies. Please select one or more before creating the Donation request."),
-        "gps_disabled_error": MessageLookupByLibrary.simpleMessage(
-            "Unable to fetch nearby communities because your GPS is not enabled."),
-        "gps_on_reminder": MessageLookupByLibrary.simpleMessage(
-            "Please make sure you have GPS turned on."),
-        "gps_reminder_near": MessageLookupByLibrary.simpleMessage(
-            "Please make sure you have GPS turned on to see the list of Seva Communities around you"),
-        "group": MessageLookupByLibrary.simpleMessage("Group"),
-        "group_description": MessageLookupByLibrary.simpleMessage(
-            "Groups within a Seva Community allow for those with shared interests to meet regularly and organize separately."),
-        "group_exists":
-            MessageLookupByLibrary.simpleMessage("Group name already exists"),
-        "group_join": MessageLookupByLibrary.simpleMessage("Group Join"),
-        "group_logo": MessageLookupByLibrary.simpleMessage("Group Image"),
-        "group_subset": MessageLookupByLibrary.simpleMessage(
-            "Group is a subset of a community who share common goals or interests. (Finance Committee, Parent Teacher Assoc., LGBTQ)"),
-        "groups": MessageLookupByLibrary.simpleMessage("GROUPS"),
-        "groups_help_text": MessageLookupByLibrary.simpleMessage("Groups Help"),
-        "groups_within": MessageLookupByLibrary.simpleMessage("Groups within"),
-        "guests_can_do_and_dont":
-            MessageLookupByLibrary.simpleMessage("Guests can do and don\'t*"),
-        "hang_on": MessageLookupByLibrary.simpleMessage("Hang on tight"),
-        "has_cash_donation": MessageLookupByLibrary.simpleMessage(
-            "Has a request for money donation"),
-        "has_exited_from":
-            MessageLookupByLibrary.simpleMessage("has exited from"),
-        "has_given_review":
-            MessageLookupByLibrary.simpleMessage("has given you a review"),
-        "has_goods_donation": MessageLookupByLibrary.simpleMessage(
-            "Has requested for goods / supplies donation"),
-        "has_worked_for":
-            MessageLookupByLibrary.simpleMessage("has worked for"),
-        "help": MessageLookupByLibrary.simpleMessage("Help"),
-        "help_about_us": MessageLookupByLibrary.simpleMessage("About us"),
-        "help_contact_us": MessageLookupByLibrary.simpleMessage("Contact Us"),
-        "help_training_video":
-            MessageLookupByLibrary.simpleMessage("Training Video"),
-        "help_version": MessageLookupByLibrary.simpleMessage("Version"),
-        "hint_text_number": MessageLookupByLibrary.simpleMessage("123456789"),
-        "hosted_by": MessageLookupByLibrary.simpleMessage("Hosted by"),
-        "hour": MessageLookupByLibrary.simpleMessage("hour"),
-        "hours": MessageLookupByLibrary.simpleMessage("hours"),
-        "hours_not_updated":
-            MessageLookupByLibrary.simpleMessage("hours not updated"),
-        "hours_worked": MessageLookupByLibrary.simpleMessage("Hours worked"),
-        "i_pledged_amount": MessageLookupByLibrary.simpleMessage(
-            "I pledge to donate this amount"),
-        "i_received_amount": MessageLookupByLibrary.simpleMessage(
-            "I acknowledge that our community/organization has received"),
-        "i_want_to_volunteer":
-            MessageLookupByLibrary.simpleMessage("I want to volunteer."),
-        "image_url": MessageLookupByLibrary.simpleMessage("Image Url"),
-        "image_url_alert_desc": MessageLookupByLibrary.simpleMessage(
-            "Please add a image URL to continue"),
-        "image_url_hint": MessageLookupByLibrary.simpleMessage(
-            "Add Image Url ex: https://www.sevaexchange.com/sevalogo.png"),
-        "images_help_convey_theme_of_request":
-            MessageLookupByLibrary.simpleMessage(
-                "Images helps to convey the theme of your request"),
-        "imageurl_alert":
-            MessageLookupByLibrary.simpleMessage("Web Image URL alert"),
-        "individual_offer":
-            MessageLookupByLibrary.simpleMessage("Individual offer"),
-        "info": MessageLookupByLibrary.simpleMessage("Info"),
-        "initial_charges":
-            MessageLookupByLibrary.simpleMessage("Initial Charges"),
-        "instruction_for_stay":
-            MessageLookupByLibrary.simpleMessage("Instruction for the stay"),
-        "insufficientSevaCreditsDialog": MessageLookupByLibrary.simpleMessage(
-            "You do not have sufficient Seva credits to create this request. You need to have *** more Seva credits"),
-        "insufficient_credits_for_request":
-            MessageLookupByLibrary.simpleMessage(
-                "Your seva credits are not sufficient to create the request."),
-        "insufficient_credits_to_donate": MessageLookupByLibrary.simpleMessage(
-            "You do not have sufficient credits to donate!"),
-        "interests": MessageLookupByLibrary.simpleMessage("Interests"),
-        "interests_description": MessageLookupByLibrary.simpleMessage(
-            "Please list as many of your interests or passions that you are willing to share with others within your community."),
-        "internet_connection_lost":
-            MessageLookupByLibrary.simpleMessage("Internet connection lost"),
-        "invalid_time": MessageLookupByLibrary.simpleMessage("Invalid Time"),
-        "invitation_accepted":
-            MessageLookupByLibrary.simpleMessage("Invitation Accepted."),
-        "invitation_accepted_subtitle":
-            MessageLookupByLibrary.simpleMessage(" has accepted your offer."),
-        "invitation_email_body": MessageLookupByLibrary.simpleMessage(
-            "<p>You are invited to download the SevaX app and join the Seva Community ***. The SevaX App uses Timebanking, a reciprocity-based system where community members help each other out in exchange for Seva Credits. Please click on this <a href=\"###;&nbsp;\">link</a> to join.</p>"),
-        "invitation_sent1": MessageLookupByLibrary.simpleMessage(
-            "We have sent your transfer of ownership invitation. You will remain to be the owner of Seva Community "),
-        "invitation_sent2": MessageLookupByLibrary.simpleMessage(" until "),
-        "invitation_sent3": MessageLookupByLibrary.simpleMessage(
-            "accepts the invitation and provides their new account information."),
-        "invitations": MessageLookupByLibrary.simpleMessage("Invitations"),
-        "invite": MessageLookupByLibrary.simpleMessage("Invite"),
-        "invite_members":
-            MessageLookupByLibrary.simpleMessage("Invite Members"),
-        "invite_members_group_dots":
-            MessageLookupByLibrary.simpleMessage("..."),
-        "invite_message": MessageLookupByLibrary.simpleMessage(
-            "Seva Communities allow you to volunteer and receive Seva credits that can be used by you for getting the community to help you with getting things done for you. Use the code"),
-        "invite_prompt": MessageLookupByLibrary.simpleMessage(
-            "when prompted to join this community. Please download the SevaX app from the links provided at https://sevaexchange.page.link/sevaxapp"),
-        "invite_via_code":
-            MessageLookupByLibrary.simpleMessage("Invite via code"),
-        "invite_via_email":
-            MessageLookupByLibrary.simpleMessage("Invite members via email"),
-        "invited": MessageLookupByLibrary.simpleMessage("Invited"),
-        "invited_speaker":
-            MessageLookupByLibrary.simpleMessage("Invited Speaker"),
-        "invited_to_timebank_message": MessageLookupByLibrary.simpleMessage(
-            "Awesome! You are invited to join a Seva Community"),
-        "invoice_and_reports":
-            MessageLookupByLibrary.simpleMessage("Invoice and Reports"),
-        "invoice_note1": MessageLookupByLibrary.simpleMessage(
-            "This invoice is for the billing period of"),
-        "invoice_note2": MessageLookupByLibrary.simpleMessage(
-            "Greetings from ***companyname. Here is the invoice for your usage of ***appname services for the period above. Additional information about your individual service charges and billing history is available in the billing section under the Manage tab."),
-        "invoice_reports_list":
-            MessageLookupByLibrary.simpleMessage("Invoice/Reports List"),
-        "is_pin_at_right_place": MessageLookupByLibrary.simpleMessage(
-            "Is this pin at a right place?"),
-        "is_your_code": MessageLookupByLibrary.simpleMessage("is your code."),
-        "item": MessageLookupByLibrary.simpleMessage("Item"),
-        "item_received_alert_dialouge": MessageLookupByLibrary.simpleMessage(
-            "If you have you received your item/place back click the button below to complete this."),
-        "item_returned_hint_text": MessageLookupByLibrary.simpleMessage(
-            "Ex: item must be returned in the same condition."),
-        "items": MessageLookupByLibrary.simpleMessage("Items"),
-        "items_collected":
-            MessageLookupByLibrary.simpleMessage("Items collected"),
-        "items_donated": MessageLookupByLibrary.simpleMessage("Items donated"),
-        "jobs": MessageLookupByLibrary.simpleMessage("Jobs"),
-        "join": MessageLookupByLibrary.simpleMessage("Join"),
-        "join_chat": MessageLookupByLibrary.simpleMessage("Join Chat"),
-        "join_code_expired_hint": MessageLookupByLibrary.simpleMessage(
-            "code has been expired, please request the admin for a new one!"),
-        "join_community_alert": MessageLookupByLibrary.simpleMessage(
-            "This action is only available to members of Community **CommunityName. Please request to join the community first before you can perform this action."),
-        "join_community_to_view_updates": MessageLookupByLibrary.simpleMessage(
-            "To view and receive updates join the community"),
-        "join_message_room": MessageLookupByLibrary.simpleMessage(
-            " **Message_room_creator_name has created a message room **message_room_name in the Community **community_name and invited you to join. Please accept or decline the invitation"),
-        "join_message_room_hint": MessageLookupByLibrary.simpleMessage(
-            "In order to view the messages in this Message Room, you need to join the room by clicking the \'Join Chat\' button below"),
-        "join_request_message":
-            MessageLookupByLibrary.simpleMessage("Member request to join a "),
-        "join_seva_community":
-            MessageLookupByLibrary.simpleMessage("Join Seva Community"),
-        "join_timbank_already_requested": MessageLookupByLibrary.simpleMessage(
-            "You already requested to this Seva Community. Please wait untill request is accepted"),
-        "join_timebank_code_message": MessageLookupByLibrary.simpleMessage(
-            "Enter the code you received from your Seva Community admin to join now."),
-        "join_timebank_question": MessageLookupByLibrary.simpleMessage(
-            "Why do you want to join this"),
-        "join_timebank_request_invite":
-            MessageLookupByLibrary.simpleMessage("Request Invite"),
-        "join_timebank_request_invite_hint":
-            MessageLookupByLibrary.simpleMessage(
-                "If you dont have a code, Click"),
-        "join_webinar": MessageLookupByLibrary.simpleMessage("join webinar"),
-        "joined": MessageLookupByLibrary.simpleMessage("Joined"),
-        "kilometer": MessageLookupByLibrary.simpleMessage("Kilometer"),
-        "kilometers": MessageLookupByLibrary.simpleMessage("Kilometers"),
-        "large_file_alert":
-            MessageLookupByLibrary.simpleMessage("Large file alert"),
-        "large_file_size":
-            MessageLookupByLibrary.simpleMessage("Large file alert"),
-        "last_option": MessageLookupByLibrary.simpleMessage("last option"),
-        "latest_requests":
-            MessageLookupByLibrary.simpleMessage("Latest Requests"),
-        "left": MessageLookupByLibrary.simpleMessage("left"),
-        "lender_acknowledged_request_completion":
-            MessageLookupByLibrary.simpleMessage(
-                "The Lender has acknowledged completion of this request. Tap to leave a feedback."),
-        "lender_not_accepted_request_msg": MessageLookupByLibrary.simpleMessage(
-            "Lender has not created an agreement for this request"),
-        "less": MessageLookupByLibrary.simpleMessage("Less"),
-        "lifetime": MessageLookupByLibrary.simpleMessage("Lifetime"),
-        "like": MessageLookupByLibrary.simpleMessage("Like"),
-        "liked": MessageLookupByLibrary.simpleMessage("Liked"),
-        "likes": MessageLookupByLibrary.simpleMessage("likes"),
-        "limit_badge_billing_failed": MessageLookupByLibrary.simpleMessage(
-            "Billing Failed, Click below to configure billing"),
-        "limit_badge_contact_admin": MessageLookupByLibrary.simpleMessage(
-            "Action not allowed, please contact the admin"),
-        "limit_badge_delete_in_progress": MessageLookupByLibrary.simpleMessage(
-            "Your request to delete has been received by us. We are processing the request. You will be notified once it is completed."),
-        "limit_exceeded":
-            MessageLookupByLibrary.simpleMessage("Limit exceeded!"),
-        "loading": MessageLookupByLibrary.simpleMessage("Loading"),
-        "loan": MessageLookupByLibrary.simpleMessage("Loan"),
-        "loan_seva_credit_to_user":
-            MessageLookupByLibrary.simpleMessage("Donate seva credits to user"),
-        "loan_success": MessageLookupByLibrary.simpleMessage(
-            "You have loaned credits successfully"),
-        "loan_zero_credit_error":
-            MessageLookupByLibrary.simpleMessage("You cannot loan 0 credits"),
-        "location": MessageLookupByLibrary.simpleMessage("Location"),
-        "location_not_added":
-            MessageLookupByLibrary.simpleMessage("Location not added"),
-        "location_not_provided":
-            MessageLookupByLibrary.simpleMessage("Location not provided"),
-        "log_in": MessageLookupByLibrary.simpleMessage("Log in"),
-        "log_out": MessageLookupByLibrary.simpleMessage("Logout"),
-        "log_out_confirmation": MessageLookupByLibrary.simpleMessage(
-            "Are you sure you want to logout?"),
-        "login_after_verification": MessageLookupByLibrary.simpleMessage(
-            "Please login once you have verified your email."),
-        "login_agreement_message1": MessageLookupByLibrary.simpleMessage(
-            "By continuing, you agree to SevaX"),
-        "login_agreement_message2": MessageLookupByLibrary.simpleMessage(
-            " We will manage information as described in our"),
-        "login_agreement_payment_link":
-            MessageLookupByLibrary.simpleMessage("Payment Policy"),
-        "login_agreement_privacy_link":
-            MessageLookupByLibrary.simpleMessage("Privacy Policy"),
-        "login_agreement_terms_link":
-            MessageLookupByLibrary.simpleMessage("Terms of Service"),
-        "login_subtitle": MessageLookupByLibrary.simpleMessage(
-            "Use your email and password to access your account."),
-        "login_title": MessageLookupByLibrary.simpleMessage(
-            "Register or Sign into Your Account"),
-        "long_term_month_to_month":
-            MessageLookupByLibrary.simpleMessage("Long-term (Month to Month)"),
-        "look_for_existing_siblings": MessageLookupByLibrary.simpleMessage(
-            "Your post is visible to the following Seva Communities:"),
-        "look_for_existing_timebank_title":
-            MessageLookupByLibrary.simpleMessage(
-                "Looking for existing Seva Community"),
-        "looking_existing_timebank": MessageLookupByLibrary.simpleMessage(
-            "Looking for an existing Seva Community to join?\nEnter ZIP/ Postal Code or city, state, country"),
-        "make_default_card":
-            MessageLookupByLibrary.simpleMessage("Make this card as default"),
-        "make_owner": MessageLookupByLibrary.simpleMessage("Make Super Admin"),
-        "manage": MessageLookupByLibrary.simpleMessage("Manage"),
-        "manage_notofications":
-            MessageLookupByLibrary.simpleMessage("Manage Notifications"),
-        "manage_permissions":
-            MessageLookupByLibrary.simpleMessage("Manage Permissions"),
-        "manual_notification_subtitle": MessageLookupByLibrary.simpleMessage(
-            "Admin **name has requested for **number hours of Seva Credit(s) towards Admin-related activities for Community **communityName"),
-        "manual_notification_title":
-            MessageLookupByLibrary.simpleMessage("Manual time notification"),
-        "manual_time_add":
-            MessageLookupByLibrary.simpleMessage("Add Manual Time"),
-        "manual_time_button_text":
-            MessageLookupByLibrary.simpleMessage("Send Request"),
-        "manual_time_info": MessageLookupByLibrary.simpleMessage(
-            "Admins can request Seva Credits for the time that they spend in performing Admin Tasks in the SevaX Application"),
-        "manual_time_request_approved": MessageLookupByLibrary.simpleMessage(
-            "Your request for **number Seva Credit(s) towards Admin-related activities for Community **communityName has been approved."),
-        "manual_time_request_rejected": MessageLookupByLibrary.simpleMessage(
-            "Your request for **number Seva Credit(s) towards Admin-related activities for Community **communityName has been rejected."),
-        "manual_time_request_subtitle": MessageLookupByLibrary.simpleMessage(
-            "Your request for <n> Seva Credit(s) towards Admin-related activities for Community community_name has been approved / rejected"),
-        "manual_time_request_title": MessageLookupByLibrary.simpleMessage(
-            "Status of your Seva Credit request"),
-        "manual_time_textfield_hint": MessageLookupByLibrary.simpleMessage(
-            "Please provide a rationale for this request - to assist the approver"),
-        "manual_time_title": MessageLookupByLibrary.simpleMessage(
-            "Request Seva Credits for Admin tasks performed"),
-        "marker": MessageLookupByLibrary.simpleMessage("Marker"),
-        "max_250_characters":
-            MessageLookupByLibrary.simpleMessage("* max 250 characters"),
-        "max_credit_hint": MessageLookupByLibrary.simpleMessage(
-            "Maximum credits to be given per volunteer"),
-        "max_credits": MessageLookupByLibrary.simpleMessage("Maximum credits*"),
-        "max_image_size":
-            MessageLookupByLibrary.simpleMessage("Maximum size: 5MB"),
-        "max_occupants":
-            MessageLookupByLibrary.simpleMessage("Maximum occupants"),
-        "maximumNoOfParticipants": MessageLookupByLibrary.simpleMessage(
-            "This request has a maximum number of participants. That limit has been reached."),
-        "member_creates_transaction": MessageLookupByLibrary.simpleMessage(
-            "This is currently not permitted. Please contact the Community Creator <creator_name> for more information."),
-        "member_exits": MessageLookupByLibrary.simpleMessage("Member exits a "),
-        "member_joined_via_code_subtitle": MessageLookupByLibrary.simpleMessage(
-            "**fullName** has joined **communityName** via code."),
-        "member_joined_via_code_title": MessageLookupByLibrary.simpleMessage(
-            "New member has joined **communityName** via code"),
-        "member_removal_confirmation": MessageLookupByLibrary.simpleMessage(
-            "Are you sure you want to remove"),
-        "member_reported": MessageLookupByLibrary.simpleMessage(
-            "Member reported successfully"),
-        "member_reported_title":
-            MessageLookupByLibrary.simpleMessage("Member Reported"),
-        "member_reporting_failed": MessageLookupByLibrary.simpleMessage(
-            "Failed to report member! Try again"),
-        "members": MessageLookupByLibrary.simpleMessage("Member(s)"),
-        "members_selected": m1,
-        "members_signed_up_advisory": MessageLookupByLibrary.simpleMessage(
-            "People have already signed up for the offer. Canceling the offer would result in these users getting back the SevaCredits. Click OK to proceed with the cancelation. Otherwise, press cancel."),
-        "message": MessageLookupByLibrary.simpleMessage("Message"),
-        "message_room_join":
-            MessageLookupByLibrary.simpleMessage("Message room join"),
-        "message_room_remove":
-            MessageLookupByLibrary.simpleMessage("Message room remove"),
-        "messaging_room":
-            MessageLookupByLibrary.simpleMessage("Messaging Room"),
-        "messaging_room_logo":
-            MessageLookupByLibrary.simpleMessage("Messaging Room Image"),
-        "messaging_room_name":
-            MessageLookupByLibrary.simpleMessage("Messaging Room Name"),
-        "messaging_room_note": MessageLookupByLibrary.simpleMessage(
-            "Please provide a message room subject and optional group icon"),
-        "mile": MessageLookupByLibrary.simpleMessage("Mile"),
-        "miles": MessageLookupByLibrary.simpleMessage("Miles"),
-        "min_credits_error": MessageLookupByLibrary.simpleMessage(
-            "Minimum credits cannot be empty or zero"),
-        "minimum_credit_hint": MessageLookupByLibrary.simpleMessage(
-            "Provide minimum credits you require"),
-        "minimum_credit_title":
-            MessageLookupByLibrary.simpleMessage("Minimum Credits*"),
-        "minimum_credits":
-            MessageLookupByLibrary.simpleMessage("Minimum Credits"),
-        "minimum_credits_offer": MessageLookupByLibrary.simpleMessage(
-            "This offer does not meet your minimum credit requirement."),
-        "minmum_amount":
-            MessageLookupByLibrary.simpleMessage("Minimum amount is"),
-        "minutes": MessageLookupByLibrary.simpleMessage("Minutes"),
-        "missing_permission":
-            MessageLookupByLibrary.simpleMessage("Missing Permission"),
-        "mission_statement":
-            MessageLookupByLibrary.simpleMessage("Mission Statement"),
-        "modified": MessageLookupByLibrary.simpleMessage("Modified"),
-        "modify": MessageLookupByLibrary.simpleMessage("Modify"),
-        "month_to_date": MessageLookupByLibrary.simpleMessage("Month to date"),
-        "monthly_charges_of": MessageLookupByLibrary.simpleMessage(
-            "monthly and additional charges of"),
-        "monthly_subscription":
-            MessageLookupByLibrary.simpleMessage("Monthly subscriptions"),
-        "more": MessageLookupByLibrary.simpleMessage("More"),
-        "my_groups": MessageLookupByLibrary.simpleMessage("My Groups"),
-        "my_language": MessageLookupByLibrary.simpleMessage("My Language"),
-        "my_offers": MessageLookupByLibrary.simpleMessage("My Offers"),
-        "my_requests": MessageLookupByLibrary.simpleMessage("My Requests"),
-        "my_timezone": MessageLookupByLibrary.simpleMessage("My Timezone"),
-        "name": MessageLookupByLibrary.simpleMessage("Name"),
-        "name_hint": MessageLookupByLibrary.simpleMessage(
-            "Ex: Pets-in-town, Citizen collab"),
-        "name_not_available":
-            MessageLookupByLibrary.simpleMessage("Name not available"),
-        "name_not_updated":
-            MessageLookupByLibrary.simpleMessage(" name not updated"),
-        "name_your_group":
-            MessageLookupByLibrary.simpleMessage("Name your specific Group"),
-        "near_by_timebank_search_hint": MessageLookupByLibrary.simpleMessage(
-            "Please type in your ZIP or postal code in the field or type in your city, state, and country to find a Seva Community near you."),
-        "near_by_timebank_subtitle": MessageLookupByLibrary.simpleMessage(
-            "Find a Seva Community near you. Don\'t see any near you? You can always create your own Seva Community for free and invite the people you know. Seva Communities are a safe and secure way to communicate with your friends and family.\nPlease type in your ZIP or postal code in the field or type in your city, state, and country to find a Seva Community near you."),
-        "near_by_timebank_title": MessageLookupByLibrary.simpleMessage(
-            "Find a Seva Community near you."),
-        "nearby_settings_content": MessageLookupByLibrary.simpleMessage(
-            "This indicates the distance that the user is willing to travel to complete a Request for a Seva Community or participate in an Event"),
-        "nearby_settings_title": MessageLookupByLibrary.simpleMessage(
-            "Distance that I am willing to travel"),
-        "need_a_place": MessageLookupByLibrary.simpleMessage("Need a place"),
-        "needs_upgraded_plan": MessageLookupByLibrary.simpleMessage(
-            "The feature you have chosen needs an upgraded plan."),
-        "negative_credit_donation_error": MessageLookupByLibrary.simpleMessage(
-            "You cannot donate lesser than 0 credits"),
-        "negative_credit_loan_error": MessageLookupByLibrary.simpleMessage(
-            "You cannot loan lesser than 0 credits"),
-        "negative_threshold_title": MessageLookupByLibrary.simpleMessage(
-            "Threshold for negative credits"),
-        "new_chat": MessageLookupByLibrary.simpleMessage("New Chat"),
-        "new_message_notification": MessageLookupByLibrary.simpleMessage(
-            "<sender_name> has sent you a message in the <community_name> community"),
-        "new_message_room":
-            MessageLookupByLibrary.simpleMessage("New Message Room"),
-        "new_post_notification": MessageLookupByLibrary.simpleMessage(
-            "There is a new Post by <name_of_poster> in the <community_name> community."),
-        "new_project": MessageLookupByLibrary.simpleMessage("New Event"),
-        "new_user": MessageLookupByLibrary.simpleMessage("New User? "),
-        "new_york": MessageLookupByLibrary.simpleMessage("New york | USA"),
-        "next": MessageLookupByLibrary.simpleMessage("Next"),
-        "no": MessageLookupByLibrary.simpleMessage("No"),
-        "no_agrreement": MessageLookupByLibrary.simpleMessage("No Agreement"),
-        "no_approved_members":
-            MessageLookupByLibrary.simpleMessage("No approved members yet."),
-        "no_blocked_members":
-            MessageLookupByLibrary.simpleMessage("No blocked members"),
-        "no_bookmarked_offers":
-            MessageLookupByLibrary.simpleMessage("No offers bookmarked"),
-        "no_cards_available":
-            MessageLookupByLibrary.simpleMessage("No cards available"),
-        "no_categories_available":
-            MessageLookupByLibrary.simpleMessage("No categories Available"),
-        "no_codes_generated":
-            MessageLookupByLibrary.simpleMessage("No codes generated yet."),
-        "no_comments": MessageLookupByLibrary.simpleMessage("No Comments"),
-        "no_completed_task": MessageLookupByLibrary.simpleMessage(
-            "You have not completed any tasks"),
-        "no_content_common_description": MessageLookupByLibrary.simpleMessage(
-            "To create one click on the plus icon."),
-        "no_data": MessageLookupByLibrary.simpleMessage("No data found !"),
-        "no_donation_yet":
-            MessageLookupByLibrary.simpleMessage("No donations yet"),
-        "no_events": MessageLookupByLibrary.simpleMessage("No Events yes"),
-        "no_events_available":
-            MessageLookupByLibrary.simpleMessage("No Events Available"),
-        "no_events_title": MessageLookupByLibrary.simpleMessage(
-            "There are currently no events."),
-        "no_feeds_yet": MessageLookupByLibrary.simpleMessage("No feeds yet"),
-        "no_frequent_contacts":
-            MessageLookupByLibrary.simpleMessage("No Frequent Contacts"),
-        "no_group_message": MessageLookupByLibrary.simpleMessage(
-            "Groups help you to organize your specific \n activities, you don\'t have any. Try "),
-        "no_groups_found":
-            MessageLookupByLibrary.simpleMessage("No groups found"),
-        "no_groups_text": MessageLookupByLibrary.simpleMessage(
-            "You are currently not part of any groups. You can either join one or create a new group."),
-        "no_image_available":
-            MessageLookupByLibrary.simpleMessage("No Image Available"),
-        "no_interests_added":
-            MessageLookupByLibrary.simpleMessage("No interests added"),
-        "no_matching_interests":
-            MessageLookupByLibrary.simpleMessage("No matching interests found"),
-        "no_matching_skills":
-            MessageLookupByLibrary.simpleMessage("No matching skills found"),
-        "no_member_found":
-            MessageLookupByLibrary.simpleMessage("No Member found"),
-        "no_members": MessageLookupByLibrary.simpleMessage("No Members"),
-        "no_message": MessageLookupByLibrary.simpleMessage("No Messages"),
-        "no_msg_yet": MessageLookupByLibrary.simpleMessage("No messages yet"),
-        "no_near_communities":
-            MessageLookupByLibrary.simpleMessage("No nearby Seva Communities"),
-        "no_notifications":
-            MessageLookupByLibrary.simpleMessage("No Notifications"),
-        "no_offers": MessageLookupByLibrary.simpleMessage("No Offers"),
-        "no_offers_title": MessageLookupByLibrary.simpleMessage(
-            "There are currently no offers."),
-        "no_options_available":
-            MessageLookupByLibrary.simpleMessage("No Options Available"),
-        "no_participants_yet":
-            MessageLookupByLibrary.simpleMessage("No Participants yet"),
-        "no_pending_join_request":
-            MessageLookupByLibrary.simpleMessage("No pending join requests"),
-        "no_pending_requests":
-            MessageLookupByLibrary.simpleMessage("No pending requests"),
-        "no_pending_task":
-            MessageLookupByLibrary.simpleMessage("No pending tasks"),
-        "no_posts_description": MessageLookupByLibrary.simpleMessage(
-            "To create one, select the Create Post button."),
-        "no_posts_title": MessageLookupByLibrary.simpleMessage(
-            "There are currently no posts."),
-        "no_projects_message":
-            MessageLookupByLibrary.simpleMessage("No events available.Try"),
-        "no_ratings_yet":
-            MessageLookupByLibrary.simpleMessage("No ratings yet"),
-        "no_record_transactions_yet": MessageLookupByLibrary.simpleMessage(
-            "No recorded transactions yet !"),
-        "no_requests": MessageLookupByLibrary.simpleMessage("No Requests"),
-        "no_requests_available":
-            MessageLookupByLibrary.simpleMessage("No requests available.Try"),
-        "no_requests_title": MessageLookupByLibrary.simpleMessage(
-            "There are currently no requests."),
-        "no_result_found":
-            MessageLookupByLibrary.simpleMessage("No result found"),
-        "no_search_result_found":
-            MessageLookupByLibrary.simpleMessage("No search result found"),
-        "no_skills_added":
-            MessageLookupByLibrary.simpleMessage("No skills added"),
-        "no_templates_found":
-            MessageLookupByLibrary.simpleMessage("No templates found"),
-        "no_timebanks_found":
-            MessageLookupByLibrary.simpleMessage("No Seva Communities found"),
-        "no_transactions_yet": MessageLookupByLibrary.simpleMessage(
-            "You do not have any transaction yet"),
-        "no_user_found": MessageLookupByLibrary.simpleMessage("No user found"),
-        "no_volunteers_available":
-            MessageLookupByLibrary.simpleMessage("No volunteers available"),
-        "no_volunteers_yet":
-            MessageLookupByLibrary.simpleMessage("No Members joined yet"),
-        "none": MessageLookupByLibrary.simpleMessage("None"),
-        "not_accepted": MessageLookupByLibrary.simpleMessage("Not Accepted"),
-        "not_authorized_create_request": MessageLookupByLibrary.simpleMessage(
-            "You are not authorized to create a request."),
-        "not_completed_any_tasks":
-            MessageLookupByLibrary.simpleMessage("not completed any tasks"),
-        "not_found": MessageLookupByLibrary.simpleMessage("not found"),
-        "not_yet": MessageLookupByLibrary.simpleMessage("not yet"),
-        "not_yet_redeemed":
-            MessageLookupByLibrary.simpleMessage("Not yet redeemed"),
-        "notification_alerts":
-            MessageLookupByLibrary.simpleMessage("Notifications Alerts"),
-        "notification_one_to_many_offer_canceled_subtitle":
-            MessageLookupByLibrary.simpleMessage(
-                "You had signed up for ***offerTItle. Due to unforeseen circumstances, ***name had to cancel this offer. You will receive credits for any unused SevaCredits."),
-        "notification_one_to_many_offer_canceled_title":
-            MessageLookupByLibrary.simpleMessage(
-                "A One-to-Many offer that you signed up for is canceled"),
-        "notification_settings":
-            MessageLookupByLibrary.simpleMessage("Notification Settings"),
-        "notification_timebank_join":
-            MessageLookupByLibrary.simpleMessage("Seva Community Join"),
-        "notifications_added_you":
-            MessageLookupByLibrary.simpleMessage("has added you to"),
-        "notifications_approved_by":
-            MessageLookupByLibrary.simpleMessage("Request approved by"),
-        "notifications_approved_for": MessageLookupByLibrary.simpleMessage(
-            "approved the task completion for"),
-        "notifications_approved_withdrawn_subtitle":
-            MessageLookupByLibrary.simpleMessage("has withdrawn from"),
-        "notifications_approved_withdrawn_title":
-            MessageLookupByLibrary.simpleMessage("Member withdrawn"),
-        "notifications_by_approving":
-            MessageLookupByLibrary.simpleMessage("By approving"),
-        "notifications_could_not_delete":
-            MessageLookupByLibrary.simpleMessage("couldn\'t be deleted!"),
-        "notifications_could_not_deleted": MessageLookupByLibrary.simpleMessage(
-            "couldn\'t be deleted because you have pending transactions!"),
-        "notifications_credited":
-            MessageLookupByLibrary.simpleMessage("Credited"),
-        "notifications_credited_msg": MessageLookupByLibrary.simpleMessage(
-            "Seva coins has been credited to your account"),
-        "notifications_credited_to": MessageLookupByLibrary.simpleMessage(
-            "have been credited to your account."),
-        "notifications_credits_for":
-            MessageLookupByLibrary.simpleMessage("Credits for"),
-        "notifications_debited":
-            MessageLookupByLibrary.simpleMessage("Debited"),
-        "notifications_debited_msg": MessageLookupByLibrary.simpleMessage(
-            "Seva coinsMoMonthlyed from your account"),
-        "notifications_debited_to": MessageLookupByLibrary.simpleMessage(
-            "has been debited from your account"),
-        "notifications_demoted_subtitle_phrase":
-            MessageLookupByLibrary.simpleMessage(
-                "has demoted you from being an Admin for the"),
-        "notifications_demoted_title": MessageLookupByLibrary.simpleMessage(
-            "You have been demoted from Admin"),
-        "notifications_event_modification": MessageLookupByLibrary.simpleMessage(
-            ". The Event Organizer has modified this event. Make sure the changes made are right for you and apply again"),
-        "notifications_feedback_request":
-            MessageLookupByLibrary.simpleMessage("Feedback request"),
-        "notifications_group_join_invite":
-            MessageLookupByLibrary.simpleMessage("Group join invite"),
-        "notifications_incomplete_transaction":
-            MessageLookupByLibrary.simpleMessage(
-                "We couldn\'t process you request for deletion of ***, as you are still having open transactions which are as : \n"),
-        "notifications_insufficient_credits": MessageLookupByLibrary.simpleMessage(
-            "Your seva credits are not sufficient to approve the credit request."),
-        "notifications_invited_to_join":
-            MessageLookupByLibrary.simpleMessage("has invited you to join the"),
-        "notifications_join_request":
-            MessageLookupByLibrary.simpleMessage("Join request"),
-        "notifications_new_member_signup":
-            MessageLookupByLibrary.simpleMessage("New member signed up"),
-        "notifications_offer_accepted":
-            MessageLookupByLibrary.simpleMessage("Offer Accepted"),
-        "notifications_organizer_demoted_subtitle_phrase":
-            MessageLookupByLibrary.simpleMessage(
-                "has demoted you from being an Organizer for the "),
-        "notifications_promoted_organizer_subtitle_phrase":
-            MessageLookupByLibrary.simpleMessage(
-                "has promoted you to be the Organizer for the"),
-        "notifications_promoted_subtitle_phrase":
-            MessageLookupByLibrary.simpleMessage(
-                "has promoted you to be the Admin for the"),
-        "notifications_promoted_title": MessageLookupByLibrary.simpleMessage(
-            "You have been promoted to Admin"),
-        "notifications_request_accepted_by":
-            MessageLookupByLibrary.simpleMessage("Request accepted by"),
-        "notifications_request_rejected_by":
-            MessageLookupByLibrary.simpleMessage("Request rejected by"),
-        "notifications_requested_join":
-            MessageLookupByLibrary.simpleMessage("has requested to join"),
-        "notifications_shown_interest": MessageLookupByLibrary.simpleMessage(
-            "has shown interest in your offer"),
-        "notifications_signed_for_class":
-            MessageLookupByLibrary.simpleMessage("Signed up for class"),
-        "notifications_signed_up_for":
-            MessageLookupByLibrary.simpleMessage("You had signed up for"),
-        "notifications_successfully_deleted":
-            MessageLookupByLibrary.simpleMessage(
-                "*** has been successfully deleted."),
-        "notifications_tap_to_view":
-            MessageLookupByLibrary.simpleMessage("Tap to view join request"),
-        "notifications_task_rejected_by":
-            MessageLookupByLibrary.simpleMessage("Task completion rejected by"),
-        "notifications_waiting_for_approval":
-            MessageLookupByLibrary.simpleMessage("waiting for your approval."),
-        "notifications_was_deleted":
-            MessageLookupByLibrary.simpleMessage("was deleted!"),
-        "notifications_will_be_added_to":
-            MessageLookupByLibrary.simpleMessage("will be added to the event"),
-        "number_of_seva_credit":
-            MessageLookupByLibrary.simpleMessage("No of seva credits"),
-        "number_of_volunteers":
-            MessageLookupByLibrary.simpleMessage("No. of volunteers*"),
-        "number_of_volunteers_required": MessageLookupByLibrary.simpleMessage(
-            "Number of volunteers required:"),
-        "occurences": MessageLookupByLibrary.simpleMessage("Occurrence"),
-        "of_text": MessageLookupByLibrary.simpleMessage("of"),
-        "offer": MessageLookupByLibrary.simpleMessage("Offer"),
-        "offerReview": MessageLookupByLibrary.simpleMessage(
-            "You have received a review for the offer:"),
-        "offer_class_description":
-            MessageLookupByLibrary.simpleMessage("Class description"),
-        "offer_debit": MessageLookupByLibrary.simpleMessage(
-            "Debit for one to many offer "),
-        "offer_description":
-            MessageLookupByLibrary.simpleMessage("Offer description"),
-        "offer_description_error": MessageLookupByLibrary.simpleMessage(
-            "Please give a detailed description of the class you’re offering."),
-        "offer_description_hint": MessageLookupByLibrary.simpleMessage(
-            "Ex: Describe in detail what you are willing to offer. Please use #hashtags so members can easily search for this offer, such as #babysitting or #mathhelp"),
-        "offer_duration":
-            MessageLookupByLibrary.simpleMessage("Offer duration"),
-        "offer_enter_participants": MessageLookupByLibrary.simpleMessage(
-            "Enter the number of participants"),
-        "offer_error_creating": MessageLookupByLibrary.simpleMessage(
-            "There was error creating your offer, Please try again."),
-        "offer_error_updating": MessageLookupByLibrary.simpleMessage(
-            "There was error updating offer, Please try again."),
-        "offer_help": MessageLookupByLibrary.simpleMessage("Offers Help"),
-        "offer_invitation_notification_subtitle":
-            MessageLookupByLibrary.simpleMessage(
-                " has invited you to accept an offer."),
-        "offer_invitation_notification_title":
-            MessageLookupByLibrary.simpleMessage("Offer Invitation"),
-        "offer_number_class_hours":
-            MessageLookupByLibrary.simpleMessage("No. of class hours"),
-        "offer_number_class_hours_required":
-            MessageLookupByLibrary.simpleMessage("No. of class hours required"),
-        "offer_prep_hours":
-            MessageLookupByLibrary.simpleMessage("No. of preparation hours"),
-        "offer_prep_hours_required": MessageLookupByLibrary.simpleMessage(
-            "No. of preparation hours required"),
-        "offer_size_class":
-            MessageLookupByLibrary.simpleMessage("Size of class"),
-        "offer_start_end_date": MessageLookupByLibrary.simpleMessage(
-            "Please enter start and end date"),
-        "offer_title_hint": MessageLookupByLibrary.simpleMessage(
-            "Ex: babysitting, math tutoring"),
-        "offer_to_sent_at":
-            MessageLookupByLibrary.simpleMessage("Send offer to address"),
-        "offer_type": MessageLookupByLibrary.simpleMessage("Offer type*"),
-        "offer_updated": MessageLookupByLibrary.simpleMessage("Offer Updated"),
-        "offered": MessageLookupByLibrary.simpleMessage("Offered"),
-        "offered_by": MessageLookupByLibrary.simpleMessage("Offered by"),
-        "offering_amount":
-            MessageLookupByLibrary.simpleMessage("Offering Amount"),
-        "offering_goods":
-            MessageLookupByLibrary.simpleMessage("Offering Goods"),
-        "offers": MessageLookupByLibrary.simpleMessage("Offers"),
-        "ok": MessageLookupByLibrary.simpleMessage("OK"),
-        "on": MessageLookupByLibrary.simpleMessage("On"),
-        "on_community_plan":
-            MessageLookupByLibrary.simpleMessage("You are on Community Plan"),
-        "oneToManyRequestCreatorCompletingRequestDialog":
-            MessageLookupByLibrary.simpleMessage(
-                "Are you sure you want to accept and complete this request?"),
-        "oneToManyRequestSpeakerAcceptRequest":
-            MessageLookupByLibrary.simpleMessage(
-                "Are you sure you want to accept this request?"),
-        "oneToManyRequestSpeakerWithdrawDialog":
-            MessageLookupByLibrary.simpleMessage(
-                "Please confirm that you would like to withdraw as a speaker"),
-        "one_to_many": MessageLookupByLibrary.simpleMessage("One to many"),
-        "one_to_many_offer_hint": MessageLookupByLibrary.simpleMessage(
-            "Ex: teaching a python class.."),
-        "one_to_many_offers":
-            MessageLookupByLibrary.simpleMessage("one to many offers\n"),
-        "onetomany_createoffer_note": MessageLookupByLibrary.simpleMessage(
-            "Note: Upon completing the one to many offer, the combined prep time and session hours will be credited to you."),
-        "onetomanyrequest_create_new_event":
-            MessageLookupByLibrary.simpleMessage(
-                "A new event will be created and linked to this request."),
-        "onetomanyrequest_member_invite_notif_subtitle":
-            MessageLookupByLibrary.simpleMessage(
-                "admin_name in community_name has invited you to join the webinar_name on date_webinar at time_webinar. Tap to accept the invitation."),
-        "onetomanyrequest_participants_or_credits_hint":
-            MessageLookupByLibrary.simpleMessage("Ex: 40."),
-        "onetomanyrequest_title_hint":
-            MessageLookupByLibrary.simpleMessage("Ex: Implicit Bias webinar."),
-        "only_community_admins_can_accept":
-            MessageLookupByLibrary.simpleMessage(
-                "Only Community admins can accept offers of money / goods"),
-        "only_csv_allowed":
-            MessageLookupByLibrary.simpleMessage("Only CSV files are allowed"),
-        "only_images_types_allowed": MessageLookupByLibrary.simpleMessage(
-            "Only image types are allowed ex:jpg, png\'"),
-        "only_pdf_files_allowed":
-            MessageLookupByLibrary.simpleMessage("Only Pdf files are allowed"),
-        "open_notification":
-            MessageLookupByLibrary.simpleMessage("Open notifications"),
-        "open_requests":
-            MessageLookupByLibrary.simpleMessage("open requests\n"),
-        "open_settings": MessageLookupByLibrary.simpleMessage("Open Settings"),
-        "option_one": MessageLookupByLibrary.simpleMessage("Standing Offer"),
-        "option_two": MessageLookupByLibrary.simpleMessage("One Time"),
-        "or": MessageLookupByLibrary.simpleMessage("or"),
-        "organizer": MessageLookupByLibrary.simpleMessage("Organizer"),
-        "other": m2,
-        "other_details": MessageLookupByLibrary.simpleMessage("Other Details"),
-        "otm_offer_cancelled_subtitle":
-            MessageLookupByLibrary.simpleMessage("Offer cancelled by Creator"),
-        "otm_offer_cancelled_title":
-            MessageLookupByLibrary.simpleMessage("One to many offer Cancelled"),
-        "owner": MessageLookupByLibrary.simpleMessage("Owner"),
-        "owner_demoted_to_admin": MessageLookupByLibrary.simpleMessage(
-            "associatedName has demoted you from being a Super Admin for the groupName"),
-        "owners": MessageLookupByLibrary.simpleMessage("Super Admin(s)"),
-        "ownership_success": MessageLookupByLibrary.simpleMessage(
-            "Congratulations! You are now the new owner of the Seva Community "),
-        "ownership_transfer_error": MessageLookupByLibrary.simpleMessage(
-            "Error occurred! Please come back later and try again."),
-        "part_of": MessageLookupByLibrary.simpleMessage("Part of"),
-        "part_of_seva_communication": MessageLookupByLibrary.simpleMessage(
-            "Part of SevaX global network of Communication"),
-        "part_of_sevax": MessageLookupByLibrary.simpleMessage(
-            "Part of SevaX Global Network of Communities"),
-        "participants": MessageLookupByLibrary.simpleMessage("Participants"),
-        "particpate_in_request_question": MessageLookupByLibrary.simpleMessage(
-            "Do you want to participate in this request?"),
-        "password": MessageLookupByLibrary.simpleMessage("Password"),
-        "past_hired":
-            MessageLookupByLibrary.simpleMessage("Previously Selected"),
-        "past_time_selected": MessageLookupByLibrary.simpleMessage(
-            "The time you selected is invalid because it is in the past."),
-        "paying": MessageLookupByLibrary.simpleMessage("paying"),
-        "payment_data_syncing":
-            MessageLookupByLibrary.simpleMessage("Payment Data Syncing"),
-        "payment_link_description": MessageLookupByLibrary.simpleMessage(
-            "Please use the link down below to donate and once done take a pledge on how much you have donated."),
-        "payment_still_processing": MessageLookupByLibrary.simpleMessage(
-            "Your payment is still being processed. Please try this operation a little later"),
-        "pdf_document": MessageLookupByLibrary.simpleMessage("PDF Document"),
-        "pending": MessageLookupByLibrary.simpleMessage("Pending"),
-        "pending_offers":
-            MessageLookupByLibrary.simpleMessage("pending offers"),
-        "pending_projects":
-            MessageLookupByLibrary.simpleMessage("pending events"),
-        "pending_requests":
-            MessageLookupByLibrary.simpleMessage("pending requests"),
-        "people": MessageLookupByLibrary.simpleMessage("people"),
-        "people_applied_for_request": MessageLookupByLibrary.simpleMessage(
-            " people have applied for this request"),
-        "per_transaction_quota": MessageLookupByLibrary.simpleMessage(
-            "per transaction billed annualy upon exceeding free monthly quota"),
-        "person_of_contact_details":
-            MessageLookupByLibrary.simpleMessage("Person of contact details"),
-        "personal": MessageLookupByLibrary.simpleMessage("Personal"),
-        "personal_event":
-            MessageLookupByLibrary.simpleMessage("Personal Event"),
-        "personal_events":
-            MessageLookupByLibrary.simpleMessage("Personal Events"),
-        "personal_max_seva_credit_message1": MessageLookupByLibrary.simpleMessage(
-            " Seva Credits are required for this request. It will be debited from your balance. Note that each participant will receive a maximum of "),
-        "personal_max_seva_credit_message2":
-            MessageLookupByLibrary.simpleMessage(
-                " credits for completing this request."),
-        "personal_messages":
-            MessageLookupByLibrary.simpleMessage("Personal Messages"),
-        "personal_project": m3,
-        "personal_request": m4,
-        "pets_allowed": MessageLookupByLibrary.simpleMessage("Pets Allowed"),
-        "phone_number": MessageLookupByLibrary.simpleMessage("Phone Number"),
-        "photo_credits": MessageLookupByLibrary.simpleMessage("Photo Credits"),
-        "plan_change": MessageLookupByLibrary.simpleMessage("Plan change"),
-        "plan_changed": MessageLookupByLibrary.simpleMessage("Plan Changed"),
-        "plan_details": MessageLookupByLibrary.simpleMessage("Plan Details"),
-        "plan_details_quota1": MessageLookupByLibrary.simpleMessage(
-            "per transaction billed monthly upon exceeding free monthly quota"),
-        "plan_upgrade_message_admin": MessageLookupByLibrary.simpleMessage(
-            "Please contact the creator of your Seva Community to activate this feature"),
-        "plan_upgrade_message_user": MessageLookupByLibrary.simpleMessage(
-            "Please contact the admin of your Seva Community to activate this feature"),
-        "plan_yearly_1500": MessageLookupByLibrary.simpleMessage(
-            "paying yearly for \$1500 and additional charges of"),
-        "please_enter_doc_name":
-            MessageLookupByLibrary.simpleMessage("Please enter document name"),
-        "please_enter_valid_amount":
-            MessageLookupByLibrary.simpleMessage("Please enter a valid amount"),
-        "please_join_seva_to_access": MessageLookupByLibrary.simpleMessage(
-            "Please join seva community to access "),
-        "please_switch_to_access": MessageLookupByLibrary.simpleMessage(
-            "Please switch seva community to access "),
-        "please_wait": MessageLookupByLibrary.simpleMessage("Please wait..."),
-        "pledge": MessageLookupByLibrary.simpleMessage("Pledge"),
-        "pledge_goods_supplies": MessageLookupByLibrary.simpleMessage(
-            " has pledge to donate good/supplies"),
-        "pledge_modified": MessageLookupByLibrary.simpleMessage(
-            "Your pledged amount for donation was not acknowledged"),
-        "pledge_modified_by_donor": MessageLookupByLibrary.simpleMessage(
-            "Donor has modified the pledge amount"),
-        "pledged": MessageLookupByLibrary.simpleMessage("Pledged"),
-        "pledged_to_donate":
-            MessageLookupByLibrary.simpleMessage("pledged to donate"),
-        "posted_by": MessageLookupByLibrary.simpleMessage("Posted By:"),
-        "posted_date": MessageLookupByLibrary.simpleMessage("PostDate:"),
-        "posted_on": MessageLookupByLibrary.simpleMessage("Posted on"),
-        "prev": MessageLookupByLibrary.simpleMessage("Prev"),
-        "prevent_accidental_delete":
-            MessageLookupByLibrary.simpleMessage("Prevent accidental delete"),
-        "private_group": MessageLookupByLibrary.simpleMessage("Private Group"),
-        "private_timebank":
-            MessageLookupByLibrary.simpleMessage("Private Seva Community"),
-        "private_timebank_alert": MessageLookupByLibrary.simpleMessage(
-            "Private Seva Community alert"),
-        "private_timebank_alert_hint": MessageLookupByLibrary.simpleMessage(
-            "Please be informed that Private Seva Communities do not have a free option. You will need to provide your billing details to continue to create this Seva Community"),
-        "proceed": MessageLookupByLibrary.simpleMessage("Proceed"),
-        "proceed_with_cancellation": MessageLookupByLibrary.simpleMessage(
-            "Click OK to proceed with the cancelation, Otherwise, press cancel"),
-        "profanity_alert":
-            MessageLookupByLibrary.simpleMessage("Profanity alert"),
-        "profanity_image_alert": MessageLookupByLibrary.simpleMessage(
-            "The SevaX App has a policy of not allowing profane, explicit or violent images. Please use another image."),
-        "profanity_text_alert": MessageLookupByLibrary.simpleMessage(
-            "The SevaX App has a policy of not allowing profane or explicit language. Please revise your text."),
-        "profile_details":
-            MessageLookupByLibrary.simpleMessage("Profile Details"),
-        "project_duration":
-            MessageLookupByLibrary.simpleMessage("Event duration"),
-        "project_location":
-            MessageLookupByLibrary.simpleMessage("Your event location"),
-        "project_location_hint": MessageLookupByLibrary.simpleMessage(
-            "Event location will help your members to locate"),
-        "project_logo": MessageLookupByLibrary.simpleMessage("Event Image"),
-        "project_message_room_invite": MessageLookupByLibrary.simpleMessage(
-            "<Message_room_creator_name> has created a message room <message_room_name> in the Community <community_name> and invited you to join. Please accept or decline the invitation."),
-        "project_mission_statement_hint": MessageLookupByLibrary.simpleMessage(
-            "Tell us why this event is happening. How will it help your community"),
-        "project_name": MessageLookupByLibrary.simpleMessage("Event Name"),
-        "projects": MessageLookupByLibrary.simpleMessage("Events"),
-        "projects_here": MessageLookupByLibrary.simpleMessage("Events here"),
-        "projects_text": MessageLookupByLibrary.simpleMessage("Projects"),
-        "promote": MessageLookupByLibrary.simpleMessage("Promote"),
-        "promoted": MessageLookupByLibrary.simpleMessage("PROMOTED"),
-        "promotion_to_admin_from_member": MessageLookupByLibrary.simpleMessage(
-            "Promotion to admin from member"),
-        "protected_timebank":
-            MessageLookupByLibrary.simpleMessage("Restricted Seva Community"),
-        "protected_timebank_alert_dialog": MessageLookupByLibrary.simpleMessage(
-            "You cannot accept requests in a protected Seva Community"),
-        "protected_timebank_group_creation_error":
-            MessageLookupByLibrary.simpleMessage(
-                "You cannot create groups in a protected Seva Community"),
-        "protected_timebank_request_creation_error":
-            MessageLookupByLibrary.simpleMessage(
-                "You cannot post requests in a protected Seva Community"),
-        "provide_skills": MessageLookupByLibrary.simpleMessage(
-            "Provide the list of Skills that you required for this request"),
-        "public": MessageLookupByLibrary.simpleMessage("Public"),
-        "public_to_sevax":
-            MessageLookupByLibrary.simpleMessage("Public to SevaX Global"),
-        "publish_code": MessageLookupByLibrary.simpleMessage("Publish code"),
-        "push_notification_message": MessageLookupByLibrary.simpleMessage(
-            "The SevaX App would like to send you Push Notifications. Notifications may include alerts and reminders."),
-        "quite_hours_allowed":
-            MessageLookupByLibrary.simpleMessage("Quiet hours allowed"),
-        "raised": MessageLookupByLibrary.simpleMessage("Raised"),
-        "read_less": MessageLookupByLibrary.simpleMessage("Read Less"),
-        "read_more": MessageLookupByLibrary.simpleMessage("Read More"),
-        "reason": MessageLookupByLibrary.simpleMessage("Reason"),
-        "reason_not_mentioned":
-            MessageLookupByLibrary.simpleMessage("Reason not mentioned"),
-        "reason_to_join":
-            MessageLookupByLibrary.simpleMessage("Reason to join"),
-        "received": MessageLookupByLibrary.simpleMessage("Received"),
-        "recieved_credits_one_to_many": MessageLookupByLibrary.simpleMessage(
-            "Received Credit for one to many offer"),
-        "recuring_weekly_on": MessageLookupByLibrary.simpleMessage("Weekly on"),
-        "recurring": MessageLookupByLibrary.simpleMessage("Recurring"),
-        "recurringDays_err": MessageLookupByLibrary.simpleMessage(
-            "Recurring days cannot be empty"),
-        "recurring_list_heading":
-            MessageLookupByLibrary.simpleMessage("Recurring list"),
-        "redeemed_by": MessageLookupByLibrary.simpleMessage("Redeemed by"),
-        "redirecting_to_messages":
-            MessageLookupByLibrary.simpleMessage("Redirecting to messages"),
-        "register": MessageLookupByLibrary.simpleMessage("Register"),
-        "register_subtitle": MessageLookupByLibrary.simpleMessage(
-            "Please create an account to begin giving and receiving"),
-        "register_with": MessageLookupByLibrary.simpleMessage("Register with"),
-        "register_with_apple":
-            MessageLookupByLibrary.simpleMessage("Register with Google"),
-        "registration_link":
-            MessageLookupByLibrary.simpleMessage("Registration Link"),
-        "registration_link_hint":
-            MessageLookupByLibrary.simpleMessage("Ex: Eventbrite link, etc."),
-        "reject": MessageLookupByLibrary.simpleMessage("Reject"),
-        "reject_request_completion": MessageLookupByLibrary.simpleMessage(
-            "Are you sure you want to reject this request for completion?"),
-        "reject_task_completion": MessageLookupByLibrary.simpleMessage(
-            "I am rejecting your task completion request because"),
-        "rejected": MessageLookupByLibrary.simpleMessage("REJECTED"),
-        "reliability_score":
-            MessageLookupByLibrary.simpleMessage("Reliability"),
-        "reliabilitysocre":
-            MessageLookupByLibrary.simpleMessage("Reliability score"),
-        "remove": MessageLookupByLibrary.simpleMessage("Remove"),
-        "remove_as_admin":
-            MessageLookupByLibrary.simpleMessage("Remove as admin"),
-        "remove_member": MessageLookupByLibrary.simpleMessage("Remove member"),
-        "remove_self_from_group_error": MessageLookupByLibrary.simpleMessage(
-            "Cannot remove yourself from the group. Instead, please try deleting the group."),
-        "remove_user": MessageLookupByLibrary.simpleMessage("Remove User"),
-        "repeat": MessageLookupByLibrary.simpleMessage("Repeat"),
-        "repeat_on": MessageLookupByLibrary.simpleMessage("Repeat on"),
-        "replace_cv": MessageLookupByLibrary.simpleMessage("Replace CV"),
-        "replies": MessageLookupByLibrary.simpleMessage("Replies"),
-        "reply": MessageLookupByLibrary.simpleMessage("Reply"),
-        "report": MessageLookupByLibrary.simpleMessage("Report"),
-        "report_feed": MessageLookupByLibrary.simpleMessage("Report Feed"),
-        "report_feed_confirmation_message":
-            MessageLookupByLibrary.simpleMessage(
-                "Do you want to report this feed?"),
-        "report_member_inform": MessageLookupByLibrary.simpleMessage(
-            "Please inform, why you are reporting this user."),
-        "report_member_provide_details": MessageLookupByLibrary.simpleMessage(
-            "Please provide as much detail as possible"),
-        "report_members": MessageLookupByLibrary.simpleMessage("Report Member"),
-        "report_of": MessageLookupByLibrary.simpleMessage("Report of"),
-        "report_on": MessageLookupByLibrary.simpleMessage("Reports on"),
-        "reported_by": MessageLookupByLibrary.simpleMessage("Reported by"),
-        "reported_member_click_to_view": MessageLookupByLibrary.simpleMessage(
-            "Click here to view reported users of this Seva Community"),
-        "reported_members":
-            MessageLookupByLibrary.simpleMessage("Reported Members"),
-        "reported_users":
-            MessageLookupByLibrary.simpleMessage("Reported Users"),
-        "reporting_member":
-            MessageLookupByLibrary.simpleMessage("Reporting member"),
-        "reports": MessageLookupByLibrary.simpleMessage("Reports"),
-        "reports_charging_info": MessageLookupByLibrary.simpleMessage(
-            "Reports are emailed to the creator of each community once a month. There is a cost of \$9.95 per report - which will be billed to the credit card on file to generate this report. By clicking Proceed, you are agreeing to this cost. Otherwise click Cancel."),
-        "request": MessageLookupByLibrary.simpleMessage("Request"),
-        "request_accepted": MessageLookupByLibrary.simpleMessage(
-            "Member has accepted a request and is waiting for approval"),
-        "request_agreement_form_component_text":
-            MessageLookupByLibrary.simpleMessage(
-                "Create/Use agreement between you and borrower on how your item/place can be used."),
-        "request_agreement_not_available": MessageLookupByLibrary.simpleMessage(
-            "Request agreement not available"),
-        "request_amount_cannot_be_greater":
-            MessageLookupByLibrary.simpleMessage(
-                "Requested amount cannot be greater than offered amount!"),
-        "request_approved":
-            MessageLookupByLibrary.simpleMessage("Request Approved"),
-        "request_approved_by_msg": MessageLookupByLibrary.simpleMessage(
-            "Your request has been approved by"),
-        "request_closed":
-            MessageLookupByLibrary.simpleMessage("Request closed"),
-        "request_completed": MessageLookupByLibrary.simpleMessage(
-            "Member claims time credits and is waiting for approval"),
-        "request_completed_by_speaker": MessageLookupByLibrary.simpleMessage(
-            "This request has been completed and is awaiting your approval."),
-        "request_credits_again": MessageLookupByLibrary.simpleMessage(
-            "Are you sure you want to request for credits again?"),
-        "request_delete_confirmation_message":
-            MessageLookupByLibrary.simpleMessage(
-                "Are you sure you want to delete this request?"),
-        "request_desc_hint_time": MessageLookupByLibrary.simpleMessage(
-            "Please describe what you need to have done. \n \nEx: I need help removing weeds from  my small garden."),
-        "request_descrip_hint_text": MessageLookupByLibrary.simpleMessage(
-            "Your Request and any #hashtags"),
-        "request_description":
-            MessageLookupByLibrary.simpleMessage("Request description*"),
-        "request_description_hint": MessageLookupByLibrary.simpleMessage(
-            "Please describe what you need to have done. \n \nExample, I need help removing weeds from  my small garden."),
-        "request_description_hint_cash": MessageLookupByLibrary.simpleMessage(
-            "Ex: Specify the cause for fundraising. Include any #hashtags"),
-        "request_description_hint_goods": MessageLookupByLibrary.simpleMessage(
-            "Ex: Specify the cause of requesting goods / supplies and any #hashtags"),
-        "request_description_hint_text_borrow":
-            MessageLookupByLibrary.simpleMessage(
-                "Please describe what you require"),
-        "request_details":
-            MessageLookupByLibrary.simpleMessage("Request details"),
-        "request_duration":
-            MessageLookupByLibrary.simpleMessage("  Request duration"),
-        "request_ended": MessageLookupByLibrary.simpleMessage(
-            "This request has now ended. Tap to complete the request"),
-        "request_ended_emailsent_msg": MessageLookupByLibrary.simpleMessage(
-            "The request has completed and an email has been sent to you. Tap to leave a feedback."),
-        "request_failed":
-            MessageLookupByLibrary.simpleMessage("Request failed!"),
-        "request_failure_message": MessageLookupByLibrary.simpleMessage(
-            "Sending request failed somehow, please try again later!"),
-        "request_goods_address": MessageLookupByLibrary.simpleMessage(
-            "Provide address where the donor should ship*"),
-        "request_goods_address_hint": MessageLookupByLibrary.simpleMessage(
-            "Ex: Donors will use the address below to ship the Goods/Supplies."),
-        "request_goods_address_inputhint":
-            MessageLookupByLibrary.simpleMessage("Address Only"),
-        "request_goods_desc_hint": MessageLookupByLibrary.simpleMessage(
-            "Ex: Local Food Bank has a shortage..."),
-        "request_goods_description": MessageLookupByLibrary.simpleMessage(
-            "Provide the list of Goods/Supplies that you need*"),
-        "request_goods_offer": MessageLookupByLibrary.simpleMessage(
-            "Provide the list of Goods/Supplies that you  can offer*"),
-        "request_goods_title_hint": MessageLookupByLibrary.simpleMessage(
-            "Ex: Non-perishable goods for Food Bank..."),
-        "request_has_been_assigned_to_a_member":
-            MessageLookupByLibrary.simpleMessage(
-                "Request has been assigned to a member"),
-        "request_min_donation":
-            MessageLookupByLibrary.simpleMessage("Minimum amount per member*"),
-        "request_min_donation_hint":
-            MessageLookupByLibrary.simpleMessage("Ex: \$10"),
-        "request_money_desc_hint": MessageLookupByLibrary.simpleMessage(
-            "Ex: Fundraiser to expand women’s shelter..."),
-        "request_money_title_hint": MessageLookupByLibrary.simpleMessage(
-            "Ex: Fundraiser for women’s shelter..."),
-        "request_offer_agreement_hint_text":
-            MessageLookupByLibrary.simpleMessage("Ex :3"),
-        "request_offer_agreement_hint_text2":
-            MessageLookupByLibrary.simpleMessage("Ex: \$300"),
-        "request_offer_agreement_hint_text3": MessageLookupByLibrary.simpleMessage(
-            "Ex: Gas-powered lawnmower in mint condition with full tank of gas."),
-        "request_offer_agreement_hint_text4": MessageLookupByLibrary.simpleMessage(
-            "Ex: Lawnmower must be cleaned and operable with a full tank of gas."),
-        "request_offer_agreement_hint_text5": MessageLookupByLibrary.simpleMessage(
-            "Ex: LANDLORD\'S LIABILITY. The Guest and any of their guests hereby indemnify and hold harmless the Landlord against any and all claims of personal injury or property damage or loss arising from the use of the Premises regardless of the nature of the accident, injury or loss. The Guest expressly recognizes that any insurance for property damage or loss which the Landlord may maintain on the property does not cover the personal property of Tenant and that Tenant should purchase their own insurance for their guests if such coverage is desired."),
-        "request_offer_agreement_tool_widget_text":
-            MessageLookupByLibrary.simpleMessage(
-                "Stipulations regarding returned item in unsatisfactory condition."),
-        "request_payment_ach_account_no":
-            MessageLookupByLibrary.simpleMessage("Account Number*"),
-        "request_payment_ach_bank_address":
-            MessageLookupByLibrary.simpleMessage("Bank Address*"),
-        "request_payment_ach_bank_name":
-            MessageLookupByLibrary.simpleMessage("Bank Name*"),
-        "request_payment_ach_routing_number":
-            MessageLookupByLibrary.simpleMessage("Routing Number*"),
-        "request_payment_description":
-            MessageLookupByLibrary.simpleMessage("Payment Details*"),
-        "request_payment_descriptionZelle_inputhint":
-            MessageLookupByLibrary.simpleMessage(
-                "Ex: Zellepay ID (phone or email)"),
-        "request_payment_description_hint": MessageLookupByLibrary.simpleMessage(
-            "SevaX does not process the payment. Please select from among PayPal, ZellePay or ACH in the drop down and provide the appropriate details for each method. The donor will complete the donation outside the SevaX app."),
-        "request_payment_description_hint_new":
-            MessageLookupByLibrary.simpleMessage(
-                "SevaX does not process the payment. Please select from among  ACH, PayPal, Venmo, or ZellePay in the drop down and provide the appropriate details for each method. The donor will complete the donation outside the SevaX app."),
-        "request_payment_description_inputhint":
-            MessageLookupByLibrary.simpleMessage(
-                "Ex: https://www.paypal.com/johndoe"),
-        "request_paymenttype_ach": MessageLookupByLibrary.simpleMessage("ACH"),
-        "request_paymenttype_paypal":
-            MessageLookupByLibrary.simpleMessage("PayPal"),
-        "request_paymenttype_venmo":
-            MessageLookupByLibrary.simpleMessage("Venmo"),
-        "request_paymenttype_zellepay":
-            MessageLookupByLibrary.simpleMessage("ZellePay"),
-        "request_review_body_creator": MessageLookupByLibrary.simpleMessage(
-            "You have received a review for the request:"),
-        "request_review_body_user": MessageLookupByLibrary.simpleMessage(
-            "You have received a review on the work that you did for the request:"),
-        "request_subject": MessageLookupByLibrary.simpleMessage(
-            "Please enter the subject of your request"),
-        "request_submitted":
-            MessageLookupByLibrary.simpleMessage("Request submitted"),
-        "request_target_donation":
-            MessageLookupByLibrary.simpleMessage("Target Donation*"),
-        "request_target_donation_hint":
-            MessageLookupByLibrary.simpleMessage("Ex: \$100"),
-        "request_title": MessageLookupByLibrary.simpleMessage("Request title*"),
-        "request_title_hint":
-            MessageLookupByLibrary.simpleMessage("Ex: Small carpentry work..."),
-        "request_to_join":
-            MessageLookupByLibrary.simpleMessage("Request to join"),
-        "request_tools_description":
-            MessageLookupByLibrary.simpleMessage("Request tools description*"),
-        "request_type": MessageLookupByLibrary.simpleMessage("Request type*"),
-        "request_type_cash": MessageLookupByLibrary.simpleMessage("Money"),
-        "request_type_goods":
-            MessageLookupByLibrary.simpleMessage("Goods / Supplies"),
-        "request_type_time": MessageLookupByLibrary.simpleMessage("Time"),
-        "request_updated":
-            MessageLookupByLibrary.simpleMessage("Request Updated"),
-        "requested": MessageLookupByLibrary.simpleMessage("REQUESTED"),
-        "requested_by": MessageLookupByLibrary.simpleMessage("Requested By"),
-        "requested_for_completion": MessageLookupByLibrary.simpleMessage(
-            "Your completed request is pending approval."),
-        "requests": MessageLookupByLibrary.simpleMessage("Requests"),
-        "resend_email": MessageLookupByLibrary.simpleMessage("Resend mail"),
-        "resend_invite":
-            MessageLookupByLibrary.simpleMessage("Resend Invitation"),
-        "reset": MessageLookupByLibrary.simpleMessage("Reset"),
-        "resetPasswordSuccess": MessageLookupByLibrary.simpleMessage(
-            "An email has been sent. Please follow the steps in the email to reset your password."),
-        "reset_dynamic_link_message": MessageLookupByLibrary.simpleMessage(
-            "Please check your email to set your password. Then enter that password here"),
-        "reset_list": MessageLookupByLibrary.simpleMessage("Reset list"),
-        "reset_password":
-            MessageLookupByLibrary.simpleMessage("Reset Password"),
-        "reset_password_message": MessageLookupByLibrary.simpleMessage(
-            "We\'ve sent the reset link to your email address"),
-        "review": MessageLookupByLibrary.simpleMessage("Review"),
-        "review_agreement":
-            MessageLookupByLibrary.simpleMessage("Review Agreement"),
-        "review_before_proceding_text": MessageLookupByLibrary.simpleMessage(
-            "Please review the agreement below before proceeding."),
-        "review_earnings":
-            MessageLookupByLibrary.simpleMessage("Review Earnings"),
-        "review_feedback_message": MessageLookupByLibrary.simpleMessage(
-            "Take a moment to reflect on your experience and share your appreciation by writing a short review."),
-        "routing_number":
-            MessageLookupByLibrary.simpleMessage("Routing number"),
-        "sandbox_already_created_1": MessageLookupByLibrary.simpleMessage(
-            "Only one sandbox community is currently allowed for each SevaX member."),
-        "sandbox_community":
-            MessageLookupByLibrary.simpleMessage("Sandbox Community"),
-        "sandbox_community_description": MessageLookupByLibrary.simpleMessage(
-            "Sandbox communities are created for testing purposes?"),
-        "sandbox_create_community_alert": MessageLookupByLibrary.simpleMessage(
-            "Are you sure you want to create a sandbox community?"),
-        "sandbox_dialog_subtitle": MessageLookupByLibrary.simpleMessage(
-            "Sandbox Seva communities are created for instructional purposes only. Any credits earned or debited will not count towards your account."),
-        "sandbox_dialog_title":
-            MessageLookupByLibrary.simpleMessage("Sandbox seva community"),
-        "save": MessageLookupByLibrary.simpleMessage("Save"),
-        "save_as_sponsored":
-            MessageLookupByLibrary.simpleMessage("Save as Endorsed"),
-        "save_as_template":
-            MessageLookupByLibrary.simpleMessage("Save as Template"),
-        "search": MessageLookupByLibrary.simpleMessage("Search"),
-        "search_admin": MessageLookupByLibrary.simpleMessage("Search Admin"),
-        "search_by_email_name": MessageLookupByLibrary.simpleMessage(
-            "Search members via email,name"),
-        "search_category":
-            MessageLookupByLibrary.simpleMessage("Search Category"),
-        "search_something":
-            MessageLookupByLibrary.simpleMessage("Search Something"),
-        "search_template_hint": MessageLookupByLibrary.simpleMessage(
-            "Enter name of a Event Template"),
-        "search_user": MessageLookupByLibrary.simpleMessage("Search a user"),
-        "security_deposits":
-            MessageLookupByLibrary.simpleMessage("Security Deposit"),
-        "see_all": MessageLookupByLibrary.simpleMessage("See All"),
-        "see_less": MessageLookupByLibrary.simpleMessage("See Less"),
-        "select_a_speaker":
-            MessageLookupByLibrary.simpleMessage("Please select a Speaker*"),
-        "select_a_speaker_dialog":
-            MessageLookupByLibrary.simpleMessage("Select a speaker"),
-        "select_all": MessageLookupByLibrary.simpleMessage("Select All"),
-        "select_categories_community_headding":
-            MessageLookupByLibrary.simpleMessage(
-                "Select categories for your community"),
-        "select_category":
-            MessageLookupByLibrary.simpleMessage("Select Category"),
-        "select_child_timebank": MessageLookupByLibrary.simpleMessage(
-            "Select Child Seva Communities"),
-        "select_goods_category": MessageLookupByLibrary.simpleMessage(
-            "Select a goods / supplies category"),
-        "select_group": MessageLookupByLibrary.simpleMessage("Select Group"),
-        "select_hours": MessageLookupByLibrary.simpleMessage("Select hours"),
-        "select_parent_timebank": MessageLookupByLibrary.simpleMessage(
-            "Select Parent Seva Communities"),
-        "select_project":
-            MessageLookupByLibrary.simpleMessage("Select an event"),
-        "select_request":
-            MessageLookupByLibrary.simpleMessage("Select Request"),
-        "select_speaker_hint":
-            MessageLookupByLibrary.simpleMessage("Ex: Name of speaker."),
-        "select_template": MessageLookupByLibrary.simpleMessage(
-            "Please select a Template from the list of available Templates"),
-        "select_time": MessageLookupByLibrary.simpleMessage("Select time"),
-        "select_time_period":
-            MessageLookupByLibrary.simpleMessage("Select Time Period"),
-        "select_timebank":
-            MessageLookupByLibrary.simpleMessage("Select a Seva Community"),
-        "select_timeline":
-            MessageLookupByLibrary.simpleMessage("Select Timeline"),
-        "select_transaction_type":
-            MessageLookupByLibrary.simpleMessage("Select Transaction Types"),
-        "select_transaction_type_valid":
-            MessageLookupByLibrary.simpleMessage("Select a transaction type"),
-        "select_user":
-            MessageLookupByLibrary.simpleMessage("Please select a user"),
-        "select_volunteer":
-            MessageLookupByLibrary.simpleMessage("Select volunteers"),
-        "selected_categories":
-            MessageLookupByLibrary.simpleMessage("Selected Categories"),
-        "selected_skills":
-            MessageLookupByLibrary.simpleMessage("Selected Skills"),
-        "selected_speaker":
-            MessageLookupByLibrary.simpleMessage("Selected Speaker"),
-        "selected_users_before":
-            MessageLookupByLibrary.simpleMessage(" Selected users before "),
-        "selected_value":
-            MessageLookupByLibrary.simpleMessage("Selected value :"),
-        "send_csv_file": MessageLookupByLibrary.simpleMessage("Send CSV File"),
-        "send_feedback": MessageLookupByLibrary.simpleMessage("Send Feedback"),
-        "send_invitation":
-            MessageLookupByLibrary.simpleMessage("Send Invitation"),
-        "send_request": MessageLookupByLibrary.simpleMessage("Send Request"),
-        "sending": MessageLookupByLibrary.simpleMessage("Sending..."),
-        "sending_feedback":
-            MessageLookupByLibrary.simpleMessage("Sending Feedback"),
-        "sending_invitation":
-            MessageLookupByLibrary.simpleMessage("Sending invitation..."),
-        "set_duration":
-            MessageLookupByLibrary.simpleMessage(" Click to Set Duration"),
-        "settings": MessageLookupByLibrary.simpleMessage("Settings"),
-        "seva": MessageLookupByLibrary.simpleMessage("Seva"),
-        "seva_coins_debited":
-            MessageLookupByLibrary.simpleMessage("Seva Coins debited"),
-        "seva_community":
-            MessageLookupByLibrary.simpleMessage("Seva Community"),
-        "seva_community_event":
-            MessageLookupByLibrary.simpleMessage("Seva Community Event"),
-        "seva_community_events":
-            MessageLookupByLibrary.simpleMessage("Seva Community Events"),
-        "seva_community_groups":
-            MessageLookupByLibrary.simpleMessage("Seva Community Groups"),
-        "seva_community_info": MessageLookupByLibrary.simpleMessage(
-            "A Seva Community is a community of volunteers that give and receive time to each other and to the larger community."),
-        "seva_community_name_not_updated": MessageLookupByLibrary.simpleMessage(
-            "Seva Community name not updated"),
-        "seva_community_requests":
-            MessageLookupByLibrary.simpleMessage("Seva Community Requests"),
-        "seva_credits": MessageLookupByLibrary.simpleMessage("Seva Credits"),
-        "seva_logo_info": MessageLookupByLibrary.simpleMessage(
-            "Upload a Image to represent your community"),
-        "sevax_global_creation_error": MessageLookupByLibrary.simpleMessage(
-            "\"SevaX Global\" is a protected community. Only Admins can post content here."),
-        "share_code": MessageLookupByLibrary.simpleMessage("Share code"),
-        "share_code_msg": MessageLookupByLibrary.simpleMessage(
-            "You can share the code to invite them to your seva community"),
-        "shared_post": MessageLookupByLibrary.simpleMessage("Shared a post"),
-        "sign_in": MessageLookupByLibrary.simpleMessage("Sign in"),
-        "sign_in_alert": MessageLookupByLibrary.simpleMessage(
-            "You need to sign in or register to view this."),
-        "sign_in_with_apple":
-            MessageLookupByLibrary.simpleMessage("Sign in with Apple"),
-        "sign_in_with_google":
-            MessageLookupByLibrary.simpleMessage("Sign in with Google"),
-        "sign_up": MessageLookupByLibrary.simpleMessage("Sign Up"),
-        "sign_up_with_apple":
-            MessageLookupByLibrary.simpleMessage("Sign up with Apple"),
-        "sign_up_with_google":
-            MessageLookupByLibrary.simpleMessage("Sign up with Google"),
-        "signed_up": MessageLookupByLibrary.simpleMessage("Signed Up"),
-        "signed_up_for": MessageLookupByLibrary.simpleMessage("signed up for"),
-        "skills": MessageLookupByLibrary.simpleMessage("Skills"),
-        "skills_description": MessageLookupByLibrary.simpleMessage(
-            "Please list as many as skills that you are willing to share with others within your community."),
-        "skip": MessageLookupByLibrary.simpleMessage("Skip"),
-        "skip_and_register":
-            MessageLookupByLibrary.simpleMessage("Skip and register"),
-        "skip_for_now": MessageLookupByLibrary.simpleMessage("Skip for now"),
-        "skipping": MessageLookupByLibrary.simpleMessage("Skipping"),
-        "snackbar_select_agreement_type":
-            MessageLookupByLibrary.simpleMessage("Select an agreement type"),
-        "something_went_wrong":
-            MessageLookupByLibrary.simpleMessage("something went wrong"),
-        "speaker": MessageLookupByLibrary.simpleMessage("Speaker"),
-        "speakerRejectedNotificationLabel":
-            MessageLookupByLibrary.simpleMessage(
-                " rejected the Speaker invitation for "),
-        "speaker_accepted_invite_notification":
-            MessageLookupByLibrary.simpleMessage(
-                "This request has been accepted by **speakerName."),
-        "speaker_claim_credits":
-            MessageLookupByLibrary.simpleMessage("Claim credits"),
-        "speaker_claim_form_field_title": MessageLookupByLibrary.simpleMessage(
-            "How much prep time did you require for this request?"),
-        "speaker_claim_form_field_title_hint":
-            MessageLookupByLibrary.simpleMessage("Prep time in hours"),
-        "speaker_claim_form_text_1": MessageLookupByLibrary.simpleMessage(
-            "I acknowledge that I have completed the session for the request."),
-        "speaker_claim_form_text_2": MessageLookupByLibrary.simpleMessage(
-            "Upon completing the one to many request, the combined prep time and session hours will be credited to you."),
-        "speaker_complete_page_text_1": MessageLookupByLibrary.simpleMessage(
-            "I acknowledge that speaker_name has completed the request. The list of members provided above attended the request."),
-        "speaker_complete_page_text_2": MessageLookupByLibrary.simpleMessage(
-            "Note: The hours will be credited to the speaker and to the attendees upon your approval. This list of attendees cannot be modified after approval."),
-        "speaker_completion_rejected_notification_1":
-            MessageLookupByLibrary.simpleMessage("Request rejected."),
-        "speaker_invite_notification": MessageLookupByLibrary.simpleMessage(
-            "Added you as the Speaker for request: "),
-        "speaker_reject_invite_dialog": MessageLookupByLibrary.simpleMessage(
-            "Are you sure you want to reject this invitation to speak?"),
-        "speaker_rejected":
-            MessageLookupByLibrary.simpleMessage("Speaker Rejected"),
-        "speaker_requested_completion_notification":
-            MessageLookupByLibrary.simpleMessage(
-                "This request has been completed."),
-        "specific_data_range":
-            MessageLookupByLibrary.simpleMessage("Specific date range"),
-        "sponsor_name": MessageLookupByLibrary.simpleMessage("Sponsor name"),
-        "sponsored_by": MessageLookupByLibrary.simpleMessage("Sponsored By"),
-        "sponsored_groups":
-            MessageLookupByLibrary.simpleMessage("Endorsed Groups"),
-        "start": MessageLookupByLibrary.simpleMessage("Start"),
-        "start_new_feed":
-            MessageLookupByLibrary.simpleMessage("Start a new feed.."),
-        "start_new_offer": MessageLookupByLibrary.simpleMessage(
-            "Start adding the first offer"),
-        "start_new_post":
-            MessageLookupByLibrary.simpleMessage("Start a new post...."),
-        "start_request_date": MessageLookupByLibrary.simpleMessage(
-            "Start adding the first request"),
-        "state": MessageLookupByLibrary.simpleMessage("State"),
-        "status": MessageLookupByLibrary.simpleMessage("Status"),
-        "step": MessageLookupByLibrary.simpleMessage("Step"),
-        "stock_images": MessageLookupByLibrary.simpleMessage("Stock Images"),
-        "street_add1": MessageLookupByLibrary.simpleMessage("Street Address 1"),
-        "street_add2": MessageLookupByLibrary.simpleMessage("Street Address 2"),
-        "submit": MessageLookupByLibrary.simpleMessage("Submit"),
-        "submitting_request":
-            MessageLookupByLibrary.simpleMessage("Submitting request..."),
-        "subscription": m5,
-        "subscription_cancellation":
-            MessageLookupByLibrary.simpleMessage("Subscription cancelation"),
-        "success": MessageLookupByLibrary.simpleMessage("success"),
-        "successfully": MessageLookupByLibrary.simpleMessage("successfully."),
-        "suggested": MessageLookupByLibrary.simpleMessage("Suggested"),
-        "suggested_categories":
-            MessageLookupByLibrary.simpleMessage("Suggested Categories"),
-        "super_admin": MessageLookupByLibrary.simpleMessage("Super Admin"),
-        "super_admins": MessageLookupByLibrary.simpleMessage("Super Admin(s)"),
-        "sure_to_cancel_one_to_many_offer":
-            MessageLookupByLibrary.simpleMessage(
-                "Are you sure you would like to cancel this One-to-Many offer"),
-        "switch_community": MessageLookupByLibrary.simpleMessage(
-            "You need to switch Seva Communities in order to access Groups in another Community."),
-        "switch_timebank":
-            MessageLookupByLibrary.simpleMessage("Switch To Seva Community"),
-        "switching_timebank":
-            MessageLookupByLibrary.simpleMessage("Switching Seva Community"),
-        "taking_to_new_timebank": MessageLookupByLibrary.simpleMessage(
-            "Taking you to your new Seva Community..."),
-        "tap_for_photo": MessageLookupByLibrary.simpleMessage("Tap for photo"),
-        "tap_to_delete":
-            MessageLookupByLibrary.simpleMessage("Tap to delete this item"),
-        "tap_to_remove_tooltip":
-            MessageLookupByLibrary.simpleMessage("items (tap to remove)"),
-        "tap_to_select": MessageLookupByLibrary.simpleMessage(
-            "Tap to select one or more..."),
-        "tap_to_view_details":
-            MessageLookupByLibrary.simpleMessage("Tap to view details"),
-        "target_amount_less_than_min_amount":
-            MessageLookupByLibrary.simpleMessage(
-                "Minimum amount cannot be greater than target amount"),
-        "task_desc": MessageLookupByLibrary.simpleMessage(
-            "Here is the list of pending tasks that are waiting for your acceptance, not accepted tasks and the tasks you have completed."),
-        "task_max_hours_of_credit": MessageLookupByLibrary.simpleMessage(
-            "Hours of credit from this request."),
-        "task_max_request_message": MessageLookupByLibrary.simpleMessage(
-            "You can only request a maximum of"),
-        "tasks": MessageLookupByLibrary.simpleMessage("Tasks"),
-        "tell_what_you_donated": MessageLookupByLibrary.simpleMessage(
-            "Tell us what you have donated"),
-        "tell_what_you_get_donated": MessageLookupByLibrary.simpleMessage(
-            "Tell us what you would like to get donated"),
-        "template_alert":
-            MessageLookupByLibrary.simpleMessage("Template alert"),
-        "template_hint":
-            MessageLookupByLibrary.simpleMessage("Ex: Template Name"),
-        "template_title": MessageLookupByLibrary.simpleMessage(
-            "Provide a unique name for the template"),
-        "terms_acknowledgement_text": MessageLookupByLibrary.simpleMessage(
-            "I accept the terms of use as per the agreement"),
-        "test_community":
-            MessageLookupByLibrary.simpleMessage("Test Community"),
-        "thanks": MessageLookupByLibrary.simpleMessage("Thanks!"),
-        "there_are_currently_none":
-            MessageLookupByLibrary.simpleMessage("There are currently none"),
-        "this_is_repeating_event":
-            MessageLookupByLibrary.simpleMessage("This is a repeating event"),
-        "this_offer": MessageLookupByLibrary.simpleMessage("this offer"),
-        "this_request_has_now_ended":
-            MessageLookupByLibrary.simpleMessage("This request has now ended"),
-        "timbank_about_hint": MessageLookupByLibrary.simpleMessage(
-            "Ex: A bit more about your Seva Community"),
-        "time": MessageLookupByLibrary.simpleMessage("Time"),
-        "time_left": MessageLookupByLibrary.simpleMessage("Time left"),
-        "time_offer": MessageLookupByLibrary.simpleMessage("Time Offer"),
-        "time_period": MessageLookupByLibrary.simpleMessage("Time period"),
-        "time_request": MessageLookupByLibrary.simpleMessage("Time Request"),
-        "time_to_prepare":
-            MessageLookupByLibrary.simpleMessage("Time to prepare: "),
-        "timebank": MessageLookupByLibrary.simpleMessage("Seva Community"),
-        "timebank_about_hint": MessageLookupByLibrary.simpleMessage(
-            "Ex: Our Community is made up of local residents primarily from..."),
-        "timebank_about_hint_example": MessageLookupByLibrary.simpleMessage(
-            "Ex: Our Community is made up of local residents primarily from..."),
-        "timebank_about_title": MessageLookupByLibrary.simpleMessage(
-            "Tell Us About your Seva Community"),
-        "timebank_account_error": MessageLookupByLibrary.simpleMessage(
-            "Please configure your account information details"),
-        "timebank_billing_error": MessageLookupByLibrary.simpleMessage(
-            "Please configure your billing information details"),
-        "timebank_code":
-            MessageLookupByLibrary.simpleMessage("Seva Community code : "),
-        "timebank_configure_accounr_info": MessageLookupByLibrary.simpleMessage(
-            "Configure account information"),
-        "timebank_configure_profile_info": MessageLookupByLibrary.simpleMessage(
-            "Configure billing information"),
-        "timebank_current_tax_percentage":
-            MessageLookupByLibrary.simpleMessage("Current Tax Percentage"),
-        "timebank_earnings":
-            MessageLookupByLibrary.simpleMessage("Seva Community earnings"),
-        "timebank_exit":
-            MessageLookupByLibrary.simpleMessage("Seva Community Exit"),
-        "timebank_gps_hint": MessageLookupByLibrary.simpleMessage(
-            "Please make sure you have GPS turned on to see the list of Seva Communities around you"),
-        "timebank_has_parent":
-            MessageLookupByLibrary.simpleMessage("Seva Community has a parent"),
-        "timebank_loan_message": MessageLookupByLibrary.simpleMessage(
-            "On click of Donate, Seva Community balance will be adjusted."),
-        "timebank_location": MessageLookupByLibrary.simpleMessage(
-            "Your Seva Community location."),
-        "timebank_location_error": MessageLookupByLibrary.simpleMessage(
-            "Please add the location of your Seva Community"),
-        "timebank_location_has_parent_hint_text":
-            MessageLookupByLibrary.simpleMessage(
-                "If your Seva community is associated with a parent Seva Community, please select from the dropdown below"),
-        "timebank_location_hint": MessageLookupByLibrary.simpleMessage(
-            "Ex: List the place or address where your community meets (such as a cafe, library, or church.)."),
-        "timebank_logo":
-            MessageLookupByLibrary.simpleMessage("Seva Community Image"),
-        "timebank_logo_error": MessageLookupByLibrary.simpleMessage(
-            "Seva Community image is mandatory"),
-        "timebank_max_seva_credit_message1": MessageLookupByLibrary.simpleMessage(
-            " Seva Credits will be credited to the Seva Community for this request. Note that each participant will receive a maximum of "),
-        "timebank_max_seva_credit_message2":
-            MessageLookupByLibrary.simpleMessage(
-                " credits for completing this request."),
-        "timebank_members":
-            MessageLookupByLibrary.simpleMessage("SEVA COMMUNITY MEMBERS"),
-        "timebank_name":
-            MessageLookupByLibrary.simpleMessage("Name your Seva Community"),
-        "timebank_name_error": MessageLookupByLibrary.simpleMessage(
-            "Seva Community name cannot be empty"),
-        "timebank_name_exists": MessageLookupByLibrary.simpleMessage(
-            "Seva Community name already exists !"),
-        "timebank_name_exists_error": MessageLookupByLibrary.simpleMessage(
-            "Please choose another name for the Seva Community. This Seva Community name already exists"),
-        "timebank_name_hint": MessageLookupByLibrary.simpleMessage(
-            "Ex: Evergreen Neighborhood, Acme Organization, XYZ Food Bank"),
-        "timebank_not_updated":
-            MessageLookupByLibrary.simpleMessage("Timebank name not updated"),
-        "timebank_offers":
-            MessageLookupByLibrary.simpleMessage("Seva Community Offers"),
-        "timebank_onboarding_message":
-            MessageLookupByLibrary.simpleMessage("You have been onboarded to"),
-        "timebank_profile_info":
-            MessageLookupByLibrary.simpleMessage("Billing Information"),
-        "timebank_project": m6,
-        "timebank_request": m7,
-        "timebank_select_tax_percentage":
-            MessageLookupByLibrary.simpleMessage("Select Tax percentage"),
-        "timebank_seva_credit": MessageLookupByLibrary.simpleMessage(
-            "Your Seva Community seva credits is"),
-        "timebank_tell_more": MessageLookupByLibrary.simpleMessage(
-            "Tell us more about your Seva Community."),
-        "timebanks_near_you":
-            MessageLookupByLibrary.simpleMessage("Seva Communities near you"),
-        "title": MessageLookupByLibrary.simpleMessage("Title"),
-        "to_other_admin":
-            MessageLookupByLibrary.simpleMessage(" to another admin."),
-        "total": MessageLookupByLibrary.simpleMessage("Total"),
-        "total_amount_raised":
-            MessageLookupByLibrary.simpleMessage("Total amount raised"),
-        "total_donation_amount":
-            MessageLookupByLibrary.simpleMessage("Total donation amount"),
-        "total_earned": MessageLookupByLibrary.simpleMessage("Total Earned"),
-        "total_goods_recevied":
-            MessageLookupByLibrary.simpleMessage("Total Goods Received"),
-        "total_no_of_participants":
-            MessageLookupByLibrary.simpleMessage("Total No. of Participants*"),
-        "total_spent": MessageLookupByLibrary.simpleMessage("Total Spent"),
-        "transer_hint_data_deletion": MessageLookupByLibrary.simpleMessage(
-            "All data not transferred will be deleted."),
-        "transfer_data_hint": MessageLookupByLibrary.simpleMessage(
-            "Transfer ownership of this user\'s data to another user, like group ownership."),
-        "transfer_to": MessageLookupByLibrary.simpleMessage("Transfer to"),
-        "trustworthiness":
-            MessageLookupByLibrary.simpleMessage("Trustworthiness"),
-        "try_later":
-            MessageLookupByLibrary.simpleMessage("Please try again later"),
-        "try_text": MessageLookupByLibrary.simpleMessage("Try"),
-        "type_group": MessageLookupByLibrary.simpleMessage("Type a group name"),
-        "type_message": MessageLookupByLibrary.simpleMessage("Type a message"),
-        "type_team_member_name":
-            MessageLookupByLibrary.simpleMessage("Type your team members name"),
-        "unassigned": MessageLookupByLibrary.simpleMessage("Unassigned"),
-        "unblock": MessageLookupByLibrary.simpleMessage("Unblock"),
-        "until": MessageLookupByLibrary.simpleMessage("Until"),
-        "upcoming_events":
-            MessageLookupByLibrary.simpleMessage("Upcoming Events"),
-        "update": MessageLookupByLibrary.simpleMessage("Update"),
-        "update_app": MessageLookupByLibrary.simpleMessage("Update App"),
-        "update_available":
-            MessageLookupByLibrary.simpleMessage("Update Available"),
-        "update_bio": MessageLookupByLibrary.simpleMessage("Update bio"),
-        "update_bio_hint":
-            MessageLookupByLibrary.simpleMessage("Please enter bio to update"),
-        "update_feed": MessageLookupByLibrary.simpleMessage("Update post"),
-        "update_msg": MessageLookupByLibrary.simpleMessage(
-            "There is an update available with the app, Please tap on update to use the latest version of the app"),
-        "update_name": MessageLookupByLibrary.simpleMessage("Update name"),
-        "update_offer": MessageLookupByLibrary.simpleMessage("Update Offer"),
-        "update_photo": MessageLookupByLibrary.simpleMessage("Update Photo"),
-        "update_request":
-            MessageLookupByLibrary.simpleMessage("Update Request"),
-        "updating": MessageLookupByLibrary.simpleMessage("Updating"),
-        "updating_details":
-            MessageLookupByLibrary.simpleMessage("Updating details"),
-        "updating_feed": MessageLookupByLibrary.simpleMessage("Updating post"),
-        "updating_messaging_room":
-            MessageLookupByLibrary.simpleMessage("Updating Room..."),
-        "updating_offer":
-            MessageLookupByLibrary.simpleMessage("Updating offer"),
-        "updating_project":
-            MessageLookupByLibrary.simpleMessage("Updating an event"),
-        "updating_request":
-            MessageLookupByLibrary.simpleMessage("Updating Request..."),
-        "updating_timebank":
-            MessageLookupByLibrary.simpleMessage("Updating Seva Community.."),
-        "updating_users":
-            MessageLookupByLibrary.simpleMessage("Updating Members"),
-        "upgrade_plan": MessageLookupByLibrary.simpleMessage("Upgrade Plan"),
-        "upgrade_plan_confirm": MessageLookupByLibrary.simpleMessage(
-            "Are you sure you want to upgrade the plan ?"),
-        "upgrade_plan_disable_msg1": MessageLookupByLibrary.simpleMessage(
-            "This feature is disabled for your community"),
-        "upgrade_plan_disable_msg2": MessageLookupByLibrary.simpleMessage(
-            "This is currently not permitted. Please see the following link for more information: http://web.sevaxapp.com/"),
-        "upgrade_plan_disable_msg3": MessageLookupByLibrary.simpleMessage(
-            "This is currently not permitted. Please contact the Community Creator for more information"),
-        "upgrade_plan_msg1":
-            MessageLookupByLibrary.simpleMessage("Sorry Couldn\'t fetch data"),
-        "upload": MessageLookupByLibrary.simpleMessage("Upload"),
-        "upload_cv_resume":
-            MessageLookupByLibrary.simpleMessage("Upload your CV or resume"),
-        "uploaded_successfully":
-            MessageLookupByLibrary.simpleMessage("Uploaded Successfully"),
-        "uploading_csv":
-            MessageLookupByLibrary.simpleMessage("Uploading CSV File"),
-        "usage_term": MessageLookupByLibrary.simpleMessage("Usage term*"),
-        "use": MessageLookupByLibrary.simpleMessage("use"),
-        "user": m8,
-        "user_has": MessageLookupByLibrary.simpleMessage("User has"),
-        "user_name_not_availble":
-            MessageLookupByLibrary.simpleMessage("User name not available"),
-        "user_removal_success": MessageLookupByLibrary.simpleMessage(
-            "User is successfully removed from the Seva Community"),
-        "user_removed_from_group": MessageLookupByLibrary.simpleMessage(
-            "User is successfully removed from the group"),
-        "user_removed_from_group_failed": MessageLookupByLibrary.simpleMessage(
-            "User cannot be deleted from this group"),
-        "user_removed_from_timebank": MessageLookupByLibrary.simpleMessage(
-            "User is successfully removed from the seva community"),
-        "user_removed_from_timebank_failed":
-            MessageLookupByLibrary.simpleMessage(
-                "User cannot be deleted from this Seva Community"),
-        "users": MessageLookupByLibrary.simpleMessage("Users"),
-        "validation_error_add_project_location":
-            MessageLookupByLibrary.simpleMessage(
-                "Please add location to your event"),
-        "validation_error_bio_empty": MessageLookupByLibrary.simpleMessage(
-            "Its easy, please fill few words about you."),
-        "validation_error_bio_max_characters":
-            MessageLookupByLibrary.simpleMessage("* max 250 characters"),
-        "validation_error_bio_min_characters":
-            MessageLookupByLibrary.simpleMessage("*min 50 characters"),
-        "validation_error_class_size": MessageLookupByLibrary.simpleMessage(
-            "Please enter valid size of class"),
-        "validation_error_class_size_int": MessageLookupByLibrary.simpleMessage(
-            "Size of class can\'t be in decimal"),
-        "validation_error_cv_not_selected":
-            MessageLookupByLibrary.simpleMessage(
-                "Please select a CV / Resume file first before you upload"),
-        "validation_error_cv_size": MessageLookupByLibrary.simpleMessage(
-            "Note: The maximum size for the CV / Resume is 10 Mb"),
-        "validation_error_email_registered":
-            MessageLookupByLibrary.simpleMessage(
-                "This email already registered"),
-        "validation_error_empty_recurring_days":
-            MessageLookupByLibrary.simpleMessage(
-                "Recurring days cannot be empty"),
-        "validation_error_end_date_greater":
-            MessageLookupByLibrary.simpleMessage(
-                "End Date cannot be before Start Date "),
-        "validation_error_file_size": MessageLookupByLibrary.simpleMessage(
-            "Files larger than 10 MB are not allowed"),
-        "validation_error_full_name":
-            MessageLookupByLibrary.simpleMessage("Name cannot be empty"),
-        "validation_error_general_text":
-            MessageLookupByLibrary.simpleMessage("Please enter some text"),
-        "validation_error_hours_not_int": MessageLookupByLibrary.simpleMessage(
-            "Entered number of hours is not valid"),
-        "validation_error_invalid_email":
-            MessageLookupByLibrary.simpleMessage("Email is not valid"),
-        "validation_error_invalid_hours": MessageLookupByLibrary.simpleMessage(
-            "Please enter valid number of hours!"),
-        "validation_error_invalid_password":
-            MessageLookupByLibrary.simpleMessage(
-                "Password must be 6 characters long"),
-        "validation_error_join_code_expired":
-            MessageLookupByLibrary.simpleMessage("Code Expired!"),
-        "validation_error_location":
-            MessageLookupByLibrary.simpleMessage("Please select location"),
-        "validation_error_location_mandatory":
-            MessageLookupByLibrary.simpleMessage("Location is Mandatory"),
-        "validation_error_min_donation_count":
-            MessageLookupByLibrary.simpleMessage(
-                "Please enter the number of min donation needed"),
-        "validation_error_min_donation_count_negative":
-            MessageLookupByLibrary.simpleMessage(
-                "Please enter the number of min donation needed"),
-        "validation_error_min_donation_count_zero":
-            MessageLookupByLibrary.simpleMessage(
-                "Please enter the number of min donation needed"),
-        "validation_error_mission_empty": MessageLookupByLibrary.simpleMessage(
-            "Mission statement cannot be empty."),
-        "validation_error_no_date": MessageLookupByLibrary.simpleMessage(
-            "Please mention the start and end date."),
-        "validation_error_offer_class_hours":
-            MessageLookupByLibrary.simpleMessage(
-                "Please enter the hours required for the class"),
-        "validation_error_offer_credit": MessageLookupByLibrary.simpleMessage(
-            "We cannot publish this Class. There are insufficient credits from the class. Please revise the Prep time or the number of students and submit the offer again"),
-        "validation_error_offer_prep_hour":
-            MessageLookupByLibrary.simpleMessage(
-                "Please enter your preperation time"),
-        "validation_error_offer_title": MessageLookupByLibrary.simpleMessage(
-            "Please enter the subject of your offer"),
-        "validation_error_password_mismatch":
-            MessageLookupByLibrary.simpleMessage("Passwords do not match"),
-        "validation_error_project_name_empty":
-            MessageLookupByLibrary.simpleMessage("Event name cannot be empty"),
-        "validation_error_required_fields":
-            MessageLookupByLibrary.simpleMessage("Field cannot be left blank*"),
-        "validation_error_room_name":
-            MessageLookupByLibrary.simpleMessage("Name can\'t be empty"),
-        "validation_error_same_start_date_end_date":
-            MessageLookupByLibrary.simpleMessage(
-                "You have provided identical date and time for the Start and End. Please provide an End time that is after the Start time."),
-        "validation_error_search_min_characters":
-            MessageLookupByLibrary.simpleMessage(
-                "Search requires minimum 3 characters"),
-        "validation_error_target_donation_count":
-            MessageLookupByLibrary.simpleMessage(
-                "Please enter the number of target donation needed"),
-        "validation_error_target_donation_count_negative":
-            MessageLookupByLibrary.simpleMessage(
-                "Please enter the number of target donation needed"),
-        "validation_error_target_donation_count_zero":
-            MessageLookupByLibrary.simpleMessage(
-                "Please enter the number of target donation needed"),
-        "validation_error_task_minutes":
-            MessageLookupByLibrary.simpleMessage("Minutes cannot be Empty"),
-        "validation_error_template_name": MessageLookupByLibrary.simpleMessage(
-            "Template name cannot be empty"),
-        "validation_error_template_name_exists":
-            MessageLookupByLibrary.simpleMessage(
-                "Template name is already in use.\nPlease provide another name"),
-        "validation_error_timebank_join_code_redeemed":
-            MessageLookupByLibrary.simpleMessage(
-                "Seva Community code already redeemed"),
-        "validation_error_timebank_join_code_redeemed_self":
-            MessageLookupByLibrary.simpleMessage(
-                "The Seva Community code that you have provided has already been redeemed earlier by you. Please request the Seva Community admin for a new code."),
-        "validation_error_volunteer_count":
-            MessageLookupByLibrary.simpleMessage(
-                "Please enter the number of volunteers needed"),
-        "validation_error_volunteer_count_negative":
-            MessageLookupByLibrary.simpleMessage(
-                "No. of volunteers cannot be lesser than 0"),
-        "validation_error_volunteer_count_zero":
-            MessageLookupByLibrary.simpleMessage(
-                "No. of volunteers cannot be 0"),
-        "validation_error_wrong_timebank_code":
-            MessageLookupByLibrary.simpleMessage(
-                "code was not registered, please check the code and try again!"),
-        "venmo_hint": MessageLookupByLibrary.simpleMessage(
-            "Ex: Provide your Venmo username"),
-        "verification_sent":
-            MessageLookupByLibrary.simpleMessage("Verification email sent"),
-        "verification_sent_desc": MessageLookupByLibrary.simpleMessage(
-            "Verification email was sent to your registered email"),
-        "verify_account":
-            MessageLookupByLibrary.simpleMessage(" to verify\nyour account"),
-        "view": MessageLookupByLibrary.simpleMessage("view"),
-        "view_approved_members":
-            MessageLookupByLibrary.simpleMessage("View Approved Members"),
-        "view_more_comments":
-            MessageLookupByLibrary.simpleMessage("View more comments"),
-        "view_prev_replies":
-            MessageLookupByLibrary.simpleMessage("View Previous Replies"),
-        "view_profile": MessageLookupByLibrary.simpleMessage("View profile"),
-        "view_requests": MessageLookupByLibrary.simpleMessage("View requests"),
-        "view_selected_plans":
-            MessageLookupByLibrary.simpleMessage("View selected plans"),
-        "virtual": MessageLookupByLibrary.simpleMessage("Virtual"),
-        "virtual_requests":
-            MessageLookupByLibrary.simpleMessage("Virtual requests"),
-        "volunteers": MessageLookupByLibrary.simpleMessage("Volunteer(s)"),
-        "volunteers_selected": m9,
-        "waiting_acknowledgement":
-            MessageLookupByLibrary.simpleMessage("Waiting acknowledgement"),
-        "we_met": MessageLookupByLibrary.simpleMessage("We met before"),
-        "what_is_community":
-            MessageLookupByLibrary.simpleMessage("What is a Seva Community"),
-        "what_is_restricted_seva_community":
-            MessageLookupByLibrary.simpleMessage(
-                "What is a Restricted Seva Community? "),
-        "who_can_see_feed":
-            MessageLookupByLibrary.simpleMessage("Who can see your Feed?"),
-        "will_added_to_donors": MessageLookupByLibrary.simpleMessage(
-            "will be added to donors list."),
-        "will_be_added_to_request": MessageLookupByLibrary.simpleMessage(
-            "will be added to the request."),
-        "withdraw": MessageLookupByLibrary.simpleMessage("Withdraw"),
-        "withdraw_request_failure": MessageLookupByLibrary.simpleMessage(
-            "You cannot withdraw request since already approved"),
-        "would_be_unblocked":
-            MessageLookupByLibrary.simpleMessage(" would be unblocked"),
-        "would_like_to_accept_offer": MessageLookupByLibrary.simpleMessage(
-            "Would you like to accept offer?"),
-        "would_like_to_donate": MessageLookupByLibrary.simpleMessage(
-            "Would you like to make a donation for this request?"),
-        "year": m10,
-        "year_to_date": MessageLookupByLibrary.simpleMessage("Year to date"),
-        "yes": MessageLookupByLibrary.simpleMessage("Yes"),
-        "you_already_created_test_community":
-            MessageLookupByLibrary.simpleMessage(
-                "You already created a test community."),
-        "you_are_on_enterprise_plan":
-            MessageLookupByLibrary.simpleMessage("You are on Enterprise Plan"),
-        "you_are_the_speaker":
-            MessageLookupByLibrary.simpleMessage("You are the speaker for: "),
-        "you_created_offer":
-            MessageLookupByLibrary.simpleMessage("You created this offer"),
-        "you_created_sandbox_community": MessageLookupByLibrary.simpleMessage(
-            "You already created a sandbox community."),
-        "you_entered": MessageLookupByLibrary.simpleMessage("You entered"),
-        "you_have": MessageLookupByLibrary.simpleMessage("You have"),
-        "you_will_go_ahead_with_them_for_request":
-            MessageLookupByLibrary.simpleMessage(
-                " you will go ahead with them for the request."),
-        "your_community_on_the":
-            MessageLookupByLibrary.simpleMessage("Your community is on the"),
-        "your_details": MessageLookupByLibrary.simpleMessage("Your details"),
-        "your_earnings": MessageLookupByLibrary.simpleMessage("Your earnings"),
-        "your_email":
-            MessageLookupByLibrary.simpleMessage("Your email address"),
-        "your_groups": MessageLookupByLibrary.simpleMessage("Your Groups"),
-        "your_interests":
-            MessageLookupByLibrary.simpleMessage("Your Interests"),
-        "your_skills": MessageLookupByLibrary.simpleMessage("Your Skills"),
-        "your_tasks": MessageLookupByLibrary.simpleMessage("Your Tasks"),
-        "zero_credit_donation_error":
-            MessageLookupByLibrary.simpleMessage("You cannot donate 0 credits"),
-        "zero_one": MessageLookupByLibrary.simpleMessage("0/1"),
-        "zip": MessageLookupByLibrary.simpleMessage("ZIP Code")
-      };
+  static _notInlinedMessages(_) => <String, Function> {
+    "Login" : MessageLookupByLibrary.simpleMessage("Login"),
+    "Register" : MessageLookupByLibrary.simpleMessage("Register"),
+    "Suggested" : MessageLookupByLibrary.simpleMessage("Suggested"),
+    "about" : MessageLookupByLibrary.simpleMessage("About"),
+    "accept" : MessageLookupByLibrary.simpleMessage("Accept"),
+    "accept_modified_amount_finalized" : MessageLookupByLibrary.simpleMessage("By Accepting this amount will be finalized"),
+    "accept_offer" : MessageLookupByLibrary.simpleMessage("Accept Offer"),
+    "accept_offer_invitation_confirmation" : MessageLookupByLibrary.simpleMessage("This task will be added to your Pending Tasks, after you approve it."),
+    "accepted" : MessageLookupByLibrary.simpleMessage("Accepted"),
+    "accepted_offer" : MessageLookupByLibrary.simpleMessage("Accepted Offer"),
+    "accepted_offer_msg" : MessageLookupByLibrary.simpleMessage("You have accepted this offer."),
+    "accepted_this_request" : MessageLookupByLibrary.simpleMessage("You have accepted this request."),
+    "access_denied" : MessageLookupByLibrary.simpleMessage("Access denied."),
+    "access_not_available" : MessageLookupByLibrary.simpleMessage("Access not available"),
+    "accidental_delete_enabled" : MessageLookupByLibrary.simpleMessage("Accidental Deletion enabled"),
+    "accidental_delete_enabled_description" : MessageLookupByLibrary.simpleMessage("This ** has \"Prevent Accidental Delete\" enabled. Please uncheck that box (in the \"Manage\" tab) before attempting to delete the **."),
+    "account_information" : MessageLookupByLibrary.simpleMessage("Account Information"),
+    "account_no" : MessageLookupByLibrary.simpleMessage("Account Number"),
+    "ack" : MessageLookupByLibrary.simpleMessage("Ack"),
+    "acknowledge" : MessageLookupByLibrary.simpleMessage("Acknowledge"),
+    "acknowledge_desc_donor_one" : MessageLookupByLibrary.simpleMessage("Note: Please be sure that the amount you transfer to"),
+    "acknowledge_desc_donor_two" : MessageLookupByLibrary.simpleMessage("matches the amount pledged above (subject to any transaction fee)"),
+    "acknowledge_desc_one" : MessageLookupByLibrary.simpleMessage("Note: Please check the amount that you have received from"),
+    "acknowledge_desc_two" : MessageLookupByLibrary.simpleMessage("This may be more or less than the pledged amount. If there is a discrepancy in the amount, please message the member."),
+    "acknowledge_donated" : MessageLookupByLibrary.simpleMessage("I acknowledge that i have donated below"),
+    "acknowledge_received" : MessageLookupByLibrary.simpleMessage("I acknowledge that i have received below"),
+    "acknowledged" : MessageLookupByLibrary.simpleMessage("Acknowledged"),
+    "action_not_permitted" : MessageLookupByLibrary.simpleMessage("Action not permitted"),
+    "action_restricted_by_owner" : MessageLookupByLibrary.simpleMessage("This action is Restricted for you by the owner of the seva Community."),
+    "actions_not_allowed" : MessageLookupByLibrary.simpleMessage("Actions not allowed, Please contact admin"),
+    "active" : MessageLookupByLibrary.simpleMessage("Active"),
+    "add" : MessageLookupByLibrary.simpleMessage("Add"),
+    "add_amount_donate" : MessageLookupByLibrary.simpleMessage("Tell us the maximum amount you are willing to donate towards your community."),
+    "add_amount_donate_empty" : MessageLookupByLibrary.simpleMessage("Amount cannot be empty"),
+    "add_amount_donated" : MessageLookupByLibrary.simpleMessage("Add the amount you have pledged to donate"),
+    "add_as_admin" : MessageLookupByLibrary.simpleMessage("Add as Admin"),
+    "add_attachment" : MessageLookupByLibrary.simpleMessage("Add Image / Document"),
+    "add_bio" : MessageLookupByLibrary.simpleMessage("Add your bio"),
+    "add_caption" : MessageLookupByLibrary.simpleMessage("Add a caption"),
+    "add_comment" : MessageLookupByLibrary.simpleMessage("Add a comment..."),
+    "add_cover_picture" : MessageLookupByLibrary.simpleMessage("Add Cover Picture"),
+    "add_document" : MessageLookupByLibrary.simpleMessage("Add document"),
+    "add_event_to_calender" : MessageLookupByLibrary.simpleMessage("Add event to calender"),
+    "add_goods_donate_empty" : MessageLookupByLibrary.simpleMessage("Please select atleast one goods to offer."),
+    "add_image" : MessageLookupByLibrary.simpleMessage("Add image"),
+    "add_image_url" : MessageLookupByLibrary.simpleMessage("Add Image Url"),
+    "add_location" : MessageLookupByLibrary.simpleMessage("Add Location"),
+    "add_manual_time" : MessageLookupByLibrary.simpleMessage("Add Manual Time"),
+    "add_members" : MessageLookupByLibrary.simpleMessage("Add Members"),
+    "add_new" : MessageLookupByLibrary.simpleMessage("Add New Card"),
+    "add_new_card" : MessageLookupByLibrary.simpleMessage("Add New Card"),
+    "add_new_feed" : MessageLookupByLibrary.simpleMessage("Start adding the first feed"),
+    "add_new_request_category" : MessageLookupByLibrary.simpleMessage("Add new request subcategory"),
+    "add_new_subcategory" : MessageLookupByLibrary.simpleMessage("Add new subcategory"),
+    "add_new_subcategory_hint" : MessageLookupByLibrary.simpleMessage("Subcategory title"),
+    "add_participants" : MessageLookupByLibrary.simpleMessage("Add Participants"),
+    "add_photo" : MessageLookupByLibrary.simpleMessage("Add Photo"),
+    "add_photo_hint" : MessageLookupByLibrary.simpleMessage("Do you want to add profile pic?"),
+    "add_requests" : MessageLookupByLibrary.simpleMessage("Add Requests"),
+    "add_sponsor_image" : MessageLookupByLibrary.simpleMessage("Add Sponsor image"),
+    "add_to_calender" : MessageLookupByLibrary.simpleMessage("Add to calender"),
+    "add_to_existing_reqest" : MessageLookupByLibrary.simpleMessage("Add to Existing Request"),
+    "add_to_google_calender" : MessageLookupByLibrary.simpleMessage("Add to Google Calendar"),
+    "add_to_ical" : MessageLookupByLibrary.simpleMessage("Add to ical"),
+    "add_to_outlook" : MessageLookupByLibrary.simpleMessage("Add to Outlook"),
+    "add_to_request" : MessageLookupByLibrary.simpleMessage("Add To Request?"),
+    "added_to_messaging_room" : MessageLookupByLibrary.simpleMessage("Since you are volunteering for this event, you\'ve been added to the messaging room. You may leave this room at any time"),
+    "additional" : MessageLookupByLibrary.simpleMessage("Additional"),
+    "additional_billable_transactions" : MessageLookupByLibrary.simpleMessage("Additional Billable Transactions"),
+    "additional_notes" : MessageLookupByLibrary.simpleMessage("Additional Notes"),
+    "address_header" : MessageLookupByLibrary.simpleMessage("Bill to Address"),
+    "admin" : MessageLookupByLibrary.simpleMessage("Admin"),
+    "adminNotificationInsufficientCredits" : MessageLookupByLibrary.simpleMessage(" Has Insufficient Credits To Create Requests"),
+    "adminNotificationInsufficientCreditsNeeded" : MessageLookupByLibrary.simpleMessage("Credits Needed: "),
+    "admin_cannot_create_message" : MessageLookupByLibrary.simpleMessage("Admin(s) cannot create message"),
+    "admin_msg" : MessageLookupByLibrary.simpleMessage("Admin Messages"),
+    "admin_not_available" : MessageLookupByLibrary.simpleMessage("Admin not Available"),
+    "admin_promoted_to_owner" : MessageLookupByLibrary.simpleMessage("creator_name the creator of Community community_name has made you a Super Admin for this Community. This means that you will receive notifications for approvals within the community and you can create Community Requests, among other things"),
+    "admin_tools" : MessageLookupByLibrary.simpleMessage("Admin Tools"),
+    "admins" : MessageLookupByLibrary.simpleMessage("Admin(s)"),
+    "admins_organizers" : MessageLookupByLibrary.simpleMessage("Admin(s) & Super Admin(s)"),
+    "advisory_for_projects" : MessageLookupByLibrary.simpleMessage("All events associated to this request would be removed"),
+    "advisory_for_timebank" : MessageLookupByLibrary.simpleMessage("All relevant information including events, requests and offers under the group will be deleted!"),
+    "after" : MessageLookupByLibrary.simpleMessage("After"),
+    "agreement" : MessageLookupByLibrary.simpleMessage("Agreement"),
+    "alert" : MessageLookupByLibrary.simpleMessage("Alert"),
+    "alert_before_exit" : MessageLookupByLibrary.simpleMessage("Please confirm that you want to cancel editing. You will lose all changes if you confirm."),
+    "allow" : MessageLookupByLibrary.simpleMessage("Allow"),
+    "already_added" : MessageLookupByLibrary.simpleMessage("already added to this request"),
+    "already_approved" : MessageLookupByLibrary.simpleMessage("Already Approved"),
+    "already_default_card" : MessageLookupByLibrary.simpleMessage("This card is already added as default card"),
+    "already_exists" : MessageLookupByLibrary.simpleMessage("Already exists"),
+    "already_reported" : MessageLookupByLibrary.simpleMessage("Already reported!"),
+    "amount" : MessageLookupByLibrary.simpleMessage("Amount"),
+    "amount_donated" : MessageLookupByLibrary.simpleMessage("Amount Donated?"),
+    "amount_lessthan_donation_amount" : MessageLookupByLibrary.simpleMessage("Entered amount is less than minimum donation amount."),
+    "amount_modified_by_creator_desc" : MessageLookupByLibrary.simpleMessage("The amount that you pledged for this donation is different from the amount acknowledged by the creator. Tap to change your pledge amount."),
+    "amount_modified_by_donor_desc" : MessageLookupByLibrary.simpleMessage("The amount which you acknowledged for this donation is different from the amount confirmed by the Donor. Tap to change the confirmation amount."),
+    "amount_pledged" : MessageLookupByLibrary.simpleMessage("Amount pledged"),
+    "amount_received_from" : MessageLookupByLibrary.simpleMessage("Amount received from"),
+    "and" : MessageLookupByLibrary.simpleMessage(" and"),
+    "and_complete_task" : MessageLookupByLibrary.simpleMessage("and complete the task"),
+    "and_others" : MessageLookupByLibrary.simpleMessage("and Others"),
+    "annual" : MessageLookupByLibrary.simpleMessage("Annual"),
+    "anonymous" : MessageLookupByLibrary.simpleMessage("Anonymous"),
+    "anonymous_user" : MessageLookupByLibrary.simpleMessage("Anonymous user"),
+    "any_category" : MessageLookupByLibrary.simpleMessage("any category"),
+    "any_specific_conditions" : MessageLookupByLibrary.simpleMessage("Any specific condition(s)"),
+    "anywhere" : MessageLookupByLibrary.simpleMessage("Anywhere"),
+    "applied" : MessageLookupByLibrary.simpleMessage("applied"),
+    "applied_for_request" : MessageLookupByLibrary.simpleMessage("You have accepetd the request"),
+    "apply" : MessageLookupByLibrary.simpleMessage("Apply"),
+    "approve" : MessageLookupByLibrary.simpleMessage("Approve"),
+    "approve_borrow_alert_msg1" : MessageLookupByLibrary.simpleMessage("Please enter the dos and donts"),
+    "approve_borrow_hint_text1" : MessageLookupByLibrary.simpleMessage("Tell your borrower do and donts"),
+    "approve_borrow_no_agreement_selected" : MessageLookupByLibrary.simpleMessage("No Agreement Selected"),
+    "approve_borrow_request" : MessageLookupByLibrary.simpleMessage("Approve Room Borrow Request"),
+    "approve_borrow_terms_acknowledgement_text1" : MessageLookupByLibrary.simpleMessage("I acknowledge that you can use the room on the mentioned dates."),
+    "approve_borrow_terms_acknowledgement_text2" : MessageLookupByLibrary.simpleMessage("I acknowledge that you can use the item on the mentioned dates."),
+    "approve_borrow_terms_acknowledgement_text3" : MessageLookupByLibrary.simpleMessage("Note: Please instruct on how to reach the location and do and dont accordingly."),
+    "approve_borrow_terms_acknowledgement_text4" : MessageLookupByLibrary.simpleMessage("Note: Please create an agreement if you have specific instructions and/or requirements."),
+    "approve_item_borrow" : MessageLookupByLibrary.simpleMessage("Approve Item Borrow request"),
+    "approved" : MessageLookupByLibrary.simpleMessage("Approved"),
+    "approved_member" : MessageLookupByLibrary.simpleMessage("Approved Members"),
+    "are_you_sure" : MessageLookupByLibrary.simpleMessage("Are you sure want to"),
+    "are_you_sure_subs_cancel" : MessageLookupByLibrary.simpleMessage("Are you sure you want to cancel your subscription ?"),
+    "assign_to_one_project" : MessageLookupByLibrary.simpleMessage("Please assign to one event"),
+    "assign_to_project" : MessageLookupByLibrary.simpleMessage("Assign to an event"),
+    "assign_to_volunteers" : MessageLookupByLibrary.simpleMessage("Assign to volunteers"),
+    "attachment" : MessageLookupByLibrary.simpleMessage("Attachment"),
+    "attend" : MessageLookupByLibrary.simpleMessage("Attend"),
+    "attended_by" : MessageLookupByLibrary.simpleMessage("Attended by"),
+    "attending" : MessageLookupByLibrary.simpleMessage("Attending"),
+    "available_as_needed" : MessageLookupByLibrary.simpleMessage("Available as needed - Open to Offers"),
+    "availablity" : MessageLookupByLibrary.simpleMessage("Availability"),
+    "availablity_description" : MessageLookupByLibrary.simpleMessage("Tell us the days or times you are generally available or not available. Example, I\'m available only on weekends or weeknights after 6pm."),
+    "awesome" : MessageLookupByLibrary.simpleMessage("Awesome!"),
+    "back" : MessageLookupByLibrary.simpleMessage("Back"),
+    "bank_address" : MessageLookupByLibrary.simpleMessage("Bank Address"),
+    "bank_name" : MessageLookupByLibrary.simpleMessage("Bank Name"),
+    "bill_me" : MessageLookupByLibrary.simpleMessage("Bill Me"),
+    "bill_me_info1" : MessageLookupByLibrary.simpleMessage("This is available only to users who have prior arrangements with Seva Exchange. Please send an email to billme@sevaexchange.com for details"),
+    "bill_me_info2" : MessageLookupByLibrary.simpleMessage("Only users who have been approved a priori can check the “Bill Me” box. If you would like to do this, please send an email to billme@sevaexchange.com"),
+    "billable_transactions" : MessageLookupByLibrary.simpleMessage("Billable transactions"),
+    "billing" : MessageLookupByLibrary.simpleMessage("Billing"),
+    "billing_stmt" : MessageLookupByLibrary.simpleMessage("Billing Statement"),
+    "billing_stmt_date" : MessageLookupByLibrary.simpleMessage("Statement Date"),
+    "billing_stmt_no" : MessageLookupByLibrary.simpleMessage("Statement Number"),
+    "bio" : MessageLookupByLibrary.simpleMessage("Bio"),
+    "bio_description" : MessageLookupByLibrary.simpleMessage("Please tell us a little bit about yourself in a few sentences.For example, you can tell us what makes you unique."),
+    "bio_hint" : MessageLookupByLibrary.simpleMessage("Ex: What makes me unique is"),
+    "bio_not_updated" : MessageLookupByLibrary.simpleMessage("Bio not yet updated"),
+    "bit_more_about_group" : MessageLookupByLibrary.simpleMessage("Ex: A bit more about your group"),
+    "block" : MessageLookupByLibrary.simpleMessage("Block"),
+    "blocked_members" : MessageLookupByLibrary.simpleMessage("Blocked Members"),
+    "bookmark" : MessageLookupByLibrary.simpleMessage("Bookmark"),
+    "bookmarked" : MessageLookupByLibrary.simpleMessage("bookmarked"),
+    "bookmarked_offers" : MessageLookupByLibrary.simpleMessage("Bookmarked Offers"),
+    "borrow" : MessageLookupByLibrary.simpleMessage("Borrow"),
+    "borrow_request_for_item" : MessageLookupByLibrary.simpleMessage("Borrow Request for item"),
+    "borrow_request_for_place" : MessageLookupByLibrary.simpleMessage("Borrow request for place"),
+    "bottom_nav_explore" : MessageLookupByLibrary.simpleMessage("Explore"),
+    "bottom_nav_home" : MessageLookupByLibrary.simpleMessage("Home"),
+    "bottom_nav_messages" : MessageLookupByLibrary.simpleMessage("Messages"),
+    "bottom_nav_notifications" : MessageLookupByLibrary.simpleMessage("Notifications"),
+    "bottom_nav_profile" : MessageLookupByLibrary.simpleMessage("Profile"),
+    "browse_by_category" : MessageLookupByLibrary.simpleMessage("Browse community by category"),
+    "browse_requests_by_category" : MessageLookupByLibrary.simpleMessage("Browse requests by category"),
+    "browser_support_info" : MessageLookupByLibrary.simpleMessage("This browser is currently not supported in the current release. We recommend using Google Chrome for now to optimize your experience. Thank you for your patience."),
+    "bulk_invite_users_csv" : MessageLookupByLibrary.simpleMessage("Bulk invite users using a CSV file"),
+    "bundlePricingInfoButton" : MessageLookupByLibrary.simpleMessage("There is a limit to the number of transactions in the free tier. You will be charged \$2 for a bundle of 50 transactions."),
+    "by_accepting" : MessageLookupByLibrary.simpleMessage("By accepting,"),
+    "by_accepting_group_join" : MessageLookupByLibrary.simpleMessage("By accepting, you will be added to"),
+    "by_accepting_owner_timebank" : MessageLookupByLibrary.simpleMessage("You have been designated the new owner of the ________ Seva Community. In order to complete the process, please select the Accept button to continue to the confirmation process."),
+    "by_approving_you_accept" : MessageLookupByLibrary.simpleMessage("By approving, you accept that"),
+    "by_selecting_this_you_will_be_creating_a_Sandbox_Community" : MessageLookupByLibrary.simpleMessage("By selecting this you will be creating a Sandbox Community"),
+    "calendars_popup_desc" : MessageLookupByLibrary.simpleMessage("You can sync the calendar for SevaX events with your Google, Outlook or iCal calendars. Select the appropriate icon to sync the calendar."),
+    "calender_sync" : MessageLookupByLibrary.simpleMessage("calendar_sync"),
+    "camera" : MessageLookupByLibrary.simpleMessage("Camera"),
+    "camera_not_available" : MessageLookupByLibrary.simpleMessage("Camera not available"),
+    "cancel" : MessageLookupByLibrary.simpleMessage("Cancel"),
+    "cancel_editing_confirmation" : MessageLookupByLibrary.simpleMessage("Please confirm that you want to cancel editing. You will lose all changes if you confirm."),
+    "cancel_offer" : MessageLookupByLibrary.simpleMessage("Cancel Offer"),
+    "cancel_offer_confirmation" : MessageLookupByLibrary.simpleMessage("Are you sure you want to cancel the offer?"),
+    "cancel_plan" : MessageLookupByLibrary.simpleMessage("Cancel Plan"),
+    "cancel_subscription" : MessageLookupByLibrary.simpleMessage("Cancel Subscription"),
+    "cancel_subscription_success_label" : MessageLookupByLibrary.simpleMessage("Your subscription is now cancelled. Until beginning at the conclusion of the current subscription period, your credit card will not be charged and transactions can be made until free limit of the current plan is reached."),
+    "cancellation_failure_message" : MessageLookupByLibrary.simpleMessage("We have received a request to cancel your subscription. While we are sorry to see you go, there are unpaid dues at this time. Please clear these dues and then attempt the cancelation again"),
+    "cancellation_success_message" : MessageLookupByLibrary.simpleMessage("We are sorry to see you go. Your subscription is now canceled. Beginning at the conclusion of the current subscription period, your credit card will not be charged"),
+    "cancelled_subscription" : MessageLookupByLibrary.simpleMessage("Canceled subscription"),
+    "cannot_be_deleted" : MessageLookupByLibrary.simpleMessage("cannot be deleted"),
+    "cannot_be_deleted_desc" : MessageLookupByLibrary.simpleMessage("Your request to delete **requestData.entityTitle cannot be completed at this time. There are pending transactions. Tap here to view the details."),
+    "cannot_create_project" : MessageLookupByLibrary.simpleMessage("Events can only be created by an admin. If you wish to create an event, please send a message to your admin."),
+    "cant_exit_group" : MessageLookupByLibrary.simpleMessage("You cannot exit from this group"),
+    "cant_exit_timebank" : MessageLookupByLibrary.simpleMessage("cannot exit from this seva community"),
+    "cant_perfrom_action_offer" : MessageLookupByLibrary.simpleMessage("You can\'t perform action before the offer ends."),
+    "card_added" : MessageLookupByLibrary.simpleMessage("Card Added"),
+    "card_details" : MessageLookupByLibrary.simpleMessage("CARD DETAILS"),
+    "card_ending_with" : MessageLookupByLibrary.simpleMessage("Card ending with"),
+    "card_holder" : MessageLookupByLibrary.simpleMessage("Card Holder"),
+    "card_number" : MessageLookupByLibrary.simpleMessage("Card Number"),
+    "card_sync" : MessageLookupByLibrary.simpleMessage("It may take couple of minutes to synchronize your payment"),
+    "careers" : MessageLookupByLibrary.simpleMessage("Careers"),
+    "careers_explore" : MessageLookupByLibrary.simpleMessage("Careers"),
+    "cash" : MessageLookupByLibrary.simpleMessage("Money"),
+    "cash_donation_invite" : MessageLookupByLibrary.simpleMessage("has a request for money donation. Tap to donate any amount that you can"),
+    "cash_offer" : MessageLookupByLibrary.simpleMessage("Money Offer"),
+    "cash_offer_desc_hint" : MessageLookupByLibrary.simpleMessage("Describe in detail what you are willing to offer. Please use #hashtags so members can easily search for this offer, such as #fundraiser #community"),
+    "cash_offer_title_hint" : MessageLookupByLibrary.simpleMessage("Ex: \$50 for community center"),
+    "cash_request" : MessageLookupByLibrary.simpleMessage("Money Request"),
+    "cash_request_data_hint_text" : MessageLookupByLibrary.simpleMessage("Ex: Fundraiser to expand women’s shelter..."),
+    "cash_request_title_hint" : MessageLookupByLibrary.simpleMessage("Ex: Fundraiser for women’s shelter..."),
+    "category" : MessageLookupByLibrary.simpleMessage("Category"),
+    "change" : MessageLookupByLibrary.simpleMessage("Change"),
+    "change_attachment" : MessageLookupByLibrary.simpleMessage("Change Attachment"),
+    "change_document" : MessageLookupByLibrary.simpleMessage("Change document"),
+    "change_image" : MessageLookupByLibrary.simpleMessage("Change image"),
+    "change_ownership" : MessageLookupByLibrary.simpleMessage("Change Ownership"),
+    "change_ownership_advisory" : MessageLookupByLibrary.simpleMessage(" You are required to provide billing details for this Seva Community - including the new billing address. The transfer of ownership will not be completed until this is done."),
+    "change_ownership_already_invited" : MessageLookupByLibrary.simpleMessage(" already invited."),
+    "change_ownership_invite" : MessageLookupByLibrary.simpleMessage("has invited you to be the new owner of the"),
+    "change_ownership_message1" : MessageLookupByLibrary.simpleMessage("You are the new owner of"),
+    "change_ownership_message2" : MessageLookupByLibrary.simpleMessage(" You need to accept it to complete the process"),
+    "change_ownership_pending_payment1" : MessageLookupByLibrary.simpleMessage("You have payment pending of "),
+    "change_ownership_pending_payment2" : MessageLookupByLibrary.simpleMessage(". Please complete these payment before ownership can be transferred"),
+    "change_ownership_pending_task_message" : MessageLookupByLibrary.simpleMessage("You have pending tasks. Please complete tasks before ownership can be transferred"),
+    "change_password" : MessageLookupByLibrary.simpleMessage("Change password"),
+    "change_plan" : MessageLookupByLibrary.simpleMessage("change plan"),
+    "change_plan_confirm" : MessageLookupByLibrary.simpleMessage("Change plan confirmation"),
+    "change_pricing_options" : MessageLookupByLibrary.simpleMessage("Change Pricing Options"),
+    "change_to" : MessageLookupByLibrary.simpleMessage("Change to"),
+    "changing_ownership_of" : MessageLookupByLibrary.simpleMessage("Changing ownership"),
+    "changing_plan" : MessageLookupByLibrary.simpleMessage("Changing plan"),
+    "charges_of" : MessageLookupByLibrary.simpleMessage("yearly and additional charges of"),
+    "chat_block_warning" : MessageLookupByLibrary.simpleMessage("will no longer be available to send you messages and engage with the content you create"),
+    "check_email" : MessageLookupByLibrary.simpleMessage("Now check your email."),
+    "check_internet" : MessageLookupByLibrary.simpleMessage("Please check your internet connection."),
+    "check_met" : MessageLookupByLibrary.simpleMessage("Checking, if we met before"),
+    "choose" : MessageLookupByLibrary.simpleMessage("Choose"),
+    "choose_bundle_pricing" : MessageLookupByLibrary.simpleMessage("Choose bundle pricing"),
+    "choose_category" : MessageLookupByLibrary.simpleMessage("Choose Category and Sub Category"),
+    "choose_csv" : MessageLookupByLibrary.simpleMessage("Please upload only CSV file with users full name and email address"),
+    "choose_document" : MessageLookupByLibrary.simpleMessage(" Choose Document"),
+    "choose_image" : MessageLookupByLibrary.simpleMessage("Choose Image"),
+    "choose_pdf_file" : MessageLookupByLibrary.simpleMessage("Choose pdf file"),
+    "choose_plan" : MessageLookupByLibrary.simpleMessage("Choose Plan"),
+    "choose_previous_agreement" : MessageLookupByLibrary.simpleMessage("Choose previous agreement"),
+    "choose_skills_for_request" : MessageLookupByLibrary.simpleMessage("Choose skills for request"),
+    "choose_suitable_plan" : MessageLookupByLibrary.simpleMessage("Choose a suitable plan"),
+    "city" : MessageLookupByLibrary.simpleMessage("City"),
+    "claimed_successfully" : MessageLookupByLibrary.simpleMessage("Claimed Successfully"),
+    "clear" : MessageLookupByLibrary.simpleMessage("Clear"),
+    "clear_all" : MessageLookupByLibrary.simpleMessage("Clear All"),
+    "clear_dues" : MessageLookupByLibrary.simpleMessage("Please clear your dues and try again !"),
+    "clear_notications" : MessageLookupByLibrary.simpleMessage("Are you sure you want to clear all notifications?"),
+    "clear_transaction" : MessageLookupByLibrary.simpleMessage("Please clear the transactions and try again."),
+    "click_button_below_to_review" : MessageLookupByLibrary.simpleMessage("Click button below to review"),
+    "click_for_more_info" : MessageLookupByLibrary.simpleMessage("Click here for more info"),
+    "click_to_see_interests" : MessageLookupByLibrary.simpleMessage("Click here to see your interests"),
+    "click_to_see_skills" : MessageLookupByLibrary.simpleMessage("Click here to see your skills"),
+    "click_to_view_request_agreement" : MessageLookupByLibrary.simpleMessage("Click to view request agreement"),
+    "close" : MessageLookupByLibrary.simpleMessage("Close"),
+    "co_ordinators" : MessageLookupByLibrary.simpleMessage("Coordinators"),
+    "code_expired" : MessageLookupByLibrary.simpleMessage("Code Expired!"),
+    "code_generated" : MessageLookupByLibrary.simpleMessage("Code generated"),
+    "code_not_found" : MessageLookupByLibrary.simpleMessage("Code not found"),
+    "coming_soon" : MessageLookupByLibrary.simpleMessage("Coming Soon"),
+    "comments" : MessageLookupByLibrary.simpleMessage("Comments"),
+    "communities" : MessageLookupByLibrary.simpleMessage("Communities"),
+    "communities_explore" : MessageLookupByLibrary.simpleMessage("Communities"),
+    "community" : MessageLookupByLibrary.simpleMessage("community"),
+    "community_chat" : MessageLookupByLibrary.simpleMessage("Child Messaging Rooms"),
+    "community_name_unavailable" : MessageLookupByLibrary.simpleMessage("COMMUNITY NAME UNAVAILABLE"),
+    "company" : MessageLookupByLibrary.simpleMessage("Company"),
+    "company_name" : MessageLookupByLibrary.simpleMessage("Company Name"),
+    "completed" : MessageLookupByLibrary.simpleMessage("Completed"),
+    "completed_one_to_many_offer_attende_subtitle" : MessageLookupByLibrary.simpleMessage("This one to many offer has completed."),
+    "completed_one_to_many_offer_attende_title" : MessageLookupByLibrary.simpleMessage("This one to many offer has completed."),
+    "completed_one_to_many_offer_speaker_subtitle" : MessageLookupByLibrary.simpleMessage("This one to many offer has completed."),
+    "completed_one_to_many_offer_speaker_title" : MessageLookupByLibrary.simpleMessage("This one to many offer has completed."),
+    "completed_one_to_many_request_attende_subtitle" : MessageLookupByLibrary.simpleMessage("This one to many offer has completed."),
+    "completed_one_to_many_request_attende_title" : MessageLookupByLibrary.simpleMessage("This one to many offer has completed."),
+    "completed_one_to_many_request_speaker_subtitle" : MessageLookupByLibrary.simpleMessage("This one to many offer has completed."),
+    "completed_one_to_many_request_speaker_title" : MessageLookupByLibrary.simpleMessage("This one to many offer has completed."),
+    "completed_task_in" : MessageLookupByLibrary.simpleMessage("completed the task in"),
+    "completed_tasks" : MessageLookupByLibrary.simpleMessage("Completed Tasks"),
+    "completed_the_request" : MessageLookupByLibrary.simpleMessage(" Completed the request"),
+    "completing_task" : MessageLookupByLibrary.simpleMessage("Completing task"),
+    "compose_new_msg" : MessageLookupByLibrary.simpleMessage("Compose new message"),
+    "computer" : MessageLookupByLibrary.simpleMessage("Computer"),
+    "configure_billing" : MessageLookupByLibrary.simpleMessage("Configure Billing"),
+    "confirm" : MessageLookupByLibrary.simpleMessage("Confirm"),
+    "confirm_location" : MessageLookupByLibrary.simpleMessage("CONFIRM LOCATION"),
+    "congrats" : MessageLookupByLibrary.simpleMessage("Congrats"),
+    "contact_community_creator" : MessageLookupByLibrary.simpleMessage("This is currently not permitted. Please contact the Community Creator for more information."),
+    "contact_for_enterprise_price" : MessageLookupByLibrary.simpleMessage("To get a price estimate for Enterprise (SMB or large Enterprise), please contact our Sevax team."),
+    "contact_for_nonprofitt_price" : MessageLookupByLibrary.simpleMessage("To get a price estimate for non-profit, please contact our Sevax team."),
+    "contact_seva_team" : MessageLookupByLibrary.simpleMessage("Please contact Sevax support for downgrading your plan"),
+    "contact_seva_to_change_plan" : MessageLookupByLibrary.simpleMessage("Please contact SevaX support to change the plans"),
+    "continue_text" : MessageLookupByLibrary.simpleMessage("Continue"),
+    "continue_to_signin" : MessageLookupByLibrary.simpleMessage("Continue to Sign in"),
+    "copied_community_code" : MessageLookupByLibrary.simpleMessage("Copied Community Code"),
+    "copied_to_clipboard" : MessageLookupByLibrary.simpleMessage("Copied to Clipboard"),
+    "copy_and_share_code" : MessageLookupByLibrary.simpleMessage("Code Generated: Copy the code and share to your friends"),
+    "copy_code" : MessageLookupByLibrary.simpleMessage("Copy Code"),
+    "copy_community_code" : MessageLookupByLibrary.simpleMessage("Copy Community Code"),
+    "copy_requests_in_events" : MessageLookupByLibrary.simpleMessage("Would you like to copy all requests inside events as well?"),
+    "could_not_launch" : MessageLookupByLibrary.simpleMessage("Could not launch"),
+    "country" : MessageLookupByLibrary.simpleMessage("Country"),
+    "cover_picture_label" : MessageLookupByLibrary.simpleMessage("Seva Community Cover Picture"),
+    "cover_picture_label_event" : MessageLookupByLibrary.simpleMessage("Event Cover Picture"),
+    "cover_picture_label_group" : MessageLookupByLibrary.simpleMessage("Group Cover Picture"),
+    "create" : MessageLookupByLibrary.simpleMessage("Create"),
+    "create_community_negative_threshold_text" : MessageLookupByLibrary.simpleMessage("Negative credits threshold"),
+    "create_community_select_categories_text" : MessageLookupByLibrary.simpleMessage("Select categories for your community"),
+    "create_community_upload_image_text" : MessageLookupByLibrary.simpleMessage("Upload an image to represent your community"),
+    "create_event" : MessageLookupByLibrary.simpleMessage("Create Event"),
+    "create_feed" : MessageLookupByLibrary.simpleMessage("Create Post"),
+    "create_feed_desc_hint" : MessageLookupByLibrary.simpleMessage("Please share only relevant information to your Group,  Event, or Community. Example, you can talk about your latest volunteer exchange and post a photo of you or the person doing the task"),
+    "create_feed_hint" : MessageLookupByLibrary.simpleMessage("Ex: Text, URL and Hashtags"),
+    "create_feed_placeholder" : MessageLookupByLibrary.simpleMessage("What would you like to share*"),
+    "create_group" : MessageLookupByLibrary.simpleMessage("Create Group"),
+    "create_new" : MessageLookupByLibrary.simpleMessage("Create New"),
+    "create_new_project" : MessageLookupByLibrary.simpleMessage("Create new Event"),
+    "create_offer" : MessageLookupByLibrary.simpleMessage("Create Offer"),
+    "create_project" : MessageLookupByLibrary.simpleMessage("Create an Event"),
+    "create_project_from_template" : MessageLookupByLibrary.simpleMessage("Create an Event from Template"),
+    "create_project_request" : MessageLookupByLibrary.simpleMessage("Create an Event Request"),
+    "create_public_offer" : MessageLookupByLibrary.simpleMessage("create public offer"),
+    "create_request" : MessageLookupByLibrary.simpleMessage("Create Request"),
+    "create_timebank" : MessageLookupByLibrary.simpleMessage("Create a Seva Community"),
+    "create_timebank_confirmation" : MessageLookupByLibrary.simpleMessage("Are you sure you want to create a new Seva Community - as opposed to joining an existing Seva Community? Creating a new Seva Community implies that you will be responsible for administering the Seva Community - including adding members and managing members’ needs, timely replying to members questions, bringing about conflict resolutions, and hosting monthly potlucks. In order to become a member of an existing Seva Community, you will need to know the name of the Seva Community and either have an invitation code or submit a request to join the Seva Community."),
+    "create_timebank_description" : MessageLookupByLibrary.simpleMessage("A Seva Community is a community where members give and receive help to each other and the greater community through time, money or goods."),
+    "create_virtual_offer" : MessageLookupByLibrary.simpleMessage("create virtual offer"),
+    "created_by" : MessageLookupByLibrary.simpleMessage("Created by "),
+    "creating_account" : MessageLookupByLibrary.simpleMessage("Creating account"),
+    "creating_feed" : MessageLookupByLibrary.simpleMessage("Creating post"),
+    "creating_join_request" : MessageLookupByLibrary.simpleMessage("Creating Join Request"),
+    "creating_messaging_room" : MessageLookupByLibrary.simpleMessage("Creating Room..."),
+    "creating_offer" : MessageLookupByLibrary.simpleMessage("Creating Offer"),
+    "creating_offer_with_underscore_error" : MessageLookupByLibrary.simpleMessage("Creating offer with \'_\' is not allowed"),
+    "creating_one" : MessageLookupByLibrary.simpleMessage("creating one"),
+    "creating_project" : MessageLookupByLibrary.simpleMessage("Creating an event"),
+    "creating_request" : MessageLookupByLibrary.simpleMessage("Creating Request..."),
+    "creating_request_with_underscore_not_allowed" : MessageLookupByLibrary.simpleMessage("Creating request with \'_\' is not allowed "),
+    "creating_timebank" : MessageLookupByLibrary.simpleMessage("Creating Seva Community"),
+    "creator_creates_transaction" : MessageLookupByLibrary.simpleMessage("This is currently not permitted. Please see the following link for more information: <Link_on_web_to_upgrade_plan>"),
+    "creator_of_request_message" : MessageLookupByLibrary.simpleMessage("You are the creator of this request."),
+    "credits" : MessageLookupByLibrary.simpleMessage("Credits:"),
+    "credits_credited" : MessageLookupByLibrary.simpleMessage("Seva Credits Credited"),
+    "credits_debited" : MessageLookupByLibrary.simpleMessage("Seva Credits Debited"),
+    "credits_debited_msg" : MessageLookupByLibrary.simpleMessage("Seva Credits have been debited from your account"),
+    "credits_have_been_credited_to_your_account" : MessageLookupByLibrary.simpleMessage("Seva Credit(s) have been credited to your account."),
+    "credits_have_been_debited_from_your_account" : MessageLookupByLibrary.simpleMessage("Seva Credit(s) have been debited from your account."),
+    "crop_photo" : MessageLookupByLibrary.simpleMessage("Crop Photo"),
+    "csv_error" : MessageLookupByLibrary.simpleMessage("Please select a CSV file first before uploading"),
+    "csv_file_sent_successfully_to" : MessageLookupByLibrary.simpleMessage("CSV file sent successfully to"),
+    "csv_large_file_message" : MessageLookupByLibrary.simpleMessage("Files larger than 1 MB are not allowed"),
+    "csv_message1" : MessageLookupByLibrary.simpleMessage("First, create a .csv file template and add the users that you want to invite to your Seva Community. Please see the format below for the two fields to include in your file. Then, select the Upload button to add the file. Note: do not upload any extra fields nor try to upload other spreadsheet file formats other than the .csv file."),
+    "csv_message2" : MessageLookupByLibrary.simpleMessage("fill the users you would like to add "),
+    "csv_message3" : MessageLookupByLibrary.simpleMessage("then upload the CSV."),
+    "csv_size_limit" : MessageLookupByLibrary.simpleMessage("NOTE : Maximum file size is 1 MB"),
+    "current" : MessageLookupByLibrary.simpleMessage("Current"),
+    "current_seva_credit" : MessageLookupByLibrary.simpleMessage("Your current seva credits is"),
+    "currently_active" : MessageLookupByLibrary.simpleMessage("Currently Active"),
+    "currently_not_permitted" : MessageLookupByLibrary.simpleMessage("This is currently not permitted, Please see the following link for more information. http://www.web.sevaxapp.com/"),
+    "currently_selected" : MessageLookupByLibrary.simpleMessage("Currently selected"),
+    "cv_message" : MessageLookupByLibrary.simpleMessage("Uploading your CV or resume helps us match you better to opportunities."),
+    "cv_resume" : MessageLookupByLibrary.simpleMessage("CV/Resume"),
+    "date" : MessageLookupByLibrary.simpleMessage("Date:"),
+    "date_not_available" : MessageLookupByLibrary.simpleMessage("Date not available"),
+    "date_selection_issue" : MessageLookupByLibrary.simpleMessage("Date Selection issue"),
+    "date_time" : MessageLookupByLibrary.simpleMessage("date & time"),
+    "day" : m0,
+    "days_available" : MessageLookupByLibrary.simpleMessage("Days Available"),
+    "debited" : MessageLookupByLibrary.simpleMessage("Debited"),
+    "decline" : MessageLookupByLibrary.simpleMessage("Decline"),
+    "declined" : MessageLookupByLibrary.simpleMessage("Declined"),
+    "default_card" : MessageLookupByLibrary.simpleMessage("Default Card"),
+    "default_card_note" : MessageLookupByLibrary.simpleMessage("Note : long press to make a card default"),
+    "default_private_alert" : MessageLookupByLibrary.simpleMessage("This plan is for private use only and cannot be made public."),
+    "default_text" : MessageLookupByLibrary.simpleMessage("DEFAULT"),
+    "delete" : MessageLookupByLibrary.simpleMessage("Delete"),
+    "delete_chat" : MessageLookupByLibrary.simpleMessage("Delete chat"),
+    "delete_chat_confirmation" : MessageLookupByLibrary.simpleMessage("Are you sure you want to delete this chat"),
+    "delete_comment_msg" : MessageLookupByLibrary.simpleMessage("Are you sure want to delete comment?"),
+    "delete_confirmation" : MessageLookupByLibrary.simpleMessage("Are your sure you want to delete "),
+    "delete_feed" : MessageLookupByLibrary.simpleMessage("Delete feed"),
+    "delete_feed_confirmation" : MessageLookupByLibrary.simpleMessage("Are you sure you want to delete this news feed?"),
+    "delete_group" : MessageLookupByLibrary.simpleMessage("Delete Group"),
+    "delete_notification" : MessageLookupByLibrary.simpleMessage("Delete notification"),
+    "delete_notification_confirmation" : MessageLookupByLibrary.simpleMessage("Are you sure you want to delete this notification?"),
+    "delete_offer" : MessageLookupByLibrary.simpleMessage("Delete Offer"),
+    "delete_offer_confirmation" : MessageLookupByLibrary.simpleMessage("Are you sure you want to delete this offer?"),
+    "delete_project" : MessageLookupByLibrary.simpleMessage("Delete Event"),
+    "delete_request" : MessageLookupByLibrary.simpleMessage("Delete Request"),
+    "delete_request_confirmation" : MessageLookupByLibrary.simpleMessage("Are you sure you want to delete this request?"),
+    "delete_request_success" : MessageLookupByLibrary.simpleMessage("**requestTitle you requested to delete has been successfully deleted!"),
+    "delete_timebank" : MessageLookupByLibrary.simpleMessage("Delete Seva Community"),
+    "deleted_events_create_request_message" : MessageLookupByLibrary.simpleMessage("This event is going to be deleted. As a result, requests cannot be created."),
+    "deleting_feed" : MessageLookupByLibrary.simpleMessage("Deleting feed"),
+    "deletion_request" : MessageLookupByLibrary.simpleMessage("Deletion Request"),
+    "deletion_request_being_processed" : MessageLookupByLibrary.simpleMessage("Your request for deletion is being processed."),
+    "deletion_request_message" : MessageLookupByLibrary.simpleMessage("Deletion request could not be processed (Due to pending transactions)"),
+    "deletion_request_progress_description" : MessageLookupByLibrary.simpleMessage("Your request to delete has been received by us. We are processing the request. You will be notified once it is completed."),
+    "deletion_request_recieved" : MessageLookupByLibrary.simpleMessage("We have received your request to delete this ***. We are sorry to see you go. We will examine your request and (in some cases) get in touch with you offline before we process the deletion of the ***"),
+    "demote" : MessageLookupByLibrary.simpleMessage("Demote"),
+    "demoted" : MessageLookupByLibrary.simpleMessage("DEMOTED"),
+    "demotion_from_admin_to_member" : MessageLookupByLibrary.simpleMessage("Demotion from admin to member"),
+    "describe_goods" : MessageLookupByLibrary.simpleMessage("Describe the type of goods or supplies you donated and select from the list of items below."),
+    "description" : MessageLookupByLibrary.simpleMessage("Description"),
+    "description_not_updated" : MessageLookupByLibrary.simpleMessage("Description not yet updated"),
+    "description_of_item" : MessageLookupByLibrary.simpleMessage("Description of item(s)"),
+    "details" : MessageLookupByLibrary.simpleMessage("Details"),
+    "details_updated_success" : MessageLookupByLibrary.simpleMessage("Details updated successfully."),
+    "discounted_transactions_msg" : MessageLookupByLibrary.simpleMessage("Discounted Billable Transactions as per your current plan"),
+    "discover" : MessageLookupByLibrary.simpleMessage("Discover"),
+    "discover_explore" : MessageLookupByLibrary.simpleMessage("Discover"),
+    "dismiss" : MessageLookupByLibrary.simpleMessage("Dismiss"),
+    "diversity_and_belonging" : MessageLookupByLibrary.simpleMessage("Diversity & Belonging"),
+    "diversity_belonging_explore" : MessageLookupByLibrary.simpleMessage("Diversity Belonging"),
+    "do_it_later" : MessageLookupByLibrary.simpleMessage("Do it later"),
+    "do_not_copy" : MessageLookupByLibrary.simpleMessage("Do not copy"),
+    "do_you_want_addto_calender" : MessageLookupByLibrary.simpleMessage("Do you want to add this event to your calendar?"),
+    "do_you_want_to_add" : MessageLookupByLibrary.simpleMessage("Do you want to add this"),
+    "doc_pdf" : MessageLookupByLibrary.simpleMessage("Document.pdf"),
+    "document" : MessageLookupByLibrary.simpleMessage("Document"),
+    "document_csv" : MessageLookupByLibrary.simpleMessage("Document.CSV"),
+    "document_name" : MessageLookupByLibrary.simpleMessage("Document Name*"),
+    "donate" : MessageLookupByLibrary.simpleMessage("Donate"),
+    "donate_message" : MessageLookupByLibrary.simpleMessage("On click of donate your balance will be adjusted"),
+    "donate_to_timebank" : MessageLookupByLibrary.simpleMessage("Donate seva credits to Seva Community"),
+    "donated" : MessageLookupByLibrary.simpleMessage("Donated"),
+    "donation_acknowledge" : MessageLookupByLibrary.simpleMessage("Donation acknowledge"),
+    "donation_address" : MessageLookupByLibrary.simpleMessage("Donation Address"),
+    "donation_completed" : MessageLookupByLibrary.simpleMessage("Donation completed"),
+    "donation_completed_desc" : MessageLookupByLibrary.simpleMessage("Your donation is successfully completed. A receipt has been emailed to you."),
+    "donation_description_one" : MessageLookupByLibrary.simpleMessage("Great! You have chosen to donate to"),
+    "donation_description_three" : MessageLookupByLibrary.simpleMessage(" USD."),
+    "donation_description_two" : MessageLookupByLibrary.simpleMessage("a donation of no less than"),
+    "donation_dispute_info" : MessageLookupByLibrary.simpleMessage("If there is discrepancy in the items received, please message the number."),
+    "donation_offered" : MessageLookupByLibrary.simpleMessage("Donation Offered"),
+    "donation_success" : MessageLookupByLibrary.simpleMessage("You have donated credits successfully"),
+    "donations" : MessageLookupByLibrary.simpleMessage("Donations"),
+    "donations_cash_request" : MessageLookupByLibrary.simpleMessage("Request Amount*"),
+    "donations_cash_request_hint" : MessageLookupByLibrary.simpleMessage("Request Amount shouldn\'t be more than the offer amount"),
+    "donations_received" : MessageLookupByLibrary.simpleMessage("Donations received"),
+    "donations_requested" : MessageLookupByLibrary.simpleMessage("Requested Donation"),
+    "done" : MessageLookupByLibrary.simpleMessage("Done"),
+    "dont_allow" : MessageLookupByLibrary.simpleMessage("Don\'t Allow"),
+    "download" : MessageLookupByLibrary.simpleMessage("Download"),
+    "download_sample_csv" : MessageLookupByLibrary.simpleMessage("Download sample CSV file"),
+    "downloading_report" : MessageLookupByLibrary.simpleMessage("Downloading Report"),
+    "duration_of_session" : MessageLookupByLibrary.simpleMessage("Duration of Session: "),
+    "edit" : MessageLookupByLibrary.simpleMessage("Edit"),
+    "edit_current_plan" : MessageLookupByLibrary.simpleMessage("Edit Current Plan"),
+    "edit_group" : MessageLookupByLibrary.simpleMessage("Edit Group"),
+    "edit_name" : MessageLookupByLibrary.simpleMessage("Edit Name"),
+    "edit_profile_information" : MessageLookupByLibrary.simpleMessage("Edit Account Information"),
+    "edit_project" : MessageLookupByLibrary.simpleMessage("Edit Event"),
+    "edit_request" : MessageLookupByLibrary.simpleMessage("Edit Request"),
+    "edit_request_category" : MessageLookupByLibrary.simpleMessage("Edit subcategory"),
+    "edit_subsequent_event" : MessageLookupByLibrary.simpleMessage("Edit subsequent events"),
+    "edit_this_event" : MessageLookupByLibrary.simpleMessage("Edit this event only"),
+    "edit_timebank" : MessageLookupByLibrary.simpleMessage("Edit Seva Community"),
+    "effective_date" : MessageLookupByLibrary.simpleMessage("Effective Date"),
+    "email" : MessageLookupByLibrary.simpleMessage("Email"),
+    "email_hint" : MessageLookupByLibrary.simpleMessage("Ex: example@example.com"),
+    "email_not_updated" : MessageLookupByLibrary.simpleMessage("User email not updated"),
+    "email_sent_to" : MessageLookupByLibrary.simpleMessage("\n\nWe sent an email to\n"),
+    "empty_credit_donation_error" : MessageLookupByLibrary.simpleMessage("Donate some credits"),
+    "empty_credit_loan_error" : MessageLookupByLibrary.simpleMessage("Loan some credits"),
+    "empty_feed" : MessageLookupByLibrary.simpleMessage("Your feed is empty"),
+    "enable_gps" : MessageLookupByLibrary.simpleMessage("You will need to enable location services on your browser: Chrome; Edge; Firefox; Safari to allow us to display nearby Communities."),
+    "end" : MessageLookupByLibrary.simpleMessage("End"),
+    "endorsed_group_request_desc" : MessageLookupByLibrary.simpleMessage("user_name has created a group group_name. Please approve if this newly formed group is indeed endorsed by your organization, so it can be shown with the Endorsed Badge."),
+    "endorsed_group_request_title" : MessageLookupByLibrary.simpleMessage("Endorsed Group Approval Request"),
+    "endorsed_notification_desc" : MessageLookupByLibrary.simpleMessage("user_name has created a group group_name. They have requested this group to be approved - to allow the group to have an endorsed badge."),
+    "endorsed_notification_title" : MessageLookupByLibrary.simpleMessage("Group group_name requires your approval"),
+    "ends" : MessageLookupByLibrary.simpleMessage("Ends"),
+    "enter_bio" : MessageLookupByLibrary.simpleMessage("Enter bio"),
+    "enter_code_to_verify" : MessageLookupByLibrary.simpleMessage("Please enter PIN to verify"),
+    "enter_delivery_time" : MessageLookupByLibrary.simpleMessage("Enter Delivery Time"),
+    "enter_email" : MessageLookupByLibrary.simpleMessage("Enter email"),
+    "enter_feedback" : MessageLookupByLibrary.simpleMessage("Please enter your feedback"),
+    "enter_hours" : MessageLookupByLibrary.simpleMessage("Enter hours"),
+    "enter_max_credits" : MessageLookupByLibrary.simpleMessage("Please enter maximum credits"),
+    "enter_name" : MessageLookupByLibrary.simpleMessage("Enter name"),
+    "enter_name_hint" : MessageLookupByLibrary.simpleMessage("Please enter name to update"),
+    "enter_password" : MessageLookupByLibrary.simpleMessage("Enter password"),
+    "enter_reason_to_delete" : MessageLookupByLibrary.simpleMessage("Enter reason to delete"),
+    "enter_reason_to_delete_error" : MessageLookupByLibrary.simpleMessage("Please enter reason to delete"),
+    "enter_reason_to_exit" : MessageLookupByLibrary.simpleMessage("Enter reason to exit"),
+    "enter_reason_to_exit_hint" : MessageLookupByLibrary.simpleMessage("Please enter reason to exit"),
+    "enter_the_amount_received" : MessageLookupByLibrary.simpleMessage("Enter the amount recieved"),
+    "enter_valid_account_number" : MessageLookupByLibrary.simpleMessage("Enter Account Number"),
+    "enter_valid_amount" : MessageLookupByLibrary.simpleMessage("Enter valid amount"),
+    "enter_valid_bank_address" : MessageLookupByLibrary.simpleMessage("Enter Bank Address"),
+    "enter_valid_bank_name" : MessageLookupByLibrary.simpleMessage("Enter Bank Name"),
+    "enter_valid_link" : MessageLookupByLibrary.simpleMessage("Enter valid payment link"),
+    "enter_valid_routing_number" : MessageLookupByLibrary.simpleMessage("Enter Routing Number"),
+    "entered" : MessageLookupByLibrary.simpleMessage("Entered"),
+    "error" : MessageLookupByLibrary.simpleMessage("error"),
+    "error_loading_data" : MessageLookupByLibrary.simpleMessage("Error Loading Data"),
+    "error_occured" : MessageLookupByLibrary.simpleMessage("Error occurred! Please come back later and try again."),
+    "error_was_thrown" : MessageLookupByLibrary.simpleMessage("Error was Thrown"),
+    "eula_delcaration" : MessageLookupByLibrary.simpleMessage("I agree that I am willing to adhere to these Terms and Conditions."),
+    "eula_title" : MessageLookupByLibrary.simpleMessage("EULA Agreement"),
+    "event" : MessageLookupByLibrary.simpleMessage("Event"),
+    "event_description" : MessageLookupByLibrary.simpleMessage("Event Description"),
+    "event_permissions" : MessageLookupByLibrary.simpleMessage("Event Permissions"),
+    "event_to_calender" : MessageLookupByLibrary.simpleMessage("event to calender"),
+    "exchanges" : MessageLookupByLibrary.simpleMessage("Exchanges"),
+    "exhaust_limit_admin_message" : MessageLookupByLibrary.simpleMessage("please contact the creator of the Seva Community to upgrade your plan"),
+    "exhaust_limit_creator_message" : MessageLookupByLibrary.simpleMessage("please upgrade your plan to continue."),
+    "exhaust_limit_user_message" : MessageLookupByLibrary.simpleMessage("please contact the admin of the Seva Community to upgrade your plan"),
+    "exhausted_free_quota" : MessageLookupByLibrary.simpleMessage("You have exhausted your free quota of transactions,"),
+    "existing_requests" : MessageLookupByLibrary.simpleMessage("Existing Requests"),
+    "exit" : MessageLookupByLibrary.simpleMessage("Exit"),
+    "exit_messaging_room" : MessageLookupByLibrary.simpleMessage("Exit Messaging Room"),
+    "exit_messaging_room_admin_confirmation" : MessageLookupByLibrary.simpleMessage("You are admin of this messaging room, are you sure you want to exit the Messaging room"),
+    "exit_messaging_room_user_confirmation" : MessageLookupByLibrary.simpleMessage("Are you sure you want to exit the Messaging room"),
+    "exit_user" : MessageLookupByLibrary.simpleMessage("Exit User"),
+    "exp_date" : MessageLookupByLibrary.simpleMessage("Exp. Date"),
+    "expired" : MessageLookupByLibrary.simpleMessage("Expired"),
+    "expiry_date" : MessageLookupByLibrary.simpleMessage("Expiration Date"),
+    "explore_page_subtitle_text" : MessageLookupByLibrary.simpleMessage("Find communities near you or online communities that interest you. You can offer to volunteer your services or request any assistance or search for Community Events."),
+    "explore_page_title_text" : MessageLookupByLibrary.simpleMessage("Explore Opportunities"),
+    "explore_search_hint" : MessageLookupByLibrary.simpleMessage("Ex: ZIP/ Postal Code or city, state, country"),
+    "extension_alert" : MessageLookupByLibrary.simpleMessage("Extension alert"),
+    "external_url" : MessageLookupByLibrary.simpleMessage("External Url"),
+    "extra_amount_charge" : MessageLookupByLibrary.simpleMessage("There is an additional cost of \$15 / month / community to create a Private Community"),
+    "failed_load_image" : MessageLookupByLibrary.simpleMessage("Failed to load image. Try different image"),
+    "failed_load_image_title" : MessageLookupByLibrary.simpleMessage("Failed to load"),
+    "failed_to_fetch_location" : MessageLookupByLibrary.simpleMessage("Failed to fetch location*"),
+    "failed_to_load_post" : MessageLookupByLibrary.simpleMessage("Couldn\'t load the post!"),
+    "failure" : MessageLookupByLibrary.simpleMessage("Failure"),
+    "favourites" : MessageLookupByLibrary.simpleMessage("Favourites"),
+    "feature_disabled" : MessageLookupByLibrary.simpleMessage("This feature is disabled for your community"),
+    "featured_communities" : MessageLookupByLibrary.simpleMessage("Featured communities"),
+    "feed_hint_back_press" : MessageLookupByLibrary.simpleMessage("Clicking on the home button takes you to the Feeds section. Double clicking on home button from the group feed will take you back to the community feed."),
+    "feed_reported" : MessageLookupByLibrary.simpleMessage("You already reported this feed"),
+    "feedback" : MessageLookupByLibrary.simpleMessage("Feedback"),
+    "feedback_messagae" : MessageLookupByLibrary.simpleMessage("Please let us know about your valuable feedback"),
+    "feedback_one_to_many_offer" : MessageLookupByLibrary.simpleMessage("Feedback for One-to-many offer"),
+    "feeds" : MessageLookupByLibrary.simpleMessage("Feeds"),
+    "fetching_location" : MessageLookupByLibrary.simpleMessage("Fetching location"),
+    "filtering_blocked_content" : MessageLookupByLibrary.simpleMessage("Filtering blocked content"),
+    "filtering_past_requests_content" : MessageLookupByLibrary.simpleMessage("Filtering past requests content"),
+    "find" : MessageLookupByLibrary.simpleMessage("Find"),
+    "find_near_timebanks" : MessageLookupByLibrary.simpleMessage("Find a Seva Community near you"),
+    "find_timebank_help_text" : MessageLookupByLibrary.simpleMessage("Enter the name or location of your community."),
+    "find_timebanks" : MessageLookupByLibrary.simpleMessage("Find Seva Communities"),
+    "find_volunteers" : MessageLookupByLibrary.simpleMessage("Find Members"),
+    "find_your_parent_timebank" : MessageLookupByLibrary.simpleMessage("Find your parent Seva Community if you are part of"),
+    "find_your_timebank" : MessageLookupByLibrary.simpleMessage("Find your Seva Community"),
+    "fixed" : MessageLookupByLibrary.simpleMessage("Fixed"),
+    "follow_link_to_upgrade" : MessageLookupByLibrary.simpleMessage("This is currently not permitted. Please see the following link for more information: **link_on_web_to_upgrade_plan"),
+    "forgot_password" : MessageLookupByLibrary.simpleMessage("Forgot Password? "),
+    "frequently_contacted" : MessageLookupByLibrary.simpleMessage("FREQUENTLY CONTACTED"),
+    "from" : MessageLookupByLibrary.simpleMessage("From:"),
+    "from_timebank_members" : MessageLookupByLibrary.simpleMessage("from Seva Community members?"),
+    "full_name" : MessageLookupByLibrary.simpleMessage("Full Name"),
+    "gallery" : MessageLookupByLibrary.simpleMessage("Gallery"),
+    "general_permissions" : MessageLookupByLibrary.simpleMessage("General Permissions"),
+    "general_stream_error" : MessageLookupByLibrary.simpleMessage("Something went wrong, please try again"),
+    "generate_report" : MessageLookupByLibrary.simpleMessage("Generate Report"),
+    "generating_report" : MessageLookupByLibrary.simpleMessage("Generating Report"),
+    "getting_volunteers" : MessageLookupByLibrary.simpleMessage("Getting volunteers..."),
+    "global_timebank" : MessageLookupByLibrary.simpleMessage("SevaX Global Network of Communities"),
+    "go_back" : MessageLookupByLibrary.simpleMessage("Go Back"),
+    "go_to_community_chat" : MessageLookupByLibrary.simpleMessage("Go To Community Chats"),
+    "goods" : MessageLookupByLibrary.simpleMessage("Goods"),
+    "goods_donation_invite" : MessageLookupByLibrary.simpleMessage("has a request for donation of specific goods / supplies. You can tap to donate any goods that you can"),
+    "goods_modified_by_creator" : MessageLookupByLibrary.simpleMessage("Your goods / supplies for donation was not acknowledged"),
+    "goods_modified_by_creator_desc" : MessageLookupByLibrary.simpleMessage("The goods / supplies that you donated for this donation is different from the goods acknowledged by the creator. Tap to change your goods details."),
+    "goods_modified_by_donor" : MessageLookupByLibrary.simpleMessage("Donor has modified goods / supplies"),
+    "goods_modified_by_donor_desc" : MessageLookupByLibrary.simpleMessage("The goods / supplies which you acknowledged for this donation is different from the goods confirmed by the Donor. Tap to change the confirmation goods."),
+    "goods_offer" : MessageLookupByLibrary.simpleMessage("Goods Offer"),
+    "goods_offer_desc_hint" : MessageLookupByLibrary.simpleMessage("Describe in detail what you are willing to offer. Please use #hashtags so members can easily search for this offer, such as #homeless #clothingdrive"),
+    "goods_offer_title_hint" : MessageLookupByLibrary.simpleMessage("Ex: winter coats for homeless shelter"),
+    "goods_request" : MessageLookupByLibrary.simpleMessage("Goods Request"),
+    "goods_request_data_hint_text" : MessageLookupByLibrary.simpleMessage("Ex: Local Food Bank has a shortage..."),
+    "goods_validation" : MessageLookupByLibrary.simpleMessage("You have not selected any Goods/Supplies. Please select one or more before creating the Donation request."),
+    "gps_disabled_error" : MessageLookupByLibrary.simpleMessage("Unable to fetch nearby communities because your GPS is not enabled."),
+    "gps_on_reminder" : MessageLookupByLibrary.simpleMessage("Please make sure you have GPS turned on."),
+    "gps_reminder_near" : MessageLookupByLibrary.simpleMessage("Please make sure you have GPS turned on to see the list of Seva Communities around you"),
+    "group" : MessageLookupByLibrary.simpleMessage("Group"),
+    "group_description" : MessageLookupByLibrary.simpleMessage("Groups within a Seva Community allow for those with shared interests to meet regularly and organize separately."),
+    "group_exists" : MessageLookupByLibrary.simpleMessage("Group name already exists"),
+    "group_join" : MessageLookupByLibrary.simpleMessage("Group Join"),
+    "group_logo" : MessageLookupByLibrary.simpleMessage("Group Image"),
+    "group_permissions" : MessageLookupByLibrary.simpleMessage("Group Permissions"),
+    "group_subset" : MessageLookupByLibrary.simpleMessage("Group is a subset of a community who share common goals or interests. (Finance Committee, Parent Teacher Assoc., LGBTQ)"),
+    "groups" : MessageLookupByLibrary.simpleMessage("GROUPS"),
+    "groups_help_text" : MessageLookupByLibrary.simpleMessage("Groups Help"),
+    "groups_within" : MessageLookupByLibrary.simpleMessage("Groups within"),
+    "guests_can_do_and_dont" : MessageLookupByLibrary.simpleMessage("Guests can do and don\'t*"),
+    "guidebooks" : MessageLookupByLibrary.simpleMessage("Guidebooks"),
+    "guidebooks_explore" : MessageLookupByLibrary.simpleMessage("Guidebooks"),
+    "hang_on" : MessageLookupByLibrary.simpleMessage("Hang on tight"),
+    "has_cash_donation" : MessageLookupByLibrary.simpleMessage("Has a request for money donation"),
+    "has_exited_from" : MessageLookupByLibrary.simpleMessage("has exited from"),
+    "has_given_review" : MessageLookupByLibrary.simpleMessage("has given you a review"),
+    "has_goods_donation" : MessageLookupByLibrary.simpleMessage("Has requested for goods / supplies donation"),
+    "has_worked_for" : MessageLookupByLibrary.simpleMessage("has worked for"),
+    "help" : MessageLookupByLibrary.simpleMessage("Help"),
+    "help_about_us" : MessageLookupByLibrary.simpleMessage("About us"),
+    "help_contact_us" : MessageLookupByLibrary.simpleMessage("Contact Us"),
+    "help_training_video" : MessageLookupByLibrary.simpleMessage("Training Video"),
+    "help_version" : MessageLookupByLibrary.simpleMessage("Version"),
+    "hint_text_number" : MessageLookupByLibrary.simpleMessage("123456789"),
+    "host_a_community" : MessageLookupByLibrary.simpleMessage("Host a community"),
+    "host_a_community_explore" : MessageLookupByLibrary.simpleMessage("Host a community"),
+    "hosted_by" : MessageLookupByLibrary.simpleMessage("Hosted by"),
+    "hosting" : MessageLookupByLibrary.simpleMessage("Hosting"),
+    "hosting_explore" : MessageLookupByLibrary.simpleMessage("Hosting"),
+    "hour" : MessageLookupByLibrary.simpleMessage("hour"),
+    "hours" : MessageLookupByLibrary.simpleMessage("hours"),
+    "hours_not_updated" : MessageLookupByLibrary.simpleMessage("hours not updated"),
+    "hours_worked" : MessageLookupByLibrary.simpleMessage("Hours worked"),
+    "i_pledged_amount" : MessageLookupByLibrary.simpleMessage("I pledge to donate this amount"),
+    "i_received_amount" : MessageLookupByLibrary.simpleMessage("I acknowledge that our community/organization has received"),
+    "i_want_to_volunteer" : MessageLookupByLibrary.simpleMessage("I want to volunteer."),
+    "image_url" : MessageLookupByLibrary.simpleMessage("Image Url"),
+    "image_url_alert_desc" : MessageLookupByLibrary.simpleMessage("Please add a image URL to continue"),
+    "image_url_hint" : MessageLookupByLibrary.simpleMessage("Add Image Url ex: https://www.sevaexchange.com/sevalogo.png"),
+    "images_help_convey_theme_of_request" : MessageLookupByLibrary.simpleMessage("Images helps to convey the theme of your request"),
+    "imageurl_alert" : MessageLookupByLibrary.simpleMessage("Web Image URL alert"),
+    "inactive" : MessageLookupByLibrary.simpleMessage("Inactive"),
+    "individual_offer" : MessageLookupByLibrary.simpleMessage("Individual offer"),
+    "info" : MessageLookupByLibrary.simpleMessage("Info"),
+    "initial_charges" : MessageLookupByLibrary.simpleMessage("Initial Charges"),
+    "instruction_for_stay" : MessageLookupByLibrary.simpleMessage("Instruction for the stay"),
+    "insufficientSevaCreditsDialog" : MessageLookupByLibrary.simpleMessage("You do not have sufficient Seva credits to create this request. You need to have *** more Seva credits"),
+    "insufficient_credits_for_request" : MessageLookupByLibrary.simpleMessage("Your seva credits are not sufficient to create the request."),
+    "insufficient_credits_to_donate" : MessageLookupByLibrary.simpleMessage("You do not have sufficient credits to donate!"),
+    "interests" : MessageLookupByLibrary.simpleMessage("Interests"),
+    "interests_description" : MessageLookupByLibrary.simpleMessage("Please list as many of your interests or passions that you are willing to share with others within your community."),
+    "internet_connection_lost" : MessageLookupByLibrary.simpleMessage("Internet connection lost"),
+    "invalid_time" : MessageLookupByLibrary.simpleMessage("Invalid Time"),
+    "invitation_accepted" : MessageLookupByLibrary.simpleMessage("Invitation Accepted."),
+    "invitation_accepted_subtitle" : MessageLookupByLibrary.simpleMessage(" has accepted your offer."),
+    "invitation_email_body" : MessageLookupByLibrary.simpleMessage("<p>You are invited to download the SevaX app and join the Seva Community ***. The SevaX App uses Timebanking, a reciprocity-based system where community members help each other out in exchange for Seva Credits. Please click on this <a href=\"###;&nbsp;\">link</a> to join.</p>"),
+    "invitation_sent1" : MessageLookupByLibrary.simpleMessage("We have sent your transfer of ownership invitation. You will remain to be the owner of Seva Community "),
+    "invitation_sent2" : MessageLookupByLibrary.simpleMessage(" until "),
+    "invitation_sent3" : MessageLookupByLibrary.simpleMessage("accepts the invitation and provides their new account information."),
+    "invitations" : MessageLookupByLibrary.simpleMessage("Invitations"),
+    "invite" : MessageLookupByLibrary.simpleMessage("Invite"),
+    "invite_members" : MessageLookupByLibrary.simpleMessage("Invite Members"),
+    "invite_members_group_dots" : MessageLookupByLibrary.simpleMessage("..."),
+    "invite_message" : MessageLookupByLibrary.simpleMessage("Seva Communities allow you to volunteer and receive Seva credits that can be used by you for getting the community to help you with getting things done for you. Use the code"),
+    "invite_prompt" : MessageLookupByLibrary.simpleMessage("when prompted to join this community. Please download the SevaX app from the links provided at https://sevaexchange.page.link/sevaxapp"),
+    "invite_via_code" : MessageLookupByLibrary.simpleMessage("Invite via code"),
+    "invite_via_email" : MessageLookupByLibrary.simpleMessage("Invite members via email"),
+    "invited" : MessageLookupByLibrary.simpleMessage("Invited"),
+    "invited_speaker" : MessageLookupByLibrary.simpleMessage("Invited Speaker"),
+    "invited_to_timebank_message" : MessageLookupByLibrary.simpleMessage("Awesome! You are invited to join a Seva Community"),
+    "invoice_amount" : MessageLookupByLibrary.simpleMessage("Invoice Amount"),
+    "invoice_and_reports" : MessageLookupByLibrary.simpleMessage("Invoice and Reports"),
+    "invoice_history" : MessageLookupByLibrary.simpleMessage("Invoice History"),
+    "invoice_note1" : MessageLookupByLibrary.simpleMessage("This invoice is for the billing period of"),
+    "invoice_note2" : MessageLookupByLibrary.simpleMessage("Greetings from ***companyname. Here is the invoice for your usage of ***appname services for the period above. Additional information about your individual service charges and billing history is available in the billing section under the Manage tab."),
+    "invoice_reports_list" : MessageLookupByLibrary.simpleMessage("Invoice/Reports List"),
+    "is_pin_at_right_place" : MessageLookupByLibrary.simpleMessage("Is this pin at a right place?"),
+    "is_your_code" : MessageLookupByLibrary.simpleMessage("is your code."),
+    "item" : MessageLookupByLibrary.simpleMessage("Item"),
+    "item_received_alert_dialouge" : MessageLookupByLibrary.simpleMessage("If you have you received your item/place back click the button below to complete this."),
+    "item_returned_hint_text" : MessageLookupByLibrary.simpleMessage("Ex: item must be returned in the same condition."),
+    "items" : MessageLookupByLibrary.simpleMessage("Items"),
+    "items_collected" : MessageLookupByLibrary.simpleMessage("Items collected"),
+    "items_donated" : MessageLookupByLibrary.simpleMessage("Items donated"),
+    "jobs" : MessageLookupByLibrary.simpleMessage("Jobs"),
+    "join" : MessageLookupByLibrary.simpleMessage("Join"),
+    "join_chat" : MessageLookupByLibrary.simpleMessage("Join Chat"),
+    "join_code_expired_hint" : MessageLookupByLibrary.simpleMessage("code has been expired, please request the admin for a new one!"),
+    "join_community_alert" : MessageLookupByLibrary.simpleMessage("This action is only available to members of Community **CommunityName. Please request to join the community first before you can perform this action."),
+    "join_community_to_view_updates" : MessageLookupByLibrary.simpleMessage("To view and receive updates join the community"),
+    "join_message_room" : MessageLookupByLibrary.simpleMessage(" **Message_room_creator_name has created a message room **message_room_name in the Community **community_name and invited you to join. Please accept or decline the invitation"),
+    "join_message_room_hint" : MessageLookupByLibrary.simpleMessage("In order to view the messages in this Message Room, you need to join the room by clicking the \'Join Chat\' button below"),
+    "join_request_message" : MessageLookupByLibrary.simpleMessage("Member request to join a "),
+    "join_seva_community" : MessageLookupByLibrary.simpleMessage("Join Seva Community"),
+    "join_timbank_already_requested" : MessageLookupByLibrary.simpleMessage("You already requested to this Seva Community. Please wait untill request is accepted"),
+    "join_timebank_code_message" : MessageLookupByLibrary.simpleMessage("Enter the code you received from your Seva Community admin to join now."),
+    "join_timebank_question" : MessageLookupByLibrary.simpleMessage("Why do you want to join this"),
+    "join_timebank_request_invite" : MessageLookupByLibrary.simpleMessage("Request Invite"),
+    "join_timebank_request_invite_hint" : MessageLookupByLibrary.simpleMessage("If you dont have a code, Click"),
+    "join_webinar" : MessageLookupByLibrary.simpleMessage("join webinar"),
+    "joined" : MessageLookupByLibrary.simpleMessage("Joined"),
+    "kilometer" : MessageLookupByLibrary.simpleMessage("Kilometer"),
+    "kilometers" : MessageLookupByLibrary.simpleMessage("Kilometers"),
+    "large_file_alert" : MessageLookupByLibrary.simpleMessage("Large file alert"),
+    "large_file_size" : MessageLookupByLibrary.simpleMessage("Large file alert"),
+    "last_option" : MessageLookupByLibrary.simpleMessage("last option"),
+    "latest_requests" : MessageLookupByLibrary.simpleMessage("Latest Requests"),
+    "left" : MessageLookupByLibrary.simpleMessage("left"),
+    "lender_acknowledged_request_completion" : MessageLookupByLibrary.simpleMessage("The Lender has acknowledged completion of this request. Tap to leave a feedback."),
+    "lender_not_accepted_request_msg" : MessageLookupByLibrary.simpleMessage("Lender has not created an agreement for this request"),
+    "less" : MessageLookupByLibrary.simpleMessage("Less"),
+    "lifetime" : MessageLookupByLibrary.simpleMessage("Lifetime"),
+    "like" : MessageLookupByLibrary.simpleMessage("Like"),
+    "liked" : MessageLookupByLibrary.simpleMessage("Liked"),
+    "likes" : MessageLookupByLibrary.simpleMessage("likes"),
+    "limit_badge_billing_failed" : MessageLookupByLibrary.simpleMessage("Billing Failed, Click below to configure billing"),
+    "limit_badge_contact_admin" : MessageLookupByLibrary.simpleMessage("Action not allowed, please contact the admin"),
+    "limit_badge_delete_in_progress" : MessageLookupByLibrary.simpleMessage("Your request to delete has been received by us. We are processing the request. You will be notified once it is completed."),
+    "limit_exceeded" : MessageLookupByLibrary.simpleMessage("Limit exceeded!"),
+    "loading" : MessageLookupByLibrary.simpleMessage("Loading"),
+    "loan" : MessageLookupByLibrary.simpleMessage("Loan"),
+    "loan_seva_credit_to_user" : MessageLookupByLibrary.simpleMessage("Donate seva credits to user"),
+    "loan_success" : MessageLookupByLibrary.simpleMessage("You have loaned credits successfully"),
+    "loan_zero_credit_error" : MessageLookupByLibrary.simpleMessage("You cannot loan 0 credits"),
+    "location" : MessageLookupByLibrary.simpleMessage("Location"),
+    "location_not_added" : MessageLookupByLibrary.simpleMessage("Location not added"),
+    "location_not_provided" : MessageLookupByLibrary.simpleMessage("Location not provided"),
+    "log_in" : MessageLookupByLibrary.simpleMessage("Log in"),
+    "log_out" : MessageLookupByLibrary.simpleMessage("Logout"),
+    "log_out_confirmation" : MessageLookupByLibrary.simpleMessage("Are you sure you want to logout?"),
+    "login_after_verification" : MessageLookupByLibrary.simpleMessage("Please login once you have verified your email."),
+    "login_agreement_message1" : MessageLookupByLibrary.simpleMessage("By continuing, you agree to SevaX"),
+    "login_agreement_message2" : MessageLookupByLibrary.simpleMessage(" We will manage information as described in our"),
+    "login_agreement_payment_link" : MessageLookupByLibrary.simpleMessage("Payment Policy"),
+    "login_agreement_privacy_link" : MessageLookupByLibrary.simpleMessage("Privacy Policy"),
+    "login_agreement_terms_link" : MessageLookupByLibrary.simpleMessage("Terms of Service"),
+    "login_subtitle" : MessageLookupByLibrary.simpleMessage("Use your email and password to access your account."),
+    "login_title" : MessageLookupByLibrary.simpleMessage("Register or Sign into Your Account"),
+    "long_term_month_to_month" : MessageLookupByLibrary.simpleMessage("Long-term (Month to Month)"),
+    "look_for_existing_siblings" : MessageLookupByLibrary.simpleMessage("Your post is visible to the following Seva Communities:"),
+    "look_for_existing_timebank_title" : MessageLookupByLibrary.simpleMessage("Looking for existing Seva Community"),
+    "looking_existing_timebank" : MessageLookupByLibrary.simpleMessage("Looking for an existing Seva Community to join?\nEnter ZIP/ Postal Code or city, state, country"),
+    "make_default_card" : MessageLookupByLibrary.simpleMessage("Make this card as default"),
+    "make_owner" : MessageLookupByLibrary.simpleMessage("Make Super Admin"),
+    "manage" : MessageLookupByLibrary.simpleMessage("Manage"),
+    "manage_notofications" : MessageLookupByLibrary.simpleMessage("Manage Notifications"),
+    "manage_permissions" : MessageLookupByLibrary.simpleMessage("Manage Permissions"),
+    "manual_notification_subtitle" : MessageLookupByLibrary.simpleMessage("Admin **name has requested for **number hours of Seva Credit(s) towards Admin-related activities for Community **communityName"),
+    "manual_notification_title" : MessageLookupByLibrary.simpleMessage("Manual time notification"),
+    "manual_time_add" : MessageLookupByLibrary.simpleMessage("Add Manual Time"),
+    "manual_time_button_text" : MessageLookupByLibrary.simpleMessage("Send Request"),
+    "manual_time_info" : MessageLookupByLibrary.simpleMessage("Admins can request Seva Credits for the time that they spend in performing Admin Tasks in the SevaX Application"),
+    "manual_time_request_approved" : MessageLookupByLibrary.simpleMessage("Your request for **number Seva Credit(s) towards Admin-related activities for Community **communityName has been approved."),
+    "manual_time_request_rejected" : MessageLookupByLibrary.simpleMessage("Your request for **number Seva Credit(s) towards Admin-related activities for Community **communityName has been rejected."),
+    "manual_time_request_subtitle" : MessageLookupByLibrary.simpleMessage("Your request for <n> Seva Credit(s) towards Admin-related activities for Community community_name has been approved / rejected"),
+    "manual_time_request_title" : MessageLookupByLibrary.simpleMessage("Status of your Seva Credit request"),
+    "manual_time_textfield_hint" : MessageLookupByLibrary.simpleMessage("Please provide a rationale for this request - to assist the approver"),
+    "manual_time_title" : MessageLookupByLibrary.simpleMessage("Request Seva Credits for Admin tasks performed"),
+    "marker" : MessageLookupByLibrary.simpleMessage("Marker"),
+    "max_250_characters" : MessageLookupByLibrary.simpleMessage("* max 250 characters"),
+    "max_credit_hint" : MessageLookupByLibrary.simpleMessage("Maximum credits to be given per volunteer"),
+    "max_credits" : MessageLookupByLibrary.simpleMessage("Maximum credits*"),
+    "max_image_size" : MessageLookupByLibrary.simpleMessage("Maximum size: 5MB"),
+    "max_occupants" : MessageLookupByLibrary.simpleMessage("Maximum occupants"),
+    "maximumNoOfParticipants" : MessageLookupByLibrary.simpleMessage("This request has a maximum number of participants. That limit has been reached."),
+    "member_creates_transaction" : MessageLookupByLibrary.simpleMessage("This is currently not permitted. Please contact the Community Creator <creator_name> for more information."),
+    "member_exits" : MessageLookupByLibrary.simpleMessage("Member exits a "),
+    "member_joined_via_code_subtitle" : MessageLookupByLibrary.simpleMessage("**fullName** has joined **communityName** via code."),
+    "member_joined_via_code_title" : MessageLookupByLibrary.simpleMessage("New member has joined **communityName** via code"),
+    "member_removal_confirmation" : MessageLookupByLibrary.simpleMessage("Are you sure you want to remove"),
+    "member_reported" : MessageLookupByLibrary.simpleMessage("Member reported successfully"),
+    "member_reported_title" : MessageLookupByLibrary.simpleMessage("Member Reported"),
+    "member_reporting_failed" : MessageLookupByLibrary.simpleMessage("Failed to report member! Try again"),
+    "members" : MessageLookupByLibrary.simpleMessage("Member(s)"),
+    "members_selected" : m1,
+    "members_signed_up_advisory" : MessageLookupByLibrary.simpleMessage("People have already signed up for the offer. Canceling the offer would result in these users getting back the SevaCredits. Click OK to proceed with the cancelation. Otherwise, press cancel."),
+    "message" : MessageLookupByLibrary.simpleMessage("Message"),
+    "message_room_join" : MessageLookupByLibrary.simpleMessage("Message room join"),
+    "message_room_remove" : MessageLookupByLibrary.simpleMessage("Message room remove"),
+    "messaging_room" : MessageLookupByLibrary.simpleMessage("Messaging Room"),
+    "messaging_room_logo" : MessageLookupByLibrary.simpleMessage("Messaging Room Image"),
+    "messaging_room_name" : MessageLookupByLibrary.simpleMessage("Messaging Room Name"),
+    "messaging_room_note" : MessageLookupByLibrary.simpleMessage("Please provide a message room subject and optional group icon"),
+    "mile" : MessageLookupByLibrary.simpleMessage("Mile"),
+    "miles" : MessageLookupByLibrary.simpleMessage("Miles"),
+    "min_credits_error" : MessageLookupByLibrary.simpleMessage("Minimum credits cannot be empty or zero"),
+    "minimum_credit_hint" : MessageLookupByLibrary.simpleMessage("Provide minimum credits you require"),
+    "minimum_credit_title" : MessageLookupByLibrary.simpleMessage("Minimum Credits*"),
+    "minimum_credits" : MessageLookupByLibrary.simpleMessage("Minimum Credits"),
+    "minimum_credits_offer" : MessageLookupByLibrary.simpleMessage("This offer does not meet your minimum credit requirement."),
+    "minmum_amount" : MessageLookupByLibrary.simpleMessage("Minimum amount is"),
+    "minutes" : MessageLookupByLibrary.simpleMessage("Minutes"),
+    "missing_permission" : MessageLookupByLibrary.simpleMessage("Missing Permission"),
+    "mission_statement" : MessageLookupByLibrary.simpleMessage("Mission Statement"),
+    "modified" : MessageLookupByLibrary.simpleMessage("Modified"),
+    "modify" : MessageLookupByLibrary.simpleMessage("Modify"),
+    "month_to_date" : MessageLookupByLibrary.simpleMessage("Month to date"),
+    "monthly" : MessageLookupByLibrary.simpleMessage("Monthly"),
+    "monthly_charges_of" : MessageLookupByLibrary.simpleMessage("monthly and additional charges of"),
+    "monthly_subscription" : MessageLookupByLibrary.simpleMessage("Monthly subscriptions"),
+    "more" : MessageLookupByLibrary.simpleMessage("More"),
+    "my_cards" : MessageLookupByLibrary.simpleMessage("My Cards"),
+    "my_groups" : MessageLookupByLibrary.simpleMessage("My Groups"),
+    "my_language" : MessageLookupByLibrary.simpleMessage("My Language"),
+    "my_offers" : MessageLookupByLibrary.simpleMessage("My Offers"),
+    "my_request_categories" : MessageLookupByLibrary.simpleMessage("My Request Subcategories"),
+    "my_requests" : MessageLookupByLibrary.simpleMessage("My Requests"),
+    "my_timezone" : MessageLookupByLibrary.simpleMessage("My Timezone"),
+    "name" : MessageLookupByLibrary.simpleMessage("Name"),
+    "name_hint" : MessageLookupByLibrary.simpleMessage("Ex: Pets-in-town, Citizen collab"),
+    "name_not_available" : MessageLookupByLibrary.simpleMessage("Name not available"),
+    "name_not_updated" : MessageLookupByLibrary.simpleMessage(" name not updated"),
+    "name_your_group" : MessageLookupByLibrary.simpleMessage("Name your specific Group"),
+    "near_by_timebank_search_hint" : MessageLookupByLibrary.simpleMessage("Please type in your ZIP or postal code in the field or type in your city, state, and country to find a Seva Community near you."),
+    "near_by_timebank_subtitle" : MessageLookupByLibrary.simpleMessage("Find a Seva Community near you. Don\'t see any near you? You can always create your own Seva Community for free and invite the people you know. Seva Communities are a safe and secure way to communicate with your friends and family.\nPlease type in your ZIP or postal code in the field or type in your city, state, and country to find a Seva Community near you."),
+    "near_by_timebank_title" : MessageLookupByLibrary.simpleMessage("Find a Seva Community near you."),
+    "nearby_settings_content" : MessageLookupByLibrary.simpleMessage("This indicates the distance that the user is willing to travel to complete a Request for a Seva Community or participate in an Event"),
+    "nearby_settings_title" : MessageLookupByLibrary.simpleMessage("Distance that I am willing to travel"),
+    "need_a_place" : MessageLookupByLibrary.simpleMessage("Need a place"),
+    "needs_upgraded_plan" : MessageLookupByLibrary.simpleMessage("The feature you have chosen needs an upgraded plan."),
+    "negative_credit_donation_error" : MessageLookupByLibrary.simpleMessage("You cannot donate lesser than 0 credits"),
+    "negative_credit_loan_error" : MessageLookupByLibrary.simpleMessage("You cannot loan lesser than 0 credits"),
+    "negative_threshold_title" : MessageLookupByLibrary.simpleMessage("Threshold for negative credits"),
+    "new_chat" : MessageLookupByLibrary.simpleMessage("New Chat"),
+    "new_comminity_message" : MessageLookupByLibrary.simpleMessage("New Community Message"),
+    "new_message_notification" : MessageLookupByLibrary.simpleMessage("<sender_name> has sent you a message in the <community_name> community"),
+    "new_message_room" : MessageLookupByLibrary.simpleMessage("New Message Room"),
+    "new_post_notification" : MessageLookupByLibrary.simpleMessage("There is a new Post by <name_of_poster> in the <community_name> community."),
+    "new_posts" : MessageLookupByLibrary.simpleMessage("new posts"),
+    "new_project" : MessageLookupByLibrary.simpleMessage("New Event"),
+    "new_user" : MessageLookupByLibrary.simpleMessage("New User? "),
+    "new_york" : MessageLookupByLibrary.simpleMessage("New york | USA"),
+    "news_explore" : MessageLookupByLibrary.simpleMessage("News"),
+    "news_text" : MessageLookupByLibrary.simpleMessage("News"),
+    "next" : MessageLookupByLibrary.simpleMessage("Next"),
+    "next_invoice_date" : MessageLookupByLibrary.simpleMessage("Next Invoice Date"),
+    "no" : MessageLookupByLibrary.simpleMessage("No"),
+    "no_agrreement" : MessageLookupByLibrary.simpleMessage("No Agreement"),
+    "no_approved_members" : MessageLookupByLibrary.simpleMessage("No approved members yet."),
+    "no_blocked_members" : MessageLookupByLibrary.simpleMessage("No blocked members"),
+    "no_bookmarked_offers" : MessageLookupByLibrary.simpleMessage("No offers bookmarked"),
+    "no_cards_available" : MessageLookupByLibrary.simpleMessage("No cards available"),
+    "no_categories_available" : MessageLookupByLibrary.simpleMessage("No categories Available"),
+    "no_child_communities" : MessageLookupByLibrary.simpleMessage("No child existing communities"),
+    "no_codes_generated" : MessageLookupByLibrary.simpleMessage("No codes generated yet."),
+    "no_comments" : MessageLookupByLibrary.simpleMessage("No Comments"),
+    "no_completed_task" : MessageLookupByLibrary.simpleMessage("You have not completed any tasks"),
+    "no_content_common_description" : MessageLookupByLibrary.simpleMessage("To create one click on the plus icon."),
+    "no_data" : MessageLookupByLibrary.simpleMessage("No data found !"),
+    "no_donation_yet" : MessageLookupByLibrary.simpleMessage("No donations yet"),
+    "no_events" : MessageLookupByLibrary.simpleMessage("No Events yes"),
+    "no_events_available" : MessageLookupByLibrary.simpleMessage("No Events Available"),
+    "no_events_title" : MessageLookupByLibrary.simpleMessage("There are currently no events."),
+    "no_feeds_yet" : MessageLookupByLibrary.simpleMessage("No feeds yet"),
+    "no_frequent_contacts" : MessageLookupByLibrary.simpleMessage("No Frequent Contacts"),
+    "no_group_message" : MessageLookupByLibrary.simpleMessage("Groups help you to organize your specific \n activities, you don\'t have any. Try "),
+    "no_groups_found" : MessageLookupByLibrary.simpleMessage("No groups found"),
+    "no_groups_text" : MessageLookupByLibrary.simpleMessage("You are currently not part of any groups. You can either join one or create a new group."),
+    "no_image_available" : MessageLookupByLibrary.simpleMessage("No Image Available"),
+    "no_interests_added" : MessageLookupByLibrary.simpleMessage("No interests added"),
+    "no_matching_interests" : MessageLookupByLibrary.simpleMessage("No matching interests found"),
+    "no_matching_skills" : MessageLookupByLibrary.simpleMessage("No matching skills found"),
+    "no_member_found" : MessageLookupByLibrary.simpleMessage("No Member found"),
+    "no_members" : MessageLookupByLibrary.simpleMessage("No Members"),
+    "no_message" : MessageLookupByLibrary.simpleMessage("No Messages"),
+    "no_msg_yet" : MessageLookupByLibrary.simpleMessage("No messages yet"),
+    "no_near_communities" : MessageLookupByLibrary.simpleMessage("No nearby Seva Communities"),
+    "no_notifications" : MessageLookupByLibrary.simpleMessage("No Notifications"),
+    "no_offers" : MessageLookupByLibrary.simpleMessage("No Offers"),
+    "no_offers_title" : MessageLookupByLibrary.simpleMessage("There are currently no offers."),
+    "no_options_available" : MessageLookupByLibrary.simpleMessage("No Options Available"),
+    "no_participants_yet" : MessageLookupByLibrary.simpleMessage("No Participants yet"),
+    "no_pending_join_request" : MessageLookupByLibrary.simpleMessage("No pending join requests"),
+    "no_pending_requests" : MessageLookupByLibrary.simpleMessage("No pending requests"),
+    "no_pending_task" : MessageLookupByLibrary.simpleMessage("No pending tasks"),
+    "no_posts_description" : MessageLookupByLibrary.simpleMessage("To create one, select the Create Post button."),
+    "no_posts_title" : MessageLookupByLibrary.simpleMessage("There are currently no posts."),
+    "no_projects_message" : MessageLookupByLibrary.simpleMessage("No events available.Try"),
+    "no_ratings_yet" : MessageLookupByLibrary.simpleMessage("No ratings yet"),
+    "no_record_transactions_yet" : MessageLookupByLibrary.simpleMessage("No recorded transactions yet !"),
+    "no_requests" : MessageLookupByLibrary.simpleMessage("No Requests"),
+    "no_requests_available" : MessageLookupByLibrary.simpleMessage("No requests available.Try"),
+    "no_requests_title" : MessageLookupByLibrary.simpleMessage("There are currently no requests."),
+    "no_result_found" : MessageLookupByLibrary.simpleMessage("No result found"),
+    "no_search_result_found" : MessageLookupByLibrary.simpleMessage("No search result found"),
+    "no_skills_added" : MessageLookupByLibrary.simpleMessage("No skills added"),
+    "no_subcategories_created" : MessageLookupByLibrary.simpleMessage("No Request Subcategories Created"),
+    "no_templates_found" : MessageLookupByLibrary.simpleMessage("No templates found"),
+    "no_timebanks_found" : MessageLookupByLibrary.simpleMessage("No Seva Communities found"),
+    "no_transactions_yet" : MessageLookupByLibrary.simpleMessage("You do not have any transaction yet"),
+    "no_user_found" : MessageLookupByLibrary.simpleMessage("No user found"),
+    "no_volunteers_available" : MessageLookupByLibrary.simpleMessage("No volunteers available"),
+    "no_volunteers_yet" : MessageLookupByLibrary.simpleMessage("No Members joined yet"),
+    "none" : MessageLookupByLibrary.simpleMessage("None"),
+    "not_accepted" : MessageLookupByLibrary.simpleMessage("Not Accepted"),
+    "not_authorized_create_request" : MessageLookupByLibrary.simpleMessage("You are not authorized to create a request."),
+    "not_available" : MessageLookupByLibrary.simpleMessage("not available"),
+    "not_completed_any_tasks" : MessageLookupByLibrary.simpleMessage("not completed any tasks"),
+    "not_found" : MessageLookupByLibrary.simpleMessage("not found"),
+    "not_yet" : MessageLookupByLibrary.simpleMessage("not yet"),
+    "not_yet_redeemed" : MessageLookupByLibrary.simpleMessage("Not yet redeemed"),
+    "notification_alerts" : MessageLookupByLibrary.simpleMessage("Notifications Alerts"),
+    "notification_one_to_many_offer_canceled_subtitle" : MessageLookupByLibrary.simpleMessage("You had signed up for ***offerTItle. Due to unforeseen circumstances, ***name had to cancel this offer. You will receive credits for any unused SevaCredits."),
+    "notification_one_to_many_offer_canceled_title" : MessageLookupByLibrary.simpleMessage("A One-to-Many offer that you signed up for is canceled"),
+    "notification_settings" : MessageLookupByLibrary.simpleMessage("Notification Settings"),
+    "notification_timebank_join" : MessageLookupByLibrary.simpleMessage("Seva Community Join"),
+    "notifications_added_you" : MessageLookupByLibrary.simpleMessage("has added you to"),
+    "notifications_approved_by" : MessageLookupByLibrary.simpleMessage("Request approved by"),
+    "notifications_approved_for" : MessageLookupByLibrary.simpleMessage("approved the task completion for"),
+    "notifications_approved_withdrawn_subtitle" : MessageLookupByLibrary.simpleMessage("has withdrawn from"),
+    "notifications_approved_withdrawn_title" : MessageLookupByLibrary.simpleMessage("Member withdrawn"),
+    "notifications_by_approving" : MessageLookupByLibrary.simpleMessage("By approving"),
+    "notifications_could_not_delete" : MessageLookupByLibrary.simpleMessage("couldn\'t be deleted!"),
+    "notifications_could_not_deleted" : MessageLookupByLibrary.simpleMessage("couldn\'t be deleted because you have pending transactions!"),
+    "notifications_credited" : MessageLookupByLibrary.simpleMessage("Credited"),
+    "notifications_credited_msg" : MessageLookupByLibrary.simpleMessage("Seva coins has been credited to your account"),
+    "notifications_credited_to" : MessageLookupByLibrary.simpleMessage("have been credited to your account."),
+    "notifications_credits_for" : MessageLookupByLibrary.simpleMessage("Credits for"),
+    "notifications_debited" : MessageLookupByLibrary.simpleMessage("Debited"),
+    "notifications_debited_msg" : MessageLookupByLibrary.simpleMessage("Seva coinsMoMonthlyed from your account"),
+    "notifications_debited_to" : MessageLookupByLibrary.simpleMessage("has been debited from your account"),
+    "notifications_demoted_subtitle_phrase" : MessageLookupByLibrary.simpleMessage("has demoted you from being an Admin for the"),
+    "notifications_demoted_title" : MessageLookupByLibrary.simpleMessage("You have been demoted from Admin"),
+    "notifications_event_modification" : MessageLookupByLibrary.simpleMessage(". The Event Organizer has modified this event. Make sure the changes made are right for you and apply again"),
+    "notifications_feedback_request" : MessageLookupByLibrary.simpleMessage("Feedback request"),
+    "notifications_group_join_invite" : MessageLookupByLibrary.simpleMessage("Group join invite"),
+    "notifications_incomplete_transaction" : MessageLookupByLibrary.simpleMessage("We couldn\'t process you request for deletion of ***, as you are still having open transactions which are as : \n"),
+    "notifications_insufficient_credits" : MessageLookupByLibrary.simpleMessage("Your seva credits are not sufficient to approve the credit request."),
+    "notifications_invited_to_join" : MessageLookupByLibrary.simpleMessage("has invited you to join the"),
+    "notifications_join_request" : MessageLookupByLibrary.simpleMessage("Join request"),
+    "notifications_new_member_signup" : MessageLookupByLibrary.simpleMessage("New member signed up"),
+    "notifications_offer_accepted" : MessageLookupByLibrary.simpleMessage("Offer Accepted"),
+    "notifications_organizer_demoted_subtitle_phrase" : MessageLookupByLibrary.simpleMessage("has demoted you from being an Organizer for the "),
+    "notifications_promoted_organizer_subtitle_phrase" : MessageLookupByLibrary.simpleMessage("has promoted you to be the Organizer for the"),
+    "notifications_promoted_subtitle_phrase" : MessageLookupByLibrary.simpleMessage("has promoted you to be the Admin for the"),
+    "notifications_promoted_title" : MessageLookupByLibrary.simpleMessage("You have been promoted to Admin"),
+    "notifications_request_accepted_by" : MessageLookupByLibrary.simpleMessage("Request accepted by"),
+    "notifications_request_rejected_by" : MessageLookupByLibrary.simpleMessage("Request rejected by"),
+    "notifications_requested_join" : MessageLookupByLibrary.simpleMessage("has requested to join"),
+    "notifications_shown_interest" : MessageLookupByLibrary.simpleMessage("has shown interest in your offer"),
+    "notifications_signed_for_class" : MessageLookupByLibrary.simpleMessage("Signed up for class"),
+    "notifications_signed_up_for" : MessageLookupByLibrary.simpleMessage("You had signed up for"),
+    "notifications_successfully_deleted" : MessageLookupByLibrary.simpleMessage("*** has been successfully deleted."),
+    "notifications_tap_to_view" : MessageLookupByLibrary.simpleMessage("Tap to view join request"),
+    "notifications_task_rejected_by" : MessageLookupByLibrary.simpleMessage("Task completion rejected by"),
+    "notifications_waiting_for_approval" : MessageLookupByLibrary.simpleMessage("waiting for your approval."),
+    "notifications_was_deleted" : MessageLookupByLibrary.simpleMessage("was deleted!"),
+    "notifications_will_be_added_to" : MessageLookupByLibrary.simpleMessage("will be added to the event"),
+    "number_of_seva_credit" : MessageLookupByLibrary.simpleMessage("No of seva credits"),
+    "number_of_volunteers" : MessageLookupByLibrary.simpleMessage("No. of volunteers*"),
+    "number_of_volunteers_required" : MessageLookupByLibrary.simpleMessage("Number of volunteers required:"),
+    "occurences" : MessageLookupByLibrary.simpleMessage("Occurences"),
+    "occurrences" : MessageLookupByLibrary.simpleMessage("Occurrences"),
+    "of_text" : MessageLookupByLibrary.simpleMessage("of"),
+    "offer" : MessageLookupByLibrary.simpleMessage("Offer"),
+    "offerReview" : MessageLookupByLibrary.simpleMessage("You have received a review for the offer:"),
+    "offer_class_description" : MessageLookupByLibrary.simpleMessage("Class description"),
+    "offer_debit" : MessageLookupByLibrary.simpleMessage("Debit for one to many offer "),
+    "offer_description" : MessageLookupByLibrary.simpleMessage("Offer description"),
+    "offer_description_error" : MessageLookupByLibrary.simpleMessage("Please give a detailed description of the class you’re offering."),
+    "offer_description_hint" : MessageLookupByLibrary.simpleMessage("Ex: Describe in detail what you are willing to offer. Please use #hashtags so members can easily search for this offer, such as #babysitting or #mathhelp"),
+    "offer_duration" : MessageLookupByLibrary.simpleMessage("Offer duration"),
+    "offer_enter_participants" : MessageLookupByLibrary.simpleMessage("Enter the number of participants"),
+    "offer_error_creating" : MessageLookupByLibrary.simpleMessage("There was error creating your offer, Please try again."),
+    "offer_error_updating" : MessageLookupByLibrary.simpleMessage("There was error updating offer, Please try again."),
+    "offer_help" : MessageLookupByLibrary.simpleMessage("Offers Help"),
+    "offer_invitation_notification_subtitle" : MessageLookupByLibrary.simpleMessage(" has invited you to accept an offer."),
+    "offer_invitation_notification_title" : MessageLookupByLibrary.simpleMessage("Offer Invitation"),
+    "offer_number_class_hours" : MessageLookupByLibrary.simpleMessage("No. of class hours"),
+    "offer_number_class_hours_required" : MessageLookupByLibrary.simpleMessage("No. of class hours required"),
+    "offer_permissions" : MessageLookupByLibrary.simpleMessage("Offer Permissions"),
+    "offer_prep_hours" : MessageLookupByLibrary.simpleMessage("No. of preparation hours"),
+    "offer_prep_hours_required" : MessageLookupByLibrary.simpleMessage("No. of preparation hours required"),
+    "offer_size_class" : MessageLookupByLibrary.simpleMessage("Size of class"),
+    "offer_start_end_date" : MessageLookupByLibrary.simpleMessage("Please enter start and end date"),
+    "offer_title_hint" : MessageLookupByLibrary.simpleMessage("Ex: babysitting, math tutoring"),
+    "offer_to_sent_at" : MessageLookupByLibrary.simpleMessage("Send offer to address"),
+    "offer_type" : MessageLookupByLibrary.simpleMessage("Offer type*"),
+    "offer_updated" : MessageLookupByLibrary.simpleMessage("Offer Updated"),
+    "offered" : MessageLookupByLibrary.simpleMessage("Offered"),
+    "offered_by" : MessageLookupByLibrary.simpleMessage("Offered by"),
+    "offering_amount" : MessageLookupByLibrary.simpleMessage("Offering Amount"),
+    "offering_goods" : MessageLookupByLibrary.simpleMessage("Offering Goods"),
+    "offers" : MessageLookupByLibrary.simpleMessage("Offers"),
+    "ok" : MessageLookupByLibrary.simpleMessage("OK"),
+    "on" : MessageLookupByLibrary.simpleMessage("On"),
+    "on_community_plan" : MessageLookupByLibrary.simpleMessage("You are on Community Plan"),
+    "oneToManyRequestCreatorCompletingRequestDialog" : MessageLookupByLibrary.simpleMessage("Are you sure you want to accept and complete this request?"),
+    "oneToManyRequestSpeakerAcceptRequest" : MessageLookupByLibrary.simpleMessage("Are you sure you want to accept this request?"),
+    "oneToManyRequestSpeakerWithdrawDialog" : MessageLookupByLibrary.simpleMessage("Please confirm that you would like to withdraw as a speaker"),
+    "one_to_many" : MessageLookupByLibrary.simpleMessage("One to many"),
+    "one_to_many_attendee_offer" : MessageLookupByLibrary.simpleMessage("One to Many Offer Attendee"),
+    "one_to_many_attendee_request" : MessageLookupByLibrary.simpleMessage("One to Many Request Attendee"),
+    "one_to_many_offer_attende" : MessageLookupByLibrary.simpleMessage("One to Many Offer Attendee"),
+    "one_to_many_offer_hint" : MessageLookupByLibrary.simpleMessage("Ex: teaching a python class.."),
+    "one_to_many_offer_speaker" : MessageLookupByLibrary.simpleMessage("One to Many Offer Speaker"),
+    "one_to_many_offers" : MessageLookupByLibrary.simpleMessage("one to many offers\n"),
+    "one_to_many_request_attende" : MessageLookupByLibrary.simpleMessage("One to Many Request attendee"),
+    "one_to_many_request_speaker" : MessageLookupByLibrary.simpleMessage("One to Many Request Speaker"),
+    "one_to_many_speaker_offer" : MessageLookupByLibrary.simpleMessage("One to Many Offer Speaker"),
+    "one_to_many_speaker_request" : MessageLookupByLibrary.simpleMessage("One to Many Offer Speaker"),
+    "onetomany_createoffer_note" : MessageLookupByLibrary.simpleMessage("Note: Upon completing the one to many offer, the combined prep time and session hours will be credited to you."),
+    "onetomanyrequest_create_new_event" : MessageLookupByLibrary.simpleMessage("A new event will be created and linked to this request."),
+    "onetomanyrequest_member_invite_notif_subtitle" : MessageLookupByLibrary.simpleMessage("admin_name in community_name has invited you to join the webinar_name on date_webinar at time_webinar. Tap to accept the invitation."),
+    "onetomanyrequest_participants_or_credits_hint" : MessageLookupByLibrary.simpleMessage("Ex: 40."),
+    "onetomanyrequest_title_hint" : MessageLookupByLibrary.simpleMessage("Ex: Implicit Bias webinar."),
+    "only_community_admins_can_accept" : MessageLookupByLibrary.simpleMessage("Only Community admins can accept offers of money / goods"),
+    "only_csv_allowed" : MessageLookupByLibrary.simpleMessage("Only CSV files are allowed"),
+    "only_images_types_allowed" : MessageLookupByLibrary.simpleMessage("Only image types are allowed ex:jpg, png\'"),
+    "only_pdf_files_allowed" : MessageLookupByLibrary.simpleMessage("Only Pdf files are allowed"),
+    "open_notification" : MessageLookupByLibrary.simpleMessage("Open notifications"),
+    "open_requests" : MessageLookupByLibrary.simpleMessage("open requests\n"),
+    "open_settings" : MessageLookupByLibrary.simpleMessage("Open Settings"),
+    "option_one" : MessageLookupByLibrary.simpleMessage("Standing Offer"),
+    "option_two" : MessageLookupByLibrary.simpleMessage("One Time"),
+    "or" : MessageLookupByLibrary.simpleMessage("or"),
+    "or_drag_and_drop" : MessageLookupByLibrary.simpleMessage("or drag and drop"),
+    "organize_an_event" : MessageLookupByLibrary.simpleMessage("Organize an event"),
+    "organize_an_event_explore" : MessageLookupByLibrary.simpleMessage("Organize an event"),
+    "organizer" : MessageLookupByLibrary.simpleMessage("Organizer"),
+    "other" : m2,
+    "other_details" : MessageLookupByLibrary.simpleMessage("Other Details"),
+    "other_payment_details" : MessageLookupByLibrary.simpleMessage("Payment Method Details"),
+    "other_payment_details_hint" : MessageLookupByLibrary.simpleMessage("Ex: Email, Phone Number, ID"),
+    "other_payment_name" : MessageLookupByLibrary.simpleMessage("Payment Method Name"),
+    "other_payment_title_hint" : MessageLookupByLibrary.simpleMessage("Ex: IndieGoGo or Revolut"),
+    "otm_offer_cancelled_subtitle" : MessageLookupByLibrary.simpleMessage("Offer cancelled by Creator"),
+    "otm_offer_cancelled_title" : MessageLookupByLibrary.simpleMessage("One to many offer Cancelled"),
+    "owner" : MessageLookupByLibrary.simpleMessage("Owner"),
+    "owner_demoted_to_admin" : MessageLookupByLibrary.simpleMessage("associatedName has demoted you from being a Super Admin for the groupName"),
+    "owners" : MessageLookupByLibrary.simpleMessage("Super Admin(s)"),
+    "ownership_success" : MessageLookupByLibrary.simpleMessage("Congratulations! You are now the new owner of the Seva Community "),
+    "ownership_transfer_error" : MessageLookupByLibrary.simpleMessage("Error occurred! Please come back later and try again."),
+    "part_of" : MessageLookupByLibrary.simpleMessage("Part of"),
+    "part_of_seva_communication" : MessageLookupByLibrary.simpleMessage("Part of SevaX global network of Communication"),
+    "part_of_sevax" : MessageLookupByLibrary.simpleMessage("Part of SevaX Global Network of Communities"),
+    "participants" : MessageLookupByLibrary.simpleMessage("Participants"),
+    "particpate_in_request_question" : MessageLookupByLibrary.simpleMessage("Do you want to participate in this request?"),
+    "password" : MessageLookupByLibrary.simpleMessage("Password"),
+    "past_hired" : MessageLookupByLibrary.simpleMessage("Previously Selected"),
+    "past_time_selected" : MessageLookupByLibrary.simpleMessage("The time you selected is invalid because it is in the past."),
+    "pay_by" : MessageLookupByLibrary.simpleMessage("Pay by"),
+    "paying" : MessageLookupByLibrary.simpleMessage("paying"),
+    "payment_data_syncing" : MessageLookupByLibrary.simpleMessage("Payment Data Syncing"),
+    "payment_link_description" : MessageLookupByLibrary.simpleMessage("Please use the link down below to donate and once done take a pledge on how much you have donated."),
+    "payment_method" : MessageLookupByLibrary.simpleMessage("Payment Method"),
+    "payment_still_processing" : MessageLookupByLibrary.simpleMessage("Your payment is still being processed. Please try this operation a little later"),
+    "pdf_document" : MessageLookupByLibrary.simpleMessage("PDF Document"),
+    "pending" : MessageLookupByLibrary.simpleMessage("Pending"),
+    "pending_offers" : MessageLookupByLibrary.simpleMessage("pending offers"),
+    "pending_projects" : MessageLookupByLibrary.simpleMessage("pending events"),
+    "pending_requests" : MessageLookupByLibrary.simpleMessage("pending requests"),
+    "people" : MessageLookupByLibrary.simpleMessage("People"),
+    "people_applied_for_request" : MessageLookupByLibrary.simpleMessage(" people have applied for this request"),
+    "per_transaction_quota" : MessageLookupByLibrary.simpleMessage("per transaction billed annualy upon exceeding free monthly quota"),
+    "person_of_contact_details" : MessageLookupByLibrary.simpleMessage("Person of contact details"),
+    "personal" : MessageLookupByLibrary.simpleMessage("Personal"),
+    "personal_event" : MessageLookupByLibrary.simpleMessage("Personal Event"),
+    "personal_events" : MessageLookupByLibrary.simpleMessage("Personal Events"),
+    "personal_max_seva_credit_message1" : MessageLookupByLibrary.simpleMessage(" Seva Credits are required for this request. It will be debited from your balance. Note that each participant will receive a maximum of "),
+    "personal_max_seva_credit_message2" : MessageLookupByLibrary.simpleMessage(" credits for completing this request."),
+    "personal_messages" : MessageLookupByLibrary.simpleMessage("Personal Messages"),
+    "personal_project" : m3,
+    "personal_request" : m4,
+    "pets_allowed" : MessageLookupByLibrary.simpleMessage("Pets Allowed"),
+    "phone_number" : MessageLookupByLibrary.simpleMessage("Phone Number"),
+    "photo_credits" : MessageLookupByLibrary.simpleMessage("Photo Credits"),
+    "photo_selected" : MessageLookupByLibrary.simpleMessage("Photo Selected"),
+    "plan_change" : MessageLookupByLibrary.simpleMessage("Plan change"),
+    "plan_changed" : MessageLookupByLibrary.simpleMessage("Plan Changed"),
+    "plan_details" : MessageLookupByLibrary.simpleMessage("Plan Details"),
+    "plan_details_quota1" : MessageLookupByLibrary.simpleMessage("per transaction billed monthly upon exceeding free monthly quota"),
+    "plan_upgrade_message_admin" : MessageLookupByLibrary.simpleMessage("Please contact the creator of your Seva Community to activate this feature"),
+    "plan_upgrade_message_user" : MessageLookupByLibrary.simpleMessage("Please contact the admin of your Seva Community to activate this feature"),
+    "plan_yearly_1500" : MessageLookupByLibrary.simpleMessage("paying yearly for \$1500 and additional charges of"),
+    "plans" : MessageLookupByLibrary.simpleMessage("Plans"),
+    "please_enter_doc_name" : MessageLookupByLibrary.simpleMessage("Please enter document name"),
+    "please_enter_title" : MessageLookupByLibrary.simpleMessage("Please enter title"),
+    "please_enter_valid_amount" : MessageLookupByLibrary.simpleMessage("Please enter a valid amount"),
+    "please_join_seva_to_access" : MessageLookupByLibrary.simpleMessage("Please join seva community to access "),
+    "please_switch_to_access" : MessageLookupByLibrary.simpleMessage("Please switch seva community to access "),
+    "please_wait" : MessageLookupByLibrary.simpleMessage("Please wait..."),
+    "pledge" : MessageLookupByLibrary.simpleMessage("Pledge"),
+    "pledge_goods_supplies" : MessageLookupByLibrary.simpleMessage(" has pledge to donate good/supplies"),
+    "pledge_modified" : MessageLookupByLibrary.simpleMessage("Your pledged amount for donation was not acknowledged"),
+    "pledge_modified_by_donor" : MessageLookupByLibrary.simpleMessage("Donor has modified the pledge amount"),
+    "pledged" : MessageLookupByLibrary.simpleMessage("Pledged"),
+    "pledged_to_donate" : MessageLookupByLibrary.simpleMessage("pledged to donate"),
+    "policies" : MessageLookupByLibrary.simpleMessage("Policies"),
+    "policies_explore" : MessageLookupByLibrary.simpleMessage("Policies"),
+    "posted_by" : MessageLookupByLibrary.simpleMessage("Posted By:"),
+    "posted_date" : MessageLookupByLibrary.simpleMessage("PostDate:"),
+    "posted_on" : MessageLookupByLibrary.simpleMessage("Posted on"),
+    "prev" : MessageLookupByLibrary.simpleMessage("Prev"),
+    "prevent_accidental_delete" : MessageLookupByLibrary.simpleMessage("Prevent accidental delete"),
+    "private_group" : MessageLookupByLibrary.simpleMessage("Private Group"),
+    "private_timebank" : MessageLookupByLibrary.simpleMessage("Private Seva Community"),
+    "private_timebank_alert" : MessageLookupByLibrary.simpleMessage("Private Seva Community alert"),
+    "private_timebank_alert_hint" : MessageLookupByLibrary.simpleMessage("Please be informed that Private Seva Communities do not have a free option. You will need to provide your billing details to continue to create this Seva Community"),
+    "proceed" : MessageLookupByLibrary.simpleMessage("Proceed"),
+    "proceed_with_cancellation" : MessageLookupByLibrary.simpleMessage("Click OK to proceed with the cancelation, Otherwise, press cancel"),
+    "proceed_with_copying" : MessageLookupByLibrary.simpleMessage("Proceed with copying."),
+    "profanity_alert" : MessageLookupByLibrary.simpleMessage("Profanity alert"),
+    "profanity_image_alert" : MessageLookupByLibrary.simpleMessage("The SevaX App has a policy of not allowing profane, explicit or violent images. Please use another image."),
+    "profanity_text_alert" : MessageLookupByLibrary.simpleMessage("The SevaX App has a policy of not allowing profane or explicit language. Please revise your text."),
+    "profile_details" : MessageLookupByLibrary.simpleMessage("Profile Details"),
+    "project_duration" : MessageLookupByLibrary.simpleMessage("Event duration"),
+    "project_location" : MessageLookupByLibrary.simpleMessage("Your event location"),
+    "project_location_hint" : MessageLookupByLibrary.simpleMessage("Event location will help your members to locate"),
+    "project_logo" : MessageLookupByLibrary.simpleMessage("Event Image"),
+    "project_message_room_invite" : MessageLookupByLibrary.simpleMessage("<Message_room_creator_name> has created a message room <message_room_name> in the Community <community_name> and invited you to join. Please accept or decline the invitation."),
+    "project_mission_statement_hint" : MessageLookupByLibrary.simpleMessage("Tell us why this event is happening. How will it help your community"),
+    "project_name" : MessageLookupByLibrary.simpleMessage("Event Name"),
+    "projects" : MessageLookupByLibrary.simpleMessage("Events"),
+    "projects_here" : MessageLookupByLibrary.simpleMessage("Events here"),
+    "projects_text" : MessageLookupByLibrary.simpleMessage("Projects"),
+    "promote" : MessageLookupByLibrary.simpleMessage("Promote"),
+    "promoted" : MessageLookupByLibrary.simpleMessage("PROMOTED"),
+    "promotion_to_admin_from_member" : MessageLookupByLibrary.simpleMessage("Promotion to admin from member"),
+    "protected_timebank" : MessageLookupByLibrary.simpleMessage("Restricted Seva Community"),
+    "protected_timebank_alert_dialog" : MessageLookupByLibrary.simpleMessage("You cannot accept requests in a protected Seva Community"),
+    "protected_timebank_group_creation_error" : MessageLookupByLibrary.simpleMessage("You cannot create groups in a protected Seva Community"),
+    "protected_timebank_request_creation_error" : MessageLookupByLibrary.simpleMessage("You cannot post requests in a protected Seva Community"),
+    "provide_skills" : MessageLookupByLibrary.simpleMessage("Provide the list of Skills that you require for this request"),
+    "public" : MessageLookupByLibrary.simpleMessage("Public"),
+    "public_to_sevax" : MessageLookupByLibrary.simpleMessage("Public to SevaX Global"),
+    "publish_code" : MessageLookupByLibrary.simpleMessage("Publish code"),
+    "push_notification_message" : MessageLookupByLibrary.simpleMessage("The SevaX App would like to send you Push Notifications. Notifications may include alerts and reminders."),
+    "quite_hours_allowed" : MessageLookupByLibrary.simpleMessage("Quiet hours allowed"),
+    "raised" : MessageLookupByLibrary.simpleMessage("Raised"),
+    "read_less" : MessageLookupByLibrary.simpleMessage("Read Less"),
+    "read_more" : MessageLookupByLibrary.simpleMessage("Read More"),
+    "reason" : MessageLookupByLibrary.simpleMessage("Reason"),
+    "reason_not_mentioned" : MessageLookupByLibrary.simpleMessage("Reason not mentioned"),
+    "reason_to_join" : MessageLookupByLibrary.simpleMessage("Reason to join"),
+    "received" : MessageLookupByLibrary.simpleMessage("Received"),
+    "recieved_credits_one_to_many" : MessageLookupByLibrary.simpleMessage("Received Credit for one to many offer"),
+    "recuring_weekly_on" : MessageLookupByLibrary.simpleMessage("Weekly on"),
+    "recurring" : MessageLookupByLibrary.simpleMessage("Recurring"),
+    "recurringDays_err" : MessageLookupByLibrary.simpleMessage("Recurring days cannot be empty"),
+    "recurring_list_heading" : MessageLookupByLibrary.simpleMessage("Recurring list"),
+    "redeemed_by" : MessageLookupByLibrary.simpleMessage("Redeemed by"),
+    "redirecting_to_messages" : MessageLookupByLibrary.simpleMessage("Redirecting to messages"),
+    "register" : MessageLookupByLibrary.simpleMessage("Register"),
+    "register_subtitle" : MessageLookupByLibrary.simpleMessage("Please create an account to begin giving and receiving"),
+    "register_with" : MessageLookupByLibrary.simpleMessage("Register with"),
+    "register_with_apple" : MessageLookupByLibrary.simpleMessage("Register with Google"),
+    "registration_link" : MessageLookupByLibrary.simpleMessage("Registration Link"),
+    "registration_link_hint" : MessageLookupByLibrary.simpleMessage("Ex: Eventbrite link, etc."),
+    "reject" : MessageLookupByLibrary.simpleMessage("Reject"),
+    "reject_request_completion" : MessageLookupByLibrary.simpleMessage("Are you sure you want to reject this request for completion?"),
+    "reject_task_completion" : MessageLookupByLibrary.simpleMessage("I am rejecting your task completion request because"),
+    "rejected" : MessageLookupByLibrary.simpleMessage("REJECTED"),
+    "reliability_score" : MessageLookupByLibrary.simpleMessage("Reliability"),
+    "reliabilitysocre" : MessageLookupByLibrary.simpleMessage("Reliability score"),
+    "remove" : MessageLookupByLibrary.simpleMessage("Remove"),
+    "remove_as_admin" : MessageLookupByLibrary.simpleMessage("Remove as admin"),
+    "remove_member" : MessageLookupByLibrary.simpleMessage("Remove member"),
+    "remove_self_from_group_error" : MessageLookupByLibrary.simpleMessage("Cannot remove yourself from the group. Instead, please try deleting the group."),
+    "remove_user" : MessageLookupByLibrary.simpleMessage("Remove User"),
+    "repeat" : MessageLookupByLibrary.simpleMessage("Repeat"),
+    "repeat_on" : MessageLookupByLibrary.simpleMessage("Repeat on"),
+    "replace_cv" : MessageLookupByLibrary.simpleMessage("Replace CV"),
+    "replies" : MessageLookupByLibrary.simpleMessage("Replies"),
+    "reply" : MessageLookupByLibrary.simpleMessage("Reply"),
+    "report" : MessageLookupByLibrary.simpleMessage("Report"),
+    "report_feed" : MessageLookupByLibrary.simpleMessage("Report Feed"),
+    "report_feed_confirmation_message" : MessageLookupByLibrary.simpleMessage("Do you want to report this feed?"),
+    "report_member_inform" : MessageLookupByLibrary.simpleMessage("Please inform, why you are reporting this user."),
+    "report_member_provide_details" : MessageLookupByLibrary.simpleMessage("Please provide as much detail as possible"),
+    "report_members" : MessageLookupByLibrary.simpleMessage("Report Member"),
+    "report_of" : MessageLookupByLibrary.simpleMessage("Report of"),
+    "report_on" : MessageLookupByLibrary.simpleMessage("Reports on"),
+    "reported_by" : MessageLookupByLibrary.simpleMessage("Reported by"),
+    "reported_member_click_to_view" : MessageLookupByLibrary.simpleMessage("Click here to view reported users of this Seva Community"),
+    "reported_members" : MessageLookupByLibrary.simpleMessage("Reported Members"),
+    "reported_users" : MessageLookupByLibrary.simpleMessage("Reported Users"),
+    "reporting_member" : MessageLookupByLibrary.simpleMessage("Reporting member"),
+    "reports" : MessageLookupByLibrary.simpleMessage("Reports"),
+    "reports_charging_info" : MessageLookupByLibrary.simpleMessage("Reports are emailed to the creator of each community once a month. There is a cost of \$9.95 per report - which will be billed to the credit card on file to generate this report. By clicking Proceed, you are agreeing to this cost. Otherwise click Cancel."),
+    "request" : MessageLookupByLibrary.simpleMessage("Request"),
+    "request_accepted" : MessageLookupByLibrary.simpleMessage("Member has accepted a request and is waiting for approval"),
+    "request_agreement_form_component_text" : MessageLookupByLibrary.simpleMessage("Create/Use agreement between you and borrower on how your item/place can be used."),
+    "request_agreement_not_available" : MessageLookupByLibrary.simpleMessage("Request agreement not available"),
+    "request_amount_cannot_be_greater" : MessageLookupByLibrary.simpleMessage("Requested amount cannot be greater than offered amount!"),
+    "request_approved" : MessageLookupByLibrary.simpleMessage("Request Approved"),
+    "request_approved_by_msg" : MessageLookupByLibrary.simpleMessage("Your request has been approved by"),
+    "request_category_exists" : MessageLookupByLibrary.simpleMessage("Request subcategory exists"),
+    "request_closed" : MessageLookupByLibrary.simpleMessage("Request closed"),
+    "request_completed" : MessageLookupByLibrary.simpleMessage("Member claims time credits and is waiting for approval"),
+    "request_completed_by_speaker" : MessageLookupByLibrary.simpleMessage("This request has been completed and is awaiting your approval."),
+    "request_credits_again" : MessageLookupByLibrary.simpleMessage("Are you sure you want to request for credits again?"),
+    "request_delete_confirmation_message" : MessageLookupByLibrary.simpleMessage("Are you sure you want to delete this request?"),
+    "request_desc_hint_time" : MessageLookupByLibrary.simpleMessage("Please describe what you need to have done. \n \nEx: I need help removing weeds from  my small garden."),
+    "request_descrip_hint_text" : MessageLookupByLibrary.simpleMessage("Your Request and any #hashtags"),
+    "request_description" : MessageLookupByLibrary.simpleMessage("Request description*"),
+    "request_description_hint" : MessageLookupByLibrary.simpleMessage("Please describe what you need to have done. \n \nExample, I need help removing weeds from  my small garden."),
+    "request_description_hint_cash" : MessageLookupByLibrary.simpleMessage("Ex: Specify the cause for fundraising. Include any #hashtags"),
+    "request_description_hint_goods" : MessageLookupByLibrary.simpleMessage("Ex: Specify the cause of requesting goods / supplies and any #hashtags"),
+    "request_description_hint_text_borrow" : MessageLookupByLibrary.simpleMessage("Please describe what you require"),
+    "request_details" : MessageLookupByLibrary.simpleMessage("Request details"),
+    "request_duration" : MessageLookupByLibrary.simpleMessage("  Request duration"),
+    "request_ended" : MessageLookupByLibrary.simpleMessage("This request has now ended. Tap to complete the request"),
+    "request_ended_emailsent_msg" : MessageLookupByLibrary.simpleMessage("The request has completed and an email has been sent to you. Tap to leave a feedback."),
+    "request_failed" : MessageLookupByLibrary.simpleMessage("Request failed!"),
+    "request_failure_message" : MessageLookupByLibrary.simpleMessage("Sending request failed somehow, please try again later!"),
+    "request_goods_address" : MessageLookupByLibrary.simpleMessage("Provide address where the donor should ship*"),
+    "request_goods_address_hint" : MessageLookupByLibrary.simpleMessage("Ex: Donors will use the address below to ship the Goods/Supplies."),
+    "request_goods_address_inputhint" : MessageLookupByLibrary.simpleMessage("Address Only"),
+    "request_goods_desc_hint" : MessageLookupByLibrary.simpleMessage("Ex: Local Food Bank has a shortage..."),
+    "request_goods_description" : MessageLookupByLibrary.simpleMessage("Provide the list of Goods/Supplies that you need*"),
+    "request_goods_offer" : MessageLookupByLibrary.simpleMessage("Provide the list of Goods/Supplies that you  can offer*"),
+    "request_goods_title_hint" : MessageLookupByLibrary.simpleMessage("Ex: Non-perishable goods for Food Bank..."),
+    "request_has_been_assigned_to_a_member" : MessageLookupByLibrary.simpleMessage("Request has been assigned to a member"),
+    "request_min_donation" : MessageLookupByLibrary.simpleMessage("Minimum amount per member*"),
+    "request_min_donation_hint" : MessageLookupByLibrary.simpleMessage("Ex: \$10"),
+    "request_money_desc_hint" : MessageLookupByLibrary.simpleMessage("Ex: Fundraiser to expand women’s shelter..."),
+    "request_money_title_hint" : MessageLookupByLibrary.simpleMessage("Ex: Fundraiser for women’s shelter..."),
+    "request_offer_agreement_hint_text" : MessageLookupByLibrary.simpleMessage("Ex :3"),
+    "request_offer_agreement_hint_text2" : MessageLookupByLibrary.simpleMessage("Ex: \$300"),
+    "request_offer_agreement_hint_text3" : MessageLookupByLibrary.simpleMessage("Ex: Gas-powered lawnmower in mint condition with full tank of gas."),
+    "request_offer_agreement_hint_text4" : MessageLookupByLibrary.simpleMessage("Ex: Lawnmower must be cleaned and operable with a full tank of gas."),
+    "request_offer_agreement_hint_text5" : MessageLookupByLibrary.simpleMessage("Ex: LANDLORD\'S LIABILITY. The Guest and any of their guests hereby indemnify and hold harmless the Landlord against any and all claims of personal injury or property damage or loss arising from the use of the Premises regardless of the nature of the accident, injury or loss. The Guest expressly recognizes that any insurance for property damage or loss which the Landlord may maintain on the property does not cover the personal property of Tenant and that Tenant should purchase their own insurance for their guests if such coverage is desired."),
+    "request_offer_agreement_tool_widget_text" : MessageLookupByLibrary.simpleMessage("Stipulations regarding returned item in unsatisfactory condition."),
+    "request_payment_ach_account_no" : MessageLookupByLibrary.simpleMessage("Account Number*"),
+    "request_payment_ach_bank_address" : MessageLookupByLibrary.simpleMessage("Bank Address*"),
+    "request_payment_ach_bank_name" : MessageLookupByLibrary.simpleMessage("Bank Name*"),
+    "request_payment_ach_routing_number" : MessageLookupByLibrary.simpleMessage("Routing Number*"),
+    "request_payment_description" : MessageLookupByLibrary.simpleMessage("Payment Details*"),
+    "request_payment_descriptionZelle_inputhint" : MessageLookupByLibrary.simpleMessage("Ex: Zellepay ID (phone or email)"),
+    "request_payment_description_hint" : MessageLookupByLibrary.simpleMessage("SevaX does not process the payment. Please select from among PayPal, ZellePay or ACH in the drop down and provide the appropriate details for each method. The donor will complete the donation outside the SevaX app."),
+    "request_payment_description_hint_new" : MessageLookupByLibrary.simpleMessage("SevaX does not process the payment. Please select from among  ACH, PayPal, Venmo, or ZellePay in the drop down and provide the appropriate details for each method. The donor will complete the donation outside the SevaX app."),
+    "request_payment_description_inputhint" : MessageLookupByLibrary.simpleMessage("Ex: https://www.paypal.com/johndoe"),
+    "request_paymenttype_ach" : MessageLookupByLibrary.simpleMessage("ACH"),
+    "request_paymenttype_paypal" : MessageLookupByLibrary.simpleMessage("PayPal"),
+    "request_paymenttype_venmo" : MessageLookupByLibrary.simpleMessage("Venmo"),
+    "request_paymenttype_zellepay" : MessageLookupByLibrary.simpleMessage("ZellePay"),
+    "request_permissions" : MessageLookupByLibrary.simpleMessage("Request Permissions"),
+    "request_review_body_creator" : MessageLookupByLibrary.simpleMessage("You have received a review for the request:"),
+    "request_review_body_user" : MessageLookupByLibrary.simpleMessage("You have received a review on the work that you did for the request:"),
+    "request_subject" : MessageLookupByLibrary.simpleMessage("Please enter the subject of your request"),
+    "request_submitted" : MessageLookupByLibrary.simpleMessage("Request submitted"),
+    "request_target_donation" : MessageLookupByLibrary.simpleMessage("Target Donation*"),
+    "request_target_donation_hint" : MessageLookupByLibrary.simpleMessage("Ex: \$100"),
+    "request_title" : MessageLookupByLibrary.simpleMessage("Request title*"),
+    "request_title_hint" : MessageLookupByLibrary.simpleMessage("Ex: Small carpentry work..."),
+    "request_to_join" : MessageLookupByLibrary.simpleMessage("Request to join"),
+    "request_tools_description" : MessageLookupByLibrary.simpleMessage("Request tools description*"),
+    "request_type" : MessageLookupByLibrary.simpleMessage("Request type*"),
+    "request_type_cash" : MessageLookupByLibrary.simpleMessage("Money"),
+    "request_type_goods" : MessageLookupByLibrary.simpleMessage("Goods / Supplies"),
+    "request_type_time" : MessageLookupByLibrary.simpleMessage("Time"),
+    "request_updated" : MessageLookupByLibrary.simpleMessage("Request Updated"),
+    "requested" : MessageLookupByLibrary.simpleMessage("REQUESTED"),
+    "requested_by" : MessageLookupByLibrary.simpleMessage("Requested By"),
+    "requested_for_completion" : MessageLookupByLibrary.simpleMessage("Your completed request is pending approval."),
+    "requests" : MessageLookupByLibrary.simpleMessage("Requests"),
+    "resend_email" : MessageLookupByLibrary.simpleMessage("Resend mail"),
+    "resend_invite" : MessageLookupByLibrary.simpleMessage("Resend Invitation"),
+    "reset" : MessageLookupByLibrary.simpleMessage("Reset"),
+    "resetPasswordSuccess" : MessageLookupByLibrary.simpleMessage("An email has been sent. Please follow the steps in the email to reset your password."),
+    "reset_dynamic_link_message" : MessageLookupByLibrary.simpleMessage("Please check your email to set your password. Then enter that password here"),
+    "reset_list" : MessageLookupByLibrary.simpleMessage("Reset list"),
+    "reset_password" : MessageLookupByLibrary.simpleMessage("Reset Password"),
+    "reset_password_message" : MessageLookupByLibrary.simpleMessage("We\'ve sent the reset link to your email address"),
+    "review" : MessageLookupByLibrary.simpleMessage("Review"),
+    "review_agreement" : MessageLookupByLibrary.simpleMessage("Review Agreement"),
+    "review_before_proceding_text" : MessageLookupByLibrary.simpleMessage("Please review the agreement below before proceeding."),
+    "review_earnings" : MessageLookupByLibrary.simpleMessage("Review Earnings"),
+    "review_feedback_message" : MessageLookupByLibrary.simpleMessage("Take a moment to reflect on your experience and share your appreciation by writing a short review."),
+    "role" : MessageLookupByLibrary.simpleMessage("Role"),
+    "routing_number" : MessageLookupByLibrary.simpleMessage("Routing number"),
+    "sandbox_already_created_1" : MessageLookupByLibrary.simpleMessage("Only one sandbox community is currently allowed for each SevaX member."),
+    "sandbox_community" : MessageLookupByLibrary.simpleMessage("Sandbox Community"),
+    "sandbox_community_description" : MessageLookupByLibrary.simpleMessage("Sandbox communities are created for testing purposes?"),
+    "sandbox_create_community_alert" : MessageLookupByLibrary.simpleMessage("Are you sure you want to create a sandbox community?"),
+    "sandbox_dialog_subtitle" : MessageLookupByLibrary.simpleMessage("Sandbox Seva communities are created for instructional purposes only. Any credits earned or debited will not count towards your account."),
+    "sandbox_dialog_title" : MessageLookupByLibrary.simpleMessage("Sandbox seva community"),
+    "save" : MessageLookupByLibrary.simpleMessage("Save"),
+    "save_as_sponsored" : MessageLookupByLibrary.simpleMessage("Save as Endorsed"),
+    "save_as_template" : MessageLookupByLibrary.simpleMessage("Save as Template"),
+    "search" : MessageLookupByLibrary.simpleMessage("Search"),
+    "search_admin" : MessageLookupByLibrary.simpleMessage("Search Admin"),
+    "search_by_email_name" : MessageLookupByLibrary.simpleMessage("Search members via email,name"),
+    "search_category" : MessageLookupByLibrary.simpleMessage("Search Category"),
+    "search_something" : MessageLookupByLibrary.simpleMessage("Search Something"),
+    "search_template_hint" : MessageLookupByLibrary.simpleMessage("Enter name of a Event Template"),
+    "search_user" : MessageLookupByLibrary.simpleMessage("Search a user"),
+    "security_deposits" : MessageLookupByLibrary.simpleMessage("Security Deposit"),
+    "see_all" : MessageLookupByLibrary.simpleMessage("See All"),
+    "see_less" : MessageLookupByLibrary.simpleMessage("See Less"),
+    "select_a_speaker" : MessageLookupByLibrary.simpleMessage("Please select a Speaker*"),
+    "select_a_speaker_dialog" : MessageLookupByLibrary.simpleMessage("Select a speaker"),
+    "select_all" : MessageLookupByLibrary.simpleMessage("Select All"),
+    "select_categories_community_headding" : MessageLookupByLibrary.simpleMessage("Select categories for your community"),
+    "select_category" : MessageLookupByLibrary.simpleMessage("Select Category"),
+    "select_child_timebank" : MessageLookupByLibrary.simpleMessage("Select Child Seva Communities"),
+    "select_goods_category" : MessageLookupByLibrary.simpleMessage("Select a goods / supplies category"),
+    "select_group" : MessageLookupByLibrary.simpleMessage("Select Group"),
+    "select_hours" : MessageLookupByLibrary.simpleMessage("Select hours"),
+    "select_parent_timebank" : MessageLookupByLibrary.simpleMessage("Select Parent Seva Communities"),
+    "select_photo" : MessageLookupByLibrary.simpleMessage("Select Photo"),
+    "select_project" : MessageLookupByLibrary.simpleMessage("Select an event"),
+    "select_request" : MessageLookupByLibrary.simpleMessage("Select Request"),
+    "select_speaker_hint" : MessageLookupByLibrary.simpleMessage("Ex: Name of speaker."),
+    "select_template" : MessageLookupByLibrary.simpleMessage("Please select a Template from the list of available Templates"),
+    "select_time" : MessageLookupByLibrary.simpleMessage("Select time"),
+    "select_time_period" : MessageLookupByLibrary.simpleMessage("Select Time Period"),
+    "select_timebank" : MessageLookupByLibrary.simpleMessage("Select a Seva Community"),
+    "select_timeline" : MessageLookupByLibrary.simpleMessage("Select Timeline"),
+    "select_transaction_type" : MessageLookupByLibrary.simpleMessage("Select Transaction Types"),
+    "select_transaction_type_valid" : MessageLookupByLibrary.simpleMessage("Select a transaction type"),
+    "select_user" : MessageLookupByLibrary.simpleMessage("Please select a user"),
+    "select_volunteer" : MessageLookupByLibrary.simpleMessage("Select volunteers"),
+    "selected_categories" : MessageLookupByLibrary.simpleMessage("Selected Categories"),
+    "selected_skills" : MessageLookupByLibrary.simpleMessage("Selected Skills"),
+    "selected_speaker" : MessageLookupByLibrary.simpleMessage("Selected Speaker"),
+    "selected_users_before" : MessageLookupByLibrary.simpleMessage(" Selected users before "),
+    "selected_value" : MessageLookupByLibrary.simpleMessage("Selected value :"),
+    "send_csv_file" : MessageLookupByLibrary.simpleMessage("Send CSV File"),
+    "send_feedback" : MessageLookupByLibrary.simpleMessage("Send Feedback"),
+    "send_invitation" : MessageLookupByLibrary.simpleMessage("Send Invitation"),
+    "send_request" : MessageLookupByLibrary.simpleMessage("Send Request"),
+    "sending" : MessageLookupByLibrary.simpleMessage("Sending..."),
+    "sending_feedback" : MessageLookupByLibrary.simpleMessage("Sending Feedback"),
+    "sending_invitation" : MessageLookupByLibrary.simpleMessage("Sending invitation..."),
+    "set_duration" : MessageLookupByLibrary.simpleMessage(" Click to Set Duration"),
+    "settings" : MessageLookupByLibrary.simpleMessage("Settings"),
+    "seva" : MessageLookupByLibrary.simpleMessage("Seva"),
+    "seva_coins_debited" : MessageLookupByLibrary.simpleMessage("Seva Coins debited"),
+    "seva_community" : MessageLookupByLibrary.simpleMessage("Seva Community"),
+    "seva_community_event" : MessageLookupByLibrary.simpleMessage("Seva Community Event"),
+    "seva_community_events" : MessageLookupByLibrary.simpleMessage("Seva Community Events"),
+    "seva_community_groups" : MessageLookupByLibrary.simpleMessage("Seva Community Groups"),
+    "seva_community_info" : MessageLookupByLibrary.simpleMessage("A Seva Community is a community of volunteers that give and receive time to each other and to the larger community."),
+    "seva_community_name_not_updated" : MessageLookupByLibrary.simpleMessage("Seva Community name not updated"),
+    "seva_community_requests" : MessageLookupByLibrary.simpleMessage("Seva Community Requests"),
+    "seva_credits" : MessageLookupByLibrary.simpleMessage("Seva Credits"),
+    "seva_exchange_corporation" : MessageLookupByLibrary.simpleMessage("© Seva Exchange Corporation"),
+    "seva_logo_info" : MessageLookupByLibrary.simpleMessage("Upload a Image to represent your community"),
+    "sevax" : MessageLookupByLibrary.simpleMessage("SevaX"),
+    "sevax_global_creation_error" : MessageLookupByLibrary.simpleMessage("\"SevaX Global\" is a protected community. Only Admins can post content here."),
+    "share_code" : MessageLookupByLibrary.simpleMessage("Share code"),
+    "share_code_msg" : MessageLookupByLibrary.simpleMessage("You can share the code to invite them to your seva community"),
+    "share_post_new" : MessageLookupByLibrary.simpleMessage("Share Post"),
+    "shared_post" : MessageLookupByLibrary.simpleMessage("Shared a post"),
+    "show_less_invoices" : MessageLookupByLibrary.simpleMessage("show less invoices"),
+    "show_previous_invoices" : MessageLookupByLibrary.simpleMessage("show previous invoices"),
+    "sign_in" : MessageLookupByLibrary.simpleMessage("Sign in"),
+    "sign_in_alert" : MessageLookupByLibrary.simpleMessage("You need to sign in or register to view this."),
+    "sign_in_with_apple" : MessageLookupByLibrary.simpleMessage("Sign in with Apple"),
+    "sign_in_with_google" : MessageLookupByLibrary.simpleMessage("Sign in with Google"),
+    "sign_up" : MessageLookupByLibrary.simpleMessage("Sign Up"),
+    "sign_up_with_apple" : MessageLookupByLibrary.simpleMessage("Sign up with Apple"),
+    "sign_up_with_google" : MessageLookupByLibrary.simpleMessage("Sign up with Google"),
+    "signed_up" : MessageLookupByLibrary.simpleMessage("Signed Up"),
+    "signed_up_for" : MessageLookupByLibrary.simpleMessage("signed up for"),
+    "skills" : MessageLookupByLibrary.simpleMessage("Skills"),
+    "skills_description" : MessageLookupByLibrary.simpleMessage("Please list as many as skills that you are willing to share with others within your community."),
+    "skip" : MessageLookupByLibrary.simpleMessage("Skip"),
+    "skip_and_register" : MessageLookupByLibrary.simpleMessage("Skip and register"),
+    "skip_for_now" : MessageLookupByLibrary.simpleMessage("Skip for now"),
+    "skipping" : MessageLookupByLibrary.simpleMessage("Skipping"),
+    "snackbar_select_agreement_type" : MessageLookupByLibrary.simpleMessage("Select an agreement type"),
+    "something_went_wrong" : MessageLookupByLibrary.simpleMessage("something went wrong"),
+    "speaker" : MessageLookupByLibrary.simpleMessage("Speaker"),
+    "speakerRejectedNotificationLabel" : MessageLookupByLibrary.simpleMessage(" rejected the Speaker invitation for "),
+    "speaker_accepted_invite_notification" : MessageLookupByLibrary.simpleMessage("This request has been accepted by **speakerName."),
+    "speaker_claim_credits" : MessageLookupByLibrary.simpleMessage("Claim credits"),
+    "speaker_claim_form_field_title" : MessageLookupByLibrary.simpleMessage("How much prep time did you require for this request?"),
+    "speaker_claim_form_field_title_hint" : MessageLookupByLibrary.simpleMessage("Prep time in hours"),
+    "speaker_claim_form_text_1" : MessageLookupByLibrary.simpleMessage("I acknowledge that I have completed the session for the request."),
+    "speaker_claim_form_text_2" : MessageLookupByLibrary.simpleMessage("Upon completing the one to many request, the combined prep time and session hours will be credited to you."),
+    "speaker_complete_page_text_1" : MessageLookupByLibrary.simpleMessage("I acknowledge that speaker_name has completed the request. The list of members provided above attended the request."),
+    "speaker_complete_page_text_2" : MessageLookupByLibrary.simpleMessage("Note: The hours will be credited to the speaker and to the attendees upon your approval. This list of attendees cannot be modified after approval."),
+    "speaker_completion_rejected_notification_1" : MessageLookupByLibrary.simpleMessage("Request rejected."),
+    "speaker_invite_notification" : MessageLookupByLibrary.simpleMessage("Added you as the Speaker for request: "),
+    "speaker_reject_invite_dialog" : MessageLookupByLibrary.simpleMessage("Are you sure you want to reject this invitation to speak?"),
+    "speaker_rejected" : MessageLookupByLibrary.simpleMessage("Speaker Rejected"),
+    "speaker_requested_completion_notification" : MessageLookupByLibrary.simpleMessage("This request has been completed."),
+    "specific_data_range" : MessageLookupByLibrary.simpleMessage("Specific date range"),
+    "sponsor_name" : MessageLookupByLibrary.simpleMessage("Sponsor name"),
+    "sponsored_by" : MessageLookupByLibrary.simpleMessage("Sponsored By"),
+    "sponsored_groups" : MessageLookupByLibrary.simpleMessage("Endorsed Groups"),
+    "start" : MessageLookupByLibrary.simpleMessage("Start"),
+    "start_new_feed" : MessageLookupByLibrary.simpleMessage("Start a new feed.."),
+    "start_new_offer" : MessageLookupByLibrary.simpleMessage("Start adding the first offer"),
+    "start_new_post" : MessageLookupByLibrary.simpleMessage("Start a new post...."),
+    "start_request_date" : MessageLookupByLibrary.simpleMessage("Start adding the first request"),
+    "state" : MessageLookupByLibrary.simpleMessage("State"),
+    "status" : MessageLookupByLibrary.simpleMessage("Status"),
+    "step" : MessageLookupByLibrary.simpleMessage("Step"),
+    "stock_images" : MessageLookupByLibrary.simpleMessage("Stock Images"),
+    "street_add1" : MessageLookupByLibrary.simpleMessage("Street Address 1"),
+    "street_add2" : MessageLookupByLibrary.simpleMessage("Street Address 2"),
+    "submit" : MessageLookupByLibrary.simpleMessage("Submit"),
+    "submitting_request" : MessageLookupByLibrary.simpleMessage("Submitting request..."),
+    "subscription" : m5,
+    "subscription_cancellation" : MessageLookupByLibrary.simpleMessage("Subscription cancelation"),
+    "subscription_period" : MessageLookupByLibrary.simpleMessage("Subscription Period"),
+    "success" : MessageLookupByLibrary.simpleMessage("success"),
+    "successfully" : MessageLookupByLibrary.simpleMessage("successfully."),
+    "suggested" : MessageLookupByLibrary.simpleMessage("Suggested"),
+    "suggested_categories" : MessageLookupByLibrary.simpleMessage("Suggested Categories"),
+    "super_admin" : MessageLookupByLibrary.simpleMessage("Super Admin"),
+    "super_admins" : MessageLookupByLibrary.simpleMessage("Super Admin(s)"),
+    "sure_to_cancel_one_to_many_offer" : MessageLookupByLibrary.simpleMessage("Are you sure you would like to cancel this One-to-Many offer"),
+    "switch_community" : MessageLookupByLibrary.simpleMessage("You need to switch Seva Communities in order to access Groups in another Community."),
+    "switch_timebank" : MessageLookupByLibrary.simpleMessage("Switch To Seva Community"),
+    "switching_timebank" : MessageLookupByLibrary.simpleMessage("Switching Seva Community"),
+    "taking_to_new_timebank" : MessageLookupByLibrary.simpleMessage("Taking you to your new Seva Community..."),
+    "tap_for_photo" : MessageLookupByLibrary.simpleMessage("Tap for photo"),
+    "tap_to_delete" : MessageLookupByLibrary.simpleMessage("Tap to delete this item"),
+    "tap_to_remove_tooltip" : MessageLookupByLibrary.simpleMessage("items (tap to remove)"),
+    "tap_to_select" : MessageLookupByLibrary.simpleMessage("Tap to select one or more..."),
+    "tap_to_view_details" : MessageLookupByLibrary.simpleMessage("Tap to view details"),
+    "target_amount_less_than_min_amount" : MessageLookupByLibrary.simpleMessage("Minimum amount cannot be greater than target amount"),
+    "task_desc" : MessageLookupByLibrary.simpleMessage("Here is the list of pending tasks that are waiting for your acceptance, not accepted tasks and the tasks you have completed."),
+    "task_max_hours_of_credit" : MessageLookupByLibrary.simpleMessage("Hours of credit from this request."),
+    "task_max_request_message" : MessageLookupByLibrary.simpleMessage("You can only request a maximum of"),
+    "tasks" : MessageLookupByLibrary.simpleMessage("Tasks"),
+    "tell_what_you_donated" : MessageLookupByLibrary.simpleMessage("Tell us what you have donated"),
+    "tell_what_you_get_donated" : MessageLookupByLibrary.simpleMessage("Tell us what you would like to get donated"),
+    "template_alert" : MessageLookupByLibrary.simpleMessage("Template alert"),
+    "template_hint" : MessageLookupByLibrary.simpleMessage("Ex: Template Name"),
+    "template_title" : MessageLookupByLibrary.simpleMessage("Provide a unique name for the template"),
+    "terms_acknowledgement_text" : MessageLookupByLibrary.simpleMessage("I accept the terms of use as per the agreement"),
+    "test_community" : MessageLookupByLibrary.simpleMessage("Test Community"),
+    "thanks" : MessageLookupByLibrary.simpleMessage("Thanks!"),
+    "there_are_currently_none" : MessageLookupByLibrary.simpleMessage("There are currently none"),
+    "this_is_a_repeating_request" : MessageLookupByLibrary.simpleMessage("This is a repeating request"),
+    "this_is_repeating_event" : MessageLookupByLibrary.simpleMessage("This is a repeating event"),
+    "this_offer" : MessageLookupByLibrary.simpleMessage("this offer"),
+    "this_request_has_now_ended" : MessageLookupByLibrary.simpleMessage("This request has now ended"),
+    "timbank_about_hint" : MessageLookupByLibrary.simpleMessage("Ex: A bit more about your Seva Community"),
+    "time" : MessageLookupByLibrary.simpleMessage("Time"),
+    "time_left" : MessageLookupByLibrary.simpleMessage("Time left"),
+    "time_offer" : MessageLookupByLibrary.simpleMessage("Time Offer"),
+    "time_offer_volunteer" : MessageLookupByLibrary.simpleMessage("Accepted Time Offer"),
+    "time_period" : MessageLookupByLibrary.simpleMessage("Time period"),
+    "time_request" : MessageLookupByLibrary.simpleMessage("Time Request"),
+    "time_request_volunteer" : MessageLookupByLibrary.simpleMessage("Time Request Volunteer"),
+    "time_to_prepare" : MessageLookupByLibrary.simpleMessage("Time to prepare: "),
+    "timebank" : MessageLookupByLibrary.simpleMessage("Seva Community"),
+    "timebank_about_hint" : MessageLookupByLibrary.simpleMessage("Ex: Our Community is made up of local residents primarily from..."),
+    "timebank_about_hint_example" : MessageLookupByLibrary.simpleMessage("Ex: Our Community is made up of local residents primarily from..."),
+    "timebank_about_title" : MessageLookupByLibrary.simpleMessage("Tell Us About your Seva Community"),
+    "timebank_account_error" : MessageLookupByLibrary.simpleMessage("Please configure your account information details"),
+    "timebank_billing_error" : MessageLookupByLibrary.simpleMessage("Please configure your billing information details"),
+    "timebank_code" : MessageLookupByLibrary.simpleMessage("Seva Community code : "),
+    "timebank_configure_accounr_info" : MessageLookupByLibrary.simpleMessage("Configure account information"),
+    "timebank_configure_profile_info" : MessageLookupByLibrary.simpleMessage("Configure billing information"),
+    "timebank_current_tax_percentage" : MessageLookupByLibrary.simpleMessage("Current Tax Percentage"),
+    "timebank_earnings" : MessageLookupByLibrary.simpleMessage("Seva Community earnings"),
+    "timebank_exit" : MessageLookupByLibrary.simpleMessage("Seva Community Exit"),
+    "timebank_gps_hint" : MessageLookupByLibrary.simpleMessage("Please make sure you have GPS turned on to see the list of Seva Communities around you"),
+    "timebank_has_parent" : MessageLookupByLibrary.simpleMessage("Seva Community has a parent"),
+    "timebank_loan_message" : MessageLookupByLibrary.simpleMessage("On click of Donate, Seva Community balance will be adjusted."),
+    "timebank_location" : MessageLookupByLibrary.simpleMessage("Your Seva Community location."),
+    "timebank_location_error" : MessageLookupByLibrary.simpleMessage("Please add the location of your Seva Community"),
+    "timebank_location_has_parent_hint_text" : MessageLookupByLibrary.simpleMessage("If your Seva community is associated with a parent Seva Community, please select from the dropdown below"),
+    "timebank_location_hint" : MessageLookupByLibrary.simpleMessage("Ex: List the place or address where your community meets (such as a cafe, library, or church.)."),
+    "timebank_logo" : MessageLookupByLibrary.simpleMessage("Seva Community Image"),
+    "timebank_logo_error" : MessageLookupByLibrary.simpleMessage("Seva Community image is mandatory"),
+    "timebank_max_seva_credit_message1" : MessageLookupByLibrary.simpleMessage(" Seva Credits will be credited to the Seva Community for this request. Note that each participant will receive a maximum of "),
+    "timebank_max_seva_credit_message2" : MessageLookupByLibrary.simpleMessage(" credits for completing this request."),
+    "timebank_members" : MessageLookupByLibrary.simpleMessage("SEVA COMMUNITY MEMBERS"),
+    "timebank_name" : MessageLookupByLibrary.simpleMessage("Name your Seva Community"),
+    "timebank_name_error" : MessageLookupByLibrary.simpleMessage("Seva Community name cannot be empty"),
+    "timebank_name_exists" : MessageLookupByLibrary.simpleMessage("Seva Community name already exists !"),
+    "timebank_name_exists_error" : MessageLookupByLibrary.simpleMessage("Please choose another name for the Seva Community. This Seva Community name already exists"),
+    "timebank_name_hint" : MessageLookupByLibrary.simpleMessage("Ex: Evergreen Neighborhood, Acme Organization, XYZ Food Bank"),
+    "timebank_not_updated" : MessageLookupByLibrary.simpleMessage("Timebank name not updated"),
+    "timebank_offers" : MessageLookupByLibrary.simpleMessage("Seva Community Offers"),
+    "timebank_onboarding_message" : MessageLookupByLibrary.simpleMessage("You have been onboarded to"),
+    "timebank_profile_info" : MessageLookupByLibrary.simpleMessage("Billing Information"),
+    "timebank_project" : m6,
+    "timebank_request" : m7,
+    "timebank_select_tax_percentage" : MessageLookupByLibrary.simpleMessage("Select Tax percentage"),
+    "timebank_seva_credit" : MessageLookupByLibrary.simpleMessage("Your Seva Community seva credits is"),
+    "timebank_tell_more" : MessageLookupByLibrary.simpleMessage("Tell us more about your Seva Community."),
+    "timebanks_near_you" : MessageLookupByLibrary.simpleMessage("Seva Communities near you"),
+    "title" : MessageLookupByLibrary.simpleMessage("Title"),
+    "to_do" : MessageLookupByLibrary.simpleMessage("To Do"),
+    "to_do_one_to_many_offer_attende_subtitle" : MessageLookupByLibrary.simpleMessage("This one to many offer has completed."),
+    "to_do_one_to_many_offer_attende_title" : MessageLookupByLibrary.simpleMessage("This one to many offer has completed."),
+    "to_do_one_to_many_request_attende_subtitle" : MessageLookupByLibrary.simpleMessage("This one to many offer has completed."),
+    "to_do_one_to_many_request_attende_title" : MessageLookupByLibrary.simpleMessage("This one to many offer has completed."),
+    "to_do_one_to_many_request_speaker_subtitle" : MessageLookupByLibrary.simpleMessage("This one to many offer has completed."),
+    "to_do_one_to_many_request_speaker_title" : MessageLookupByLibrary.simpleMessage("This one to many offer has completed."),
+    "to_do_one_to_many_reuqest_speaker_subtitle" : MessageLookupByLibrary.simpleMessage("This one to many request has completed."),
+    "to_do_one_to_many_reuqest_speaker_title" : MessageLookupByLibrary.simpleMessage("This one to many reuqest has completed."),
+    "to_other_admin" : MessageLookupByLibrary.simpleMessage(" to another admin."),
+    "total" : MessageLookupByLibrary.simpleMessage("Total"),
+    "total_amount_raised" : MessageLookupByLibrary.simpleMessage("Total amount raised"),
+    "total_donation_amount" : MessageLookupByLibrary.simpleMessage("Total donation amount"),
+    "total_earned" : MessageLookupByLibrary.simpleMessage("Total Earned"),
+    "total_goods_recevied" : MessageLookupByLibrary.simpleMessage("Total Goods Received"),
+    "total_no_of_participants" : MessageLookupByLibrary.simpleMessage("Total No. of Participants*"),
+    "total_spent" : MessageLookupByLibrary.simpleMessage("Total Spent"),
+    "transer_hint_data_deletion" : MessageLookupByLibrary.simpleMessage("All data not transferred will be deleted."),
+    "transfer_data_hint" : MessageLookupByLibrary.simpleMessage("Transfer ownership of this user\'s data to another user, like group ownership."),
+    "transfer_to" : MessageLookupByLibrary.simpleMessage("Transfer to"),
+    "trust_and_safety" : MessageLookupByLibrary.simpleMessage("Trust & Safety"),
+    "trust_and_safety_explore" : MessageLookupByLibrary.simpleMessage("Trust & Safety"),
+    "trustworthiness" : MessageLookupByLibrary.simpleMessage("Trustworthiness"),
+    "try_later" : MessageLookupByLibrary.simpleMessage("Please try again later"),
+    "try_text" : MessageLookupByLibrary.simpleMessage("Try"),
+    "type_group" : MessageLookupByLibrary.simpleMessage("Type a group name"),
+    "type_message" : MessageLookupByLibrary.simpleMessage("Type a message"),
+    "type_team_member_name" : MessageLookupByLibrary.simpleMessage("Type your team members name"),
+    "unassigned" : MessageLookupByLibrary.simpleMessage("Unassigned"),
+    "unblock" : MessageLookupByLibrary.simpleMessage("Unblock"),
+    "unknown" : MessageLookupByLibrary.simpleMessage("Unknown"),
+    "until" : MessageLookupByLibrary.simpleMessage("Until"),
+    "upcoming_events" : MessageLookupByLibrary.simpleMessage("Upcoming Events"),
+    "update" : MessageLookupByLibrary.simpleMessage("Update"),
+    "update_app" : MessageLookupByLibrary.simpleMessage("Update App"),
+    "update_available" : MessageLookupByLibrary.simpleMessage("Update Available"),
+    "update_bio" : MessageLookupByLibrary.simpleMessage("Update bio"),
+    "update_bio_hint" : MessageLookupByLibrary.simpleMessage("Please enter bio to update"),
+    "update_feed" : MessageLookupByLibrary.simpleMessage("Update post"),
+    "update_msg" : MessageLookupByLibrary.simpleMessage("There is an update available with the app, Please tap on update to use the latest version of the app"),
+    "update_name" : MessageLookupByLibrary.simpleMessage("Update name"),
+    "update_offer" : MessageLookupByLibrary.simpleMessage("Update Offer"),
+    "update_photo" : MessageLookupByLibrary.simpleMessage("Update Photo"),
+    "update_request" : MessageLookupByLibrary.simpleMessage("Update Request"),
+    "updating" : MessageLookupByLibrary.simpleMessage("Updating"),
+    "updating_details" : MessageLookupByLibrary.simpleMessage("Updating details"),
+    "updating_feed" : MessageLookupByLibrary.simpleMessage("Updating post"),
+    "updating_messaging_room" : MessageLookupByLibrary.simpleMessage("Updating Room..."),
+    "updating_offer" : MessageLookupByLibrary.simpleMessage("Updating offer"),
+    "updating_project" : MessageLookupByLibrary.simpleMessage("Updating an event"),
+    "updating_request" : MessageLookupByLibrary.simpleMessage("Updating Request..."),
+    "updating_timebank" : MessageLookupByLibrary.simpleMessage("Updating Seva Community.."),
+    "updating_users" : MessageLookupByLibrary.simpleMessage("Updating Members"),
+    "upgrade_plan" : MessageLookupByLibrary.simpleMessage("Upgrade Plan"),
+    "upgrade_plan_confirm" : MessageLookupByLibrary.simpleMessage("Are you sure you want to upgrade the plan ?"),
+    "upgrade_plan_disable_msg1" : MessageLookupByLibrary.simpleMessage("This feature is disabled for your community"),
+    "upgrade_plan_disable_msg2" : MessageLookupByLibrary.simpleMessage("This is currently not permitted. Please see the following link for more information: http://web.sevaxapp.com/"),
+    "upgrade_plan_disable_msg3" : MessageLookupByLibrary.simpleMessage("This is currently not permitted. Please contact the Community Creator for more information"),
+    "upgrade_plan_msg1" : MessageLookupByLibrary.simpleMessage("Sorry Couldn\'t fetch data"),
+    "upload" : MessageLookupByLibrary.simpleMessage("Upload"),
+    "upload_cv_resume" : MessageLookupByLibrary.simpleMessage("Upload your CV or resume"),
+    "uploaded_successfully" : MessageLookupByLibrary.simpleMessage("Uploaded Successfully"),
+    "uploading_csv" : MessageLookupByLibrary.simpleMessage("Uploading CSV File"),
+    "url" : MessageLookupByLibrary.simpleMessage("Url"),
+    "usage_term" : MessageLookupByLibrary.simpleMessage("Usage term*"),
+    "use" : MessageLookupByLibrary.simpleMessage("use"),
+    "user" : m8,
+    "user_has" : MessageLookupByLibrary.simpleMessage("User has"),
+    "user_name_not_availble" : MessageLookupByLibrary.simpleMessage("User name not available"),
+    "user_removal_success" : MessageLookupByLibrary.simpleMessage("User is successfully removed from the Seva Community"),
+    "user_removed_from_group" : MessageLookupByLibrary.simpleMessage("User is successfully removed from the group"),
+    "user_removed_from_group_failed" : MessageLookupByLibrary.simpleMessage("User cannot be deleted from this group"),
+    "user_removed_from_timebank" : MessageLookupByLibrary.simpleMessage("User is successfully removed from the seva community"),
+    "user_removed_from_timebank_failed" : MessageLookupByLibrary.simpleMessage("User cannot be deleted from this Seva Community"),
+    "users" : MessageLookupByLibrary.simpleMessage("Users"),
+    "validation_error_add_project_location" : MessageLookupByLibrary.simpleMessage("Please add location to your event"),
+    "validation_error_bio_empty" : MessageLookupByLibrary.simpleMessage("Its easy, please fill few words about you."),
+    "validation_error_bio_max_characters" : MessageLookupByLibrary.simpleMessage("* max 250 characters"),
+    "validation_error_bio_min_characters" : MessageLookupByLibrary.simpleMessage("*min 50 characters"),
+    "validation_error_class_size" : MessageLookupByLibrary.simpleMessage("Please enter valid size of class"),
+    "validation_error_class_size_int" : MessageLookupByLibrary.simpleMessage("Size of class can\'t be in decimal"),
+    "validation_error_cv_not_selected" : MessageLookupByLibrary.simpleMessage("Please select a CV / Resume file first before you upload"),
+    "validation_error_cv_size" : MessageLookupByLibrary.simpleMessage("Note: The maximum size for the CV / Resume is 10 Mb"),
+    "validation_error_email_registered" : MessageLookupByLibrary.simpleMessage("This email already registered"),
+    "validation_error_empty_recurring_days" : MessageLookupByLibrary.simpleMessage("Recurring days cannot be empty"),
+    "validation_error_end_date_greater" : MessageLookupByLibrary.simpleMessage("End Date cannot be before Start Date "),
+    "validation_error_file_size" : MessageLookupByLibrary.simpleMessage("Files larger than 10 MB are not allowed"),
+    "validation_error_full_name" : MessageLookupByLibrary.simpleMessage("Name cannot be empty"),
+    "validation_error_general_text" : MessageLookupByLibrary.simpleMessage("Please enter some text"),
+    "validation_error_hours_not_int" : MessageLookupByLibrary.simpleMessage("Entered number of hours is not valid"),
+    "validation_error_invalid_email" : MessageLookupByLibrary.simpleMessage("Email is not valid"),
+    "validation_error_invalid_hours" : MessageLookupByLibrary.simpleMessage("Please enter valid number of hours!"),
+    "validation_error_invalid_password" : MessageLookupByLibrary.simpleMessage("Password must be 6 characters long"),
+    "validation_error_join_code_expired" : MessageLookupByLibrary.simpleMessage("Code Expired!"),
+    "validation_error_location" : MessageLookupByLibrary.simpleMessage("Please select location"),
+    "validation_error_location_mandatory" : MessageLookupByLibrary.simpleMessage("Location is Mandatory"),
+    "validation_error_min_donation_count" : MessageLookupByLibrary.simpleMessage("Please enter the number of min donation needed"),
+    "validation_error_min_donation_count_negative" : MessageLookupByLibrary.simpleMessage("Please enter the number of min donation needed"),
+    "validation_error_min_donation_count_zero" : MessageLookupByLibrary.simpleMessage("Please enter the number of min donation needed"),
+    "validation_error_mission_empty" : MessageLookupByLibrary.simpleMessage("Mission statement cannot be empty."),
+    "validation_error_no_date" : MessageLookupByLibrary.simpleMessage("Please mention the start and end date."),
+    "validation_error_offer_class_hours" : MessageLookupByLibrary.simpleMessage("Please enter the hours required for the class"),
+    "validation_error_offer_credit" : MessageLookupByLibrary.simpleMessage("We cannot publish this Class. There are insufficient credits from the class. Please revise the Prep time or the number of students and submit the offer again"),
+    "validation_error_offer_prep_hour" : MessageLookupByLibrary.simpleMessage("Please enter your preperation time"),
+    "validation_error_offer_title" : MessageLookupByLibrary.simpleMessage("Please enter the subject of your offer"),
+    "validation_error_password_mismatch" : MessageLookupByLibrary.simpleMessage("Passwords do not match"),
+    "validation_error_project_name_empty" : MessageLookupByLibrary.simpleMessage("Event name cannot be empty"),
+    "validation_error_required_fields" : MessageLookupByLibrary.simpleMessage("Field cannot be left blank*"),
+    "validation_error_room_name" : MessageLookupByLibrary.simpleMessage("Name can\'t be empty"),
+    "validation_error_same_start_date_end_date" : MessageLookupByLibrary.simpleMessage("You have provided identical date and time for the Start and End. Please provide an End time that is after the Start time."),
+    "validation_error_search_min_characters" : MessageLookupByLibrary.simpleMessage("Search requires minimum 3 characters"),
+    "validation_error_target_donation_count" : MessageLookupByLibrary.simpleMessage("Please enter the number of target donation needed"),
+    "validation_error_target_donation_count_negative" : MessageLookupByLibrary.simpleMessage("Please enter the number of target donation needed"),
+    "validation_error_target_donation_count_zero" : MessageLookupByLibrary.simpleMessage("Please enter the number of target donation needed"),
+    "validation_error_task_minutes" : MessageLookupByLibrary.simpleMessage("Minutes cannot be Empty"),
+    "validation_error_template_name" : MessageLookupByLibrary.simpleMessage("Template name cannot be empty"),
+    "validation_error_template_name_exists" : MessageLookupByLibrary.simpleMessage("Template name is already in use.\nPlease provide another name"),
+    "validation_error_timebank_join_code_redeemed" : MessageLookupByLibrary.simpleMessage("Seva Community code already redeemed"),
+    "validation_error_timebank_join_code_redeemed_self" : MessageLookupByLibrary.simpleMessage("The Seva Community code that you have provided has already been redeemed earlier by you. Please request the Seva Community admin for a new code."),
+    "validation_error_volunteer_count" : MessageLookupByLibrary.simpleMessage("Please enter the number of volunteers needed"),
+    "validation_error_volunteer_count_negative" : MessageLookupByLibrary.simpleMessage("No. of volunteers cannot be lesser than 0"),
+    "validation_error_volunteer_count_zero" : MessageLookupByLibrary.simpleMessage("No. of volunteers cannot be 0"),
+    "validation_error_wrong_timebank_code" : MessageLookupByLibrary.simpleMessage("code was not registered, please check the code and try again!"),
+    "venmo_hint" : MessageLookupByLibrary.simpleMessage("Ex: Provide your Venmo username"),
+    "verification_sent" : MessageLookupByLibrary.simpleMessage("Verification email sent"),
+    "verification_sent_desc" : MessageLookupByLibrary.simpleMessage("Verification email was sent to your registered email"),
+    "verify_account" : MessageLookupByLibrary.simpleMessage(" to verify\nyour account"),
+    "view" : MessageLookupByLibrary.simpleMessage("view"),
+    "view_approved_members" : MessageLookupByLibrary.simpleMessage("View Approved Members"),
+    "view_more_comments" : MessageLookupByLibrary.simpleMessage("View more comments"),
+    "view_prev_replies" : MessageLookupByLibrary.simpleMessage("View Previous Replies"),
+    "view_profile" : MessageLookupByLibrary.simpleMessage("View profile"),
+    "view_requests" : MessageLookupByLibrary.simpleMessage("View requests"),
+    "view_selected_plans" : MessageLookupByLibrary.simpleMessage("View selected plans"),
+    "virtual" : MessageLookupByLibrary.simpleMessage("Virtual"),
+    "virtual_requests" : MessageLookupByLibrary.simpleMessage("Virtual requests"),
+    "volunteers" : MessageLookupByLibrary.simpleMessage("Volunteer(s)"),
+    "volunteers_selected" : m9,
+    "waiting_acknowledgement" : MessageLookupByLibrary.simpleMessage("Waiting acknowledgement"),
+    "we_met" : MessageLookupByLibrary.simpleMessage("We met before"),
+    "what_is_community" : MessageLookupByLibrary.simpleMessage("What is a Seva Community"),
+    "what_is_restricted_seva_community" : MessageLookupByLibrary.simpleMessage("What is a Restricted Seva Community? "),
+    "what_would_you_like_to_share" : MessageLookupByLibrary.simpleMessage("What would you like to share"),
+    "who_can_see_feed" : MessageLookupByLibrary.simpleMessage("Who can see your Feed?"),
+    "will_added_to_donors" : MessageLookupByLibrary.simpleMessage("will be added to donors list."),
+    "will_be_added_to_request" : MessageLookupByLibrary.simpleMessage("will be added to the request."),
+    "withdraw" : MessageLookupByLibrary.simpleMessage("Withdraw"),
+    "withdraw_request_failure" : MessageLookupByLibrary.simpleMessage("You cannot withdraw request since already approved"),
+    "would_be_unblocked" : MessageLookupByLibrary.simpleMessage(" would be unblocked"),
+    "would_like_to_accept_offer" : MessageLookupByLibrary.simpleMessage("Would you like to accept offer?"),
+    "would_like_to_donate" : MessageLookupByLibrary.simpleMessage("Would you like to make a donation for this request?"),
+    "year" : m10,
+    "year_to_date" : MessageLookupByLibrary.simpleMessage("Year to date"),
+    "yes" : MessageLookupByLibrary.simpleMessage("Yes"),
+    "you_already_created_test_community" : MessageLookupByLibrary.simpleMessage("You already created a test community."),
+    "you_are_on_enterprise_plan" : MessageLookupByLibrary.simpleMessage("You are on Enterprise Plan"),
+    "you_are_the_speaker" : MessageLookupByLibrary.simpleMessage("You are the speaker for: "),
+    "you_created_offer" : MessageLookupByLibrary.simpleMessage("You created this offer"),
+    "you_created_sandbox_community" : MessageLookupByLibrary.simpleMessage("You already created a sandbox community."),
+    "you_entered" : MessageLookupByLibrary.simpleMessage("You entered"),
+    "you_have" : MessageLookupByLibrary.simpleMessage("You have"),
+    "you_will_go_ahead_with_them_for_request" : MessageLookupByLibrary.simpleMessage(" you will go ahead with them for the request."),
+    "your_community_on_the" : MessageLookupByLibrary.simpleMessage("Your community is on the"),
+    "your_details" : MessageLookupByLibrary.simpleMessage("Your details"),
+    "your_earnings" : MessageLookupByLibrary.simpleMessage("Your earnings"),
+    "your_email" : MessageLookupByLibrary.simpleMessage("Your email address"),
+    "your_groups" : MessageLookupByLibrary.simpleMessage("Your Groups"),
+    "your_interests" : MessageLookupByLibrary.simpleMessage("Your Interests"),
+    "your_skills" : MessageLookupByLibrary.simpleMessage("Your Skills"),
+    "your_tasks" : MessageLookupByLibrary.simpleMessage("Your Tasks"),
+    "zero_credit_donation_error" : MessageLookupByLibrary.simpleMessage("You cannot donate 0 credits"),
+    "zero_one" : MessageLookupByLibrary.simpleMessage("0/1"),
+    "zip" : MessageLookupByLibrary.simpleMessage("ZIP Code")
+  };
 }

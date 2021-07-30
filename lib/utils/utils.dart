@@ -37,6 +37,7 @@ bool isLeapYear(int year) {
 
 bool isSameDay(DateTime d1, DateTime d2) {
   return (d1.year == d2.year && d1.month == d2.month && d1.day == d2.day);
+  return (d1.year == d2.year && d1.month == d2.month && d1.day == d2.day);
 }
 
 bool isMemberAnAdmin(TimebankModel timebank, String userId) =>
@@ -162,9 +163,10 @@ void showAdminAccessMessage({BuildContext context}) {
         actions: <Widget>[
           // usually buttons at the bottom of the dialog
           CustomTextButton(
+            shape: StadiumBorder(),
             padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
             color: Theme.of(context).accentColor,
-            textColor: FlavorConfig.values.buttonTextColor,
+            textColor: Colors.white,
             child: Text(S.of(context).close),
             onPressed: () {
               Navigator.of(_context).pop();
