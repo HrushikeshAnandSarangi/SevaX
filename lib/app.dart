@@ -98,10 +98,10 @@ class MainApplication extends StatelessWidget {
           create: (context) => HomePageBaseBloc(),
           dispose: (_, b) => b.dispose(),
         ),
-        StreamProvider<UserModel>.value(
-          initialData: null,
-          value: userBloc.user,
-        ),
+        // StreamProvider<UserModel>.value(
+        //   initialData: null,
+        //   value: userBloc.user,
+        // ),
       ],
       child: ChangeNotifierProvider<AppLanguage>(
         create: (_) => appLanguage,

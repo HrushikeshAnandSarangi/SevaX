@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/manual_time_model.dart';
@@ -257,4 +258,15 @@ Future<bool> deleteFireBaseImage({String imageUrl}) async {
   }).catchError((e) {
     return false;
   });
+}
+
+
+
+String getStartDateFormat(DateTime date) {
+  var suffix = "th";
+  var digit = date.day % 10;
+  if ((digit > 0 && digit < 4) && (date.day < 11 || date.day > 13)) {
+    suffix = ["st", "nd", "rd"][digit - 1];
+  }
+  return new DateFormat("EEEE MMM d'$suffix',  h:mm a").format(date);
 }
