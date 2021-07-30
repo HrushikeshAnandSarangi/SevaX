@@ -41,7 +41,7 @@ class _AdminOfferRequestsTabState extends State<AdminOfferRequestsTab> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-           S.of(context).existing_requests,
+            S.of(context).existing_requests,
             style: TextStyle(fontSize: 18),
           ),
         ),
@@ -66,15 +66,14 @@ class _AdminOfferRequestsTabState extends State<AdminOfferRequestsTab> {
                   TimeBankExistingRequests(
                     timebankId: widget.timebankid,
                     isAdmin: true,
-                    parentContext: context,
                     userModel: widget.userModel,
                   ),
                   AdminPersonalRequests(
-                      timebankId: widget.timebankid,
-                      isTimebankRequest: true,
-                      parentContext: context,
-                      userModel: widget.userModel,
-                      showAppBar: false),
+                    timebankId: widget.timebankid,
+                    isTimebankRequest: true,
+                    userModel: widget.userModel,
+                    showAppBar: false,
+                  ),
                 ],
               ),
             )
