@@ -1282,7 +1282,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                 stream: _one_to_many_bloc.makeVirtualValue,
                 builder: (context, snapshot) {
                   return ConfigurationCheck(
-                    actionType: S.of(context).create_virtual_offer,
+                    actionType: 'create_virtual_offer',
                     role: memberType(widget.timebankModel,
                         SevaCore.of(context).loggedInUser.sevaUserID),
                     child: OpenScopeCheckBox(
@@ -1311,7 +1311,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                           stream: _one_to_many_bloc.makePublicValue,
                           builder: (context, snapshot) {
                             return ConfigurationCheck(
-                              actionType: S.of(context).create_public_offer,
+                              actionType: 'create_public_offer',
                               role: memberType(widget.timebankModel,
                                   SevaCore.of(context).loggedInUser.sevaUserID),
                               child: OpenScopeCheckBox(
