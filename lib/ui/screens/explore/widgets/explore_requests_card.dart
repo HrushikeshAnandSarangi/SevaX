@@ -14,6 +14,7 @@ class ExploreRequestsCard extends StatelessWidget {
     this.firstTextStyle,
     this.secondTextStyle,
     this.onTap,
+    this.requestDate
     //this.padding,
   }) : super(key: key);
 
@@ -25,6 +26,7 @@ class ExploreRequestsCard extends StatelessWidget {
   final List<String> userIds;
   final TextStyle firstTextStyle;
   final TextStyle secondTextStyle;
+  final String requestDate;
   //final EdgeInsetsGeometry padding;
 
   @override
@@ -99,6 +101,16 @@ class ExploreRequestsCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 MemberAvatarListWithCount(userIds:userIds,radius:10),
+                Padding(
+                  padding: const EdgeInsets.only(left: 4.0),
+                  child: Text(
+                    requestDate.toUpperCase(),
+                    style: TextStyle(
+                      color: Theme.of(context).accentColor,
+                      fontSize: 13,
+                    ),
+                  ),
+                ),
               ],
             ),
           ],
