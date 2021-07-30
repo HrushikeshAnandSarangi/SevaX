@@ -2529,7 +2529,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       height: 39,
       width: 90,
       child: widget.requestItem.sevaUserId ==
-              SevaCore.of(context).loggedInUser.sevaUserID
+                  SevaCore.of(context).loggedInUser.sevaUserID &&
+              widget.requestItem.accepted == false
           ? CustomTextButton(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),

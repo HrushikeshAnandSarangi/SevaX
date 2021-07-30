@@ -907,11 +907,8 @@ class _RegisterPageState extends State<RegisterPage>
       ),
     );
 
-    String imageURL = '';
-    uploadTask.whenComplete(() async {
-      imageURL = await ref.getDownloadURL();
-      return imageURL;
-    });
+    String imageURL =
+        await (await uploadTask.whenComplete(() => null)).ref.getDownloadURL();
     return imageURL;
   }
 
@@ -1002,10 +999,10 @@ class _RegisterPageState extends State<RegisterPage>
       ),
     );
     String documentURL = '';
-    uploadTask.whenComplete(() async {
-      documentURL = await ref.getDownloadURL();
-      cvUrl = documentURL;
-    });
+    documentURL =
+        await (await uploadTask.whenComplete(() => null)).ref.getDownloadURL();
+
+    cvUrl = documentURL;
     log('link  ' + documentURL);
 
     cvName = _fileName;
