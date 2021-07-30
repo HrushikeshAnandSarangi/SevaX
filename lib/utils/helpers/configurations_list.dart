@@ -155,14 +155,14 @@ class ConfigurationsList {
         type: 'offer'),
     ConfigurationModel(
         id: 'accept_time_offer', title_en: 'Accept Time Offer', type: 'offer'),
-    ConfigurationModel(
+/*    ConfigurationModel(
         id: 'accept_money_offer',
         title_en: 'Accept Money Offer',
         type: 'offer'),
     ConfigurationModel(
         id: 'accept_goods_offer',
         title_en: 'Accept Goods Offer',
-        type: 'offer'),
+        type: 'offer'),*/
     ConfigurationModel(
         id: 'accept_one_to_many_offer',
         title_en: 'Accept One To Many Offer',
