@@ -328,7 +328,8 @@ class L {
   String get news_explore => "News";
   String get trust_and_safety_explore => "Trust & Safety";
 
-  //30 july
+//30th July
+  String get loan_success => "You have donated credits successfully";
   String get yes => "Yes";
   String get no => "No";
 }
