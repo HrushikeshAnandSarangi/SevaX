@@ -26,7 +26,7 @@ class _CustomRequestCategoriesState extends State<CustomRequestCategories> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          L.of(context).my_request_categories,
+          S.of(context).my_request_categories,
           style: TextStyle(fontSize: 18),
         ),
       ),
@@ -69,7 +69,7 @@ class _CustomRequestCategoriesState extends State<CustomRequestCategories> {
                   return categoryModelList.length == 0
                       ? Center(
                           child: Text(
-                          L.of(context).no_subcategories_created,
+                          S.of(context).no_subcategories_created,
                           style:
                               TextStyle(fontSize: 17, color: Colors.grey[400]),
                         ))

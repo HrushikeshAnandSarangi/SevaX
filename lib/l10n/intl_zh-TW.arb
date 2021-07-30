@@ -1,6 +1,6 @@
 {
     "@@locale": "zh-TW",
-    "@@last_modified": "2021-07-29T11:01:09+00:00",
+    "@@last_modified": "2021-07-30T14:56:54+00:00",
     "check_met": "查看我們曾經見過？",
     "we_met": "是的，我們曾見過",
     "hang_on": "請稍待。。。",
@@ -692,7 +692,7 @@
     "loan_zero_credit_error": "您不能貸出0個點數",
     "negative_credit_loan_error": "您的貸款不能少於0個點數",
     "empty_credit_loan_error": "貸款一些點數",
-    "loan_success": "您已成功貸出貸項",
+    "loan_success": "您已成功捐贈了學分",
     "co_ordinators": "協調員",
     "remove": "移除",
     "promote": "推廣",
@@ -1625,9 +1625,9 @@
     "add_new_request_category": "添加新請求子類別",
     "edit_request_category": "編輯子類別",
     "add_new_subcategory": "添加新子類別",
-    "add_new_subcategory_hint": "子類標題",
+    "add_new_subcategory_hint": "子類別標題",
     "select_photo": "選擇照片",
-    "photo_selected": "照片選擇",
+    "photo_selected": "照片選擇了",
     "please_enter_title": "請輸入標題",
     "request_category_exists": "請求子類別存在",
     "no_subcategories_created": "沒有要求子類別創建",
@@ -1650,5 +1650,6 @@
     "other_payment_details_hint": "EX：電子郵件，電話號碼，ID",
     "other_payment_details": "付款方式詳情",
     "deleted_events_create_request_message": "此事件將被刪除。因此，無法創建請求。",
-    "other_payment_name": "付款方式名稱"
+    "other_payment_name": "付款方式名稱",
+    "accept_offer_invitation_confirmation_to_do_tasks": "批准後，此任務將添加到您的待辦事項列表中。"
 }

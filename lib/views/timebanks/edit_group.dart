@@ -190,7 +190,7 @@ class EditGroupFormState extends State<EditGroupForm> {
                       coverUrl: widget.timebankModel.cover_url ?? null),
                   SizedBox(height: 10),
                   Text(
-                    "${L.of(context).cover_picture_label_group}",
+                    "${S.of(context).cover_picture_label_group}",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.grey,

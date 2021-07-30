@@ -22,7 +22,7 @@ class CommunityMessages extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          L.of(context).community_chat,
+          S.of(context).community_chat,
           style: TextStyle(fontSize: 22),
         ),
         centerTitle: true,

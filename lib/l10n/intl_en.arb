@@ -1,6 +1,6 @@
 {
     "@@locale": "en",
-    "@@last_modified": "2021-07-29T11:01:12+00:00",
+    "@@last_modified": "2021-07-30T14:56:55+00:00",
     "check_met": "Checking, if we met before",
     "we_met": "We met before",
     "hang_on": "Hang on tight",
@@ -692,7 +692,7 @@
     "loan_zero_credit_error": "You cannot loan 0 credits",
     "negative_credit_loan_error": "You cannot loan lesser than 0 credits",
     "empty_credit_loan_error": "Loan some credits",
-    "loan_success": "You have loaned credits successfully",
+    "loan_success": "You have donated credits successfully",
     "co_ordinators": "Coordinators",
     "remove": "Remove",
     "promote": "Promote",
@@ -1649,5 +1649,6 @@
     "other_payment_details_hint": "Ex: Email, Phone Number, ID",
     "other_payment_details": "Payment Method Details",
     "deleted_events_create_request_message": "This event is going to be deleted. As a result, requests cannot be created.",
-    "other_payment_name": "Payment Method Name"
+    "other_payment_name": "Payment Method Name",
+    "accept_offer_invitation_confirmation_to_do_tasks": "This task will be added to your To Do list, after you approve it."
 }

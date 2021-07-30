@@ -150,7 +150,7 @@ class CompletedTasks {
             subTitle: model.description,
             timeInMilliseconds: model.requestStart,
             onTap: () async {},
-            tag: L.of(context).one_to_many_request_speaker,
+            tag: S.of(context).one_to_many_request_speaker,
           ),
         );
       } else if (model.requestType == RequestType.ONE_TO_MANY_REQUEST &&
@@ -160,7 +160,7 @@ class CompletedTasks {
         widgetList.add(
           ToDoCard(
             timeInMilliseconds: model.requestStart,
-            tag: L.of(context).time_request_volunteer,
+            tag: S.of(context).time_request_volunteer,
             subTitle: model.description,
             title: model.title,
             onTap: () async {},
@@ -177,7 +177,7 @@ class CompletedTasks {
           onTap: () async {},
           title: element.groupOfferDataModel.classTitle,
           subTitle: element.groupOfferDataModel.classDescription,
-          tag: L.of(context).one_to_many_offer_attende,
+          tag: S.of(context).one_to_many_offer_attende,
           timeInMilliseconds: element.groupOfferDataModel.startDate,
         ),
       );
@@ -190,7 +190,7 @@ class CompletedTasks {
         onTap: () async {},
         title: element.groupOfferDataModel.classTitle,
         subTitle: element.groupOfferDataModel.classDescription,
-        tag: L.of(context).one_to_many_offer_speaker,
+        tag: S.of(context).one_to_many_offer_speaker,
         timeInMilliseconds: element.groupOfferDataModel.startDate,
       ));
     });
@@ -202,7 +202,7 @@ class CompletedTasks {
         onTap: () async {},
         title: element.title,
         subTitle: element.description,
-        tag: L.of(context).one_to_many_request_attende,
+        tag: S.of(context).one_to_many_request_attende,
         timeInMilliseconds: element.requestStart,
       ));
     });
@@ -214,7 +214,7 @@ class CompletedTasks {
         onTap: () async {},
         title: element.title,
         subTitle: element.description,
-        tag: L.of(context).one_to_many_request_attende,
+        tag: S.of(context).one_to_many_request_attende,
         timeInMilliseconds: element.requestStart,
       ));
     });

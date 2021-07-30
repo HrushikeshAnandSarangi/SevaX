@@ -241,7 +241,7 @@ class _TimebankHomePageState extends State<TimebankHomePage>
                 indicatorColor: Theme.of(context).primaryColor,
                 tabs: [
                   Tab(
-                    child: Text(L.of(context).to_do),
+                    child: Text(S.of(context).to_do),
                   ),
                   Tab(
                     child: Text(S.of(context).pending),

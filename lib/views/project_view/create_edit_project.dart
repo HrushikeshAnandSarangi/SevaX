@@ -320,7 +320,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                       Text(''),
                       !widget.isCreateProject
                           ? Text(
-                              "${L.of(context).cover_picture_label_event}",
+                              "${S.of(context).cover_picture_label_event}",
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.grey,
@@ -930,10 +930,10 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                             //CHECK TO SEE IF ADMIN WANTS TO CLONE ALL THE REQUESTS INSIDE OR JUST CREATE EMPTY
 
                             await DialogsManager.showDilaogWithTitle(
-                              negativeTitle: L.of(context).do_not_copy,
-                              positiveTitle: L.of(context).proceed_with_copying,
+                              negativeTitle: S.of(context).do_not_copy,
+                              positiveTitle: S.of(context).proceed_with_copying,
                               context: context,
-                              title: L.of(context).copy_requests_in_events,
+                              title: S.of(context).copy_requests_in_events,
                             ).then((value) async {
                               if (value)
                                 await WatchDog

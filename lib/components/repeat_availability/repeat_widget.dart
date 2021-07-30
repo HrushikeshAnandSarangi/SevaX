@@ -385,7 +385,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
                                     }).toList(),
                                   ),
                                 ),
-                                Text("${L.of(context).occurrences}",
+                                Text("${S.of(context).occurrences}",
                                     textAlign: TextAlign.end,
                                     style: TextStyle(
                                       fontSize: 16,

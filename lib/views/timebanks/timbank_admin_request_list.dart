@@ -227,7 +227,7 @@ class _InputDonateSuccessDialogState extends State<InputDonateSuccessDialog> {
       content: Container(
         height: MediaQuery.of(context).size.height / 10,
         width: MediaQuery.of(context).size.width / 12,
-        child: Text(L.of(context).loan_success),
+        child: Text(S.of(context).loan_success),
       ),
     );
   }

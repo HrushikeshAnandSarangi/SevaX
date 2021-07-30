@@ -1,6 +1,6 @@
 {
     "@@locale": "zh-CN",
-    "@@last_modified": "2021-07-29T11:01:09+00:00",
+    "@@last_modified": "2021-07-30T14:56:54+00:00",
     "check_met": "查看我们曾经见过？",
     "we_met": "是的，我们曾见过",
     "hang_on": "请稍待。。。",
@@ -692,7 +692,7 @@
     "loan_zero_credit_error": "您不能贷出0个点数",
     "negative_credit_loan_error": "您的贷款不能少于0个点数",
     "empty_credit_loan_error": "贷款一些点数",
-    "loan_success": "您已成功贷出贷项",
+    "loan_success": "您已成功捐赠了学分",
     "co_ordinators": "协调员",
     "remove": "移除",
     "promote": "推广",
@@ -1650,5 +1650,6 @@
     "other_payment_details_hint": "EX：电子邮件，电话号码，ID",
     "other_payment_details": "付款方式详情",
     "deleted_events_create_request_message": "此事件将被删除。因此，无法创建请求。",
-    "other_payment_name": "付款方式名称"
+    "other_payment_name": "付款方式名称",
+    "accept_offer_invitation_confirmation_to_do_tasks": "批准后，此任务将添加到您的待办事项列表中。"
 }

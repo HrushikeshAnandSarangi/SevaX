@@ -1354,7 +1354,7 @@ class _DonationViewState extends State<DonationView> {
                   widget.requestModel.cashModel.achdetails.routing_number ??
               '';
         case RequestPaymentType.OTHER:
-          return L.of(context).other_payment_details +
+          return S.of(context).other_payment_details +
                   '\n' +
                   widget.requestModel.cashModel.others +
                   '\n' +
@@ -1524,7 +1524,7 @@ class _DonationViewState extends State<DonationView> {
             height: 10,
           ),
           Text(
-            L.of(context).other_payment_details,
+            S.of(context).other_payment_details,
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
@@ -1541,7 +1541,7 @@ class _DonationViewState extends State<DonationView> {
             textInputAction: TextInputAction.next,
             decoration: InputDecoration(
               errorMaxLines: 2,
-              hintText: L.of(context).other_payment_details_hint,
+              hintText: S.of(context).other_payment_details_hint,
               hintStyle: hintTextStyle,
             ),
             keyboardType: TextInputType.multiline,
