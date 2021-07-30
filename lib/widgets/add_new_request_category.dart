@@ -236,9 +236,7 @@ class _AddNewRequestCategoryState extends State<AddNewRequestCategory> {
                                     'logo': newRequestCategoryLogo == ''
                                         ? defaultGroupImageURL
                                         : newRequestCategoryLogo,
-                                    // title_en: subcategorytitle,
-                                    'type':
-                                        CategoryType.SUB_CATEGORY.toString(),
+                                    'type': 'subCategory',
                                     'typeId': newTypeId,
                                     'creatorId': SevaCore.of(context)
                                         .loggedInUser

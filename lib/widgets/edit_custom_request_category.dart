@@ -126,8 +126,9 @@ class _EditRequestCustomCategoryState extends State<EditRequestCustomCategory> {
                       child: Container(
                         height: MediaQuery.of(context).size.width * 0.1,
                         child: TextFormField(
-                          initialValue:
-                              widget.categoryModel.getCategoryName(context),
+                          initialValue: widget.categoryModel
+                              .getCategoryName(context)
+                              .toString(),
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           // controller: searchTextController,
                           onChanged: (val) {
@@ -215,17 +216,18 @@ class _EditRequestCustomCategoryState extends State<EditRequestCustomCategory> {
                     child: CustomElevatedButton(
                       color: widget.primaryColor,
                       onPressed: () async {
-                        CategoryModel newRequestCategoryModel = CategoryModel(
-                          categoryId: widget.categoryModel.categoryId,
-                          logo: newRequestCategoryLogo == null
+                        Map<String, dynamic> newRequestCategoryModel = {
+                          'categoryId': widget.categoryModel.categoryId,
+                          'logo': newRequestCategoryLogo == null
                               ? widget.categoryModel.logo
                               : newRequestCategoryLogo,
-                          title_en: subcategorytitle,
-                          type: CategoryType.SUB_CATEGORY,
-                          typeId: widget.categoryModel.typeId,
-                          creatorId: widget.userModel.sevaUserID,
-                          creatorEmail: widget.userModel.email,
-                        );
+                          'type': 'subCategory',
+                          'typeId': widget.categoryModel.typeId,
+                          'creatorId': widget.userModel.sevaUserID,
+                          'creatorEmail': widget.userModel.email,
+                          'title_' + widget.userModel.language ??
+                              S.of(context).localeName: subcategorytitle
+                        };
                         if (newRequestCategoryLogo !=
                                 widget.categoryModel.logo &&
                             subcategorytitle ==

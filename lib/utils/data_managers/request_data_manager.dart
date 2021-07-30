@@ -609,7 +609,14 @@ Stream<List<CategoryModel>> getUserCreatedRequestCategories(
           (documentSnapshot) {
             CategoryModel model =
                 CategoryModel.fromMap(documentSnapshot.data());
-            categoriesList.add(model);
+
+            logger.e('SNAPSHOT LENGTH:  ' +
+                documentSnapshot.data().length.toString());
+
+            if (model.data.containsKey(
+                'title_' + SevaCore.of(context).loggedInUser.language)) {
+              categoriesList.add(model);
+            }
           },
         );
         requestSink.add(categoriesList);
@@ -1903,8 +1910,9 @@ Future<void> addNewRequestCategory(
 }
 
 //Edit user defined request category
-Future<void> editRequestCategory(CategoryModel newModel, String typeId) async {
-  await CollectionRef.requestCategories.doc(typeId).update(newModel.toMap());
+Future<void> editRequestCategory(
+    Map<String, dynamic> newModel, String typeId) async {
+  await CollectionRef.requestCategories.doc(typeId).update(newModel);
 }
 
 Future oneToManyCreatorRequestCompletionRejectedTimebankNotifications(
