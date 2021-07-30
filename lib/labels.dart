@@ -330,4 +330,6 @@ class L {
 
 //30th July
   String get loan_success => "You have donated credits successfully";
+  String get yes => "Yes";
+  String get no => "No";
 }
