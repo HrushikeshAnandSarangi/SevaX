@@ -472,6 +472,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   scrollDirection: Axis.vertical,
                   child: Text(
                     dialogTitle,
+                    textAlign: TextAlign.justify,
                     style: TextStyle(
                       fontSize: 16,
                     ),
