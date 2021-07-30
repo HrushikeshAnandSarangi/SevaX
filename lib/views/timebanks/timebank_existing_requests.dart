@@ -22,16 +22,11 @@ import '../core.dart';
 
 class TimeBankExistingRequests extends StatefulWidget {
   final String timebankId;
-  final BuildContext parentContext;
   final UserModel userModel;
-  bool isAdmin;
+  final bool isAdmin;
 
   TimeBankExistingRequests(
-      {Key key,
-      this.timebankId,
-      this.parentContext,
-      this.isAdmin,
-      this.userModel});
+      {Key key, this.timebankId, this.isAdmin, this.userModel});
 
   @override
   _TimeBankExistingRequestsState createState() =>
@@ -39,73 +34,41 @@ class TimeBankExistingRequests extends StatefulWidget {
 }
 
 class _TimeBankExistingRequestsState extends State<TimeBankExistingRequests> {
-  TimebankModel timebankModel;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-
-    FirestoreManager.getTimeBankForId(timebankId: widget.timebankId)
-        .then((onValue) {
-      timebankModel = onValue;
-    });
-    //  timeBankBloc.getRequestsStreamFromTimebankId(widget.timebankId);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-//      appBar: AppBar(
-//        title: Text(
-//          "Existing Requests",
-//          style: TextStyle(fontSize: 18),
-//        ),
-//      ),
-      body: FutureBuilder<Object>(
-          future: FirestoreManager.getUserForId(
-              sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}');
-            }
-            if (snapshot.connectionState == ConnectionState.waiting) {
+      body: StreamBuilder<List<RequestModel>>(
+        stream: FirestoreManager.getTimebankExistingRequestListStream(
+            timebankId: widget.timebankId),
+        builder: (BuildContext context,
+            AsyncSnapshot<List<RequestModel>> requestListSnapshot) {
+          if (requestListSnapshot.hasError) {
+            return Text('Error: ${requestListSnapshot.error}');
+          }
+          switch (requestListSnapshot.connectionState) {
+            case ConnectionState.waiting:
               return LoadingIndicator();
-            }
-            return StreamBuilder<List<RequestModel>>(
-              stream: FirestoreManager.getTimebankExistingRequestListStream(
-                  timebankId: widget.timebankId),
-              builder: (BuildContext context,
-                  AsyncSnapshot<List<RequestModel>> requestListSnapshot) {
-                if (requestListSnapshot.hasError) {
-                  return Text('Error: ${requestListSnapshot.error}');
-                }
-                switch (requestListSnapshot.connectionState) {
-                  case ConnectionState.waiting:
-                    return LoadingIndicator();
-                  default:
-                    List<RequestModel> requestModelList =
-                        requestListSnapshot.data;
-                    requestModelList = filterRequests(
-                        context: context, requestModelList: requestModelList);
-                    requestModelList = filterBlockedRequestsContent(
-                        context: context, requestModelList: requestModelList);
+            default:
+              List<RequestModel> requestModelList = requestListSnapshot.data;
+              requestModelList = filterRequests(
+                  context: context, requestModelList: requestModelList);
+              requestModelList = filterBlockedRequestsContent(
+                  context: context, requestModelList: requestModelList);
 
-                    if (requestModelList.length == 0) {
-                      return Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Center(child: Text(S.of(context).no_requests)),
-                      );
-                    }
-                    var consolidatedList =
-                        GroupRequestCommons.groupAndConsolidateRequests(
-                            requestModelList,
-                            SevaCore.of(context).loggedInUser.sevaUserID);
-                    return formatListFrom(consolidatedList: consolidatedList);
-                }
-              },
-            );
-          }),
+              if (requestModelList.length == 0) {
+                return Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Center(child: Text(S.of(context).no_requests)),
+                );
+              }
+              var consolidatedList =
+                  GroupRequestCommons.groupAndConsolidateRequests(
+                      requestModelList,
+                      SevaCore.of(context).loggedInUser.sevaUserID);
+              return formatListFrom(consolidatedList: consolidatedList);
+          }
+        },
+      ),
     );
   }
 
@@ -169,44 +132,47 @@ class _TimeBankExistingRequestsState extends State<TimeBankExistingRequests> {
 
   Widget getRequestView(
       RequestModelList model, String loggedintimezone, String userEmail) {
-    switch (model.getType()) {
-      case RequestModelList.TITLE:
-        var isMyContent = (model as GroupTitle).groupTitle.contains("My");
+    return FutureBuilder<TimebankModel>(
+        future: utils.getTimeBankForId(timebankId: widget.timebankId),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            switch (model.getType()) {
+              case RequestModelList.TITLE:
+                var isMyContent =
+                    (model as GroupTitle).groupTitle.contains("My");
 
-        return Container(
-          height: !isMyContent ? 18 : 0,
-          margin: !isMyContent ? EdgeInsets.all(12) : EdgeInsets.all(0),
-          child: Text(
-            GroupRequestCommons.getGroupTitle(
-                groupKey: (model as GroupTitle).groupTitle,
-                context: context,
-                isGroup: isPrimaryTimebank(
-                    parentTimebankId: timebankModel.parentTimebankId)),
-          ),
-        );
+                return Container(
+                  height: !isMyContent ? 18 : 0,
+                  margin: !isMyContent ? EdgeInsets.all(12) : EdgeInsets.all(0),
+                  child: Text(
+                    GroupRequestCommons.getGroupTitle(
+                      groupKey: (model as GroupTitle).groupTitle,
+                      context: context,
+                      isGroup: isPrimaryTimebank(
+                        parentTimebankId: snapshot.data.parentTimebankId,
+                      ),
+                    ),
+                  ),
+                );
 
-      case RequestModelList.REQUEST:
-        return getRequestListViewHolder(
-          model: (model as RequestItem).requestModel,
-          loggedintimezone: loggedintimezone,
-          userEmail: userEmail,
-        );
+              case RequestModelList.REQUEST:
+                return getRequestListViewHolder(
+                  model: (model as RequestItem).requestModel,
+                  loggedintimezone: loggedintimezone,
+                  userEmail: userEmail,
+                );
 
-      default:
-        return Text(S.of(context).default_text);
-    }
+              default:
+                return Text(S.of(context).default_text);
+            }
+          } else {
+            return Container();
+          }
+        });
   }
 
   Widget getRequestListViewHolder(
       {RequestModel model, String loggedintimezone, String userEmail}) {
-//    bool isApplied =false;
-//    if(model.acceptors.contains(userEmail) ||
-//        model.approvedUsers.contains(userEmail) ||
-//        model.invitedUsers.contains(SevaCore.of(context)
-//            .loggedInUser
-//            .sevaUserID)){
-//      isApplied = true;
-//    }
     return Container(
       decoration: containerDecorationR,
       margin: EdgeInsets.symmetric(horizontal: 5, vertical: 0),
@@ -269,6 +235,9 @@ class _TimeBankExistingRequestsState extends State<TimeBankExistingRequests> {
                             widget.userModel.email,
                           );
 
+                          var timebankModel = await utils.getTimeBankForId(
+                              timebankId: widget.timebankId);
+
                           sendNotification(
                             requestModel: model,
                             userModel: widget.userModel,
@@ -324,8 +293,7 @@ class _TimeBankExistingRequestsState extends State<TimeBankExistingRequests> {
                         model.title,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
-                        style:
-                            Theme.of(widget.parentContext).textTheme.subtitle1,
+                        style: Theme.of(context).textTheme.subtitle1,
                       ),
                       Container(
                         width: MediaQuery.of(context).size.width * 0.7,
@@ -333,9 +301,7 @@ class _TimeBankExistingRequestsState extends State<TimeBankExistingRequests> {
                           model.description,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: Theme.of(widget.parentContext)
-                              .textTheme
-                              .subtitle1,
+                          style: Theme.of(context).textTheme.subtitle1,
                         ),
                       ),
                       SizedBox(height: 8),
@@ -452,10 +418,6 @@ class _TimeBankExistingRequestsState extends State<TimeBankExistingRequests> {
         .collection("notifications")
         .doc(notification.id)
         .set(notification.toMap());
-
-    // if (dialogLoadingContext != null) {
-    //  Navigator.pop(dialogLoadingContext);
-    // }
   }
 
   BoxDecoration get containerDecorationR {
