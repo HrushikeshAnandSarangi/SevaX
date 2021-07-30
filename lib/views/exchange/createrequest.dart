@@ -2374,7 +2374,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text("${item.title_en.toString()}",
+                  Text("${item.getCategoryName(context).toString()}",
                       style: TextStyle(color: Colors.white)),
                   SizedBox(width: 3),
                   InkWell(

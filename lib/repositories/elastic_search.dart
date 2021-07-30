@@ -2,8 +2,10 @@ import 'dart:convert';
 
 // import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/category_model.dart';
 import 'package:sevaexchange/models/community_category_model.dart';
 import 'package:sevaexchange/models/offer_model.dart';
@@ -499,7 +501,10 @@ class ElasticSearchApi {
 
   //get all categories
 
-  static Future<List<CategoryModel>> getAllCategories() async {
+  static Future<List<CategoryModel>> getAllCategories(
+      BuildContext context) async {
+    var key = S.of(context).localeName;
+
     String endPoint =
         '//elasticsearch/request_categories/_doc/_search?size=200';
 
@@ -517,8 +522,10 @@ class ElasticSearchApi {
 
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
-      CategoryModel model = CategoryModel.fromMap(sourceMap);
-      categoryList.add(model);
+      if (sourceMap["title_" + key ?? 'en'] != null) {
+        CategoryModel model = CategoryModel.fromMap(sourceMap);
+        categoryList.add(model);
+      }
     });
     return categoryList;
   }

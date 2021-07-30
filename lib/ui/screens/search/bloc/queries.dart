@@ -2,9 +2,11 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/category_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
@@ -513,9 +515,11 @@ class Searches {
   }
 
   //get all categories
-  static Stream<List<CategoryModel>> getAllCategories() async* {
+  static Stream<List<CategoryModel>> getAllCategories(
+      BuildContext context) async* {
     String url =
         '${FlavorConfig.values.elasticSearchBaseURL}/elasticsearch/request_categories/_doc/_search?size=200';
+    var key = S.of(context).localeName;
 
     dynamic body = json.encode({
       "query": {"match_all": {}},
@@ -529,8 +533,10 @@ class Searches {
 
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
-      CategoryModel model = CategoryModel.fromMap(sourceMap);
-      categoryList.add(model);
+      if (sourceMap["title_" + key ?? 'en'] != null) {
+        CategoryModel model = CategoryModel.fromMap(sourceMap);
+        categoryList.add(model);
+      }
     });
     yield categoryList;
   }

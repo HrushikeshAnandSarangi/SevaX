@@ -102,11 +102,11 @@ class _ExplorePageState extends State<ExplorePage> {
           Duration(milliseconds: 300),
           () => {
                 _exploreBloc.load(
-                  isUserLoggedIn: widget.isUserSignedIn,
-                  sevaUserID: widget.isUserSignedIn
-                      ? SevaCore.of(context).loggedInUser.sevaUserID
-                      : '',
-                ),
+                    isUserLoggedIn: widget.isUserSignedIn,
+                    sevaUserID: widget.isUserSignedIn
+                        ? SevaCore.of(context).loggedInUser.sevaUserID
+                        : '',
+                    context: context),
               });
 
       // if (isSignedUser) {
@@ -384,9 +384,9 @@ class _ExplorePageState extends State<ExplorePage> {
                                           : x.length - 1];
                                     }
                                     String formattedStartTime =
-                                    getStartDateFormat(
-                                        DateTime.fromMillisecondsSinceEpoch(
-                                            projectModel.startTime));
+                                        getStartDateFormat(
+                                            DateTime.fromMillisecondsSinceEpoch(
+                                                projectModel.startTime));
                                     return Row(
                                       children: [
                                         widget.isUserSignedIn
@@ -408,7 +408,8 @@ class _ExplorePageState extends State<ExplorePage> {
                                                   }
 
                                                   return ExploreEventsCard(
-                                                    eventStartDate: formattedStartTime,
+                                                    eventStartDate:
+                                                        formattedStartTime,
                                                     userIds: projectModel
                                                         .associatedmembers.keys
                                                         .toList(),
@@ -441,8 +442,9 @@ class _ExplorePageState extends State<ExplorePage> {
                                                   );
                                                 })
                                             : ExploreEventsCard(
-                                          eventStartDate: formattedStartTime,
-                                          userIds: projectModel
+                                                eventStartDate:
+                                                    formattedStartTime,
+                                                userIds: projectModel
                                                     .associatedmembers.keys
                                                     .toList(),
                                                 imageUrl:
@@ -532,8 +534,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                       ? x.length - 3
                                       : x.length - 1];
                                 }
-                                String formattedStartTime =
-                                getStartDateFormat(
+                                String formattedStartTime = getStartDateFormat(
                                     DateTime.fromMillisecondsSinceEpoch(
                                         model.requestStart));
                                 return Row(
@@ -617,7 +618,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                               );
                                             })
                                         : ExploreRequestsCard(
-                                      requestDate: formattedStartTime,
+                                            requestDate: formattedStartTime,
                                             userIds: model.approvedUsers,
                                             imageUrl: model.photoUrl ??
                                                 defaultGroupImageURL,
@@ -702,8 +703,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                 landMark = x[
                                     x.length > 3 ? x.length - 3 : x.length - 1];
                               }
-                              String formattedStartTime =
-                              getStartDateFormat(
+                              String formattedStartTime = getStartDateFormat(
                                   DateTime.fromMillisecondsSinceEpoch(
                                       offer.timestamp));
                               return Row(
@@ -725,7 +725,8 @@ class _ExplorePageState extends State<ExplorePage> {
                                             }
 
                                             return ExploreOffersCard(
-                                              offerStartDate: formattedStartTime,
+                                              offerStartDate:
+                                                  formattedStartTime,
                                               imageUrl: defaultGroupImageURL,
                                               offerName: getOfferTitle(
                                                       offerDataModel: offer) ??
@@ -747,7 +748,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                             );
                                           })
                                       : ExploreOffersCard(
-                                    offerStartDate: formattedStartTime,
+                                          offerStartDate: formattedStartTime,
                                           imageUrl: defaultGroupImageURL,
                                           offerName: getOfferTitle(
                                                   offerDataModel: offer) ??
@@ -949,7 +950,7 @@ class _ExplorePageState extends State<ExplorePage> {
                     ),
                     SizedBox(height: 10),
                     RequestCategories(
-                      stream: FirestoreManager.getAllCategoriesStream(),
+                      stream: FirestoreManager.getAllCategoriesStream(context),
                       onTap: (value) {
                         Navigator.of(context).push(
                           MaterialPageRoute(
