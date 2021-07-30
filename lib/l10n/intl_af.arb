@@ -1,6 +1,6 @@
 {
     "@@locale": "af",
-    "@@last_modified": "2021-07-29T11:01:13+00:00",
+    "@@last_modified": "2021-07-30T14:56:55+00:00",
     "check_met": "Kyk of ons van te vore al ontmoet het",
     "we_met": "Ons het van te vore al ontmoet",
     "hang_on": "Net 'n oomblik",
@@ -692,7 +692,7 @@
     "loan_zero_credit_error": "Jy kan nie 0 krediete leen nie",
     "negative_credit_loan_error": "Jy kan nie minder as 0 krediete leen nie",
     "empty_credit_loan_error": "Leen krediete aan",
-    "loan_success": "Jy het krediete suksesvol geleen",
+    "loan_success": "U het krediete suksesvol geskenk",
     "co_ordinators": "Koördineerders",
     "remove": "Verwyder",
     "promote": "Promote",
@@ -1650,5 +1650,6 @@
     "other_payment_details_hint": "Ex: Email, Telefoonnommer, ID",
     "other_payment_details": "Betaalmetode Besonderhede",
     "deleted_events_create_request_message": "Hierdie geleentheid sal uitgevee word.As gevolg hiervan kan versoeke nie geskep kan word nie.",
-    "other_payment_name": "Betaalmetode Naam"
+    "other_payment_name": "Betaalmetode Naam",
+    "accept_offer_invitation_confirmation_to_do_tasks": "Hierdie taak sal bygevoeg word aan u om te doen, nadat u dit goedgekeur het."
 }

@@ -3481,7 +3481,7 @@ class S {
       );
 
   String get loan_success => Intl.message(
-        'You have loaned credits successfully',
+        'You have donated credits successfully',
         name: 'loan_success',
       );
 
@@ -8294,6 +8294,11 @@ class S {
   String get other_payment_name => Intl.message(
         'Payment Method Name',
         name: 'other_payment_name',
+      );
+
+  String get accept_offer_invitation_confirmation_to_do_tasks => Intl.message(
+        'This task will be added to your To Do list, after you approve it.',
+        name: 'accept_offer_invitation_confirmation_to_do_tasks',
       );
 }
 
