@@ -235,11 +235,7 @@ class ToDo {
     offersList.forEach((element) {
       widgetList.add(
         ToDoCard(
-          onTap: () => CompletedTasks.showMyTaskDialog(
-            context: context,
-            title: L.of(context).to_do_one_to_many_offer_attende_title,
-            subTitle: L.of(context).to_do_one_to_many_offer_attende_subtitle,
-          ),
+          onTap: () {},
           title: element.groupOfferDataModel.classTitle,
           subTitle: element.groupOfferDataModel.classDescription,
           tag: L.of(context).one_to_many_offer_attende,
@@ -253,11 +249,7 @@ class ToDo {
     createdOneToManyOffers.forEach((element) {
       widgetList.add(
         ToDoCard(
-          onTap: () => CompletedTasks.showMyTaskDialog(
-            context: context,
-            title: L.of(context).to_do_one_to_many_reuqest_speaker_title,
-            subTitle: L.of(context).to_do_one_to_many_reuqest_speaker_subtitle,
-          ),
+          onTap: () {},
           title: element.groupOfferDataModel.classTitle,
           subTitle: element.groupOfferDataModel.classDescription,
           tag: L.of(context).one_to_many_offer_speaker,
@@ -270,11 +262,7 @@ class ToDo {
     List<RequestModel> acceptedOneToManyRequests = toDoSink[3];
     acceptedOneToManyRequests.forEach((element) {
       widgetList.add(ToDoCard(
-        onTap: () => CompletedTasks.showMyTaskDialog(
-          context: context,
-          title: L.of(context).to_do_one_to_many_request_attende_title,
-          subTitle: L.of(context).to_do_one_to_many_request_attende_subtitle,
-        ),
+        onTap: () {},
         title: element.title,
         subTitle: element.description,
         tag: L.of(context).one_to_many_request_attende,

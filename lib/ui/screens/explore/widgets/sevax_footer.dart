@@ -52,7 +52,10 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
       width: MediaQuery.of(context).size.width,
       color: Theme.of(context).primaryColor,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 20),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 8.0,
+          vertical: 20,
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
