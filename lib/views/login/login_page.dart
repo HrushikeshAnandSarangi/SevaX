@@ -208,51 +208,67 @@ class _LoginPageState extends State<LoginPage> {
                                 SizedBox(
                                   height: 15,
                                 ),
-                                Row(
-                                  children: [
-                                    CustomTextButton(
-                                      padding:
-                                          EdgeInsets.fromLTRB(10, 5, 10, 5),
-                                      color: Theme.of(context).accentColor,
-                                      textColor:
-                                          FlavorConfig.values.buttonTextColor,
-                                      child: Text(
-                                        S.of(context).reset_password,
-                                        style: TextStyle(
-                                          fontSize: 15,
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    left: 30.0,
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      CustomTextButton(
+                                        padding:
+                                            EdgeInsets.fromLTRB(10, 5, 10, 5),
+                                        shape: StadiumBorder(),
+                                        color: Colors.grey,
+                                        child: Text(
+                                          S.of(context).cancel,
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.white,
+                                            fontFamily: 'Europa',
+                                          ),
                                         ),
+                                        onPressed: () {
+                                          Navigator.of(_context).pop(
+                                            {
+                                              "sendResetLink": false,
+                                              "userEmail": null
+                                            },
+                                          );
+                                        },
                                       ),
-                                      onPressed: () {
-                                        if (!_formKeyDialog.currentState
-                                            .validate()) {
-                                          return;
-                                        }
-                                        Navigator.of(_context).pop({
-                                          "sendResetLink": true,
-                                          "userEmail":
-                                              _textFieldControllerResetEmail
-                                                  .trim()
-                                        });
-                                      },
-                                    ),
-                                    CustomTextButton(
-                                      child: Text(
-                                        S.of(context).cancel,
-                                        style: TextStyle(
-                                          fontSize: 15,
-                                          color: Colors.red,
+                                      Spacer(),
+                                      CustomTextButton(
+                                        shape: StadiumBorder(),
+                                        padding:
+                                            EdgeInsets.fromLTRB(10, 5, 10, 5),
+                                        color: Theme.of(context).accentColor,
+                                        textColor:
+                                            FlavorConfig.values.buttonTextColor,
+                                        child: Text(
+                                          S.of(context).reset_password,
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.white,
+                                            fontFamily: 'Europa',
+                                          ),
                                         ),
+                                        onPressed: () {
+                                          if (!_formKeyDialog.currentState
+                                              .validate()) {
+                                            return;
+                                          }
+                                          Navigator.of(_context).pop(
+                                            {
+                                              "sendResetLink": true,
+                                              "userEmail":
+                                                  _textFieldControllerResetEmail
+                                                      .trim()
+                                            },
+                                          );
+                                        },
                                       ),
-                                      onPressed: () {
-                                        Navigator.of(_context).pop(
-                                          {
-                                            "sendResetLink": false,
-                                            "userEmail": null
-                                          },
-                                        );
-                                      },
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
 //                                LayoutBuilder(
 //                                  builder: (context, size) {
@@ -540,68 +556,72 @@ class _LoginPageState extends State<LoginPage> {
     return FadeAnimation(
       1.5,
       Container(
-          width: double.infinity,
-          decoration: BoxDecoration(color: Colors.white),
-          height: 200,
-          child: Padding(
-              padding: EdgeInsets.only(top: 8.0, bottom: 0.0),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    TextFormField(
-                      focusNode: emailFocus,
-                      style: textStyle,
-                      cursorColor: Colors.black54,
-                      validator: _validateEmailId,
-                      onSaved: _saveEmail,
-                      onFieldSubmitted: (v) {
-                        FocusScope.of(context).requestFocus(pwdFocus);
-                      },
-                      decoration: InputDecoration(
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black54),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black54),
-                        ),
-                        labelText: S.of(context).email.toUpperCase(),
-                        labelStyle: textStyle,
-                      ),
+        width: double.infinity,
+        decoration: BoxDecoration(color: Colors.white),
+        height: 200,
+        child: Padding(
+          padding: EdgeInsets.only(top: 8.0, bottom: 0.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                TextFormField(
+                  focusNode: emailFocus,
+                  style: textStyle,
+                  cursorColor: Colors.black54,
+                  validator: _validateEmailId,
+                  onSaved: _saveEmail,
+                  onFieldSubmitted: (v) {
+                    FocusScope.of(context).requestFocus(pwdFocus);
+                  },
+                  decoration: InputDecoration(
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black54),
                     ),
-                    TextFormField(
-                      focusNode: pwdFocus,
-                      obscureText: _shouldObscurePassword,
-                      style: textStyle,
-                      cursorColor: Colors.black54,
-                      validator: _validatePassword,
-                      onSaved: _savePassword,
-                      decoration: InputDecoration(
-                          enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.black54)),
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black54),
-                          ),
-                          labelText: S.of(context).password.toUpperCase(),
-                          labelStyle: textStyle,
-                          suffix: GestureDetector(
-                            onTap: () {
-                              _shouldObscurePassword = !_shouldObscurePassword;
-                              setState(() {});
-                            },
-                            child: Icon(
-                              _shouldObscurePassword
-                                  ? Icons.visibility_off
-                                  : Icons.visibility,
-                            ),
-                          )),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black54),
                     ),
-                    SizedBox(height: 22),
-                  ],
+                    labelText: S.of(context).email.toUpperCase(),
+                    labelStyle: textStyle,
+                  ),
                 ),
-              ))),
+                TextFormField(
+                  focusNode: pwdFocus,
+                  obscureText: _shouldObscurePassword,
+                  style: textStyle,
+                  cursorColor: Colors.black54,
+                  validator: _validatePassword,
+                  onSaved: _savePassword,
+                  decoration: InputDecoration(
+                      enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black54)),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black54),
+                      ),
+                      labelText: S.of(context).password.toUpperCase(),
+                      labelStyle: textStyle,
+                      suffix: GestureDetector(
+                        onTap: () {
+                          _shouldObscurePassword = !_shouldObscurePassword;
+                          setState(() {});
+                        },
+                        child: Icon(
+                          _shouldObscurePassword
+                              ? Icons.visibility_off
+                              : Icons.visibility,
+                        ),
+                      )),
+                ),
+                SizedBox(
+                  height: 16,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -727,13 +747,30 @@ class _LoginPageState extends State<LoginPage> {
       child: InkWell(
         onTap: useGoogleSignIn,
         child: Card(
-          child: ListTile(
-            leading: SizedBox(
-              height: 30,
-              width: 30,
-              child: Image.asset('lib/assets/images/g.png'),
+          child: Container(
+            height: 60,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 30,
+                  width: 30,
+                  child: Image.asset('lib/assets/images/g.png'),
+                ),
+                SizedBox(
+                  width: 15,
+                ),
+                Text(
+                  S.of(context).sign_in_with_google,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                    fontFamily: 'Europa',
+                  ),
+                ),
+              ],
             ),
-            title: Text(S.of(context).sign_in_with_google),
           ),
         ),
       ),

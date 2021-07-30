@@ -895,11 +895,14 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                                 ],
                               ),
                               getSpacerItem(
-                                Text(
-                                  '${model.title}',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 20,
+                                Flexible(
+                                  child: Text(
+                                    '${model.title}',
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 20,
+                                    ),
                                   ),
                                 ),
                                 model.isRecurring
