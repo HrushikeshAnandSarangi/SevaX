@@ -22,17 +22,18 @@ class ImagePickerHandler {
 
   ImagePickerHandler(this._listener, this._controller, this.isCover);
 
-  void openCamera() async {
-    imagePicker.dismissDialog();
+  void openCamera(BuildContext context) async {
+    imagePicker.dismissDialog(context);
     final picker = ImagePicker();
     final pickedFile = await picker.getImage(source: ImageSource.camera);
     cropImage(pickedFile.path);
   }
 
-  void openGallery() async {
-    imagePicker.dismissDialog();
+  void openGallery(BuildContext context) async {
+    imagePicker.dismissDialog(context);
     final picker = ImagePicker();
-    final pickedFile = await picker.getImage(source: ImageSource.gallery).then((value) {
+    final pickedFile =
+        await picker.getImage(source: ImageSource.gallery).then((value) {
       log('open gallery image ${value.path}');
       cropImage(value.path);
     });
@@ -61,24 +62,24 @@ class ImagePickerHandler {
 //    });
 //  }
 
-  addImageUrl() async {
-    imagePicker.dismissDialog();
+  addImageUrl(BuildContext context) async {
+    imagePicker.dismissDialog(context);
     _listener.addWebImageUrl();
   }
 
-  addStockImageUrl(String image, bool isCover) async {
+  addStockImageUrl(BuildContext context, String image, bool isCover) async {
     logger.e('HERE 1');
 
     if (isCover) {
-      isCover ? imagePicker.dismissDialog() : null;
+      isCover ? imagePicker.dismissDialog(context) : null;
       //crop functionality for stock image selection for cover photo
       File imageToCrop = await utils.urlToFile(image);
       cropImage(imageToCrop.path);
 
-      globals.isFromOnBoarding ? null : imagePicker.dismissDialog();
+      globals.isFromOnBoarding ? null : imagePicker.dismissDialog(context);
       _listener.userImage(image, 'stock_image');
     } else {
-      globals.isFromOnBoarding ? null : imagePicker.dismissDialog();
+      globals.isFromOnBoarding ? null : imagePicker.dismissDialog(context);
       _listener.userImage(image, 'stock_image');
     }
   }
@@ -140,7 +141,8 @@ class SearchStockImages extends StatefulWidget {
   }
 }
 
-class SearchStockImagesViewState extends State<SearchStockImages> with TickerProviderStateMixin {
+class SearchStockImagesViewState extends State<SearchStockImages>
+    with TickerProviderStateMixin {
   num catSelected = -1;
 
   @override
@@ -184,15 +186,17 @@ class SearchStockImagesViewState extends State<SearchStockImages> with TickerPro
                       child: Text(
                         'Choose Category',
                         style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.w600, color: HexColor('#F5A623')),
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                            color: HexColor('#F5A623')),
                       ),
                     ),
                     this.catSelected > -1
                         ? Icon(
-                      Icons.arrow_forward_ios,
-                      color: HexColor('#F5A623'),
-                      size: 20,
-                    )
+                            Icons.arrow_forward_ios,
+                            color: HexColor('#F5A623'),
+                            size: 20,
+                          )
                         : Container(),
                     Text(
                       this.catSelected > -1
@@ -217,7 +221,8 @@ class SearchStockImagesViewState extends State<SearchStockImages> with TickerPro
 }
 
 class StockImageListingView extends StatelessWidget {
-  const StockImageListingView(this.onCatSelected, this.catSelected, this.onChanged);
+  const StockImageListingView(
+      this.onCatSelected, this.catSelected, this.onChanged);
 
   final ValueChanged onChanged;
   final int catSelected;
@@ -231,7 +236,9 @@ class StockImageListingView extends StatelessWidget {
           childs[i]['image'],
           isimages ? childs[i]['index'] : i,
           childs[i]['name'],
-          isimages ? (index) => {this.onChanged(childs[i]['image'])} : this.onCatSelected));
+          isimages
+              ? (index) => {this.onChanged(childs[i]['image'])}
+              : this.onCatSelected));
       staggeredtiles.add(
         StaggeredTile.fit(
           childs[i]['fit'],
