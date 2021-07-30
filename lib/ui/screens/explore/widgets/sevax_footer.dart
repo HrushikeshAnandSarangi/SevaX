@@ -52,7 +52,10 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
       width: MediaQuery.of(context).size.width,
       color: Theme.of(context).primaryColor,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 20),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 8.0,
+          vertical: 20,
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -61,7 +64,7 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
               children: [
                 Container(
                   height: 40,
-                  width: MediaQuery.of(context).size.width / 2 - 14,
+                  width: MediaQuery.of(context).size.width / 2 - 16,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(4),
                     color: Colors.white,
@@ -97,10 +100,10 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
                     ),
                   ),
                 ),
-                // SizedBox(width: 12),
+                SizedBox(width: 4),
                 Container(
                   height: 40,
-                  width: MediaQuery.of(context).size.width / 2,
+                  width: MediaQuery.of(context).size.width / 2 - 4,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(4),
                     color: Colors.white,
@@ -113,14 +116,16 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
                         });
                       },
                       value: timezoneName,
+                      isExpanded: true,
                       items: TimezoneListData()
                           .timezonelist
                           .map(
                             (model) => DropdownMenuItem(
                               child: Padding(
-                                padding: const EdgeInsets.only(right: 8.0),
+                                padding: const EdgeInsets.only(left: 8.0),
                                 child: Text(
                                   model.timezoneName,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                               value: model.timezoneName.toLowerCase(),

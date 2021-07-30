@@ -86,6 +86,9 @@ class HomePageBaseBloc extends BlocBase
   void init(UserModel user) {
     logger.wtf("homepage base bloc init");
     getAllTimebanksOfCommunity(user.currentCommunity).listen((event) {
+      event.sort(
+        (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
+      );
       _timebanks.add(event);
     });
     getAllCommunitiesOfUser(user.sevaUserID).listen((event) {

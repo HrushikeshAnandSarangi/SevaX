@@ -181,30 +181,30 @@ class _ManageGroupView extends State<ManageGroupView> {
     );
   }
 
-  Widget viewRequests({BuildContext context}) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => RequestListingPage(
-              // timebankId: widget.timebankModel.id,
-              timebankModel: widget.timebankModel,
-              isFromSettings: true,
-            ),
-          ),
-        );
-      },
-      child: Text(
-        S.of(context).view_requests,
-        style: TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.bold,
-          color: Colors.blue,
-        ),
-      ),
-    );
-  }
+  // Widget viewRequests({BuildContext context}) {
+  //   return GestureDetector(
+  //     onTap: () {
+  //       Navigator.push(
+  //         context,
+  //         MaterialPageRoute(
+  //           builder: (context) => RequestListingPage(
+  //             // timebankId: widget.timebankModel.id,
+  //             timebankModel: widget.timebankModel,
+  //             isFromSettings: true,
+  //           ),
+  //         ),
+  //       );
+  //     },
+  //     child: Text(
+  //       S.of(context).view_requests,
+  //       style: TextStyle(
+  //         fontSize: 14,
+  //         fontWeight: FontWeight.bold,
+  //         color: Colors.blue,
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget viewReportedMembers({BuildContext context}) {
     return GestureDetector(
@@ -289,10 +289,10 @@ class _ManageGroupView extends State<ManageGroupView> {
           SizedBox(
             height: 30,
           ),
-          viewRequests(context: context),
-          SizedBox(
-            height: 30,
-          ),
+          // viewRequests(context: context),
+          // SizedBox(
+          //   height: 30,
+          // ),
           viewReportedMembers(context: context),
           SizedBox(
             height: 30,

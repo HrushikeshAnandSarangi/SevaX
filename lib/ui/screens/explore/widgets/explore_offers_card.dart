@@ -12,6 +12,7 @@ class ExploreOffersCard extends StatelessWidget {
     this.firstTextStyle,
     this.secondTextStyle,
     this.onTap,
+    this.offerStartDate,
     //this.padding,
   }) : super(key: key);
 
@@ -22,6 +23,7 @@ class ExploreOffersCard extends StatelessWidget {
   final String description;
   final TextStyle firstTextStyle;
   final TextStyle secondTextStyle;
+  final String offerStartDate;
   //final EdgeInsetsGeometry padding;
 
   @override
@@ -98,6 +100,16 @@ class ExploreOffersCard extends StatelessWidget {
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                           ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 4.0),
+                  child: Text(
+                    offerStartDate.toUpperCase(),
+                    style: TextStyle(
+                      color: Theme.of(context).accentColor,
+                      fontSize: 13,
                     ),
                   ),
                 ),

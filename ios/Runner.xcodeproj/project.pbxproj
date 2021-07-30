@@ -449,7 +449,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 138;
+				CURRENT_PROJECT_VERSION = 139;
 				DEVELOPMENT_TEAM = 456DU6XRWC;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -465,7 +465,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 1.7.2;
+				MARKETING_VERSION = 1.7.3;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sevaexchange.dev;
 				PRODUCT_NAME = SevaX;
@@ -606,7 +606,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 138;
+				CURRENT_PROJECT_VERSION = 139;
 				DEVELOPMENT_TEAM = 456DU6XRWC;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -623,7 +623,7 @@
 					"$(PROJECT_DIR)/Flutter",
 				);
 				LLVM_LTO = YES_THIN;
-				MARKETING_VERSION = 1.7.2;
+				MARKETING_VERSION = 1.7.3;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sevaexchange.dev;
 				PRODUCT_NAME = SevaX;
@@ -648,7 +648,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 138;
+				CURRENT_PROJECT_VERSION = 139;
 				DEVELOPMENT_TEAM = 456DU6XRWC;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -665,7 +665,7 @@
 					"$(PROJECT_DIR)/Flutter",
 				);
 				LLVM_LTO = YES_THIN;
-				MARKETING_VERSION = 1.7.2;
+				MARKETING_VERSION = 1.7.3;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sevaexchange.app;
 				PRODUCT_NAME = SevaX;
@@ -752,7 +752,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 138;
+				CURRENT_PROJECT_VERSION = 139;
 				DEVELOPMENT_TEAM = 456DU6XRWC;
 				ENABLE_BITCODE = YES;
 				FLUTTER_TARGET = lib/main_seva_dev.dart;
@@ -769,7 +769,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 1.7.2;
+				MARKETING_VERSION = 1.7.3;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sevaexchange.dev;
 				PRODUCT_NAME = SevaX;
@@ -855,7 +855,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 138;
+				CURRENT_PROJECT_VERSION = 139;
 				DEVELOPMENT_TEAM = 456DU6XRWC;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -872,7 +872,7 @@
 					"$(PROJECT_DIR)/Flutter",
 				);
 				LLVM_LTO = YES_THIN;
-				MARKETING_VERSION = 1.7.2;
+				MARKETING_VERSION = 1.7.3;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sevaexchange.app;
 				PRODUCT_NAME = SevaX;
@@ -958,7 +958,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 138;
+				CURRENT_PROJECT_VERSION = 139;
 				DEVELOPMENT_TEAM = 456DU6XRWC;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -975,7 +975,7 @@
 					"$(PROJECT_DIR)/Flutter",
 				);
 				LLVM_LTO = NO;
-				MARKETING_VERSION = 1.7.2;
+				MARKETING_VERSION = 1.7.3;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sevaexchange.app;
 				PRODUCT_NAME = SevaX;
@@ -1061,7 +1061,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 138;
+				CURRENT_PROJECT_VERSION = 139;
 				DEVELOPMENT_TEAM = 456DU6XRWC;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1077,7 +1077,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 1.7.2;
+				MARKETING_VERSION = 1.7.3;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sevaexchange.app;
 				PRODUCT_NAME = SevaX;
@@ -1163,7 +1163,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 138;
+				CURRENT_PROJECT_VERSION = 139;
 				DEVELOPMENT_TEAM = 456DU6XRWC;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1179,7 +1179,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 1.7.2;
+				MARKETING_VERSION = 1.7.3;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sevaexchange.app;
 				PRODUCT_NAME = SevaX;
@@ -1262,7 +1262,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 138;
+				CURRENT_PROJECT_VERSION = 139;
 				DEVELOPMENT_TEAM = 456DU6XRWC;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1278,7 +1278,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 1.7.2;
+				MARKETING_VERSION = 1.7.3;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sevaexchange.app;
 				PRODUCT_NAME = SevaX;
@@ -1360,7 +1360,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 138;
+				CURRENT_PROJECT_VERSION = 139;
 				DEVELOPMENT_TEAM = 456DU6XRWC;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1376,7 +1376,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 1.7.2;
+				MARKETING_VERSION = 1.7.3;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sevaexchange.app;
 				PRODUCT_NAME = SevaX;
@@ -1459,7 +1459,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 138;
+				CURRENT_PROJECT_VERSION = 139;
 				DEVELOPMENT_TEAM = 456DU6XRWC;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1476,7 +1476,7 @@
 					"$(PROJECT_DIR)/Flutter",
 				);
 				LLVM_LTO = YES_THIN;
-				MARKETING_VERSION = 1.7.2;
+				MARKETING_VERSION = 1.7.3;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sevaexchange.app;
 				PRODUCT_NAME = SevaX;
@@ -1561,7 +1561,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 138;
+				CURRENT_PROJECT_VERSION = 139;
 				DEVELOPMENT_TEAM = 456DU6XRWC;
 				ENABLE_BITCODE = YES;
 				FLUTTER_TARGET = lib/main_seva_dev.dart;
@@ -1578,7 +1578,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 1.7.2;
+				MARKETING_VERSION = 1.7.3;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sevaexchange.dev;
 				PRODUCT_NAME = SevaX;
@@ -1660,7 +1660,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 138;
+				CURRENT_PROJECT_VERSION = 139;
 				DEVELOPMENT_TEAM = 456DU6XRWC;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1676,7 +1676,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 1.7.2;
+				MARKETING_VERSION = 1.7.3;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sevaexchange.app;
 				PRODUCT_NAME = SevaX;

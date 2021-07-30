@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+// import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -84,8 +84,8 @@ class MessageBloc extends BlocBase {
             chats.add(chat);
           }
         } else {
-          FirebaseCrashlytics.instance
-              .log('Chat issue with same memeber chat id ${chat.id}');
+          // FirebaseCrashlytics.instance
+          //     .log('Chat issue with same memeber chat id ${chat.id}');
 
           log('chat id is ${chat.id}');
         }

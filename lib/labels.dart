@@ -267,8 +267,8 @@ class L {
   String get choose_plan => "Choose Plan";
 
   String get new_comminity_message => "Select a child or branch community";
-  String get go_to_community_chat => "View child community\nMessaging Rooms";
-  String get no_child_communities => "No child existing communities";
+  String get go_to_community_chat => "View child community Messaging Rooms";
+  String get no_child_communities => "No child communities";
   String get community_chat => "Child Messaging Rooms";
 // }
 
@@ -327,4 +327,9 @@ class L {
   String get policies_explore => "Policies";
   String get news_explore => "News";
   String get trust_and_safety_explore => "Trust & Safety";
+
+//30th July
+  String get loan_success => "You have donated credits successfully";
+  String get yes => "Yes";
+  String get no => "No";
 }

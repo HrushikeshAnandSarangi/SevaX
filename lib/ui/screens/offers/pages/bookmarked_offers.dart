@@ -357,7 +357,6 @@ void showDialogForMakingAnOffer({
                                 builder: (context) => AdminPersonalRequests(
                                   timebankId: model.timebankId,
                                   isTimebankRequest: true,
-                                  parentContext: parentContext,
                                   userModel: userModel,
                                   showAppBar: true,
                                 ),

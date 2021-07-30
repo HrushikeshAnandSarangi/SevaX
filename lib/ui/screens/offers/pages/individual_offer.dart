@@ -980,6 +980,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                                 });
                                           } else {
                                             updateOneToManyOfferFunc(2);
+                                            Navigator.pop(context);
                                           }
                                         }
                                       } else {
@@ -1373,7 +1374,8 @@ class _IndividualOfferState extends State<IndividualOffer> {
           user: SevaCore.of(context).loggedInUser,
           timebankId: widget.timebankId,
           communityName: communityModel.name ?? '');
-      log("creation statusss - ${_bloc.offerCreatedBool}");
+      _bloc.offerCreatedBool = true;
+      log("Here creation statusss - ${_bloc.offerCreatedBool}");
       if (_bloc.offerCreatedBool) {
         log("inside if with ${_bloc.offerCreatedBool}");
         Navigator.pushReplacement(

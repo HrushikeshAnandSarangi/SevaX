@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+// import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/labels.dart';
@@ -184,8 +184,8 @@ class DonationParticipantPage extends StatelessWidget {
         );
         break;
       default:
-        FirebaseCrashlytics.instance.log(
-            'UnImplemented DonationStatus case ${model.donationStatus.toString()}');
+        // FirebaseCrashlytics.instance.log(
+        //     'UnImplemented DonationStatus case ${model.donationStatus.toString()}');
         return DonationButtonActionModel(
           buttonColor: Colors.grey,
           buttonText: 'UN-IMPLEMENTED',

@@ -1123,6 +1123,8 @@ class _EditProfilePageState extends State<EditProfilePage>
     if (result ?? false) {
       var auth = AuthProvider.of(context).auth;
       await auth.signOut();
+      Provider.of<UserBloc>(context, listen: false).clearUserData;
+
       await Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
@@ -1130,7 +1132,6 @@ class _EditProfilePageState extends State<EditProfilePage>
         ),
         (Route<dynamic> route) => false,
       );
-      Provider.of<UserBloc>(context, listen: false).clearUserData;
       await Phoenix.rebirth(context);
     }
   }

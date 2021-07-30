@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+// import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:rxdart/rxdart.dart';
@@ -1081,8 +1081,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
 
                     default:
                       log("Unhandled user notification type ${notification.type} ${notification.id}");
-                      FirebaseCrashlytics.instance.log(
-                          "Unhandled notification type ${notification.type} ${notification.id}");
+                      // FirebaseCrashlytics.instance.log(
+                      //     "Unhandled notification type ${notification.type} ${notification.id}");
                       return Container();
                   }
                 },
