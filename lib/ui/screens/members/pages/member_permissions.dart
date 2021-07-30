@@ -270,7 +270,6 @@ class _MemberPermissionsState extends State<MemberPermissions> {
         children: List.generate(
           generalList.length,
           (index) => CheckboxListTile(
-            checkColor: Colors.black,
             contentPadding: EdgeInsets.zero,
             controlAffinity: ListTileControlAffinity.leading,
             title: Text(generalList[index].title_en),

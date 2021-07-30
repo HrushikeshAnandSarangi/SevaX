@@ -411,13 +411,36 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
               Row(
                 children: <Widget>[
                   CustomTextButton(
+                    shape: StadiumBorder(),
+                    padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                    color: Colors.grey,
+                    child: Text(
+                      S.of(context).cancel,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontFamily: 'Europa',
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.of(dialogContext, rootNavigator: true).pop();
+                    },
+                  ),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  CustomTextButton(
+                    shape: StadiumBorder(),
                     padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                     color: Theme.of(context).accentColor,
                     textColor: FlavorConfig.values.buttonTextColor,
                     child: Text(
                       S.of(context).send_request,
                       style: TextStyle(
-                          fontSize: dialogButtonSize, fontFamily: 'Europa'),
+                        fontSize: dialogButtonSize,
+                        fontFamily: 'Europa',
+                        color: Colors.white,
+                      ),
                     ),
                     onPressed: () async {
                       if (formkey.currentState.validate()) {
@@ -434,18 +457,6 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
 
                         return;
                       }
-                    },
-                  ),
-                  CustomTextButton(
-                    child: Text(
-                      S.of(context).cancel,
-                      style: TextStyle(
-                          color: Colors.red,
-                          fontSize: 16,
-                          fontFamily: 'Europa'),
-                    ),
-                    onPressed: () {
-                      Navigator.of(dialogContext, rootNavigator: true).pop();
                     },
                   ),
                 ],

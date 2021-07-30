@@ -632,46 +632,60 @@ class _RegisterPageState extends State<RegisterPage>
                           title: Text(S.of(context).add_photo),
                           content: Text(S.of(context).add_photo_hint),
                           actions: <Widget>[
-                            CustomTextButton(
-                              child: Text(
-                                S.of(context).skip_and_register,
-                                style: TextStyle(
-                                  fontSize: dialogButtonSize,
-                                  color: Colors.red,
-                                  fontFamily: 'Europa',
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 15),
+                              child: CustomTextButton(
+                                shape: StadiumBorder(),
+                                color: Colors.grey,
+                                padding: EdgeInsets.fromLTRB(10, 5, 5, 10),
+                                child: Text(
+                                  S.of(context).skip_and_register,
+                                  style: TextStyle(
+                                    fontSize: dialogButtonSize,
+                                    color: Colors.white,
+                                    fontFamily: 'Europa',
+                                  ),
                                 ),
+                                onPressed: () async {
+                                  Navigator.pop(viewContext);
+                                  if (!_formKey.currentState.validate()) {
+                                    isLoading = false;
+                                    return;
+                                  }
+                                  _formKey.currentState.save();
+
+                                  await profanityCheck();
+                                  isLoading = false;
+                                },
                               ),
-                              onPressed: () async {
-                                Navigator.pop(viewContext);
-                                if (!_formKey.currentState.validate()) {
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                bottom: 15,
+                                right: 15,
+                              ),
+                              child: CustomTextButton(
+                                shape: StadiumBorder(),
+                                padding: EdgeInsets.fromLTRB(10, 5, 5, 10),
+                                color: Theme.of(context).accentColor,
+                                textColor: FlavorConfig.values.buttonTextColor,
+                                child: Text(
+                                  S.of(context).add_photo,
+                                  style: TextStyle(
+                                    fontSize: dialogButtonSize,
+                                    fontFamily: 'Europa',
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                onPressed: () {
+                                  Navigator.pop(viewContext);
+                                  FocusScope.of(context)
+                                      .requestFocus(new FocusNode());
+                                  imagePicker.showDialog(context);
                                   isLoading = false;
                                   return;
-                                }
-                                _formKey.currentState.save();
-
-                                await profanityCheck();
-                                isLoading = false;
-                              },
-                            ),
-                            CustomTextButton(
-                              padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                              color: Theme.of(context).accentColor,
-                              textColor: FlavorConfig.values.buttonTextColor,
-                              child: Text(
-                                S.of(context).add_photo,
-                                style: TextStyle(
-                                  fontSize: dialogButtonSize,
-                                  fontFamily: 'Europa',
-                                ),
+                                },
                               ),
-                              onPressed: () {
-                                Navigator.pop(viewContext);
-                                FocusScope.of(context)
-                                    .requestFocus(new FocusNode());
-                                imagePicker.showDialog(context);
-                                isLoading = false;
-                                return;
-                              },
                             ),
                           ],
                         ),

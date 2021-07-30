@@ -451,7 +451,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
             ],
           ),
           color: Theme.of(context).accentColor,
-          textColor: FlavorConfig.values.buttonTextColor,
+          textColor: Colors.white,
           shape: StadiumBorder(),
         )
       ]),
