@@ -947,7 +947,8 @@ class _ExplorePageState extends State<ExplorePage> {
                       ),
                     ),
                     SizedBox(height: 10),
-                    RequestCategories(
+                    RequestCategories
+                      (
                       stream: FirestoreManager.getAllCategoriesStream(),
                       onTap: (value) {
                         Navigator.of(context).push(
