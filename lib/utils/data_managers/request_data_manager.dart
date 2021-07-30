@@ -593,10 +593,11 @@ Stream<List<RequestModel>> getAllRequestListStream() async* {
 }
 
 Stream<List<CategoryModel>> getUserCreatedRequestCategories(
-    String creatorId) async* {
-  var query = CollectionRef.requestCategories
-      .where('creatorId', isEqualTo: creatorId)
-      .orderBy('title_en');
+    String creatorId, BuildContext context) async* {
+  var query =
+      CollectionRef.requestCategories.where('creatorId', isEqualTo: creatorId);
+  // .orderBy('title_' + SevaCore.of(context).loggedInUser.language ??
+  //     S.of(context).localeName);
 
   var data = query.snapshots();
 
@@ -1009,7 +1010,6 @@ Stream<List<RequestModel>> getProjectRequestsStream(
     ),
   );
 }
-
 
 Future<void> sendOfferRequest({
   @required OfferModel offerModel,
@@ -1893,8 +1893,8 @@ Future<CategoryModel> getCategoryForId({@required String categoryID}) async {
 
 //Add new user defined request category
 Future<void> addNewRequestCategory(
-    CategoryModel newModel, String typeId) async {
-  await CollectionRef.requestCategories.doc(typeId).set(newModel.toMap());
+    Map<String, dynamic> newModel, String typeId) async {
+  await CollectionRef.requestCategories.doc(typeId).set(newModel);
 }
 
 //Edit user defined request category
