@@ -57,9 +57,8 @@ class _RequestsByCategoryViewState extends State<RequestsByCategoryView> {
       hideSearchBar: true,
       hideHeader: widget.isUserSignedIn,
       hideFooter: widget.isUserSignedIn,
-      appBarTitle: widget.model.title_en != null
-          ? widget.model.title_en
-          : '', //widget.model.getCategoryName(context),
+      appBarTitle: widget.model
+          .getCategoryName(context), //widget.model.getCategoryName(context),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

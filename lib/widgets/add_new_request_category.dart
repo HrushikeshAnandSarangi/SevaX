@@ -47,8 +47,8 @@ class _AddNewRequestCategoryState extends State<AddNewRequestCategory> {
         setState(() {});
       } else {
         SearchManager.searchRequestCategoriesForDuplicate(
-          queryString: s.trim(),
-        ).then((categoryFound) {
+                queryString: s.trim(), context: context)
+            .then((categoryFound) {
           if (categoryFound) {
             setState(() {
               errTxt = L.of(context).request_category_exists;

@@ -592,7 +592,7 @@ class ExploreSearchTabBar extends StatelessWidget {
                               (e) => DropdownMenuItem(
                                 value: e.typeId,
                                 child: Text(
-                                  e.title_en,
+                                  e.getCategoryName(context),
                                 ),
                               ),
                             ),

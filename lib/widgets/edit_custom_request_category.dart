@@ -43,9 +43,9 @@ class _EditRequestCustomCategoryState extends State<EditRequestCustomCategory> {
   @override
   void initState() {
     super.initState();
-
-    subcategorytitle = widget.categoryModel.title_en;
-
+    Future.delayed(Duration.zero, () async {
+      subcategorytitle = widget.categoryModel.getCategoryName(context);
+    });
     //For Checking Duplicate request subcategory When creating new one
     searchTextController.addListener(
         () => _subcategorytitleStream.add(searchTextController.text));
@@ -57,8 +57,8 @@ class _EditRequestCustomCategoryState extends State<EditRequestCustomCategory> {
         setState(() {});
       } else {
         SearchManager.searchRequestCategoriesForDuplicate(
-          queryString: s.trim(),
-        ).then((categoryFound) {
+                queryString: s.trim(), context: context)
+            .then((categoryFound) {
           if (categoryFound) {
             setState(() {
               errTxt = L.of(context).request_category_exists;
@@ -126,7 +126,8 @@ class _EditRequestCustomCategoryState extends State<EditRequestCustomCategory> {
                       child: Container(
                         height: MediaQuery.of(context).size.width * 0.1,
                         child: TextFormField(
-                          initialValue: widget.categoryModel.title_en,
+                          initialValue:
+                              widget.categoryModel.getCategoryName(context),
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           // controller: searchTextController,
                           onChanged: (val) {
@@ -225,11 +226,10 @@ class _EditRequestCustomCategoryState extends State<EditRequestCustomCategory> {
                           creatorId: widget.userModel.sevaUserID,
                           creatorEmail: widget.userModel.email,
                         );
-                        logger.e('CHECK 1: ' + subcategorytitle);
-                        logger.e('CHECK 2: ' + widget.categoryModel.title_en);
                         if (newRequestCategoryLogo !=
                                 widget.categoryModel.logo &&
-                            subcategorytitle == widget.categoryModel.title_en) {
+                            subcategorytitle ==
+                                widget.categoryModel.getCategoryName(context)) {
                           await editRequestCategory(newRequestCategoryModel,
                               widget.categoryModel.typeId);
 
