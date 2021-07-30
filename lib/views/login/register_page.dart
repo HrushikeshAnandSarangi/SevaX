@@ -7,7 +7,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+// import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -744,7 +744,7 @@ class _RegisterPageState extends State<RegisterPage>
           if (dialogContext != null) {
             Navigator.pop(dialogContext);
           }
-          showFailedLoadImage().then((value) {});
+          showFailedLoadImage(context: context).then((value) {});
         } else {
           profanityStatusModel = await getProfanityStatus(
               profanityImageModel: profanityImageModel);
@@ -877,7 +877,7 @@ class _RegisterPageState extends State<RegisterPage>
       if (dialogContext != null) {
         Navigator.pop(dialogContext);
       }
-      FirebaseCrashlytics.instance.log(error.toString());
+      // FirebaseCrashlytics.instance.log(error.toString());
       error;
       log('createUser: error: ${error.toString()}');
       return null;

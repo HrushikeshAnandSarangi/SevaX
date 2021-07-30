@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+// import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
@@ -62,7 +62,7 @@ class SearchCommunityViaZIPCode {
     var latLngFromZip = latLngFromZipCodeFromJson(response.body);
 
     if (response.statusCode != 200 || latLngFromZip == null) {
-      FirebaseCrashlytics.instance.log('Quota Exausted');
+      // FirebaseCrashlytics.instance.log('Quota Exausted');
       return Future.error(NoNearByCommunitesFoundException());
     }
     if (latLngFromZip.results != null &&

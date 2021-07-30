@@ -24,7 +24,6 @@ import '../core.dart';
 
 class AdminPersonalRequests extends StatefulWidget {
   final String timebankId;
-  final BuildContext parentContext;
   final UserModel userModel;
   final bool isTimebankRequest;
   final bool showAppBar;
@@ -32,7 +31,6 @@ class AdminPersonalRequests extends StatefulWidget {
   AdminPersonalRequests({
     Key key,
     this.timebankId,
-    this.parentContext,
     this.isTimebankRequest,
     this.userModel,
     this.showAppBar,
@@ -49,7 +47,6 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
   @override
   void initState() {
     getTimebank();
-    //   timeBankBloc.getRequestsStreamFromTimebankId(widget.timebankId);
   }
 
   Future<void> getTimebank() async {
@@ -73,54 +70,39 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
             )
           : null,
       body: timebankModel != null
-          ? FutureBuilder<Object>(
-              future: FirestoreManager.getUserForId(
-                  sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return Text(S.of(context).general_stream_error);
+          ? StreamBuilder<List<RequestModel>>(
+              stream: FirestoreManager.getPersonalRequestListStream(
+                  sevauserid: SevaCore.of(context).loggedInUser.sevaUserID),
+              builder: (BuildContext context,
+                  AsyncSnapshot<List<RequestModel>> requestListSnapshot) {
+                if (requestListSnapshot.hasError) {
+                  return Text('Error: ${requestListSnapshot.error}');
                 }
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return LoadingIndicator();
-                }
-                return StreamBuilder<List<RequestModel>>(
-                  stream: FirestoreManager.getPersonalRequestListStream(
-                      sevauserid: SevaCore.of(context).loggedInUser.sevaUserID),
-                  builder: (BuildContext context,
-                      AsyncSnapshot<List<RequestModel>> requestListSnapshot) {
-                    if (requestListSnapshot.hasError) {
-                      return Text('Error: ${requestListSnapshot.error}');
-                    }
-                    switch (requestListSnapshot.connectionState) {
-                      case ConnectionState.waiting:
-                        return LoadingIndicator();
-                      default:
-                        List<RequestModel> requestModelList =
-                            requestListSnapshot.data;
-                        requestModelList = filterRequests(
-                            context: context,
-                            requestModelList: requestModelList);
-                        requestModelList = filterBlockedRequestsContent(
-                            context: context,
-                            requestModelList: requestModelList);
+                switch (requestListSnapshot.connectionState) {
+                  case ConnectionState.waiting:
+                    return LoadingIndicator();
+                  default:
+                    List<RequestModel> requestModelList =
+                        requestListSnapshot.data;
+                    requestModelList = filterRequests(
+                        context: context, requestModelList: requestModelList);
+                    requestModelList = filterBlockedRequestsContent(
+                        context: context, requestModelList: requestModelList);
 
-                        if (requestModelList.length == 0) {
-                          return Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child:
-                                Center(child: Text(S.of(context).no_requests)),
-                          );
-                        }
-                        var consolidatedList =
-                            GroupRequestCommons.groupAndConsolidateRequests(
-                                requestModelList,
-                                SevaCore.of(context).loggedInUser.sevaUserID);
-                        return formatListFrom(
-                            consolidatedList: consolidatedList);
+                    if (requestModelList.length == 0) {
+                      return Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Center(child: Text(S.of(context).no_requests)),
+                      );
                     }
-                  },
-                );
-              })
+                    var consolidatedList =
+                        GroupRequestCommons.groupAndConsolidateRequests(
+                            requestModelList,
+                            SevaCore.of(context).loggedInUser.sevaUserID);
+                    return formatListFrom(consolidatedList: consolidatedList);
+                }
+              },
+            )
           : LoadingIndicator(),
     );
   }

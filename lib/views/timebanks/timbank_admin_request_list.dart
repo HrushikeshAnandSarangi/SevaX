@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/ui/utils/debouncer.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 
@@ -226,7 +227,7 @@ class _InputDonateSuccessDialogState extends State<InputDonateSuccessDialog> {
       content: Container(
         height: MediaQuery.of(context).size.height / 10,
         width: MediaQuery.of(context).size.width / 12,
-        child: Text(S.of(context).loan_success),
+        child: Text(L.of(context).loan_success),
       ),
     );
   }

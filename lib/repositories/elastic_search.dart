@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+// import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:sevaexchange/flavor_config.dart';
@@ -306,8 +306,8 @@ class ElasticSearchApi {
       });
     } on NoNearByCommunitesFoundException catch (e) {
       logger.i("NoNearByCommunitesViaZIPFoundException");
-      FirebaseCrashlytics.instance
-          .log('NoNearByCommunitesViaZIPFoundException');
+      // FirebaseCrashlytics.instance
+      //     .log('NoNearByCommunitesViaZIPFoundException');
     }
 
     String endPoint = '//elasticsearch/sevaxcommunities/_doc/_search';
@@ -473,6 +473,9 @@ class ElasticSearchApi {
               }
             ]
           }
+        },
+        "sort": {
+          "posttimestamp": {"order": "desc"}
         }
       },
     );
@@ -491,7 +494,6 @@ class ElasticSearchApi {
         }
       }
     });
-    models.sort((a, b) => a.title.compareTo(b.title));
     return models;
   }
 

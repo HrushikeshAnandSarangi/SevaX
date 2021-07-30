@@ -6,6 +6,7 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
+import 'package:sevaexchange/widgets/hide_blocked_content.dart';
 
 class OfferListBloc extends BlocBase {
   final _myOffers = BehaviorSubject<List<OfferModel>>();
@@ -27,10 +28,10 @@ class OfferListBloc extends BlocBase {
         allOffers, filter, (models, filter) {
       OfferLists offerLists = OfferLists([], []);
       models.forEach((model) {
-        // if (!HideBlockedContent.checkIfBlocked(model.sevaUserId, user)) {
-        if (filter.checkFilter(model)) {
-          offerLists.addOffer(userId, model);
-          // }
+        if (!HideBlockedContent.checkIfBlocked(model.sevaUserId, user)) {
+          if (filter.checkFilter(model)) {
+            offerLists.addOffer(userId, model);
+          }
         }
       });
 

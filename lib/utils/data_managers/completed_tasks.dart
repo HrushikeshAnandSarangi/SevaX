@@ -149,14 +149,7 @@ class CompletedTasks {
             title: model.title,
             subTitle: model.description,
             timeInMilliseconds: model.requestStart,
-            onTap: () async {
-              // var a = await utils.getTimeBankForId(timebankId: model.timebankId);
-              // TaskUtils.navigateToRequests(
-              //   context: context,
-              //   request: model,
-              //   timebankModel: a,
-              // );
-            },
+            onTap: () async {},
             tag: L.of(context).one_to_many_request_speaker,
           ),
         );
@@ -170,16 +163,7 @@ class CompletedTasks {
             tag: L.of(context).time_request_volunteer,
             subTitle: model.description,
             title: model.title,
-            onTap: () async {
-              // var a =
-              //     await utils.getTimeBankForId(timebankId: model.timebankId);
-              // logger.d("+=+=+=" + a.toString());
-              // TaskUtils.navigateToRequests(
-              //   context: context,
-              //   request: model,
-              //   timebankModel: a,
-              // );
-            },
+            onTap: () async {},
           ),
         );
       }
@@ -190,15 +174,7 @@ class CompletedTasks {
     offersList.forEach((element) {
       widgetList.add(
         ToDoCard(
-          onTap: () async {
-            // var a =
-            //     await utils.getTimeBankForId(timebankId: element.timebankId);
-            // TaskUtils.navigateToOffers(
-            //   context: context,
-            //   offer: element,
-            //   timebankModel: a,
-            // );
-          },
+          onTap: () async {},
           title: element.groupOfferDataModel.classTitle,
           subTitle: element.groupOfferDataModel.classDescription,
           tag: L.of(context).one_to_many_offer_attende,
@@ -211,15 +187,7 @@ class CompletedTasks {
     List<OfferModel> createdOneToManyOffers = completedSink[2];
     createdOneToManyOffers.forEach((element) {
       widgetList.add(ToDoCard(
-        onTap: () async {
-          // var a = await utils.getTimeBankForId(timebankId: element.timebankId);
-          // logger.d("+=+=+=" + a.toString());
-          // TaskUtils.navigateToOffers(
-          //   context: context,
-          //   offer: element,
-          //   timebankModel: a,
-          // );
-        },
+        onTap: () async {},
         title: element.groupOfferDataModel.classTitle,
         subTitle: element.groupOfferDataModel.classDescription,
         tag: L.of(context).one_to_many_offer_speaker,
@@ -231,14 +199,7 @@ class CompletedTasks {
     List<RequestModel> acceptedOneToManyRequests = completedSink[3];
     acceptedOneToManyRequests.forEach((element) {
       widgetList.add(ToDoCard(
-        onTap: () async {
-          // var a = await utils.getTimeBankForId(timebankId: element.timebankId);
-          // TaskUtils.navigateToRequests(
-          //   context: context,
-          //   request: element,
-          //   timebankModel: a,
-          // );
-        },
+        onTap: () async {},
         title: element.title,
         subTitle: element.description,
         tag: L.of(context).one_to_many_request_attende,
@@ -250,14 +211,7 @@ class CompletedTasks {
     List<RequestModel> speakerCompletedOneToManyRequests = completedSink[4];
     speakerCompletedOneToManyRequests.forEach((element) {
       widgetList.add(ToDoCard(
-        onTap: () async {
-          // var a = await utils.getTimeBankForId(timebankId: element.timebankId);
-          // TaskUtils.navigateToRequests(
-          //   context: context,
-          //   request: element,
-          //   timebankModel: a,
-          // );
-        },
+        onTap: () async {},
         title: element.title,
         subTitle: element.description,
         tag: L.of(context).one_to_many_request_attende,

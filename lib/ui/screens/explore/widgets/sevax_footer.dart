@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/localization/applanguage.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/app_config.dart';
@@ -51,7 +52,10 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
       width: MediaQuery.of(context).size.width,
       color: Theme.of(context).primaryColor,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 20),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 8.0,
+          vertical: 20,
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -60,7 +64,7 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
               children: [
                 Container(
                   height: 40,
-                  width: MediaQuery.of(context).size.width / 2 - 14,
+                  width: MediaQuery.of(context).size.width / 2 - 16,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(4),
                     color: Colors.white,
@@ -96,10 +100,10 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
                     ),
                   ),
                 ),
-                // SizedBox(width: 12),
+                SizedBox(width: 4),
                 Container(
                   height: 40,
-                  width: MediaQuery.of(context).size.width / 2,
+                  width: MediaQuery.of(context).size.width / 2 - 4,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(4),
                     color: Colors.white,
@@ -112,14 +116,16 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
                         });
                       },
                       value: timezoneName,
+                      isExpanded: true,
                       items: TimezoneListData()
                           .timezonelist
                           .map(
                             (model) => DropdownMenuItem(
                               child: Padding(
-                                padding: const EdgeInsets.only(right: 8.0),
+                                padding: const EdgeInsets.only(left: 8.0),
                                 child: Text(
                                   model.timezoneName,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                               value: model.timezoneName.toLowerCase(),
@@ -299,37 +305,37 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
       case FooterData.About_Us:
         return S.of(context).help_about_us;
       case FooterData.Careers:
-        return 'Careers';
+        return L.of(context).careers_explore;
       case FooterData.Communities:
-        return 'Communities';
+        return L.of(context).communities_explore;
       case FooterData.Create_offer:
         return S.of(context).create_offer;
       case FooterData.Create_request:
         return S.of(context).create_request;
       case FooterData.Discover:
-        return 'Discover';
+        return L.of(context).discover_explore;
       case FooterData.Diversity_Belonging:
-        return 'Diversity Belonging';
+        return L.of(context).diversity_belonging_explore;
       case FooterData.Events:
         return S.of(context).projects;
       case FooterData.Guidebooks:
-        return 'Guidebooks';
+        return L.of(context).guidebooks_explore;
       case FooterData.Help:
         return S.of(context).help;
       case FooterData.Hosting:
-        return 'Hosting';
+        return L.of(context).hosting_explore;
       case FooterData.Host_community:
-        return 'Host a community';
+        return L.of(context).host_a_community_explore;
       case FooterData.Organize_event:
-        return 'Organize an event';
+        return L.of(context).organize_an_event_explore;
       case FooterData.Policies:
-        return 'Policies';
+        return L.of(context).policies_explore;
       case FooterData.Press:
-        return 'News';
+        return L.of(context).news_explore;
       case FooterData.Offers:
         return S.of(context).offers;
       case FooterData.Trust_Safety:
-        return 'Trust & Safety';
+        return L.of(context).trust_and_safety_explore;
       case FooterData.SevaX:
         return 'SevaX';
       case FooterData.Requests:
@@ -348,9 +354,10 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
         return getOnTap(context, S.of(context).help_about_us, 'aboutUsLink');
 
       case FooterData.Careers:
-        return getOnTap(context, 'Careers', 'careersLink');
+        return getOnTap(context, L.of(context).careers_explore, 'careersLink');
       case FooterData.Communities:
-        return getOnTap(context, 'Communities', 'aboutSeva');
+        return getOnTap(
+            context, L.of(context).communities_explore, 'aboutSeva');
 
       case FooterData.Create_offer:
         return getOnTap(context, S.of(context).create_offer, 'trainingVideo');
@@ -359,16 +366,19 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
         return getOnTap(context, S.of(context).create_request, 'trainingVideo');
 
       case FooterData.Discover:
-        return getOnTap(context, 'Discover', 'trainingVideo');
+        return getOnTap(
+            context, L.of(context).discover_explore, 'trainingVideo');
 
       case FooterData.Diversity_Belonging:
-        return getOnTap(context, 'Diversity Belonging', 'diversityLink');
+        return getOnTap(context, L.of(context).diversity_belonging_explore,
+            'diversityLink');
 
       case FooterData.Events:
         return getOnTap(context, S.of(context).projects, 'projectsInfoLink');
 
       case FooterData.Guidebooks:
-        return getOnTap(context, 'Guidebooks', 'trainingVideo');
+        return getOnTap(
+            context, L.of(context).guidebooks_explore, 'trainingVideo');
 
       case FooterData.Help:
         return getOnTap(
@@ -378,25 +388,29 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
         );
 
       case FooterData.Hosting:
-        return getOnTap(context, 'Hosting', 'aboutSeva');
+        return getOnTap(context, L.of(context).hosting_explore, 'aboutSeva');
 
       case FooterData.Host_community:
-        return getOnTap(context, 'Host a community', 'aboutSeva');
+        return getOnTap(
+            context, L.of(context).host_a_community_explore, 'aboutSeva');
 
       case FooterData.Organize_event:
-        return getOnTap(context, 'Organize an event', 'projectsInfoLink');
+        return getOnTap(context, L.of(context).organize_an_event_explore,
+            'projectsInfoLink');
 
       case FooterData.Policies:
-        return getOnTap(context, 'Policies', 'privacyPolicyLink');
+        return getOnTap(
+            context, L.of(context).policies_explore, 'privacyPolicyLink');
 
       case FooterData.Press:
-        return getOnTap(context, 'News', 'pressLink');
+        return getOnTap(context, L.of(context).news_explore, 'pressLink');
 
       case FooterData.Offers:
         return getOnTap(context, S.of(context).offers, 'offersInfoLink');
 
       case FooterData.Trust_Safety:
-        return getOnTap(context, 'Trust & Safety', 'trustAndSafetyLink');
+        return getOnTap(context, L.of(context).trust_and_safety_explore,
+            'trustAndSafetyLink');
 
       case FooterData.SevaX:
         return getOnTap(context, 'SevaX', 'aboutSeva');

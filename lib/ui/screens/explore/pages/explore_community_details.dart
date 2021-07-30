@@ -182,7 +182,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                                       userModel.fullname,
                                       style: TextStyle(fontSize: 18),
                                     ),
-                                    SizedBox(height: 8),
+                                    SizedBox(height: 5),
                                     Text(
                                       S.of(context).organizer,
                                       style: TextStyle(

@@ -207,21 +207,23 @@ class _ChatPageState extends State<ChatPage> {
               isBlockEnabled:
                   chatModel.isTimebankMessage || chatModel.isGroupMessage,
               openGroupInfo: isGroupMessage ? openGroupInfo : null,
-              onProfileImageTap: () {
-                if (timebankModel != null && !isGroupMessage) {
-                  Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (context) {
-                    return ProfileViewer(
-                      timebankId: timebankModel.id,
-                      entityName: timebankModel.name,
-                      isFromTimebank: isPrimaryTimebank(
-                          parentTimebankId: timebankModel.parentTimebankId),
-                      userId: recieverInfo.id,
-                      userEmail: null,
-                    );
-                  }));
-                }
-              },
+              onProfileImageTap: !isGroupMessage &&
+                      timebankModel != null &&
+                      !recieverInfo.id.contains('-')
+                  ? () {
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
+                        return ProfileViewer(
+                          timebankId: timebankModel.id,
+                          entityName: timebankModel.name,
+                          isFromTimebank: isPrimaryTimebank(
+                              parentTimebankId: timebankModel.parentTimebankId),
+                          userId: recieverInfo.id,
+                          userEmail: null,
+                        );
+                      }));
+                    }
+                  : null,
             )
           : null,
       body: Column(

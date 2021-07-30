@@ -19,7 +19,8 @@ Future<String> getLocation(GeoFirePoint location) async {
 }
 
 bool isPrimaryTimebank({@required String parentTimebankId}) {
-  return parentTimebankId == FlavorConfig.values.timebankId;
+  return parentTimebankId != null &&
+      parentTimebankId == FlavorConfig.values.timebankId;
 }
 
 handleVolunterFeedbackForTrustWorthynessNRealiablityScore(

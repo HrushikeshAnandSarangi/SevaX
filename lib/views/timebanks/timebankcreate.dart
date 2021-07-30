@@ -3,7 +3,7 @@ import 'dart:collection';
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+// import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
@@ -478,7 +478,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                       try {
                         parentTimebank.children.add(timebankModel.id);
                       } catch (e) {
-                        FirebaseCrashlytics.instance.log(e.toString());
+                        // FirebaseCrashlytics.instance.log(e.toString());
                       }
                       updateTimebank(timebankModel: parentTimebank);
                       Navigator.pop(context);

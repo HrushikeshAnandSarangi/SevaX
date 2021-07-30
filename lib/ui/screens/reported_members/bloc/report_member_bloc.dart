@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+// import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
@@ -93,7 +93,7 @@ class ReportMemberBloc {
       return true;
     } catch (e) {
       _buttonStatus.add(true);
-      FirebaseCrashlytics.instance.log(e);
+      // FirebaseCrashlytics.instance.log(e);
     }
   }
 

@@ -383,6 +383,10 @@ class _ExplorePageState extends State<ExplorePage> {
                                           ? x.length - 3
                                           : x.length - 1];
                                     }
+                                    String formattedStartTime =
+                                    getStartDateFormat(
+                                        DateTime.fromMillisecondsSinceEpoch(
+                                            projectModel.startTime));
                                     return Row(
                                       children: [
                                         widget.isUserSignedIn
@@ -402,7 +406,9 @@ class _ExplorePageState extends State<ExplorePage> {
                                                   if (snapshot.data == null) {
                                                     return Container();
                                                   }
+
                                                   return ExploreEventsCard(
+                                                    eventStartDate: formattedStartTime,
                                                     userIds: projectModel
                                                         .associatedmembers.keys
                                                         .toList(),
@@ -435,7 +441,8 @@ class _ExplorePageState extends State<ExplorePage> {
                                                   );
                                                 })
                                             : ExploreEventsCard(
-                                                userIds: projectModel
+                                          eventStartDate: formattedStartTime,
+                                          userIds: projectModel
                                                     .associatedmembers.keys
                                                     .toList(),
                                                 imageUrl:
@@ -525,6 +532,10 @@ class _ExplorePageState extends State<ExplorePage> {
                                       ? x.length - 3
                                       : x.length - 1];
                                 }
+                                String formattedStartTime =
+                                getStartDateFormat(
+                                    DateTime.fromMillisecondsSinceEpoch(
+                                        model.requestStart));
                                 return Row(
                                   children: [
                                     widget.isUserSignedIn
@@ -542,7 +553,9 @@ class _ExplorePageState extends State<ExplorePage> {
                                               if (snapshot.data == null) {
                                                 return Container();
                                               }
+
                                               return ExploreRequestsCard(
+                                                requestDate: formattedStartTime,
                                                 imageUrl: model.photoUrl ??
                                                     defaultGroupImageURL,
                                                 communityName:
@@ -604,6 +617,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                               );
                                             })
                                         : ExploreRequestsCard(
+                                      requestDate: formattedStartTime,
                                             userIds: model.approvedUsers,
                                             imageUrl: model.photoUrl ??
                                                 defaultGroupImageURL,
@@ -688,6 +702,10 @@ class _ExplorePageState extends State<ExplorePage> {
                                 landMark = x[
                                     x.length > 3 ? x.length - 3 : x.length - 1];
                               }
+                              String formattedStartTime =
+                              getStartDateFormat(
+                                  DateTime.fromMillisecondsSinceEpoch(
+                                      offer.timestamp));
                               return Row(
                                 children: [
                                   widget.isUserSignedIn
@@ -705,7 +723,9 @@ class _ExplorePageState extends State<ExplorePage> {
                                             if (snapshot.data == null) {
                                               return Container();
                                             }
+
                                             return ExploreOffersCard(
+                                              offerStartDate: formattedStartTime,
                                               imageUrl: defaultGroupImageURL,
                                               offerName: getOfferTitle(
                                                       offerDataModel: offer) ??
@@ -727,6 +747,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                             );
                                           })
                                       : ExploreOffersCard(
+                                    offerStartDate: formattedStartTime,
                                           imageUrl: defaultGroupImageURL,
                                           offerName: getOfferTitle(
                                                   offerDataModel: offer) ??
