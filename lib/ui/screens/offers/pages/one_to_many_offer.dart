@@ -333,8 +333,8 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                   stream: _bloc.makeVirtualValue,
                                   builder: (context, snapshot) {
                                     return ConfigurationCheck(
-                                      actionType:
-                                          S.of(context).create_virtual_offer,
+                                      actionType: 'create_virtual_offer',
+                                      // S.of(context).create_virtual_offer,
                                       role: memberType(
                                           widget.timebankModel,
                                           SevaCore.of(context)
@@ -346,6 +346,8 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                           checkBoxTypeLabel:
                                               CheckBoxType.type_VirtualOffers,
                                           onChangedCB: (bool val) {
+                                            logger.e(
+                                                'value for virtual offer $val');
                                             if (snapshot.data != val) {
                                               _bloc.onOfferMadeVirtual(val);
                                               log('value ${val}');
@@ -368,9 +370,9 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                             stream: _bloc.makePublicValue,
                                             builder: (context, snapshot) {
                                               return ConfigurationCheck(
-                                                actionType: S
-                                                    .of(context)
-                                                    .create_public_offer,
+                                                actionType:
+                                                    'create_public_offer',
+                                                // S.of(context).create_public_offer,
                                                 role: memberType(
                                                     widget.timebankModel,
                                                     SevaCore.of(context)

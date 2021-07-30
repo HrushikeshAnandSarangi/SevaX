@@ -118,7 +118,7 @@ class _ExplorePageState extends State<ExplorePage> {
           });
         }
         _bloc.init(
-          Provider.of<UserModel>(context, listen: false)?.nearBySettings,
+          SevaCore.of(context)?.loggedInUser?.nearBySettings,
         );
       });
     });
@@ -886,7 +886,8 @@ class _ExplorePageState extends State<ExplorePage> {
                                 var status = widget.isUserSignedIn
                                     ? _bloc.compareUserStatus(
                                         snapshot.data[index],
-                                        Provider.of<UserModel>(context)
+                                        SevaCore.of(context)
+                                            ?.loggedInUser
                                             ?.sevaUserID,
                                       )
                                     : CompareUserStatus.JOIN;

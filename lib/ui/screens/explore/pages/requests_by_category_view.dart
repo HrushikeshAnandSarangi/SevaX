@@ -109,7 +109,7 @@ class _RequestsByCategoryViewState extends State<RequestsByCategoryView> {
                     itemBuilder: (context, index) {
                       var request = snapshot.data[index];
                       var date = DateTime.fromMillisecondsSinceEpoch(request.requestStart);
-                      return Provider.of<UserModel>(context, listen: false)?.sevaUserID != null
+                      return SevaCore.of(context)?.loggedInUser?.sevaUserID != null
                           ? FutureBuilder<TimebankModel>(
                               future: getTimeBankForId(timebankId: request.timebankId),
                               builder: (context, snapshot) {

@@ -95,7 +95,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                     imageUrl:
                         widget.timebankModel.cover_url ?? defaultGroupImageURL,
                     fit: BoxFit.cover,
-                    height: 200,
+                    height: 120,
                     errorWidget: (context, url, error) => Image(
                       fit: BoxFit.cover,
                       width: 620,
