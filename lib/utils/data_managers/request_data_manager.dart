@@ -593,10 +593,11 @@ Stream<List<RequestModel>> getAllRequestListStream() async* {
 }
 
 Stream<List<CategoryModel>> getUserCreatedRequestCategories(
-    String creatorId) async* {
-  var query = CollectionRef.requestCategories
-      .where('creatorId', isEqualTo: creatorId)
-      .orderBy('title_en');
+    String creatorId, BuildContext context) async* {
+  var query =
+      CollectionRef.requestCategories.where('creatorId', isEqualTo: creatorId);
+  // .orderBy('title_' + SevaCore.of(context).loggedInUser.language ??
+  //     S.of(context).localeName);
 
   var data = query.snapshots();
 
@@ -608,7 +609,14 @@ Stream<List<CategoryModel>> getUserCreatedRequestCategories(
           (documentSnapshot) {
             CategoryModel model =
                 CategoryModel.fromMap(documentSnapshot.data());
-            categoriesList.add(model);
+
+            logger.e('SNAPSHOT LENGTH:  ' +
+                documentSnapshot.data().length.toString());
+
+            if (model.data.containsKey(
+                'title_' + SevaCore.of(context).loggedInUser.language)) {
+              categoriesList.add(model);
+            }
           },
         );
         requestSink.add(categoriesList);
@@ -1897,13 +1905,14 @@ Future<CategoryModel> getCategoryForId({@required String categoryID}) async {
 
 //Add new user defined request category
 Future<void> addNewRequestCategory(
-    CategoryModel newModel, String typeId) async {
-  await CollectionRef.requestCategories.doc(typeId).set(newModel.toMap());
+    Map<String, dynamic> newModel, String typeId) async {
+  await CollectionRef.requestCategories.doc(typeId).set(newModel);
 }
 
 //Edit user defined request category
-Future<void> editRequestCategory(CategoryModel newModel, String typeId) async {
-  await CollectionRef.requestCategories.doc(typeId).update(newModel.toMap());
+Future<void> editRequestCategory(
+    Map<String, dynamic> newModel, String typeId) async {
+  await CollectionRef.requestCategories.doc(typeId).update(newModel);
 }
 
 Future oneToManyCreatorRequestCompletionRejectedTimebankNotifications(
