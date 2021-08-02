@@ -317,7 +317,7 @@ class _ManageGroupView extends State<ManageGroupView> {
         ));
       },
       child: Text(
-        S.of(context).member_permission,
+        S.of(context).manage_permissions,
         style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.bold,

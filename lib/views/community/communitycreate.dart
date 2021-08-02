@@ -346,7 +346,7 @@ class CreateEditCommunityViewFormState
                                       ),
                                 Text(''),
                                 Text(
-                                  "${L.of(context).cover_picture_label}",
+                                  "${S.of(context).cover_picture_label}",
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.grey,

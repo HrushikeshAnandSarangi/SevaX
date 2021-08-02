@@ -197,7 +197,7 @@ class ToDo {
                       ),
                     );
             },
-            tag: L.of(context).one_to_many_request_speaker,
+            tag: S.of(context).one_to_many_request_speaker,
           ),
         );
       } else if (model.requestType == RequestType.ONE_TO_MANY_REQUEST &&
@@ -207,7 +207,7 @@ class ToDo {
         widgetList.add(
           ToDoCard(
             timeInMilliseconds: model.requestStart,
-            tag: L.of(context).time_request_volunteer,
+            tag: S.of(context).time_request_volunteer,
             subTitle: model.description,
             title: model.title,
             onTap: () {
@@ -238,7 +238,7 @@ class ToDo {
           onTap: () {},
           title: element.groupOfferDataModel.classTitle,
           subTitle: element.groupOfferDataModel.classDescription,
-          tag: L.of(context).one_to_many_offer_attende,
+          tag: S.of(context).one_to_many_offer_attende,
           timeInMilliseconds: element.groupOfferDataModel.startDate,
         ),
       );
@@ -252,7 +252,7 @@ class ToDo {
           onTap: () {},
           title: element.groupOfferDataModel.classTitle,
           subTitle: element.groupOfferDataModel.classDescription,
-          tag: L.of(context).one_to_many_offer_speaker,
+          tag: S.of(context).one_to_many_offer_speaker,
           timeInMilliseconds: element.groupOfferDataModel.startDate,
         ),
       );
@@ -265,7 +265,7 @@ class ToDo {
         onTap: () {},
         title: element.title,
         subTitle: element.description,
-        tag: L.of(context).one_to_many_request_attende,
+        tag: S.of(context).one_to_many_request_attende,
         timeInMilliseconds: element.requestStart,
       ));
     });

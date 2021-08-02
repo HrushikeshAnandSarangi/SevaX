@@ -174,7 +174,7 @@ class _NewChatPageState extends State<NewChatPage> {
                                 );
                               },
                               child: Text(
-                                L.of(context).new_comminity_message,
+                                S.of(context).new_comminity_message,
                                 style: TextStyle(
                                   color: Theme.of(context).primaryColor,
                                   fontFamily: 'Europa',

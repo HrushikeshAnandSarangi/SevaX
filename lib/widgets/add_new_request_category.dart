@@ -51,7 +51,7 @@ class _AddNewRequestCategoryState extends State<AddNewRequestCategory> {
             .then((categoryFound) {
           if (categoryFound) {
             setState(() {
-              errTxt = L.of(context).request_category_exists;
+              errTxt = S.of(context).request_category_exists;
             });
             logger.e('DUPLICATE FOUND');
           } else {
@@ -70,7 +70,7 @@ class _AddNewRequestCategoryState extends State<AddNewRequestCategory> {
     return Padding(
       padding: EdgeInsets.only(left: 54, top: 5, bottom: 10),
       child: InkWell(
-        child: Text(L.of(context).add_new_request_category,
+        child: Text(S.of(context).add_new_request_category,
             style: TextStyle(
               color: widget.primaryColor,
               decoration: TextDecoration.underline,
@@ -99,7 +99,7 @@ class _AddNewRequestCategoryState extends State<AddNewRequestCategory> {
                       ),
                       SizedBox(width: 12),
                       Text(
-                        L.of(context).add_new_subcategory,
+                        S.of(context).add_new_subcategory,
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                           color: Colors.black,
@@ -145,7 +145,7 @@ class _AddNewRequestCategoryState extends State<AddNewRequestCategory> {
                                         left: 0.0, right: 8.0, bottom: 10.0),
                                     border: InputBorder.none,
                                     hintText:
-                                        L.of(context).add_new_subcategory_hint +
+                                        S.of(context).add_new_subcategory_hint +
                                             '*',
                                     hintStyle: TextStyle(color: Colors.grey),
                                     errorStyle: TextStyle(height: 0.85),
@@ -155,7 +155,7 @@ class _AddNewRequestCategoryState extends State<AddNewRequestCategory> {
                                     final profanityDetector =
                                         ProfanityDetector();
                                     if (value == '') {
-                                      return L.of(context).please_enter_title;
+                                      return S.of(context).please_enter_title;
                                     }
                                     if (errTxt != null) {
                                       return errTxt;
@@ -208,11 +208,11 @@ class _AddNewRequestCategoryState extends State<AddNewRequestCategory> {
                             ),
                             title: newRequestCategoryLogo != null
                                 ? Text(
-                                    L.of(context).photo_selected,
+                                    S.of(context).photo_selected,
                                     style: TextStyle(color: Colors.green),
                                   )
                                 : Text(
-                                    L.of(context).select_photo,
+                                    S.of(context).select_photo,
                                     style: TextStyle(color: Colors.grey),
                                   ),
                           ),

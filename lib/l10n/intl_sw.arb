@@ -1,6 +1,6 @@
 {
     "@@locale": "sw",
-    "@@last_modified": "2021-07-29T11:01:10+00:00",
+    "@@last_modified": "2021-07-30T14:56:54+00:00",
     "check_met": "Kuangalia, ikiwa tulikutana hapo awali",
     "we_met": "Tulikutana hapo awali",
     "hang_on": "Kaa sana",
@@ -692,7 +692,7 @@
     "loan_zero_credit_error": "Huwezi kukopesha mikopo 0",
     "negative_credit_loan_error": "Huwezi mkopo chini ya mikopo 0",
     "empty_credit_loan_error": "Mkopo wa mikopo kadhaa",
-    "loan_success": "Umekopa mikopo ya mafanikio",
+    "loan_success": "Umetoa mikopo kwa mafanikio.",
     "co_ordinators": "Waratibu",
     "remove": "Ondoa",
     "promote": "Kukuza",
@@ -1649,5 +1649,6 @@
     "other_payment_details_hint": "Ex: Barua pepe, namba ya simu, ID.",
     "other_payment_details": "Maelezo ya Njia ya Malipo",
     "deleted_events_create_request_message": "Tukio hili litafutwa.Matokeo yake, maombi hayawezi kuundwa.",
-    "other_payment_name": "Jina la malipo ya jina."
+    "other_payment_name": "Jina la malipo ya jina.",
+    "accept_offer_invitation_confirmation_to_do_tasks": "Kazi hii itaongezwa kwenye orodha yako, baada ya kuidhinisha."
 }

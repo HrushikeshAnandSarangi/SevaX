@@ -96,7 +96,7 @@ class ImagePickerHandler {
     ImageCropper.cropImage(
       sourcePath: path,
       aspectRatio: CropAspectRatio(
-        ratioX: isCover ? 2.0 : 1.0,
+        ratioX: isCover ? 3 / 1 : 1.0,
         ratioY: 1.0,
       ),
       maxWidth: isCover ? 620 : 200,

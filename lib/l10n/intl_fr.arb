@@ -1,6 +1,6 @@
 {
     "@@locale": "fr",
-    "@@last_modified": "2021-07-29T11:01:11+00:00",
+    "@@last_modified": "2021-07-30T14:56:55+00:00",
     "check_met": "Checking, if we met before",
     "we_met": "We met before",
     "hang_on": "Accrochez-vous bien",
@@ -692,7 +692,7 @@
     "loan_zero_credit_error": "Vous ne pouvez pas prêter 0 crédit",
     "negative_credit_loan_error": "Vous ne pouvez pas prêter moins de 0 crédits",
     "empty_credit_loan_error": "Prêt de crédits",
-    "loan_success": "Vous avez prêté des crédits avec succès",
+    "loan_success": "Vous avez donné des crédits donnés avec succès",
     "co_ordinators": "Coordinateurs",
     "remove": "Retirer",
     "promote": "Promouvoir",
@@ -1649,5 +1649,6 @@
     "other_payment_details_hint": "Ex: email, numéro de téléphone, id",
     "other_payment_details": "Méthode de paiement Détails",
     "deleted_events_create_request_message": "Cet événement va être supprimé.En conséquence, les demandes ne peuvent pas être créées.",
-    "other_payment_name": "Nom de la méthode de paiement"
+    "other_payment_name": "Nom de la méthode de paiement",
+    "accept_offer_invitation_confirmation_to_do_tasks": "Cette tâche sera ajoutée à votre liste de tâches, après votre approuver."
 }

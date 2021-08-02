@@ -509,7 +509,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                     SnackBar(
                       duration: Duration(seconds: 6),
                       content: Text(
-                          L.of(context).deleted_events_create_request_message),
+                          S.of(context).deleted_events_create_request_message),
                       action: SnackBarAction(
                         label: S.of(context).dismiss,
                         onPressed: () =>

@@ -42,7 +42,7 @@ class AdminMessagePage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
-                      L.of(context).go_to_community_chat,
+                      S.of(context).go_to_community_chat,
                       style: TextStyle(
                         fontSize: 18,
                         color: FlavorConfig.values.theme.primaryColor,

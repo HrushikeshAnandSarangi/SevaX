@@ -84,7 +84,7 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                     clipBehavior: Clip.none,
                     children: <Widget>[
                       AspectRatio(
-                        aspectRatio: 3 / 1,
+                        aspectRatio: 3 / 2,
                         child: CachedNetworkImage(
                           fit: BoxFit.cover,
                           height: 180,

@@ -1,6 +1,6 @@
 {
     "@@locale": "sn",
-    "@@last_modified": "2021-07-29T11:01:10+00:00",
+    "@@last_modified": "2021-07-30T14:56:54+00:00",
     "check_met": "Kuongorora, kana takasangana zvisati zvaitika",
     "we_met": "Takasangana zvisati zvaitika",
     "hang_on": "Ramba wakasimba",
@@ -692,7 +692,7 @@
     "loan_zero_credit_error": "Iwe haugone kukwereta 0 zvikwereti",
     "negative_credit_loan_error": "Iwe haugone kukwereta zvakaderera pane 0 zvikwereti",
     "empty_credit_loan_error": "Kwereta zvimwe zvikwereti",
-    "loan_success": "Iwe wakwereta zvikwereti zvinobudirira",
+    "loan_success": "Iwe wakapa zvikwereti zvinobudirira",
     "co_ordinators": "Coordinators",
     "remove": "Bvisa",
     "promote": "Kurudzira",
@@ -1649,5 +1649,6 @@
     "other_payment_details_hint": "Ex: Email, nhamba yefoni, ID",
     "other_payment_details": "Nzira yekubhadhara nhoroondo",
     "deleted_events_create_request_message": "Chiitiko ichi chiri kuzobviswa.Nekuda kweizvozvo, zvikumbiro hazvigone kugadzirwa.",
-    "other_payment_name": "Kubhadhara Nzira Yezita"
+    "other_payment_name": "Kubhadhara Nzira Yezita",
+    "accept_offer_invitation_confirmation_to_do_tasks": "Iri basa richawedzerwa kune yako yekuita runyorwa, mushure mekunge iwe uzvitende nazvo."
 }
