@@ -2592,7 +2592,7 @@ class RequestEditFormState extends State<RequestEditForm> {
       return;
     }
 
-    logger.i(widget.requestModel.communityId + "<<<<<<<<<<<<<<<>>>>>>>>>>>>");
+    // logger.i(widget.requestModel.communityId + "<<<<<<<<<<<<<<<>>>>>>>>>>>>");
 
     if (_formKey.currentState.validate()) {
       if (widget.requestModel.public) {
