@@ -58,9 +58,11 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
     Future.delayed(
         Duration(milliseconds: 300),
         () => {
-              _bloc.load(widget.isUserSignedIn
-                  ? SevaCore.of(context).loggedInUser.sevaUserID
-                  : ''),
+              _bloc.load(
+                  widget.isUserSignedIn
+                      ? SevaCore.of(context).loggedInUser.sevaUserID
+                      : '',
+                  context),
             });
     _tabIndex.add(widget.tabIndex);
     _searchController.text = widget.searchText;
@@ -590,7 +592,7 @@ class ExploreSearchTabBar extends StatelessWidget {
                               (e) => DropdownMenuItem(
                                 value: e.typeId,
                                 child: Text(
-                                  e.title_en,
+                                  e.getCategoryName(context).toString(),
                                 ),
                               ),
                             ),
