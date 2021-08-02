@@ -47,8 +47,8 @@ class _AddNewRequestCategoryState extends State<AddNewRequestCategory> {
         setState(() {});
       } else {
         SearchManager.searchRequestCategoriesForDuplicate(
-          queryString: s.trim(),
-        ).then((categoryFound) {
+                queryString: s.trim(), context: context)
+            .then((categoryFound) {
           if (categoryFound) {
             setState(() {
               errTxt = S.of(context).request_category_exists;
@@ -230,21 +230,27 @@ class _AddNewRequestCategoryState extends State<AddNewRequestCategory> {
                                   //Add new request category to db
                                   //validate title is not empty
                                   String newTypeId = utils.Utils.getUuid();
-                                  CategoryModel newRequestCategoryModel =
-                                      CategoryModel(
-                                    categoryId: widget.categoryId,
-                                    logo: newRequestCategoryLogo == ''
+                                  Map<String, dynamic> newRequestCategoryModel =
+                                      {
+                                    'categoryId': widget.categoryId,
+                                    'logo': newRequestCategoryLogo == ''
                                         ? defaultGroupImageURL
                                         : newRequestCategoryLogo,
-                                    title_en: subcategorytitle,
-                                    type: CategoryType.SUB_CATEGORY,
-                                    typeId: newTypeId,
-                                    creatorId: SevaCore.of(context)
+                                    'type': 'subCategory',
+                                    'typeId': newTypeId,
+                                    'creatorId': SevaCore.of(context)
                                         .loggedInUser
                                         .sevaUserID,
-                                    creatorEmail:
+                                    'creatorEmail':
                                         SevaCore.of(context).loggedInUser.email,
-                                  );
+                                    'title_' +
+                                                SevaCore.of(context)
+                                                    .loggedInUser
+                                                    .language ??
+                                            S.of(context).localeName:
+                                        subcategorytitle
+                                  };
+
                                   await addNewRequestCategory(
                                           newRequestCategoryModel, newTypeId)
                                       .then((value) {
@@ -265,7 +271,9 @@ class _AddNewRequestCategoryState extends State<AddNewRequestCategory> {
                                   ),
                                 ),
                               ),
-                              shape: StadiumBorder(),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
                             ),
                           ),
                         ),

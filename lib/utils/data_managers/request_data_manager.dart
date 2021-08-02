@@ -593,10 +593,11 @@ Stream<List<RequestModel>> getAllRequestListStream() async* {
 }
 
 Stream<List<CategoryModel>> getUserCreatedRequestCategories(
-    String creatorId) async* {
-  var query = CollectionRef.requestCategories
-      .where('creatorId', isEqualTo: creatorId)
-      .orderBy('title_en');
+    String creatorId, BuildContext context) async* {
+  var query =
+      CollectionRef.requestCategories.where('creatorId', isEqualTo: creatorId);
+  // .orderBy('title_' + SevaCore.of(context).loggedInUser.language ??
+  //     S.of(context).localeName);
 
   var data = query.snapshots();
 
@@ -608,7 +609,14 @@ Stream<List<CategoryModel>> getUserCreatedRequestCategories(
           (documentSnapshot) {
             CategoryModel model =
                 CategoryModel.fromMap(documentSnapshot.data());
-            categoriesList.add(model);
+
+            logger.e('SNAPSHOT LENGTH:  ' +
+                documentSnapshot.data().length.toString());
+
+            if (model.data.containsKey(
+                'title_' + SevaCore.of(context).loggedInUser.language)) {
+              categoriesList.add(model);
+            }
           },
         );
         requestSink.add(categoriesList);
@@ -1009,7 +1017,6 @@ Stream<List<RequestModel>> getProjectRequestsStream(
     ),
   );
 }
-
 
 Future<void> sendOfferRequest({
   @required OfferModel offerModel,
@@ -1861,15 +1868,20 @@ Stream<List<RequestModel>> getNotAcceptedRequestStream({
 }
 
 //getALl the categories
-Future<List<CategoryModel>> getAllCategories() async {
+Future<List<CategoryModel>> getAllCategories(String languageCode) async {
   List<CategoryModel> categories = [];
 
   await CollectionRef.requestCategories.get().then((data) {
     data.docs.forEach(
       (documentSnapshot) {
-        CategoryModel model = CategoryModel.fromMap(documentSnapshot.data());
-        model.typeId = documentSnapshot.id;
-        categories.add(model);
+        if (documentSnapshot.data()["title_" + languageCode] != null) {
+          CategoryModel model = CategoryModel.fromMap(documentSnapshot.data());
+          model.typeId = documentSnapshot.id;
+          categories.add(model);
+
+          //  model.typeId = documentSnapshot.id;
+          //categories.add(model);
+        }
       },
     );
   });
@@ -1893,13 +1905,14 @@ Future<CategoryModel> getCategoryForId({@required String categoryID}) async {
 
 //Add new user defined request category
 Future<void> addNewRequestCategory(
-    CategoryModel newModel, String typeId) async {
-  await CollectionRef.requestCategories.doc(typeId).set(newModel.toMap());
+    Map<String, dynamic> newModel, String typeId) async {
+  await CollectionRef.requestCategories.doc(typeId).set(newModel);
 }
 
 //Edit user defined request category
-Future<void> editRequestCategory(CategoryModel newModel, String typeId) async {
-  await CollectionRef.requestCategories.doc(typeId).update(newModel.toMap());
+Future<void> editRequestCategory(
+    Map<String, dynamic> newModel, String typeId) async {
+  await CollectionRef.requestCategories.doc(typeId).update(newModel);
 }
 
 Future oneToManyCreatorRequestCompletionRejectedTimebankNotifications(
@@ -2064,7 +2077,10 @@ Stream<List<RequestModel>> getSpeakerClaimedCompletionRequestStream({
 }
 
 //getALl the categories
-Stream<List<CategoryModel>> getAllCategoriesStream() async* {
+Stream<List<CategoryModel>> getAllCategoriesStream(
+    BuildContext context) async* {
+  var key = S.of(context).localeName;
+
   var data = CollectionRef.requestCategories
       .where("type", isEqualTo: "subCategory")
       .orderBy("title_en", descending: false)
@@ -2074,27 +2090,32 @@ Stream<List<CategoryModel>> getAllCategoriesStream() async* {
       StreamTransformer<QuerySnapshot, List<CategoryModel>>.fromHandlers(
     handleData: (snapshot, sink) {
       List<CategoryModel> categories = [];
+
       snapshot.docs.forEach((element) {
-        CategoryModel model = CategoryModel.fromMap(element.data());
-        model.typeId = element.id;
-        log('${model.title_en}');
-        categories.add(model);
+        if (element.data()["title_" + key ?? 'en'] != null) {
+          CategoryModel model = CategoryModel.fromMap(element.data());
+          model.typeId = element.id;
+          categories.add(model);
+        }
       });
       sink.add(categories);
     },
   ));
 }
 
-Future<List<CategoryModel>> getSubCategoriesFuture() async {
+Future<List<CategoryModel>> getSubCategoriesFuture(BuildContext context) async {
+  var key = S.of(context).localeName;
+
   var data = await CollectionRef.requestCategories
       .where("type", isEqualTo: "subCategory")
       .get();
   List<CategoryModel> categories = [];
   data.docs.forEach((element) {
-    CategoryModel model = CategoryModel.fromMap(element.data());
-    model.typeId = element.id;
-    log('${model.title_en}');
-    categories.add(model);
+    if (element.data()["title_" + key ?? 'en'] != null) {
+      CategoryModel model = CategoryModel.fromMap(element.data());
+      model.typeId = element.id;
+      categories.add(model);
+    }
   });
   logger.i("subCat length ${categories.length}");
   return categories;
