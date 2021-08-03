@@ -114,17 +114,9 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
               },
             ),
             SizedBox(height: 20),
-            LocationPickerWidget(
-              selectedAddress: selectedAddress,
-              location: location,
-              onChanged: (LocationDataModel dataModel) {
-                setState(() {
-                  location = dataModel.geoPoint;
-                  selectedAddress = dataModel.location;
-                });
-              },
-            ),
             requestAgreementFormComponent,
+            SizedBox(height: 20),
+            locationWidget,
             termsAcknowledegmentText,
             bottomActionButtons,
           ],
@@ -195,6 +187,34 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget get locationWidget {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          L.of(context).your_location,
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+        ),
+        SizedBox(height: 15),
+        Text(L.of(context).your_location_subtext,
+            style: TextStyle(fontSize: 15), textAlign: TextAlign.start),
+        SizedBox(height: 20),
+        Center(
+          child: LocationPickerWidget(
+            selectedAddress: selectedAddress,
+            location: location,
+            onChanged: (LocationDataModel dataModel) {
+              setState(() {
+                location = dataModel.geoPoint;
+                selectedAddress = dataModel.location;
+              });
+            },
+          ),
+        ),
+      ],
     );
   }
 
@@ -375,7 +395,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(documentName != '' ?  S.of(context).view   : ''),
+                Text(documentName != '' ? S.of(context).view : ''),
                 GestureDetector(
                     child: Container(
                       alignment: Alignment.topLeft,

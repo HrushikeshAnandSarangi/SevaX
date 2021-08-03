@@ -132,7 +132,7 @@ TimebankConfigurations getConfigurationModel() {
       "create_feeds",
       "billing_access",
       "accept_requests",
-      //"create_borrow_request",
+      "create_borrow_request",
       "create_events",
       "create_goods_offers",
       "create_goods_request",
@@ -144,7 +144,6 @@ TimebankConfigurations getConfigurationModel() {
       "create_group",
       "promote_user",
       "demote_user",
-      //"create_borrow_request",
       "create_onetomany_request",
       "create_virtual_request",
       "create_public_request",
@@ -181,9 +180,8 @@ TimebankConfigurations getConfigurationModel() {
     superAdmin: [
       "create_feeds",
       "billing_access",
-
       "accept_requests",
-      //"create_borrow_request",
+      "create_borrow_request",
       "create_events",
       "create_goods_offers",
       "create_goods_request",
@@ -195,7 +193,6 @@ TimebankConfigurations getConfigurationModel() {
       "create_group",
       "promote_user",
       "demote_user",
-      //"create_borrow_request",
       "create_onetomany_request",
       "create_virtual_request",
       "create_public_request",
@@ -219,9 +216,8 @@ TimebankConfigurations getFriendAndPlanConfigurationModel() {
   return TimebankConfigurations(
     admin: [
       "create_feeds",
-
       "accept_requests",
-      //"create_borrow_request",
+      "create_borrow_request",
       "create_events",
       "create_goods_offers",
       "create_goods_request",
@@ -233,7 +229,6 @@ TimebankConfigurations getFriendAndPlanConfigurationModel() {
       "create_group",
       "promote_user",
       "demote_user",
-      //"create_borrow_request",
       "create_onetomany_request",
       "create_virtual_request",
       "create_public_request",
@@ -243,7 +238,6 @@ TimebankConfigurations getFriendAndPlanConfigurationModel() {
       "create_public_event",
       "create_endorsed_group",
       "create_private_group",
-
       "accept_one_to_many_offer",
       "accept_time_offer",
       "accept_goods_offer",
@@ -266,9 +260,7 @@ TimebankConfigurations getFriendAndPlanConfigurationModel() {
     ],
     superAdmin: [
       "create_feeds",
-
       "accept_requests",
-      //"create_borrow_request",
       "create_events",
       "create_goods_offers",
       "create_goods_request",
@@ -280,7 +272,7 @@ TimebankConfigurations getFriendAndPlanConfigurationModel() {
       "create_group",
       "promote_user",
       "demote_user",
-      //"create_borrow_request",
+      "create_borrow_request",
       "create_onetomany_request",
       "create_virtual_request",
       "create_public_request",
@@ -290,7 +282,6 @@ TimebankConfigurations getFriendAndPlanConfigurationModel() {
       "create_public_event",
       "create_endorsed_group",
       "create_private_group",
-
       "accept_one_to_many_offer",
       "accept_time_offer",
       "accept_goods_offer",
@@ -401,9 +392,7 @@ TimebankConfigurations getGroupConfigurationModel() {
       "billing_access",
       "create_feeds",
       "billing_access",
-
       "accept_requests",
-      //"create_borrow_request",
       "create_events",
       "create_goods_offers",
       "create_goods_request",
@@ -415,7 +404,7 @@ TimebankConfigurations getGroupConfigurationModel() {
       "create_group",
       "promote_user",
       "demote_user",
-      //"create_borrow_request",
+      "create_borrow_request",
       "create_onetomany_request",
       "create_virtual_request",
       "create_public_request",
@@ -425,7 +414,6 @@ TimebankConfigurations getGroupConfigurationModel() {
       "create_public_event",
       "create_endorsed_group",
       "create_private_group",
-
       "accept_one_to_many_offer",
       "accept_time_offer",
       "accept_goods_offer",
@@ -439,9 +427,7 @@ TimebankConfigurations getNonProfitConfigurationModel() {
     admin: [
       "create_feeds",
       "billing_access",
-
       "accept_requests",
-      //"create_borrow_request",
       "create_events",
       "create_goods_offers",
       "create_goods_request",
@@ -453,7 +439,7 @@ TimebankConfigurations getNonProfitConfigurationModel() {
       "create_group",
       "promote_user",
       "demote_user",
-      //"create_borrow_request",
+      "create_borrow_request",
       "create_onetomany_request",
       "create_virtual_request",
       "create_public_request",
@@ -464,7 +450,6 @@ TimebankConfigurations getNonProfitConfigurationModel() {
       "create_endorsed_group",
       "create_private_group",
       "one_to_many_offer",
-
       "accept_one_to_many_offer",
       "accept_time_offer",
       "accept_goods_offer",
@@ -489,9 +474,7 @@ TimebankConfigurations getNonProfitConfigurationModel() {
     superAdmin: [
       "create_feeds",
       "billing_access",
-
       "accept_requests",
-      //"create_borrow_request",
       "create_events",
       "create_goods_offers",
       "create_goods_request",
@@ -503,7 +486,7 @@ TimebankConfigurations getNonProfitConfigurationModel() {
       "create_group",
       "promote_user",
       "demote_user",
-      //"create_borrow_request",
+      "create_borrow_request",
       "create_onetomany_request",
       "create_virtual_request",
       "create_public_request",
@@ -514,7 +497,6 @@ TimebankConfigurations getNonProfitConfigurationModel() {
       "create_endorsed_group",
       "create_private_group",
       "one_to_many_offer",
-
       "accept_one_to_many_offer",
       "accept_time_offer",
       "accept_goods_offer",
@@ -528,9 +510,7 @@ TimebankConfigurations getEnterpriseConfigurationModel() {
     admin: [
       "create_feeds",
       "billing_access",
-
       "accept_requests",
-      //"create_borrow_request",
       "create_events",
       "create_goods_offers",
       "create_goods_request",
@@ -542,7 +522,7 @@ TimebankConfigurations getEnterpriseConfigurationModel() {
       "create_group",
       "promote_user",
       "demote_user",
-      //"create_borrow_request",
+      "create_borrow_request",
       "create_onetomany_request",
       "create_virtual_request",
       "create_public_request",
@@ -553,7 +533,6 @@ TimebankConfigurations getEnterpriseConfigurationModel() {
       "create_endorsed_group",
       "create_private_group",
       "one_to_many_offer",
-
       "accept_one_to_many_offer",
       "accept_time_offer",
       "accept_goods_offer",
@@ -578,9 +557,7 @@ TimebankConfigurations getEnterpriseConfigurationModel() {
     superAdmin: [
       "create_feeds",
       "billing_access",
-
       "accept_requests",
-      //"create_borrow_request",
       "create_events",
       "create_goods_offers",
       "create_goods_request",
@@ -592,7 +569,7 @@ TimebankConfigurations getEnterpriseConfigurationModel() {
       "create_group",
       "promote_user",
       "demote_user",
-      //"create_borrow_request",
+      "create_borrow_request",
       "create_onetomany_request",
       "create_virtual_request",
       "create_public_request",
@@ -603,7 +580,6 @@ TimebankConfigurations getEnterpriseConfigurationModel() {
       "create_endorsed_group",
       "create_private_group",
       "one_to_many_offer",
-
       "accept_one_to_many_offer",
       "accept_time_offer",
       "accept_goods_offer",
@@ -617,9 +593,7 @@ TimebankConfigurations getCommunityPlanConfigurationModel() {
     admin: [
       "create_feeds",
       "billing_access",
-
       "accept_requests",
-      //"create_borrow_request",
       "create_events",
       "create_goods_offers",
       "create_goods_request",
@@ -631,7 +605,7 @@ TimebankConfigurations getCommunityPlanConfigurationModel() {
       "create_group",
       "promote_user",
       "demote_user",
-      //"create_borrow_request",
+      "create_borrow_request",
       "create_onetomany_request",
       "create_virtual_request",
       "create_public_request",
@@ -642,7 +616,6 @@ TimebankConfigurations getCommunityPlanConfigurationModel() {
       "create_endorsed_group",
       "create_private_group",
       "one_to_many_offer",
-
       "accept_one_to_many_offer",
       "accept_time_offer",
       "accept_goods_offer",
@@ -667,9 +640,7 @@ TimebankConfigurations getCommunityPlanConfigurationModel() {
     superAdmin: [
       "create_feeds",
       "billing_access",
-
       "accept_requests",
-      //"create_borrow_request",
       "create_events",
       "create_goods_offers",
       "create_goods_request",
@@ -681,7 +652,7 @@ TimebankConfigurations getCommunityPlanConfigurationModel() {
       "create_group",
       "promote_user",
       "demote_user",
-      //"create_borrow_request",
+      "create_borrow_request",
       "create_onetomany_request",
       "create_virtual_request",
       "create_public_request",
@@ -692,7 +663,6 @@ TimebankConfigurations getCommunityPlanConfigurationModel() {
       "create_endorsed_group",
       "create_private_group",
       "one_to_many_offer",
-
       "accept_one_to_many_offer",
       "accept_time_offer",
       "accept_goods_offer",
@@ -706,9 +676,7 @@ TimebankConfigurations getCommunityPlusPlanConfigurationModel() {
     admin: [
       "create_feeds",
       "billing_access",
-
       "accept_requests",
-      //"create_borrow_request",
       "create_events",
       "create_goods_offers",
       "create_goods_request",
@@ -720,7 +688,7 @@ TimebankConfigurations getCommunityPlusPlanConfigurationModel() {
       "create_group",
       "promote_user",
       "demote_user",
-      //"create_borrow_request",
+      "create_borrow_request",
       "create_onetomany_request",
       "create_virtual_request",
       "create_public_request",
@@ -731,7 +699,6 @@ TimebankConfigurations getCommunityPlusPlanConfigurationModel() {
       "create_endorsed_group",
       "create_private_group",
       "one_to_many_offer",
-
       "accept_one_to_many_offer",
       "accept_time_offer",
       "accept_goods_offer",
@@ -756,9 +723,7 @@ TimebankConfigurations getCommunityPlusPlanConfigurationModel() {
     superAdmin: [
       "create_feeds",
       "billing_access",
-
       "accept_requests",
-      //"create_borrow_request",
       "create_events",
       "create_goods_offers",
       "create_goods_request",
@@ -770,7 +735,7 @@ TimebankConfigurations getCommunityPlusPlanConfigurationModel() {
       "create_group",
       "promote_user",
       "demote_user",
-      //"create_borrow_request",
+      "create_borrow_request",
       "create_onetomany_request",
       "create_virtual_request",
       "create_public_request",
@@ -781,7 +746,6 @@ TimebankConfigurations getCommunityPlusPlanConfigurationModel() {
       "create_endorsed_group",
       "create_private_group",
       "one_to_many_offer",
-
       "accept_one_to_many_offer",
       "accept_time_offer",
       "accept_goods_offer",

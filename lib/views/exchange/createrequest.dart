@@ -1160,7 +1160,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                               padding: EdgeInsets.only(
                                                   left: 14, right: 14),
                                               child: Text(
-                                                S.of(context).need_a_place,
+                                                L.of(context).place,
                                                 style:
                                                     TextStyle(fontSize: 12.0),
                                               ),
@@ -1169,7 +1169,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                               padding: EdgeInsets.only(
                                                   left: 14, right: 14),
                                               child: Text(
-                                                S.of(context).item,
+                                                L.of(context).items,
                                                 style:
                                                     TextStyle(fontSize: 12.0),
                                               ),
@@ -2133,36 +2133,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
                       ),
                     ),
                   ),
-
-                  //BORROW REQUEST PUSHED TO NEXT RELEASE
-
-                  // TransactionsMatrixCheck(
-                  //   upgradeDetails:
-                  //       AppConfig.upgradePlanBannerModel.cash_request,
-                  //   transaction_matrix_type: 'cash_goods_requests',
-                  //   comingFrom: widget.comingFrom,
-                  //   child: ConfigurationCheck(
-                  //     actionType: 'create_goods_request',
-                  //     role: memberType(timebankModel,
-                  //         SevaCore.of(context).loggedInUser.sevaUserID),
-                  //     child: _optionRadioButton<RequestType>(
-                  //       title: 'Borrow',
-                  //       value: RequestType.BORROW,
-                  //       isEnabled: !widget.isOfferRequest,
-                  //       groupvalue: requestModel.requestType,
-                  //       onChanged: (value) {
-                  //         //requestModel.isRecurring = true;
-                  //         requestModel.requestType = value;
-                  //         //By default instructor for One To Many Requests is the creator
-                  //         instructorAdded = false;
-                  //         requestModel.selectedInstructor = null;
-                  //         AppConfig.helpIconContextMember =
-                  //             HelpContextMemberType.time_requests;
-                  //         setState(() => {});
-                  //       },
-                  //     ),
-                  //   ),
-                  // ),
                   TransactionsMatrixCheck(
                     upgradeDetails:
                         AppConfig.upgradePlanBannerModel.onetomany_requests,
@@ -2189,6 +2159,32 @@ class RequestCreateFormState extends State<RequestCreateForm>
                             HelpContextMemberType.one_to_many_requests;
                         setState(() => {});
                       },
+                    ),
+                  ),
+                  TransactionsMatrixCheck(
+                    upgradeDetails:
+                        AppConfig.upgradePlanBannerModel.cash_request,
+                    transaction_matrix_type: 'cash_goods_requests',
+                    comingFrom: widget.comingFrom,
+                    child: ConfigurationCheck(
+                      actionType: 'create_goods_request',
+                      role: memberType(timebankModel,
+                          SevaCore.of(context).loggedInUser.sevaUserID),
+                      child: _optionRadioButton<RequestType>(
+                        title: S.of(context).borrow,
+                        value: RequestType.BORROW,
+                        isEnabled: !widget.isOfferRequest,
+                        groupvalue: requestModel.requestType,
+                        onChanged: (value) {
+                          //requestModel.isRecurring = true;
+                          requestModel.requestType = value;
+                          instructorAdded = false;
+                          requestModel.selectedInstructor = null;
+                          AppConfig.helpIconContextMember =
+                              HelpContextMemberType.time_requests;
+                          setState(() => {});
+                        },
+                      ),
                     ),
                   ),
                 ],

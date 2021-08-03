@@ -280,9 +280,6 @@ class L {
 
   String get crop_photo => "Crop Photo";
 
-// // <--------  IRRELEVANT FOR NOW  --------->
-// // String get borrow_request_title => "Borrow Request"; //done in mobile
-
   String get my_request_categories => "My Request Subcategories";
   String get add_new_request_category => "Add new request subcategory";
   String get edit_request_category => "Edit subcategory";
@@ -334,4 +331,13 @@ class L {
   String get no => "No";
   String get any_distance => "Any Distance";
 
+  //3rd August 2021
+  String get admin_borrow_request_received_back_check =>
+      "If you have you received your item/place back click the button below to complete this.";
+  String get borrow_request_title => "Borrow Request";
+  String get place => "Place";
+  String get items => "Item(s)";
+  String get your_location => "Your location";
+  String get your_location_subtext =>
+      "location will help members to connect easily.";
 }

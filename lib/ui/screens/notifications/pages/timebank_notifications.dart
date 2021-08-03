@@ -447,8 +447,9 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                     showDialog(
                       context: context,
                       builder: (_context) => AlertDialog(
-                        title: Text(
-                            'If you have you received your item/place back click the button below to complete this.'), //label to be created later (borrow request)
+                        title: Text(L
+                            .of(context)
+                            .admin_borrow_request_received_back_check), //label to be created later (borrow request)
                         actions: [
                           CustomTextButton(
                             onPressed: () {
@@ -724,9 +725,8 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   onPressed: null, // TO BE MADE
                   photoUrl: model.photoUrl,
                   title: model.title,
-                  subTitle: model.requestType == RequestType.BORROW
-                      ? 'Request has been approved' //maybe Request has been approved by 'name of Borrower' (depends if timebank or personal)
-                      : '${S.of(context).notifications_approved_by} ${model.fullName}',
+                  subTitle:
+                      '${S.of(context).notifications_approved_by} ${model.fullName}',
                 );
                 break;
 
@@ -1091,7 +1091,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
     //Send Receipt Email to Lender & Borrowr
     await MailBorrowRequestReceipts.sendBorrowRequestReceipts(
         requestModelUpdated);
-    log('Came to send receipts to lender and borrower api');
+    log('Sent receipts to lender and borrower api');
 
     //Send Notification To Lender to let them know it's acknowledged
     await sendNotificationLenderReceipt(
@@ -1195,7 +1195,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
 
       //requestModelNew.accepted = false;
 
-      //FirestoreManager.borrowRequestComplete(model: requestModelNew);
+      // FirestoreManager.borrowRequestComplete(model: requestModelNew);
 
       // FirestoreManager.createTaskCompletedNotification(
       //   model: NotificationsModel(

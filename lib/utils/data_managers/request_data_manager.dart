@@ -52,23 +52,20 @@ Future<void> updateRequest({@required RequestModel requestModel}) async {
       .update(requestModel.toMap());
 }
 
-// Future<void> updateAcceptBorrowRequest({
-//   @required RequestModel requestModel,
-//   //@required Map participantDetails,
-//   @required String userEmail,
-// }) async {
-//   log('accept updated borrow request');
-//   return await CollectionRef
-//       .requests
-//       .doc(requestModel.id)
-//       .update(
-//     {
-//       //'participantDetails.$userEmail': participantDetails,
-//       'accepted': true,
-//       'approvedUsers': FieldValue.arrayUnion([userEmail]),
-//     },
-//   );
-// }
+Future<void> updateAcceptBorrowRequest({
+  @required RequestModel requestModel,
+  //@required Map participantDetails,
+  @required String userEmail,
+}) async {
+  log('accept updated borrow request');
+  return await CollectionRef.requests.doc(requestModel.id).update(
+    {
+      //'participantDetails.$userEmail': participantDetails,
+      'accepted': true,
+      'approvedUsers': FieldValue.arrayUnion([userEmail]),
+    },
+  );
+}
 
 Future<void> updateRequestsByFields(
     {List<String> requestIds, Map<String, dynamic> fields}) async {
