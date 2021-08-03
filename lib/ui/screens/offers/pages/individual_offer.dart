@@ -623,6 +623,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                             ? RequestTypeWidget()
                             // ? Container()
                             : Container(),
+                        SizedBox(height: 10),
                         HideWidget(
                           hide: offerType == RequestType.ONE_TO_MANY_OFFER,
                           child: StreamBuilder<String>(
@@ -1469,45 +1470,59 @@ class _IndividualOfferState extends State<IndividualOffer> {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          SizedBox(height: 10),
           Container(
             alignment: Alignment.bottomLeft,
-            child: CupertinoSegmentedControl<int>(
-              unselectedColor: Colors.grey[200],
-              selectedColor: Theme.of(context).primaryColor,
-              children: {
-                0: Padding(
-                  padding: EdgeInsets.only(left: 14, right: 14),
-                  child: Text(
-                    L.of(context).place, //Label to be created
-                    style: TextStyle(fontSize: 12.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  L.of(context).lending,
+                  style: TextStyle(
+                    fontSize: 16,
+                    //fontWeight: FontWeight.bold,
+                    fontFamily: 'Europa',
+                    color: Colors.black,
                   ),
                 ),
-                1: Padding(
-                  padding: EdgeInsets.only(left: 14, right: 14),
-                  child: Text(
-                    L.of(context).items, //Label to be created
-                    style: TextStyle(fontSize: 12.0),
-                  ),
-                ),
-              },
+                SizedBox(height: 10),
+                CupertinoSegmentedControl<int>(
+                  unselectedColor: Colors.grey[200],
+                  selectedColor: Theme.of(context).primaryColor,
+                  children: {
+                    0: Padding(
+                      padding: EdgeInsets.only(left: 14, right: 14),
+                      child: Text(
+                        L.of(context).place, //Label to be created
+                        style: TextStyle(fontSize: 12.0),
+                      ),
+                    ),
+                    1: Padding(
+                      padding: EdgeInsets.only(left: 14, right: 14),
+                      child: Text(
+                        L.of(context).items, //Label to be created
+                        style: TextStyle(fontSize: 12.0),
+                      ),
+                    ),
+                  },
 
-              borderColor: Colors.grey,
-              padding: EdgeInsets.only(left: 0.0, right: 0.0),
-              groupValue: _bloc.lendingOfferType,
-              onValueChanged: (int val) {
-                if (val != _bloc.lendingOfferType) {
-                  setState(() {
-                    if (val == 0) {
-                      _bloc.lendingOfferType = 0;
-                    } else {
-                      _bloc.lendingOfferType = 1;
+                  borderColor: Colors.grey,
+                  padding: EdgeInsets.only(left: 0.0, right: 0.0),
+                  groupValue: _bloc.lendingOfferType,
+                  onValueChanged: (int val) {
+                    if (val != _bloc.lendingOfferType) {
+                      setState(() {
+                        if (val == 0) {
+                          _bloc.lendingOfferType = 0;
+                        } else {
+                          _bloc.lendingOfferType = 1;
+                        }
+                        _bloc.lendingOfferType = val;
+                      });
                     }
-                    _bloc.lendingOfferType = val;
-                  });
-                }
-              },
-              //groupValue: sharedValue,
+                  },
+                  //groupValue: sharedValue,
+                ),
+              ],
             ),
           ),
           SizedBox(height: 20),
