@@ -145,7 +145,7 @@ class NewsCardViewState extends State<NewsCardView> {
                 children: <Widget>[
                   newsAuthorAndDate,
                   widget.newsModel.title == null ||
-                          widget.newsModel.title == S.of(context).no_data
+                          widget.newsModel.title == "NoData"
                       ? Offstage()
                       : newsTitle,
                   newsImage,
@@ -246,6 +246,9 @@ class NewsCardViewState extends State<NewsCardView> {
                           )),
                         ),
                         labelText: S.of(context).add_comment,
+                        labelStyle: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                        ),
                         isDense: true,
                         contentPadding: EdgeInsets.all(3.0),
                       ),
@@ -355,16 +358,16 @@ class NewsCardViewState extends State<NewsCardView> {
   Widget get newsTitle {
     return Container(
       padding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 20.0),
-      child: widget.newsModel.title == null ||
-              widget.newsModel.title == S.of(context).no_data
-          ? Offstage()
-          : Text(
-              widget.newsModel.title.trim(),
-              style: TextStyle(
-                  fontSize: 28.0,
-                  fontStyle: FontStyle.normal,
-                  fontWeight: FontWeight.bold),
-            ),
+      child:
+          widget.newsModel.title == null || widget.newsModel.title == "NoData"
+              ? Offstage()
+              : Text(
+                  widget.newsModel.title.trim(),
+                  style: TextStyle(
+                      fontSize: 28.0,
+                      fontStyle: FontStyle.normal,
+                      fontWeight: FontWeight.bold),
+                ),
     );
   }
 
@@ -497,7 +500,7 @@ class NewsCardViewState extends State<NewsCardView> {
             if (await canLaunch(value)) {
               await launch(value);
             } else {
-              throw L.of(context).could_not_launch + '$value';
+              throw S.of(context).could_not_launch + '$value';
             }
           },
           child: Material(
@@ -588,7 +591,7 @@ class NewsCardViewState extends State<NewsCardView> {
 
   Widget get scrappedImage {
     return widget.newsModel.imageScraped == null ||
-            widget.newsModel.imageScraped == S.of(context).no_data
+            widget.newsModel.imageScraped == "NoData"
         ? Offstage()
         //change tag to avoid hero widget issue
         : getImageView(
@@ -621,7 +624,7 @@ class NewsCardViewState extends State<NewsCardView> {
             child: Container(
               child: Text(
                 widget.newsModel.photoCredits != null
-                    ? L.of(context).credits + '${widget.newsModel.photoCredits}'
+                    ? S.of(context).credits + '${widget.newsModel.photoCredits}'
                     : '',
                 style: TextStyle(
                   fontSize: 15.0,
@@ -665,7 +668,7 @@ class NewsCardViewState extends State<NewsCardView> {
                     leading: Icon(Icons.attachment),
                     title: Text(
                       widget.newsModel.newsDocumentName ??
-                          L.of(context).doc_pdf,
+                          S.of(context).doc_pdf,
                       //overflow: TextOverflow.ellipsis,
                     ),
                   ),
@@ -907,7 +910,7 @@ class NewsCardViewState extends State<NewsCardView> {
                         padding: EdgeInsets.only(left: 2, top: 0),
                         child: Align(
                             alignment: Alignment.centerLeft,
-                            child: Text(L.of(context).likes,
+                            child: Text(S.of(context).likes,
                                 style: TextStyle(
                                   fontSize: 11,
                                   fontWeight: FontWeight.bold,

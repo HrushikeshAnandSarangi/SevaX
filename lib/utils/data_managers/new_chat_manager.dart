@@ -163,23 +163,26 @@ Future<void> createNewMessage({
   if (messageModel.type == MessageType.IMAGE) {
     log(file.path);
     log(messageRef.id);
-    log("started upload");
+    var reference = DateTime.now().toString();
     FirebaseStorage _storage = FirebaseStorage.instance;
+
     UploadTask _uploadTask =
-        _storage.ref().child("chats/${DateTime.now()}.png").putFile(file);
+        _storage.ref().child("chats/${reference}.png").putFile(file);
     String attachmentUrl = '';
-    _uploadTask.whenComplete(() async {
-      attachmentUrl = await _storage.ref().getDownloadURL();
+
+    _uploadTask.then((value) async {
+      attachmentUrl = await value.ref.getDownloadURL().then((value) {
+        return value;
+      });
+      CollectionRef.chats
+          .doc(chatId)
+          .collection("messages")
+          .doc(messageRef.id)
+          .update(
+        {"data": attachmentUrl},
+      );
     });
     log(attachmentUrl);
-    CollectionRef.chats
-        .doc(chatId)
-        .collection("messages")
-        .doc(messageRef.id)
-        .set(
-      {"data": attachmentUrl},
-      SetOptions(merge: true),
-    );
   }
 }
 

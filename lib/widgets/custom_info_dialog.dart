@@ -167,11 +167,27 @@ void showDialogFromInfoWindow(
                     ),
                     Align(
                       alignment: Alignment.bottomRight,
-                      child: CustomTextButton(
-                        child: Text(S.of(context).ok),
-                        onPressed: () {
-                          Navigator.of(_context).pop();
-                        },
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                          right: 15,
+                          bottom: 15,
+                        ),
+                        child: CustomTextButton(
+                          // padding: EdgeInsets.fromLTRB(10, 5, 5, 10),
+                          shape: StadiumBorder(),
+                          color: Colors.grey,
+                          child: Text(
+                            S.of(context).ok,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontFamily: 'Europa',
+                            ),
+                          ),
+                          onPressed: () {
+                            Navigator.of(_context).pop();
+                          },
+                        ),
                       ),
                     ),
                   ],

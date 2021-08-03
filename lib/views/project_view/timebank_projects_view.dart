@@ -15,10 +15,12 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/configuration_check.dart';
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/project_view/projects_template_view.dart';
+import 'package:sevaexchange/views/project_view/recurring_event_list.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
@@ -57,47 +59,22 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
             margin: EdgeInsets.only(top: 10, bottom: 10, left: 0, right: 10),
             alignment: Alignment.centerLeft,
             child: Row(
-              children: <Widget>[
-                ButtonTheme(
-                  minWidth: 110.0,
-                  height: 50.0,
-                  buttonColor: Color.fromRGBO(234, 135, 137, 1.0),
-                  child: Stack(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.only(
-                          right: 0,
-                        ),
-                        child: CustomTextButton(
-                          onPressed: () {},
-                          child: Text(
-                            S.of(context).projects,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        // will be positioned in the top right of the container
-                        top: 0,
-                        right: -20,
-                        child: Container(
-                          padding: EdgeInsets.only(left: 4, right: 4),
-                          child: infoButton(
-                            context: context,
-                            key: GlobalKey(),
-                            type: InfoType.PROJECTS,
-                            // text: infoDetails['projectsInfo'] ?? description,
-                          ),
-                        ),
-                      ),
-                    ],
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Text(
+                    S.of(context).projects,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 24,
+                    ),
                   ),
                 ),
-                SizedBox(
-                  width: 8,
+                infoButton(
+                  context: context,
+                  key: GlobalKey(),
+                  type: InfoType.PROJECTS,
+                  // text: infoDetails['projectsInfo'] ?? description,
                 ),
                 Visibility(
                   visible: isAdminOrOwner,
@@ -125,26 +102,15 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                     ),
                   ),
                 ),
-                Spacer(),
-                // Container(
-                //   height: 40,
-                //   width: 40,
-                //   child: IconButton(
-                //     icon: Image.asset(
-                //       'lib/assets/images/help.png',
-                //     ),
-                //     color: FlavorConfig.values.theme.primaryColor,
-                //     //iconSize: 16,
-                //     onPressed: showProjectsWebPage,
-                //   ),
-                // ),
               ],
             ),
           ),
           Expanded(
             child: StreamBuilder<List<ProjectModel>>(
               stream: FirestoreManager.getAllProjectListStream(
-                  timebankid: widget.timebankId),
+                  timebankid: widget.timebankId,
+                  isAdminOrOwner: isAdminOrOwner,
+                  context: context),
               builder: (BuildContext context,
                   AsyncSnapshot<List<ProjectModel>> projectListSnapshot) {
                 if (projectListSnapshot.hasError) {
@@ -169,31 +135,6 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                                 : S.of(context).cannot_create_project,
                           ),
                         ),
-                        // child: Padding(
-                        //   padding: const EdgeInsets.all(16.0),
-                        //   child: RichText(
-                        //     textAlign: TextAlign.center,
-                        //     text: TextSpan(
-                        //       children: <TextSpan>[
-                        //         TextSpan(
-                        //           style: TextStyle(
-                        //             color: Colors.grey,
-                        //             fontSize: 14,
-                        //           ),
-                        //           text: '${S.of(context).no_projects_message} ',
-                        //         ),
-                        //         TextSpan(
-                        //           text: S.of(context).creating_one,
-                        //           style: TextStyle(
-                        //             color: Theme.of(context).primaryColor,
-                        //           ),
-                        //           recognizer: TapGestureRecognizer()
-                        //             ..onTap = navigateToCreateProject,
-                        //         ),
-                        //       ],
-                        //     ),
-                        //   ),
-                        // ),
                       );
                     }
                     return ListView.builder(
@@ -208,6 +149,7 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                             : 0;
 
                         return ProjectsCard(
+                          isRecurring: project.isRecurring,
                           timestamp: project.createdAt,
                           startTime: project.startTime,
                           endTime: project.endTime,
@@ -217,21 +159,39 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                           location: project.address,
                           tasks: totalTask,
                           pendingTask: project.pendingRequests?.length,
-                          onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_context) => BlocProvider(
-                                bloc:
-                                    BlocProvider.of<HomeDashBoardBloc>(context),
-                                child: ProjectRequests(
-                                  ComingFrom.Projects,
-                                  timebankId: widget.timebankId,
-                                  projectModel: project,
-                                  timebankModel: widget.timebankModel,
+                          onTap: () {
+                            if (project.isRecurring)
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_context) => BlocProvider(
+                                    bloc: BlocProvider.of<HomeDashBoardBloc>(
+                                        context),
+                                    child: RecurringEventsList(
+                                      timebankId: widget.timebankId,
+                                      timebankModel: widget.timebankModel,
+                                      parentEventId: project.parentEventId,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                          ),
+                              );
+                            else
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_context) => BlocProvider(
+                                    bloc: BlocProvider.of<HomeDashBoardBloc>(
+                                        context),
+                                    child: ProjectRequests(
+                                      ComingFrom.Projects,
+                                      timebankId: widget.timebankId,
+                                      projectModel: project,
+                                      timebankModel: widget.timebankModel,
+                                    ),
+                                  ),
+                                ),
+                              );
+                          },
                         );
                       },
                     );

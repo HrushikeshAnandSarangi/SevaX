@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:rxdart/streams.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:sevaexchange/models/category_model.dart';
@@ -7,6 +8,9 @@ import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/repositories/elastic_search.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
+import 'package:sevaexchange/ui/utils/location_helper.dart';
+import 'package:sevaexchange/repositories/elastic_search.dart';
 
 class ExplorePageBloc {
   final _events = BehaviorSubject<List<ProjectModel>>();
@@ -31,15 +35,17 @@ class ExplorePageBloc {
         },
       );
 
-  void load({bool isUserLoggedIn = false}) {
+  void load(
+      {bool isUserLoggedIn = false, String sevaUserID, BuildContext context}) {
     ElasticSearchApi.getFeaturedCommunities().then((value) {
       _communities.add(value);
     });
+    logger.e('USER ID CHECK 9:' + isUserLoggedIn.toString());
     if (isUserLoggedIn) {
       FirestoreManager.getPublicOffers().listen((event) {
         _offers.add(event);
       });
-      FirestoreManager.getPublicProjects().listen((event) {
+      FirestoreManager.getPublicProjects(sevaUserID).listen((event) {
         _events.add(event);
       });
       FirestoreManager.getPublicRequests().listen((event) {
@@ -49,13 +55,16 @@ class ExplorePageBloc {
       ElasticSearchApi.getPublicOffers().then((value) {
         _offers.add(value);
       });
-      ElasticSearchApi.getPublicProjects().then((value) {
+      ElasticSearchApi.getPublicProjects(
+        distanceFilterData: null,
+        sevaUserID: sevaUserID,
+      ).then((value) {
         _events.add(value);
       });
       ElasticSearchApi.getPublicRequests().then((value) {
         _requests.add(value);
       });
-      ElasticSearchApi.getAllCategories().then((value) {
+      ElasticSearchApi.getAllCategories(context).then((value) {
         _categories.add(value);
       });
     }

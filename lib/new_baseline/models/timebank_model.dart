@@ -17,6 +17,7 @@ class TimebankModel extends DataModel {
   String address;
   String creatorId;
   String photoUrl;
+  String cover_url;
   int createdAt;
   List<String> admins;
   List<String> organizers;
@@ -60,6 +61,7 @@ class TimebankModel extends DataModel {
     this.address = map.containsKey("address") ? map["address"] : '';
     this.creatorId = map.containsKey("creator_id") ? map["creator_id"] : '';
     this.photoUrl = map.containsKey("photo_url") ? map["photo_url"] : '';
+    this.cover_url = map.containsKey("cover_url") ? map["cover_url"] : '';
     this.createdAt = map.containsKey("created_at") ? map["created_at"] : 0;
     this.admins = map.containsKey("admins") ? List.castFrom(map['admins']) : [];
     this.organizers =
@@ -174,6 +176,9 @@ class TimebankModel extends DataModel {
     if (key == 'photoUrl') {
       this.photoUrl = value;
     }
+    if (key == 'cover_url') {
+      this.cover_url = value;
+    }
     if (key == 'createdAt') {
       this.createdAt = value;
     }
@@ -281,6 +286,7 @@ class TimebankModel extends DataModel {
       "address": address == null ? null : address,
       "creator_id": creatorId == null ? null : creatorId,
       "photo_url": photoUrl == null ? null : photoUrl,
+      "cover_url": cover_url == null ? null : cover_url,
       "created_at": createdAt == null ? null : createdAt,
       "admins":
           admins == null ? null : List<dynamic>.from(admins.map((x) => x)),
@@ -360,7 +366,7 @@ class TimebankModel extends DataModel {
 
   @override
   String toString() {
-    return 'TimebankModel{id: $id, name: $name, missionStatement: $missionStatement, emailId: $emailId, phoneNumber: $phoneNumber, address: $address,liveMode: $liveMode, creatorId: $creatorId, photoUrl: $photoUrl, createdAt: $createdAt, admins: $admins,organizers: $organizers, coordinators: $coordinators, members: $members, protected: $protected,sponsored: $sponsored,timebankConfigurations: ${timebankConfigurations.toString()}, parentTimebankId: $parentTimebankId, communityId: $communityId, rootTimebankId: $rootTimebankId, children: $children, balance: $balance, sandboxBalance: $sandboxBalance, location: $location, private: $private}';
+    return 'TimebankModel{id: $id, name: $name, missionStatement: $missionStatement, emailId: $emailId, phoneNumber: $phoneNumber, address: $address,liveMode: $liveMode, creatorId: $creatorId, photoUrl: $photoUrl, cover_url: $cover_url, createdAt: $createdAt, admins: $admins,organizers: $organizers, coordinators: $coordinators, members: $members, protected: $protected,sponsored: $sponsored,timebankConfigurations: ${timebankConfigurations.toString()}, parentTimebankId: $parentTimebankId, communityId: $communityId, rootTimebankId: $rootTimebankId, children: $children, balance: $balance, sandboxBalance: $sandboxBalance, location: $location, private: $private}';
   }
 }
 

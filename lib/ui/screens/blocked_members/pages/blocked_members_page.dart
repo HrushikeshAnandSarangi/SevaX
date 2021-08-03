@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/blocked_members/bloc/blocked_members_bloc.dart';
@@ -38,8 +39,7 @@ class _BlockedMembersPageState extends State<BlockedMembersPage> {
   }
 
   Future<void> getTimebank() async {
-    timebankModel =
-        await FirestoreManager.getTimeBankForId(timebankId: widget.timebankId);
+    timebankModel = await FirestoreManager.getTimeBankForId(timebankId: widget.timebankId);
     setState(() {});
   }
 
@@ -65,8 +65,7 @@ class _BlockedMembersPageState extends State<BlockedMembersPage> {
           BuildContext context,
           AsyncSnapshot<List<UserModel>> snapshot,
         ) {
-          if (snapshot.connectionState == ConnectionState.waiting ||
-              snapshot.data == null) {
+          if (snapshot.connectionState == ConnectionState.waiting || snapshot.data == null) {
             return LoadingIndicator();
           }
           if (snapshot.data.isEmpty)
@@ -99,14 +98,13 @@ class _BlockedMembersPageState extends State<BlockedMembersPage> {
                                 blockedUser.photoURL,
                                 onTap: () {
                                   if (timebankModel != null) {
-                                    Navigator.of(context).push(
-                                        MaterialPageRoute(builder: (context) {
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(builder: (context) {
                                       return ProfileViewer(
                                         timebankId: timebankModel.id,
                                         entityName: timebankModel.name,
                                         isFromTimebank: isPrimaryTimebank(
-                                            parentTimebankId:
-                                                timebankModel.parentTimebankId),
+                                            parentTimebankId: timebankModel.parentTimebankId),
                                         userId: blockedUser.sevaUserID,
                                         userEmail: blockedUser.email,
                                       );
@@ -118,14 +116,13 @@ class _BlockedMembersPageState extends State<BlockedMembersPage> {
                                 name: blockedUser.fullname,
                                 onTap: () {
                                   if (timebankModel != null) {
-                                    Navigator.of(context).push(
-                                        MaterialPageRoute(builder: (context) {
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(builder: (context) {
                                       return ProfileViewer(
                                         timebankId: timebankModel.id,
                                         entityName: timebankModel.name,
                                         isFromTimebank: isPrimaryTimebank(
-                                            parentTimebankId:
-                                                timebankModel.parentTimebankId),
+                                            parentTimebankId: timebankModel.parentTimebankId),
                                         userId: blockedUser.sevaUserID,
                                         userEmail: blockedUser.email,
                                       );
@@ -149,8 +146,7 @@ class _BlockedMembersPageState extends State<BlockedMembersPage> {
     );
   }
 
-  void _showUnblocDialog(
-      {String unblockUserId, String unblockUserEmail, String name}) {
+  void _showUnblocDialog({String unblockUserId, String unblockUserEmail, String name}) {
     showDialog(
       context: context,
       builder: (BuildContext dialogContext) {
@@ -160,39 +156,71 @@ class _BlockedMembersPageState extends State<BlockedMembersPage> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ),
-            titlePadding: isLoading
-                ? EdgeInsets.symmetric(vertical: 12)
-                : EdgeInsets.zero,
+            titlePadding: EdgeInsets.symmetric(vertical: 12),
             title: Container(
-              height: 50,
-              child: isLoading
-                  ? LoadingIndicator()
-                  : CustomTextButton(
-                      child: Text(
-                        "${S.of(context).unblock} $name?",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Theme.of(context).accentColor,
-                        ),
-                      ),
-                      onPressed: () {
-                        isLoading = true;
-                        setState(() {});
-                        _bloc
-                            .unblockMember(
-                              unblockedUserId: unblockUserId,
-                              unblockedUserEmail: unblockUserEmail,
-                              userId:
-                                  SevaCore.of(context).loggedInUser.sevaUserID,
-                              loggedInUserEmail:
-                                  SevaCore.of(context).loggedInUser.email,
-                            )
-                            .then(
-                              (_) => Navigator.of(dialogContext).pop(),
-                            );
-                      },
-                    ),
-            ),
+                child: isLoading
+                    ? LoadingIndicator()
+                    : Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            "${S.of(context).unblock} $name?",
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Theme.of(context).accentColor,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Visibility(
+                            visible: !isLoading,
+                            child: Row(
+                              children: <Widget>[
+                                Spacer(),
+                                CustomTextButton(
+                                    shape: StadiumBorder(),
+                                    padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                                    color: Theme.of(context).accentColor,
+                                    textColor: Colors.white,
+                                    child: Text(
+                                      S.of(context).yes,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontFamily: 'Europa',
+                                      ),
+                                    ),
+                                    onPressed: () {
+                                      isLoading = true;
+                                      setState(() {});
+                                      _bloc
+                                          .unblockMember(
+                                            unblockedUserId: unblockUserId,
+                                            unblockedUserEmail: unblockUserEmail,
+                                            userId: SevaCore.of(context).loggedInUser.sevaUserID,
+                                            loggedInUserEmail:
+                                                SevaCore.of(context).loggedInUser.email,
+                                          )
+                                          .then(
+                                            (_) => Navigator.of(dialogContext).pop(),
+                                          );
+                                    }),
+                                CustomTextButton(
+                                  child: Text(
+                                    S.of(context).no,
+                                    style: TextStyle(
+                                        fontSize: 16, fontFamily: 'Europa', color: Colors.red),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.of(dialogContext).pop();
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      )),
           ),
         );
       },

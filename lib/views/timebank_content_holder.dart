@@ -71,6 +71,9 @@ class _TabarViewState extends State<TabarView> with TickerProviderStateMixin {
   void initState() {
     timebankModel = widget.timebankModel;
     AppConfig.helpIconContextMember = HelpContextMemberType.groups;
+    AppConfig.timebankConfigurations =
+        widget.timebankModel.timebankConfigurations ?? getConfigurationModel();
+
     var tempRole = determineUserRoleInAbout(
       sevaUserId: widget.userModel.sevaUserID,
       timeBankModel: timebankModel,
@@ -563,7 +566,7 @@ class DiscussionListState extends State<DiscussionList> {
               ),
               Text(
                 S.of(context).feeds,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
               ),
               Spacer(),
               DropdownButtonHideUnderline(
@@ -587,6 +590,7 @@ class DiscussionListState extends State<DiscussionList> {
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 16,
+                          fontFamily: 'Europa',
                           color: FlavorConfig.values.theme.primaryColor,
                         ),
                       ),
@@ -901,78 +905,7 @@ class DiscussionListState extends State<DiscussionList> {
                 ),
               ),
               //Pinning ui
-              Padding(
-                padding: const EdgeInsets.only(left: 12.0, top: 10, bottom: 15),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Container(
-                            margin: EdgeInsets.only(top: 5),
-                            child: Umeshify(
-                              text: news.subheading.trim(),
-                              onOpen: (url) async {
-                                if (await canLaunch(url)) {
-                                  launch(url);
-                                } else {
-                                  logger.e("could not launch");
-                                }
-                              },
-                            ),
-                          ),
-                          // scraped Data
-                          Container(
-                            margin: EdgeInsets.only(top: 5),
-                            child: Umeshify(
-                              text: news.title != null &&
-                                      news.title != S.of(context).no_data
-                                  ? news.title.trim()
-                                  : '',
-                              onOpen: (url) async {
-                                if (await canLaunch(url)) {
-                                  launch(url);
-                                } else {
-                                  logger.e("could not launch");
-                                }
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    isAccessAvailable(widget.timebankModel,
-                            SevaCore.of(context).loggedInUser.sevaUserID)
-                        ? getOptionButtons(
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 6, vertical: 2),
-                              child: Container(
-                                height: 20,
-                                width: 20,
-                                child: Image.asset(
-                                  'lib/assets/images/pin.png',
-                                  color: news.isPinned
-                                      ? Colors.green
-                                      : Colors.black,
-                                ),
-                              ),
-                            ),
-                            () {
-                              news.isPinned
-                                  ? unPinFeed(newsModel: news)
-                                  : pinNews(
-                                      newsModel: news,
-                                    );
-                              setState(() {});
-                            },
-                          )
-                        : Offstage(),
-                  ],
-                ),
-              ),
+
               Padding(
                 padding: const EdgeInsets.only(left: 12.0, right: 12),
                 child: Row(
@@ -1018,16 +951,90 @@ class DiscussionListState extends State<DiscussionList> {
               SizedBox(
                 height: 10,
               ),
+              Padding(
+                key: ValueKey(news.subheading),
+                padding: const EdgeInsets.only(left: 12.0, top: 10, bottom: 15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Container(
+                            margin: EdgeInsets.only(top: 5),
+                            child: Umeshify(
+                              text: news.subheading != null &&
+                                      news.subheading != ""
+                                  ? news.subheading.trim()
+                                  : '',
+                              onOpen: (url) async {
+                                if (await canLaunch(url)) {
+                                  launch(url);
+                                } else {
+                                  logger.e("could not launch");
+                                }
+                              },
+                            ),
+                          ),
+                          // scraped Data
+                          Container(
+                            key: ValueKey(news.title),
+                            margin: EdgeInsets.only(top: 5),
+                            child: Umeshify(
+                              text: news.title != null && news.title != "NoData"
+                                  ? news.title.trim()
+                                  : '',
+                              onOpen: (url) async {
+                                if (await canLaunch(url)) {
+                                  launch(url);
+                                } else {
+                                  logger.e("could not launch");
+                                }
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    isAccessAvailable(widget.timebankModel,
+                            SevaCore.of(context).loggedInUser.sevaUserID)
+                        ? getOptionButtons(
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 6, vertical: 2),
+                              child: Container(
+                                height: 20,
+                                width: 20,
+                                child: Image.asset(
+                                  'lib/assets/images/pin.png',
+                                  color: news.isPinned
+                                      ? Colors.green
+                                      : Colors.black,
+                                ),
+                              ),
+                            ),
+                            () {
+                              news.isPinned
+                                  ? unPinFeed(newsModel: news)
+                                  : pinNews(
+                                      newsModel: news,
+                                    );
+                              setState(() {});
+                            },
+                          )
+                        : Offstage(),
+                  ],
+                ),
+              ),
               //feed image
               news.newsImageUrl == null
-                  ? news.imageScraped == null ||
-                          news.imageScraped == S.of(context).no_data
+                  ? news.imageScraped == null || news.imageScraped == "NoData"
                       ? Offstage()
                       : getImageView(news.id, news.imageScraped)
                   : getImageView(news.id, news.newsImageUrl),
 
               //feed options
-
               Padding(
                 padding: const EdgeInsets.only(bottom: 0.0, top: 4, right: 15),
                 child: !isFromMessage
@@ -1203,19 +1210,19 @@ class DiscussionListState extends State<DiscussionList> {
                                 GestureDetector(
                                   onTap: () {
                                     Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (_context) => BlocProvider(
-                                                  bloc: BlocProvider.of<
-                                                          HomeDashBoardBloc>(
-                                                      context),
-                                                  child: NewsCardView(
-                                                    newsModel: news,
-                                                    isFocused: false,
-                                                    timebankModel:
-                                                        widget.timebankModel,
-                                                  ),
-                                                )));
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_context) => BlocProvider(
+                                          bloc: BlocProvider.of<
+                                              HomeDashBoardBloc>(context),
+                                          child: NewsCardView(
+                                            newsModel: news,
+                                            isFocused: false,
+                                            timebankModel: widget.timebankModel,
+                                          ),
+                                        ),
+                                      ),
+                                    );
                                   },
                                   child: Padding(
                                       padding: EdgeInsets.only(left: 3),

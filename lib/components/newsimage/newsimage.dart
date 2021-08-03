@@ -79,9 +79,9 @@ class NewsImageState extends State<NewsImage>
     String imageURL = '';
     uploadTask.whenComplete(() async {
       imageURL = await ref.getDownloadURL();
-    });
 
-    await profanityCheck(imageURL: imageURL);
+      await profanityCheck(imageURL: imageURL);
+    });
 
     // _setAvatarURL();
     // _updateDB();
@@ -91,6 +91,9 @@ class NewsImageState extends State<NewsImage>
   Future<void> profanityCheck({String imageURL}) async {
     // _newsImageURL = imageURL;
     profanityImageModel = await checkProfanityForImage(imageUrl: imageURL);
+    setState(() {
+      this._isImageBeingUploaded = false;
+    });
     if (profanityImageModel == null) {
       showFailedLoadImage(context: context).then((value) {
         globals.newsImageURL = null;
@@ -112,7 +115,9 @@ class NewsImageState extends State<NewsImage>
           } else {}
         });
       } else {
-        globals.newsImageURL = imageURL;
+        setState(() {
+          globals.newsImageURL = imageURL;
+        });
       }
     }
   }
@@ -122,9 +127,7 @@ class NewsImageState extends State<NewsImage>
       this._image = _image;
       this._isImageBeingUploaded = true;
     });
-    uploadImage().then((_) {
-      setState(() => this._isImageBeingUploaded = false);
-    });
+    uploadImage();
   }
 
   @override
@@ -150,9 +153,7 @@ class NewsImageState extends State<NewsImage>
       this._isDocumentBeingUploaded = false;
       getAlertDialog(parentContext);
     } else {
-      uploadDocument().then((_) {
-        setState(() => this._isDocumentBeingUploaded = false);
-      });
+      uploadDocument();
     }
   }
 
@@ -178,7 +179,7 @@ class NewsImageState extends State<NewsImage>
     );
   }
 
-  Future<String> uploadDocument() async {
+  Future<void> uploadDocument() async {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     String timestampString = timestamp.toString();
     Reference ref = FirebaseStorage.instance
@@ -197,15 +198,11 @@ class NewsImageState extends State<NewsImage>
     String documentURL = '';
     uploadTask.whenComplete(() async {
       documentURL = await ref.getDownloadURL();
+      // _newsImageURL = imageURL;
+      globals.newsDocumentURL = documentURL;
+      globals.newsDocumentName = _fileName;
+      setState(() => this._isDocumentBeingUploaded = false);
     });
-
-    // _newsImageURL = imageURL;
-    globals.newsDocumentURL = documentURL;
-    globals.newsDocumentName = _fileName;
-
-    // _setAvatarURL();
-    // _updateDB();
-    return documentURL;
   }
 
   @override

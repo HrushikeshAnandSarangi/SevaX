@@ -307,12 +307,15 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
         // This container holds the align
         widget.isFromHome ? Container() : createCommunity(),
         CustomTextButton(
+          shape: StadiumBorder(),
+          color: Theme.of(context).accentColor,
           onPressed: () async {
             await CollectionRef.users.doc(widget.loggedInUser.email).update(
               {
                 'skipCreateCommunityPage': true,
               },
             );
+
             Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
                 builder: (context) => SevaCore(
@@ -323,7 +326,8 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
               ModalRoute.withName('/'),
             );
           },
-          child: Text(S.of(context).skip),
+          child:
+              Text(S.of(context).skip, style: TextStyle(color: Colors.white)),
         ),
       ]),
     );
@@ -447,7 +451,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
             ],
           ),
           color: Theme.of(context).accentColor,
-          textColor: FlavorConfig.values.buttonTextColor,
+          textColor: Colors.white,
           shape: StadiumBorder(),
         )
       ]),
@@ -645,10 +649,13 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
             ),
             actions: <Widget>[
               CustomTextButton(
+                shape: StadiumBorder(),
+                color: Colors.grey,
                 child: Text(
                   S.of(context).cancel,
                   style: TextStyle(
                     fontSize: 16,
+                    color: Colors.white,
                   ),
                 ),
                 onPressed: () {
@@ -656,10 +663,13 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                 },
               ),
               CustomTextButton(
+                shape: StadiumBorder(),
+                color: Theme.of(context).accentColor,
                 child: Text(
                   S.of(context).proceed,
                   style: TextStyle(
                     fontSize: 16,
+                    color: Colors.white,
                   ),
                 ),
                 onPressed: () {

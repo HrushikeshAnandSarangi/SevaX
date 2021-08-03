@@ -1,14 +1,21 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/category_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
+import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/utils/utils.dart' as utils;
+import 'package:sevaexchange/widgets/add_new_request_category.dart';
 
 class Category extends StatefulWidget {
   final List<String> selectedSubCategoriesids;
 
-  Category({this.selectedSubCategoriesids});
+  Category({
+    this.selectedSubCategoriesids,
+  });
 
   @override
   _CategoryState createState() => _CategoryState();
@@ -26,6 +33,7 @@ class _CategoryState extends State<Category> {
   List<CategoryModel> searchcategories = [];
   TextEditingController _textEditingController = TextEditingController();
   bool dataLoaded = false;
+
   @override
   void initState() {
     super.initState();
@@ -33,25 +41,32 @@ class _CategoryState extends State<Category> {
   }
 
   Future<void> getCategories() async {
-    await FirestoreManager.getAllCategories().then((value) {
-      categories = value;
-      mainCategories = filterMainCategories(value);
-      dataLoaded = true;
-      if (widget.selectedSubCategoriesids != null &&
-          widget.selectedSubCategoriesids.length > 0) {
-        selectedSubCategoriesIds.addAll(widget.selectedSubCategoriesids);
-        selectedSubCategories = List<CategoryModel>.from(categories.where(
-            (element) => selectedSubCategoriesIds.contains(element.typeId)));
-      }
+    Future.delayed(Duration.zero, () async {
+      await FirestoreManager.getAllCategories(
+              SevaCore.of(context).loggedInUser.language ?? 'en')
+          .then((value) {
+        categories = value;
+        mainCategories = filterMainCategories(value);
+        dataLoaded = true;
+        if (widget.selectedSubCategoriesids != null &&
+            widget.selectedSubCategoriesids.length > 0) {
+          selectedSubCategoriesIds.addAll(widget.selectedSubCategoriesids);
+          selectedSubCategories = List<CategoryModel>.from(categories.where(
+              (element) => selectedSubCategoriesIds.contains(element.typeId)));
+        }
 
-      setState(() {});
+        setState(() {});
+      });
     });
   }
 
   // search function
   void filterSearchResults(String query) {
     searchcategories = List<CategoryModel>.from(categories.where((element) =>
-        element.title_en.toLowerCase().contains(query.toLowerCase())));
+        element
+            .getCategoryName(context)
+            .toLowerCase()
+            .contains(query.toLowerCase())));
     //   _isSearching = true;
     setState(() {});
     logger.i("Categories =>\n${searchcategories}");
@@ -66,8 +81,8 @@ class _CategoryState extends State<Category> {
         leading: IconButton(
           onPressed: () {
             Future.delayed(Duration.zero, () {
-              Navigator.pop(
-                  context, ['Selected Categories', selectedSubCategories]);
+              Navigator.pop(context,
+                  [S.of(context).selected_categories, selectedSubCategories]);
             });
             ;
           },
@@ -144,14 +159,15 @@ class _CategoryState extends State<Category> {
                                       ),
                                       child: ExpansionTile(
                                         title: Text(
-                                          '${!_isSearching ? mainCategories[ind].title_en : searchcategories[ind].title_en}',
+                                          '${!_isSearching ? mainCategories[ind].getCategoryName(context) : searchcategories[ind].getCategoryName(context)}',
                                         ),
                                         onExpansionChanged: (bool expanding) {
                                           if (true) {
                                             selectedCategory = !_isSearching
-                                                ? mainCategories[ind].title_en
+                                                ? mainCategories[ind]
+                                                    .getCategoryName(context)
                                                 : searchcategories[ind]
-                                                    .title_en;
+                                                    .getCategoryName(context);
                                             this.isExpanded = expanding;
                                             setState(() {});
                                           }
@@ -186,7 +202,7 @@ class _CategoryState extends State<Category> {
         return Padding(
           padding: const EdgeInsets.only(left: 10.0),
           child: CheckboxListTile(
-            title: Text(subs[index].title_en ?? '',
+            title: Text(subs[index].getCategoryName(context) ?? '',
                 style: TextStyle(color: Colors.black)),
             value: selectedSubCategories.contains(subs[index]),
             onChanged: (value) {
@@ -220,25 +236,38 @@ class _CategoryState extends State<Category> {
       (index) {
         return Padding(
           padding: const EdgeInsets.only(left: 10.0),
-          child: CheckboxListTile(
-            title: Text(subs[index].title_en ?? '',
-                style: TextStyle(color: Colors.black)),
-            value: selectedSubCategories.contains(subs[index]),
-            onChanged: (value) {
-              if (value) {
-                selectedSubCategoriesIds.add(subs[index].typeId);
-                selectedSubCategories.add(subs[index]);
-              } else {
-                selectedSubCategoriesIds.remove(subs[index].typeId);
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CheckboxListTile(
+                title: Text(subs[index].getCategoryName(context) ?? '',
+                    style: TextStyle(color: Colors.black)),
+                value: selectedSubCategories.contains(subs[index]),
+                onChanged: (value) {
+                  if (value) {
+                    selectedSubCategoriesIds.add(subs[index].typeId);
+                    selectedSubCategories.add(subs[index]);
+                  } else {
+                    selectedSubCategoriesIds.remove(subs[index].typeId);
 
-                selectedSubCategories.remove(subs[index]);
-              }
-              setState(() {});
-            },
-            activeColor: Colors.grey[300],
-            checkColor: Colors.black,
-            contentPadding: EdgeInsets.zero,
-            controlAffinity: ListTileControlAffinity.leading,
+                    selectedSubCategories.remove(subs[index]);
+                  }
+                  setState(() {});
+                },
+                activeColor: Colors.grey[300],
+                checkColor: Colors.black,
+                contentPadding: EdgeInsets.zero,
+                controlAffinity: ListTileControlAffinity.leading,
+              ),
+              index == subs.length - 1
+                  ? AddNewRequestCategory(
+                      categoryId: mainCategoryId,
+                      onNewCategoryCreated: () {
+                        getCategories();
+                      },
+                      primaryColor: Theme.of(context).primaryColor)
+                  : Container(),
+            ],
           ),
         );
       },

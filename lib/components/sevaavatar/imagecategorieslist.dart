@@ -12,12 +12,12 @@ List<dynamic> categories = [
         'index': 0,
         'fit': 2
       },
-      {
-        'image':
-            'https://https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=300&q=60',
-        'index': 1,
-        'fit': 2
-      },
+      // {
+      //   'image':
+      //       'https://https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=300&q=60',
+      //   'index': 1,
+      //   'fit': 2
+      // },
       {
         'image':
             'https://images.unsplash.com/photo-1530268729831-4b0b9e170218?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=300&q=60',

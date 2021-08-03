@@ -11,6 +11,7 @@ import 'package:meta/meta.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/invitation_model.dart';
 import 'package:sevaexchange/models/models.dart' as prefix0;
+import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/reports_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/card_model.dart';
@@ -132,8 +133,8 @@ Future<List<TimebankModel>> getAllTheGroups(
         .get()
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((DocumentSnapshot documentSnapshot) {
-        var timebank = TimebankModel(documentSnapshot.data);
-        timeBankModelList.add(timebank);
+        var timebank = TimebankModel(documentSnapshot.data());
+        if (!timebank.private) timeBankModelList.add(timebank);
       });
     });
   }
@@ -398,6 +399,20 @@ Future<TimebankModel> getTimeBankForId({@required String timebankId}) async {
   return timeBankModel;
 }
 
+/// Get a particular Timebank by it's ID
+Future<OfferModel> getOfferFromId({@required String offerId}) async {
+  OfferModel offerModel;
+  await CollectionRef.offers.doc(offerId).get().then(
+      (DocumentSnapshot documentSnapshot) {
+    Map<String, dynamic> dataMap = documentSnapshot.data();
+    offerModel = OfferModel.fromMap(dataMap);
+    offerModel.id = offerModel.id;
+  }).catchError(
+      (value) => logger.e('ERROR CATCH Timebank Details: ' + value.toString()));
+
+  return offerModel;
+}
+
 Future updateCommunity({@required CommunityModel communityModel}) async {
   await CollectionRef.communities
       .doc(communityModel.id)
@@ -422,6 +437,8 @@ Future<CommunityModel> getCommunityDetailsByCommunityId(
       .then((DocumentSnapshot documentSnapshot) {
     Map<String, dynamic> dataMap = documentSnapshot.data();
     communityModel = CommunityModel(dataMap);
+    logger.d(
+        "==================|||||||||========================================");
   });
   return communityModel;
 }
@@ -494,14 +511,13 @@ Stream<CardModel> getCardModelStream({@required String communityId}) async* {
 Future<TimebankParticipantsDataHolder> getAllTimebankIdStream(
     {@required String timebankId}) async {
   DocumentSnapshot onValue = await CollectionRef.timebank.doc(timebankId).get();
+  TimebankModel model = TimebankModel.fromMap(onValue.data());
 
-  prefix0.TimebankModel model = prefix0.TimebankModel(onValue.data);
-
-  var admins = model.admins;
-  var coordinators = model.coordinators;
-  var organizers = model.organizers;
-  var members = model.members;
-  var allItems = [];
+  List<String> admins = model.admins;
+  List<String> coordinators = model.coordinators;
+  List<String> organizers = model.organizers;
+  List<String> members = model.members;
+  List<String> allItems = [];
   allItems.addAll(admins);
   allItems.addAll(coordinators);
   allItems.addAll(members);
@@ -519,7 +535,7 @@ class TimebankParticipantsDataHolder {
 Future<TimebankModel> getTimebankIdStream({@required String timebankId}) async {
   DocumentSnapshot onValue = await CollectionRef.timebank.doc(timebankId).get();
 
-  prefix0.TimebankModel model = prefix0.TimebankModel(onValue.data);
+  prefix0.TimebankModel model = prefix0.TimebankModel(onValue.data());
 
   return model;
 }

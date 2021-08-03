@@ -62,10 +62,10 @@ class TimebankUserInsufficientCreditsDialog extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
+              padding: EdgeInsets.fromLTRB(0, 0, 0, 8),
               child: Text(
                 userInsufficientModel.timebankName ??
-                    L.of(context).seva_community_name_not_updated,
+                    S.of(context).seva_community_name_not_updated,
               ),
             ),
             // Padding(
@@ -92,6 +92,7 @@ class TimebankUserInsufficientCreditsDialog extends StatelessWidget {
                     onPressed: onMessageClick,
                   ),
                 ),
+                SizedBox(height: 5),
                 Container(
                   width: double.infinity,
                   child: CustomElevatedButton(

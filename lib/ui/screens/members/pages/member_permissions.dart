@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/configuration_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/helpers/configurations_list.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
@@ -92,7 +94,7 @@ class _MemberPermissionsState extends State<MemberPermissions> {
         ),
         centerTitle: true,
         title: Text(
-          'Manage Permissions',
+          S.of(context).manage_permissions,
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w700,
@@ -187,8 +189,9 @@ class _MemberPermissionsState extends State<MemberPermissions> {
               SizedBox(
                 height: 10,
               ),
-              Container(
-                child: Center(
+              Center(
+                child: SizedBox(
+                  width: 95,
                   child: CustomElevatedButton(
                     onPressed: () {
                       updateConfigurations().then(
@@ -198,7 +201,10 @@ class _MemberPermissionsState extends State<MemberPermissions> {
                     child: Text(S.of(context).save),
                   ),
                 ),
-              )
+              ),
+              SizedBox(
+                height: 20,
+              ),
             ],
           ),
         ),
@@ -264,7 +270,6 @@ class _MemberPermissionsState extends State<MemberPermissions> {
         children: List.generate(
           generalList.length,
           (index) => CheckboxListTile(
-            checkColor: Colors.black,
             contentPadding: EdgeInsets.zero,
             controlAffinity: ListTileControlAffinity.leading,
             title: Text(generalList[index].title_en),
@@ -422,13 +427,17 @@ class _MemberPermissionsState extends State<MemberPermissions> {
       case Role.SUPER_ADMIN:
         widget.timebankModel.timebankConfigurations.superAdmin =
             all_permissions;
+        AppConfig.timebankConfigurations.superAdmin = all_permissions;
         break;
       case Role.ADMIN:
         widget.timebankModel.timebankConfigurations.admin = all_permissions;
+        AppConfig.timebankConfigurations.admin = all_permissions;
         break;
 
         break;
       case Role.MEMBER:
+        AppConfig.timebankConfigurations.member = all_permissions;
+
         widget.timebankModel.timebankConfigurations.member = all_permissions;
     }
   }

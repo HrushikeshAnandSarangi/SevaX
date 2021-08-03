@@ -38,7 +38,7 @@ class _FindVolunteersViewState extends State<FindVolunteersView> {
   TimeBankModelSingleton timebankModel = TimeBankModelSingleton();
 
   final searchOnChange = BehaviorSubject<String>();
-  var validItems = [];
+  List<String> validItems = [];
   List<UserModel> users = [];
   final _searchText = BehaviorSubject<String>();
   final _debouncer = Debouncer(milliseconds: 400);
@@ -68,7 +68,6 @@ class _FindVolunteersViewState extends State<FindVolunteersView> {
         if (s.isEmpty) {
           setState(() {});
         } else {
-          volunteerUsersBloc.fetchUsers(s);
           setState(() {});
         }
       });
@@ -289,7 +288,7 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
   Widget recommendedUsers() {
     return StreamBuilder<List<UserModel>>(
       stream: FirestoreManager.getRecommendedUsersStream(
-        requestId: requestModel.id,
+        requestId: requestModel?.id,
       ),
       builder: (context, snapshot) {
         if (snapshot.hasError) {

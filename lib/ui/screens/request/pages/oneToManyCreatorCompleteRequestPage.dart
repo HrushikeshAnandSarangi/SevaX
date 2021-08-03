@@ -13,10 +13,14 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
+import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
+import 'package:sevaexchange/utils/one_to_many_request_feedback_manager.dart';
+
+import 'package:sevaexchange/utils/utils.dart' as utils;
 
 class OneToManyCreatorCompleteRequestPage extends StatefulWidget {
   final RequestModel requestModel;
@@ -50,8 +54,8 @@ class OneToManyCreatorCompleteRequestPageState
         .get()
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {
-        attendeesList.add(doc.data);
-        tempAttendeesList.add(doc.data);
+        attendeesList.add(doc.data());
+        tempAttendeesList.add(doc.data());
       });
       if (this.mounted) {
         setState(() {});
@@ -144,7 +148,7 @@ class OneToManyCreatorCompleteRequestPageState
                                                                 .selectedInstructor
                                                                 .fullname ==
                                                             null)
-                                                    ? L
+                                                    ? S
                                                         .of(context)
                                                         .name_not_available
                                                     : requestModel
@@ -245,7 +249,7 @@ class OneToManyCreatorCompleteRequestPageState
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                L.of(context).attended_by,
+                                S.of(context).attended_by,
                                 style: TextStyle(
                                     fontSize: 17, fontWeight: FontWeight.w600),
                               ),
@@ -257,7 +261,7 @@ class OneToManyCreatorCompleteRequestPageState
                                   });
                                 },
                                 child: Text(
-                                  L.of(context).reset_list,
+                                  S.of(context).reset_list,
                                   style: TextStyle(
                                       fontSize: 15,
                                       fontWeight: FontWeight.w600,
@@ -550,11 +554,25 @@ class OneToManyCreatorCompleteRequestPageState
                                               fromNotification: false,
                                             );
 
+                                            //Send Feedback notitifications to Attendees
+                                            if (tempAttendeesList.length >= 1) {
+                                              logger.wtf(
+                                                  'RESET LIST LENGTH:  ' +
+                                                      tempAttendeesList.length
+                                                          .toString());
+                                              await sendFeedbackNotificationsToAttendees(
+                                                  attendeesList:
+                                                      tempAttendeesList,
+                                                  requestModel: requestModel,
+                                                  context: context);
+                                            }
+
                                             Navigator.pop(viewContext);
                                             Navigator.of(viewContext).pop();
                                             Navigator.of(context).pop();
 
                                             //Navigator.of(context).pop();
+                                            widget.onFinish();
                                           },
                                         ),
                                         CustomTextButton(
@@ -572,12 +590,12 @@ class OneToManyCreatorCompleteRequestPageState
                                       ],
                                     );
                                   });
-
-                              widget.onFinish();
                             },
                             child: Text(
                               S.of(context).accept,
-                              style: TextStyle(fontWeight: FontWeight.w600),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black),
                             ),
                             elevation: 0,
                             color: Colors.grey[200],
@@ -620,7 +638,9 @@ class OneToManyCreatorCompleteRequestPageState
                             },
                             child: Text(
                               S.of(context).message,
-                              style: TextStyle(fontWeight: FontWeight.w600),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black),
                             ),
                             elevation: 0,
                             color: Colors.grey[200],

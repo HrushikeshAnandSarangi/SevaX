@@ -39,6 +39,7 @@ import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/mailer.dart';
+import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/svea_credits_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
@@ -63,6 +64,7 @@ import 'package:sevaexchange/widgets/user_profile_image.dart';
 import 'package:usage/uuid/uuid.dart';
 
 import '../../flavor_config.dart';
+import '../../labels.dart';
 
 class EditRequest extends StatefulWidget {
   final bool isOfferRequest;
@@ -73,16 +75,16 @@ class EditRequest extends StatefulWidget {
   String projectId;
   RequestModel requestModel;
 
-  EditRequest(
-      {Key key,
-      this.isOfferRequest,
-      this.offer,
-      this.timebankId,
-      this.userModel,
-      this.projectId,
-      this.projectModel,
-      this.requestModel})
-      : super(key: key);
+  EditRequest({
+    Key key,
+    this.isOfferRequest,
+    this.offer,
+    this.timebankId,
+    this.userModel,
+    this.projectId,
+    this.projectModel,
+    @required this.requestModel,
+  }) : super(key: key);
 
   @override
   _EditRequestState createState() => _EditRequestState();
@@ -115,6 +117,8 @@ class _EditRequestState extends State<EditRequest> {
                   return LoadingIndicator();
                 }
                 if (snapshot.data != null) {
+                  logger.e('REQUESTMODEL CHECK:   ' +
+                      widget.requestModel.toString());
                   return RequestEditForm(
                     requestModel: widget.requestModel,
                     isOfferRequest: widget.isOfferRequest,
@@ -187,7 +191,7 @@ class RequestEditFormState extends State<RequestEditForm> {
   String tempProjectId = '';
 
   End end = End();
-  var focusNodes = List.generate(16, (_) => FocusNode());
+  var focusNodes = List.generate(18, (_) => FocusNode());
 
   double sevaCoinsValue = 0;
   String hoursMessage = ' Click to Set Duration';
@@ -236,9 +240,13 @@ class RequestEditFormState extends State<RequestEditForm> {
       oneToManyRequestAttenders: widget.requestModel.oneToManyRequestAttenders,
       selectedInstructor: widget.requestModel.selectedInstructor,
     );
+    logger.e('PAYPAL CHECK:  ' + widget.requestModel.cashModel.toString());
     selectedInstructorModelTemp = widget.requestModel.selectedInstructor;
     this.requestModel.timebankId = _selectedTimebankId;
     this.location = widget.requestModel.location;
+
+    logger.d(widget.requestModel.location.toString() +
+        "From Database =====================");
     this.selectedAddress = widget.requestModel.address;
     this.oldHours = widget.requestModel.numberOfHours;
     this.requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
@@ -499,10 +507,26 @@ class RequestEditFormState extends State<RequestEditForm> {
     return FutureBuilder<TimebankModel>(
         future: getTimebankAdminStatus,
         builder: (context, snapshot) {
-          // if(snapshot.connectionState == ConnectionState.waiting){
-          //   return LoadingIndicator();
-          // }
-          log("timebank ${snapshot.data}");
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Container();
+          }
+          timebankModel = snapshot.data;
+
+          if (snapshot.hasError) {
+            return Text(snapshot.error);
+          }
+
+          if (widget.requestModel.location == null ||
+              widget.requestModel.address == null) {
+            // logger.d(selectedAddress + " =====Location " + location.toString());
+
+            location = timebankModel.location;
+            selectedAddress = timebankModel.address;
+          } else {
+            location = widget.requestModel.location;
+            selectedAddress = widget.requestModel.address;
+          }
+
           return FutureBuilder<List<ProjectModel>>(
               future: getProjectsByFuture,
               builder: (projectscontext, projectListSnapshot) {
@@ -1056,6 +1080,24 @@ class RequestEditFormState extends State<RequestEditForm> {
                                                 snapshot, projectModelList)
                                             : GoodsRequest(
                                                 snapshot, projectModelList),
+                            Center(
+                              child: LocationPickerWidget(
+                                selectedAddress: selectedAddress,
+                                location: location,
+                                onChanged: (LocationDataModel dataModel) {
+                                  log("received data model");
+                                  setState(() {
+                                    widget.requestModel.location =
+                                        dataModel.geoPoint;
+                                    widget.requestModel.address =
+                                        dataModel.location;
+
+                                    location = dataModel.geoPoint;
+                                    this.selectedAddress = dataModel.location;
+                                  });
+                                },
+                              ),
+                            ),
 
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 10),
@@ -1088,18 +1130,26 @@ class RequestEditFormState extends State<RequestEditForm> {
                               child: Padding(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 10),
-                                child: OpenScopeCheckBox(
-                                    infoType: InfoType.OpenScopeRequest,
-                                    isChecked: widget.requestModel.public,
-                                    checkBoxTypeLabel:
-                                        CheckBoxType.type_Requests,
-                                    onChangedCB: (bool val) {
-                                      if (widget.requestModel.public != val) {
-                                        widget.requestModel.public = val;
-                                        log('value ${widget.requestModel.public}');
-                                        setState(() {});
-                                      }
-                                    }),
+                                child: TransactionsMatrixCheck(
+                                  comingFrom: ComingFrom.Requests,
+                                  upgradeDetails: AppConfig
+                                      .upgradePlanBannerModel
+                                      .public_to_sevax_global,
+                                  transaction_matrix_type:
+                                      'create_public_request',
+                                  child: OpenScopeCheckBox(
+                                      infoType: InfoType.OpenScopeRequest,
+                                      isChecked: widget.requestModel.public,
+                                      checkBoxTypeLabel:
+                                          CheckBoxType.type_Requests,
+                                      onChangedCB: (bool val) {
+                                        if (widget.requestModel.public != val) {
+                                          widget.requestModel.public = val;
+                                          log('value ${widget.requestModel.public}');
+                                          setState(() {});
+                                        }
+                                      }),
+                                ),
                               ),
                             ),
 
@@ -1211,7 +1261,7 @@ class RequestEditFormState extends State<RequestEditForm> {
         ]);
   }
 
-  Widget RequestPaymentACH(RequestModel requestModel) {
+  Widget RequestPaymentACH() {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -1227,7 +1277,7 @@ class RequestEditFormState extends State<RequestEditForm> {
           ),
           TextFormField(
             autovalidateMode: AutovalidateMode.onUserInteraction,
-            initialValue: requestModel.cashModel.achdetails.bank_name,
+            initialValue: widget.requestModel.cashModel.achdetails.bank_name,
             onChanged: (value) {
               updateExitWithConfirmationValue(context, 3, value);
             },
@@ -1261,7 +1311,7 @@ class RequestEditFormState extends State<RequestEditForm> {
           ),
           TextFormField(
             autovalidateMode: AutovalidateMode.onUserInteraction,
-            initialValue: requestModel.cashModel.achdetails.bank_address,
+            initialValue: widget.requestModel.cashModel.achdetails.bank_address,
             onChanged: (value) {
               updateExitWithConfirmationValue(context, 4, value);
             },
@@ -1295,7 +1345,8 @@ class RequestEditFormState extends State<RequestEditForm> {
           ),
           TextFormField(
             autovalidateMode: AutovalidateMode.onUserInteraction,
-            initialValue: requestModel.cashModel.achdetails.routing_number,
+            initialValue:
+                widget.requestModel.cashModel.achdetails.routing_number,
             onChanged: (value) {
               updateExitWithConfirmationValue(context, 5, value);
             },
@@ -1329,7 +1380,8 @@ class RequestEditFormState extends State<RequestEditForm> {
           ),
           TextFormField(
             autovalidateMode: AutovalidateMode.onUserInteraction,
-            initialValue: requestModel.cashModel.achdetails.account_number,
+            initialValue:
+                widget.requestModel.cashModel.achdetails.account_number,
             onChanged: (value) {
               updateExitWithConfirmationValue(context, 6, value);
             },
@@ -1361,7 +1413,7 @@ class RequestEditFormState extends State<RequestEditForm> {
       r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
   String mobilePattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
 
-  Widget RequestPaymentZellePay(RequestModel requestModel) {
+  Widget RequestPaymentZellePay() {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -1381,8 +1433,8 @@ class RequestEditFormState extends State<RequestEditForm> {
                   S.of(context).request_payment_descriptionZelle_inputhint,
               hintStyle: hintTextStyle,
             ),
-            initialValue: requestModel.cashModel.zelleId != null
-                ? requestModel.cashModel.zelleId
+            initialValue: widget.requestModel.cashModel.zelleId != null
+                ? widget.requestModel.cashModel.zelleId
                 : '',
             keyboardType: TextInputType.multiline,
             maxLines: 1,
@@ -1410,7 +1462,7 @@ class RequestEditFormState extends State<RequestEditForm> {
     return null;
   }
 
-  Widget RequestPaymentPaypal(RequestModel requestModel) {
+  Widget RequestPaymentPaypal() {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -1426,31 +1478,34 @@ class RequestEditFormState extends State<RequestEditForm> {
             textInputAction: TextInputAction.next,
             decoration: InputDecoration(
               errorMaxLines: 2,
-              hintText: S.of(context).email_hint,
+              hintText: 'Ex: Paypal ID (phone or email)',
               hintStyle: hintTextStyle,
             ),
-            initialValue: requestModel.cashModel.paypalId ?? '',
+            initialValue: widget.requestModel.cashModel.paypalId != null
+                ? widget.requestModel.cashModel.paypalId
+                : '',
             keyboardType: TextInputType.multiline,
             maxLines: 1,
             onSaved: (value) {
               widget.requestModel.cashModel.paypalId = value;
             },
             validator: (value) {
+              RegExp regExp = RegExp(mobilePattern);
               if (value.isEmpty) {
                 return S.of(context).validation_error_general_text;
-              } else if (!emailPattern.hasMatch(value)) {
-                return S.of(context).enter_valid_link;
-              } else {
+              } else if (emailPattern.hasMatch(value) ||
+                  regExp.hasMatch(value)) {
                 widget.requestModel.cashModel.paypalId = value;
-
                 return null;
+              } else {
+                return S.of(context).enter_valid_link;
               }
             },
           )
         ]);
   }
 
-  Widget RequestPaymentVenmo(RequestModel requestModel) {
+  Widget RequestPaymentVenmo() {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -1467,7 +1522,7 @@ class RequestEditFormState extends State<RequestEditForm> {
               hintText: S.of(context).venmo_hint,
               hintStyle: hintTextStyle,
             ),
-            initialValue: requestModel.cashModel.venmoId ?? '',
+            initialValue: widget.requestModel.cashModel.venmoId ?? '',
             keyboardType: TextInputType.multiline,
             maxLines: 1,
             onSaved: (value) {
@@ -1547,11 +1602,16 @@ class RequestEditFormState extends State<RequestEditForm> {
               widget.requestModel.cashModel.paymentType = value;
               setState(() => {});
             }),
-        getPaymentInformation,
-        SizedBox(
-          height: 15,
+        _optionRadioButton(
+          title: S.of(context).other(1),
+          value: RequestPaymentType.OTHER,
+          groupvalue: requestModel.cashModel.paymentType,
+          onChanged: (value) {
+            widget.requestModel.cashModel.paymentType = value;
+            setState(() => {});
+          },
         ),
-        OtherDetailsWidget(),
+        getPaymentInformation,
       ],
     );
   }
@@ -1561,11 +1621,10 @@ class RequestEditFormState extends State<RequestEditForm> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            S.of(context).other_details,
+            S.of(context).other_payment_name,
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              fontFamily: 'Europa',
               color: Colors.black,
             ),
           ),
@@ -1574,12 +1633,12 @@ class RequestEditFormState extends State<RequestEditForm> {
             onChanged: (value) {},
             focusNode: focusNodes[0],
             onFieldSubmitted: (v) {
-              FocusScope.of(context).requestFocus(focusNodes[1]);
+              FocusScope.of(context).autofocus(focusNodes[17]);
             },
             textInputAction: TextInputAction.next,
             decoration: InputDecoration(
               errorMaxLines: 2,
-              hintText: S.of(context).other_details,
+              hintText: 'Provide other payment mode details',
               hintStyle: hintTextStyle,
             ),
             keyboardType: TextInputType.multiline,
@@ -1591,10 +1650,58 @@ class RequestEditFormState extends State<RequestEditForm> {
               widget.requestModel.cashModel.others = value;
             },
             validator: (value) {
+              if (value.isEmpty || value == null) {
+                return S.of(context).validation_error_general_text;
+              }
               if (!value.isEmpty && profanityDetector.isProfaneString(value)) {
                 return S.of(context).profanity_text_alert;
               } else {
                 widget.requestModel.cashModel.others = value;
+                return null;
+              }
+            },
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Text(
+            S.of(context).other_payment_details,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
+          TextFormField(
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            focusNode: focusNodes[17],
+            onChanged: (value) {},
+            onFieldSubmitted: (v) {
+              FocusScope.of(context).unfocus();
+            },
+            textInputAction: TextInputAction.next,
+            keyboardType: TextInputType.multiline,
+            minLines: 5,
+            maxLines: null,
+            onSaved: (value) {
+              widget.requestModel.cashModel.other_details = value;
+            },
+            decoration: InputDecoration(
+              errorMaxLines: 2,
+              hintText: S.of(context).other_payment_details_hint,
+              hintStyle: hintTextStyle,
+            ),
+            initialValue: widget.requestModel.cashModel.other_details != null
+                ? widget.requestModel.cashModel.other_details
+                : '',
+            validator: (value) {
+              if (value.isEmpty || value == null) {
+                return S.of(context).validation_error_general_text;
+              }
+              if (!value.isEmpty && profanityDetector.isProfaneString(value)) {
+                return S.of(context).profanity_text_alert;
+              } else {
+                widget.requestModel.cashModel.other_details = value;
                 return null;
               }
             },
@@ -1605,25 +1712,27 @@ class RequestEditFormState extends State<RequestEditForm> {
   Widget get getPaymentInformation {
     switch (widget.requestModel.cashModel.paymentType) {
       case RequestPaymentType.ACH:
-        return RequestPaymentACH(widget.requestModel);
+        return RequestPaymentACH();
 
       case RequestPaymentType.PAYPAL:
-        return RequestPaymentPaypal(widget.requestModel);
+        return RequestPaymentPaypal();
 
       case RequestPaymentType.ZELLEPAY:
-        return RequestPaymentZellePay(widget.requestModel);
+        return RequestPaymentZellePay();
 
       case RequestPaymentType.VENMO:
-        return RequestPaymentVenmo(widget.requestModel);
+        return RequestPaymentVenmo();
       case RequestPaymentType.SWIFT:
-        return RequestPaymentSwift(widget.requestModel);
+        return RequestPaymentSwift();
+      case RequestPaymentType.OTHER:
+        return OtherDetailsWidget();
 
       default:
-        return RequestPaymentACH(widget.requestModel);
+        return RequestPaymentACH();
     }
   }
 
-  Widget RequestPaymentSwift(RequestModel requestModel) {
+  Widget RequestPaymentSwift() {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -1835,13 +1944,17 @@ class RequestEditFormState extends State<RequestEditForm> {
   }
 
 // Choose Category and Sub Category function
+
   // get data from Category class
-  List categories;
-  List<CategoryModel> modelList = [];
+  List<CategoryModel> selectedCategoryModels = [];
+  String categoryMode;
   Map<String, dynamic> _selectedSkillsMap = {};
 
-  void updateInformation(List category) {
-    setState(() => categories = category);
+  void updateInformation(List<CategoryModel> category) {
+    if (category != null && category.length > 0) {
+      selectedCategoryModels.addAll(category);
+    }
+    setState(() {});
   }
 
   Future<void> getCategoriesFromApi(String query) async {
@@ -1886,7 +1999,11 @@ class RequestEditFormState extends State<RequestEditForm> {
       modelList.add(categoryModel);
     }
 
-    updateInformation([title, modelList]);
+    if (modelList != null && modelList.length > 0) {
+      categoryMode = S.of(context).suggested_categories;
+
+      updateInformation(modelList);
+    }
   }
 
   // Navigat to Category class and geting data from the class
@@ -1900,14 +2017,23 @@ class RequestEditFormState extends State<RequestEditForm> {
               )),
     );
 
-    updateInformation(category);
+    if (category != null) {
+      categoryMode = category[0];
+      updateInformation(category[1]);
+    }
     log(' poped selectedCategory  => ${category[0]} \n poped selectedSubCategories => ${category[1]} ');
   }
 
   //building list of selectedSubCategories
-  List<Widget> _buildselectedSubCategories(List categories) {
+  List<Widget> _buildselectedSubCategories() {
     List<CategoryModel> subCategories = [];
-    subCategories = categories[1];
+    subCategories = selectedCategoryModels;
+    log('lll l ${subCategories.length}');
+    subCategories.forEach((item) {});
+    final ids = subCategories.map((e) => e.typeId).toSet();
+    subCategories.retainWhere((x) => ids.remove(x.typeId));
+    log('lll after ${subCategories.length}');
+
     List<Widget> selectedSubCategories = [];
     selectedCategoryIds.clear();
     subCategories.forEach((item) {
@@ -1929,7 +2055,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text("${item.title_en.toString()}",
+                  Text("${item.getCategoryName(context).toString()}",
                       style: TextStyle(color: Colors.white)),
                   SizedBox(width: 3),
                   InkWell(
@@ -1956,328 +2082,231 @@ class RequestEditFormState extends State<RequestEditForm> {
 
   Widget TimeRequest(snapshot, projectModelList) {
     return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Visibility(
-            visible: widget.requestModel.isRecurring == true ||
-                widget.requestModel.autoGenerated == true,
-            child: EditRepeatWidget(
-              requestModel: widget.requestModel,
-              offerModel: null,
-            ),
-          ),
-          SizedBox(height: 20),
-          RequestDescriptionData(S.of(context).request_description_hint),
-          SizedBox(height: 20),
-          InkWell(
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    categories == null
-                        ? Text(
-                            S.of(context).choose_category,
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Europa',
-                              color: Colors.black,
-                            ),
-                          )
-                        : Text(
-                            "${categories[0]}",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Europa',
-                              color: Colors.black,
-                            ),
-                          ),
-                    Spacer(),
-                    Icon(
-                      Icons.arrow_forward_ios_outlined,
-                      size: 16,
-                    ),
-                    // Container(
-                    //   height: 25,
-                    //   width: 25,
-                    //   decoration: BoxDecoration(
-                    //       color: Theme.of(context).primaryColor,
-                    //       borderRadius: BorderRadius.circular(100)),
-                    //   child: Icon(
-                    //     Icons.arrow_drop_down_outlined,
-                    //     color: Colors.white,
-                    //   ),
-                    // ),
-                  ],
-                ),
-                SizedBox(height: 20),
-                categories != null
-                    ? Wrap(
-                        alignment: WrapAlignment.start,
-                        crossAxisAlignment: WrapCrossAlignment.start,
-                        children: _buildselectedSubCategories(categories),
-                      )
-                    : Container(),
-              ],
-            ),
-            onTap: () => moveToCategory(),
-          ),
-          SizedBox(height: 20),
-          isFromRequest(
-            projectId: widget.projectId,
-          )
-              ? addToProjectContainer(
-                  snapshot,
-                  projectModelList,
-                  requestModel,
-                )
-              : Container(),
-          SizedBox(height: 20),
-          AddImagesForRequest(
-            onLinksCreated: (List<String> imageUrls) {
-              widget.requestModel.imageUrls = imageUrls;
-            },
-            selectedList: widget.requestModel.imageUrls,
-          ),
-          SizedBox(height: 20),
-          Text(
-            S.of(context).max_credits,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Europa',
-              color: Colors.black,
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: TextFormField(
-                  focusNode: focusNodes[1],
-                  onFieldSubmitted: (v) {
-                    FocusScope.of(context).requestFocus(focusNodes[2]);
-                  },
-                  initialValue: widget.requestModel.maxCredits.toString(),
-                  onChanged: (v) {
-                    logger.i("___________>>> Updating credits to ============");
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        RequestDescriptionData(S.of(context).request_description_hint),
+        SizedBox(height: 20),
+        categoryWidget(),
 
-                    updateExitWithConfirmationValue(context, 10, v);
-                    if (v.isNotEmpty && int.parse(v) >= 0) {
-                      //widget.requestModel.maxCredits = int.parse(v);
-                      logger.i("___________>>> Updating credits to " +
-                          int.parse(v).toString());
+        SizedBox(height: 20),
+        isFromRequest(
+          projectId: widget.projectId,
+        )
+            ? addToProjectContainer(
+                snapshot,
+                projectModelList,
+                requestModel,
+              )
+            : Container(),
+        SizedBox(height: 20),
+        AddImagesForRequest(
+          onLinksCreated: (List<String> imageUrls) {
+            widget.requestModel.imageUrls = imageUrls;
+          },
+          selectedList: widget.requestModel.imageUrls,
+        ),
+        SizedBox(height: 20),
+        Text(
+          S.of(context).max_credits,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Europa',
+            color: Colors.black,
+          ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: TextFormField(
+                focusNode: focusNodes[1],
+                onFieldSubmitted: (v) {
+                  FocusScope.of(context).requestFocus(focusNodes[2]);
+                },
+                initialValue: widget.requestModel.maxCredits.toString(),
+                onChanged: (v) {
+                  logger.i("___________>>> Updating credits to ============");
 
-                      tempCredits = int.parse(v);
-                      setState(() {});
-                    }
-                  },
-                  decoration: InputDecoration(
-                    hintText: requestModel.requestType ==
-                            RequestType.ONE_TO_MANY_REQUEST
-                        ? S
-                            .of(context)
-                            .onetomanyrequest_participants_or_credits_hint
-                        : S.of(context).max_credit_hint,
-                    hintStyle: hintTextStyle,
-                    // labelText: 'No. of volunteers',
-                  ),
-                  textInputAction: TextInputAction.next,
-                  keyboardType: TextInputType.number,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return S.of(context).enter_max_credits;
-                    } else if (int.parse(value) < 0) {
-                      return S.of(context).enter_max_credits;
-                    } else if (int.parse(value) == 0) {
-                      return S.of(context).enter_max_credits;
-                    } else {
-                      //requestModel.maxCredits = int.parse(value);
-                      tempCredits = int.parse(value);
-                      setState(() {});
-                      return null;
-                    }
-                  },
+                  updateExitWithConfirmationValue(context, 10, v);
+                  if (v.isNotEmpty && int.parse(v) >= 0) {
+                    //widget.requestModel.maxCredits = int.parse(v);
+                    logger.i("___________>>> Updating credits to " +
+                        int.parse(v).toString());
+
+                    tempCredits = int.parse(v);
+                    setState(() {});
+                  }
+                },
+                decoration: InputDecoration(
+                  hintText: requestModel.requestType ==
+                          RequestType.ONE_TO_MANY_REQUEST
+                      ? S
+                          .of(context)
+                          .onetomanyrequest_participants_or_credits_hint
+                      : S.of(context).max_credit_hint,
+                  hintStyle: hintTextStyle,
+                  // labelText: 'No. of volunteers',
                 ),
+                textInputAction: TextInputAction.next,
+                keyboardType: TextInputType.number,
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return S.of(context).enter_max_credits;
+                  } else if (int.parse(value) < 0) {
+                    return S.of(context).enter_max_credits;
+                  } else if (int.parse(value) == 0) {
+                    return S.of(context).enter_max_credits;
+                  } else {
+                    //requestModel.maxCredits = int.parse(value);
+                    tempCredits = int.parse(value);
+                    setState(() {});
+                    return null;
+                  }
+                },
               ),
-              infoButton(
-                context: context,
-                key: GlobalKey(),
-                type: InfoType.MAX_CREDITS,
+            ),
+            infoButton(
+              context: context,
+              key: GlobalKey(),
+              type: InfoType.MAX_CREDITS,
+            ),
+          ],
+        ),
+        SizedBox(height: 20),
+        Text(
+          S.of(context).number_of_volunteers,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Europa',
+            color: Colors.black,
+          ),
+        ),
+        TextFormField(
+          focusNode: focusNodes[2],
+          onFieldSubmitted: (v) {
+            FocusScope.of(context).unfocus();
+          },
+          initialValue: widget.requestModel.numberOfApprovals.toString(),
+          onChanged: (v) {
+            updateExitWithConfirmationValue(context, 11, v);
+            if (v.isNotEmpty && int.parse(v) >= 0) {
+              //widget.requestModel.numberOfApprovals = int.parse(v);
+              tempNoOfVolunteers = int.parse(v);
+              setState(() {});
+            }
+          },
+          decoration: InputDecoration(
+            hintText: requestModel.requestType ==
+                    RequestType.ONE_TO_MANY_REQUEST
+                ? S.of(context).onetomanyrequest_participants_or_credits_hint
+                : S.of(context).number_of_volunteers,
+            hintStyle: hintTextStyle,
+            // labelText: 'No. of volunteers',
+          ),
+          keyboardType: TextInputType.number,
+          validator: (value) {
+            if (value.isEmpty) {
+              return S.of(context).validation_error_volunteer_count;
+            } else if (int.parse(value) < 0) {
+              return S.of(context).validation_error_volunteer_count_negative;
+            } else if (int.parse(value) == 0) {
+              return S.of(context).validation_error_volunteer_count_zero;
+            } else {
+              //widget.requestModel.numberOfApprovals = int.parse(value);
+              tempNoOfVolunteers = int.parse(value);
+              setState(() {});
+              return null;
+            }
+          },
+        ),
+        CommonUtils.TotalCredits(
+          context: context,
+          requestCreditsMode: TotalCreditseMode.EDIT_MODE,
+          requestModel: widget.requestModel,
+        ),
+        SizedBox(height: 10),
+
+        // requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST
+        //     ? Row(
+        //         children: [
+        //           Checkbox(
+        //             activeColor: Theme.of(context).primaryColor,
+        //             checkColor: Colors.white,
+        //             value: createEvent,
+        //             onChanged: (val) {
+        //               setState(() {
+        //                 createEvent = val;
+        //               });
+        //             },
+        //           ),
+        //           Text(
+        //               'Tick to create an event for this request')
+        //         ],
+        //       )
+        //     : Container(height: 0, width: 0),
+
+        SizedBox(height: 15),
+      ],
+    );
+  }
+
+  Widget categoryWidget() {
+    return InkWell(
+      child: Column(
+        children: [
+          Row(
+            children: [
+              categoryMode == null
+                  ? Text(
+                      S.of(context).choose_category,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Europa',
+                        color: Colors.black,
+                      ),
+                    )
+                  : Text(
+                      "${categoryMode}",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Europa',
+                        color: Colors.black,
+                      ),
+                    ),
+              Spacer(),
+              Icon(
+                Icons.arrow_forward_ios_outlined,
+                size: 16,
               ),
             ],
           ),
           SizedBox(height: 20),
-          Text(
-            S.of(context).number_of_volunteers,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Europa',
-              color: Colors.black,
-            ),
-          ),
-          TextFormField(
-            focusNode: focusNodes[2],
-            onFieldSubmitted: (v) {
-              FocusScope.of(context).unfocus();
-            },
-            initialValue: widget.requestModel.numberOfApprovals.toString(),
-            onChanged: (v) {
-              updateExitWithConfirmationValue(context, 11, v);
-              if (v.isNotEmpty && int.parse(v) >= 0) {
-                //widget.requestModel.numberOfApprovals = int.parse(v);
-                tempNoOfVolunteers = int.parse(v);
-                setState(() {});
-              }
-            },
-            decoration: InputDecoration(
-              hintText: requestModel.requestType ==
-                      RequestType.ONE_TO_MANY_REQUEST
-                  ? S.of(context).onetomanyrequest_participants_or_credits_hint
-                  : S.of(context).number_of_volunteers,
-              hintStyle: hintTextStyle,
-              // labelText: 'No. of volunteers',
-            ),
-            keyboardType: TextInputType.number,
-            validator: (value) {
-              if (value.isEmpty) {
-                return S.of(context).validation_error_volunteer_count;
-              } else if (int.parse(value) < 0) {
-                return S.of(context).validation_error_volunteer_count_negative;
-              } else if (int.parse(value) == 0) {
-                return S.of(context).validation_error_volunteer_count_zero;
-              } else {
-                //widget.requestModel.numberOfApprovals = int.parse(value);
-                tempNoOfVolunteers = int.parse(value);
-                setState(() {});
-                return null;
-              }
-            },
-          ),
-          CommonUtils.TotalCredits(
-            context: context,
-            requestCreditsMode: TotalCreditseMode.EDIT_MODE,
-            requestModel: widget.requestModel,
-          ),
-
-          SizedBox(height: 10),
-
-          // requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST
-          //     ? Row(
-          //         children: [
-          //           Checkbox(
-          //             activeColor: Theme.of(context).primaryColor,
-          //             checkColor: Colors.white,
-          //             value: createEvent,
-          //             onChanged: (val) {
-          //               setState(() {
-          //                 createEvent = val;
-          //               });
-          //             },
-          //           ),
-          //           Text(
-          //               'Tick to create an event for this request')
-          //         ],
-          //       )
-          //     : Container(height: 0, width: 0),
-
-          SizedBox(height: 15),
-
-          Center(
-            child: LocationPickerWidget(
-              selectedAddress: selectedAddress,
-              location: location,
-              onChanged: (LocationDataModel dataModel) {
-                log("received data model");
-                setState(() {
-                  location = dataModel.geoPoint;
-                  this.selectedAddress = dataModel.location;
-                });
-              },
-            ),
-          )
-        ]);
+          selectedCategoryModels != null && selectedCategoryModels.length > 0
+              ? Wrap(
+                  alignment: WrapAlignment.start,
+                  crossAxisAlignment: WrapCrossAlignment.start,
+                  children: _buildselectedSubCategories(),
+                )
+              : Container(),
+        ],
+      ),
+      onTap: () => moveToCategory(),
+    );
   }
 
   Widget BorrowRequest(snapshot, projectModelList) {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Visibility(
-            visible: widget.requestModel.isRecurring == true ||
-                widget.requestModel.autoGenerated == true,
-            child: EditRepeatWidget(
-              requestModel: widget.requestModel,
-              offerModel: null,
-            ),
-          ),
-          SizedBox(height: 20),
-
-          // widget.requestModel.borrowRequestToolName != null
-          // ? BorrowToolTitleField('Ex: Hammer or Chair...')
-          //     : Container(),
-
-          SizedBox(height: 15),
-
-          RequestDescriptionData('Please describe what you require'),
+          RequestDescriptionData(
+              S.of(context).request_description_hint_text_borrow),
           SizedBox(height: 20), //Same hint for Room and Tools ?
           // Choose Category and Sub Category
-          InkWell(
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    categories == null
-                        ? Text(
-                            S.of(context).choose_category,
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Europa',
-                              color: Colors.black,
-                            ),
-                          )
-                        : Text(
-                            "${categories[0]}",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Europa',
-                              color: Colors.black,
-                            ),
-                          ),
-                    Spacer(),
-                    Icon(
-                      Icons.arrow_forward_ios_outlined,
-                      size: 16,
-                    ),
-                    // Container(
-                    //   height: 25,
-                    //   width: 25,
-                    //   decoration: BoxDecoration(
-                    //       color: Theme.of(context).primaryColor,
-                    //       borderRadius: BorderRadius.circular(100)),
-                    //   child: Icon(
-                    //     Icons.arrow_drop_down_outlined,
-                    //     color: Colors.white,
-                    //   ),
-                    // ),
-                  ],
-                ),
-                SizedBox(height: 20),
-                categories != null
-                    ? Wrap(
-                        alignment: WrapAlignment.start,
-                        crossAxisAlignment: WrapCrossAlignment.start,
-                        children: _buildselectedSubCategories(categories),
-                      )
-                    : Container(),
-              ],
-            ),
-            onTap: () => moveToCategory(),
-          ),
+          categoryWidget(),
           SizedBox(height: 20),
           isFromRequest(
             projectId: widget.projectId,
@@ -2337,8 +2366,15 @@ class RequestEditFormState extends State<RequestEditForm> {
             decoration: InputDecoration(
               hintText: S.of(context).request_target_donation_hint,
               hintStyle: hintTextStyle,
+              prefixIcon: Icon(Icons.attach_money),
+
               // labelText: 'No. of volunteers',
             ),
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(
+                (RegExp("[0-9]")),
+              ),
+            ],
             keyboardType: TextInputType.number,
             validator: (value) {
               if (value.isEmpty) {
@@ -2385,7 +2421,15 @@ class RequestEditFormState extends State<RequestEditForm> {
               hintText: S.of(context).request_min_donation_hint,
               hintStyle: hintTextStyle,
               // labelText: 'No. of volunteers',
+              prefixIcon: Icon(Icons.attach_money),
+
+              // labelText: 'No. of volunteers',
             ),
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(
+                (RegExp("[0-9]")),
+              ),
+            ],
             keyboardType: TextInputType.number,
             validator: (value) {
               if (value.isEmpty) {
@@ -2413,60 +2457,7 @@ class RequestEditFormState extends State<RequestEditForm> {
             selectedList: widget.requestModel.imageUrls,
           ),
           SizedBox(height: 20),
-          InkWell(
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    categories == null
-                        ? Text(
-                            S.of(context).choose_category,
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Europa',
-                              color: Colors.black,
-                            ),
-                          )
-                        : Text(
-                            "${categories[0]}",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Europa',
-                              color: Colors.black,
-                            ),
-                          ),
-                    Spacer(),
-                    Icon(
-                      Icons.arrow_forward_ios_outlined,
-                      size: 16,
-                    ),
-                    // Container(
-                    //   height: 25,
-                    //   width: 25,
-                    //   decoration: BoxDecoration(
-                    //       color: Theme.of(context).primaryColor,
-                    //       borderRadius: BorderRadius.circular(100)),
-                    //   child: Icon(
-                    //     Icons.arrow_drop_down_outlined,
-                    //     color: Colors.white,
-                    //   ),
-                    // ),
-                  ],
-                ),
-                SizedBox(height: 20),
-                categories != null
-                    ? Wrap(
-                        alignment: WrapAlignment.start,
-                        crossAxisAlignment: WrapCrossAlignment.start,
-                        children: _buildselectedSubCategories(categories),
-                      )
-                    : Container(),
-              ],
-            ),
-            onTap: () => moveToCategory(),
-          ),
+          categoryWidget(),
           SizedBox(height: 20),
           isFromRequest(
             projectId: widget.projectId,
@@ -2489,60 +2480,7 @@ class RequestEditFormState extends State<RequestEditForm> {
           SizedBox(height: 20),
           RequestDescriptionData(S.of(context).request_description_hint_goods),
           SizedBox(height: 20),
-          InkWell(
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    categories == null
-                        ? Text(
-                            S.of(context).choose_category,
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Europa',
-                              color: Colors.black,
-                            ),
-                          )
-                        : Text(
-                            "${categories[0]}",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Europa',
-                              color: Colors.black,
-                            ),
-                          ),
-                    Spacer(),
-                    Icon(
-                      Icons.arrow_forward_ios_outlined,
-                      size: 16,
-                    ),
-                    // Container(
-                    //   height: 25,
-                    //   width: 25,
-                    //   decoration: BoxDecoration(
-                    //       color: Theme.of(context).primaryColor,
-                    //       borderRadius: BorderRadius.circular(100)),
-                    //   child: Icon(
-                    //     Icons.arrow_drop_down_outlined,
-                    //     color: Colors.white,
-                    //   ),
-                    // ),
-                  ],
-                ),
-                SizedBox(height: 20),
-                categories != null
-                    ? Wrap(
-                        alignment: WrapAlignment.start,
-                        crossAxisAlignment: WrapCrossAlignment.start,
-                        children: _buildselectedSubCategories(categories),
-                      )
-                    : Container(),
-              ],
-            ),
-            onTap: () => moveToCategory(),
-          ),
+          categoryWidget(),
           SizedBox(height: 20),
           AddImagesForRequest(
             onLinksCreated: (List<String> imageUrls) {
@@ -2654,8 +2592,6 @@ class RequestEditFormState extends State<RequestEditForm> {
       return;
     }
 
-    logger.i(widget.requestModel.communityId + "<<<<<<<<<<<<<<<>>>>>>>>>>>>");
-
     if (_formKey.currentState.validate()) {
       if (widget.requestModel.public) {
         widget.requestModel.timebanksPosted = [
@@ -2664,6 +2600,13 @@ class RequestEditFormState extends State<RequestEditForm> {
         ];
       } else {
         widget.requestModel.timebanksPosted = [widget.requestModel.timebankId];
+      }
+
+      if (widget.requestModel.requestType == RequestType.GOODS &&
+          (widget.requestModel.goodsDonationDetails.requiredGoods == null ||
+              widget.requestModel.goodsDonationDetails.requiredGoods.isEmpty)) {
+        showDialogForTitle(dialogTitle: S.of(context).goods_validation);
+        return;
       }
 
       if (widget.requestModel.isRecurring == true ||
@@ -2710,7 +2653,7 @@ class RequestEditFormState extends State<RequestEditForm> {
           );
         }
 
-        if (!onBalanceCheckResult) {
+        if (!onBalanceCheckResult.hasSuffiientCredits) {
           showInsufficientBalance();
           return;
         }
@@ -2805,7 +2748,7 @@ class RequestEditFormState extends State<RequestEditForm> {
             location != widget.requestModel.location ||
             widget.requestModel.projectId != tempProjectId ||
             !widget.requestModel.acceptors
-                .contains(selectedInstructorModel.email)) {
+                .contains(selectedInstructorModel?.email)) {
           //setState(() {
           widget.requestModel.title = initialRequestTitle;
           widget.requestModel.description = initialRequestDescription;
@@ -2921,11 +2864,11 @@ class RequestEditFormState extends State<RequestEditForm> {
               return WillPopScope(
                 onWillPop: () {},
                 child: AlertDialog(
-                  title: Text(S.of(context).this_is_repeating_event),
+                  title: Text("This is a repeating request."),
                   actions: [
                     CustomTextButton(
                       child: Text(
-                        S.of(context).edit_this_event,
+                        "Edit this request only.",
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.red,
@@ -2941,7 +2884,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                     ),
                     CustomTextButton(
                       child: Text(
-                        S.of(context).edit_subsequent_event,
+                        "Edit subsequent requests.",
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.red,

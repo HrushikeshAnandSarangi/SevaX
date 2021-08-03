@@ -10,6 +10,7 @@ class SponsoredGroupModel extends DataModel {
   String timebankTitle;
   String timebankId;
   String timebankPhotUrl;
+  String timebankCoverUrl;
   String notificationId;
 
   SponsoredGroupModel({
@@ -20,6 +21,7 @@ class SponsoredGroupModel extends DataModel {
     this.timebankTitle,
     this.timebankId,
     this.timebankPhotUrl,
+    this.timebankCoverUrl,
     this.notificationId,
   }) {
     id = utils.Utils.getUuid();
@@ -34,6 +36,8 @@ class SponsoredGroupModel extends DataModel {
       timebankId: json["timebankId"] == null ? null : json["timebankId"],
       timebankPhotUrl:
           json["timebankPhotUrl"] == null ? null : json["timebankPhotUrl"],
+      timebankCoverUrl:
+          json["timebankCoverUrl"] == null ? null : json["timebankCoverUrl"],
     );
 
     if (json.containsKey("timebankTitle")) {
@@ -64,6 +68,7 @@ class SponsoredGroupModel extends DataModel {
       "timestamp": timestamp == null ? null : timestamp,
       "userPhotoUrl": userPhotoUrl == null ? null : userPhotoUrl,
       "timebankPhotUrl": timebankPhotUrl == null ? null : timebankPhotUrl,
+      "timebankCoverUrl": timebankCoverUrl == null ? null : timebankCoverUrl,
       "timebankId": timebankId == null ? null : timebankId,
     };
 

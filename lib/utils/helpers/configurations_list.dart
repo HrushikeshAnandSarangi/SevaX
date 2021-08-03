@@ -6,34 +6,14 @@ class ConfigurationsList {
   final List<ConfigurationModel> configurationsList = [
     ConfigurationModel(
         id: 'create_feeds', title_en: 'Create Feeds', type: 'general'),
-    // ConfigurationModel(
-    //     id: 'accept_offers', title_en: 'Accept Offers', type: 'offer'),
     ConfigurationModel(
         id: 'accept_requests', title_en: 'Accept requests', type: 'request'),
     ConfigurationModel(
         id: 'billing_access', title_en: 'Billing Access', type: 'general'),
-    // ConfigurationModel(
-    //     id: 'create_borrow_request',
-    //     title_en: 'Create Borrow Request',
-    //     type: 'request'),
-
     ConfigurationModel(
-        id: 'accept_one_to_many_offer',
-        title_en: 'Accept One To Many Offers',
-        type: 'offer'),
-    ConfigurationModel(
-        id: 'accept_time_offer',
-        title_en: 'Accept Time Offers',
-        type: 'offer'),
-    ConfigurationModel(
-        id: 'accept_money_offer',
-        title_en: 'Accept Money Offers',
-        type: 'offer'),
-    ConfigurationModel(
-        id: 'accept_goods_offer',
-        title_en: 'Accept Goods/Supplies Offers',
-        type: 'offer'),
-
+        id: 'create_borrow_request',
+        title_en: 'Create Borrow Request',
+        type: 'request'),
     ConfigurationModel(
         id: 'create_events', title_en: 'Create Events', type: 'events'),
     ConfigurationModel(
@@ -42,7 +22,7 @@ class ConfigurationsList {
         type: 'offer'),
     ConfigurationModel(
         id: 'create_goods_request',
-        title_en: 'Create Goods Request',
+        title_en: 'Create Goods Requests',
         type: 'request'),
     ConfigurationModel(
         id: 'create_money_offers',
@@ -50,7 +30,7 @@ class ConfigurationsList {
         type: 'offer'),
     ConfigurationModel(
         id: 'create_money_request',
-        title_en: 'Create Money Request',
+        title_en: 'Create Money Requests',
         type: 'request'),
     ConfigurationModel(
         id: 'create_time_offers',
@@ -58,7 +38,7 @@ class ConfigurationsList {
         type: 'offer'),
     ConfigurationModel(
         id: 'create_time_request',
-        title_en: 'Create Time Request',
+        title_en: 'Create Time Requests',
         type: 'request'),
     ConfigurationModel(
         id: 'invite_bulk_members',
@@ -72,7 +52,7 @@ class ConfigurationsList {
         id: 'demote_user', title_en: 'Demote user', type: 'general'),
     ConfigurationModel(
         id: 'create_onetomany_request',
-        title_en: 'Create OneToMany Request',
+        title_en: 'Create One To Many Requests',
         type: 'request'),
     ConfigurationModel(
         id: 'create_virtual_request',
@@ -88,58 +68,47 @@ class ConfigurationsList {
         type: 'offer'),
     ConfigurationModel(
         id: 'create_public_offer',
-        title_en: 'Create Public offer',
+        title_en: 'Create public offer',
         type: 'offer'),
     ConfigurationModel(
         id: 'create_virtual_event',
-        title_en: 'Create Virtual Event',
+        title_en: 'Create virtual event',
         type: 'events'),
     ConfigurationModel(
         id: 'create_public_event',
-        title_en: 'Create Public Event',
+        title_en: 'Create public event',
         type: 'events'),
     ConfigurationModel(
         id: 'create_endorsed_group',
-        title_en: 'Create Endorsed group',
+        title_en: 'Create endorsed group',
         type: 'group'),
     ConfigurationModel(
         id: 'create_private_group',
-        title_en: 'Create Private Group',
+        title_en: 'Create private group',
         type: 'group'),
     ConfigurationModel(
         id: 'one_to_many_offer',
         title_en: 'Create One To Many Offer',
-        type: 'offer')
+        type: 'offer'),
+    ConfigurationModel(
+        id: 'accept_time_offer', title_en: 'Accept Time Offer', type: 'offer'),
+    ConfigurationModel(
+        id: 'accept_money_offer',
+        title_en: 'Accept Money Offer',
+        type: 'offer'),
+    ConfigurationModel(
+        id: 'accept_goods_offer',
+        title_en: 'Accept Goods Offer',
+        type: 'offer'),
+    ConfigurationModel(
+        id: 'accept_one_to_many_offer',
+        title_en: 'Accept One To Many Offer',
+        type: 'offer'),
   ];
 
   final List<ConfigurationModel> memberConfigurationsList = [
     ConfigurationModel(
         id: 'create_feeds', title_en: 'Create Feeds', type: 'general'),
-    // ConfigurationModel(
-    //     id: 'accept_one_to_many_offer',
-    //     title_en: 'Accept One To Many Offers',
-    //     type: 'offer'),
-    // ConfigurationModel(
-    //     id: 'accept_time_offers',
-    //     title_en: 'Accept Time Offers',
-    //     type: 'offer'),
-    // ConfigurationModel(
-    //     id: 'accept_money_offers',
-    //     title_en: 'Accept Money Offers',
-    //     type: 'offer'),
-    // ConfigurationModel(
-    //     id: 'accept_goods_offers',
-    //     title_en: 'Accept Goods/Supplies Offers',
-    //     type: 'offer'),
-
-    ConfigurationModel(
-        id: 'accept_one_to_many_offer',
-        title_en: 'Accept One To Many Offers',
-        type: 'offer'),
-    ConfigurationModel(
-        id: 'accept_time_offer',
-        title_en: 'Accept Time Offers',
-        type: 'offer'),
     ConfigurationModel(
         id: 'accept_requests', title_en: 'Accept requests', type: 'request'),
     ConfigurationModel(
@@ -183,7 +152,21 @@ class ConfigurationsList {
     ConfigurationModel(
         id: 'one_to_many_offer',
         title_en: 'Create One To Many Offer',
-        type: 'offer')
+        type: 'offer'),
+    ConfigurationModel(
+        id: 'accept_time_offer', title_en: 'Accept Time Offer', type: 'offer'),
+/*    ConfigurationModel(
+        id: 'accept_money_offer',
+        title_en: 'Accept Money Offer',
+        type: 'offer'),
+    ConfigurationModel(
+        id: 'accept_goods_offer',
+        title_en: 'Accept Goods Offer',
+        type: 'offer'),*/
+    ConfigurationModel(
+        id: 'accept_one_to_many_offer',
+        title_en: 'Accept One To Many Offer',
+        type: 'offer'),
   ];
 
   List<ConfigurationModel> getMemberData() {

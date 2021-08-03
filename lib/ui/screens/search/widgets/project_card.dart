@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
+import 'package:sevaexchange/widgets/tag_view.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class ProjectsCard extends StatelessWidget {
@@ -15,8 +16,10 @@ class ProjectsCard extends StatelessWidget {
   final int tasks;
   final int pendingTask;
   final Function onTap;
+  final bool isRecurring;
   const ProjectsCard({
     Key key,
+    this.isRecurring,
     this.location,
     this.timestamp,
     this.photoUrl,
@@ -88,16 +91,29 @@ class ProjectsCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-//                          getInitials(title),
                           title,
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold),
                         ),
+                        SizedBox(height: 5),
+                        Visibility(
+                          visible: isRecurring ?? false,
+                          child: Container(
+                            margin: EdgeInsets.only(right: 10),
+                            child: TagView(
+                              tagTitle: 'Recurring',
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 5),
                         Wrap(
                           crossAxisAlignment: WrapCrossAlignment.center,
                           children: <Widget>[
                             Text(
-                              getTimeFormattedString(startTime, S.of(context).localeName,),
+                              getTimeFormattedString(
+                                startTime,
+                                S.of(context).localeName,
+                              ),
                               style:
                                   TextStyle(fontSize: 12, color: Colors.grey),
                             ),
@@ -109,7 +125,10 @@ class ProjectsCard extends StatelessWidget {
                             ),
                             SizedBox(width: 2),
                             Text(
-                              getTimeFormattedString(endTime, S.of(context).localeName,),
+                              getTimeFormattedString(
+                                endTime,
+                                S.of(context).localeName,
+                              ),
                               style:
                                   TextStyle(fontSize: 12, color: Colors.grey),
                             ),

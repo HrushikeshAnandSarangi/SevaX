@@ -182,7 +182,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                                       userModel.fullname,
                                       style: TextStyle(fontSize: 18),
                                     ),
-                                    SizedBox(height: 8),
+                                    SizedBox(height: 5),
                                     Text(
                                       S.of(context).organizer,
                                       style: TextStyle(
@@ -728,14 +728,23 @@ void showSignInAlertMessage({BuildContext context, String message}) {
         content: Text(message),
         actions: [
           CustomTextButton(
-              onPressed: () {
-                Navigator.of(dialogContext).pop();
-              },
-              child: Text(
-                S.of(context).cancel,
-                style: TextStyle(color: Colors.deepOrange),
-              )),
+            shape: StadiumBorder(),
+            color: Theme.of(context).accentColor,
+            onPressed: () {
+              Navigator.of(dialogContext).pop();
+            },
+            child: Text(
+              S.of(context).cancel,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontFamily: 'Europa',
+              ),
+            ),
+          ),
           CustomTextButton(
+            shape: StadiumBorder(),
+            color: Theme.of(context).primaryColor,
             onPressed: () {
               Navigator.of(dialogContext).pop();
               Navigator.of(context).push(
@@ -746,7 +755,11 @@ void showSignInAlertMessage({BuildContext context, String message}) {
             },
             child: Text(
               S.of(context).continue_to_signin,
-              style: TextStyle(color: FlavorConfig.values.theme.primaryColor),
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontFamily: 'Europa',
+              ),
             ),
           ),
         ],

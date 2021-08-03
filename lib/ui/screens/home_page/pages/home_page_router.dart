@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
@@ -18,6 +17,7 @@ import 'package:sevaexchange/ui/screens/notifications/bloc/notifications_bloc.da
 import 'package:sevaexchange/ui/screens/notifications/pages/combined_notification_page.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/profile.dart';
 import 'package:sevaexchange/views/splash_view.dart';
@@ -67,27 +67,28 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
           email: SevaCore.of(context).loggedInUser.email,
           communityId: SevaCore.of(context).loggedInUser.currentCommunity,
         );
-        Provider.of<HomePageBaseBloc>(context, listen: false).init(SevaCore.of(context).loggedInUser);
+        Provider.of<HomePageBaseBloc>(context, listen: false)
+            .init(SevaCore.of(context).loggedInUser);
         _userBloc.userStream.listen((UserModel user) async {
+          logger.e("USER ID CHECK 1 =======> " + user.sevaUserID);
           Provider.of<MembersBloc>(context, listen: false)
               .init(user.currentCommunity);
-
-          var membersList =
-              await Provider.of<MembersBloc>(context, listen: false)
-                  .members
-                  .first;
-          
-
-          _messageBloc.fetchAllMessage(
-            user.currentCommunity,
-            user,
-            membersList,
-          );
 
           _notificationsBloc.init(
             user.email,
             user.sevaUserID,
             user.currentCommunity,
+          );
+
+          // var membersList =
+          //     await Provider.of<MembersBloc>(context, listen: false)
+          //         .members
+          //         .first;
+
+          _messageBloc.fetchAllMessage(
+            user.currentCommunity,
+            user,
+            // membersList,
           );
         });
       },

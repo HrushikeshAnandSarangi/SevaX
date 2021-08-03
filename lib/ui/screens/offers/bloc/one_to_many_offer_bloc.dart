@@ -95,6 +95,7 @@ class OneToManyOfferBloc extends BlocBase {
             fullName: user.fullname,
             sevaUserId: user.sevaUserID,
             timebankId: timebankId,
+            type: RequestType.ONE_TO_MANY_OFFER,
             communityId: user.currentCommunity,
             photoUrlImage: user.photoURL ?? defaultUserImageURL,
             creatorAllowedCalender: allowedCalenderEvent,

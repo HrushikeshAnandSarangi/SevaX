@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 
 Future<void> errorDialog({BuildContext context, String error}) async {
   await showDialog(
@@ -13,7 +15,7 @@ Future<void> errorDialog({BuildContext context, String error}) async {
         actions: <Widget>[
           CustomTextButton(
             child: Text(
-              'OK',
+              S.of(context).ok,
               style: TextStyle(
                 fontSize: 16,
               ),
@@ -29,8 +31,7 @@ Future<void> errorDialog({BuildContext context, String error}) async {
   return true;
 }
 
-Future<bool> confirmationDialog(
-    {BuildContext context, String title, Function onConfirmed}) async {
+Future<bool> confirmationDialog({BuildContext context, String title, Function onConfirmed}) async {
   await showDialog(
     context: context,
     builder: (BuildContext viewContext) {
@@ -41,8 +42,10 @@ Future<bool> confirmationDialog(
         title: Text(title),
         actions: <Widget>[
           CustomTextButton(
+            // color: HexColor("#D2D2D2"),
+            // shape: StadiumBorder(),
             child: Text(
-              'Cancel',
+              S.of(context).cancel,
               style: TextStyle(
                 fontSize: 16,
               ),
@@ -52,12 +55,11 @@ Future<bool> confirmationDialog(
             },
           ),
           CustomTextButton(
+            // shape: StadiumBorder(),
             color: Theme.of(context).primaryColor,
             child: Text(
-              'OK',
-              style: TextStyle(
-                fontSize: 16,
-              ),
+              S.of(context).ok,
+              style: TextStyle(fontSize: 16, color: Colors.white),
             ),
             onPressed: onConfirmed != null
                 ? () {

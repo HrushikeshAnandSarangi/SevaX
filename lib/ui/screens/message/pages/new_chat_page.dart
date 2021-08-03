@@ -1,13 +1,18 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/home_page_base_bloc.dart';
+import 'package:sevaexchange/ui/screens/members/pages/members_page.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/create_chat_bloc.dart';
 import 'package:sevaexchange/ui/screens/message/pages/chat_page.dart';
 import 'package:sevaexchange/ui/screens/message/pages/create_new_chat_page.dart';
 import 'package:sevaexchange/ui/screens/message/pages/group_members_page.dart';
+import 'package:sevaexchange/ui/screens/message/pages/parent_community_message_create.dart';
 import 'package:sevaexchange/ui/screens/message/pages/quick_scroll_bar.dart';
 import 'package:sevaexchange/ui/screens/message/pages/timebank_members_page.dart';
 import 'package:sevaexchange/ui/screens/message/widgets/frequent_contacts_builder.dart';
@@ -16,9 +21,11 @@ import 'package:sevaexchange/ui/utils/icons.dart';
 import 'package:sevaexchange/ui/utils/strings.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
+import 'package:sevaexchange/utils/helpers/configuration_check.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/widgets/hide_widget.dart';
 
 class NewChatPage extends StatefulWidget {
   final List<FrequentContactsModel> frequentContacts;
@@ -72,73 +79,112 @@ class _NewChatPageState extends State<NewChatPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                _bloc.isSelectionEnabled
-                    ? SelectedMemberListBuilder()
-                    : TransactionsMatrixCheck(
-                        comingFrom: ComingFrom.Chats,
-                        upgradeDetails: AppConfig
-                            .upgradePlanBannerModel.multi_member_messaging,
-                        transaction_matrix_type: "multi_member_messaging",
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.of(context)
-                                  .push(
-                                MaterialPageRoute<ChatModel>(
-                                  builder: (context) => CreateNewChatPage(
-                                    frequentContacts: widget.frequentContacts,
-                                    isSelectionEnabled: true,
+                ..._bloc.isSelectionEnabled
+                    ? <Widget>[SelectedMemberListBuilder()]
+                    : [
+                        TransactionsMatrixCheck(
+                          comingFrom: ComingFrom.Chats,
+                          upgradeDetails: AppConfig
+                              .upgradePlanBannerModel.multi_member_messaging,
+                          transaction_matrix_type: "multi_member_messaging",
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.of(context)
+                                    .push(
+                                  MaterialPageRoute<ChatModel>(
+                                    builder: (context) => CreateNewChatPage(
+                                      frequentContacts: widget.frequentContacts,
+                                      isSelectionEnabled: true,
+                                    ),
                                   ),
-                                ),
-                              )
-                                  .then((ChatModel model) {
-                                if (model != null) {
-                                  Navigator.of(context).pop(model);
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) => ChatPage(
-                                        chatModel: model,
-                                        senderId: model.groupDetails.admins[0],
-                                        timebankId: SevaCore.of(context)
-                                            .loggedInUser
-                                            .currentTimebank,
+                                )
+                                    .then((ChatModel model) {
+                                  if (model != null) {
+                                    Navigator.of(context).pop(model);
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) => ChatPage(
+                                          chatModel: model,
+                                          senderId:
+                                              model.groupDetails.admins[0],
+                                          timebankId: SevaCore.of(context)
+                                              .loggedInUser
+                                              .currentTimebank,
+                                        ),
                                       ),
-                                    ),
-                                  );
-                                }
-                              });
-                            },
-                            child: Container(
-                              height: 50,
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 12),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: <Widget>[
-                                    CircleAvatar(
-                                      backgroundColor: Colors.grey[300],
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8),
-                                        child: Image.asset(groupIcon),
+                                    );
+                                  }
+                                });
+                              },
+                              child: Container(
+                                height: 50,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 12),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: <Widget>[
+                                      CircleAvatar(
+                                        backgroundColor: Colors.grey[300],
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8),
+                                          child: Image.asset(groupIcon),
+                                        ),
                                       ),
-                                    ),
-                                    SizedBox(width: 12),
-                                    Text(
-                                      S.of(context).messaging_room,
-                                      style: TextStyle(
-                                        color: Theme.of(context).primaryColor,
-                                        fontSize: 16,
+                                      SizedBox(width: 12),
+                                      Text(
+                                        S.of(context).messaging_room,
+                                        style: TextStyle(
+                                          color: Theme.of(context).primaryColor,
+                                          fontSize: 16,
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
                           ),
                         ),
-                      ),
+                        HideWidget(
+                          hide: memberType(
+                                  Provider.of<HomePageBaseBloc>(context,
+                                          listen: false)
+                                      .primaryTimebankModel(),
+                                  SevaCore.of(context)
+                                      .loggedInUser
+                                      .sevaUserID) ==
+                              MemberType.MEMBER,
+                          child: Container(
+                            height: 50,
+                            child: TextButton(
+                              onPressed: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        CommunityMessageCreate(
+                                      isEditing: false,
+                                      primaryTimebankId: SevaCore.of(context)
+                                          .loggedInUser
+                                          .currentTimebank,
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Text(
+                                S.of(context).new_comminity_message,
+                                style: TextStyle(
+                                  color: Theme.of(context).primaryColor,
+                                  fontFamily: 'Europa',
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                 Container(
                   height: 30,
                   width: MediaQuery.of(context).size.width,
@@ -172,6 +218,32 @@ class _NewChatPageState extends State<NewChatPage> {
                           child: Text(S.of(context).no_frequent_contacts),
                         ),
                       ),
+                // StreamBuilder<List<ParticipantInfo>>(
+                //     stream: _bloc.parentChildCommunities,
+                //     builder: (context, snapshot) {
+                //       if (snapshot.data == null || snapshot.data.isEmpty) {
+                //         return Container();
+                //       }
+                //       return Column(
+                //         children: [
+                //           Container(
+                //             height: 30,
+                //             width: MediaQuery.of(context).size.width,
+                //             color: Colors.grey[300],
+                //             padding: EdgeInsets.only(left: 12),
+                //             alignment: Alignment.centerLeft,
+                //             child: Text(
+                //               "Parent child Messaging",
+                //               style: TextStyle(
+                //                 fontWeight: FontWeight.bold,
+                //                 fontSize: 15,
+                //               ),
+                //             ),
+                //           ),
+
+                //         ],
+                //       );
+                //     }),
                 StreamBuilder<List<TimebankModel>>(
                   stream: _bloc.timebanksOfUser,
                   builder: (context, snapshot) {
@@ -200,6 +272,7 @@ class _NewChatPageState extends State<NewChatPage> {
                         ],
                       );
                     }
+
                     return Column(
                       children: [
                         Row(

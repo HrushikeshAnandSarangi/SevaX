@@ -26,6 +26,9 @@
 //      };
 //}
 
+import 'package:flutter/material.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
+
 class CategoryModel {
   CategoryModel({
     this.categoryId,
@@ -33,6 +36,9 @@ class CategoryModel {
     this.type,
     this.typeId,
     this.logo,
+    this.creatorId,
+    this.creatorEmail,
+    this.data,
   });
 
   String categoryId;
@@ -40,6 +46,9 @@ class CategoryModel {
   CategoryType type;
   String typeId;
   String logo;
+  String creatorId;
+  String creatorEmail;
+  final Map<String, String> data;
 
   factory CategoryModel.fromMap(Map<String, dynamic> json) => CategoryModel(
         categoryId: json["categoryId"] == null ? null : json["categoryId"],
@@ -51,7 +60,32 @@ class CategoryModel {
                 : CategoryType.SUB_CATEGORY,
         typeId: json["typeId"] == null ? null : json["typeId"],
         logo: json.containsKey('logo') ? json['logo'] : null,
+        creatorId: json.containsKey('creatorId') ? json['creatorId'] : null,
+        creatorEmail:
+            json.containsKey('creatorEmail') ? json['creatorEmail'] : null,
+        data: Map<String, String>.from(json),
       );
+
+  Map<String, dynamic> toMap() => {
+        "categoryId": categoryId == null ? null : categoryId,
+        "title_en": title_en == null ? null : title_en,
+        "type": type == null
+            ? null
+            : type == CategoryType.CATEGORY
+                ? 'category'
+                : 'subCategory',
+        "typeId": typeId == null ? null : typeId,
+        "logo": logo == null ? null : logo,
+        "creatorId": creatorId == null ? null : creatorId,
+        "creatorEmail": creatorEmail == null ? null : creatorEmail,
+      };
+
+  String getCategoryName(BuildContext context) {
+    var key = S.of(context).localeName;
+    return data.containsKey('title_' + key)
+        ? data['title_' + key]
+        : data['title_en'];
+  }
 }
 
 enum CategoryType { CATEGORY, SUB_CATEGORY }

@@ -84,7 +84,7 @@ class _UpgradePlanBannerState extends State<UpgradePlanBanner> {
             timebankId: SevaCore.of(context).loggedInUser.currentTimebank),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return Text(L.of(context).upgrade_plan_msg1);
+            return Text(S.of(context).upgrade_plan_msg1);
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
@@ -107,7 +107,7 @@ class _UpgradePlanBannerState extends State<UpgradePlanBanner> {
                     style: TextStyle(fontSize: 16, color: Colors.black),
                     children: [
                       TextSpan(
-                        text: L.of(context).upgrade_plan_disable_msg1,
+                        text: S.of(context).upgrade_plan_disable_msg1,
                       )
                     ],
                   ),
@@ -157,12 +157,12 @@ class _UpgradePlanBannerState extends State<UpgradePlanBanner> {
                 Spacer(),
                 timebankModel.creatorId == currentUser.sevaUserID
                     ? Text(
-                        L.of(context).upgrade_plan_disable_msg2,
+                        S.of(context).upgrade_plan_disable_msg2,
                         textAlign: TextAlign.center,
                         style: TextStyle(fontSize: 16),
                       )
                     : Text(
-                        L.of(context).upgrade_plan_disable_msg3,
+                        S.of(context).upgrade_plan_disable_msg3,
                         textAlign: TextAlign.center,
                         style: TextStyle(fontSize: 16),
                       ),

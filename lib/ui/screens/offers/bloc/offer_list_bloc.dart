@@ -6,6 +6,7 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
+import 'package:sevaexchange/widgets/hide_blocked_content.dart';
 
 class OfferListBloc extends BlocBase {
   final _myOffers = BehaviorSubject<List<OfferModel>>();
@@ -26,40 +27,14 @@ class OfferListBloc extends BlocBase {
     CombineLatestStream.combine2<List<OfferModel>, OfferFilter, OfferLists>(
         allOffers, filter, (models, filter) {
       OfferLists offerLists = OfferLists([], []);
-      if (filter.isFilterSelected) {
-        logger.i("here in filter");
-        for (var model in models) {
-          if (filter.oneToManyOffer &&
-              model.offerType == OfferType.GROUP_OFFER) {
+      models.forEach((model) {
+        if (!HideBlockedContent.checkIfBlocked(model.sevaUserId, user)) {
+          if (filter.checkFilter(model)) {
             offerLists.addOffer(userId, model);
-            continue;
-          }
-          if (filter.timeOffer && model.type == RequestType.TIME) {
-            offerLists.addOffer(userId, model);
-            continue;
-          }
-          if (filter.cashOffer && model.type == RequestType.CASH) {
-            offerLists.addOffer(userId, model);
-            continue;
-          }
-          if (filter.goodsOffer && model.type == RequestType.GOODS) {
-            offerLists.addOffer(userId, model);
-            continue;
-          }
-          if (filter.publicOffer && model.public) {
-            offerLists.addOffer(userId, model);
-            continue;
-          }
-          if (filter.virtualOffer && model.virtual) {
-            offerLists.addOffer(userId, model);
-            continue;
           }
         }
-      } else {
-        models.forEach((model) {
-          offerLists.addOffer(userId, model);
-        });
-      }
+      });
+
       return offerLists;
     }).listen((value) {
       _offers.add(value);
@@ -151,11 +126,17 @@ class OfferFilter {
     if (isFilterSelected) {
       if (oneToManyOffer && model.offerType == OfferType.GROUP_OFFER) {
         return true;
-      } else if (timeOffer && model.type == RequestType.TIME) {
+      } else if (timeOffer &&
+          model.offerType == OfferType.INDIVIDUAL_OFFER &&
+          model.type == RequestType.TIME) {
         return true;
-      } else if (cashOffer && model.type == RequestType.CASH) {
+      } else if (cashOffer &&
+          model.offerType == OfferType.INDIVIDUAL_OFFER &&
+          model.type == RequestType.CASH) {
         return true;
-      } else if (goodsOffer && model.type == RequestType.GOODS) {
+      } else if (goodsOffer &&
+          model.offerType == OfferType.INDIVIDUAL_OFFER &&
+          model.type == RequestType.GOODS) {
         return true;
       } else if (publicOffer && model.public) {
         return true;

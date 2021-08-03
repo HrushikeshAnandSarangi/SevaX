@@ -1,10 +1,11 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/get_location.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
-import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/views/onboarding/interests_view.dart';
 import 'package:sevaexchange/views/spell_check_manager.dart';
@@ -36,22 +37,26 @@ class _SkillsForRequestsState extends State<SkillsForRequests> {
 
   @override
   void initState() {
-    CollectionRef.skills
-        .orderBy('name')
-        .get()
-        .then((QuerySnapshot querySnapshot) {
-      querySnapshot.docs.forEach((DocumentSnapshot data) {
-        // suggestionText.add(data['name']);
-        // suggestionID.add(data.id);
-        if (data[widget.languageCode] != null) {
-          skills[data.id] = data[widget.languageCode];
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      CollectionRef.skills
+          .orderBy('name')
+          .get()
+          .then((QuerySnapshot querySnapshot) {
+        querySnapshot.docs.forEach((DocumentSnapshot data) {
+          if (data.data()[widget.languageCode] != null) {
+            skills[data.data()['id']] = data.data()[widget.languageCode];
+          } else {
+            skills[data.data()['id']] = data.data()['name'];
+          }
+        });
+
+        log("len ${skills.values.length}");
+        if (widget.selectedSkills.values != null) {
+          _selectedSkills = widget.selectedSkills;
         }
-      });
-
-      _selectedSkills = widget.selectedSkills;
-
-      setState(() {
-        isDataLoaded = true;
+        setState(() {
+          isDataLoaded = true;
+        });
       });
     });
 
@@ -67,13 +72,17 @@ class _SkillsForRequestsState extends State<SkillsForRequests> {
           TypeAheadField<SuggestedItem>(
             suggestionsBoxDecoration: SuggestionsBoxDecoration(
               borderRadius: BorderRadius.circular(8),
+              hasScrollbar: false,
             ),
             errorBuilder: (context, err) {
-              return Text(L.of(context).error_was_thrown);
+              return Text('No result found');
             },
-            debounceDuration: Duration(milliseconds: 600),
-            hideOnError: true,
+            debounceDuration: Duration(milliseconds: 300),
             textFieldConfiguration: TextFieldConfiguration(
+              onTap: () {
+                controller.open();
+                controller.resize();
+              },
               style: hasPellError
                   ? TextStyle(
                       decoration: TextDecoration.underline,
@@ -85,6 +94,7 @@ class _SkillsForRequestsState extends State<SkillsForRequests> {
               controller: _textEditingController,
               decoration: InputDecoration(
                 hintText: S.of(context).search,
+                hintStyle: TextStyle(color: Colors.grey),
                 filled: true,
                 fillColor: Colors.grey[300],
                 focusedBorder: OutlineInputBorder(
@@ -97,7 +107,7 @@ class _SkillsForRequestsState extends State<SkillsForRequests> {
                 contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
                 prefixIcon: Icon(
                   Icons.search,
-                  color: Colors.grey,
+                  color: Colors.black,
                 ),
                 suffixIcon: InkWell(
                   splashColor: Colors.transparent,
@@ -130,6 +140,7 @@ class _SkillsForRequestsState extends State<SkillsForRequests> {
                 var spellCheckResult =
                     await SpellCheckManager.evaluateSpellingFor(pattern,
                         language: widget.languageCode);
+
                 if (spellCheckResult.hasErros) {
                   dataCopy.add(SuggestedItem()
                     ..suggestionMode = SuggestionMode.USER_DEFINED
@@ -149,7 +160,8 @@ class _SkillsForRequestsState extends State<SkillsForRequests> {
                 }
               }
 
-              return await Future.value(dataCopy);
+              // return await Future.value(dataCopy);
+              return Future.value(dataCopy);
             },
             itemBuilder: (context, suggestedItem) {
               switch (suggestedItem.suggestionMode) {
@@ -182,18 +194,23 @@ class _SkillsForRequestsState extends State<SkillsForRequests> {
 
                 case SuggestionMode.USER_DEFINED:
                   if (ProfanityDetector()
-                      .isProfaneString(suggestedItem.suggesttionTitle)) {
+                      .isProfaneString(_textEditingController.text)) {
                     return ProfanityDetector.getProanityAdvisory(
-                      suggestion: suggestedItem.suggesttionTitle,
+                      suggestion: _textEditingController.text,
                       suggestionMode: SuggestionMode.USER_DEFINED,
                       context: context,
                     );
                   }
-                  return searchUserDefinedEntity(
-                    keyword: suggestedItem.suggesttionTitle,
-                    language: widget.languageCode,
-                    suggestionMode: suggestedItem.suggestionMode,
-                    showLoader: false,
+                  // return searchUserDefinedEntity(
+                  //   keyword: suggestedItem.suggesttionTitle,
+                  //   language: 'en',
+                  //   suggestionMode: suggestedItem.suggestionMode,
+                  //   showLoader: false,
+                  // );
+                  return getSuggestionLayout(
+                    suggestion: _textEditingController.text,
+                    add: S.of(context).add + ' ',
+                    suggestionMode: SuggestionMode.USER_DEFINED,
                   );
                   break;
 
@@ -202,13 +219,18 @@ class _SkillsForRequestsState extends State<SkillsForRequests> {
               }
             },
             noItemsFoundBuilder: (context) {
-              return searchUserDefinedEntity(
-                keyword: _textEditingController.text,
-                language: widget.languageCode,
-                showLoader: false,
+              return getSuggestionLayout(
+                suggestion: _textEditingController.text,
+                add: S.of(context).add + ' ',
+                suggestionMode: SuggestionMode.USER_DEFINED,
               );
+              // return searchUserDefinedEntity(
+              //   keyword: _textEditingController.text,
+              //   language: 'en',
+              //   showLoader: false,
+              // );
             },
-            onSuggestionSelected: (SuggestedItem suggestion) {
+            onSuggestionSelected: (SuggestedItem suggestion) async {
               if (ProfanityDetector()
                   .isProfaneString(suggestion.suggesttionTitle)) {
                 return;
@@ -222,6 +244,18 @@ class _SkillsForRequestsState extends State<SkillsForRequests> {
                       skillLanguage: widget.languageCode,
                       skillTitle: suggestion.suggesttionTitle);
                   skills[skillId] = suggestion.suggesttionTitle;
+
+                  if (!_selectedSkills
+                      .containsValue(suggestion.suggesttionTitle)) {
+                    controller.close();
+                    String id = skills.keys.firstWhere(
+                      (k) => skills[k] == suggestion.suggesttionTitle,
+                    );
+                    _selectedSkills[id] = suggestion.suggesttionTitle;
+                    widget.onSelectedSkillsMap(_selectedSkills);
+
+                    setState(() {});
+                  }
                   break;
 
                 case SuggestionMode.USER_DEFINED:
@@ -229,25 +263,37 @@ class _SkillsForRequestsState extends State<SkillsForRequests> {
                   SkillsAndInterestBloc.addSkillToDb(
                     skillId: skillId,
                     skillLanguage: widget.languageCode,
-                    skillTitle: suggestion.suggesttionTitle,
+                    skillTitle: _textEditingController.text,
                   );
-                  skills[skillId] = suggestion.suggesttionTitle;
+                  skills[skillId] = _textEditingController.text;
+                  if (!_selectedSkills
+                      .containsValue(_textEditingController.text)) {
+                    controller.close();
+                    String id = skills.keys.firstWhere(
+                      (k) => skills[k] == _textEditingController.text,
+                    );
+                    _selectedSkills[id] = _textEditingController.text;
+                    widget.onSelectedSkillsMap(_selectedSkills);
+                    setState(() {});
+                  }
                   break;
 
                 case SuggestionMode.FROM_DB:
+                  if (!_selectedSkills
+                      .containsValue(suggestion.suggesttionTitle)) {
+                    controller.close();
+                    String id = skills.keys.firstWhere(
+                      (k) => skills[k] == suggestion.suggesttionTitle,
+                    );
+                    _selectedSkills[id] = suggestion.suggesttionTitle;
+                    widget.onSelectedSkillsMap(_selectedSkills);
+
+                    setState(() {});
+                  }
                   break;
               }
 
               _textEditingController.clear();
-              if (!_selectedSkills.containsValue(suggestion.suggesttionTitle)) {
-                controller.close();
-                String id = skills.keys.firstWhere(
-                    (k) => skills[k] == suggestion.suggesttionTitle);
-                _selectedSkills[id] = suggestion.suggesttionTitle;
-                widget.onSelectedSkillsMap(_selectedSkills);
-
-                setState(() {});
-              }
             },
           ),
           SizedBox(height: 20),
@@ -308,5 +354,77 @@ class _SkillsForRequestsState extends State<SkillsForRequests> {
       padding: const EdgeInsets.all(8.0),
       child: LoadingIndicator(),
     );
+  }
+
+  Padding getSuggestionLayout({
+    String suggestion,
+    SuggestionMode suggestionMode,
+    String add,
+  }) {
+    return suggestion == ''
+        ? Padding(padding: const EdgeInsets.all(0))
+        : Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Container(
+              height: 40,
+              alignment: Alignment.centerLeft,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        RichText(
+                          text: TextSpan(
+                            children: <TextSpan>[
+                              TextSpan(
+                                text: add,
+                                style: TextStyle(
+                                  color: Colors.blue,
+                                ),
+                              ),
+                              TextSpan(
+                                text: "\"${suggestion}\"",
+                                style: suggestionMode ==
+                                        SuggestionMode.SUGGESTED
+                                    ? TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.blue,
+                                      )
+                                    : TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.blue,
+                                        decoration: TextDecoration.underline,
+                                        decorationColor: Colors.red,
+                                        decorationStyle:
+                                            TextDecorationStyle.wavy,
+                                        decorationThickness: 1.5,
+                                      ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Text(
+                          suggestionMode == SuggestionMode.SUGGESTED
+                              ? S.of(context).suggested
+                              : S.of(context).you_entered,
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Icon(
+                    Icons.add,
+                    color: Colors.grey,
+                  ),
+                ],
+              ),
+            ),
+          );
   }
 }

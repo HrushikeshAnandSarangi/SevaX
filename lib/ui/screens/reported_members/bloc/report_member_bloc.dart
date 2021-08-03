@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+// import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
@@ -58,14 +58,9 @@ class ReportMemberBloc {
     if (_file.value != null) {
       UploadTask _uploadTask =
           _storage.ref().child("reports/$filePath.png").putFile(_file.value);
-
-      _uploadTask.whenComplete(() async {
-        attachmentUrl = await _storage.ref().getDownloadURL();
-      });
-
-      if (attachmentUrl == null || attachmentUrl == '') {
-        return Future.value(false);
-      }
+      attachmentUrl = await (await _uploadTask.whenComplete(() => null))
+          .ref
+          .getDownloadURL();
     }
     Report report = Report(
       reporterId: reportingUserModel.sevaUserID,
@@ -98,7 +93,7 @@ class ReportMemberBloc {
       return true;
     } catch (e) {
       _buttonStatus.add(true);
-      FirebaseCrashlytics.instance.log(e);
+      // FirebaseCrashlytics.instance.log(e);
     }
   }
 

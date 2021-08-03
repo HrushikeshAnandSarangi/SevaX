@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/manual_time_model.dart';
@@ -20,6 +21,10 @@ export 'firestore_manager.dart';
 export 'preference_manager.dart';
 export 'search_manager.dart';
 
+import 'package:path_provider/path_provider.dart';
+import 'package:http/http.dart' as http;
+import 'dart:math';
+
 class Utils {
   static String getUuid() {
     return Uuid().generateV4();
@@ -31,6 +36,7 @@ bool isLeapYear(int year) {
 }
 
 bool isSameDay(DateTime d1, DateTime d2) {
+  return (d1.year == d2.year && d1.month == d2.month && d1.day == d2.day);
   return (d1.year == d2.year && d1.month == d2.month && d1.day == d2.day);
 }
 
@@ -134,7 +140,8 @@ String getReviewMessage(
     String reviewMessage,
     bool isForCreator,
     bool isOfferReview = false,
-    BuildContext context}) {
+    BuildContext context,
+    bool isFromOfferRequest}) {
   String offerReview = '${S.of(context).offerReview} $requestTitle';
   String body = isForCreator
       ? S.of(context).request_review_body_creator
@@ -156,9 +163,10 @@ void showAdminAccessMessage({BuildContext context}) {
         actions: <Widget>[
           // usually buttons at the bottom of the dialog
           CustomTextButton(
+            shape: StadiumBorder(),
             padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
             color: Theme.of(context).accentColor,
-            textColor: FlavorConfig.values.buttonTextColor,
+            textColor: Colors.white,
             child: Text(S.of(context).close),
             onPressed: () {
               Navigator.of(_context).pop();
@@ -168,6 +176,24 @@ void showAdminAccessMessage({BuildContext context}) {
       );
     },
   );
+}
+
+Future<File> urlToFile(String imageUrl) async {
+// generate random number.
+  var rng = new Random();
+// get temporary directory of device.
+  Directory tempDir = await getTemporaryDirectory();
+// get temporary path from temporary directory.
+  String tempPath = tempDir.path;
+// create a new file in temporary path with random file name.
+  File file = new File('$tempPath' + (rng.nextInt(100)).toString() + '.png');
+// call http.get method and pass imageUrl into it to get response.
+  http.Response response = await http.get(imageUrl);
+// write bodyBytes received in response to file.
+  await file.writeAsBytes(response.bodyBytes);
+// now return the file which is created with random name in
+// temporary directory and image bytes from response is written to // that file.
+  return file;
 }
 
 class HexColor extends Color {
@@ -234,4 +260,15 @@ Future<bool> deleteFireBaseImage({String imageUrl}) async {
   }).catchError((e) {
     return false;
   });
+}
+
+
+
+String getStartDateFormat(DateTime date) {
+  var suffix = "th";
+  var digit = date.day % 10;
+  if ((digit > 0 && digit < 4) && (date.day < 11 || date.day > 13)) {
+    suffix = ["st", "nd", "rd"][digit - 1];
+  }
+  return new DateFormat("EEEE MMM d'$suffix',  h:mm a").format(date);
 }

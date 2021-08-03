@@ -488,6 +488,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                       });
                     }
                   },
+                  padding: EdgeInsets.all(3),
                   child: Text(
                     S.of(context).upload,
                     textAlign: TextAlign.center,
@@ -959,7 +960,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                     } else if (value.length < 50) {
                       return S.of(context).validation_error_bio_min_characters;
                     } else if (value.length > 250) {
-                      return L.of(context).max_250_characters;
+                      return S.of(context).max_250_characters;
                     } else {
                       bio = value;
                       return null;
@@ -1073,11 +1074,35 @@ class _EditProfilePageState extends State<EditProfilePage>
                   Spacer(),
                   CustomTextButton(
                     padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                    shape: StadiumBorder(),
+                    color: Colors.grey,
+                    child: Text(
+                      S.of(context).cancel,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontFamily: 'Europa',
+                        fontSize: 16,
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.of(_context).pop(false);
+                    },
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  CustomTextButton(
+                    shape: StadiumBorder(),
+                    padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                     color: Theme.of(context).accentColor,
                     textColor: FlavorConfig.values.buttonTextColor,
                     child: Text(
                       S.of(context).log_out,
-                      style: TextStyle(fontFamily: 'Europa'),
+                      style: TextStyle(
+                        fontFamily: 'Europa',
+                        color: Colors.white,
+                        fontSize: 16,
+                      ),
                     ),
                     onPressed: () async {
                       FCMNotificationManager.removeDeviceRegisterationForMember(
@@ -1087,15 +1112,6 @@ class _EditProfilePageState extends State<EditProfilePage>
 
                       // _signOut(
                       //     context, SevaCore.of(context).loggedInUser.email);
-                    },
-                  ),
-                  CustomTextButton(
-                    child: Text(
-                      S.of(context).cancel,
-                      style: TextStyle(color: Colors.red, fontFamily: 'Europa'),
-                    ),
-                    onPressed: () {
-                      Navigator.of(_context).pop(false);
                     },
                   ),
                 ],
@@ -1109,6 +1125,8 @@ class _EditProfilePageState extends State<EditProfilePage>
     if (result ?? false) {
       var auth = AuthProvider.of(context).auth;
       await auth.signOut();
+      Provider.of<UserBloc>(context, listen: false).clearUserData;
+
       await Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
@@ -1116,7 +1134,6 @@ class _EditProfilePageState extends State<EditProfilePage>
         ),
         (Route<dynamic> route) => false,
       );
-      Provider.of<UserBloc>(context, listen: false).clearUserData;
       await Phoenix.rebirth(context);
     }
   }

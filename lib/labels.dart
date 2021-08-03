@@ -1,6 +1,7 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class L {
+  // <------Enhanced Billing UI Labels Below ------> //
   L.of(BuildContext context) {}
 
 //   String get browse_requests_by_category => "Browse requests by category";
@@ -606,7 +607,335 @@ class L {
       "There was error creating your place, Please try again.";
   String get updating_place_error =>
       "There was error creating your place, Please try again.";
-}
+
+  String get sevax => "SevaX";
+  String get plans => "Plans";
+  String get invoice_history => "Invoice History";
+  String get subscription_period => "Subscription Period";
+  String get effective_date => "Effective Date";
+  String get invoice_amount => "Invoice Amount";
+  String get next_invoice_date => "Next Invoice Date";
+  String get monthly => "Monthly";
+  String get download => "Download";
+  String get annual => "Annual";
+  String get inactive => "Inactive";
+  String get date_not_available => "Date not available";
+  String get not_available => "not available";
+  String get edit_current_plan => "Edit Current Plan";
+  String get cancel_plan => "Cancel Plan";
+  String get card_ending_with => "Card ending with ";
+  String get show_previous_invoices => "show previous invoices";
+  String get show_less_invoices => "show less invoices";
+  String get my_cards => "My Cards";
+  String get payment_method => "Payment Method";
+  String get pay_by => "Pay by";
+  String get country => "Country";
+  String get company => "Company";
+  String get additional => "Additional";
+  String get usd => "USD";
+
+  String get to_do => "To Do";
+  String get one_to_many_offer_attende => "One to Many Offer Attendee";
+  String get one_to_many_offer_speaker => "One to Many Offer Speaker";
+  String get time_request_volunteer => "Time Request Volunteer";
+  String get time_offer_volunteer => "Accepted Time Offer";
+  String get one_to_many_request_speaker => "One to Many Request Speaker";
+  String get one_to_many_request_attende => "One to Many Request attendee";
+
+  String get completed_one_to_many_offer_attende_title =>
+      "This one to many offer has completed.";
+  String get completed_one_to_many_offer_attende_subtitle =>
+      "This one to many offer has completed.";
+
+  String get completed_one_to_many_offer_speaker_title =>
+      "This one to many offer has completed.";
+  String get completed_one_to_many_offer_speaker_subtitle =>
+      "This one to many offer has completed.";
+
+  String get completed_one_to_many_request_attende_title =>
+      "This one to many offer has completed.";
+  String get completed_one_to_many_request_attende_subtitle =>
+      "This one to many offer has completed.";
+
+  String get completed_one_to_many_request_speaker_title =>
+      "This one to many offer has completed.";
+  String get completed_one_to_many_request_speaker_subtitle =>
+      "This one to many offer has completed.";
+
+//ToDO List
+
+  String get to_do_one_to_many_offer_attende_title =>
+      "This one to many offer has completed.";
+  String get to_do_one_to_many_offer_attende_subtitle =>
+      "This one to many offer has completed.";
+
+  String get to_do_one_to_many_reuqest_speaker_title =>
+      "This one to many reuqest has completed.";
+  String get to_do_one_to_many_reuqest_speaker_subtitle =>
+      "This one to many request has completed.";
+
+  String get to_do_one_to_many_request_attende_title =>
+      "This one to many offer has completed.";
+  String get to_do_one_to_many_request_attende_subtitle =>
+      "This one to many offer has completed.";
+
+  String get to_do_one_to_many_request_speaker_title =>
+      "This one to many offer has completed.";
+  String get to_do_one_to_many_request_speaker_subtitle =>
+      "This one to many offer has completed.";
+
+//   // <------------ PENDING START ------------>
+//   String get no_groups_text =>
+//       "You are currently not part of any groups. You can either join one or create a new group."; //(only for mobile)
+//   String get offer => "Offer"; //it's in flavor config file so cannot add it.
+//   String get minimum_credits => "Minimum Credits"; //can't find where to replace
+//   String get applied_for_request =>
+//       "You have accepted the request"; //cant find where to replace
+//   String get nearby_settings_content => //already in arbify
+//       "This indicates the distance that the user is willing to travel to complete a Request for a Seva Community or participate in an Event";
+//   String get kilometer => "Kilometer"; //cant find where to replace
+//   String get mile => "Mile"; //cant find where to replace
+//   // <------------ PENDING END ------------>
+
+//TODO PENDING LIST
+  String get one_to_many_attendee_offer => "One to Many Offer Attendee";
+  String get one_to_many_speaker_offer => "One to Many Offer Speaker";
+  String get one_to_many_attendee_request => "One to Many Request Attendee";
+  String get one_to_many_speaker_request => "One to Many Offer Speaker";
+
+//RECURRING EVENTS
+  String get do_not_copy => "Do not copy";
+  String get proceed_with_copying => "Proceed with copying.";
+  String get copy_requests_in_events =>
+      "You have requested to make this a recurring event. Would you like to include all the requests within this event over to all the remaining events?";
+
+// //
+// //
+// // <----------- BELOW DONE IN WEB ------------>
+// //
+// //
+//DO BELOW OF THIS VISHNU
+  String get kilometers => "Kilometers"; //done in web
+  String get miles => "Miles"; //done in web
+  String get continue_to_signin => "Continue to Sign in"; //done in web
+  String get access_not_available => "Access not available"; //done in web
+  String get no_interests_added => "No interests added"; //done in web
+  String get no_skills_added => "No skills added"; //done in web
+  String get part_of_sevax =>
+      "Part of SevaX Global Network of Communities"; //done in web
+  String get upcoming_events =>
+      "Upcoming Events"; //done in web (but code is commented out)
+  String get latest_requests =>
+      "Latest Requests"; //done in web (but code is commented out)
+  String get provide_skills =>
+      "Provide the list of Skills that you require for this request"; //done in web
+  String get event_description => "Event Description"; //done in web
+  String get request_to_join => "Request to join"; //done in web
+  String get event => "Event"; //done in web
+  String get min_credits_error =>
+      "Minimum credits cannot be empty or zero"; //done in web
+//OFFERS LABELS STARTS HERE
+  String get offer_description_error =>
+      "Please give a detailed description of the class you’re offering.";
+  String get invitation_accepted =>
+      "Invitation Accepted."; //done in mobile & web
+  String get invitation_accepted_subtitle =>
+      " has accepted your offer."; //done in mobile & web
+  String get offer_invitation_notification_title =>
+      "Offer Invitation"; //done in mobile & web
+  String get offer_invitation_notification_subtitle =>
+      " has invited you to accept an offer."; //done in mobile & web
+  String get accept_offer_invitation_confirmation =>
+      "This task will be added to your Pending Tasks, after you approve it."; //done in mobile & web
+  String get minimum_credit_title => "Minimum Credits*"; //done in mobile & web
+  String get minimum_credit_hint =>
+      "Provide minimum credits you require"; //done in mobile & web
+  String get option_one => "Standing Offer"; //done in mobile & web
+  String get option_two => "One Time"; //done in mobile & web
+  String get minimum_credits_offer => //done in web
+      "This offer does not meet your minimum credit requirement.";
+  String get speaker_claim_form_field_title =>
+      "How much prep time did you require for this request?"; //done in web
+  String get speaker_claim_form_field_title_hint =>
+      "Prep time in hours"; //done in web
+  String get speaker_claim_form_text_1 =>
+      "I acknowledge that I have completed the session for the request."; //done in web
+  String get speaker_claim_form_text_2 =>
+      "Upon completing the one to many request, the combined prep time and session hours will be credited to you."; //done in web
+  String get registration_link => "Registration Link"; //done in mobile & web
+  String get registration_link_hint =>
+      "Ex: Eventbrite link, etc."; //done in mobile & web
+  String get request_closed => "Request closed"; //done in mobile & web
+  String get speaker_claim_credits => 'Claim credits'; //done in mobile & web
+  String get requested_for_completion =>
+      "Your completed request is pending approval."; //done in mobile & web
+  String get this_request_has_now_ended =>
+      "This request has now ended"; //done in web
+  String get maximumNoOfParticipants =>
+      'This request has a maximum number of participants. That limit has been reached.'; //done in web
+  String get reject_request_completion => //done in mobile & web
+      "Are you sure you want to reject this request for completion?";
+  String get speaker_reject_invite_dialog => //done in mobile & web
+      "Are you sure you want to reject this invitation to speak?";
+  String get join_community_alert => //already in json  //done in web
+      "This action is only available to members of Community **CommunityName. Please request to join the community first before you can perform this action.";
+  String get switch_community => //done in mobile & web //already in json
+      "You need to switch Seva Communities in order to access Groups in another Community.";
+  String get sign_in_alert =>
+      "You need to sign in or register to view this."; //done in web //already in json
+  String get explore_page_title_text =>
+      "Explore Opportunities"; //done in mobile & web
+  String get explore_page_subtitle_text => //done in mobile & web //already in json
+      "Find communities near you or online communities that interest you. You can offer to volunteer your services or request any assistance or search for Community Events.";
+  String get select_speaker_hint =>
+      "Ex: Name of speaker."; //done in mobile & web
+  String get my_groups => "My Groups"; //done in mobile & web
+  String get onetomanyrequest_create_new_event => //done in mobile & web
+      "A new event will be created and linked to this request.";
+  String get speaker_requested_completion_notification =>
+      "This request has been completed."; //done web
+  String get request_completed_by_speaker =>
+      "This request has been completed and is awaiting your approval."; //done in mobile & web
+  String get speaker => 'Speaker'; //done in mobile & web
+  String get speaker_completion_rejected_notification_1 =>
+      "Request rejected."; //done in web
+  String get you_are_the_speaker => "You are the speaker for: "; //done in web
+  String get select_a_speaker => "Please select a Speaker*"; //done in web
+  String get selected_speaker => "Selected Speaker"; //done in web
+  String get speaker_accepted_invite_notification =>
+      "This request has been accepted by **speakerName."; //done in web
+  String get oneToManyRequestSpeakerAcceptRequest =>
+      'Are you sure you want to accept this request?'; //done in web
+  String get resetPasswordSuccess =>
+      'An email has been sent. Please follow the steps in the email to reset your password.'; //done in web
+  String get bundlePricingInfoButton =>
+      'There is a limit to the number of transactions in the free tier. You will be charged \$2 for a bundle of 50 transactions.'; //done in web
+  String get insufficientSevaCreditsDialog =>
+      'You do not have sufficient Seva credits to create this request. You need to have *** more Seva credits'; //done in web
+  String get adminNotificationInsufficientCredits =>
+      ' Has Insufficient Credits To Create Requests'; //done in web
+  String get adminNotificationInsufficientCreditsNeeded =>
+      'Credits Needed: '; //done in web
+  String get oneToManyRequestSpeakerWithdrawDialog =>
+      'Please confirm that you would like to withdraw as a speaker'; //done in web
+  String get speakerRejectedNotificationLabel =>
+      ' rejected the Speaker invitation for '; //done in web
+  String get speaker_rejected => 'Speaker Rejected'; //done in web
+  String get people_applied_for_request =>
+      ' people have applied for this request'; //done in web
+  String get oneToManyRequestCreatorCompletingRequestDialog =>
+      'Are you sure you want to accept and complete this request?'; //done in web
+  String get duration_of_session => 'Duration of Session: '; //done in web
+  String get time_to_prepare => 'Time to prepare: '; //done in web
+  String get hours => 'hours'; //done in web
+  String get hour => 'hour'; //done in web
+  String get speaker_complete_page_text_1 =>
+      'I acknowledge that speaker_name has completed the request. The list of members provided above attended the request.'; //done in web
+  String get speaker_complete_page_text_2 =>
+      'Note: The hours will be credited to the speaker and to the attendees upon your approval. This list of attendees cannot be modified after approval.'; //done in web
+  String get action_restricted_by_owner =>
+      'This action is Restricted for you by the owner of the seva Community.'; //done in web
+  String get accepted_this_request =>
+      'You have accepted this request.'; //done in web
+  String get onetomanyrequest_member_invite_notif_subtitle =>
+      'admin_name in community_name has invited you to join the webinar_name on date_webinar at time_webinar. Tap to accept the invitation.'; // done in web
+  String get select_a_speaker_dialog => 'Select a speaker';
+  String get onetomanyrequest_title_hint =>
+      "Ex: Implicit Bias webinar."; //done in web
+  String get total_no_of_participants =>
+      "Total No. of Participants*"; //done in web
+  String get onetomanyrequest_participants_or_credits_hint =>
+      "Ex: 40."; //done in web
+  String get speaker_invite_notification =>
+      "Added you as the Speaker for request: "; //done in web
+  String get sandbox_already_created_1 =>
+      "Only one sandbox community is currently allowed for each SevaX member."; //done in web
+  String get sandbox_community => "Sandbox Community"; //done in web
+  String get sandbox_dialog_title => "Sandbox seva community"; //done in web
+  String get sandbox_create_community_alert =>
+      "Are you sure you want to create a sandbox community?"; //done in web
+  String get you_are_on_enterprise_plan =>
+      "You are on Enterprise Plan"; //done in web
+  String get sandbox_dialog_subtitle =>
+      "Sandbox Seva communities are created for instructional purposes only. Any credits earned or debited will not count towards your account."; //done in web
+
+// labels added on june 11
+  String get create_community_upload_image_text =>
+      "Upload an image to represent your community";
+
+  String get create_community_select_categories_text =>
+      "Select categories for your community";
+
+  String get create_community_negative_threshold_text =>
+      "Negative credits threshold";
+
+  String get choose_plan => "Choose Plan";
+
+  String get new_comminity_message => "Select a child or branch community";
+  String get go_to_community_chat => "View child community Messaging Rooms";
+  String get no_child_communities => "No child communities";
+  String get community_chat => "Child Messaging Rooms";
+// }
+
+  String get add_cover_picture => "Add Cover Picture";
+  String get or_drag_and_drop => "or drag and drop";
+  String get cover_picture_label => "Seva Community Cover Picture";
+  String get cover_picture_label_group => "Group Cover Picture";
+  String get cover_picture_label_event => "Event Cover Picture";
+
+  String get crop_photo => "Crop Photo";
 
 // // <--------  IRRELEVANT FOR NOW  --------->
 // // String get borrow_request_title => "Borrow Request"; //done in mobile
+
+  String get my_request_categories => "My Request Subcategories";
+  String get add_new_request_category => "Add new request subcategory";
+  String get edit_request_category => "Edit subcategory";
+  String get add_new_subcategory => "Add new subcategory";
+  String get add_new_subcategory_hint => "Subcategory title";
+  String get select_photo => "Select Photo";
+  String get photo_selected => "Photo Selected";
+  String get please_enter_title => "Please enter title";
+  String get request_category_exists => "Request subcategory exists";
+  String get no_subcategories_created => "No Request Subcategories Created";
+
+  String get change_pricing_options => 'Change Pricing Options';
+  String get occurrences => "Occurrences";
+
+//13 july
+  String get share_post_new => 'Share Post';
+
+  String get this_is_a_repeating_request => "This is a repeating request";
+
+  String get other_payment_title_hint => "Ex: IndieGoGo or Revolut";
+  String get other_payment_details_hint => "Ex: Email, Phone Number, ID";
+  String get other_payment_details => "Payment Method Details";
+  String get other_payment_name => "Payment Method Name";
+  String get deleted_events_create_request_message =>
+      "This event is going to be deleted. As a result, requests cannot be created.";
+
+  String get communities => "Communities";
+
+// 28th July
+  String get accept_offer_invitation_confirmation_to_do_tasks =>
+      "This task will be added to your To Do list, after you approve it.";
+
+//29th july
+  String get careers_explore => "Careers";
+  String get communities_explore => "Communities";
+  String get discover_explore => "Discover";
+  String get diversity_belonging_explore => "Diversity Belonging";
+  String get guidebooks_explore => "Guidebooks";
+  String get hosting_explore => "Hosting";
+  String get host_a_community_explore => "Host a community";
+  String get organize_an_event_explore => "Organize an event";
+  String get policies_explore => "Policies";
+  String get news_explore => "News";
+  String get trust_and_safety_explore => "Trust & Safety";
+
+//30th July
+  String get loan_success => "You have donated credits successfully";
+  String get yes => "Yes";
+  String get no => "No";
+  String get any_distance => "Any Distance";
+}

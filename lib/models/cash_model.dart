@@ -53,6 +53,7 @@ class CashModel {
     this.venmoId,
     this.swiftId,
     this.others,
+    this.other_details,
   });
 
   int amountRaised = 0;
@@ -66,6 +67,7 @@ class CashModel {
   String venmoId;
   String swiftId;
   String others;
+  String other_details;
 
   factory CashModel.fromMap(Map<dynamic, dynamic> json) => CashModel(
         paymentType: json["paymentType"] == null
@@ -78,7 +80,9 @@ class CashModel {
                         ? RequestPaymentType.VENMO
                         : json["paymentType"] == 'RequestPaymentType.SWIFT'
                             ? RequestPaymentType.SWIFT
-                            : RequestPaymentType.PAYPAL,
+                            : json["paymentType"] == 'RequestPaymentType.OTHER'
+                                ? RequestPaymentType.OTHER
+                                : RequestPaymentType.PAYPAL,
         amountRaised:
             json["amountRaised"] == null ? null : json["amountRaised"],
         donors: json["donors"] == null
@@ -95,6 +99,8 @@ class CashModel {
         venmoId: json["venmoId"] == null ? null : json["venmoId"],
         swiftId: json["swiftId"] == null ? null : json["swiftId"],
         others: json["others"] == null ? null : json["others"],
+        other_details:
+            json["other_details"] == null ? null : json["other_details"],
       );
 
   Map<String, dynamic> toMap() => {
@@ -109,5 +115,6 @@ class CashModel {
         'venmoId': venmoId == null ? null : venmoId,
         'swiftId': swiftId == null ? null : swiftId,
         'others': others == null ? null : others,
+        'other_details': other_details == null ? null : other_details,
       };
 }

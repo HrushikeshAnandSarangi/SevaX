@@ -7,6 +7,7 @@ import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 //Fetch location
 Future<String> getLocation(GeoFirePoint location) async {
@@ -18,7 +19,8 @@ Future<String> getLocation(GeoFirePoint location) async {
 }
 
 bool isPrimaryTimebank({@required String parentTimebankId}) {
-  return parentTimebankId == FlavorConfig.values.timebankId;
+  return parentTimebankId != null &&
+      parentTimebankId == FlavorConfig.values.timebankId;
 }
 
 handleVolunterFeedbackForTrustWorthynessNRealiablityScore(
@@ -78,6 +80,18 @@ handleVolunterFeedbackForTrustWorthynessNRealiablityScore(
           ratingCal(temp['0'] + temp['1']), user.reliabilityscore),
       'trustworthinessscore': averageReview(user.totalReviews,
           ratingCal(temp['2'] + temp['3']), user.trustworthinessscore)
+    }, SetOptions(merge: true));
+  }
+
+  if (type == FeedbackType.FOR_ONE_TO_MANY_REQUEST_ATTENDEE) {
+    var temp = results['ratings'];
+    logger.e('RESULTS:' + results.toString());
+    await CollectionRef.users.doc(model.selectedInstructor.email).set({
+      'totalReviews': FieldValue.increment(1),
+      'reliabilityscore': averageReview(user.totalReviews,
+          ratingCal(temp['0'] + temp['1']), user.reliabilityscore),
+      'trustworthinessscore': averageReview(user.totalReviews,
+          ratingCal(temp['0'] + temp['2']), user.trustworthinessscore)
     }, SetOptions(merge: true));
   }
 }

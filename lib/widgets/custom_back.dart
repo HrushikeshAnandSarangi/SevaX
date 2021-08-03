@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 
 class CustomBackButton extends StatelessWidget {
   final Function onBackPressed;
@@ -13,7 +14,7 @@ class CustomBackButton extends StatelessWidget {
         icon: Icon(Icons.arrow_back_ios, color: Theme.of(context).accentColor),
         onPressed: onBackPressed,
         label: Text(
-          'Go Back',
+         S.of(context).go_back,
           style: TextStyle(
             fontWeight: FontWeight.bold,
             color: Theme.of(context).accentColor,

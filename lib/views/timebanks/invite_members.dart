@@ -17,6 +17,7 @@ import 'package:sevaexchange/components/dashed_border.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/csv_file_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/invitation_model.dart';
@@ -57,7 +58,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   Future<TimebankModel> getTimebankDetails;
   TimebankModel timebankModel;
 
-  var validItems = [];
+  List<String> validItems = [];
   InvitationManager inivitationManager = InvitationManager();
   bool _isDocumentBeingUploaded = false;
 
@@ -100,6 +101,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
     ).then((onValue) {
       setState(() {
         validItems = onValue.listOfElement;
+        logger.i('validItems len ${validItems.length}');
       });
     });
   }
@@ -342,7 +344,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                   _openFileExplorer();
                 },
                 child: Container(
-                  height: 150,
+                  height: csvFileModel.csvUrl == null ? 150 : 200,
                   width: double.infinity,
                   decoration: BoxDecoration(
                     border: DashPathBorder.all(
@@ -385,7 +387,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                                           leading: Icon(Icons.attachment),
                                           title: Text(
                                             csvFileModel.csvTitle ??
-                                                "Document.csv",
+                                                S.of(context).document_csv,
                                             overflow: TextOverflow.ellipsis,
                                           ),
                                           trailing: IconButton(
@@ -413,6 +415,9 @@ class InviteAddMembersState extends State<InviteAddMembers> {
             style: TextStyle(color: Colors.grey),
           ),
         ),
+        // csvFileModel.csvUrl == null
+        //     ? Offstage()
+        // :
         Padding(
           padding: const EdgeInsets.only(left: 8.0),
           child: Text(
@@ -426,7 +431,8 @@ class InviteAddMembersState extends State<InviteAddMembers> {
             Padding(
               padding: const EdgeInsets.only(top: 5),
               child: Container(
-                height: 30,
+                height: 40,
+                width: 80,
                 child: CustomElevatedButton(
                   onPressed: () async {
                     var connResult = await Connectivity().checkConnectivity();
@@ -446,7 +452,11 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                     if (csvFileModel.csvUrl == null ||
                         csvFileModel.csvUrl == '' ||
                         csvFileModel.csvTitle == '' ||
-                        csvFileModel.csvTitle == null) {
+                        csvFileModel.csvTitle == null ||
+                        csvFileModel.csvUrl == null &&
+                            csvFileModel.csvTitle == null) {
+                      logger.e(
+                          'csvFileModel.csvUrl :  ${csvFileModel.csvUrl}\n csvFileModel.csvTitle : ${csvFileModel.csvTitle}');
                       setState(() {
                         this.csvFileError = S.of(context).csv_error;
                       });
@@ -539,7 +549,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
     }
   }
 
-  Future<String> uploadDocument() async {
+  Future<void> uploadDocument() async {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     String timestampString = timestamp.toString();
     String name =
@@ -557,13 +567,17 @@ class InviteAddMembersState extends State<InviteAddMembers> {
 
     uploadTask.whenComplete(() async {
       documentURL = await ref.getDownloadURL();
+      csvFileModel.csvUrl = documentURL;
+      logger.e(
+          'csvFileModel.csvUrl :  ${csvFileModel.csvUrl} \n documentURL : ${documentURL}');
     });
 
     csvFileModel.csvTitle = name;
-    csvFileModel.csvUrl = documentURL;
+    setState(() => this._isDocumentBeingUploaded = false);
+
+    // csvFileModel.csvUrl = documentURL;
     // _setAvatarURL();
     // _updateDB();
-    return documentURL;
   }
 
   void userDoc(String _doc, String fileName) {
@@ -584,9 +598,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
       this._isDocumentBeingUploaded = false;
       getAlertDialog(parentContext);
     } else {
-      uploadDocument().then((_) {
-        setState(() => this._isDocumentBeingUploaded = false);
-      });
+      uploadDocument();
     }
   }
 

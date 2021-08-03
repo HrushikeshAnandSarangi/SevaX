@@ -66,7 +66,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
       querySnapshot.docs.forEach((DocumentSnapshot data) {
         // suggestionText.add(data['name']);
         // suggestionID.add(data.id);
-        if (data[widget.languageCode] != null) {
+        if (data.data().containsKey(widget.languageCode)) {
           skills[data.id] = data[widget.languageCode];
         }
 
@@ -127,7 +127,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
                 borderRadius: BorderRadius.circular(8),
               ),
               errorBuilder: (context, err) {
-                return Text(L.of(context).error_was_thrown);
+                return Text(S.of(context).error_was_thrown);
               },
               debounceDuration: Duration(milliseconds: 600),
               hideOnError: true,

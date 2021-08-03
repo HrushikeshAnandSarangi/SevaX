@@ -62,6 +62,7 @@ class GroupCard extends StatelessWidget {
                 Container(
                   height: 30,
                   child: CustomTextButton(
+                    padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                     shape: StadiumBorder(),
                     color: Colors.grey[300],
                     textColor: Theme.of(context).primaryColor,

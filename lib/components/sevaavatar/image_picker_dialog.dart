@@ -11,8 +11,9 @@ class ImagePickerDialog extends StatelessWidget {
   ImagePickerHandler _listener;
   AnimationController _controller;
   BuildContext context;
+  bool isCover;
 
-  ImagePickerDialog(this._listener, this._controller);
+  ImagePickerDialog(this._listener, this._controller, this.isCover);
 
   Animation<double> _drawerContentsOpacity;
   Animation<Offset> _drawerDetailsPosition;
@@ -51,37 +52,40 @@ class ImagePickerDialog extends StatelessWidget {
     );
   }
 
-  void refresh() {
-    _listener.addImageUrl();
+  void refresh(BuildContext context) {
+    _listener.addImageUrl(context);
   }
 
   void dispose() {
     _controller.dispose();
   }
 
-  Future<Timer> startTime() async {
+  Future<Timer> startTime(BuildContext context) async {
     var _duration = Duration(milliseconds: 200);
-    return Timer(_duration, navigationPage);
+    return Timer(_duration, () => navigationPage(context));
   }
 
-  void navigationPage() {
-    Navigator.of(dialogContext).pop();
+  void navigationPage(BuildContext context) {
+    if (Navigator.of(context).canPop()) {
+      Navigator.of(context).pop();
+    }
   }
 
-  void popContext() {
-    Navigator.of(dialogContext).pop();
-  }
+  // void popContext() {
+  //   if (Navigator.of(context).canPop()) {
+  //     Navigator.of(dialogContext).pop();
+  //   }
+  // }
 
-  void dismissDialog() {
+  void dismissDialog(BuildContext context) {
     _controller.reverse();
-    startTime();
+    startTime(context);
   }
 
-  BuildContext dialogContext;
   @override
   Widget build(BuildContext _context) {
     //context;
-    this.dialogContext = _context;
+
     return Material(
         type: MaterialType.transparency,
         child: Opacity(
@@ -93,7 +97,7 @@ class ImagePickerDialog extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
                 GestureDetector(
-                  onTap: () => _listener.openCamera(),
+                  onTap: () => _listener.openCamera(_context),
                   child: roundedButton(
                       S.of(context).camera,
                       EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
@@ -101,7 +105,7 @@ class ImagePickerDialog extends StatelessWidget {
                       const Color(0xFFFFFFFF)),
                 ),
                 GestureDetector(
-                  onTap: () => _listener.openGallery(),
+                  onTap: () => _listener.openGallery(_context),
                   child: roundedButton(
                       S.of(context).gallery,
                       EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
@@ -117,8 +121,9 @@ class ImagePickerDialog extends StatelessWidget {
                           // keepOnBackPress: false,
                           // showBackBtn: false,
                           // isFromHome: false,
-                          onChanged: (image) {
-                            _listener.addStockImageUrl(image);
+                          onChanged: (image) async {
+                            await _listener.addStockImageUrl(
+                                _context, image, isCover);
                             Navigator.pop(context);
                           },
                         ),
@@ -126,7 +131,7 @@ class ImagePickerDialog extends StatelessWidget {
                     )
                         .then((value) {
                       if (globals.isFromOnBoarding) {
-                        dismissDialog();
+                        dismissDialog(context);
                       }
                     });
                   },
@@ -141,11 +146,11 @@ class ImagePickerDialog extends StatelessWidget {
                     Navigator.of(_context).push(
                       MaterialPageRoute(
                         builder: (context) {
-                          return ImageUrlView();
+                          return ImageUrlView(isCover: isCover);
                         },
                       ),
                     ).then((value) {
-                      refresh();
+                      refresh(_context);
                       // dismissDialog();
                     });
                   },
@@ -158,7 +163,7 @@ class ImagePickerDialog extends StatelessWidget {
                 ),
                 const SizedBox(height: 15.0),
                 GestureDetector(
-                  onTap: () => dismissDialog(),
+                  onTap: () => dismissDialog(_context),
                   child: Padding(
                     padding: EdgeInsets.fromLTRB(30.0, 0.0, 30.0, 0.0),
                     child: roundedButton(

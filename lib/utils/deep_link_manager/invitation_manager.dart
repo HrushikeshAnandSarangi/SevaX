@@ -2,6 +2,7 @@ import 'dart:collection';
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
@@ -146,7 +147,7 @@ class InvitationManager {
     @required String primaryTimebankId,
     @required String memberJoiningSevaUserId,
     @required String newMemberJoinedEmail,
-    @required var adminCredentials,
+    @required User adminCredentials,
     @required String newMemberFullName,
     @required String newMemberPhotoUrl,
   }) async {
@@ -158,22 +159,25 @@ class InvitationManager {
       adminCredentials: adminCredentials,
       newMemberFullName: newMemberFullName,
       newMemberPhotoUrl: newMemberPhotoUrl,
-    ).commit().then((onValue) => true).catchError((onError) => false);
+    ).then((batch) {
+      return batch
+          .commit()
+          .then((onValue) => true)
+          .catchError((onError) => false);
+    });
   }
 
-  static WriteBatch _addMemberToTimebank({
-    @required String communityId,
-    @required String primaryTimebankId,
-    @required String memberJoiningSevaUserId,
-    @required String newMemberJoinedEmail,
-    @required var adminCredentials,
-    @required String newMemberFullName,
-    @required String newMemberPhotoUrl,
-    TimebankModel timebankModel,
-  }) {
+  static Future<WriteBatch> _addMemberToTimebank(
+      {@required String communityId,
+      @required String primaryTimebankId,
+      @required String memberJoiningSevaUserId,
+      @required String newMemberJoinedEmail,
+      @required User adminCredentials,
+      @required String newMemberFullName,
+      @required String newMemberPhotoUrl}) async {
     //add to timebank members
 
-    log('CHECK DATA: ' + timebankModel.name + ' ' + timebankModel.id);
+    // log('CHECK DATA: ' + timebankModel.name + ' ' + timebankModel.id);
 
     WriteBatch batch = CollectionRef.batch;
     var timebankRef = CollectionRef.timebank.doc(primaryTimebankId);
@@ -196,19 +200,19 @@ class InvitationManager {
     });
 
     var entryExitLogReference = CollectionRef.timebank
-        .doc(timebankModel.id)
+        .doc(primaryTimebankId)
         .collection('entryExitLogs')
         .doc();
+
+    var timebankDetals =
+        await utils.getTimeBankForId(timebankId: primaryTimebankId);
 
     batch.set(entryExitLogReference, {
       'mode': ExitJoinType.JOIN.readable,
       'modeType': JoinMode.JOINED_VIA_LINK.readable,
       'timestamp': DateTime.now().millisecondsSinceEpoch,
       'communityId': communityId,
-      'isGroup':
-          timebankModel.parentTimebankId == FlavorConfig.values.timebankId
-              ? false
-              : true,
+      'isGroup': false,
       'memberDetails': {
         'email': newMemberJoinedEmail,
         'id': memberJoiningSevaUserId,
@@ -219,13 +223,13 @@ class InvitationManager {
         'email': adminCredentials.email,
         'id': adminCredentials.uid,
         'fullName': adminCredentials.displayName,
-        'photoUrl': adminCredentials.photoUrl,
+        'photoUrl': adminCredentials.photoURL,
       },
       'associatedTimebankDetails': {
         //Need to check if timebankModel data is correct or null
-        'timebankId': timebankModel.id,
-        'timebankTitle': timebankModel.name,
-        'missionStatement': timebankModel.missionStatement,
+        'timebankId': primaryTimebankId,
+        'timebankTitle': timebankDetals.name,
+        'missionStatement': timebankDetals.missionStatement,
       }
     });
 

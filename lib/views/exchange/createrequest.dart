@@ -24,6 +24,7 @@ import 'package:sevaexchange/components/pdf_screen.dart';
 import 'package:sevaexchange/components/repeat_availability/repeat_widget.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/basic_user_details.dart';
 import 'package:sevaexchange/models/cash_model.dart';
 import 'package:sevaexchange/models/category_model.dart';
@@ -191,7 +192,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
   RequestModel requestModel;
   bool isPulicCheckboxVisible = false;
   End end = End();
-  var focusNodes = List.generate(16, (_) => FocusNode());
+  var focusNodes = List.generate(18, (_) => FocusNode());
   List<String> eventsIdsArr = [];
   List<String> selectedCategoryIds = [];
   bool comingFromDynamicLink = false;
@@ -306,7 +307,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
             _searchText = "";
           });
         } else {
-          volunteerUsersBloc.fetchUsers(s);
           setState(() {
             _searchText = s;
           });
@@ -502,6 +502,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
                 } else if (snapshot.hasError) {
                   return Text(S.of(context).error_loading_data);
                 } else {
+                  selectedAddress = snapshot.data.address;
+                  location = snapshot.data.location;
                   return Form(
                     key: _formKey,
                     child: Container(
@@ -590,7 +592,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                           .contains('_') &&
                                       !AppConfig.testingEmails
                                           .contains(AppConfig.loggedInEmail)) {
-                                    return L
+                                    return S
                                         .of(context)
                                         .creating_request_with_underscore_not_allowed;
                                   } else {
@@ -1140,7 +1142,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                       children: [
                                         SizedBox(height: 12),
                                         Text(
-                                          L.of(context).borrow,
+                                          S.of(context).borrow,
                                           style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
@@ -1158,7 +1160,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                               padding: EdgeInsets.only(
                                                   left: 14, right: 14),
                                               child: Text(
-                                                L.of(context).need_a_place,
+                                                S.of(context).need_a_place,
                                                 style:
                                                     TextStyle(fontSize: 12.0),
                                               ),
@@ -1167,7 +1169,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                               padding: EdgeInsets.only(
                                                   left: 14, right: 14),
                                               child: Text(
-                                                L.of(context).item,
+                                                S.of(context).item,
                                                 style:
                                                     TextStyle(fontSize: 12.0),
                                               ),
@@ -1263,24 +1265,32 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                 child: Padding(
                                   padding:
                                       const EdgeInsets.symmetric(vertical: 10),
-                                  child: ConfigurationCheck(
-                                    actionType: 'create_public_request',
-                                    role: memberType(
-                                        timebankModel,
-                                        SevaCore.of(context)
-                                            .loggedInUser
-                                            .sevaUserID),
-                                    child: OpenScopeCheckBox(
-                                        infoType: InfoType.OpenScopeEvent,
-                                        isChecked: requestModel.public,
-                                        checkBoxTypeLabel:
-                                            CheckBoxType.type_Requests,
-                                        onChangedCB: (bool val) {
-                                          if (requestModel.public != val) {
-                                            this.requestModel.public = val;
-                                            setState(() {});
-                                          }
-                                        }),
+                                  child: TransactionsMatrixCheck(
+                                    comingFrom: widget.comingFrom,
+                                    upgradeDetails: AppConfig
+                                        .upgradePlanBannerModel
+                                        .public_to_sevax_global,
+                                    transaction_matrix_type:
+                                        'create_public_request',
+                                    child: ConfigurationCheck(
+                                      actionType: 'create_public_request',
+                                      role: memberType(
+                                          timebankModel,
+                                          SevaCore.of(context)
+                                              .loggedInUser
+                                              .sevaUserID),
+                                      child: OpenScopeCheckBox(
+                                          infoType: InfoType.OpenScopeEvent,
+                                          isChecked: requestModel.public,
+                                          checkBoxTypeLabel:
+                                              CheckBoxType.type_Requests,
+                                          onChangedCB: (bool val) {
+                                            if (requestModel.public != val) {
+                                              this.requestModel.public = val;
+                                              setState(() {});
+                                            }
+                                          }),
+                                    ),
                                   ),
                                 ),
                               ),
@@ -1333,6 +1343,12 @@ class RequestCreateFormState extends State<RequestCreateForm>
         //radio button goods
         //prefrill offer title, offer description, pleged amount,
 
+        // TODO: Handle this case.
+        break;
+      case RequestType.BORROW:
+        // TODO: Handle this case.
+        break;
+      case RequestType.ONE_TO_MANY_REQUEST:
         // TODO: Handle this case.
         break;
     }
@@ -1484,6 +1500,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
             ),
           ),
           TextFormField(
+            maxLength: 30,
             autovalidateMode: AutovalidateMode.onUserInteraction,
             onChanged: (value) {
               updateExitWithConfirmationValue(context, 5, value);
@@ -1517,6 +1534,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
             ),
           ),
           TextFormField(
+            maxLength: 30,
             autovalidateMode: AutovalidateMode.onUserInteraction,
             onChanged: (value) {
               updateExitWithConfirmationValue(context, 6, value);
@@ -1547,7 +1565,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
         ]);
   }
 
-  Widget RequestPaymentZellePay(RequestModel requestModel) {
+  Widget RequestPaymentZellePay() {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -1585,10 +1603,10 @@ class RequestCreateFormState extends State<RequestCreateForm>
         ]);
   }
 
+  String mobilePattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
+  RegExp emailPattern = RegExp(
+      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
   String _validateEmailAndPhone(String value) {
-    String mobilePattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
-    RegExp emailPattern = RegExp(
-        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
     RegExp regExp = RegExp(mobilePattern);
     if (value.isEmpty) {
       return S.of(context).validation_error_general_text;
@@ -1624,7 +1642,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
             textInputAction: TextInputAction.next,
             decoration: InputDecoration(
               errorMaxLines: 2,
-              hintText: S.of(context).email_hint,
+              hintText: 'Ex: Paypal ID (phone or email)',
               hintStyle: hintTextStyle,
             ),
             initialValue: widget.offer != null && widget.isOfferRequest
@@ -1638,8 +1656,16 @@ class RequestCreateFormState extends State<RequestCreateForm>
               requestModel.cashModel.paypalId = value;
             },
             validator: (value) {
-              requestModel.cashModel.paypalId = value;
-              return _validateEmailId(value);
+              RegExp regExp = RegExp(mobilePattern);
+              if (value.isEmpty) {
+                return S.of(context).validation_error_general_text;
+              } else if (emailPattern.hasMatch(value) ||
+                  regExp.hasMatch(value)) {
+                requestModel.cashModel.paypalId = value;
+                return null;
+              } else {
+                return S.of(context).enter_valid_link;
+              }
             },
           )
         ]);
@@ -1684,7 +1710,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
         ]);
   }
 
-  Widget RequestPaymentSwift(RequestModel requestModel) {
+  Widget RequestPaymentSwift() {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -1733,25 +1759,24 @@ class RequestCreateFormState extends State<RequestCreateForm>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            S.of(context).other_details,
+            S.of(context).other_payment_name,
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              fontFamily: 'Europa',
               color: Colors.black,
             ),
           ),
           TextFormField(
             autovalidateMode: AutovalidateMode.onUserInteraction,
             onChanged: (value) {},
-            focusNode: focusNodes[0],
+            focusNode: focusNodes[16],
             onFieldSubmitted: (v) {
-              FocusScope.of(context).requestFocus(focusNodes[1]);
+              FocusScope.of(context).autofocus(focusNodes[17]);
             },
             textInputAction: TextInputAction.next,
             decoration: InputDecoration(
               errorMaxLines: 2,
-              hintText: S.of(context).other_details,
+              hintText: S.of(context).other_payment_title_hint,
               hintStyle: hintTextStyle,
             ),
             keyboardType: TextInputType.multiline,
@@ -1760,10 +1785,55 @@ class RequestCreateFormState extends State<RequestCreateForm>
               requestModel.cashModel.others = value;
             },
             validator: (value) {
+              if (value.isEmpty || value == null) {
+                return S.of(context).validation_error_general_text;
+              }
               if (!value.isEmpty && profanityDetector.isProfaneString(value)) {
                 return S.of(context).profanity_text_alert;
               } else {
                 requestModel.cashModel.others = value;
+                return null;
+              }
+            },
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Text(
+            S.of(context).other_payment_details,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
+          TextFormField(
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            focusNode: focusNodes[17],
+            onChanged: (value) {},
+            onFieldSubmitted: (v) {
+              FocusScope.of(context).unfocus();
+            },
+            textInputAction: TextInputAction.next,
+            keyboardType: TextInputType.multiline,
+            minLines: 5,
+            maxLines: null,
+            onSaved: (value) {
+              requestModel.cashModel.other_details = value;
+            },
+            decoration: InputDecoration(
+              errorMaxLines: 2,
+              hintText: S.of(context).other_payment_details_hint,
+              hintStyle: hintTextStyle,
+            ),
+            validator: (value) {
+              if (value.isEmpty || value == null) {
+                return S.of(context).validation_error_general_text;
+              }
+              if (!value.isEmpty && profanityDetector.isProfaneString(value)) {
+                return S.of(context).profanity_text_alert;
+              } else {
+                requestModel.cashModel.other_details = value;
                 return null;
               }
             },
@@ -1836,6 +1906,15 @@ class RequestCreateFormState extends State<RequestCreateForm>
             setState(() => {});
           },
         ),
+        _optionRadioButton<RequestPaymentType>(
+          title: S.of(context).other(1),
+          value: RequestPaymentType.OTHER,
+          groupvalue: requestModel.cashModel.paymentType,
+          onChanged: (value) {
+            requestModel.cashModel.paymentType = value;
+            setState(() => {});
+          },
+        ),
         requestModel.cashModel.paymentType == RequestPaymentType.ACH
             ? RequestPaymentACH(requestModel)
             : requestModel.cashModel.paymentType == RequestPaymentType.PAYPAL
@@ -1844,12 +1923,11 @@ class RequestCreateFormState extends State<RequestCreateForm>
                     ? RequestPaymentVenmo(requestModel)
                     : requestModel.cashModel.paymentType ==
                             RequestPaymentType.SWIFT
-                        ? RequestPaymentSwift(requestModel)
-                        : RequestPaymentZellePay(requestModel),
-        SizedBox(
-          height: 15,
-        ),
-        OtherDetailsWidget()
+                        ? RequestPaymentSwift()
+                        : requestModel.cashModel.paymentType ==
+                                RequestPaymentType.OTHER
+                            ? OtherDetailsWidget()
+                            : RequestPaymentZellePay(),
       ],
     );
   }
@@ -1909,7 +1987,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
         children: <Widget>[
           (requestModel.requestType == RequestType.BORROW && roomOrTool == 1)
               ? Text(
-                  L.of(context).request_tools_description,
+                  S.of(context).request_tools_description,
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -2088,7 +2166,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                   TransactionsMatrixCheck(
                     upgradeDetails:
                         AppConfig.upgradePlanBannerModel.onetomany_requests,
-                    transaction_matrix_type: 'cash_goods_requests',
+                    transaction_matrix_type: 'onetomany_requests',
                     comingFrom: widget.comingFrom,
                     child: _optionRadioButton<RequestType>(
                       title: S.of(context).one_to_many.sentenceCase(),
@@ -2181,11 +2259,15 @@ class RequestCreateFormState extends State<RequestCreateForm>
 
 // Choose Category and Sub Category function
   // get data from Category class
-  List categories;
+  List<CategoryModel> selectedCategoryModels = [];
+  String categoryMode;
   Map<String, dynamic> _selectedSkillsMap = {};
 
-  void updateInformation(List category) {
-    setState(() => categories = category);
+  void updateInformation(List<CategoryModel> category) {
+    if (category != null && category.length > 0) {
+      selectedCategoryModels.addAll(category);
+    }
+    setState(() {});
   }
 
   Future<void> getCategoriesFromApi(String query) async {
@@ -2230,8 +2312,11 @@ class RequestCreateFormState extends State<RequestCreateForm>
       );
       modelList.add(categoryModel);
     }
+    if (modelList != null && modelList.length > 0) {
+      categoryMode = S.of(context).suggested_categories;
 
-    updateInformation([S.of(context).suggested_categories, modelList]);
+      updateInformation(modelList);
+    }
   }
 
   // Navigat to Category class and geting data from the class
@@ -2242,15 +2327,32 @@ class RequestCreateFormState extends State<RequestCreateForm>
           fullscreenDialog: true,
           builder: (context) => Category(
                 selectedSubCategoriesids: selectedCategoryIds,
+                // onNewCategoryCreated: () async {
+                //   var categoryNew = await Navigator.of(context)
+                //       .push(MaterialPageRoute(builder: (context) {
+                //     return Category(
+                //         selectedSubCategoriesids: selectedCategoryIds);
+                //   }));
+                //   updateInformation(categoryNew);
+                // },
               )),
     );
-    updateInformation(category);
+    if (category != null) {
+      categoryMode = category[0];
+      updateInformation(category[1]);
+    }
   }
 
   //building list of selectedSubCategories
-  List<Widget> _buildselectedSubCategories(List categories) {
+  List<Widget> _buildselectedSubCategories() {
     List<CategoryModel> subCategories = [];
-    subCategories = categories[1];
+    subCategories = selectedCategoryModels;
+    log('lll l ${subCategories.length}');
+    subCategories.forEach((item) {});
+    final ids = subCategories.map((e) => e.typeId).toSet();
+    subCategories.retainWhere((x) => ids.remove(x.typeId));
+    log('lll after ${subCategories.length}');
+
     List<Widget> selectedSubCategories = [];
     selectedCategoryIds.clear();
     subCategories.forEach((item) {
@@ -2272,7 +2374,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text("${item.title_en.toString()}",
+                  Text("${item.getCategoryName(context).toString()}",
                       style: TextStyle(color: Colors.white)),
                   SizedBox(width: 3),
                   InkWell(
@@ -2311,7 +2413,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
 
           SizedBox(height: 15),
 
-          RequestDescriptionData('Your Request and any #hashtags'),
+          RequestDescriptionData(S.of(context).request_descrip_hint_text),
           SizedBox(height: 20),
           //Same hint for Room and Tools ?
           // Choose Category and Sub Category
@@ -2320,7 +2422,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
               children: [
                 Row(
                   children: [
-                    categories == null
+                    categoryMode == null
                         ? Text(
                             S.of(context).choose_category,
                             style: TextStyle(
@@ -2331,7 +2433,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                             ),
                           )
                         : Text(
-                            "${categories[0]}",
+                            "${categoryMode}",
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -2358,11 +2460,12 @@ class RequestCreateFormState extends State<RequestCreateForm>
                   ],
                 ),
                 SizedBox(height: 20),
-                categories != null
+                selectedCategoryModels != null &&
+                        selectedCategoryModels.length > 0
                     ? Wrap(
                         alignment: WrapAlignment.start,
                         crossAxisAlignment: WrapCrossAlignment.start,
-                        children: _buildselectedSubCategories(categories),
+                        children: _buildselectedSubCategories(),
                       )
                     : Container(),
               ],
@@ -2404,7 +2507,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
         children: [
           Row(
             children: [
-              categories == null
+              categoryMode == null
                   ? Text(
                       S.of(context).choose_category,
                       style: TextStyle(
@@ -2415,7 +2518,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                       ),
                     )
                   : Text(
-                      "${categories[0]}",
+                      "${categoryMode}",
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -2442,10 +2545,10 @@ class RequestCreateFormState extends State<RequestCreateForm>
             ],
           ),
           SizedBox(height: 20),
-          categories != null
+          selectedCategoryModels != null && selectedCategoryModels.length > 0
               ? Wrap(
                   alignment: WrapAlignment.start,
-                  children: _buildselectedSubCategories(categories),
+                  children: _buildselectedSubCategories(),
                 )
               : Container(),
         ],
@@ -2463,7 +2566,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
           SizedBox(height: 20),
 
           requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST
-              ? RequestDescriptionData('You Request and any #hashtags')
+              ? RequestDescriptionData(S.of(context).request_descrip_hint_text)
               : RequestDescriptionData(S.of(context).request_description_hint),
 
           SizedBox(height: 20),
@@ -2693,7 +2796,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           SizedBox(height: 20),
-          RequestDescriptionData("Ex: Fundraiser to expand women’s shelter..."),
+          RequestDescriptionData(S.of(context).cash_request_data_hint_text),
           // RequestDescriptionData(S.of(context).request_description_hint_cash),
           SizedBox(height: 20),
           categoryWidget(),
@@ -2733,8 +2836,15 @@ class RequestCreateFormState extends State<RequestCreateForm>
             decoration: InputDecoration(
               hintText: S.of(context).request_target_donation_hint,
               hintStyle: hintTextStyle,
+              prefixIcon: Icon(Icons.attach_money),
+
               // labelText: 'No. of volunteers',
             ),
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(
+                (RegExp("[0-9]")),
+              ),
+            ],
             keyboardType: TextInputType.number,
             validator: (value) {
               if (value.isEmpty) {
@@ -2780,7 +2890,15 @@ class RequestCreateFormState extends State<RequestCreateForm>
               hintText: S.of(context).request_min_donation_hint,
               hintStyle: hintTextStyle,
               // labelText: 'No. of volunteers',
+              prefixIcon: Icon(Icons.attach_money),
+
+              // labelText: 'No. of volunteers',
             ),
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(
+                (RegExp("[0-9]")),
+              ),
+            ],
             keyboardType: TextInputType.number,
             validator: (value) {
               if (value.isEmpty) {
@@ -2821,7 +2939,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           SizedBox(height: 20),
-          RequestDescriptionData("Ex: Local Food Bank has a shortage..."),
+          RequestDescriptionData(S.of(context).goods_request_data_hint_text),
           // RequestDescriptionData(S.of(context).request_description_hint_goods),
           SizedBox(height: 20),
           categoryWidget(),
@@ -2885,7 +3003,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
             0: Text(
               timebankModel.parentTimebankId == FlavorConfig.values.timebankId
                   ? S.of(context).timebank_request(1)
-                  : L.of(context).seva +
+                  : S.of(context).seva +
                       timebankModel.name +
                       " ${S.of(context).group} " +
                       S.of(context).request,
@@ -3011,7 +3129,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
       }
 
       if (requestModel.requestType == RequestType.GOODS &&
-          requestModel.goodsDonationDetails.requiredGoods == null) {
+          (requestModel.goodsDonationDetails.requiredGoods == null ||
+              requestModel.goodsDonationDetails.requiredGoods.isEmpty)) {
         showDialogForTitle(dialogTitle: S.of(context).goods_validation);
         return;
       }
@@ -3201,6 +3320,10 @@ class RequestCreateFormState extends State<RequestCreateForm>
             //selectedInstructorModel.sevaUserID != requestModel.sevaUserId &&
             requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
           if (selectedInstructorModel.sevaUserID == requestModel.sevaUserId) {
+            requestModel.approvedUsers = [];
+            List<String> approvedUsers = [];
+            approvedUsers.add(requestModel.email);
+            requestModel.approvedUsers = approvedUsers;
             log('speaker is creator');
           } else if (selectedInstructorModel.communities
                   .contains(requestModel.communityId) &&
@@ -3250,6 +3373,10 @@ class RequestCreateFormState extends State<RequestCreateForm>
             //selectedInstructorModel.sevaUserID != requestModel.sevaUserId &&
             requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
           if (selectedInstructorModel.sevaUserID == requestModel.sevaUserId) {
+            requestModel.approvedUsers = [];
+            List<String> approvedUsers = [];
+            approvedUsers.add(requestModel.email);
+            requestModel.approvedUsers = approvedUsers;
             log('speaker is creator');
           } else if (selectedInstructorModel.communities
                   .contains(requestModel.communityId) &&

@@ -293,7 +293,6 @@ class CommunityModel extends DataModel {
 
     if (key == 'payment_records') {
       this.payment_records = [];
-      ;
     }
 
     if (key == 'logo_url') {
@@ -328,7 +327,10 @@ class CommunityModel extends DataModel {
       this.testCommunity = value;
     }
     if (key == 'communityCategories') {
-      this.communityCategories = communityCategories;
+      this.communityCategories = value;
+    }
+    if (key == 'payment') {
+      this.payment = value;
     }
   }
 

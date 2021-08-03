@@ -373,10 +373,8 @@ class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
     );
     // UploadTask uploadTask = ref.putFile(File.)
 
-    uploadTask.then((res) async {
-      imageURL = await res.ref.getDownloadURL();
-      log('link ${imageURL}');
-
+    uploadTask.whenComplete(() async {
+      imageURL = await ref.getDownloadURL();
       await profanityCheck(
         imageURL: imageURL,
         storagePath: imageURL,

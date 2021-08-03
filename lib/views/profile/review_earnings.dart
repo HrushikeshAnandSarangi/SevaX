@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
@@ -82,37 +81,33 @@ class _ReviewEarningState extends State<ReviewEarning> {
       );
     }
     return FutureBuilder<Object>(
-        future: FirestoreManager.getUserForId(
-            sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Text(
-              S.of(context).general_stream_error,
-            );
-          }
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return LoadingIndicator();
-          }
-          UserModel userModel = snapshot.data;
-          String usertimezone = userModel.timezone;
-          return ListView.builder(
-            itemBuilder: (context, index) {
-              TransactionModel model = requestList.elementAt(index);
-
-              return Container(
-                margin: EdgeInsets.all(1),
-                child: Card(
-                  child: EarningListItem(
-                    model: model,
-                    usertimezone: usertimezone,
-                    viewtype: widget.type,
-                  ),
-                ),
-              );
-            },
-            itemCount: requestList.length,
+      future: FirestoreManager.getUserForId(
+          sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Text(
+            S.of(context).general_stream_error,
           );
-        });
+        }
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return LoadingIndicator();
+        }
+        UserModel userModel = snapshot.data;
+        String usertimezone = userModel.timezone;
+        return ListView.builder(
+          itemBuilder: (context, index) {
+            TransactionModel model = requestList.elementAt(index);
+
+            return EarningListItem(
+              model: model,
+              usertimezone: usertimezone,
+              viewtype: widget.type,
+            );
+          },
+          itemCount: requestList.length,
+        );
+      },
+    );
   }
 }
 
@@ -129,53 +124,78 @@ class EarningListItem extends StatefulWidget {
 class _EarningListItemState extends State<EarningListItem> {
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: widget.model.from.contains('-')
-            ? FirestoreManager.getTimeBankForId(timebankId: widget.model.from)
-            : FirestoreManager.getUserForId(sevaUserId: widget.model.from),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Text('');
+    if (widget.model.from.contains('-')) {
+      return FutureBuilder(
+        future:
+            FirestoreManager.getTimeBankForId(timebankId: widget.model.from),
+        builder: (context, AsyncSnapshot<TimebankModel> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting ||
+              snapshot.data == null) {
+            debugPrint(widget.model.from);
+            return Container();
           }
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Text('');
+          return getListTile(
+            snapshot.data.name,
+            snapshot.data.photoUrl ?? defaultUserImageURL,
+          );
+        },
+      );
+    } else {
+      return FutureBuilder(
+        future: FirestoreManager.getUserForId(sevaUserId: widget.model.from),
+        builder: (context, AsyncSnapshot<UserModel> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting ||
+              snapshot.data == null) {
+            return Container();
           }
-          return ListTile(
-              leading:
-                  EarningImageItem(model: widget.model, snapshot: snapshot),
-              trailing: () {
-                String plus = widget.model.from == widget.model.to
-                    ? '+'
-                    : widget.model.debitCreditSymbol(
-                        SevaCore.of(context).loggedInUser.sevaUserID,
-                        widget.model.timebankid,
-                        widget.viewtype,
-                      );
-                return Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Text(plus + '${widget.model.credits}',
-                        style: TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.w500,
-                        )),
-                    Text(S.of(context).seva_credits,
-                        style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: -0.2,
-                        )),
-                  ],
+          return getListTile(
+            snapshot.data.fullname,
+            snapshot.data.photoURL ?? defaultUserImageURL,
+          );
+        },
+      );
+    }
+  }
+
+  Widget getListTile(String name, String image) {
+    return Card(
+      child: ListTile(
+        leading: EarningImageItem(
+          image: image,
+        ),
+        trailing: () {
+          String plus = widget.model.from == widget.model.to
+              ? '+'
+              : widget.model.debitCreditSymbol(
+                  SevaCore.of(context).loggedInUser.sevaUserID,
+                  widget.model.timebankid,
+                  widget.viewtype,
                 );
-              }(),
-              subtitle: EarningItem(
-                  name: widget.model.from.contains('-')
-                      ? snapshot.data.name
-                      : snapshot.data.fullname ?? '',
-                  timestamp: widget.model.timestamp,
-                  usertimezone: widget.usertimezone));
-        });
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Text(plus + '${widget.model.credits}',
+                  style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w500,
+                  )),
+              Text(S.of(context).seva_credits,
+                  style: TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: -0.2,
+                  )),
+            ],
+          );
+        }(),
+        subtitle: EarningItem(
+          name: name ?? '',
+          timestamp: widget.model.timestamp,
+          usertimezone: widget.usertimezone,
+        ),
+      ),
+    );
   }
 }
 
@@ -219,35 +239,13 @@ class EarningItem extends StatelessWidget {
 }
 
 class EarningImageItem extends StatelessWidget {
-  final TransactionModel model;
-  final snapshot;
-  EarningImageItem({this.model, this.snapshot});
+  final String image;
+  EarningImageItem({this.image});
   @override
   Widget build(BuildContext context) {
-    if (snapshot.hasError) {
-      return CircleAvatar();
-    }
-    if (snapshot.connectionState == ConnectionState.waiting) {
-      return CircleAvatar();
-    }
-    if (snapshot.data is UserModel) {
-      UserModel user = snapshot.data;
-      //Fallback in case the condition anyhow
-      if (user == null)
-        return CircleAvatar(
-          backgroundImage: NetworkImage(defaultUserImageURL),
-        );
-
-      return CircleAvatar(
-        backgroundImage: NetworkImage(user.photoURL ?? defaultUserImageURL),
-      );
-    } else {
-      TimebankModel timebanktemp = snapshot.data;
-      return CircleAvatar(
-        backgroundImage:
-            NetworkImage(timebanktemp.photoUrl ?? defaultUserImageURL),
-      );
-    }
+    return CircleAvatar(
+      backgroundImage: NetworkImage(image ?? defaultUserImageURL),
+    );
   }
 }
 

@@ -28,6 +28,7 @@ import 'package:sevaexchange/ui/utils/location_helper.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/onboarding/findcommunitiesview.dart';
@@ -46,9 +47,15 @@ class ExplorePage extends StatefulWidget {
   final bool isUserSignedIn;
 
   const ExplorePage({Key key, @required this.isUserSignedIn}) : super(key: key);
+
   @override
   _ExplorePageState createState() => _ExplorePageState();
 }
+
+final searchBorder = OutlineInputBorder(
+  borderSide: BorderSide(color: Colors.grey),
+  borderRadius: BorderRadius.circular(40),
+);
 
 List findCardsData = [
   {
@@ -85,12 +92,25 @@ class _ExplorePageState extends State<ExplorePage> {
   bool dataLoaded = false;
 
   GeoPoint geoPoint;
+
   void initState() {
     super.initState();
     _bloc = FindCommunitiesBloc();
 
+    logger.e('USER ID CHECK 8');
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _exploreBloc.load(isUserLoggedIn: widget.isUserSignedIn);
+      Future.delayed(
+          Duration(milliseconds: 300),
+          () => {
+                _exploreBloc.load(
+                    isUserLoggedIn: widget.isUserSignedIn,
+                    sevaUserID: widget.isUserSignedIn
+                        ? SevaCore.of(context).loggedInUser.sevaUserID
+                        : '',
+                    context: context),
+              });
+
       // if (isSignedUser) {
       LocationHelper.getLocation().then((value) {
         if (value != null) {
@@ -100,7 +120,7 @@ class _ExplorePageState extends State<ExplorePage> {
           });
         }
         _bloc.init(
-          Provider.of<UserModel>(context, listen: false)?.nearBySettings,
+          SevaCore.of(context)?.loggedInUser?.nearBySettings,
         );
       });
     });
@@ -108,6 +128,7 @@ class _ExplorePageState extends State<ExplorePage> {
 
   @override
   Widget build(BuildContext context) {
+    logger.e('USER ID CHECK 7');
     var screenWidth = MediaQuery.of(context).size.width;
     return ExplorePageViewHolder(
       hideSearchBar: true,
@@ -142,52 +163,111 @@ class _ExplorePageState extends State<ExplorePage> {
                       ),
                     ),
                     SizedBox(height: 20),
-                    Stack(
-                      children: [
-                        SearchBar(
-                          controller: _searchController,
+                    SizedBox(
+                      height: 40,
+                      child: TextField(
+                        controller: _searchController,
+                        onChanged: _bloc.onSearchChange,
+                        decoration: InputDecoration(
                           hintText: S.of(context).explore_search_hint,
-                          onChanged: null,
-                        ),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 7, right: 10),
-                            child: Container(
-                              width: 120,
-                              height: 32,
-                              child: CustomElevatedButton(
-                                padding: EdgeInsets.only(left: 8, right: 8),
-                                color: Color.fromRGBO(245, 166, 35, 1),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
+                          hintStyle: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 12,
+                          ),
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide.none,
+                            borderRadius: BorderRadius.circular(40),
+                          ),
+                          enabledBorder: searchBorder,
+                          focusedBorder: searchBorder,
+                          disabledBorder: searchBorder,
+                          errorBorder: searchBorder,
+                          filled: true,
+                          fillColor: Colors.white,
+                          prefixIcon: Icon(Icons.search),
+                          suffixIcon: Padding(
+                            padding: const EdgeInsets.fromLTRB(2, 5, 5, 5),
+                            child: CustomTextButton(
+                              padding: EdgeInsets.all(2),
+                              child: Text(
+                                S.of(context).search,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  // fontSize: 10,
                                 ),
-                                child: Text(
-                                  S.of(context).search,
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                                onPressed: () {
-                                  if (_searchController.text != null ||
-                                      _searchController.text.isNotEmpty) {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) => ExploreSearchPage(
-                                          searchText: _searchController.text,
-                                          isUserSignedIn: widget.isUserSignedIn,
-                                        ),
-                                      ),
-                                    );
-                                  }
-                                },
                               ),
+                              textColor: Colors.white,
+                              color: Colors.orange,
+                              shape: StadiumBorder(),
+                              // RoundedRectangleBorder(
+                              //   borderRadius: BorderRadius.circular(20),
+                              // ),
+                              onPressed: () {
+                                if (_searchController.text != null ||
+                                    _searchController.text.isNotEmpty) {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => ExploreSearchPage(
+                                        searchText: _searchController.text,
+                                        isUserSignedIn: widget.isUserSignedIn,
+                                      ),
+                                    ),
+                                  );
+                                }
+                              },
                             ),
                           ),
+                          contentPadding:
+                              const EdgeInsets.symmetric(vertical: 4),
                         ),
-                      ],
+                      ),
                     ),
+                    // Stack(
+                    //   children: [
+                    //     SearchBar(
+                    //       controller: _searchController,
+                    //       hintText: S.of(context).explore_search_hint,
+                    //       onChanged: null,
+                    //     ),
+                    //     Align(
+                    //       alignment: Alignment.centerRight,
+                    //       child: Padding(
+                    //         padding: const EdgeInsets.only(top: 7, right: 10),
+                    //         child: Container(
+                    //           width: 120,
+                    //           height: 32,
+                    //           child: CustomElevatedButton(
+                    //             padding: EdgeInsets.only(left: 8, right: 8),
+                    //             color: Color.fromRGBO(245, 166, 35, 1),
+                    //             shape: RoundedRectangleBorder(
+                    //               borderRadius: BorderRadius.circular(20),
+                    //             ),
+                    //             child: Text(
+                    //               S.of(context).search,
+                    //               style: TextStyle(
+                    //                 color: Colors.white,
+                    //                 fontSize: 14,
+                    //               ),
+                    //             ),
+                    //             onPressed: () {
+                    //               if (_searchController.text != null ||
+                    //                   _searchController.text.isNotEmpty) {
+                    //                 Navigator.of(context).push(
+                    //                   MaterialPageRoute(
+                    //                     builder: (context) => ExploreSearchPage(
+                    //                       searchText: _searchController.text,
+                    //                       isUserSignedIn: widget.isUserSignedIn,
+                    //                     ),
+                    //                   ),
+                    //                 );
+                    //               }
+                    //             },
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
                   ],
                 ),
                 SizedBox(height: 40),
@@ -305,6 +385,10 @@ class _ExplorePageState extends State<ExplorePage> {
                                           ? x.length - 3
                                           : x.length - 1];
                                     }
+                                    String formattedStartTime =
+                                        getStartDateFormat(
+                                            DateTime.fromMillisecondsSinceEpoch(
+                                                projectModel.startTime));
                                     return Row(
                                       children: [
                                         widget.isUserSignedIn
@@ -324,7 +408,10 @@ class _ExplorePageState extends State<ExplorePage> {
                                                   if (snapshot.data == null) {
                                                     return Container();
                                                   }
+
                                                   return ExploreEventsCard(
+                                                    eventStartDate:
+                                                        formattedStartTime,
                                                     userIds: projectModel
                                                         .associatedmembers.keys
                                                         .toList(),
@@ -357,6 +444,8 @@ class _ExplorePageState extends State<ExplorePage> {
                                                   );
                                                 })
                                             : ExploreEventsCard(
+                                                eventStartDate:
+                                                    formattedStartTime,
                                                 userIds: projectModel
                                                     .associatedmembers.keys
                                                     .toList(),
@@ -447,6 +536,9 @@ class _ExplorePageState extends State<ExplorePage> {
                                       ? x.length - 3
                                       : x.length - 1];
                                 }
+                                String formattedStartTime = getStartDateFormat(
+                                    DateTime.fromMillisecondsSinceEpoch(
+                                        model.requestStart));
                                 return Row(
                                   children: [
                                     widget.isUserSignedIn
@@ -464,7 +556,9 @@ class _ExplorePageState extends State<ExplorePage> {
                                               if (snapshot.data == null) {
                                                 return Container();
                                               }
+
                                               return ExploreRequestsCard(
+                                                requestDate: formattedStartTime,
                                                 imageUrl: model.photoUrl ??
                                                     defaultGroupImageURL,
                                                 communityName:
@@ -526,6 +620,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                               );
                                             })
                                         : ExploreRequestsCard(
+                                            requestDate: formattedStartTime,
                                             userIds: model.approvedUsers,
                                             imageUrl: model.photoUrl ??
                                                 defaultGroupImageURL,
@@ -549,60 +644,6 @@ class _ExplorePageState extends State<ExplorePage> {
                         ],
                       );
                     }),
-                SizedBox(height: screenWidth * 0.02),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      S.of(context).featured_communities,
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      height: 300,
-                      child: StreamBuilder<List<CommunityModel>>(
-                          stream: _exploreBloc.communities,
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return LoadingIndicator();
-                            }
-                            if (snapshot.data == null) {
-                              return Center(
-                                child: Text(S.of(context).no_timebanks_found),
-                              );
-                            }
-                            return ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: snapshot.data.length,
-                              scrollDirection: Axis.horizontal,
-                              itemBuilder: (context, index) {
-                                CommunityModel community = snapshot.data[index];
-                                return ExploreFeaturedCard(
-                                  imageUrl: community.logo_url,
-                                  communityName: community.name,
-                                  onTap: () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            ExploreCommunityDetails(
-                                          communityId: community.id,
-                                          isSignedUser: widget.isUserSignedIn,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                );
-                              },
-                            );
-                          }),
-                    ),
-                  ],
-                ),
                 SizedBox(height: screenWidth * 0.02),
                 StreamBuilder<List<OfferModel>>(
                   stream: _exploreBloc.offers,
@@ -664,6 +705,9 @@ class _ExplorePageState extends State<ExplorePage> {
                                 landMark = x[
                                     x.length > 3 ? x.length - 3 : x.length - 1];
                               }
+                              String formattedStartTime = getStartDateFormat(
+                                  DateTime.fromMillisecondsSinceEpoch(
+                                      offer.timestamp));
                               return Row(
                                 children: [
                                   widget.isUserSignedIn
@@ -681,7 +725,10 @@ class _ExplorePageState extends State<ExplorePage> {
                                             if (snapshot.data == null) {
                                               return Container();
                                             }
+
                                             return ExploreOffersCard(
+                                              offerStartDate:
+                                                  formattedStartTime,
                                               imageUrl: defaultGroupImageURL,
                                               offerName: getOfferTitle(
                                                       offerDataModel: offer) ??
@@ -703,6 +750,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                             );
                                           })
                                       : ExploreOffersCard(
+                                          offerStartDate: formattedStartTime,
                                           imageUrl: defaultGroupImageURL,
                                           offerName: getOfferTitle(
                                                   offerDataModel: offer) ??
@@ -726,6 +774,60 @@ class _ExplorePageState extends State<ExplorePage> {
                       ],
                     );
                   },
+                ),
+                SizedBox(height: screenWidth * 0.02),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      S.of(context).featured_communities,
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      height: 300,
+                      child: StreamBuilder<List<CommunityModel>>(
+                          stream: _exploreBloc.communities,
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return LoadingIndicator();
+                            }
+                            if (snapshot.data == null) {
+                              return Center(
+                                child: Text(S.of(context).no_timebanks_found),
+                              );
+                            }
+                            return ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: snapshot.data.length,
+                              scrollDirection: Axis.horizontal,
+                              itemBuilder: (context, index) {
+                                CommunityModel community = snapshot.data[index];
+                                return ExploreFeaturedCard(
+                                  imageUrl: community.logo_url,
+                                  communityName: community.name,
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            ExploreCommunityDetails(
+                                          communityId: community.id,
+                                          isSignedUser: widget.isUserSignedIn,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                            );
+                          }),
+                    ),
+                  ],
                 ),
                 SizedBox(height: screenWidth * 0.02),
                 Container(
@@ -787,7 +889,8 @@ class _ExplorePageState extends State<ExplorePage> {
                                 var status = widget.isUserSignedIn
                                     ? _bloc.compareUserStatus(
                                         snapshot.data[index],
-                                        Provider.of<UserModel>(context)
+                                        SevaCore.of(context)
+                                            ?.loggedInUser
                                             ?.sevaUserID,
                                       )
                                     : CompareUserStatus.JOIN;
@@ -809,9 +912,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                       status == CompareUserStatus.JOINED
                                           ? HexColor("#D2D2D2")
                                           : Theme.of(context).accentColor,
-                                  textColor: status == CompareUserStatus.JOINED
-                                      ? Colors.white
-                                      : Colors.black87,
+                                  textColor: Colors.white,
                                   onbuttonPress:
                                       status == CompareUserStatus.JOINED
                                           ? null
@@ -849,7 +950,7 @@ class _ExplorePageState extends State<ExplorePage> {
                     ),
                     SizedBox(height: 10),
                     RequestCategories(
-                      stream: FirestoreManager.getAllCategoriesStream(),
+                      stream: FirestoreManager.getAllCategoriesStream(context),
                       onTap: (value) {
                         Navigator.of(context).push(
                           MaterialPageRoute(
@@ -875,6 +976,7 @@ class _ExplorePageState extends State<ExplorePage> {
 class SeeAllButton extends StatelessWidget {
   final VoidCallback onPressed;
   final bool hideButton;
+
   const SeeAllButton({
     Key key,
     this.onPressed,

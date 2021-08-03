@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
@@ -12,7 +11,6 @@ import 'package:sevaexchange/ui/screens/message/bloc/create_chat_bloc.dart';
 import 'package:sevaexchange/ui/screens/message/widgets/selected_member_list_builder.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/custom_textfield.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
-import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -198,7 +196,13 @@ class CreateGroupPage extends StatelessWidget {
                 }),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: SelectedMemberWrapBuilder(bloc: bloc),
+              child: SelectedMemberWrapBuilder(
+                allParticipants: bloc.allMembers,
+                selectedParticipants: bloc.selectedMembers,
+                onRemovePressed: (id) {
+                  bloc.selectMember(id);
+                },
+              ),
             ),
           ],
         ),

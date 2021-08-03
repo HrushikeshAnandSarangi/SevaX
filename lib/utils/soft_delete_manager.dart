@@ -482,19 +482,27 @@ Future<void> showFailedLoadImage({
             S.of(context).failed_load_image,
           ),
           actions: <Widget>[
-            CustomTextButton(
-              padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-              color: Theme.of(context).accentColor,
-              textColor: Colors.white,
-              child: Text(
-                S.of(context).ok,
-                style: TextStyle(
-                  fontSize: dialogButtonSize,
-                ),
+            Padding(
+              padding: const EdgeInsets.only(
+                right: 15,
+                bottom: 15,
               ),
-              onPressed: () {
-                Navigator.pop(_context);
-              },
+              child: CustomTextButton(
+                shape: StadiumBorder(),
+                padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                color: Theme.of(context).accentColor,
+                textColor: Colors.white,
+                child: Text(
+                  S.of(context).ok,
+                  style: TextStyle(
+                    fontSize: dialogButtonSize,
+                    color: Colors.white,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.pop(_context);
+                },
+              ),
             ),
           ],
         );

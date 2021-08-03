@@ -14,6 +14,7 @@ class ChatModel {
   bool isTimebankMessage;
   // String timebankId;
   bool interCommunity;
+  bool isParentChildCommunication;
   String communityId;
   List<String> showToCommunities;
   bool isGroupMessage;
@@ -36,6 +37,7 @@ class ChatModel {
     this.isGroupMessage,
     this.groupDetails,
     this.chatContext,
+    this.isParentChildCommunication = false,
   });
 
   factory ChatModel.fromMap(Map<String, dynamic> map) => ChatModel(
@@ -61,6 +63,10 @@ class ChatModel {
                 : null,
 
         // timebankId: map["timebankId"],
+        isParentChildCommunication:
+            map.containsKey('isParentChildCommunication')
+                ? map['isParentChildCommunication'] ?? false
+                : false,
         interCommunity: map.containsKey('interCommunity')
             ? map['interCommunity'] ?? false
             : false,
@@ -68,6 +74,7 @@ class ChatModel {
         showToCommunities: map.containsKey('showToCommunities')
             ? List<String>.from((map["showToCommunities"] ?? []).map((x) => x))
             : [],
+
         timestamp: map["timestamp"],
         chatContext:
             map.containsKey('chatContext') && map['chatContext'] != null
@@ -92,6 +99,7 @@ class ChatModel {
         "showToCommunities":
             List<dynamic>.from((showToCommunities ?? []).map((x) => x)),
         "interCommunity": interCommunity ?? false,
+        "isParentChildCommunication": isParentChildCommunication ?? false,
       };
 
   Map<String, dynamic> shareMessage({Map<String, dynamic> unreadStatus}) => {
@@ -106,11 +114,13 @@ class ChatModel {
         "groupDetails": groupDetails?.toMap(),
         "chatContext": chatContext.toMap(),
         "interCommunity": interCommunity ?? false,
+        "isParentChildCommunication": isParentChildCommunication ?? false,
       };
 }
 
 class ParticipantInfo {
   String id;
+  String communityId;
   String name;
   String photoUrl;
   ChatType type;
@@ -118,6 +128,7 @@ class ParticipantInfo {
 
   ParticipantInfo({
     this.id,
+    this.communityId,
     this.name,
     this.photoUrl,
     this.type,
@@ -125,6 +136,7 @@ class ParticipantInfo {
 
   factory ParticipantInfo.fromMap(Map<String, dynamic> map) => ParticipantInfo(
         id: map["id"],
+        communityId: map["communityId"] == null ? null : map["communityId"],
         name: map["name"],
         photoUrl: map["photoUrl"],
         type: typeMapper[map["type"]],
@@ -132,6 +144,7 @@ class ParticipantInfo {
 
   Map<String, dynamic> toMap() => {
         "id": id,
+        "communityId": communityId == null ? null : communityId,
         "name": name,
         "photoUrl": photoUrl,
         "type": type.toString().split('.')[1],

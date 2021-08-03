@@ -7,7 +7,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
-import 'package:geolocator/geolocator.dart';
+// import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 // import 'package:location/location.dart' as prefix;
 import 'package:sevaexchange/constants/sevatitles.dart';
@@ -17,6 +17,7 @@ import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/ui/screens/location/widgets/location_confirmation_card.dart';
 import 'package:sevaexchange/ui/utils/location_helper.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 import 'get_location.dart';
 
@@ -32,6 +33,9 @@ class LocationPicker extends StatefulWidget {
   // final prefix.Location location = new prefix.Location();
   final Geoflutterfire geo = Geoflutterfire();
   final LatLng defaultLocation;
+  static const int CAMERA_STATE_UNCHANGED = 0;
+  static const int CAMERA_MOVED = 1;
+
   LocationPicker({
     this.defaultLocation,
     this.selectedLocation,
@@ -45,7 +49,9 @@ class _LocationPickerState extends State<LocationPicker> {
   GoogleMapController _mapController;
   LatLng target;
   Set<Marker> markers = {};
-  final Geolocator geolocator = Geolocator();
+
+  int currentCameraState = LocationPicker.CAMERA_STATE_UNCHANGED;
+  // final Geolocator geolocator = Geolocator();
   Location locationData;
   String address;
   // CameraPosition cameraPosition;
@@ -73,8 +79,10 @@ class _LocationPickerState extends State<LocationPicker> {
     if (SchedulerBinding.instance.schedulerPhase ==
         SchedulerPhase.persistentCallbacks) {
       SchedulerBinding.instance.addPostFrameCallback((_) => () => {
-            address = S.of(context).fetching_location,
-            _addMarker(latLng: defaultLatLng)
+            address = widget.selectedAddress != null
+                ? widget.selectedAddress
+                : S.of(context).fetching_location,
+            _addMarker(latLng: defaultLatLng, readAbleAddress: address)
           });
     }
     if (widget.selectedLocation != null) {
@@ -84,6 +92,8 @@ class _LocationPickerState extends State<LocationPicker> {
         widget.selectedLocation.longitude,
       );
     }
+    locationDataFromSearch.location = null;
+
     log('init state called for ${this.runtimeType.toString()}');
     // loadCameraPosition();
     loadInitialLocation();
@@ -99,10 +109,17 @@ class _LocationPickerState extends State<LocationPicker> {
 //    );
 //  }
 
-  Future<void> loadInitialAddress(marker, context) async {
-    address = await _getAddressFromLatLng(target, context);
+  Future<void> loadInitialAddress(
+      marker, context, String readAbleAddress) async {
+    // logger.d(readAbleAddress + "========================>>>>>>>>>>");
+
+    address = readAbleAddress == null
+        ? await _getAddressFromLatLng(target, context)
+        : readAbleAddress;
+
+    logger.d(address + "<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
     setState(() {
-      address;
+      // address;
       markers = {marker};
     });
   }
@@ -116,11 +133,12 @@ class _LocationPickerState extends State<LocationPicker> {
           widget.selectedLocation.latitude,
           widget.selectedLocation.longitude,
         );
-        _addMarker();
+        _addMarker(readAbleAddress: null);
       }
     }
   }
 
+  int onSearchResult = 0;
   @override
   Widget build(context) {
     return Scaffold(
@@ -147,11 +165,14 @@ class _LocationPickerState extends State<LocationPicker> {
                   fullscreenDialog: true,
                 ),
               );
+              logger.i("Data from search => " + model.location);
+
               if (model?.lat != null && model?.lng != null) {
                 locationDataFromSearch = model;
+                onSearchResult = 1;
                 target = LatLng(
                     locationDataFromSearch.lat, locationDataFromSearch.lng);
-                _addMarker(latLng: target);
+                _addMarker(latLng: target, readAbleAddress: model.location);
                 var temp = point;
                 if (locationDataFromSearch.lat != null &&
                     locationDataFromSearch.lng != null &&
@@ -164,6 +185,7 @@ class _LocationPickerState extends State<LocationPicker> {
                   }
                 }
                 animateToLocation(
+                  model.location,
                   _mapController,
                   location: target,
                 );
@@ -183,14 +205,11 @@ class _LocationPickerState extends State<LocationPicker> {
           ),
         ),
         LocationConfimationCard(
-          locationDataModel: locationDataFromSearch.location == null
-              ? LocationDataModel(
-                  address == null ? "" : address,
-                  point?.latitude,
-                  point?.longitude,
-                )
-              : locationDataFromSearch,
-        ),
+            locationDataModel: LocationDataModel(
+          address == null ? "" : address,
+          point?.latitude,
+          point?.longitude,
+        )),
       ]),
     );
   }
@@ -207,6 +226,7 @@ class _LocationPickerState extends State<LocationPicker> {
       if (_mapController != null) {
         if (widget.selectedLocation != null) {
           animateToLocation(
+            widget.selectedAddress,
             _mapController,
             location: LatLng(
               widget.selectedLocation.latitude,
@@ -215,6 +235,7 @@ class _LocationPickerState extends State<LocationPicker> {
           );
         } else {
           animateToLocation(
+            null,
             _mapController,
             location: LatLng(
               locationData.latitude,
@@ -223,7 +244,7 @@ class _LocationPickerState extends State<LocationPicker> {
           );
         }
       }
-      setState(() => this.locationData = locationData);
+      // setState(() => this.locationData = locationData);
     } on PlatformException catch (exception) {
       if (exception.code == 'PERMISSION_DENIED') {
         log('Permission Denied');
@@ -292,13 +313,38 @@ class _LocationPickerState extends State<LocationPicker> {
         compassEnabled: true,
         markers: markers,
         onCameraMove: (position) {
+          // logger.d("CAMERA MOVED=====================");
+          currentCameraState = LocationPicker.CAMERA_MOVED;
           if (mounted)
             setState(() {
               target = position.target;
             });
         },
         onCameraIdle: () {
-          _addMarker();
+          if (locationDataFromSearch != null &&
+              target.latitude == locationDataFromSearch.lat &&
+              target.longitude == locationDataFromSearch.lng) {
+            logger
+                .d("Locations are equal dont do anything....++++++++++++++++");
+          }
+
+          logger.d(onSearchResult.toString() +
+              " CAMERA IDLE===================== " +
+              (currentCameraState == LocationPicker.CAMERA_STATE_UNCHANGED &&
+                      widget.selectedAddress != null
+                  ? widget.selectedAddress
+                  : "null"));
+          if (onSearchResult == 1) {
+            onSearchResult = 0;
+          } else {
+            _addMarker(
+                readAbleAddress: currentCameraState ==
+                            LocationPicker.CAMERA_STATE_UNCHANGED &&
+                        widget.selectedAddress != null
+                    ? widget.selectedAddress
+                    : null);
+          }
+
           var temp = point;
           if (locationDataFromSearch.lat != null &&
               locationDataFromSearch.lng != null &&
@@ -365,6 +411,7 @@ class _LocationPickerState extends State<LocationPicker> {
     if (this.locationData != null) {
       if (widget.selectedLocation != null) {
         animateToLocation(
+          null,
           controller,
           location: LatLng(
             widget.selectedLocation.latitude ?? 41.678510,
@@ -373,6 +420,7 @@ class _LocationPickerState extends State<LocationPicker> {
         );
       } else {
         animateToLocation(
+          null,
           controller,
           location: LatLng(locationData.latitude, locationData.longitude),
         );
@@ -380,7 +428,7 @@ class _LocationPickerState extends State<LocationPicker> {
     }
   }
 
-  void _addMarker({LatLng latLng}) {
+  void _addMarker({LatLng latLng, @required String readAbleAddress}) async {
     log('_addMarker ${target?.latitude} ${target?.longitude}  ${latLng?.latitude}  ${latLng?.longitude}');
     Marker marker = Marker(
       markerId: MarkerId('1'),
@@ -390,11 +438,12 @@ class _LocationPickerState extends State<LocationPicker> {
         title: S.of(context).marker,
       ),
     );
-    loadInitialAddress(marker, context);
+    loadInitialAddress(marker, context, readAbleAddress);
   }
 
   /// Animate to location corresponding to [LatLng]
   Future animateToLocation(
+    String readAbleAddress,
     GoogleMapController mapController, {
     LatLng location,
   }) async {
@@ -406,7 +455,7 @@ class _LocationPickerState extends State<LocationPicker> {
       ),
       zoom: 15,
     );
-    _addMarker(latLng: location);
+    await _addMarker(latLng: location, readAbleAddress: readAbleAddress);
     Future.delayed(
         Duration(milliseconds: 100),
         () => {

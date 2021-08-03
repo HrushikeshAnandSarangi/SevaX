@@ -86,27 +86,49 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            Container(
-              width: MediaQuery.of(context).size.width,
-              child: CachedNetworkImage(
-                imageUrl: widget.timebankModel.photoUrl ?? defaultGroupImageURL,
-                fit: BoxFit.cover,
-                height: 200,
-                errorWidget: (context, url, error) => Container(
-                    height: 80,
-                    child: Center(
-                      child: Text(
-                        S.of(context).no_image_available,
-                        textAlign: TextAlign.center,
-                      ),
-                    )),
-                placeholder: (context, url) {
-                  return LoadingIndicator();
-                },
-              ),
+            Stack(
+              clipBehavior: Clip.none,
+              children: <Widget>[
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  child: CachedNetworkImage(
+                    imageUrl:
+                        widget.timebankModel.cover_url ?? defaultGroupImageURL,
+                    fit: BoxFit.cover,
+                    height: 200,
+                    errorWidget: (context, url, error) => Image(
+                      fit: BoxFit.cover,
+                      width: 620,
+                      height: 180,
+                      image: NetworkImage(defaultGroupImageURL),
+                    ),
+                    placeholder: (context, url) {
+                      return LoadingIndicator();
+                    },
+                  ),
+                ),
+                Positioned(
+                  child: Container(
+                    child: CachedNetworkImage(
+                      imageUrl: (widget.timebankModel.photoUrl == null ||
+                              widget.timebankModel.photoUrl == '')
+                          ? defaultUserImageURL
+                          : widget.timebankModel.photoUrl,
+                      fit: BoxFit.cover,
+                      width: 100,
+                      height: 70,
+                      placeholder: (context, url) {
+                        return LoadingIndicator();
+                      },
+                    ),
+                  ),
+                  left: 13.0,
+                  bottom: -38.0,
+                ),
+              ],
             ),
             SizedBox(
-              height: 10,
+              height: 45,
             ),
             Padding(
               padding: const EdgeInsets.only(left: 20.0, top: 5),
@@ -462,16 +484,27 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
         return AlertDialog(
           title: Text(S.of(context).admin_cannot_create_message),
           actions: <Widget>[
-            CustomTextButton(
-              child: Text(
-                S.of(context).close,
-                style: TextStyle(
-                  color: Colors.red,
-                ),
+            Padding(
+              padding: const EdgeInsets.only(
+                right: 15,
+                bottom: 15,
               ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+              child: CustomTextButton(
+                color: Colors.grey,
+                padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                shape: StadiumBorder(),
+                child: Text(
+                  S.of(context).close,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontFamily: 'Europa',
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
             ),
           ],
         );

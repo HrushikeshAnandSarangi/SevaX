@@ -3,6 +3,8 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/components/location_picker.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/location_model.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class LocationPickerWidget extends StatelessWidget {
   final ValueChanged<LocationDataModel> onChanged;
@@ -19,25 +21,43 @@ class LocationPickerWidget extends StatelessWidget {
       : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return TextButton.icon(
-      icon: Icon(Icons.add_location),
-      label: Container(
+    return CustomElevatedButton(
+      child: Container(
         constraints: BoxConstraints.loose(
           Size(MediaQuery.of(context).size.width - 140, 50),
         ),
-        child: Text(
-          selectedAddress == '' || selectedAddress == null
-              ? S.of(context).add_location
-              : selectedAddress,
-          overflow: TextOverflow.ellipsis,
-          maxLines: 1,
-          style: TextStyle(color: color),
+        child: Row(
+          children: [
+            Icon(
+              Icons.add_location,
+              color: Colors.black,
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Text(
+              selectedAddress == '' || selectedAddress == null
+                  ? S.of(context).add_location
+                  : selectedAddress,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+              style: TextStyle(
+                color: Colors.black54,
+                fontFamily: 'Europa',
+                fontSize: 14,
+              ),
+            ),
+          ],
         ),
       ),
-      style: TextButton.styleFrom(
-        primary: Colors.grey,
-      ),
+      elevation: 0.0,
+      shape: StadiumBorder(),
+      padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+      color: Colors.grey[200],
       onPressed: () async {
+        logger.d(
+            "$location retrieved from onTap=================================");
+
         await Navigator.push(
           context,
           MaterialPageRoute<LocationDataModel>(

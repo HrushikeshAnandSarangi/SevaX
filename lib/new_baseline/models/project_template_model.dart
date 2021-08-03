@@ -11,23 +11,25 @@ class ProjectTemplateModel extends DataModel {
   String description;
   String creatorId;
   String photoUrl;
+  String cover_url;
   ProjectMode mode;
   int createdAt;
   bool softDelete;
   String registrationLink;
   String emailId;
-  String phoneNumber;
+  // String phoneNumber;
   ProjectTemplateModel(
       {this.id,
       this.name,
       this.templateName,
       this.timebankId,
       this.emailId,
-      this.phoneNumber,
+      // this.phoneNumber,
       this.communityId,
       this.description,
       this.creatorId,
       this.photoUrl,
+      this.cover_url,
       this.mode,
       this.createdAt,
       this.softDelete,
@@ -43,11 +45,12 @@ class ProjectTemplateModel extends DataModel {
         communityId: json["communityId"] == null ? null : json["communityId"],
         description: json["description"] == null ? null : json["description"],
         emailId: json["email_id"] == null ? null : json["email_id"],
-        phoneNumber: json["phone_number"] == null ? null : json["phone_number"],
+        // phoneNumber: json["phone_number"] == null ? null : json["phone_number"],
         registrationLink:
             json["registrationLink"] == null ? null : json["registrationLink"],
         creatorId: json["creator_id"] == null ? null : json["creator_id"],
         photoUrl: json["photo_url"] == null ? null : json["photo_url"],
+        cover_url: json["cover_url"] == null ? null : json["cover_url"],
         mode: json["mode"] == null
             ? null
             : json["mode"] == 'Timebank'
@@ -67,15 +70,16 @@ class ProjectTemplateModel extends DataModel {
         "registrationLink": registrationLink == null ? null : registrationLink,
         "creator_id": creatorId == null ? null : creatorId,
         "photo_url": photoUrl == null ? null : photoUrl,
+        "cover_url": cover_url == null ? null : cover_url,
         "mode": mode == null ? null : mode.readable,
         "softDelete": softDelete ?? false,
         "email_id": emailId == null ? null : emailId,
-        "phone_number": phoneNumber == null ? null : phoneNumber,
+        // "phone_number": phoneNumber == null ? null : phoneNumber,
         "created_at": createdAt == null ? null : createdAt,
       };
 
   @override
   String toString() {
-    return 'ProjectTemplateModel{id: $id, name: $name, templateName: $templateName, timebankId: $timebankId, communityId: $communityId, description: $description, creatorId: $creatorId, photoUrl: $photoUrl, mode: $mode, createdAt: $createdAt, softDelete: $softDelete, registrationLink: $registrationLink, emailId: $emailId, phoneNumber: $phoneNumber}';
+    return 'ProjectTemplateModel{id: $id, name: $name, templateName: $templateName, timebankId: $timebankId, communityId: $communityId, description: $description, creatorId: $creatorId, photoUrl: $photoUrl, cover_url: $cover_url, mode: $mode, createdAt: $createdAt, softDelete: $softDelete, registrationLink: $registrationLink, emailId: $emailId}'; //phoneNumber: $phoneNumber
   }
 }

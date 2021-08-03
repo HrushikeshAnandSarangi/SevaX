@@ -31,7 +31,7 @@ class RequestTabs extends StatelessWidget {
                     ),
                   ),
                   Tab(
-                    child: Text(L.of(context).virtual_requests),
+                    child: Text(S.of(context).virtual_requests),
                   ),
                 ],
               ),

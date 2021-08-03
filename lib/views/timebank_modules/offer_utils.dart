@@ -133,28 +133,52 @@ Future<void> deleteOffer({
           S.of(context).delete_offer_confirmation,
         ),
         actions: <Widget>[
-          CustomTextButton(
-            onPressed: () {
-              Navigator.of(dialogContext).pop();
-            },
-            child: Text(
-              S.of(context).cancel,
-              style: TextStyle(fontSize: dialogButtonSize, color: Colors.red),
+          Padding(
+            padding: const EdgeInsets.only(
+              bottom: 15,
+            ),
+            child: CustomTextButton(
+              shape: StadiumBorder(),
+              padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+              color: Colors.grey,
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+              },
+              child: Text(
+                S.of(context).cancel,
+                style: TextStyle(
+                  fontSize: dialogButtonSize,
+                  color: Colors.white,
+                  fontFamily: 'Europa',
+                ),
+              ),
             ),
           ),
-          CustomTextButton(
-            padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-            color: Theme.of(context).accentColor,
-            textColor: FlavorConfig.values.buttonTextColor,
-            onPressed: () async {
-              await CollectionRef.offers
-                  .doc(offerId)
-                  .update({'softDelete': true});
-              Navigator.of(dialogContext).pop();
-              Navigator.pop(context);
-            },
-            child: Text(
-              S.of(context).delete,
+          Padding(
+            padding: const EdgeInsets.only(
+              bottom: 15,
+              right: 15,
+            ),
+            child: CustomTextButton(
+              shape: StadiumBorder(),
+              padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+              color: Theme.of(context).accentColor,
+              textColor: FlavorConfig.values.buttonTextColor,
+              onPressed: () async {
+                await CollectionRef.offers
+                    .doc(offerId)
+                    .update({'softDelete': true});
+                Navigator.of(dialogContext).pop();
+                Navigator.pop(context);
+              },
+              child: Text(
+                S.of(context).delete,
+                style: TextStyle(
+                  fontSize: dialogButtonSize,
+                  color: Colors.white,
+                  fontFamily: 'Europa',
+                ),
+              ),
             ),
           ),
         ],

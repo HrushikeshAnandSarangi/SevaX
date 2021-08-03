@@ -35,17 +35,18 @@ Future<void> createAndOpenChat({
   bool interCommunity = false,
   List<String> showToCommunities,
   String entityId,
+  bool isParentChildCommunication = false,
 }) async {
   List<String> participants = [sender.id, reciever.id];
   participants.sort();
   ChatModel model = ChatModel(
-    participants: participants,
-    communityId: interCommunity ? null : communityId,
-    participantInfo: [sender, reciever],
-    showToCommunities: interCommunity ? showToCommunities : null,
-    interCommunity: interCommunity,
-    isTimebankMessage: isTimebankMessage,
-  )
+      participants: participants,
+      communityId: interCommunity ? null : communityId,
+      participantInfo: [sender, reciever],
+      showToCommunities: interCommunity ? showToCommunities : null,
+      interCommunity: interCommunity,
+      isTimebankMessage: isTimebankMessage,
+      isParentChildCommunication: isParentChildCommunication)
     ..id =
         "${participants[0]}*${participants[1]}*${interCommunity ? entityId : communityId}"
     ..isGroupMessage = false;

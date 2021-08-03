@@ -60,8 +60,8 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
         centerTitle: true,
         title: Text(
           widget.requestModel.roomOrTool == 'ROOM'
-              ? L.of(context).approve_borrow_request
-              : L.of(context).approve_item_borrow,
+              ? S.of(context).approve_borrow_request
+              : S.of(context).approve_item_borrow,
           style: TextStyle(
               fontFamily: "Europa", fontSize: 19, color: Colors.white),
         ),
@@ -82,7 +82,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             SizedBox(height: 20),
-            Text("S.of(context).guests_can_do_and_dont",
+            Text(S.of(context).guests_can_do_and_dont,
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w600,
@@ -98,14 +98,14 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
                 setState(() {});
               },
               decoration: InputDecoration(
-                hintText: L.of(context).approve_borrow_hint_text1,
+                hintText: S.of(context).approve_borrow_hint_text1,
                 hintStyle: TextStyle(fontSize: 13, color: Colors.grey),
                 // labelText: 'No. of volunteers',
               ),
               keyboardType: TextInputType.text,
               validator: (value) {
                 if (value.isEmpty) {
-                  return L.of(context).approve_borrow_alert_msg1;
+                  return S.of(context).approve_borrow_alert_msg1;
                 } else {
                   doAndDonts = value;
                   setState(() {});
@@ -205,8 +205,8 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
         SizedBox(height: 20),
         Text(
             widget.requestModel.roomOrTool == 'ROOM'
-                ? L.of(context).approve_borrow_terms_acknowledgement_text1
-                : L.of(context).approve_borrow_terms_acknowledgement_text2,
+                ? S.of(context).approve_borrow_terms_acknowledgement_text1
+                : S.of(context).approve_borrow_terms_acknowledgement_text2,
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w600,
@@ -216,8 +216,8 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
         SizedBox(height: 15),
         Text(
             widget.requestModel.roomOrTool == 'ROOM'
-                ? L.of(context).approve_borrow_terms_acknowledgement_text3
-                : L.of(context).approve_borrow_terms_acknowledgement_text4,
+                ? S.of(context).approve_borrow_terms_acknowledgement_text3
+                : S.of(context).approve_borrow_terms_acknowledgement_text4,
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w600,
@@ -259,7 +259,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content:
-                          Text("S.of(context).snackbar_select_agreement_type"),
+                          Text(S.of(context).snackbar_select_agreement_type),
                     ),
                   );
                 } else {
@@ -344,7 +344,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
       children: [
         SizedBox(height: 15),
         Text(
-          "S.of(context).agreement",
+          S.of(context).agreement,
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
         ),
         SizedBox(height: 10),
@@ -354,7 +354,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
             Container(
               width: MediaQuery.of(context).size.width * 0.68,
               child: Text(
-                L.of(context).request_agreement_form_component_text,
+                S.of(context).request_agreement_form_component_text,
                 style: TextStyle(fontSize: 15),
                 softWrap: true,
               ),
@@ -375,7 +375,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(documentName != '' ? 'view ' : ''),
+                Text(documentName != '' ?  S.of(context).view   : ''),
                 GestureDetector(
                     child: Container(
                       alignment: Alignment.topLeft,
@@ -383,7 +383,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
                       child: Text(
                         documentName != ''
                             ? documentName
-                            : L
+                            : S
                                 .of(context)
                                 .approve_borrow_no_agreement_selected,
                         style: TextStyle(

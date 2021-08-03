@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 
 class RepeatWidget extends StatefulWidget {
   RepeatWidget();
@@ -38,7 +39,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
   static List<bool> _selected;
   static List<int> recurringDays = [];
   static bool isRecurring = false;
-  
+
   @override
   void initState() {
     super.initState();
@@ -48,7 +49,6 @@ class RepeatWidgetState extends State<RepeatWidget> {
     isRecurring = false;
   }
 
-  
   bool viewVisible = false;
   bool titleCheck = true;
   static int endType = 0;
@@ -226,45 +226,47 @@ class RepeatWidgetState extends State<RepeatWidget> {
                         ),
                       ),
                       Container(
-                          height: 45.0,
-                          margin: EdgeInsets.fromLTRB(8.0, 8.0, 0.0, 0.0),
-                          alignment: Alignment.center,
-                          child: ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: 7,
-                              scrollDirection: Axis.horizontal,
-                              itemBuilder: (BuildContext context, int index) =>
-                                  Container(
-                                      alignment: Alignment.center,
-                                      height: 40.0,
-                                      width: 40.0,
-                                      margin: EdgeInsets.all(2.0),
-                                      decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(40.0),
-                                        color: _selected[index]
-                                            ? Theme.of(context).primaryColor
-                                            : Colors.black12,
-                                      ),
-                                      child: InkWell(
-                                        child: Center(
-                                          child: Text(dayNameList[index],
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.bold,
-                                                fontFamily: 'Europa',
-                                                color: _selected[index]
-                                                    ? Colors.white
-                                                    : Colors.black,
-                                              )),
-                                        ),
-                                        onTap: () => setState(() {
-                                          _selected[index] = !_selected[index];
-                                        }), // reverse bool value
-                                      ))
-//                            children: getDayList(),
-                              )),
+                        height: 45.0,
+                        margin: EdgeInsets.fromLTRB(8.0, 8.0, 0.0, 0.0),
+                        alignment: Alignment.center,
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: 7,
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (BuildContext context, int index) =>
+                              Container(
+                            alignment: Alignment.center,
+                            height: 40.0,
+                            width: 40.0,
+                            margin: EdgeInsets.all(2.0),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(40.0),
+                              color: _selected[index]
+                                  ? Theme.of(context).primaryColor
+                                  : Colors.black12,
+                            ),
+                            child: InkWell(
+                              child: Center(
+                                child: Text(dayNameList[index],
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: 'Europa',
+                                      color: _selected[index]
+                                          ? Colors.white
+                                          : Colors.black,
+                                    )),
+                              ),
+                              onTap: () => setState(
+                                () {
+                                  _selected[index] = !_selected[index];
+                                },
+                              ), // reverse bool value
+                            ),
+                          ),
+                        ),
+                      ),
                       Container(
                         alignment: Alignment.topLeft,
                         padding:
@@ -383,7 +385,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
                                     }).toList(),
                                   ),
                                 ),
-                                Text("${S.of(context).occurences}",
+                                Text("${S.of(context).occurrences}",
                                     textAlign: TextAlign.end,
                                     style: TextStyle(
                                       fontSize: 16,
@@ -417,17 +419,20 @@ class RepeatWidgetState extends State<RepeatWidget> {
                               ),
                             ),
                             Container(
-                                margin: EdgeInsets.all(8.0),
-                                child: InkWell(
-                                  onTap: _cancelOnAfter,
-                                  child: Text("${S.of(context).cancel}",
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                        fontFamily: 'Europa',
-                                        color: Colors.black12,
-                                      )),
-                                )),
+                              margin: EdgeInsets.all(8.0),
+                              child: InkWell(
+                                onTap: _cancelOnAfter,
+                                child: Text(
+                                  "${S.of(context).cancel}",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Europa',
+                                    color: Colors.black12,
+                                  ),
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ),

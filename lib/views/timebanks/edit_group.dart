@@ -19,8 +19,9 @@ import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
-
+import 'package:sevaexchange/components/sevaavatar/timebankcoverphoto.dart';
 import '../core.dart';
+import 'package:sevaexchange/labels.dart';
 
 class EditGroupView extends StatelessWidget {
   final TimebankModel timebankModel;
@@ -73,6 +74,9 @@ class EditGroupFormState extends State<EditGroupForm> {
     if (widget.timebankModel.location != null) {
       location = widget.timebankModel.location;
       selectedAddress = widget.timebankModel.address;
+    } else {
+      location = parentTimebankModel.location;
+      selectedAddress = parentTimebankModel.address;
     }
 
     searchTextController =
@@ -123,6 +127,8 @@ class EditGroupFormState extends State<EditGroupForm> {
   void updateGroupDetails() {
     widget.timebankModel.photoUrl =
         globals.timebankAvatarURL ?? widget.timebankModel.photoUrl;
+    widget.timebankModel.cover_url =
+        globals.timebankCoverURL ?? widget.timebankModel.cover_url;
     // widget.timebankModel.protected = protectedVal;
     widget.timebankModel.address = selectedAddress;
     widget.timebankModel.location =
@@ -141,6 +147,7 @@ class EditGroupFormState extends State<EditGroupForm> {
           subTimebankId: widget.timebankModel.id,
           targetTimebankId: parentTimebankModel.id,
           timebankPhotoUrl: widget.timebankModel.photoUrl,
+          timebankCoverUrl: widget.timebankModel.cover_url,
           creatorName: SevaCore.of(context).loggedInUser.fullname,
           creatorPhotoUrl: SevaCore.of(context).loggedInUser.photoURL,
           communityId: widget.timebankModel.communityId);
@@ -179,6 +186,17 @@ class EditGroupFormState extends State<EditGroupForm> {
               padding: EdgeInsets.all(5.0),
               child: Column(
                 children: <Widget>[
+                  TimebankCoverPhoto(
+                      coverUrl: widget.timebankModel.cover_url ?? null),
+                  SizedBox(height: 10),
+                  Text(
+                    "${S.of(context).cover_picture_label_group}",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  SizedBox(height: 25),
                   TimebankAvatar(
                     photoUrl: widget.timebankModel.photoUrl ?? null,
                   ),
@@ -258,31 +276,36 @@ class EditGroupFormState extends State<EditGroupForm> {
               ),
             ],
           ),
-          Row(
-            children: <Widget>[
-              headingText(S.of(context).private_group, false),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
-                child: infoButton(
-                  context: context,
-                  key: GlobalKey(),
-                  type: InfoType.PRIVATE_GROUP,
-                ),
-              ),
-              Column(
-                children: <Widget>[
-                  Divider(),
-                  Checkbox(
-                    value: widget.timebankModel.private,
-                    onChanged: (bool value) {
-                      setState(() {
-                        widget.timebankModel.private = value;
-                      });
-                    },
+          TransactionsMatrixCheck(
+            comingFrom: ComingFrom.Groups,
+            upgradeDetails: AppConfig.upgradePlanBannerModel.private_groups,
+            transaction_matrix_type: "private_groups",
+            child: Row(
+              children: <Widget>[
+                headingText(S.of(context).private_group, false),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
+                  child: infoButton(
+                    context: context,
+                    key: GlobalKey(),
+                    type: InfoType.PRIVATE_GROUP,
                   ),
-                ],
-              ),
-            ],
+                ),
+                Column(
+                  children: <Widget>[
+                    Divider(),
+                    Checkbox(
+                      value: widget.timebankModel.private,
+                      onChanged: (bool value) {
+                        setState(() {
+                          widget.timebankModel.private = value;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
           headingText(S.of(context).is_pin_at_right_place, false),
           Container(
@@ -324,12 +347,11 @@ class EditGroupFormState extends State<EditGroupForm> {
                     Checkbox(
                       value: widget.timebankModel.sponsored,
                       onChanged: (bool value) {
-                        if (!widget.timebankModel.sponsored) {
-                          setState(() {
-                            widget.timebankModel.sponsored =
-                                !widget.timebankModel.sponsored;
-                          });
-                        }
+                        // if (!widget.timebankModel.sponsored) {
+                        setState(() {
+                          widget.timebankModel.sponsored = value;
+                        });
+                        // }
                       },
                     ),
                   ],

@@ -47,14 +47,14 @@ class _CommunityByCategoryViewState extends State<CommunityByCategoryView> {
   Widget build(BuildContext context) {
     return ExplorePageViewHolder(
       hideSearchBar: true,
-      hideHeader: Provider.of<UserModel>(context, listen: false) != null,
-      hideFooter: Provider.of<UserModel>(context, listen: false) != null,
+      hideHeader: widget.isUserSignedIn,
+      hideFooter: widget.isUserSignedIn,
       appBarTitle: widget.isFromNearby
           ? S.of(context).timebanks_near_you
           : widget.model.getCategoryName(context),
       child: widget.isFromNearby
           ? StreamBuilder(
-              stream: Provider.of<UserModel>(context, listen: false) != null
+              stream: widget.isUserSignedIn
                   ? _bloc.nearyByCommunities
                   : Searches.getNearBYCommunities(geoPoint: widget.geoPoint),
               builder: (context, snapshot) {

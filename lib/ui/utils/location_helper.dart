@@ -1,7 +1,8 @@
 import 'package:dartz/dartz.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:location/location.dart' as loc;
+// import 'package:geolocator/geolocator.dart';
 import 'package:sevaexchange/core/error/failures.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
@@ -68,9 +69,7 @@ class LocationHelper {
     if (await _hasPermissions()) {
       logger.i("Permission seems to be granted for location!", "Location");
       try {
-        var lastKnownLocation = await Geolocator.getLastKnownPosition(
-          forceAndroidLocationManager: true,
-        );
+        var lastKnownLocation = await new loc.Location().getLocation();
         logger.i(
             "Successfully retrieved location========" +
                 lastKnownLocation.toString(),
@@ -91,24 +90,27 @@ class LocationHelper {
   }
 
   static Future<bool> _hasPermissions({bool firstTime = true}) async {
-    var permission = await Geolocator.checkPermission();
+    var locationInstace = new loc.Location();
+    locationInstace.enableBackgroundMode(enable: false);
 
-    if (permission == LocationPermission.denied ||
-        permission == LocationPermission.deniedForever) {
+    // var permission = await Geolocator.checkPermission();
+    var permission = await locationInstace.hasPermission();
+
+    if (permission == loc.PermissionStatus.denied ||
+        permission == loc.PermissionStatus.deniedForever) {
       if (firstTime) {
-        await Geolocator.requestPermission();
+        await locationInstace.requestPermission();
         return _hasPermissions(firstTime: false);
       } else
         return false;
     } else {
-      var isLocationServiceEnabled =
-          await Geolocator.isLocationServiceEnabled();
+      var isLocationServiceEnabled = await locationInstace.serviceEnabled();
       if (!isLocationServiceEnabled) {
         logger.d(
             "Location permission is not enabled! requesting permission from user!",
             "Location");
 
-        return await Geolocator.isLocationServiceEnabled();
+        return await locationInstace.serviceEnabled();
       } else {
         logger.d("Location permission allowed from user!!", "Location");
         return true;

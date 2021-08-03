@@ -52,18 +52,26 @@ class IndividualOfferBloc extends BlocBase with Validators {
       GoodsDonationDetails(address: '', donors: [], requiredGoods: {}));
 
   final profanityDetector = ProfanityDetector();
+
   Stream<String> get errorMessage => _errorMessage.stream;
 
   Function(String value) get onTitleChanged => _title.sink.add;
+
   Function(String value) get onMinimumCreditsChanged =>
       _minimumCredits.sink.add;
+
   Function(bool value) get onOfferMadePublic => _makePublic.sink.add;
 
   Function(String) get onOfferDescriptionChanged => _offerDescription.sink.add;
+
   Function(int) get onDonationAmountChanged => _donationAmount.sink.add;
+
   Function(String) get onAvailabilityChanged => _availabilty.sink.add;
+
   Function(CustomLocation) get onLocatioChanged => _location.sink.add;
+
   Function(RequestType) get onTypeChanged => _type.sink.add;
+
   // Function(CashModel) get onCashModelChanged => _cashModel.sink.add;
   Function(bool) get isVisibleChanged => _isVisible.sink.add;
   Function(LendingPlaceModel model) get onLendingModelAdded =>
@@ -83,16 +91,25 @@ class IndividualOfferBloc extends BlocBase with Validators {
       _goodsDonationDetails.sink.add;
 
   Stream<String> get title => _title.stream;
+
   Stream<bool> get makePublicValue => _makePublic.stream;
+
   Stream<bool> get makeVirtual => _makeVirtual.stream;
+
   Stream<String> get offerDescription => _offerDescription.stream;
+
   Stream<String> get availability => _availabilty.stream;
+
   Stream<String> get minimumCredits => _minimumCredits.stream;
 
   Stream<CustomLocation> get location => _location.stream;
+
   Stream<Status> get status => _status.stream;
+
   Stream<bool> get isVisible => _isVisible.stream;
+
   Stream<RequestType> get type => _type.stream;
+
   // Stream<CashModel> get cashModel => _cashModel.stream;
   Stream<int> get donationAmount => _donationAmount.stream;
 

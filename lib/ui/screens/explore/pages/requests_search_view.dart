@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/explore/bloc/explore_search_page_bloc.dart';
@@ -34,7 +35,7 @@ class RequestsSearchView extends StatelessWidget {
               return LoadingIndicator();
             }
             if (snapshot.data == null || snapshot.data.isEmpty) {
-              return Text('No result found');
+              return Text(S.of(context).no_result_found);
             }
 
             return ListView.builder(

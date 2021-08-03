@@ -17,8 +17,12 @@ class TagView extends StatelessWidget {
         child: Container(
           color: Theme.of(context).primaryColor,
           child: Padding(
-            padding:
-                const EdgeInsets.only(left: 8, right: 8, top: 3, bottom: 3),
+            padding: const EdgeInsets.only(
+              left: 8,
+              right: 8,
+              top: 3,
+              bottom: 3,
+            ),
             child: Text(
               tagTitle,
               style: TextStyle(

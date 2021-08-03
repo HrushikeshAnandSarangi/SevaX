@@ -52,7 +52,6 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
   String selectedAddress = '';
   int sharedValue = 0;
   String _selectedTimebankId;
-  bool isAdmin = false;
   TimebankModel timebankModel;
   final profanityDetector = ProfanityDetector();
   CommunityModel communityModel;
@@ -221,7 +220,7 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
           0: Text(
             timebankModel.parentTimebankId == FlavorConfig.values.timebankId
                 ? S.of(context).timebank_request(1)
-                : "Seva " +
+                :S.of(context).seva +
                     timebankModel.name +
                     " ${S.of(context).group} " +
                     S.of(context).request,

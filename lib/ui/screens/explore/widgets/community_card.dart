@@ -43,18 +43,20 @@ class CommunityCard extends StatelessWidget {
             ),
           ),
           SizedBox(width: 10),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                name ?? '',
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontSize: 14),
-              ),
-              Text(
-                '${memberCount + ' ' + S.of(context).members}',
-                style: TextStyle(fontSize: 10),
-              ),
+          SizedBox(
+            width: 140,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  name ?? '',
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontSize: 14),
+                ),
+                Text(
+                  '${memberCount + ' ' + S.of(context).members}',
+                  style: TextStyle(fontSize: 10),
+                ),
 //              Offstage(
 //                  offstage: int.parse(memberCount) == 0,
 //                child: FutureBuilder<List<String>>(
@@ -79,7 +81,8 @@ class CommunityCard extends StatelessWidget {
 //                  }
 //                ),
 //              )
-            ],
+              ],
+            ),
           ),
           Spacer(),
           CustomElevatedButton(

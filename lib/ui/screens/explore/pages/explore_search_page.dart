@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/ui/screens/explore/bloc/explore_search_page_bloc.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/communities_search_view.dart';
@@ -17,6 +18,7 @@ import 'package:sevaexchange/ui/screens/offers/widgets/offer_filters.dart';
 import 'package:sevaexchange/ui/screens/request/widgets/request_filters.dart';
 import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
+import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/filters.dart';
 import 'package:sevaexchange/widgets/custom_back.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
@@ -53,7 +55,15 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
   @override
   void initState() {
     super.initState();
-    _bloc.load();
+    Future.delayed(
+        Duration(milliseconds: 300),
+        () => {
+              _bloc.load(
+                  widget.isUserSignedIn
+                      ? SevaCore.of(context).loggedInUser.sevaUserID
+                      : '',
+                  context),
+            });
     _tabIndex.add(widget.tabIndex);
     _searchController.text = widget.searchText;
     _bloc.onSearchChange(widget.searchText);
@@ -114,7 +124,10 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
                 onChanged: _bloc.onSearchChange,
                 decoration: InputDecoration(
                   hintText: S.of(context).explore_search_hint,
-                  hintStyle: TextStyle(color: Colors.grey, fontSize: 12),
+                  hintStyle: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 12,
+                  ),
                   border: OutlineInputBorder(
                     borderSide: BorderSide.none,
                     borderRadius: BorderRadius.circular(40),
@@ -126,19 +139,27 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
                   filled: true,
                   fillColor: Colors.white,
                   prefixIcon: Icon(Icons.search),
-                  suffixIcon: CustomTextButton(
-                    child: Text(
-                      S.of(context).search,
-                      style: TextStyle(color: Colors.white),
+                  suffixIcon: Padding(
+                    padding: const EdgeInsets.fromLTRB(2, 5, 5, 5),
+                    child: CustomTextButton(
+                      padding: EdgeInsets.all(2),
+                      child: Text(
+                        S.of(context).search,
+                        style: TextStyle(
+                          color: Colors.white,
+                          // fontSize: 10,
+                        ),
+                      ),
+                      textColor: Colors.white,
+                      color: Colors.orange,
+                      shape: StadiumBorder(),
+                      // RoundedRectangleBorder(
+                      //   borderRadius: BorderRadius.circular(20),
+                      // ),
+                      onPressed: () {
+                        FocusScope.of(context).unfocus();
+                      },
                     ),
-                    textColor: Colors.white,
-                    color: Colors.orange,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    onPressed: () {
-                      FocusScope.of(context).unfocus();
-                    },
                   ),
                   contentPadding: const EdgeInsets.symmetric(vertical: 4),
                 ),
@@ -181,7 +202,7 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
         "Hobbies & Crafts",
         "Fashion & Beauty",
         "Social",
-        "Career & Buisness",
+        "Career & Business",
       ];
 
   List<String> get _tabsText => ["Communities", "Events", "Requests", "Offers"];
@@ -294,10 +315,17 @@ class ExploreCommunityCard extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 4),
-                  Text(
-                    S.of(context).new_york,
-                    style: TextStyle(
-                      color: Theme.of(context).accentColor,
+                  HideWidget(
+                    hide: (model.billing_address == null ||
+                        model.billing_address.city == null ||
+                        model.billing_address.country == null),
+                    child: Text(
+                      model.billing_address.city +
+                          ' | ' +
+                          model.billing_address.country,
+                      style: TextStyle(
+                        color: Theme.of(context).accentColor,
+                      ),
                     ),
                   ),
                   SizedBox(height: 12),
@@ -437,7 +465,7 @@ class ExploreSearchTabBar extends StatelessWidget {
                             children: [
                               Text(
                                 snapshot.data == 0
-                                    ? 'Anywhere'
+                                    ? L.of(context).any_distance
                                     : 'Within ${snapshot.data} ' +
                                         S.of(context).miles,
                                 style: TextStyle(
@@ -564,7 +592,7 @@ class ExploreSearchTabBar extends StatelessWidget {
                               (e) => DropdownMenuItem(
                                 value: e.typeId,
                                 child: Text(
-                                  e.title_en,
+                                  e.getCategoryName(context).toString(),
                                 ),
                               ),
                             ),

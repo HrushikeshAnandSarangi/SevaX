@@ -18,6 +18,7 @@ import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/request_tab_holder.dart';
@@ -109,8 +110,12 @@ class _RecurringListingState extends State<RecurringListing> {
                         if (snapshot.data != null) {
                           List<RequestModel> requestModelList = snapshot.data;
 
-                          return RecurringList(requestModelList, null,
-                              timebankModel, communityModel);
+                          return RecurringList(
+                            requestModelList,
+                            null,
+                            timebankModel,
+                            communityModel,
+                          );
                         } else {
                           return Center(child: CircularProgressIndicator());
                         }
@@ -176,6 +181,20 @@ class _RecurringListState extends State<RecurringList> {
 
   @override
   Widget build(BuildContext context) {
+    logger.i(widget.offerModel == null
+        ? widget.requestmodel.length.toString()
+        : widget.offerModel.length.toString() + "Length of ===");
+
+    if ((widget.offerModel == null
+            ? widget.requestmodel.length
+            : widget.offerModel.length) ==
+        0) {
+      return Center(
+        child: Container(
+          child: Text('All requests completed.'),
+        ),
+      );
+    }
     return ListView.builder(
         itemCount: widget.offerModel == null
             ? widget.requestmodel.length

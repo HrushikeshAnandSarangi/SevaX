@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+// import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:rxdart/rxdart.dart';
@@ -42,6 +42,10 @@ import 'package:sevaexchange/views/tasks/my_tasks_list.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/custom_dialogs/custom_dialog.dart';
+import 'package:sevaexchange/utils/utils.dart' as utils;
+import 'package:sevaexchange/ui/utils/helpers.dart';
+
+import '../../../../labels.dart';
 
 class PersonalNotifications extends StatefulWidget {
   @override
@@ -328,41 +332,50 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         },
                         onPressedAccept: () async {
                           showDialog(
-                              context: context,
-                              builder: (BuildContext viewContext) {
-                                return AlertDialog(
-                                  title: Text(S
-                                      .of(context)
-                                      .oneToManyRequestSpeakerAcceptRequest),
-                                  actions: <Widget>[
-                                    CustomTextButton(
-                                      color: Theme.of(context).primaryColor,
-                                      child: Text(
-                                        S.of(context).yes,
-                                        style: TextStyle(
-                                            fontSize: 16, color: Colors.white),
+                            context: context,
+                            builder: (BuildContext viewContext) {
+                              return AlertDialog(
+                                title: Text(S
+                                    .of(context)
+                                    .oneToManyRequestSpeakerAcceptRequest),
+                                actions: <Widget>[
+                                  CustomTextButton(
+                                    shape: StadiumBorder(),
+                                    color: Theme.of(context).primaryColor,
+                                    child: Text(
+                                      S.of(context).yes,
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.white,
+                                        fontFamily: 'Europa',
                                       ),
-                                      onPressed: () async {
-                                        await oneToManySpeakerInviteAcceptedPersonalNotifications(
-                                            model, context);
+                                    ),
+                                    onPressed: () async {
+                                      await oneToManySpeakerInviteAcceptedPersonalNotifications(
+                                          model, context);
 
-                                        Navigator.of(viewContext).pop();
-                                      },
-                                    ),
-                                    CustomTextButton(
-                                      color: Theme.of(context).accentColor,
-                                      child: Text(
-                                        S.of(context).no,
-                                        style: TextStyle(
-                                            fontSize: 16, color: Colors.white),
+                                      Navigator.of(viewContext).pop();
+                                    },
+                                  ),
+                                  CustomTextButton(
+                                    shape: StadiumBorder(),
+                                    color: Theme.of(context).accentColor,
+                                    child: Text(
+                                      S.of(context).no,
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.white,
+                                        fontFamily: 'Europa',
                                       ),
-                                      onPressed: () {
-                                        Navigator.of(viewContext).pop();
-                                      },
                                     ),
-                                  ],
-                                );
-                              });
+                                    onPressed: () {
+                                      Navigator.of(viewContext).pop();
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
 
                           // Navigator.of(context).push(
                           //   MaterialPageRoute(
@@ -389,11 +402,15 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                       .speaker_reject_invite_dialog),
                                   actions: <Widget>[
                                     CustomTextButton(
+                                      shape: StadiumBorder(),
                                       color: Theme.of(context).primaryColor,
                                       child: Text(
                                         S.of(context).yes,
                                         style: TextStyle(
-                                            fontSize: 16, color: Colors.white),
+                                          fontSize: 16,
+                                          color: Colors.white,
+                                          fontFamily: 'Europa',
+                                        ),
                                       ),
                                       onPressed: () async {
                                         Navigator.of(viewContext).pop();
@@ -403,11 +420,15 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                       },
                                     ),
                                     CustomTextButton(
+                                      shape: StadiumBorder(),
                                       color: Theme.of(context).accentColor,
                                       child: Text(
                                         S.of(context).no,
                                         style: TextStyle(
-                                            fontSize: 16, color: Colors.white),
+                                          fontFamily: 'Europa',
+                                          fontSize: 16,
+                                          color: Colors.white,
+                                        ),
                                       ),
                                       onPressed: () {
                                         Navigator.of(viewContext).pop();
@@ -449,7 +470,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                         oneToManyRequestModel);
                                     await onDismissed();
                                   },
-                                  fromNotification: true,
+                                  isFromtasks: false,
                                 );
                               },
                             ),
@@ -460,9 +481,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                             .of(context)
                             .speaker_completion_rejected_notification_1,
                         subTitle:
-                            S.of(context).notifications_request_rejected_by +
-                                '' +
-                                model.requestCreatorName,
+                            '${S.of(context).notifications_request_rejected_by} ${model.requestCreatorName}',
                       );
                       break;
 
@@ -839,6 +858,34 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       );
                       break;
 
+                    case NotificationType.ONETOMANY_REQUEST_ATTENDEES_FEEDBACK:
+                      RequestModel requestModel =
+                          RequestModel.fromMap(notification.data);
+
+                      return NotificationCard(
+                        isDissmissible: true,
+                        timestamp: notification.timestamp,
+                        entityName: 'Feed Back',
+                        photoUrl: null,
+                        title: S.of(context).notifications_feedback_request,
+                        subTitle: UserNotificationMessage
+                                .FEEDBACK_FROM_SIGNUP_MEMBER
+                                .replaceFirst(
+                              '*class',
+                              requestModel.title,
+                            ) +
+                            " ",
+                        onPressed: () =>
+                            _handleFeedBackNotificationOneToManyAttendees(
+                          context,
+                          requestModel,
+                          notification.id,
+                          user.email,
+                        ),
+                        onDismissed: onDismissed,
+                      );
+                      break;
+
                     case NotificationType.APPROVED_MEMBER_WITHDRAWING_REQUEST:
                       var body =
                           WithdrawnRequestBody.fromMap(notification.data);
@@ -1034,8 +1081,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
 
                     default:
                       log("Unhandled user notification type ${notification.type} ${notification.id}");
-                      FirebaseCrashlytics.instance.log(
-                          "Unhandled notification type ${notification.type} ${notification.id}");
+                      // FirebaseCrashlytics.instance.log(
+                      //     "Unhandled notification type ${notification.type} ${notification.id}");
                       return Container();
                   }
                 },
@@ -1140,7 +1187,52 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
       await sendMessageOfferCreator(
           loggedInUser: SevaCore.of(context).loggedInUser,
           message: results['didComment'] ? results['comment'] : "No comments",
-          creatorId: data.classDetails.sevauserid);
+          creatorId: data.classDetails.sevauserid,
+          isFromOfferRequest: true);
+      NotificationsRepository.readUserNotification(notificationId, email);
+    }
+  }
+
+  void _handleFeedBackNotificationOneToManyAttendees(
+    BuildContext context,
+    RequestModel requestModel,
+    String notificationId,
+    String email,
+  ) async {
+    Map results = await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => ReviewFeedback(
+          feedbackType: FeedbackType
+              .FOR_ONE_TO_MANY_REQUEST_ATTENDEE, //if new questions then have to change this and update
+        ),
+      ),
+    );
+
+    if (results != null && results.containsKey('selection')) {
+      CollectionRef.reviews.add(
+        {
+          "reviewer": SevaCore.of(context).loggedInUser.email,
+          "reviewed": requestModel.title,
+          "ratings": results['selection'],
+          "requestId": "testId",
+          "comments":
+              results['didComment'] ? results['comment'] : "No comments",
+          'liveMode': !AppConfig.isTestCommunity,
+        },
+      );
+
+      await handleVolunterFeedbackForTrustWorthynessNRealiablityScore(
+          FeedbackType.FOR_ONE_TO_MANY_REQUEST_ATTENDEE,
+          results,
+          requestModel,
+          SevaCore.of(context).loggedInUser);
+
+      await sendMessageOfferCreator(
+          loggedInUser: SevaCore.of(context).loggedInUser,
+          message: results['didComment'] ? results['comment'] : "No comments",
+          creatorId: requestModel.sevaUserId,
+          offerTitle: requestModel.title,
+          isFromOfferRequest: requestModel.isFromOfferRequest);
       NotificationsRepository.readUserNotification(notificationId, email);
     }
   }
@@ -1150,6 +1242,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
     String offerTitle,
     String creatorId,
     String message,
+    bool isFromOfferRequest,
   }) async {
     UserModel userModel =
         await FirestoreManager.getUserForId(sevaUserId: creatorId);
@@ -1174,7 +1267,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
             context: context,
             requestTitle: offerTitle,
             isForCreator: true,
-            isOfferReview: true,
+            isOfferReview: isFromOfferRequest,
           ),
           reciever: receiver,
           isTimebankMessage: false,

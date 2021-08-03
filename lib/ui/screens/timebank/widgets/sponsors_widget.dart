@@ -138,13 +138,26 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                                 ),
                               ),
                               actions: <Widget>[
-                                CustomTextButton(
-                                  onPressed: () {
-                                    Navigator.of(dialogContext).pop();
-                                  },
-                                  child: Text(
-                                    S.of(context).cancel,
-                                    style: TextStyle(color: Colors.redAccent),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    right: 15,
+                                    bottom: 15,
+                                  ),
+                                  child: CustomTextButton(
+                                    shape: StadiumBorder(),
+                                    color: Colors.grey,
+                                    padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                                    onPressed: () {
+                                      Navigator.of(dialogContext).pop();
+                                    },
+                                    child: Text(
+                                      S.of(context).cancel,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontFamily: 'Europa',
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ],
@@ -288,7 +301,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                                         context: context,
                                         timebankModel: widget.timebankModel);
                                   },
-                                  title: Text('Edit Name'),
+                                  title: Text(S.of(context).edit_name),
                                   trailing: Icon(Icons.edit),
                                 ),
                                 ListTile(
@@ -333,7 +346,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
     return Container(
       margin: EdgeInsets.only(top: 15),
       child: Text(
-        L.of(context).sponsored_by,
+        S.of(context).sponsored_by,
         style: TextStyle(
           color: widget.titleColor ?? HexColor('#766FE0'),
           fontSize: 16,
@@ -371,7 +384,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10.0))),
           title: Text(
-            L.of(context).sponsor_name,
+            S.of(context).sponsor_name,
             style: TextStyle(fontSize: 15.0),
           ),
           content: Column(
@@ -410,6 +423,28 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                 children: <Widget>[
                   Spacer(),
                   CustomTextButton(
+                    shape: StadiumBorder(),
+                    padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                    color: Colors.grey,
+                    child: Text(
+                      S.of(context).cancel,
+                      style: TextStyle(
+                        fontSize: dialogButtonSize,
+                        color: Colors.white,
+                        fontFamily: 'Europa',
+                      ),
+                    ),
+                    onPressed: () {
+                      indexPosition = null;
+                      name = null;
+                      Navigator.of(viewContext).pop();
+                    },
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  CustomTextButton(
+                    shape: StadiumBorder(),
                     padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                     color: Theme.of(context).primaryColor,
                     textColor: Colors.white,
@@ -419,6 +454,8 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                           : S.of(context).save,
                       style: TextStyle(
                         fontSize: dialogButtonSize,
+                        color: Colors.white,
+                        fontFamily: 'Europa',
                       ),
                     ),
                     onPressed: () async {
@@ -443,20 +480,6 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                       }
                     },
                   ),
-                  CustomTextButton(
-                    child: Text(
-                      S.of(context).cancel,
-                      style: TextStyle(
-                        fontSize: dialogButtonSize,
-                        color: Colors.red,
-                      ),
-                    ),
-                    onPressed: () {
-                      indexPosition = null;
-                      name = null;
-                      Navigator.of(viewContext).pop();
-                    },
-                  ),
                 ],
               ),
             ],
@@ -478,7 +501,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10.0))),
           title: Text(
-            'Add Sponsor image',
+            S.of(context).add_sponsor_image,
             style: TextStyle(fontSize: 15.0),
           ),
           actions: [

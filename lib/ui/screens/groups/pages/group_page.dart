@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -64,7 +65,7 @@ class _GroupPageState extends State<GroupPage> {
               snapshot.data.listOfSubTimebanks.isEmpty) {
             return EmptyWidget(
               title: S.of(context).no_groups_found,
-              sub_title: "Try " + S.of(context).creating_one,
+              sub_title:S.of(context).try_text+ S.of(context).creating_one,
             );
           }
           List<TimebankModel> myGroups = [];
@@ -160,7 +161,7 @@ class _GroupPageState extends State<GroupPage> {
                   hide: myGroups.isNotEmpty || otherGroups.isNotEmpty,
                   child: EmptyWidget(
                     title: S.of(context).no_groups_found,
-                    sub_title: "Try " + S.of(context).creating_one,
+                    sub_title: S.of(context).try_text + S.of(context).creating_one,
                   ),
                 ),
                 myGroups.isNotEmpty
@@ -196,7 +197,7 @@ class _GroupPageState extends State<GroupPage> {
                     ? [
                         SizedBox(height: 15),
                         Text(
-                          'Seva Community Groups', //label to be created
+                        S.of(context).seva_community_groups,
                           style: TextStyle(
                             fontSize: 18,
                           ),

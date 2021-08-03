@@ -124,6 +124,7 @@ enum NotificationType {
   OneToManyRequestInviteRejected,
   OneToManyRequestCompleted,
   OneToManyCreatorRejectedCompletion,
+  ONETOMANY_REQUEST_ATTENDEES_FEEDBACK,
   // OneToManyRequestDoneForSpeaker,
   RequestApprove,
   RequestInvite,
@@ -195,6 +196,10 @@ enum NotificationType {
   MEMBER_ADDED_TO_MESSAGE_ROOM,
   MEMBER_REMOVED_FROM_MESSAGE_ROOM,
 
+  //messaging room
+  COMMUNITY_ADDED_TO_MESSAGE_ROOM,
+  COMMUNITY_REMOVED_FROM_MESSAGE_ROOM,
+
   //offer request invite
   OfferRequestInvite,
   TimeOfferInvitationFromCreator
@@ -229,8 +234,10 @@ Map<String, NotificationType> typeMapper = {
   "OneToManyRequestCompleted": NotificationType.OneToManyRequestCompleted,
   "OneToManyCreatorRejectedCompletion":
       NotificationType.OneToManyCreatorRejectedCompletion,
+  "ONETOMANY_REQUEST_ATTENDEES_FEEDBACK":
+      NotificationType.ONETOMANY_REQUEST_ATTENDEES_FEEDBACK,
   // "OneToManyRequestDoneForSpeaker":
-      // NotificationType.OneToManyRequestDoneForSpeaker,
+  // NotificationType.OneToManyRequestDoneForSpeaker,
   "RequestReject": NotificationType.RequestReject,
   "RequestCompleted": NotificationType.RequestCompleted,
   "RequestCompletedApproved": NotificationType.RequestCompletedApproved,
@@ -310,6 +317,11 @@ Map<String, NotificationType> typeMapper = {
   "OfferRequestInvite": NotificationType.OfferRequestInvite,
   "TimeOfferInvitationFromCreator":
       NotificationType.TimeOfferInvitationFromCreator,
+  //Messaging room
+  "COMMUNITY_ADDED_TO_MESSAGE_ROOM":
+      NotificationType.COMMUNITY_ADDED_TO_MESSAGE_ROOM,
+  "COMMUNITY_REMOVED_FROM_MESSAGE_ROOM":
+      NotificationType.COMMUNITY_REMOVED_FROM_MESSAGE_ROOM,
 };
 
 ClearNotificationModel clearNotificationModelFromJson(String str) =>

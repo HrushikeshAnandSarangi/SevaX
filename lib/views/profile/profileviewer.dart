@@ -546,13 +546,17 @@ class ProfileViewerState extends State<ProfileViewer> {
                 children: <Widget>[
                   Spacer(),
                   CustomTextButton(
+                    shape: StadiumBorder(),
                     padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                     color: Theme.of(context).accentColor,
                     textColor: FlavorConfig.values.buttonTextColor,
                     child: Text(
                       isBlocked ? S.of(context).unblock : S.of(context).block,
                       style: TextStyle(
-                          fontSize: dialogButtonSize, fontFamily: 'Europa'),
+                        color: Colors.white,
+                        fontSize: dialogButtonSize,
+                        fontFamily: 'Europa',
+                      ),
                     ),
                     onPressed: () {
                       isBlocked
@@ -784,11 +788,11 @@ class ProfileHeader extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        StreamBuilder(
+        StreamBuilder<QuerySnapshot>(
           stream: CollectionRef.reviews
               .where("reviewed", isEqualTo: email)
               .snapshots(),
-          builder: (context, AsyncSnapshot snapshot) {
+          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
             double r = 0;
             if (snapshot.data != null) {
               snapshot.data.docs.forEach((data) {
@@ -803,7 +807,7 @@ class ProfileHeader extends StatelessWidget {
                   Text(
                     r != null
                         ? r > 0
-                            ? '${(r / snapshot.data.documents.length).toStringAsFixed(1)}'
+                            ? '${(r / snapshot.data.docs.length).toStringAsFixed(1)}'
                             : S.of(context).no_ratings_yet
                         : S.of(context).loading,
                     style: TextStyle(

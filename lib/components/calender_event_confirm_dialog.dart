@@ -17,31 +17,46 @@ class CalenderEventConfirmationDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(L.of(context).add_to_calender),
+      title: Text(S.of(context).add_to_calender),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Text(L.of(context).do_you_want_to_add +
-              '$title ${isrequest ? 'request' : 'offer'}' +
-              L.of(context).event_to_calender),
+          Text(S.of(context).do_you_want_to_add +
+              ' ' +
+              '$title ${isrequest ? 'request ' : 'offer '}' +
+              S.of(context).event_to_calender),
           SizedBox(height: 10),
           Row(
             children: <Widget>[
               Spacer(),
               CustomTextButton(
-                padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                shape: StadiumBorder(),
+                // padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                 color: Theme.of(context).accentColor,
-                textColor: FlavorConfig.values.buttonTextColor,
+                // textColor: FlavorConfig.values.buttonTextColor,
                 child: Text(
                   S.of(context).yes,
-                  style: TextStyle(fontFamily: 'Europa'),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontFamily: 'Europa',
+                    fontSize: 16,
+                  ),
                 ),
                 onPressed: addToCalender,
               ),
+              SizedBox(
+                width: 10,
+              ),
               CustomTextButton(
+                shape: StadiumBorder(),
+                color: Colors.grey,
                 child: Text(
                   S.of(context).no,
-                  style: TextStyle(color: Colors.red, fontFamily: 'Europa'),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontFamily: 'Europa',
+                    fontSize: 16,
+                  ),
                 ),
                 onPressed: cancelled,
               ),

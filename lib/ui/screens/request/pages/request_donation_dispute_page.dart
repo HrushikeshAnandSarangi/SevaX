@@ -871,6 +871,7 @@ class _CashFlow extends StatelessWidget {
                     enteredReceivedAmount = val;
                   },
                   decoration: InputDecoration(
+                    prefixIcon: Icon(Icons.attach_money),
                     errorText: snapshot.error == 'min'
                         ? S.of(context).minmum_amount + ' ' + minAmount
                         : snapshot.error == 'amount1'

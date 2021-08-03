@@ -39,47 +39,52 @@ class _CreateOfferState extends State<CreateOffer> {
             CommonHelpIconWidget(),
           ],
         ),
-        body: Column(
-          children: <Widget>[
-            SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30),
-              child: getSwitchForGroupOffer(),
-            ),
-            Expanded(
-              child: IndexedStack(
-                index: currentPage,
-                children: <Widget>[
-                  IndividualOffer(
-                    timebankId: widget.timebankId,
-                    loggedInMemberUserId:
-                        SevaCore.of(context).loggedInUser.sevaUserID,
-                    timebankModel: widget.timebankModel,
-                  ),
-                  TransactionsMatrixCheck.checkAllowedTransaction(
-                          'onetomany_offers')
-                      ? ConfigurationCheck.checkAllowedConfiguartions(
-                              memberType(widget.timebankModel,
-                                  SevaCore.of(context).loggedInUser.sevaUserID),
-                              'one_to_many_offer')
-                          ? OneToManyOffer(
-                              timebankId: widget.timebankId,
-                              loggedInMemberUserId:
-                                  SevaCore.of(context).loggedInUser.sevaUserID,
-                              timebankModel: widget.timebankModel,
-                            )
-                          : permissionsAlertDialog(context)
-                      : UpgradePlanBanner(
-                          activePlanName: AppConfig.paymentStatusMap['planId'],
-                          details:
-                              AppConfig.upgradePlanBannerModel.onetomany_offers,
-                          showAppBar: false,
-                        ),
-                ],
-              ),
-            ),
-          ],
+        body: IndividualOffer(
+          timebankId: widget.timebankId,
+          loggedInMemberUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+          timebankModel: widget.timebankModel,
         ),
+        // Column(
+        //   children: <Widget>[
+        //     SizedBox(height: 20),
+        //     Padding(
+        //       padding: const EdgeInsets.symmetric(horizontal: 30),
+        //       child: getSwitchForGroupOffer(),
+        //     ),
+        //     Expanded(
+        //       child: IndexedStack(
+        //         index: currentPage,
+        //         children: <Widget>[
+        //           IndividualOffer(
+        //             timebankId: widget.timebankId,
+        //             loggedInMemberUserId:
+        //                 SevaCore.of(context).loggedInUser.sevaUserID,
+        //             timebankModel: widget.timebankModel,
+        //           ),
+        //           // TransactionsMatrixCheck.checkAllowedTransaction(
+        //           //         'onetomany_offers')
+        //           //     ? ConfigurationCheck.checkAllowedConfiguartions(
+        //           //             memberType(widget.timebankModel,
+        //           //                 SevaCore.of(context).loggedInUser.sevaUserID),
+        //           //             'one_to_many_offer')
+        //           //         ? OneToManyOffer(
+        //           //             timebankId: widget.timebankId,
+        //           //             loggedInMemberUserId:
+        //           //                 SevaCore.of(context).loggedInUser.sevaUserID,
+        //           //             timebankModel: widget.timebankModel,
+        //           //           )
+        //           //         : permissionsAlertDialog(context)
+        //           //     : UpgradePlanBanner(
+        //           //         activePlanName: AppConfig.paymentStatusMap['planId'],
+        //           //         details:
+        //           //             AppConfig.upgradePlanBannerModel.onetomany_offers,
+        //           //         showAppBar: false,
+        //           //       ),
+        //         ],
+        //       ),
+        //     ),
+        //   ],
+        // ),
       ),
     );
   }

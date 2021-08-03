@@ -29,6 +29,7 @@ import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 
 import '../../../../flavor_config.dart';
+import '../../../../labels.dart';
 
 class TimebankHomePage extends StatefulWidget {
   final SelectedCommuntityGroup selectedCommuntityGroup;
@@ -157,8 +158,9 @@ class _TimebankHomePageState extends State<TimebankHomePage>
                                   child: Text(
                                     S.of(context).your_groups,
                                     style: TextStyle(
-                                      fontSize: 16,
+                                      fontSize: 24,
                                       fontWeight: FontWeight.bold,
+                                      color: Colors.black,
                                     ),
                                   ),
                                 ),
@@ -239,10 +241,10 @@ class _TimebankHomePageState extends State<TimebankHomePage>
                 indicatorColor: Theme.of(context).primaryColor,
                 tabs: [
                   Tab(
-                    child: Text(S.of(context).pending),
+                    child: Text(S.of(context).to_do),
                   ),
                   Tab(
-                    child: Text(S.of(context).not_accepted),
+                    child: Text(S.of(context).pending),
                   ),
                   Tab(
                     child: Text(S.of(context).completed),
@@ -284,7 +286,16 @@ class _TimebankHomePageState extends State<TimebankHomePage>
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             CustomTextButton(
-              child: Text(S.of(context).close),
+              shape: StadiumBorder(),
+              color: Theme.of(context).accentColor,
+              child: Text(
+                S.of(context).close,
+                style: TextStyle(
+                  fontSize: 16.0,
+                  fontFamily: 'Europa',
+                  color: Colors.white,
+                ),
+              ),
               onPressed: () {
                 Navigator.of(_context).pop();
               },

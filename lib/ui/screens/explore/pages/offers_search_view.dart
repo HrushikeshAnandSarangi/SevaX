@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/ui/screens/communities/widgets/communities_categories.dart';
@@ -33,7 +34,7 @@ class OffersSearchView extends StatelessWidget {
               return LoadingIndicator();
             }
             if (snapshot.data == null || snapshot.data.isEmpty) {
-              return Text('No result found');
+              return Text(S.of(context).no_result_found);
             }
 
             return ListView.builder(

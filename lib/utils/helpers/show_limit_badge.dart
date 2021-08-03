@@ -338,8 +338,8 @@ String getMessage({
   if (isBillingFailed ?? false) {
     return getRoleAssociatedMessage(
       viewRole: viewRole,
-      forAdmin: S.of(context).limit_badge_billing_failed,
-      forCreator: S.of(context).limit_badge_billing_failed,
+      forAdmin: "Billing Failed, please contact owner. ",
+      forCreator: "Billing Failed, please visit web.sevaxapp.com to configure.",
       forMember: S.of(context).limit_badge_contact_admin,
     );
   }

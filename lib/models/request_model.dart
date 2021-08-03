@@ -7,6 +7,8 @@ import 'package:sevaexchange/models/basic_user_details.dart';
 import 'package:sevaexchange/models/cash_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/selectedSpeakerTimeDetails.dart';
+import 'package:sevaexchange/utils/helpers/location_helper.dart';
+import 'package:sevaexchange/utils/utils.dart';
 
 class TaskModel extends DataModel {
   String id;
@@ -475,12 +477,9 @@ class RequestModel extends DataModel {
       this.maxCredits = map['maxCredits'];
     }
 
-    // if (map.containsKey('location')) {
-    //   GeoPoint geoPoint = map['location']['geopoint'];
-
-    //   this.location = Geoflutterfire()
-    //       .point(latitude: geoPoint.latitude, longitude: geoPoint.longitude);
-    // }
+    if (map.containsKey('location')) {
+      this.location = getLocation(map);
+    }
 
     if (map.containsKey('isRecurring')) {
       this.isRecurring = map['isRecurring'];
@@ -528,7 +527,6 @@ class RequestModel extends DataModel {
     } else {
       this.selectedSpeakerTimeDetails = new SelectedSpeakerTimeDetails();
     }
-
     if (map.containsKey('cashModeDetails')) {
       this.cashModel = CashModel.fromMap(map['cashModeDetails']);
     } else {
@@ -770,13 +768,11 @@ class RequestModel extends DataModel {
     if (map.containsKey('numberOfApprovals')) {
       this.numberOfApprovals = map['numberOfApprovals'];
     }
-    // if (map.containsKey('location')) {
-    //   GeoPoint geoPoint = GeoPoint(map['location']['geopoint']['_latitude'],
-    //       map['location']['geopoint']['_longitude']);
 
-    //   this.location = Geoflutterfire()
-    //       .point(latitude: geoPoint.latitude, longitude: geoPoint.longitude);
-    // }
+    if (map.containsKey('location')) {
+      this.location = getLocation(map);
+    }
+
     if (map.containsKey('isRecurring')) {
       this.isRecurring = map['isRecurring'];
     }
@@ -945,6 +941,12 @@ class RequestModel extends DataModel {
 
         case RequestType.TIME:
           object['requestType'] = "TIME";
+          break;
+        case RequestType.LENDING_OFFER:
+          // TODO: Handle this case.
+          break;
+        case RequestType.ONE_TO_MANY_OFFER:
+          // TODO: Handle this case.
           break;
       }
     } else {
@@ -1186,6 +1188,41 @@ class RequestModel extends DataModel {
   String toString() {
     return 'RequestModel{id: $id, title: $title, description: $description, email: $email, fullName: $fullName, requestCreatorName: $requestCreatorName, sevaUserId: $sevaUserId, photoUrl: $photoUrl, acceptors: $acceptors,oneToManyRequestAttenders: $oneToManyRequestAttenders, durationOfRequest: $durationOfRequest, postTimestamp: $postTimestamp, requestEnd: $requestEnd, requestStart: $requestStart, accepted: $accepted, rejectedReason: $rejectedReason, transactions: $transactions,  categories: $categories, timebankId: $timebankId, numberOfApprovals: $numberOfApprovals, approvedUsers: $approvedUsers, invitedUsers: $invitedUsers,recommendedMemberIdsForRequest: $recommendedMemberIdsForRequest, location: $location, root_timebank_id: $root_timebank_id, color: $color, isNotified: $isNotified, isSpeakerCompleted: $isSpeakerCompleted}';
   }
+
+  RequestModel get flush {
+    RequestModel requestModel = this;
+    requestModel.id = Utils.getUuid();
+    requestModel.acceptors = [];
+    requestModel.allowedCalenderUsers = [];
+    requestModel.approvedUsers = [];
+    requestModel.invitedUsers = [];
+    requestModel.transactions = [];
+    requestModel.participantDetails = {};
+    requestModel.postTimestamp = DateTime.now().millisecondsSinceEpoch;
+    switch (this.requestType) {
+      case RequestType.TIME:
+        break;
+      case RequestType.CASH:
+        requestModel.cashModel.donors = [];
+        break;
+      case RequestType.GOODS:
+        requestModel.goodsDonationDetails.donors = [];
+        break;
+      case RequestType.BORROW:
+        break;
+      case RequestType.ONE_TO_MANY_REQUEST:
+        requestModel.oneToManyRequestAttenders = [];
+        break;
+      case RequestType.LENDING_OFFER:
+        // TODO: Handle this case.
+        break;
+      case RequestType.ONE_TO_MANY_OFFER:
+        // TODO: Handle this case.
+        break;
+    }
+
+    return requestModel;
+  }
 }
 
 class GoodsDonationDetails {
@@ -1227,6 +1264,7 @@ enum RequestType {
   BORROW,
   ONE_TO_MANY_REQUEST,
   LENDING_OFFER,
+  ONE_TO_MANY_OFFER,
 }
 enum RequestPaymentType {
   ACH,
@@ -1234,6 +1272,7 @@ enum RequestPaymentType {
   PAYPAL,
   VENMO,
   SWIFT,
+  OTHER,
 }
 
 enum ContantsSeva { USER_DONATE_TOTIMEBANK }
@@ -1245,6 +1284,7 @@ Map<String, RequestType> requestTypeMapper = {
   "BORROW": RequestType.BORROW,
   "ONE_TO_MANY_REQUEST": RequestType.ONE_TO_MANY_REQUEST,
   "LENDING_OFFER": RequestType.LENDING_OFFER,
+  "ONE_TO_MANY_OFFER": RequestType.ONE_TO_MANY_OFFER,
 };
 Map<String, RequestPaymentType> requestPaymentTypeMapper = {
   "ACH": RequestPaymentType.ACH,
@@ -1252,4 +1292,5 @@ Map<String, RequestPaymentType> requestPaymentTypeMapper = {
   "PAYPAL": RequestPaymentType.PAYPAL,
   "VENMO": RequestPaymentType.VENMO,
   "SWIFT": RequestPaymentType.SWIFT,
+  "OTHER": RequestPaymentType.OTHER,
 };

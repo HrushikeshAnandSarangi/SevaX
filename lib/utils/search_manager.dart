@@ -3,11 +3,13 @@ import 'dart:developer';
 
 // import 'dart:html';
 
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+// import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/agreement_template_model.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 // import 'package:sevaexchange/new_baseline/models/borrow_agreement_template_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
@@ -104,8 +106,8 @@ class SearchManager {
       communityList =
           await SearchCommunityViaZIPCode.getCommunitiesViaZIPCode(queryString);
     } on NoNearByCommunitesFoundException catch (e) {
-      FirebaseCrashlytics.instance
-          .log('NoNearByCommunitesViaZIPFoundException');
+      // FirebaseCrashlytics.instance
+      //     .log('NoNearByCommunitesViaZIPFoundException');
     }
 
     List<Map<String, dynamic>> hitList =
@@ -178,7 +180,7 @@ class SearchManager {
         }
       },
       "sort": {
-        "name.keyword": {"order": "asc"}
+        "templateName.keyword": {"order": "asc"}
       }
     });
     List<Map<String, dynamic>> hitList =
@@ -300,6 +302,30 @@ class SearchManager {
 //    } else {
 //      return false;
 //    }
+  }
+
+  static Future<bool> searchRequestCategoriesForDuplicate(
+      {@required queryString, @required BuildContext context}) async {
+    var key = S.of(context).localeName;
+
+    String url =
+        '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/request_categories/_doc/_search?size=400';
+    dynamic body = json.encode({
+      "query": {
+        "match": {"title_" + key ?? 'en': queryString.trim()}
+      }
+    });
+    List<Map<String, dynamic>> hitList =
+        await _makeElasticSearchPostRequest(url, body);
+    bool categoryfound = false;
+    for (var map in hitList) {
+      if (map['_source']['title_' + key ?? 'en'].toLowerCase() ==
+          queryString.toLowerCase()) {
+        categoryfound = true;
+        break;
+      }
+    }
+    return categoryfound;
   }
 
   static Future<bool> searchGroupForDuplicate(

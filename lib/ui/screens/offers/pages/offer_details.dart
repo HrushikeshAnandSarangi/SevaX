@@ -55,6 +55,23 @@ class OfferDetails extends StatelessWidget {
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    // return Align(
+    //   alignment: Alignment.topLeft,
+    //   child: Container(
+    //     color: Colors.teal,
+    //     child: ImagesPreview(
+    //       urls: [
+    //         "https://picsum.photos/200",
+    //         "https://picsum.photos/200",
+    //         "https://picsum.photos/200",
+    //         "https://picsum.photos/200",
+    //         "https://picsum.photos/200",
+    //         "https://picsum.photos/200",
+    //       ],
+    //     ),
+    //   ),
+    // );
+
     return Column(
       children: <Widget>[
         Expanded(
@@ -111,7 +128,7 @@ class OfferDetails extends StatelessWidget {
                       child: Row(
                         children: [
                           Container(
-                            height: 30,
+                            height: 40,
                             width: 80,
                             child: CustomTextButton(
                               shape: RoundedRectangleBorder(
@@ -122,7 +139,20 @@ class OfferDetails extends StatelessWidget {
                                 S.of(context).edit,
                                 style: TextStyle(color: Colors.white),
                               ),
-                              onPressed: () => _onEdit(context),
+                              onPressed: () {
+                                Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                    builder: (context) => IndividualOffer(
+                                      offerModel: offerModel,
+                                      timebankId: offerModel.timebankId,
+                                      loggedInMemberUserId: SevaCore.of(context)
+                                          .loggedInUser
+                                          .sevaUserID,
+                                      timebankModel: timebankModel,
+                                    ),
+                                  ),
+                                );
+                              },
                             ),
                           ),
                           oneToManyOfferCancellation(context),
@@ -290,7 +320,7 @@ class OfferDetails extends StatelessWidget {
             width: 10,
           ),
           Container(
-            height: 30,
+            height: 40,
             width: 90,
             child: CustomTextButton(
               shape: RoundedRectangleBorder(
@@ -534,12 +564,24 @@ class OfferDetails extends StatelessWidget {
                             return;
                           }
 
+                          TimebankModel timebankModel;
+                          if (Provider.of<HomePageBaseBloc>(context,
+                                      listen: false)
+                                  .timebankModel(offerModel.timebankId) ==
+                              null) {
+                            timebankModel = await utils.getTimeBankForId(
+                                timebankId: offerModel.timebankId);
+                          } else {
+                            timebankModel = Provider.of<HomePageBaseBloc>(
+                                    context,
+                                    listen: false)
+                                .timebankModel(offerModel.timebankId);
+                          }
+
                           //ClubHouse
                           if (offerModel.type != RequestType.TIME &&
                               !isAccessAvailable(
-                                  Provider.of<HomePageBaseBloc>(context,
-                                          listen: false)
-                                      .primaryTimebankModel(),
+                                  timebankModel,
                                   SevaCore.of(context)
                                       .loggedInUser
                                       .sevaUserID)) {
@@ -585,51 +627,56 @@ class OfferDetails extends StatelessWidget {
                               offerModel),
                       role: memberType(timebankModel,
                           SevaCore.of(context).loggedInUser.sevaUserID),
-                      child: CustomTextButton(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                          left: 2,
                         ),
-                        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                        color: Color.fromRGBO(44, 64, 140, 0.7),
-                        child: Row(
-                          children: <Widget>[
-                            SizedBox(width: 1),
-                            Container(
-                              width: 30,
-                              height: 30,
-                              decoration: BoxDecoration(
-                                color: Color.fromRGBO(44, 64, 140, 1),
-                                shape: BoxShape.circle,
+                        child: CustomTextButton(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                          color: Color.fromRGBO(44, 64, 140, 0.7),
+                          child: Row(
+                            children: <Widget>[
+                              SizedBox(width: 1),
+                              Container(
+                                width: 30,
+                                height: 30,
+                                decoration: BoxDecoration(
+                                  color: Color.fromRGBO(44, 64, 140, 1),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  Icons.check,
+                                  color: Colors.white,
+                                ),
                               ),
-                              child: Icon(
-                                Icons.check,
-                                color: Colors.white,
+                              Spacer(),
+                              Text(
+                                S.of(context).accept_offer,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
                               ),
-                            ),
-                            Spacer(),
-                            Text(
-                              S.of(context).accept_offer,
-                              style: TextStyle(
-                                color: Colors.white,
+                              Spacer(
+                                flex: 2,
                               ),
-                            ),
-                            Spacer(
-                              flex: 2,
-                            ),
-                          ],
-                        ),
-                        onPressed: () async {
-                          logger.i("INDIVIDUAL ========== || =======");
+                            ],
+                          ),
+                          onPressed: () async {
+                            logger.i("INDIVIDUAL ========== || =======");
 
-                          showDialogForMakingAnOffer(
-                            model: offerModel,
-                            parentContext: context,
-                            timebankModel: timebankModel,
-                            sevaUserId:
-                                SevaCore.of(context).loggedInUser.sevaUserID,
-                            hideCancelBookMark: true,
-                          );
-                        },
+                            showDialogForMakingAnOffer(
+                              model: offerModel,
+                              parentContext: context,
+                              timebankModel: timebankModel,
+                              sevaUserId:
+                                  SevaCore.of(context).loggedInUser.sevaUserID,
+                              hideCancelBookMark: true,
+                            );
+                          },
+                        ),
                       ),
                     ),
                   ),
@@ -744,7 +791,7 @@ class OfferDetails extends StatelessWidget {
                         comingFrom: ComingFrom.Offers,
                         upgradeDetails:
                             AppConfig.upgradePlanBannerModel.calendar_sync,
-                        transaction_matrix_type: S.of(context).calender_sync,
+                        transaction_matrix_type: "calender_sync",
                         child: GestureDetector(
                             child: CircleAvatar(
                               backgroundColor: Colors.white,
@@ -773,7 +820,7 @@ class OfferDetails extends StatelessWidget {
                         comingFrom: ComingFrom.Offers,
                         upgradeDetails:
                             AppConfig.upgradePlanBannerModel.calendar_sync,
-                        transaction_matrix_type: S.of(context).calender_sync,
+                        transaction_matrix_type: "calender_sync",
                         child: GestureDetector(
                             child: CircleAvatar(
                               backgroundColor: Colors.white,
@@ -800,7 +847,7 @@ class OfferDetails extends StatelessWidget {
                         comingFrom: ComingFrom.Offers,
                         upgradeDetails:
                             AppConfig.upgradePlanBannerModel.calendar_sync,
-                        transaction_matrix_type: S.of(context).calender_sync,
+                        transaction_matrix_type: "calender_sync",
                         child: GestureDetector(
                             child: CircleAvatar(
                               backgroundColor: Colors.white,
@@ -845,5 +892,69 @@ class OfferDetails extends StatelessWidget {
             ),
           );
         });
+  }
+}
+
+class ImagesPreview extends StatefulWidget {
+  final List<String> urls;
+
+  ImagesPreview({@required this.urls});
+
+  @override
+  State<StatefulWidget> createState() {
+    return ImagesPreviewState();
+  }
+}
+
+class ImagesPreviewState extends State<ImagesPreview> {
+  PageController pageController = new PageController();
+  int pageIndex = 0;
+  @override
+  Widget build(BuildContext context) {
+    log("_" + pageIndex.toString());
+    return Column(
+      children: [
+        AspectRatio(
+          aspectRatio: 16 / 9,
+          child: Container(
+            color: Colors.red,
+            child: PageView.builder(
+              itemCount: widget.urls.length,
+              itemBuilder: (_, index) {
+                return Image.network(
+                  widget.urls[index],
+                  fit: BoxFit.fitWidth,
+                );
+              },
+              controller: pageController,
+              onPageChanged: (pageIndex) {
+                this.pageIndex = pageIndex;
+                log(this.pageIndex.toString());
+              },
+            ),
+          ),
+        ),
+        Row(
+          children: [
+            IconButton(
+              icon: Icon(Icons.play_arrow_sharp),
+              onPressed: () => pageController.animateToPage(
+                pageIndex > 0 ? --pageIndex : pageIndex,
+                curve: Curves.linearToEaseOut,
+                duration: Duration(seconds: 1),
+              ),
+            ),
+            IconButton(
+              icon: Icon(Icons.arrow_drop_down_circle_rounded),
+              onPressed: () => pageController.animateToPage(
+                pageIndex < (widget.urls.length - 1) ? ++pageIndex : pageIndex,
+                curve: Curves.easeIn,
+                duration: Duration(seconds: 1),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
   }
 }

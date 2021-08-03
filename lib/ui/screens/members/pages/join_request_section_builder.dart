@@ -37,7 +37,7 @@ class JoinRequestSectionBuilder extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Requests',
+                S.of(context).requests,
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,

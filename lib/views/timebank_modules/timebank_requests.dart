@@ -10,6 +10,7 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
@@ -657,7 +658,7 @@ class RequestListItemsState extends State<RequestListItems> {
                                 child: Container(
                                   margin: EdgeInsets.only(right: 10),
                                   child: TagView(
-                                    tagTitle: 'Public',
+                                    tagTitle: S.of(context).public,
                                   ),
                                 ),
                               ),
@@ -666,7 +667,7 @@ class RequestListItemsState extends State<RequestListItems> {
                                 child: Container(
                                   margin: EdgeInsets.only(right: 10),
                                   child: TagView(
-                                    tagTitle: 'Recurring',
+                                    tagTitle: S.of(context).recurring,
                                   ),
                                 ),
                               ),

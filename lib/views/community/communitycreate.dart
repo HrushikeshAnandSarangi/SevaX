@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:collection';
+import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
@@ -10,6 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/sevaavatar/timebankavatar.dart';
+import 'package:sevaexchange/components/sevaavatar/timebankcoverphoto.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/globals.dart' as globals;
@@ -40,7 +42,7 @@ import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/widgets/parent_timebank_picker.dart';
-
+import 'package:sevaexchange/utils/extensions.dart';
 import '../switch_timebank.dart';
 
 class CreateEditCommunityView extends StatelessWidget {
@@ -169,6 +171,7 @@ class CreateEditCommunityViewFormState
 
     focusNodes = List.generate(8, (_) => FocusNode());
     globals.timebankAvatarURL = null;
+    globals.timebankCoverURL = null;
     globals.addedMembersId = [];
     globals.addedMembersFullname = [];
     globals.addedMembersPhotoURL = [];
@@ -197,7 +200,7 @@ class CreateEditCommunityViewFormState
               if (commFound) {
                 setState(() {
                   communityFound = true;
-                  errTxt = 'Seva Community name already exists';
+                  errTxt = S.of(context).timebank_name_exists;
                 });
               } else {
                 setState(() {
@@ -328,9 +331,34 @@ class CreateEditCommunityViewFormState
                             child: Column(
                               children: <Widget>[
                                 widget.isCreateTimebank
+                                    ? SizedBox(
+                                        height: 10,
+                                      )
+                                    : Container(),
+                                widget.isCreateTimebank
+                                    ? TimebankCoverPhoto()
+                                    : TimebankCoverPhoto(
+                                        coverUrl: (communityModel.cover_url ==
+                                                    null ||
+                                                communityModel.cover_url == '')
+                                            ? null
+                                            : communityModel.cover_url,
+                                      ),
+                                Text(''),
+                                Text(
+                                  "${S.of(context).cover_picture_label}",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 25,
+                                ),
+                                widget.isCreateTimebank
                                     ? TimebankAvatar()
                                     : TimebankAvatar(
-                                        photoUrl: communityModel.logo_url ?? "",
+                                        photoUrl: communityModel.logo_url ?? '',
                                       ),
                                 Text(''),
                                 Text(
@@ -445,7 +473,8 @@ class CreateEditCommunityViewFormState
                         SizedBox(
                           height: 20,
                         ),
-                        headingText('Select categories for your community'),
+                        headingText(
+                            S.of(context).select_categories_community_headding),
                         SizedBox(
                           height: 10,
                         ),
@@ -660,10 +689,13 @@ class CreateEditCommunityViewFormState
                                       if (!canTestCommunity) {
                                         if (!testCommunity) {
                                           _showSanBoxdvisory(
-                                                  title:
-                                                      'Sandbox Seva Community',
-                                                  description:
-                                                      'Sandbox communities are created for testing purposes?')
+                                                  title: S
+                                                      .of(context)
+                                                      .sandbox_dialog_title
+                                                      .sentenceCase(),
+                                                  description: S
+                                                      .of(context)
+                                                      .sandbox_community_description)
                                               .then((status) {
                                             if (status) {
                                               communityModel.payment = {
@@ -674,6 +706,13 @@ class CreateEditCommunityViewFormState
                                                     "You are on Enterprise Plan",
                                                 "status": 200,
                                               };
+
+                                              snapshot.data.community
+                                                  .updateValueByKey(
+                                                'payment',
+                                                communityModel.payment,
+                                              );
+
                                               communityModel.testCommunity =
                                                   true;
                                               snapshot.data.community
@@ -702,9 +741,9 @@ class CreateEditCommunityViewFormState
                                         }
                                       } else {
                                         showDialogForSuccess(
-                                            dialogTitle: L
+                                            dialogTitle: S
                                                 .of(context)
-                                                .you_already_created_test_community,
+                                                .you_created_sandbox_community,
                                             err: true);
                                       }
                                     },
@@ -883,7 +922,7 @@ class CreateEditCommunityViewFormState
                               Row(
                                 children: <Widget>[
                                   Text(
-                                    L.of(context).selected_value +
+                                    S.of(context).selected_value +
                                         '${negativeCreditsThreshold} ${S.of(context).seva_credits}',
                                     style: TextStyle(
                                       fontSize: 12,
@@ -1072,11 +1111,13 @@ class CreateEditCommunityViewFormState
                                           SevaCore.of(context).loggedInUser,
                                           globals.timebankAvatarURL,
                                           location,
+                                          globals.timebankCoverURL,
                                         );
                                         // creation of default timebank;
                                         snapshot.data.UpdateTimebankDetails(
                                           SevaCore.of(context).loggedInUser,
                                           globals.timebankAvatarURL,
+                                          globals.timebankCoverURL,
                                         );
                                         // updating the community with default timebank id
                                         snapshot.data.community.timebanks = [
@@ -1151,6 +1192,7 @@ class CreateEditCommunityViewFormState
                                         });
 
                                         globals.timebankAvatarURL = null;
+                                        globals.timebankCoverURL = null;
                                         globals.webImageUrl = null;
 
                                         Navigator.pop(dialogContext);
@@ -1193,11 +1235,25 @@ class CreateEditCommunityViewFormState
                                     showProgressDialog(
                                       S.of(context).updating_timebank,
                                     );
+
+                                    log('UPDATE CHECK 3: ' +
+                                        globals.timebankAvatarURL.toString());
+                                    log('UPDATE CHECK 4: ' +
+                                        globals.timebankCoverURL.toString());
+
                                     if (globals.timebankAvatarURL != null) {
                                       communityModel.logo_url =
                                           globals.timebankAvatarURL;
                                       timebankModel.photoUrl =
                                           globals.timebankAvatarURL;
+                                    }
+
+                                    if (globals.timebankCoverURL != null) {
+                                      communityModel.cover_url =
+                                          globals.timebankCoverURL;
+                                      timebankModel.cover_url =
+                                          globals.timebankCoverURL;
+                                      setState(() {});
                                     }
 
                                     timebankModel.name =
@@ -1224,6 +1280,7 @@ class CreateEditCommunityViewFormState
                                         .then((onValue) {});
 
                                     globals.timebankAvatarURL = null;
+                                    globals.timebankCoverURL = null;
                                     globals.webImageUrl = null;
                                     if (dialogContext != null) {
                                       Navigator.pop(dialogContext);

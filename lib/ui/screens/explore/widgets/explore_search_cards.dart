@@ -13,7 +13,7 @@ class ExploreEventCard extends StatelessWidget {
       this.date,
       this.memberList,
       this.onTap,
-      this.tagsToShow =  const []})
+      this.tagsToShow = const []})
       : super(key: key);
 
   final String photoUrl;
@@ -30,7 +30,13 @@ class ExploreEventCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: tagsToShow != null && tagsToShow.isNotEmpty ? 469:440,
+      height: tagsToShow != null && tagsToShow.isNotEmpty
+          ? tagsToShow.length > 3 && memberList == null
+              ? 440
+              : tagsToShow.length > 3 && memberList != null
+                  ? 505
+                  : 500
+          : 485,
       child: InkWell(
         onTap: onTap,
         child: Card(
@@ -80,11 +86,17 @@ class ExploreEventCard extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   description,
-                  style: const TextStyle(fontSize: 14),
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontFamily: 'Europa',
+                  ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
-                const Spacer(),
+                // const Spacer(),
+                SizedBox(
+                  height: 20,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: tagsToShow
@@ -107,9 +119,9 @@ class ExploreEventCard extends StatelessWidget {
                       .toList(),
                 ),
                 const Spacer(),
-                const SizedBox(height: 8),
-                memberList ?? Container(),
-                const SizedBox(height: 8),
+                // SizedBox(height: 15),
+                memberList ?? Offstage(offstage: true),
+                // const SizedBox(height: 8),
               ],
             ),
           ),
@@ -132,7 +144,7 @@ class ExploreEventCard extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: Text(
                   text,
-                  overflow:TextOverflow.ellipsis,
+                  overflow: TextOverflow.ellipsis,
                   style: const TextStyle(color: Colors.grey, fontSize: 14),
                 ),
               ),

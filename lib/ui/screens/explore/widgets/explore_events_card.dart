@@ -14,6 +14,7 @@ class ExploreEventsCard extends StatelessWidget {
     this.firstTextStyle,
     this.secondTextStyle,
     this.onTap,
+    this.eventStartDate,
     //this.padding,
   }) : super(key: key);
 
@@ -25,6 +26,7 @@ class ExploreEventsCard extends StatelessWidget {
   final List<String> userIds;
   final TextStyle firstTextStyle;
   final TextStyle secondTextStyle;
+  final String eventStartDate;
   //final EdgeInsetsGeometry padding;
 
   @override
@@ -101,6 +103,16 @@ class ExploreEventsCard extends StatelessWidget {
                 MemberAvatarListWithCount(
                   userIds: userIds,
                   radius: 10,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 4.0),
+                  child: Text(
+                    eventStartDate.toUpperCase(),
+                    style: TextStyle(
+                      color: Theme.of(context).accentColor,
+                      fontSize: 13,
+                    ),
+                  ),
                 ),
               ],
             ),

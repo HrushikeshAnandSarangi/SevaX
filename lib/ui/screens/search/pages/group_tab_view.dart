@@ -60,7 +60,7 @@ class _GroupTabViewState extends State<GroupTabView> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.max,
                   children: <Widget>[
-                    Text(L.of(context).no_search_result_found),
+                    Text(S.of(context).no_search_result_found),
                   ],
                 );
               }

@@ -3,7 +3,7 @@ import 'dart:developer';
 
 import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+// import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -27,7 +27,7 @@ class Auth {
     try {
       googleUser = await _googleSignIn.signIn();
     } on Exception catch (error) {
-      FirebaseCrashlytics.instance.log(error.toString());
+      // FirebaseCrashlytics.instance.log(error.toString());
       error;
     } catch (error) {
       log('Google sign in exception. Error: ${error.toString()}');
@@ -103,7 +103,7 @@ class Auth {
         password: password,
       );
     } on Exception catch (error) {
-      FirebaseCrashlytics.instance.log(error.toString());
+      // FirebaseCrashlytics.instance.log(error.toString());
       throw error;
     } catch (error) {
       //FirebaseCrashlytics.instance.log(error.toString());
@@ -124,11 +124,11 @@ class Auth {
         password: password,
       );
       return _processEmailPasswordUser(result.user, displayName);
-    } on PlatformException catch (error) {
+    } on FirebaseAuthException catch (error) {
       logger.i(
           "${error.code} ==================================================");
       if (error.code == 'ERROR_EMAIL_ALREADY_IN_USE')
-        FirebaseCrashlytics.instance.log(error.toString());
+        // FirebaseCrashlytics.instance.log(error.toString());
       throw EmailAlreadyInUseException(error.message);
     } catch (error) {
       log('createUserWithEmailAndPassword: error: ${error.toString()}');

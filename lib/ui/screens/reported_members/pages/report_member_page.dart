@@ -5,6 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
 import 'package:sevaexchange/ui/screens/reported_members/bloc/report_member_bloc.dart';
@@ -159,7 +160,7 @@ class _ReportMemberPageState extends State<ReportMemberPage> {
                                   size: 30,
                                 ),
                                 Text(
-                                  "0/1",
+                                  S.of(context).zero_one,
                                   style: TextStyle(
                                     color: Colors.grey,
                                     fontSize: 12,
@@ -265,10 +266,8 @@ class _ReportMemberPageState extends State<ReportMemberPage> {
     }
     UploadTask _uploadTask =
         _storage.ref().child("reports/$filePath.png").putFile(file);
-    String imageURL = '';
-    _uploadTask.whenComplete(() async {
-      imageURL = await _storage.ref().getDownloadURL();
-    });
+    String imageURL =
+        await (await _uploadTask.whenComplete(() => null)).ref.getDownloadURL();
     profanityImageModel = await checkProfanityForImage(imageUrl: imageURL);
     if (profanityImageModel == null) {
       progressDialog.hide();

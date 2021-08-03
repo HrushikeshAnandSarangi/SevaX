@@ -28,7 +28,10 @@ class ParentTimebankPickerWidget extends StatelessWidget {
     BuildContext parentContext;
     parentContext = context;
     return CustomElevatedButton(
-      textColor: color,
+      shape: StadiumBorder(),
+      padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+      color: Colors.grey[200],
+      textColor: Colors.black,
       elevation: 0,
       child: Container(
         constraints: BoxConstraints.loose(
@@ -40,9 +43,14 @@ class ParentTimebankPickerWidget extends StatelessWidget {
               : selectedTimebank,
           overflow: TextOverflow.ellipsis,
           maxLines: 1,
+          style: TextStyle(
+            color: Colors.black54,
+            fontSize: 14,
+            fontFamily: 'Europa',
+          ),
         ),
       ),
-      color: Colors.grey[200],
+      // color: Colors.grey[200],
       onPressed: () async {
         FocusScope.of(parentContext).requestFocus(FocusNode());
         _parentSelectionBottomsheet(parentContext, onChanged, selectedTimebank);

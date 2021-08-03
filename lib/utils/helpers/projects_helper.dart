@@ -38,10 +38,19 @@ class ProjectMessagingRoomHelper {
           ),
           actions: [
             CustomTextButton(
+              shape: StadiumBorder(),
+              color: Theme.of(context).accentColor,
               onPressed: () async {
                 Navigator.pop(_);
               },
-              child: Text('Okay'),
+              child: Text(
+                'Okay',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontFamily: 'Europa',
+                  fontSize: 16,
+                ),
+              ),
             ),
           ],
         );
@@ -140,11 +149,6 @@ class ProjectMessagingRoomHelper {
     @required ProjectModel projectModel,
     @required UserModel projectCreator,
   }) async {
-    log('------THIS DATA 1-----' +
-        projectModel.id +
-        '*' +
-        projectModel.timebankId +
-        '----');
     return await _createProjectWithMessagingRoomBatchOneToManyRequest(
       projectCreator: projectCreator,
       projectModel: projectModel,
@@ -204,17 +208,53 @@ class ProjectMessagingRoomHelper {
     return batch;
   }
 
+  static Future<String> createMessagingRoomForEvent({
+    ProjectModel projectModel,
+    UserModel projectCreator,
+  }) async {
+    ChatModel chatModel = ChatModel();
+    chatModel
+      ..timestamp = DateTime.now().millisecondsSinceEpoch
+      ..communityId = projectModel.communityId
+      ..groupDetails = MultiUserMessagingModel(
+        admins: [projectModel.creatorId],
+        imageUrl: projectModel.photoUrl,
+        name: projectModel.name,
+        timestamp: DateTime.now().millisecondsSinceEpoch,
+      )
+      ..isTimebankMessage = projectModel.mode == ProjectMode.TIMEBANK_PROJECT
+      ..id = projectModel.id + '*' + projectModel.timebankId
+      ..lastMessage = DBHelper.NO_MESSAGE
+      ..participantInfo = [
+        ParticipantInfo(
+          id: projectCreator.sevaUserID,
+          name: projectCreator.fullname,
+          photoUrl: projectCreator.photoURL,
+          type: ChatType.TYPE_MULTI_USER_MESSAGING,
+        )
+      ]
+      ..isGroupMessage = true
+      ..timestamp = DateTime.now().millisecondsSinceEpoch
+      ..participants = [projectCreator.sevaUserID]
+      ..unreadStatus = {
+        projectCreator.sevaUserID: 0,
+      }
+      ..chatContext = ChatContext(
+        chatContext: 'Project',
+        contextId: projectModel.id,
+      );
+
+    return await CollectionRef.chats
+        .doc(chatModel.id)
+        .set(chatModel.toMap())
+        .then((value) => chatModel.id);
+  }
+
   static WriteBatch _createProjectWithMessagingRoomBatchOneToManyRequest({
     @required ProjectModel projectModel,
     @required UserModel projectCreator,
   }) {
     var batch = DBHelper.batch;
-
-    log('------THIS DATA 2-----' +
-        projectModel.id +
-        '*' +
-        projectModel.timebankId +
-        '----');
 
     ChatModel chatModel = ChatModel();
     chatModel

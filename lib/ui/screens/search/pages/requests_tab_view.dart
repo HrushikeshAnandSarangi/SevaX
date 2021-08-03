@@ -46,7 +46,7 @@ class RequestsTabView extends StatelessWidget {
               }
               if (snapshot.data == null || snapshot.data.isEmpty) {
                 return Center(
-                  child: Text(L.of(context).no_search_result_found),
+                  child: Text(S.of(context).no_search_result_found),
                 );
               }
 

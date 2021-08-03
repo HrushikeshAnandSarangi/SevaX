@@ -7,7 +7,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+// import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -594,7 +594,7 @@ class _RegisterPageState extends State<RegisterPage>
 
   Widget get registerButton {
     return SizedBox(
-      height: 39,
+      height: 47,
       width: 134,
       child: CustomElevatedButton(
         onPressed: isLoading
@@ -632,46 +632,60 @@ class _RegisterPageState extends State<RegisterPage>
                           title: Text(S.of(context).add_photo),
                           content: Text(S.of(context).add_photo_hint),
                           actions: <Widget>[
-                            CustomTextButton(
-                              child: Text(
-                                S.of(context).skip_and_register,
-                                style: TextStyle(
-                                  fontSize: dialogButtonSize,
-                                  color: Colors.red,
-                                  fontFamily: 'Europa',
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 15),
+                              child: CustomTextButton(
+                                shape: StadiumBorder(),
+                                color: Colors.grey,
+                                padding: EdgeInsets.fromLTRB(10, 5, 5, 10),
+                                child: Text(
+                                  S.of(context).skip_and_register,
+                                  style: TextStyle(
+                                    fontSize: dialogButtonSize,
+                                    color: Colors.white,
+                                    fontFamily: 'Europa',
+                                  ),
                                 ),
+                                onPressed: () async {
+                                  Navigator.pop(viewContext);
+                                  if (!_formKey.currentState.validate()) {
+                                    isLoading = false;
+                                    return;
+                                  }
+                                  _formKey.currentState.save();
+
+                                  await profanityCheck();
+                                  isLoading = false;
+                                },
                               ),
-                              onPressed: () async {
-                                Navigator.pop(viewContext);
-                                if (!_formKey.currentState.validate()) {
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                bottom: 15,
+                                right: 15,
+                              ),
+                              child: CustomTextButton(
+                                shape: StadiumBorder(),
+                                padding: EdgeInsets.fromLTRB(10, 5, 5, 10),
+                                color: Theme.of(context).accentColor,
+                                textColor: FlavorConfig.values.buttonTextColor,
+                                child: Text(
+                                  S.of(context).add_photo,
+                                  style: TextStyle(
+                                    fontSize: dialogButtonSize,
+                                    fontFamily: 'Europa',
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                onPressed: () {
+                                  Navigator.pop(viewContext);
+                                  FocusScope.of(context)
+                                      .requestFocus(new FocusNode());
+                                  imagePicker.showDialog(context);
                                   isLoading = false;
                                   return;
-                                }
-                                _formKey.currentState.save();
-
-                                await profanityCheck();
-                                isLoading = false;
-                              },
-                            ),
-                            CustomTextButton(
-                              padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                              color: Theme.of(context).accentColor,
-                              textColor: FlavorConfig.values.buttonTextColor,
-                              child: Text(
-                                S.of(context).add_photo,
-                                style: TextStyle(
-                                  fontSize: dialogButtonSize,
-                                  fontFamily: 'Europa',
-                                ),
+                                },
                               ),
-                              onPressed: () {
-                                Navigator.pop(viewContext);
-                                FocusScope.of(context)
-                                    .requestFocus(new FocusNode());
-                                imagePicker.showDialog(context);
-                                isLoading = false;
-                                return;
-                              },
                             ),
                           ],
                         ),
@@ -744,7 +758,7 @@ class _RegisterPageState extends State<RegisterPage>
           if (dialogContext != null) {
             Navigator.pop(dialogContext);
           }
-          showFailedLoadImage().then((value) {});
+          showFailedLoadImage(context: context).then((value) {});
         } else {
           profanityStatusModel = await getProfanityStatus(
               profanityImageModel: profanityImageModel);
@@ -877,7 +891,7 @@ class _RegisterPageState extends State<RegisterPage>
       if (dialogContext != null) {
         Navigator.pop(dialogContext);
       }
-      FirebaseCrashlytics.instance.log(error.toString());
+      // FirebaseCrashlytics.instance.log(error.toString());
       error;
       log('createUser: error: ${error.toString()}');
       return null;
@@ -907,10 +921,8 @@ class _RegisterPageState extends State<RegisterPage>
       ),
     );
 
-    String imageURL = '';
-    uploadTask.whenComplete(() async {
-      imageURL = await ref.getDownloadURL();
-    });
+    String imageURL =
+        await (await uploadTask.whenComplete(() => null)).ref.getDownloadURL();
     return imageURL;
   }
 
@@ -1001,13 +1013,13 @@ class _RegisterPageState extends State<RegisterPage>
       ),
     );
     String documentURL = '';
-    uploadTask.whenComplete(() async {
-      documentURL = await ref.getDownloadURL();
-    });
+    documentURL =
+        await (await uploadTask.whenComplete(() => null)).ref.getDownloadURL();
+
+    cvUrl = documentURL;
     log('link  ' + documentURL);
 
     cvName = _fileName;
-    cvUrl = documentURL;
     return documentURL;
   }
 

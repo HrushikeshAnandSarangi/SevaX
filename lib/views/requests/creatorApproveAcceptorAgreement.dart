@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -115,7 +116,7 @@ class _CreatorApproveAcceptorAgreeementState
             SizedBox(width: 15),
             Container(
               width: 250,
-              child: Text("S.of(context).terms_acknowledgement_text",
+              child: Text(S.of(context).terms_acknowledgement_text,
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
@@ -235,7 +236,7 @@ class _CreatorApproveAcceptorAgreeementState
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Text(
-              "S.of(context).agreement",
+              S.of(context).agreement,
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
             ),
           ],
@@ -248,8 +249,8 @@ class _CreatorApproveAcceptorAgreeementState
               width: MediaQuery.of(context).size.width * 0.68,
               child: Text(
                 widget.requestModel.hasBorrowAgreement
-                    ? "S.of(context).review_before_proceding_text"
-                    : "S.of(context).lender_not_accepted_request_msg",
+                    ? S.of(context).review_before_proceding_text
+                    : S.of(context).lender_not_accepted_request_msg,
                 style: TextStyle(fontSize: 15),
                 softWrap: true,
               ),
@@ -291,7 +292,7 @@ class _CreatorApproveAcceptorAgreeementState
                       SizedBox(width: 1),
                       Spacer(),
                       Text(
-                        "S.of(context).review_agreement",
+                        S.of(context).review_agreement,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Colors.white,

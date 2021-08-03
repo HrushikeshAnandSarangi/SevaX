@@ -43,13 +43,19 @@ class FeedBubble extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: <Widget>[
                 getFeedCard(context),
-                Text(
-                  formatChatDate(
-                    messageModel.timestamp,
-                    SevaCore.of(context).loggedInUser.timezone,
-                    S.of(context).localeName,
+                Padding(
+                  padding: const EdgeInsets.only(
+                    right: 5,
+                    bottom: 3,
                   ),
-                  style: TextStyle(fontSize: 10, color: Colors.grey[700]),
+                  child: Text(
+                    formatChatDate(
+                      messageModel.timestamp,
+                      SevaCore.of(context).loggedInUser.timezone,
+                      S.of(context).localeName,
+                    ),
+                    style: TextStyle(fontSize: 10, color: Colors.grey[700]),
+                  ),
                 ),
               ],
             ),
@@ -64,7 +70,7 @@ class FeedBubble extends StatelessWidget {
       return Container();
     }
     var imageBanner = news.newsImageUrl == null
-        ? (news.imageScraped == null ? S.of(context).no_data : news.imageScraped)
+        ? (news.imageScraped == null ? "NoData" : news.imageScraped)
         : news.newsImageUrl;
     return GestureDetector(
       onTap: () {
@@ -73,7 +79,8 @@ class FeedBubble extends StatelessWidget {
           MaterialPageRoute(
             builder: (_context) {
               return BlocProvider(
-                  bloc: BlocProvider.of<HomeDashBoardBloc>(context),child: NewsCardView(newsModel: news, isFocused: false));
+                  bloc: BlocProvider.of<HomeDashBoardBloc>(context),
+                  child: NewsCardView(newsModel: news, isFocused: false));
             },
           ),
         );
@@ -93,14 +100,14 @@ class FeedBubble extends StatelessWidget {
         child: Column(
           children: <Widget>[
             Container(
-              height: imageBanner != S.of(context).no_data ? 250 : 0,
+              height: imageBanner != "NoData" ? 250 : 0,
               child: SizedBox.expand(
                 child: ClipRRect(
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(15),
                       topRight: Radius.circular(15),
                     ),
-                    child: imageBanner != S.of(context).no_data
+                    child: imageBanner != "NoData"
                         ? FadeInImage(
                             fit: BoxFit.fitWidth,
                             placeholder:
