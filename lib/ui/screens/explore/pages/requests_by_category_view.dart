@@ -90,8 +90,8 @@ class _RequestsByCategoryViewState extends State<RequestsByCategoryView> {
                   isUserSignedIn: widget.isUserSignedIn,
                   children: [
                     Container(
-                      alignment: Alignment.center,
-                      height: MediaQuery.of(context).size.height / 2,
+                      alignment: Alignment.bottomCenter,
+                      height: MediaQuery.of(context).size.height / 2.3,
                       child: Text(S.of(context).no_result_found),
                     ),
                   ],

@@ -15,6 +15,7 @@ import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class CommunityMessages extends StatelessWidget {
   final MessageBloc bloc;
+
   CommunityMessages({this.bloc});
 
   @override

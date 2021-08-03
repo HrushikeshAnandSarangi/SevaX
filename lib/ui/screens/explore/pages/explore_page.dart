@@ -327,7 +327,21 @@ class _ExplorePageState extends State<ExplorePage> {
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
-                            return LoadingIndicator();
+                            return Column(
+                              children: [
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    S.of(context).projects,
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                                LoadingIndicator(),
+                              ],
+                            );
                           }
                           if (snapshot.hasError ||
                               snapshot.data == null ||
@@ -480,7 +494,21 @@ class _ExplorePageState extends State<ExplorePage> {
                     stream: _exploreBloc.requests,
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return LoadingIndicator();
+                        return Column(
+                          children: [
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                S.of(context).requests,
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                            LoadingIndicator(),
+                          ],
+                        );
                       }
                       if (snapshot.hasError ||
                           snapshot.data == null ||
@@ -649,7 +677,21 @@ class _ExplorePageState extends State<ExplorePage> {
                   stream: _exploreBloc.offers,
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return LoadingIndicator();
+                      return Column(
+                        children: [
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              S.of(context).offers,
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                          LoadingIndicator(),
+                        ],
+                      );
                     }
                     if (snapshot.hasError ||
                         snapshot.data == null ||
@@ -795,7 +837,11 @@ class _ExplorePageState extends State<ExplorePage> {
                           builder: (context, snapshot) {
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {
-                              return LoadingIndicator();
+                              return Column(
+                                children: [
+                                  LoadingIndicator(),
+                                ],
+                              );
                             }
                             if (snapshot.data == null) {
                               return Center(

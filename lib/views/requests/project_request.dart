@@ -414,6 +414,8 @@ class ProjectRequestListState extends State<ProjectRequestList> {
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             CustomTextButton(
+              color: Theme.of(context).primaryColor,
+              textColor: Colors.white,
               child: Text(S.of(context).close),
               onPressed: () {
                 Navigator.of(context).pop();
