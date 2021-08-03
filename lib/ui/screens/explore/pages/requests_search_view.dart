@@ -52,16 +52,16 @@ class RequestsSearchView extends StatelessWidget {
                         future:
                             getTimeBankForId(timebankId: request.timebankId),
                         builder: (context, snapshot) {
-                          /*if (snapshot.connectionState ==
+                         /* if (snapshot.connectionState ==
                               ConnectionState.waiting) {
                             return LoadingIndicator();
-                          }*/
+                          }
                           if (snapshot.hasError) {
                             return Container();
                           }
                           if (snapshot.data == null) {
                             return Container();
-                          }
+                          }*/
                           return ExploreEventCard(
                             onTap: () {
                               bool isAdmin = snapshot.data.admins.contains(

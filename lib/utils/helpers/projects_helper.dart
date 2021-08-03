@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -44,7 +45,7 @@ class ProjectMessagingRoomHelper {
                 Navigator.pop(_);
               },
               child: Text(
-                'Okay',
+                S.of(context).ok,
                 style: TextStyle(
                   color: Colors.white,
                   fontFamily: 'Europa',

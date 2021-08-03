@@ -283,17 +283,18 @@ class _TimebankHomePageState extends State<TimebankHomePage>
         return AlertDialog(
           title: Text(S.of(context).protected_timebank),
           content: Text(S.of(context).protected_timebank_group_creation_error),
+          actionsPadding: EdgeInsets.only(right: 20),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             CustomTextButton(
               shape: StadiumBorder(),
               color: Theme.of(context).accentColor,
+              textColor: Colors.white,
               child: Text(
                 S.of(context).close,
                 style: TextStyle(
                   fontSize: 16.0,
                   fontFamily: 'Europa',
-                  color: Colors.white,
                 ),
               ),
               onPressed: () {

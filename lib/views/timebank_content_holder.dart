@@ -166,8 +166,7 @@ Widget createAdminTabBar(
     appBar: AppBar(
       leading: BackButton(
         onPressed: () {
-          AppConfig.helpIconContextMember =
-              HelpContextMemberType.seva_community;
+          AppConfig.helpIconContextMember = HelpContextMemberType.seva_community;
           Navigator.pop(context);
         },
       ),
@@ -191,8 +190,7 @@ Widget createAdminTabBar(
                 AppConfig.helpIconContextMember = HelpContextMemberType.events;
                 break;
               case 2:
-                AppConfig.helpIconContextMember =
-                    HelpContextMemberType.requests;
+                AppConfig.helpIconContextMember = HelpContextMemberType.requests;
                 break;
               case 3:
                 AppConfig.helpIconContextMember = HelpContextMemberType.offers;
@@ -322,8 +320,7 @@ Widget createJoinedUserTabBar(
       leading: BackButton(
         color: Colors.black,
         onPressed: () {
-          AppConfig.helpIconContextMember =
-              HelpContextMemberType.seva_community;
+          AppConfig.helpIconContextMember = HelpContextMemberType.seva_community;
           Navigator.pop(context);
         },
       ),
@@ -352,8 +349,7 @@ Widget createJoinedUserTabBar(
                 AppConfig.helpIconContextMember = HelpContextMemberType.events;
                 break;
               case 2:
-                AppConfig.helpIconContextMember =
-                    HelpContextMemberType.requests;
+                AppConfig.helpIconContextMember = HelpContextMemberType.requests;
                 break;
               case 3:
                 AppConfig.helpIconContextMember = HelpContextMemberType.offers;
@@ -447,8 +443,7 @@ Widget createNormalUserTabBar(
         leading: BackButton(
           color: Colors.black,
           onPressed: () {
-            AppConfig.helpIconContextMember =
-                HelpContextMemberType.seva_community;
+            AppConfig.helpIconContextMember = HelpContextMemberType.seva_community;
             Navigator.pop(context);
           },
         ),
@@ -497,8 +492,7 @@ Widget createNormalUserTabBar(
       ));
 }
 
-AboutUserRole determineUserRoleInAbout(
-    {String sevaUserId, TimebankModel timeBankModel}) {
+AboutUserRole determineUserRoleInAbout({String sevaUserId, TimebankModel timeBankModel}) {
   if (isAccessAvailable(timeBankModel, sevaUserId)) {
     return AboutUserRole.ADMIN;
   } else if (timeBankModel.members.contains(sevaUserId)) {
@@ -512,7 +506,9 @@ class DiscussionList extends StatefulWidget {
   final String loggedInUser;
   final String timebankId;
   final TimebankModel timebankModel;
+
   DiscussionList({this.timebankId, this.loggedInUser, this.timebankModel});
+
   @override
   DiscussionListState createState() {
     return DiscussionListState();
@@ -610,13 +606,12 @@ class DiscussionListState extends State<DiscussionList> {
         ),
         ConfigurationCheck(
           actionType: 'create_feeds',
-          role: memberType(widget.timebankModel,
-              SevaCore.of(context).loggedInUser.sevaUserID),
+          role: memberType(widget.timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
           child: InkWell(
             onTap: () {
               if (widget.timebankModel.id == FlavorConfig.values.timebankId &&
-                  !isAccessAvailable(widget.timebankModel,
-                      SevaCore.of(context).loggedInUser.sevaUserID)) {
+                  !isAccessAvailable(
+                      widget.timebankModel, SevaCore.of(context).loggedInUser.sevaUserID)) {
                 showAdminAccessMessage(context: context);
               } else {
                 Navigator.of(context).push(MaterialPageRoute(
@@ -632,8 +627,7 @@ class DiscussionListState extends State<DiscussionList> {
                 children: <Widget>[
                   CircleAvatar(
                     backgroundImage: NetworkImage(
-                        SevaCore.of(context).loggedInUser.photoURL ??
-                            defaultUserImageURL),
+                        SevaCore.of(context).loggedInUser.photoURL ?? defaultUserImageURL),
                   ),
                   SizedBox(
                     width: 10,
@@ -673,19 +667,16 @@ class DiscussionListState extends State<DiscussionList> {
               );
             if (!snapshot.hasData)
               return Container(
-                padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height / 3),
+                padding: EdgeInsets.only(top: MediaQuery.of(context).size.height / 3),
                 child: LoadingIndicator(),
               );
 
             List<NewsModel> newsList = snapshot.data;
 
-            if (sortOrderVal.toLowerCase() ==
-                SortOrderClass.LIKES.toLowerCase()) {
+            if (sortOrderVal.toLowerCase() == SortOrderClass.LIKES.toLowerCase()) {
               newsList.sort((a, b) => b.likes.length.compareTo(a.likes.length));
             } else {
-              newsList
-                  .sort((a, b) => b.postTimestamp.compareTo(a.postTimestamp));
+              newsList.sort((a, b) => b.postTimestamp.compareTo(a.postTimestamp));
             }
             newsList = filterBlockedContent(newsList, context);
             newsList = filterPinnedNews(newsList, context);
@@ -705,14 +696,9 @@ class DiscussionListState extends State<DiscussionList> {
               );
             }
             if (newsList.length == 0) {
-              return Padding(
-                padding: const EdgeInsets.all(25.0),
-                child: Center(
-                  child: EmptyWidget(
-                    title: S.of(context).no_posts_title,
-                    sub_title: S.of(context).no_posts_description,
-                  ),
-                ),
+              return EmptyWidget(
+                title: S.of(context).no_posts_title,
+                sub_title: S.of(context).no_posts_description,
               );
             }
 
@@ -765,8 +751,7 @@ class DiscussionListState extends State<DiscussionList> {
     );
   }
 
-  List<NewsModel> filterPinnedNews(
-      List<NewsModel> newsList, BuildContext context) {
+  List<NewsModel> filterPinnedNews(List<NewsModel> newsList, BuildContext context) {
     List<NewsModel> filteredNewsList = [];
     filteredNewsList = newsList;
     isPinned = false;
@@ -788,19 +773,12 @@ class DiscussionListState extends State<DiscussionList> {
     return filteredNewsList;
   }
 
-  List<NewsModel> filterBlockedContent(
-      List<NewsModel> newsList, BuildContext context) {
+  List<NewsModel> filterBlockedContent(List<NewsModel> newsList, BuildContext context) {
     List<NewsModel> filteredNewsList = [];
 
     newsList.forEach((news) {
-      SevaCore.of(context)
-                  .loggedInUser
-                  .blockedMembers
-                  .contains(news.sevaUserId) ||
-              SevaCore.of(context)
-                  .loggedInUser
-                  .blockedBy
-                  .contains(news.sevaUserId)
+      SevaCore.of(context).loggedInUser.blockedMembers.contains(news.sevaUserId) ||
+              SevaCore.of(context).loggedInUser.blockedBy.contains(news.sevaUserId)
           ? logger.i("Removed blocked content")
           : filteredNewsList.add(news);
     });
@@ -889,10 +867,8 @@ class DiscussionListState extends State<DiscussionList> {
                                   Spacer(),
                                   Text(
                                     timeAgo.format(
-                                        DateTime.fromMillisecondsSinceEpoch(
-                                            news.postTimestamp),
-                                        locale: Locale(AppConfig.prefs
-                                                .getString('language_code'))
+                                        DateTime.fromMillisecondsSinceEpoch(news.postTimestamp),
+                                        locale: Locale(AppConfig.prefs.getString('language_code'))
                                             .toLanguageTag()),
                                     style: TextStyle(color: Colors.grey),
                                   ),
@@ -964,8 +940,7 @@ class DiscussionListState extends State<DiscussionList> {
                           Container(
                             margin: EdgeInsets.only(top: 5),
                             child: Umeshify(
-                              text: news.subheading != null &&
-                                      news.subheading != ""
+                              text: news.subheading != null && news.subheading != ""
                                   ? news.subheading.trim()
                                   : '',
                               onOpen: (url) async {
@@ -997,20 +972,17 @@ class DiscussionListState extends State<DiscussionList> {
                         ],
                       ),
                     ),
-                    isAccessAvailable(widget.timebankModel,
-                            SevaCore.of(context).loggedInUser.sevaUserID)
+                    isAccessAvailable(
+                            widget.timebankModel, SevaCore.of(context).loggedInUser.sevaUserID)
                         ? getOptionButtons(
                             Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 6, vertical: 2),
+                              padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                               child: Container(
                                 height: 20,
                                 width: 20,
                                 child: Image.asset(
                                   'lib/assets/images/pin.png',
-                                  color: news.isPinned
-                                      ? Colors.green
-                                      : Colors.black,
+                                  color: news.isPinned ? Colors.green : Colors.black,
                                 ),
                               ),
                             ),
@@ -1043,50 +1015,39 @@ class DiscussionListState extends State<DiscussionList> {
                         children: <Widget>[
                           //slot closed
                           Container(
-                            child: news.sevaUserId !=
-                                    SevaCore.of(context).loggedInUser.sevaUserID
+                            child: news.sevaUserId != SevaCore.of(context).loggedInUser.sevaUserID
                                 ? getOptionButtons(
                                     Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 6, vertical: 2),
+                                      padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                                       child: Icon(
                                         Icons.flag,
                                         color: news.reports.contains(
-                                                SevaCore.of(context)
-                                                    .loggedInUser
-                                                    .sevaUserID)
+                                                SevaCore.of(context).loggedInUser.sevaUserID)
                                             ? Colors.red
                                             : Colors.black,
                                         size: 20,
                                       ),
                                     ),
                                     () {
-                                      if (news.reports.contains(
-                                          SevaCore.of(context)
-                                              .loggedInUser
-                                              .sevaUserID)) {
+                                      if (news.reports
+                                          .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
                                         showDialog(
                                           context: context,
                                           builder: (BuildContext viewContextS) {
                                             // return object of type Dialog
                                             return AlertDialog(
-                                              title: Text(S
-                                                  .of(context)
-                                                  .already_reported),
-                                              content: Text(
-                                                  S.of(context).feed_reported),
+                                              title: Text(S.of(context).already_reported),
+                                              content: Text(S.of(context).feed_reported),
                                               actions: <Widget>[
                                                 CustomTextButton(
                                                   child: Text(
                                                     S.of(context).ok,
                                                     style: TextStyle(
-                                                      fontSize:
-                                                          dialogButtonSize,
+                                                      fontSize: dialogButtonSize,
                                                     ),
                                                   ),
                                                   onPressed: () {
-                                                    Navigator.of(viewContextS)
-                                                        .pop();
+                                                    Navigator.of(viewContextS).pop();
                                                   },
                                                 ),
                                               ],
@@ -1099,62 +1060,47 @@ class DiscussionListState extends State<DiscussionList> {
                                           builder: (BuildContext viewContext) {
                                             // return object of type Dialog
                                             return AlertDialog(
-                                              title: Text(
-                                                  S.of(context).report_feed),
+                                              title: Text(S.of(context).report_feed),
                                               content: Text(
-                                                S
-                                                    .of(context)
-                                                    .report_feed_confirmation_message,
+                                                S.of(context).report_feed_confirmation_message,
                                               ),
                                               actions: <Widget>[
                                                 CustomTextButton(
-                                                  padding: EdgeInsets.fromLTRB(
-                                                      20, 5, 20, 5),
-                                                  color: Theme.of(context)
-                                                      .accentColor,
-                                                  textColor: FlavorConfig
-                                                      .values.buttonTextColor,
+                                                  color: HexColor("#d2d2d2"),
+                                                  textColor: Colors.white,
+                                                  child: Text(
+                                                    S.of(context).cancel,
+                                                  ),
+                                                  onPressed: () {
+                                                    Navigator.of(viewContext).pop();
+                                                  },
+                                                ),
+                                                CustomTextButton(
+                                                  color: Theme.of(context).accentColor,
+                                                  textColor: Colors.white,
                                                   child: Text(
                                                     S.of(context).report_feed,
                                                     style: TextStyle(
-                                                      fontSize:
-                                                          dialogButtonSize,
+                                                      fontSize: dialogButtonSize,
                                                     ),
                                                   ),
                                                   onPressed: () {
-                                                    if (news.reports.contains(
-                                                        SevaCore.of(context)
-                                                            .loggedInUser
-                                                            .sevaUserID)) {
+                                                    if (news.reports.contains(SevaCore.of(context)
+                                                        .loggedInUser
+                                                        .sevaUserID)) {
                                                     } else {
-                                                      if (news
-                                                          .reports.isEmpty) {
+                                                      if (news.reports.isEmpty) {
                                                         news.reports = [];
                                                       }
-                                                      CollectionRef.feeds
-                                                          .doc(news.id)
-                                                          .update({
-                                                        'reports': FieldValue
-                                                            .arrayUnion([
+                                                      CollectionRef.feeds.doc(news.id).update({
+                                                        'reports': FieldValue.arrayUnion([
                                                           SevaCore.of(context)
                                                               .loggedInUser
                                                               .sevaUserID
                                                         ])
                                                       });
                                                     }
-                                                    Navigator.of(viewContext)
-                                                        .pop();
-                                                  },
-                                                ),
-                                                CustomTextButton(
-                                                  child: Text(
-                                                    S.of(context).cancel,
-                                                    style: TextStyle(
-                                                        color: Colors.red),
-                                                  ),
-                                                  onPressed: () {
-                                                    Navigator.of(viewContext)
-                                                        .pop();
+                                                    Navigator.of(viewContext).pop();
                                                   },
                                                 ),
                                               ],
@@ -1176,11 +1122,15 @@ class DiscussionListState extends State<DiscussionList> {
                           getOptionButtons(
                             Row(
                               children: <Widget>[
+                                Text('${news.likes.length}',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                    )),
                                 Padding(
                                   padding: const EdgeInsets.all(4.0),
                                   child: Center(
-                                    child: news.likes != null &&
-                                            news.likes.contains(loggedinemail)
+                                    child: news.likes != null && news.likes.contains(loggedinemail)
                                         ? Icon(
                                             Icons.favorite,
                                             size: 24,
@@ -1193,11 +1143,7 @@ class DiscussionListState extends State<DiscussionList> {
                                           ),
                                   ),
                                 ),
-                                Text('${news.likes.length}',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14,
-                                    )),
+
                                 Padding(
                                     padding: EdgeInsets.only(left: 20),
                                     child: Align(
@@ -1213,8 +1159,7 @@ class DiscussionListState extends State<DiscussionList> {
                                       context,
                                       MaterialPageRoute(
                                         builder: (_context) => BlocProvider(
-                                          bloc: BlocProvider.of<
-                                              HomeDashBoardBloc>(context),
+                                          bloc: BlocProvider.of<HomeDashBoardBloc>(context),
                                           child: NewsCardView(
                                             newsModel: news,
                                             isFocused: false,
@@ -1239,8 +1184,7 @@ class DiscussionListState extends State<DiscussionList> {
                             ),
                             () {
                               Set<String> likesList = Set.from(news.likes);
-                              news.likes != null &&
-                                      news.likes.contains(loggedinemail)
+                              news.likes != null && news.likes.contains(loggedinemail)
                                   ? likesList.remove(loggedinemail)
                                   : likesList.add(loggedinemail);
                               news.likes = likesList.toList();
@@ -1263,10 +1207,9 @@ class DiscussionListState extends State<DiscussionList> {
       TimebankModel currentTimebankModel;
 
       final _membersBloc = Provider.of<MembersBloc>(context, listen: false);
-      final _homePageBaseBloc =
-          Provider.of<HomePageBaseBloc>(context, listen: false);
-      currentTimebankModel = _homePageBaseBloc
-          .getTimebankModelFromCurrentCommunity(widget.timebankId);
+      final _homePageBaseBloc = Provider.of<HomePageBaseBloc>(context, listen: false);
+      currentTimebankModel =
+          _homePageBaseBloc.getTimebankModelFromCurrentCommunity(widget.timebankId);
 
       currentTimebankModel.members.forEach((element) {
         membersInTimebank.add(

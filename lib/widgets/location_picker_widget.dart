@@ -35,16 +35,18 @@ class LocationPickerWidget extends StatelessWidget {
             SizedBox(
               width: 10,
             ),
-            Text(
-              selectedAddress == '' || selectedAddress == null
-                  ? S.of(context).add_location
-                  : selectedAddress,
-              overflow: TextOverflow.ellipsis,
-              maxLines: 1,
-              style: TextStyle(
-                color: Colors.black54,
-                fontFamily: 'Europa',
-                fontSize: 14,
+            Flexible(
+              child: Text(
+                selectedAddress == '' || selectedAddress == null
+                    ? S.of(context).add_location
+                    : selectedAddress,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+                style: TextStyle(
+                  color: Colors.black54,
+                  fontFamily: 'Europa',
+                  fontSize: 14,
+                ),
               ),
             ),
           ],
