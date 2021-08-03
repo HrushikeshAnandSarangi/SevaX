@@ -2,6 +2,8 @@ import UIKit
 import Flutter
 import GoogleMaps
 import flutter_downloader
+import Firebase
+
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
   override func application(
@@ -9,6 +11,7 @@ import flutter_downloader
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
     GMSServices.provideAPIKey("AIzaSyC5p0iPaOTJEtOpfc8bT5zQnxlIrHtVgsU")
+    FirebaseApp.configure()
     GeneratedPluginRegistrant.register(with: self) 
     
     FlutterDownloaderPlugin.setPluginRegistrantCallback(registerPlugins)
