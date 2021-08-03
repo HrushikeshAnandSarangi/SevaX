@@ -99,6 +99,7 @@ class AboutApp extends StatelessWidget {
               ),
               'FAQ',
             ),
+            SizedBox(height: 10,)
           ],
         ),
       ),

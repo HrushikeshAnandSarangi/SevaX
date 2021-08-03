@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/ui/screens/feeds/share_feed_component/bloc/share_feed_bloc_component.dart';
 import 'package:sevaexchange/ui/screens/feeds/share_feed_component/states/share_feed_search_component.dart';
@@ -27,177 +28,178 @@ class ShareDashboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var associatedImage =
-        feedToShare.imageScraped != null && feedToShare.imageScraped != 'NoData'
-            ? feedToShare.imageScraped
-            : feedToShare.newsImageUrl;
+    var associatedImage = feedToShare.imageScraped != null && feedToShare.imageScraped != 'NoData'
+        ? feedToShare.imageScraped
+        : feedToShare.newsImageUrl;
 
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 25),
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                InkWell(
-                  onTap: () {
-                    pageController.animateToPage(
-                      1,
-                      duration: Duration(milliseconds: 300),
-                      curve: Curves.linear,
-                    );
-                  },
-                  child: Icon(
-                    Icons.arrow_back,
-                    color: HexColor('#766FE0'),
-                    size: 24.0,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              InkWell(
+                onTap: () {
+                  pageController.animateToPage(
+                    1,
+                    duration: Duration(milliseconds: 300),
+                    curve: Curves.linear,
+                  );
+                },
+                child: Icon(
+                  Icons.arrow_back,
+                  color: HexColor('#766FE0'),
+                  size: 24.0,
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(
+                  top: 12,
+                  bottom: 12,
+                ),
+                child: Text(
+                  'Share',
+                  style: TextStyle(
+                    fontSize: 24,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
                   ),
+                ),
+              ),
+              CustomCloseButton(
+                onCleared: () {
+                  Navigator.pop(dialogContextReference);
+                },
+              )
+            ],
+          ),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(children: [
+                Container(
+                  height: 1,
+                  color: HexColor('#ECEDF1'),
                 ),
                 Container(
-                  margin: EdgeInsets.only(
-                    top: 12,
-                    bottom: 12,
-                  ),
-                  child: Text(
-                    'Share',
-                    style: TextStyle(
-                      fontSize: 24,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                CustomCloseButton(
-                  onCleared: () {
-                    Navigator.pop(dialogContextReference);
-                  },
-                )
-              ],
-            ),
-            Container(
-              height: 1,
-              color: HexColor('#ECEDF1'),
-            ),
-            Container(
-              margin: EdgeInsets.only(top: 30, bottom: 10),
-              child: Row(
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(top: 5),
-                    height: 45,
-                    width: 45,
-                    child: ProfileImage(
-                      image: feedToShare.userPhotoURL,
-                      tag: feedToShare.fullName,
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(left: 5),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          feedToShare.fullName ?? '',
-                          style: TextStyle(
-                            color: HexColor('#4A4A4A'),
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                          ),
+                  margin: EdgeInsets.only(top: 30, bottom: 10),
+                  child: Row(
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(top: 5),
+                        height: 45,
+                        width: 45,
+                        child: ProfileImage(
+                          image: feedToShare.userPhotoURL,
+                          tag: feedToShare.fullName,
                         ),
-                        Row(
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(left: 5),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Icon(
-                              Icons.location_pin,
-                              color: HexColor('#4A4A4A'),
-                              size: 15.0,
-                            ),
                             Text(
-                              feedToShare.placeAddress ?? '',
-                              // 'California',
+                              feedToShare.fullName ?? '',
                               style: TextStyle(
-                                color: HexColor('#9B9B9B'),
-                                fontSize: 14,
+                                color: HexColor('#4A4A4A'),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
                               ),
+                            ),
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.location_pin,
+                                  color: HexColor('#4A4A4A'),
+                                  size: 15.0,
+                                ),
+                                Text(
+                                  feedToShare.placeAddress ?? '',
+                                  // 'California',
+                                  style: TextStyle(
+                                    color: HexColor('#9B9B9B'),
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ),
-            Text(
-              feedToShare.title ?? feedToShare.subheading,
-              style: TextStyle(
-                color: HexColor('#9B9B9B'),
-                fontSize: 14,
-              ),
-            ),
-            associatedImage != null
-                ? Container(
-                    margin: EdgeInsets.only(top: 10),
-                    child: Image.network(
-                      associatedImage,
-                    ),
-                  )
-                : Center(
-                    child: Container(
-                      height: 180,
-                    ),
+                      )
+                    ],
                   ),
-            Container(
-              margin: EdgeInsets.only(
-                top: 10,
-                bottom: 40,
-              ),
-              width: double.infinity,
-              child: CustomTextButton(
-                color: HexColor('#766FE0'),
-                onPressed: () async {
-                  var listOfSelectedMembers =
-                      searchSegmentBloc.getSelectedUsersForShare();
-                  if (listOfSelectedMembers.length > 0) {
-                    pageController.animateToPage(
-                      0,
-                      duration: Duration(milliseconds: 300),
-                      curve: Curves.linear,
-                    );
-                    await ShareMessageManager()
-                        .assembleMembersDataForSharingFeed(
-                      communityId: loggedInUser.currentCommunity,
-                      sender: loggedInUser,
-                      selectedMembers: listOfSelectedMembers,
-                      messageContent: feedToShare.id,
-                    );
-
-                    Future.delayed(const Duration(milliseconds: 1000), () {
-                      Navigator.pop(dialogContextReference);
-                    });
-                  } else {
-                    pageController.animateToPage(
-                      1,
-                      duration: Duration(milliseconds: 300),
-                      curve: Curves.linear,
-                    );
-                  }
-                },
-                child: Text(
-                  'Share Post',
+                ),
+                Text(
+                  feedToShare.title ?? feedToShare.subheading,
                   style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
+                    color: HexColor('#9B9B9B'),
+                    fontSize: 14,
                   ),
+                ),
+                associatedImage != null
+                    ? Container(
+                        margin: EdgeInsets.only(top: 10),
+                        child: Image.network(
+                          associatedImage,
+                        ),
+                      )
+                    : Center(
+                        child: Container(
+                          height: 180,
+                        ),
+                      ),
+              ]),
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(
+              top: 10,
+              bottom: 10,
+            ),
+            width: double.infinity,
+            child: CustomTextButton(
+              color: HexColor('#766FE0'),
+              onPressed: () async {
+                var listOfSelectedMembers = searchSegmentBloc.getSelectedUsersForShare();
+                if (listOfSelectedMembers.length > 0) {
+                  pageController.animateToPage(
+                    0,
+                    duration: Duration(milliseconds: 300),
+                    curve: Curves.linear,
+                  );
+                  await ShareMessageManager().assembleMembersDataForSharingFeed(
+                    communityId: loggedInUser.currentCommunity,
+                    sender: loggedInUser,
+                    selectedMembers: listOfSelectedMembers,
+                    messageContent: feedToShare.id,
+                  );
+
+                  Future.delayed(const Duration(milliseconds: 1000), () {
+                    Navigator.pop(dialogContextReference);
+                  });
+                } else {
+                  pageController.animateToPage(
+                    1,
+                    duration: Duration(milliseconds: 300),
+                    curve: Curves.linear,
+                  );
+                }
+              },
+              child: Text(
+                S.of(context).share_post_new,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

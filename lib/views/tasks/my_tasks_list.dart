@@ -969,6 +969,8 @@ class TaskCardViewState extends State<TaskCardView> {
             content: Text(content),
             actions: <Widget>[
               CustomTextButton(
+                color: Theme.of(context).primaryColor,
+                textColor: Colors.white,
                 child: Text(S.of(context).close),
                 onPressed: () {
                   Navigator.of(buildContext).pop();
