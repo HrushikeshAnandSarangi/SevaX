@@ -15,6 +15,7 @@ import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/requestOfferAgreementForm.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 
 import '../../labels.dart';
@@ -170,7 +171,7 @@ class _ApproveLendingOfferState extends State<ApproveLendingOffer> {
       children: <Widget>[
         Container(
           height: 32,
-          child: RaisedButton(
+          child: CustomElevatedButton(
             padding: EdgeInsets.only(left: 11, right: 11),
             color: Colors.grey[300],
             child: Text(
@@ -188,7 +189,7 @@ class _ApproveLendingOfferState extends State<ApproveLendingOffer> {
         Spacer(),
         Container(
           height: 32,
-          child: RaisedButton(
+          child: CustomElevatedButton(
             padding: EdgeInsets.only(left: 11, right: 11),
             color: Colors.grey[300],
             child: Text(
@@ -206,7 +207,7 @@ class _ApproveLendingOfferState extends State<ApproveLendingOffer> {
         SizedBox(width: 5),
         Container(
           height: 32,
-          child: RaisedButton(
+          child: CustomElevatedButton(
             padding: EdgeInsets.only(left: 11, right: 11),
             color: Colors.grey[300],
             child: Text(

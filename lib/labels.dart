@@ -938,4 +938,8 @@ class L {
   String get yes => "Yes";
   String get no => "No";
   String get any_distance => "Any Distance";
+
+//3rd August
+  String get select_a_place_lending => "Select a place for lending*";
+  String get select_a_item_lending => "Select list of items for lending*";
 }

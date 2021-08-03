@@ -55,13 +55,9 @@ android {
         release {
             keyAlias keystoreProperties['keyAlias']
             keyPassword keystoreProperties['keyPassword']
-            storeFile file(keystoreProperties['storeFile'])
-<<<<<<< HEAD
-            // storeFile file('D:\\\\Projects\\\\seva-exchange\\\\seva_key.jks')
-=======
+            // storeFile file(keystoreProperties['storeFile'])
             //  storeFile file('/Users/xyz/Desktop/seva-exchange/android/key.jks')
->>>>>>> e839592084d3d5db9da2027acba574b200f99579
-            // storeFile file('Keystore')
+            storeFile file('Keystore')
             storePassword keystoreProperties['storePassword']
         }
     }
@@ -81,36 +77,16 @@ android {
     flavorDimensions "flavor-type"
 
     productFlavors {
-<<<<<<< HEAD
-        // HumanityFirst {
-        //     dimension "flavor-type"
-        //     applicationIdSuffix ".humanityfirst"
-        //     resValue "string", "app_name", "Humanity First"
-        // }
-=======
 //        HumanityFirst {
 //            dimension "flavor-type"
 //            applicationIdSuffix ".humanityfirst"
 //            resValue "string", "app_name", "Humanity First"
 //        }
->>>>>>> e839592084d3d5db9da2027acba574b200f99579
         App {
             dimension "flavor-type"
             applicationIdSuffix ".sevax"
             resValue "string", "app_name", "SevaX"
         }
-<<<<<<< HEAD
-        // Tulsi {
-        //     dimension "flavor-type"
-        //     applicationIdSuffix ".tulsi_2020"
-        //     resValue "string", "app_name", "Tulsi 2020"
-        // }
-        // Tom {
-        //     dimension "flavor-type"
-        //     applicationIdSuffix ".tom_2020"
-        //     resValue "string", "app_name", "Tom 2020"
-        // }
-=======
 //        Tulsi {
 //            dimension "flavor-type"
 //            applicationIdSuffix ".tulsi_2020"
@@ -121,7 +97,6 @@ android {
 //            applicationIdSuffix ".tom_2020"
 //            resValue "string", "app_name", "Tom 2020"
 //        }
->>>>>>> e839592084d3d5db9da2027acba574b200f99579
 
         dev {
             dimension "flavor-type"

@@ -352,6 +352,33 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                   setState(() {});
                                 }),
                           ),
+                        ),
+                        TransactionsMatrixCheck(
+                          upgradeDetails: AppConfig.upgradePlanBannerModel
+                              .onetomany_offers, //lending offers banner to be added
+                          transaction_matrix_type: "lending_offers",
+                          comingFrom: ComingFrom.Offers,
+                          child: ConfigurationCheck(
+                            actionType: 'lending_offer',
+                            role: memberType(widget.timebankModel,
+                                SevaCore.of(context).loggedInUser.sevaUserID),
+                            child: _optionRadioButton(
+                                title: L.of(context).lending,
+                                value: RequestType.LENDING_OFFER,
+                                groupvalue: snapshot.data != null
+                                    ? snapshot.data
+                                    : RequestType.LENDING_OFFER,
+                                onChanged: (data) {
+                                  AppConfig.helpIconContextMember =
+                                      HelpContextMemberType.lending_offers;
+                                  _bloc.onTypeChanged(data);
+                                  offerType = data;
+                                  description_hint =
+                                      S.of(context).request_descrip_hint_text;
+
+                                  setState(() {});
+                                }),
+                          ),
                         )
                       ],
                     ),
@@ -622,10 +649,12 @@ class _IndividualOfferState extends State<IndividualOffer> {
                           ),
                         ),
                         HideWidget(
-                            hide: offerType == RequestType.ONE_TO_MANY_OFFER,
+                            hide: offerType == RequestType.ONE_TO_MANY_OFFER ||
+                                offerType == RequestType.LENDING_OFFER,
                             child: SizedBox(height: 30)),
                         HideWidget(
-                          hide: offerType == RequestType.ONE_TO_MANY_OFFER,
+                          hide: offerType == RequestType.ONE_TO_MANY_OFFER ||
+                              offerType == RequestType.LENDING_OFFER,
                           child: StreamBuilder<String>(
                             stream: _bloc.offerDescription,
                             builder: (context, snapshot) {
@@ -1440,7 +1469,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          SizedBox(height: 20),
+          SizedBox(height: 10),
           Container(
             alignment: Alignment.bottomLeft,
             child: CupertinoSegmentedControl<int>(
@@ -1499,7 +1528,9 @@ class _IndividualOfferState extends State<IndividualOffer> {
               );
             },
             child: Text(
-              'Select a place for lending*',
+              _bloc.lendingOfferType == 0
+                  ? L.of(context).select_a_place_lending
+                  : L.of(context).select_a_item_lending,
               style: TextStyle(
                 fontSize: 16,
                 //fontWeight: FontWeight.bold,
@@ -1543,7 +1574,41 @@ class _IndividualOfferState extends State<IndividualOffer> {
                     );
                   },
                 );
-              })
+              }),
+          SizedBox(height: 20),
+          OfferDurationWidget(
+            title: S.of(context).offer_duration,
+            startTime: widget.offerModel != null
+                ? DateTime.fromMillisecondsSinceEpoch(
+                    widget.offerModel.groupOfferDataModel.startDate,
+                  )
+                : null,
+            endTime: widget.offerModel != null
+                ? DateTime.fromMillisecondsSinceEpoch(
+                    widget.offerModel.groupOfferDataModel.endDate,
+                  )
+                : null,
+          ),
+          SizedBox(height: 20),
+          StreamBuilder<String>(
+            stream: _bloc.offerDescription,
+            builder: (context, snapshot) {
+              return CustomTextField(
+                controller: _descriptionController,
+                currentNode: _description,
+                nextNode: _availability,
+                value: snapshot.data,
+                heading: "${S.of(context).offer_description}*",
+                onChanged: _bloc.onOfferDescriptionChanged,
+                hint: description_hint != null
+                    ? description_hint
+                    : S.of(context).offer_description_hint,
+                maxLength: 500,
+                error: getValidationError(context, snapshot.error),
+              );
+            },
+          ),
+          SizedBox(height: 12),
         ]);
   }
 }
