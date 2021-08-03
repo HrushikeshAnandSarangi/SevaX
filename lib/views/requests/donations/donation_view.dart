@@ -46,7 +46,7 @@ class _DonationViewState extends State<DonationView> {
   ProgressDialog progressDialog;
   RegExp emailPattern = RegExp(
       r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
-  String mobilePattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
+  String mobilePattern = r'^[0-9]+$';
   List<String> donationsCategories = [];
   int amountEntered = 0;
   Map selectedList = {};
@@ -559,7 +559,7 @@ class _DonationViewState extends State<DonationView> {
   }
 
   String _validateEmailAndPhone(String value) {
-    String mobilePattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
+    String mobilePattern = r'^[0-9]+$';
     RegExp emailPattern = RegExp(
         r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
     RegExp regExp = RegExp(mobilePattern);
