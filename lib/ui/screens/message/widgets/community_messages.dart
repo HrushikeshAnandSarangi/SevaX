@@ -27,32 +27,30 @@ class CommunityMessages extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        child: StreamBuilder<List<ChatModel>>(
-          stream: ChatsRepository.getParentChildChats(
-              SevaCore.of(context).loggedInUser.currentTimebank),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return LoadingIndicator();
-            }
-            if (snapshot.data.length == 0) {
-              return Center(child: Text(S.of(context).no_message));
-            }
-            return ListView.builder(
-              shrinkWrap: true,
-              itemCount: snapshot.data.length,
-              itemBuilder: (_, index) {
-                ChatModel chat = snapshot.data[index];
-                log('parrt  ${chat.participants}');
-                return MessageCard(
-                  model: chat,
-                  isAdminMessage: true,
-                  timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
-                );
-              },
-            );
-          },
-        ),
+      body: StreamBuilder<List<ChatModel>>(
+        stream: ChatsRepository.getParentChildChats(
+            SevaCore.of(context).loggedInUser.currentTimebank),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return LoadingIndicator();
+          }
+          if (snapshot.data.length == 0) {
+            return Center(child: Text(S.of(context).no_message));
+          }
+          return ListView.builder(
+            shrinkWrap: true,
+            itemCount: snapshot.data.length,
+            itemBuilder: (_, index) {
+              ChatModel chat = snapshot.data[index];
+              log('parrt  ${chat.participants}');
+              return MessageCard(
+                model: chat,
+                isAdminMessage: true,
+                timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
+              );
+            },
+          );
+        },
       ),
     );
   }
