@@ -14,6 +14,9 @@ Future<void> errorDialog({BuildContext context, String error}) async {
         title: Text(error),
         actions: <Widget>[
           CustomTextButton(
+            shape: StadiumBorder(),
+            color: Theme.of(context).primaryColor,
+            textColor: Colors.white,
             child: Text(
               S.of(context).ok,
               style: TextStyle(

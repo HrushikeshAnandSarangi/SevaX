@@ -3455,6 +3455,9 @@ class RequestEditFormState extends State<RequestEditForm> {
             title: Text(dialogTitle),
             actions: <Widget>[
               CustomTextButton(
+                shape: StadiumBorder(),
+                color: Theme.of(context).primaryColor,
+                textColor: Colors.white,
                 child: Text(
                   S.of(context).ok,
                   style: TextStyle(

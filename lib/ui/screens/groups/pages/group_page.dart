@@ -320,7 +320,9 @@ class _GroupPageState extends State<GroupPage> {
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             CustomTextButton(
+              color: Theme.of(context).primaryColor,
               child: Text(S.of(context).close),
+              textColor: Colors.white,
               onPressed: () {
                 Navigator.of(_context).pop();
               },

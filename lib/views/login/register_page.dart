@@ -7,12 +7,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
 // import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
+
 // import 'package:location/location.dart';
 import 'package:path_drawing/path_drawing.dart';
 import 'package:sevaexchange/auth/auth.dart';
@@ -134,8 +136,7 @@ class _RegisterPageState extends State<RegisterPage>
                 child: FadeAnimation(
                     1.4,
                     Padding(
-                        padding:
-                            EdgeInsets.only(left: 28.0, right: 28.0, top: 40.0),
+                        padding: EdgeInsets.only(left: 28.0, right: 28.0, top: 40.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
@@ -165,6 +166,7 @@ class _RegisterPageState extends State<RegisterPage>
   }
 
   bool get shouldObscurePassword => this._shouldObscurePassword;
+
   bool get shouldObscureConfirmPassword => this._shouldObscureConfirmPassword;
 
   set shouldObscurePassword(bool shouldObscure) {
@@ -299,12 +301,9 @@ class _RegisterPageState extends State<RegisterPage>
                   height: 150.0,
                   decoration: BoxDecoration(
                       image: DecorationImage(
-                          image: NetworkImage(defaultCameraImageURL),
-                          fit: BoxFit.cover),
+                          image: NetworkImage(defaultCameraImageURL), fit: BoxFit.cover),
                       borderRadius: BorderRadius.all(Radius.circular(75.0)),
-                      boxShadow: [
-                        BoxShadow(blurRadius: 7.0, color: Colors.black12)
-                      ]))
+                      boxShadow: [BoxShadow(blurRadius: 7.0, color: Colors.black12)]))
               : Container(
                   decoration: BoxDecoration(
                       image: DecorationImage(
@@ -313,16 +312,13 @@ class _RegisterPageState extends State<RegisterPage>
                               : CachedNetworkImageProvider(webImageUrl),
                           fit: BoxFit.cover),
                       borderRadius: BorderRadius.all(Radius.circular(75.0)),
-                      boxShadow: [
-                        BoxShadow(blurRadius: 7.0, color: Colors.black12)
-                      ]),
+                      boxShadow: [BoxShadow(blurRadius: 7.0, color: Colors.black12)]),
                   child: Align(
                     alignment: Alignment.bottomRight,
                     child: Container(
                       decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius:
-                              BorderRadius.all(Radius.circular(50.0))),
+                          borderRadius: BorderRadius.all(Radius.circular(50.0))),
                       child: Icon(Icons.add_a_photo),
                     ),
                   ),
@@ -456,9 +452,7 @@ class _RegisterPageState extends State<RegisterPage>
                     setState(() {});
                   },
                   child: Icon(
-                    _shouldObscurePassword
-                        ? Icons.visibility_off
-                        : Icons.visibility,
+                    _shouldObscurePassword ? Icons.visibility_off : Icons.visibility,
                   ),
                 )),
           ),
@@ -485,14 +479,11 @@ class _RegisterPageState extends State<RegisterPage>
                 height: 30,
                 child: GestureDetector(
                   onTap: () {
-                    _shouldObscureConfirmPassword =
-                        !_shouldObscureConfirmPassword;
+                    _shouldObscureConfirmPassword = !_shouldObscureConfirmPassword;
                     setState(() {});
                   },
                   child: Icon(
-                    shouldObscureConfirmPassword
-                        ? Icons.visibility_off
-                        : Icons.visibility,
+                    shouldObscureConfirmPassword ? Icons.visibility_off : Icons.visibility,
                   ),
                 )),
           )
@@ -526,8 +517,7 @@ class _RegisterPageState extends State<RegisterPage>
           suffix: suffix,
           labelStyle: TextStyle(color: Colors.black),
           suffixStyle: TextStyle(color: Colors.black),
-          counterStyle:
-              TextStyle(height: double.minPositive, color: Colors.black),
+          counterStyle: TextStyle(height: double.minPositive, color: Colors.black),
           counterText: "",
           enabledBorder: UnderlineInputBorder(
             borderSide: BorderSide(color: Colors.black),
@@ -571,8 +561,7 @@ class _RegisterPageState extends State<RegisterPage>
           suffix: suffix,
           labelStyle: TextStyle(color: Colors.black),
           suffixStyle: TextStyle(color: Colors.black),
-          counterStyle:
-              TextStyle(height: double.minPositive, color: Colors.black),
+          counterStyle: TextStyle(height: double.minPositive, color: Colors.black),
           counterText: "",
           enabledBorder: UnderlineInputBorder(
             borderSide: BorderSide(color: Colors.black),
@@ -607,8 +596,7 @@ class _RegisterPageState extends State<RegisterPage>
                       content: Text(S.of(context).check_internet),
                       action: SnackBarAction(
                         label: S.of(context).dismiss,
-                        onPressed: () =>
-                            ScaffoldMessenger.of(context).hideCurrentSnackBar(),
+                        onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
                       ),
                     ),
                   );
@@ -679,8 +667,7 @@ class _RegisterPageState extends State<RegisterPage>
                                 ),
                                 onPressed: () {
                                   Navigator.pop(viewContext);
-                                  FocusScope.of(context)
-                                      .requestFocus(new FocusNode());
+                                  FocusScope.of(context).requestFocus(new FocusNode());
                                   imagePicker.showDialog(context);
                                   isLoading = false;
                                   return;
@@ -731,8 +718,7 @@ class _RegisterPageState extends State<RegisterPage>
   }
 
   bool isValidEmail(String email) {
-    RegExp regex =
-        RegExp(r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)');
+    RegExp regex = RegExp(r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)');
     return regex.hasMatch(email);
   }
 
@@ -760,15 +746,13 @@ class _RegisterPageState extends State<RegisterPage>
           }
           showFailedLoadImage(context: context).then((value) {});
         } else {
-          profanityStatusModel = await getProfanityStatus(
-              profanityImageModel: profanityImageModel);
+          profanityStatusModel = await getProfanityStatus(profanityImageModel: profanityImageModel);
 
           if (profanityStatusModel.isProfane) {
             if (dialogContext != null) {
               Navigator.pop(dialogContext);
             }
-            showProfanityImageAlert(
-                    context: context, content: profanityStatusModel.category)
+            showProfanityImageAlert(context: context, content: profanityStatusModel.category)
                 .then((status) {
               if (status == 'Proceed') {
                 deleteFireBaseImage(imageUrl: imageUrl).then((value) {
@@ -805,11 +789,9 @@ class _RegisterPageState extends State<RegisterPage>
 
       user.photoURL = imageUrl;
 
-      user.timezone =
-          TimezoneListData().getTimeZoneByCodeData(DateTime.now().timeZoneName);
+      user.timezone = TimezoneListData().getTimeZoneByCodeData(DateTime.now().timeZoneName);
       Locale _sysLng = ui.window.locale;
-      Locale _language =
-          S.delegate.isSupported(_sysLng) ? _sysLng : Locale('en');
+      Locale _language = S.delegate.isSupported(_sysLng) ? _sysLng : Locale('en');
       appLanguage.changeLanguage(_language);
       user.language = _language.languageCode;
 
@@ -865,8 +847,7 @@ class _RegisterPageState extends State<RegisterPage>
           content: Text(error.message),
           action: SnackBarAction(
             label: S.of(context).dismiss,
-            onPressed: () =>
-                ScaffoldMessenger.of(context).hideCurrentSnackBar(),
+            onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
           ),
         ),
       );
@@ -882,8 +863,7 @@ class _RegisterPageState extends State<RegisterPage>
               e._message),
           action: SnackBarAction(
             label: S.of(context).dismiss,
-            onPressed: () =>
-                ScaffoldMessenger.of(context).hideCurrentSnackBar(),
+            onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
           ),
         ),
       );
@@ -909,10 +889,7 @@ class _RegisterPageState extends State<RegisterPage>
   }
 
   Future<String> uploadImage(String email) async {
-    Reference ref = FirebaseStorage.instance
-        .ref()
-        .child('profile_images')
-        .child(email + '.jpg');
+    Reference ref = FirebaseStorage.instance.ref().child('profile_images').child(email + '.jpg');
     UploadTask uploadTask = ref.putFile(
       selectedImage,
       SettableMetadata(
@@ -921,8 +898,7 @@ class _RegisterPageState extends State<RegisterPage>
       ),
     );
 
-    String imageURL =
-        await (await uploadTask.whenComplete(() => null)).ref.getDownloadURL();
+    String imageURL = await (await uploadTask.whenComplete(() => null)).ref.getDownloadURL();
     return imageURL;
   }
 
@@ -963,8 +939,8 @@ class _RegisterPageState extends State<RegisterPage>
     Map<String, String> _paths;
     try {
       _paths = null;
-      FilePickerResult result = await FilePicker.platform
-          .pickFiles(type: FileType.custom, allowedExtensions: ['pdf']);
+      FilePickerResult result =
+          await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ['pdf']);
       if (result != null) {
         _path = result.files.single.path;
       }
@@ -1003,8 +979,7 @@ class _RegisterPageState extends State<RegisterPage>
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     String timestampString = timestamp.toString();
     String name = email + timestampString + _fileName;
-    Reference ref =
-        FirebaseStorage.instance.ref().child('cv_files').child(name);
+    Reference ref = FirebaseStorage.instance.ref().child('cv_files').child(name);
     UploadTask uploadTask = ref.putFile(
       File(_path),
       SettableMetadata(
@@ -1013,8 +988,7 @@ class _RegisterPageState extends State<RegisterPage>
       ),
     );
     String documentURL = '';
-    documentURL =
-        await (await uploadTask.whenComplete(() => null)).ref.getDownloadURL();
+    documentURL = await (await uploadTask.whenComplete(() => null)).ref.getDownloadURL();
 
     cvUrl = documentURL;
     log('link  ' + documentURL);
@@ -1098,13 +1072,23 @@ class _RegisterPageState extends State<RegisterPage>
       child: InkWell(
         onTap: useGoogleSignIn,
         child: Card(
-          child: ListTile(
-            leading: SizedBox(
-              height: 30,
-              width: 30,
-              child: Image.asset('lib/assets/images/g.png'),
+          margin: EdgeInsets.only(top: 12.0),
+          child: Padding(
+            padding: EdgeInsets.all(10.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  height: 30,
+                  width: 30,
+                  child: Image.asset('lib/assets/images/g.png'),
+                ),
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 20),
+                  child: Text(S.of(context).sign_up_with_google),
+                ),
+              ],
             ),
-            title: Text(S.of(context).sign_up_with_google),
           ),
         ),
       ),
@@ -1185,8 +1169,7 @@ class _RegisterPageState extends State<RegisterPage>
           content: Text(S.of(context).check_internet),
           action: SnackBarAction(
             label: S.of(context).dismiss,
-            onPressed: () =>
-                ScaffoldMessenger.of(context).hideCurrentSnackBar(),
+            onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
           ),
         ),
       );
@@ -1202,8 +1185,7 @@ class _RegisterPageState extends State<RegisterPage>
     } on Exception catch (error) {
       logger.e(error);
     }
-    await FirestoreManager.addCreationSourceOfUser(
-        locationVal: location, userEmailId: user.email);
+    await FirestoreManager.addCreationSourceOfUser(locationVal: location, userEmailId: user.email);
 
     isLoading = false;
     _processLogin(user);
@@ -1226,8 +1208,7 @@ class _RegisterPageState extends State<RegisterPage>
           content: Text(S.of(context).check_internet),
           action: SnackBarAction(
             label: S.of(context).dismiss,
-            onPressed: () =>
-                ScaffoldMessenger.of(context).hideCurrentSnackBar(),
+            onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
           ),
         ),
       );
@@ -1257,8 +1238,7 @@ class _RegisterPageState extends State<RegisterPage>
     } on Exception catch (error) {
       logger.e(error);
     }
-    await FirestoreManager.addCreationSourceOfUser(
-        locationVal: location, userEmailId: user.email);
+    await FirestoreManager.addCreationSourceOfUser(locationVal: location, userEmailId: user.email);
 
     isLoading = false;
     _processLogin(user);
@@ -1318,9 +1298,7 @@ class _RegisterPageState extends State<RegisterPage>
   }
 
   Future<void> resetPassword(String email) async {
-    await FirebaseAuth.instance
-        .sendPasswordResetEmail(email: email)
-        .then((onValue) {
+    await FirebaseAuth.instance.sendPasswordResetEmail(email: email).then((onValue) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(S.of(context).reset_password_message),
         action: SnackBarAction(

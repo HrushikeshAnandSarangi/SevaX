@@ -1788,10 +1788,6 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       width: 100,
       height: 32,
       child: CustomTextButton(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-        padding: EdgeInsets.all(0),
         color: widget.requestItem.oneToManyRequestAttenders
                 .contains(SevaCore.of(context).loggedInUser.email)
             ? Theme.of(context).accentColor
@@ -2950,16 +2946,20 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           ),
           actions: <Widget>[
             CustomTextButton(
+              shape: StadiumBorder(),
+              color: utils.HexColor("#d2d2d2"),
+              textColor: Colors.white,
               onPressed: () => {Navigator.of(dialogContext).pop()},
               child: Text(
                 S.of(context).cancel,
-                style: TextStyle(fontSize: dialogButtonSize, color: Colors.red),
+                style: TextStyle(fontSize: dialogButtonSize),
               ),
             ),
             CustomTextButton(
-              padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+              shape: StadiumBorder(),
+              padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
               color: Theme.of(context).accentColor,
-              textColor: FlavorConfig.values.buttonTextColor,
+              textColor: Colors.white,
               onPressed: () async {
                 if (requestItem.parent_request_id == requestItem.id) {
                   LinearProgressIndicator();
@@ -2980,6 +2980,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               },
               child: Text(
                 S.of(context).delete,
+                style: TextStyle(fontSize: dialogButtonSize),
               ),
             ),
           ],

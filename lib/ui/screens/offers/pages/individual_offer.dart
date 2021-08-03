@@ -1140,6 +1140,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
 
   Widget OneToManyOffer() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         SizedBox(height: 20),
         StreamBuilder<String>(

@@ -451,6 +451,7 @@ Future<String> showProfanityImageAlert({BuildContext context, String content}) {
           ),
           actions: <Widget>[
             CustomTextButton(
+              shape: StadiumBorder(),
               padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
               color: Theme.of(context).accentColor,
               textColor: FlavorConfig.values.buttonTextColor,
@@ -458,6 +459,7 @@ Future<String> showProfanityImageAlert({BuildContext context, String content}) {
                 S.of(context).ok,
                 style: TextStyle(
                   fontSize: dialogButtonSize,
+                  color: Colors.white
                 ),
               ),
               onPressed: () {

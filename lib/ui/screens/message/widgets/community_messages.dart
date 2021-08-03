@@ -15,6 +15,7 @@ import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class CommunityMessages extends StatelessWidget {
   final MessageBloc bloc;
+
   CommunityMessages({this.bloc});
 
   @override
@@ -36,7 +37,7 @@ class CommunityMessages extends StatelessWidget {
               return LoadingIndicator();
             }
             if (snapshot.data.length == 0) {
-              return Center(child: Text(S.of(context).no_message));
+              return Expanded(child: Center(child: Text(S.of(context).no_message)));
             }
             return ListView.builder(
               shrinkWrap: true,

@@ -205,17 +205,12 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                                 //   onPressed: () {},
                                 // ),
                                 CustomTextButton(
-                                  color: Colors.grey[300],
-                                  textColor: Theme.of(context).primaryColor,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(0.0),
-                                    child: Text(isUserJoined
-                                        ? S.of(context).joined
-                                        : S.of(context).request_to_join),
-                                  ),
+                                  color: Theme.of(context).primaryColor,
+                                  textColor: Colors.white,
+                                  shape: StadiumBorder(),
+                                  child: Text(isUserJoined
+                                      ? S.of(context).joined
+                                      : S.of(context).request_to_join),
                                   onPressed: () {
                                     if (widget.isSignedUser && !isUserJoined) {
                                       createEditCommunityBloc
