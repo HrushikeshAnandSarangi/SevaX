@@ -244,7 +244,7 @@ class EarningImageItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CircleAvatar(
-      backgroundImage: NetworkImage(defaultUserImageURL),
+      backgroundImage: NetworkImage(image ?? defaultUserImageURL),
     );
   }
 }

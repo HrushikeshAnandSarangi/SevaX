@@ -241,7 +241,6 @@ class _OfferJoinRequestDialogState extends State<OfferJoinRequestDialog> {
       allowedCalender: allowedCalender,
       acceptorModel: acceptorModel,
     );
-
     //Update accetor document
     CollectionRef.offers
         .doc(offerId)

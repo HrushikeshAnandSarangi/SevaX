@@ -790,6 +790,7 @@ class _DonationViewState extends State<DonationView> {
                 ),
                 actionButton(
                     buttonColor: Colors.grey,
+                    textColor: Colors.black,
                     buttonTitle: S.of(context).do_it_later,
                     onPressed: () {
                       Navigator.of(context).pop();
@@ -881,8 +882,9 @@ class _DonationViewState extends State<DonationView> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               actionButton(
-                  buttonTitle: S.of(context).do_it_later,
+                  buttonColor: Colors.grey,
                   textColor: Colors.black,
+                  buttonTitle: S.of(context).do_it_later,
                   onPressed: () {
                     Navigator.of(context).pop();
                   }),
@@ -1118,8 +1120,9 @@ class _DonationViewState extends State<DonationView> {
                   width: 20,
                 ),
                 actionButton(
-                    buttonTitle: S.of(context).do_it_later,
+                    buttonColor: Colors.grey,
                     textColor: Colors.black,
+                    buttonTitle: S.of(context).do_it_later,
                     onPressed: () {
                       Navigator.of(context).pop();
                     }),
@@ -1288,8 +1291,9 @@ class _DonationViewState extends State<DonationView> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
                 actionButton(
-                  buttonTitle: S.of(context).do_it_later,
+                  buttonColor: Colors.grey,
                   textColor: Colors.black,
+                  buttonTitle: S.of(context).do_it_later,
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
@@ -1408,7 +1412,7 @@ class _DonationViewState extends State<DonationView> {
       child: Container(
         height: 37,
         child: CustomElevatedButton(
-          textColor: textColor ?? Colors.white,
+          textColor: textColor ?? Colors.black,
           onPressed: onPressed,
           child: Text(
             buttonTitle,

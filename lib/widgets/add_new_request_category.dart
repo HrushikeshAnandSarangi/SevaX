@@ -122,7 +122,7 @@ class _AddNewRequestCategoryState extends State<AddNewRequestCategory> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10)),
                             onTap: () {},
-                            leading: Icon(Icons.add_circle_outline, size: 16),
+                            // leading: Icon(Icons.add_circle_outline, size: 16),
                             title: Form(
                               autovalidateMode:
                                   AutovalidateMode.onUserInteraction,
@@ -263,7 +263,7 @@ class _AddNewRequestCategoryState extends State<AddNewRequestCategory> {
                                 ;
                               },
                               child: Padding(
-                                padding: EdgeInsets.only(left: 14, right: 14),
+                                padding: EdgeInsets.only(left: 13, right: 13),
                                 child: Text(
                                   S.of(context).save,
                                   style: TextStyle(
@@ -271,9 +271,9 @@ class _AddNewRequestCategoryState extends State<AddNewRequestCategory> {
                                   ),
                                 ),
                               ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
+                              // shape: RoundedRectangleBorder(
+                              //   borderRadius: BorderRadius.circular(15),
+                              // ),
                             ),
                           ),
                         ),

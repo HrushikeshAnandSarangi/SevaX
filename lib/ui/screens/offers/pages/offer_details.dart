@@ -564,12 +564,24 @@ class OfferDetails extends StatelessWidget {
                             return;
                           }
 
+                          TimebankModel timebankModel;
+                          if (Provider.of<HomePageBaseBloc>(context,
+                                      listen: false)
+                                  .timebankModel(offerModel.timebankId) ==
+                              null) {
+                            timebankModel = await utils.getTimeBankForId(
+                                timebankId: offerModel.timebankId);
+                          } else {
+                            timebankModel = Provider.of<HomePageBaseBloc>(
+                                    context,
+                                    listen: false)
+                                .timebankModel(offerModel.timebankId);
+                          }
+
                           //ClubHouse
                           if (offerModel.type != RequestType.TIME &&
                               !isAccessAvailable(
-                                  Provider.of<HomePageBaseBloc>(context,
-                                          listen: false)
-                                      .primaryTimebankModel(),
+                                  timebankModel,
                                   SevaCore.of(context)
                                       .loggedInUser
                                       .sevaUserID)) {
