@@ -2055,7 +2055,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text("${item.title_en.toString()}",
+                  Text("${item.getCategoryName(context).toString()}",
                       style: TextStyle(color: Colors.white)),
                   SizedBox(width: 3),
                   InkWell(
@@ -2591,8 +2591,6 @@ class RequestEditFormState extends State<RequestEditForm> {
       );
       return;
     }
-
-    logger.i(widget.requestModel.communityId + "<<<<<<<<<<<<<<<>>>>>>>>>>>>");
 
     if (_formKey.currentState.validate()) {
       if (widget.requestModel.public) {

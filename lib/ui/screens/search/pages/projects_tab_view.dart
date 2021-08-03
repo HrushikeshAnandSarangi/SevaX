@@ -92,6 +92,8 @@ class _ProjectsTabViewState extends State<ProjectsTabView> {
           ),
         ),
       ),
-    );
+    ).then((value) {
+      setState(() {});
+    });
   }
 }
