@@ -58,7 +58,7 @@ class _RequestsByCategoryViewState extends State<RequestsByCategoryView> {
       hideSearchBar: true,
       hideHeader: widget.isUserSignedIn,
       hideFooter: widget.isUserSignedIn,
-      appBarTitle: widget.model.title_en != null ? widget.model.title_en : '',
+      appBarTitle: widget.model.getCategoryName(context),
       //widget.model.getCategoryName(context),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,7 +75,8 @@ class _RequestsByCategoryViewState extends State<RequestsByCategoryView> {
                     Container(
                       height: MediaQuery.of(context).size.height / 2,
                       child: Padding(
-                        padding: EdgeInsets.only(top: MediaQuery.of(context).size.height / 4 - 20),
+                        padding: EdgeInsets.only(
+                            top: MediaQuery.of(context).size.height / 4 - 20),
                         child: LoadingIndicator(),
                       ),
                     ),
@@ -89,8 +90,8 @@ class _RequestsByCategoryViewState extends State<RequestsByCategoryView> {
                   isUserSignedIn: widget.isUserSignedIn,
                   children: [
                     Container(
-                      alignment: Alignment.center,
-                      height: MediaQuery.of(context).size.height / 2,
+                      alignment: Alignment.bottomCenter,
+                      height: MediaQuery.of(context).size.height / 2.3,
                       child: Text(S.of(context).no_result_found),
                     ),
                   ],
@@ -108,12 +109,15 @@ class _RequestsByCategoryViewState extends State<RequestsByCategoryView> {
                     itemCount: snapshot.data.length,
                     itemBuilder: (context, index) {
                       var request = snapshot.data[index];
-                      var date = DateTime.fromMillisecondsSinceEpoch(request.requestStart);
+                      var date = DateTime.fromMillisecondsSinceEpoch(
+                          request.requestStart);
                       return widget.isUserSignedIn
                           ? FutureBuilder<TimebankModel>(
-                              future: getTimeBankForId(timebankId: request.timebankId),
+                              future: getTimeBankForId(
+                                  timebankId: request.timebankId),
                               builder: (context, snapshot) {
-                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
                                   return LoadingIndicator();
                                 }
                                 if (snapshot.hasError) {
@@ -125,14 +129,20 @@ class _RequestsByCategoryViewState extends State<RequestsByCategoryView> {
                                 return ExploreEventCard(
                                   onTap: () {
                                     if (request.sevaUserId ==
-                                            SevaCore.of(context).loggedInUser.sevaUserID ||
-                                        isAccessAvailable(snapshot.data,
-                                            SevaCore.of(context).loggedInUser.sevaUserID)) {
+                                            SevaCore.of(context)
+                                                .loggedInUser
+                                                .sevaUserID ||
+                                        isAccessAvailable(
+                                            snapshot.data,
+                                            SevaCore.of(context)
+                                                .loggedInUser
+                                                .sevaUserID)) {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                           builder: (_context) => BlocProvider(
-                                            bloc: BlocProvider.of<HomeDashBoardBloc>(context),
+                                            bloc: BlocProvider.of<
+                                                HomeDashBoardBloc>(context),
                                             child: RequestTabHolder(
                                               //communityModel: BlocProvider.of<HomeDashBoardBloc>(context).selectedCommunityModel,
                                               isAdmin: true,
@@ -145,7 +155,8 @@ class _RequestsByCategoryViewState extends State<RequestsByCategoryView> {
                                         context,
                                         MaterialPageRoute(
                                           builder: (_context) => BlocProvider(
-                                            bloc: BlocProvider.of<HomeDashBoardBloc>(context),
+                                            bloc: BlocProvider.of<
+                                                HomeDashBoardBloc>(context),
                                             child: RequestDetailsAboutPage(
                                               requestItem: request,
                                               timebankModel: snapshot.data,
@@ -157,7 +168,8 @@ class _RequestsByCategoryViewState extends State<RequestsByCategoryView> {
                                       );
                                     }
                                   },
-                                  photoUrl: request.photoUrl ?? defaultProjectImageURL,
+                                  photoUrl: request.photoUrl ??
+                                      defaultProjectImageURL,
                                   title: request.title,
                                   description: request.description,
                                   location: request.address,
@@ -172,9 +184,11 @@ class _RequestsByCategoryViewState extends State<RequestsByCategoryView> {
                           : ExploreEventCard(
                               onTap: () {
                                 showSignInAlertMessage(
-                                    context: context, message: S.of(context).sign_in_alert);
+                                    context: context,
+                                    message: S.of(context).sign_in_alert);
                               },
-                              photoUrl: request.photoUrl ?? defaultProjectImageURL,
+                              photoUrl:
+                                  request.photoUrl ?? defaultProjectImageURL,
                               title: request.title,
                               description: request.description,
                               location: request.address,

@@ -539,7 +539,9 @@ class _IndividualOfferState extends State<IndividualOffer> {
           builder: (context, status) {
             if (status.data == Status.COMPLETE) {
               WidgetsBinding.instance.addPostFrameCallback(
-                (_) => Navigator.of(context).pop(),
+                (_) {
+                  if (Navigator.canPop(context)) Navigator.of(context).pop();
+                },
               );
             }
 
@@ -1140,6 +1142,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
 
   Widget OneToManyOffer() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         SizedBox(height: 20),
         StreamBuilder<String>(

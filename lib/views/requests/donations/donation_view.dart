@@ -46,7 +46,7 @@ class _DonationViewState extends State<DonationView> {
   ProgressDialog progressDialog;
   RegExp emailPattern = RegExp(
       r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
-  String mobilePattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
+  String mobilePattern = r'^[0-9]+$';
   List<String> donationsCategories = [];
   int amountEntered = 0;
   Map selectedList = {};
@@ -559,7 +559,7 @@ class _DonationViewState extends State<DonationView> {
   }
 
   String _validateEmailAndPhone(String value) {
-    String mobilePattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
+    String mobilePattern = r'^[0-9]+$';
     RegExp emailPattern = RegExp(
         r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
     RegExp regExp = RegExp(mobilePattern);
@@ -790,6 +790,7 @@ class _DonationViewState extends State<DonationView> {
                 ),
                 actionButton(
                     buttonColor: Colors.grey,
+                    textColor: Colors.black,
                     buttonTitle: S.of(context).do_it_later,
                     onPressed: () {
                       Navigator.of(context).pop();
@@ -881,8 +882,9 @@ class _DonationViewState extends State<DonationView> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               actionButton(
-                  buttonTitle: S.of(context).do_it_later,
+                  buttonColor: Colors.grey,
                   textColor: Colors.black,
+                  buttonTitle: S.of(context).do_it_later,
                   onPressed: () {
                     Navigator.of(context).pop();
                   }),
@@ -1118,8 +1120,9 @@ class _DonationViewState extends State<DonationView> {
                   width: 20,
                 ),
                 actionButton(
-                    buttonTitle: S.of(context).do_it_later,
+                    buttonColor: Colors.grey,
                     textColor: Colors.black,
+                    buttonTitle: S.of(context).do_it_later,
                     onPressed: () {
                       Navigator.of(context).pop();
                     }),
@@ -1288,8 +1291,9 @@ class _DonationViewState extends State<DonationView> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
                 actionButton(
-                  buttonTitle: S.of(context).do_it_later,
+                  buttonColor: Colors.grey,
                   textColor: Colors.black,
+                  buttonTitle: S.of(context).do_it_later,
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
@@ -1408,7 +1412,7 @@ class _DonationViewState extends State<DonationView> {
       child: Container(
         height: 37,
         child: CustomElevatedButton(
-          textColor: textColor ?? Colors.white,
+          textColor: textColor ?? Colors.black,
           onPressed: onPressed,
           child: Text(
             buttonTitle,
@@ -1458,6 +1462,8 @@ class _DonationViewState extends State<DonationView> {
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             CustomTextButton(
+              color: Theme.of(context).primaryColor,
+              textColor: Colors.white,
               child: Text(S.of(context).ok),
               onPressed: () {
                 Navigator.of(context).pop();

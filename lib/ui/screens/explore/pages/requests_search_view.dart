@@ -52,7 +52,7 @@ class RequestsSearchView extends StatelessWidget {
                         future:
                             getTimeBankForId(timebankId: request.timebankId),
                         builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
+                         /* if (snapshot.connectionState ==
                               ConnectionState.waiting) {
                             return LoadingIndicator();
                           }
@@ -61,7 +61,7 @@ class RequestsSearchView extends StatelessWidget {
                           }
                           if (snapshot.data == null) {
                             return Container();
-                          }
+                          }*/
                           return ExploreEventCard(
                             onTap: () {
                               bool isAdmin = snapshot.data.admins.contains(
@@ -139,7 +139,7 @@ class RequestsSearchView extends StatelessWidget {
         ),
         Text(
           S.of(context).browse_requests_by_category,
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)
         ),
         SizedBox(height: 12),
         RequestCategories(

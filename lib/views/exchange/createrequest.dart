@@ -1603,7 +1603,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
         ]);
   }
 
-  String mobilePattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
+  String mobilePattern = r'^[0-9]+$';
   RegExp emailPattern = RegExp(
       r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
   String _validateEmailAndPhone(String value) {
@@ -2374,7 +2374,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text("${item.title_en.toString()}",
+                  Text("${item.getCategoryName(context).toString()}",
                       style: TextStyle(color: Colors.white)),
                   SizedBox(width: 3),
                   InkWell(
@@ -3852,6 +3852,9 @@ class RequestCreateFormState extends State<RequestCreateForm>
             title: Text(dialogTitle),
             actions: <Widget>[
               CustomTextButton(
+                shape: StadiumBorder(),
+                color: Theme.of(context).primaryColor,
+                textColor: Colors.white,
                 child: Text(
                   S.of(context).ok,
                   style: TextStyle(

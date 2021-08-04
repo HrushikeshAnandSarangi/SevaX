@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/models/category_model.dart';
@@ -66,8 +67,8 @@ class ExploreSearchPageBloc {
     }
   }
 
-  Future<void> load(String sevaUserID) async {
-    FirestoreManager.getSubCategoriesFuture().then((value) {
+  Future<void> load(String sevaUserID, BuildContext context) async {
+    FirestoreManager.getSubCategoriesFuture(context).then((value) {
       _requestCategory.add(value);
     });
     Location location;

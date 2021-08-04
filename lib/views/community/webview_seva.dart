@@ -59,6 +59,7 @@ class _WebViewExampleState extends State<SevaWebView> {
             onPageFinished: (String url) {
               setState(() {
                 _stackToView = 0;
+                logger.d("Finished Loading== $url");
               });
             },
             gestureNavigationEnabled: true,

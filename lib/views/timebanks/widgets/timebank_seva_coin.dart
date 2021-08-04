@@ -155,7 +155,7 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
     }
 
     if (AppConfig.isTestCommunity
-        ? this.widget.loggedInUser.sandboxCurrentBalance
+        ? this.widget.loggedInUser.sandboxCurrentBalance <= 0
         : this.widget.loggedInUser.currentBalance <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

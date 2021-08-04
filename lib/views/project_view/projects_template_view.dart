@@ -9,6 +9,7 @@ import 'package:sevaexchange/ui/utils/debouncer.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/project_view/create_edit_project.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 
@@ -305,6 +306,9 @@ class _ProjectTemplateViewState extends State<ProjectTemplateView> {
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             CustomTextButton(
+              shape: StadiumBorder(),
+              color: Theme.of(context).accentColor,
+              textColor: Colors.white,
               child: Text(S.of(context).close),
               onPressed: () {
                 Navigator.of(context).pop();

@@ -198,10 +198,12 @@ class FrequentContactsModel {
   final ChatModel chatModel;
   final ParticipantInfo participantInfo;
   final bool isGroupMessage;
+  final bool isTimebankMessage;
 
   FrequentContactsModel(
     this.chatModel,
     this.participantInfo,
     this.isGroupMessage,
+    this.isTimebankMessage,
   );
 }

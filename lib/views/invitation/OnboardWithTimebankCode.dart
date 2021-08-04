@@ -412,8 +412,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                 children: <Widget>[
                   CustomTextButton(
                     shape: StadiumBorder(),
-                    padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                    color: Colors.grey,
+                    color: utils.HexColor("#d2d2d2"),
                     child: Text(
                       S.of(context).cancel,
                       style: TextStyle(
@@ -729,11 +728,12 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             CustomTextButton(
+              color: Theme.of(context).accentColor,
+              textColor: Colors.white,
               child: Text(
                 S.of(context).dismiss,
                 style: TextStyle(
                   fontSize: dialogButtonSize,
-                  color: Colors.red,
                 ),
               ),
               onPressed: () {

@@ -26,6 +26,7 @@ import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/login/register_page.dart';
 import 'package:sevaexchange/views/splash_view.dart';
@@ -215,10 +216,7 @@ class _LoginPageState extends State<LoginPage> {
                                   child: Row(
                                     children: [
                                       CustomTextButton(
-                                        padding:
-                                            EdgeInsets.fromLTRB(10, 5, 10, 5),
-                                        shape: StadiumBorder(),
-                                        color: Colors.grey,
+                                        color: HexColor("#d2d2d2"),
                                         child: Text(
                                           S.of(context).cancel,
                                           style: TextStyle(
@@ -239,8 +237,6 @@ class _LoginPageState extends State<LoginPage> {
                                       Spacer(),
                                       CustomTextButton(
                                         shape: StadiumBorder(),
-                                        padding:
-                                            EdgeInsets.fromLTRB(10, 5, 10, 5),
                                         color: Theme.of(context).accentColor,
                                         textColor:
                                             FlavorConfig.values.buttonTextColor,

@@ -1411,7 +1411,7 @@ class RequestEditFormState extends State<RequestEditForm> {
 
   RegExp emailPattern = RegExp(
       r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
-  String mobilePattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
+  String mobilePattern = r'^[0-9]+$';
 
   Widget RequestPaymentZellePay() {
     return Column(
@@ -2055,7 +2055,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text("${item.title_en.toString()}",
+                  Text("${item.getCategoryName(context).toString()}",
                       style: TextStyle(color: Colors.white)),
                   SizedBox(width: 3),
                   InkWell(
@@ -2591,8 +2591,6 @@ class RequestEditFormState extends State<RequestEditForm> {
       );
       return;
     }
-
-    logger.i(widget.requestModel.communityId + "<<<<<<<<<<<<<<<>>>>>>>>>>>>");
 
     if (_formKey.currentState.validate()) {
       if (widget.requestModel.public) {
@@ -3455,6 +3453,9 @@ class RequestEditFormState extends State<RequestEditForm> {
             title: Text(dialogTitle),
             actions: <Widget>[
               CustomTextButton(
+                shape: StadiumBorder(),
+                color: Theme.of(context).primaryColor,
+                textColor: Colors.white,
                 child: Text(
                   S.of(context).ok,
                   style: TextStyle(

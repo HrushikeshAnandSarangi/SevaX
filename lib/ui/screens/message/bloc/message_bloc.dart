@@ -70,14 +70,15 @@ class MessageBloc extends BlocBase {
             if (frequentContacts.length < 5) {
               FrequentContactsModel fc;
               if (chat.isGroupMessage) {
-                fc = FrequentContactsModel(chat, null, chat.isGroupMessage);
+                fc = FrequentContactsModel(
+                    chat, null, chat.isGroupMessage, chat.isTimebankMessage);
               } else {
                 fc = FrequentContactsModel(
-                  null,
-                  chat.participantInfo.firstWhere(
-                      (ParticipantInfo info) => info.id == senderId),
-                  chat.isGroupMessage,
-                );
+                    null,
+                    chat.participantInfo.firstWhere(
+                        (ParticipantInfo info) => info.id == senderId),
+                    chat.isGroupMessage,
+                    chat.isTimebankMessage);
               }
               frequentContacts.add(fc);
             }

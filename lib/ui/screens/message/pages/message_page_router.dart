@@ -3,9 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/message_bloc.dart';
 import 'package:sevaexchange/ui/screens/message/pages/personal_message_page.dart';
+import 'package:sevaexchange/ui/screens/message/widgets/community_messages.dart';
+import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/ui/utils/icons.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
+import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/widgets/hide_widget.dart';
 
+import '../../../../flavor_config.dart';
 import 'admin_message_page.dart';
 import 'create_new_chat_page.dart';
 
@@ -63,7 +68,47 @@ class _MessagePageRouterState extends State<MessagePageRouter> {
                       ],
                     );
                   }
-                  return Container();
+                  return HideWidget(
+                    hide: isPrimaryTimebank(
+                        parentTimebankId:
+                            SevaCore.of(context).loggedInUser.currentTimebank),
+                    child: Container(
+                      height: 50,
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => CommunityMessages(
+                                bloc: _bloc,
+                              ),
+                            ),
+                          );
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              S.of(context).go_to_community_chat,
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: FlavorConfig.values.theme.primaryColor,
+                                fontFamily: 'Europa',
+                                fontWeight: FontWeight.bold,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Spacer(),
+                            Icon(
+                              Icons.arrow_forward_ios,
+                              color: FlavorConfig.values.theme.primaryColor,
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
                 }),
             Expanded(
               child: [

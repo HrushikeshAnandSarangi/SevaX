@@ -23,6 +23,7 @@ import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/user_profile_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/community/about_app.dart';
 import 'package:sevaexchange/views/community/communitycreate.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -465,6 +466,8 @@ class _ProfilePageState extends State<ProfilePage> {
 //                fontSize: 16,
 //              ),
 //            ),
+
+          actionsPadding: EdgeInsets.only(right: 20),
             content: Form(
               child: Container(
                 height: 200,
@@ -483,7 +486,7 @@ class _ProfilePageState extends State<ProfilePage> {
             actions: <Widget>[
               CustomTextButton(
                 shape: StadiumBorder(),
-                color: Colors.grey,
+                color: HexColor("#d2d2d2"),
                 child: Text(
                   S.of(context).cancel,
                   style: TextStyle(

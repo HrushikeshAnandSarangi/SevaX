@@ -207,6 +207,9 @@ class CalendarPickerState extends State<CalendarPicker> {
           ),
           actions: <Widget>[
             CustomTextButton(
+              shape: StadiumBorder(),
+              color: Theme.of(context).accentColor,
+              textColor: Colors.white,
               child: Text(S.of(context).close),
               onPressed: () {
                 Navigator.of(context).pop();

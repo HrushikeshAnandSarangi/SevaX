@@ -56,7 +56,7 @@ class _CustomRequestCategoriesState extends State<CustomRequestCategories> {
             Expanded(
               child: StreamBuilder<Object>(
                 stream: getUserCreatedRequestCategories(
-                    SevaCore.of(context).loggedInUser.sevaUserID),
+                    SevaCore.of(context).loggedInUser.sevaUserID, context),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}');

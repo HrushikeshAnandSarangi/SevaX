@@ -155,6 +155,7 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
                                     child: Text(
                                       getFooterDataTitle(
                                           data: data, context: context),
+                                      textAlign: TextAlign.center,
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontSize: footerData[0].contains(data)
