@@ -1080,24 +1080,31 @@ class RequestEditFormState extends State<RequestEditForm> {
                                                 snapshot, projectModelList)
                                             : GoodsRequest(
                                                 snapshot, projectModelList),
-                            Center(
-                              child: LocationPickerWidget(
-                                selectedAddress: selectedAddress,
-                                location: location,
-                                onChanged: (LocationDataModel dataModel) {
-                                  log("received data model");
-                                  setState(() {
-                                    widget.requestModel.location =
-                                        dataModel.geoPoint;
-                                    widget.requestModel.address =
-                                        dataModel.location;
 
-                                    location = dataModel.geoPoint;
-                                    this.selectedAddress = dataModel.location;
-                                  });
-                                },
-                              ),
-                            ),
+                            SizedBox(height: 20),
+
+                            widget.requestModel.requestType !=
+                                    RequestType.BORROW
+                                ? Center(
+                                    child: LocationPickerWidget(
+                                      selectedAddress: selectedAddress,
+                                      location: location,
+                                      onChanged: (LocationDataModel dataModel) {
+                                        log("received data model");
+                                        setState(() {
+                                          widget.requestModel.location =
+                                              dataModel.geoPoint;
+                                          widget.requestModel.address =
+                                              dataModel.location;
+
+                                          location = dataModel.geoPoint;
+                                          this.selectedAddress =
+                                              dataModel.location;
+                                        });
+                                      },
+                                    ),
+                                  )
+                                : Container(),
 
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 10),
@@ -2319,6 +2326,29 @@ class RequestEditFormState extends State<RequestEditForm> {
               : Container(),
 
           SizedBox(height: 15),
+
+          Text(
+            S.of(context).city + '/' + S.of(context).state,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Europa',
+              color: Colors.black,
+            ),
+          ),
+          SizedBox(height: 10),
+
+          Text(
+            L.of(context).provide_address,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Europa',
+              color: Colors.grey,
+            ),
+          ),
+
+          SizedBox(height: 10),
 
           Center(
             child: LocationPickerWidget(

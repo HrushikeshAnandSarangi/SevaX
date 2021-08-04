@@ -206,6 +206,18 @@ class _RequestListingPageState extends State<RequestListingPage> {
               ),
               SizedBox(width: 10),
               CustomChip(
+                label: S.of(context).borrow,
+                isSelected: filter.borrowRequest,
+                onTap: () {
+                  _bloc.onFilterChange(
+                    snapshot.data.copyWith(
+                      borrowRequest: !snapshot.data.borrowRequest,
+                    ),
+                  );
+                },
+              ),
+              SizedBox(width: 10),
+              CustomChip(
                 label: 'Public',
                 isSelected: filter.publicRequest,
                 onTap: () {
