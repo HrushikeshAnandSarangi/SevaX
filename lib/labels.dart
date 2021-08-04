@@ -334,4 +334,6 @@ class L {
   String get no => "No";
   String get any_distance => "Any Distance";
 
+  //4th aug
+  String get request_payment_description => "Payment Method*";
 }

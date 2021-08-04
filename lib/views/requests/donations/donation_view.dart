@@ -657,7 +657,7 @@ class _DonationViewState extends State<DonationView> {
               height: 10,
             ),
             Text(
-              S.of(context).request_payment_description,
+              L.of(context).request_payment_description,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
