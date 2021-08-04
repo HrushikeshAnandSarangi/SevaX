@@ -340,4 +340,162 @@ class L {
   String get your_location => "Your location";
   String get your_location_subtext =>
       "location will help members to connect easily.";
+
+  String get request_agreement_not_available =>
+      'Request agreement not available';
+
+  String get click_to_view_request_agreement =>
+      'Click to view request agreement';
+
+  String get enter_prep_time => 'Enter Prep Time';
+
+  String get enter_delivery_time => 'Enter Delivery Time';
+
+  String get choose_item_agreement => "Select Item(s) Agreement";
+  String get choose_place_agreement => "Select Place Agreement";
+  String get max_occupants => "Maximum occupants";
+
+  String get security_deposits => "Security Deposit";
+
+  String get person_of_contact_details => "Person of contact details";
+
+  String get any_specific_conditions => "Any specific condition(s)";
+
+  String get item_returned_hint_text =>
+      'Ex: item must be returned in the same condition.';
+  String get description_of_item => "Description of item(s)";
+
+  String get place_returned_hint_text =>
+      'Ex: place must be returned in the same condition.';
+
+  String get attending => "Attending";
+
+  String get invited_speaker => "Invited Speaker";
+  String get description_not_updated => "Description not yet updated";
+  String get terms_acknowledgement_text =>
+      "I accept the terms of use as per the agreement";
+  String get agreement => "Agreement";
+  String get lender_not_accepted_request_msg =>
+      "Lender has not created an agreement for this request";
+
+  String get review_before_proceding_text =>
+      "Please review the agreement below before proceeding.";
+
+  String get review_agreement => "Review Agreement";
+
+  String get guests_can_do_and_dont => "Guests can do and don't*";
+
+  String get snackbar_select_agreement_type => "Select an agreement type";
+  String get add_manual_time => "Add Manual Time";
+
+  String get create_new => "Create New";
+  String get choose_previous_agreement => "Choose previous agreement";
+
+  String get no_agrreement => "No Agreement";
+  String get fixed => "Fixed";
+
+  String get long_term_month_to_month => 'Long-term (Month to Month)';
+  String get request_offer_agreement_hint_text => "Ex :3";
+  String get request_offer_agreement_hint_text2 => "Ex: \$300";
+  String get request_offer_agreement_hint_text3 =>
+      'Ex: Gas-powered lawnmower in mint condition with full tank of gas.';
+
+  String get request_offer_agreement_tool_widget_text =>
+      "Stipulations regarding returned item in unsatisfactory condition.";
+
+  String get request_offer_agreement_hint_text4 =>
+      'Ex: Lawnmower must be cleaned and operable with a full tank of gas.';
+
+  String get document_name => "Document Name*";
+  String get please_enter_doc_name => "Please enter document name";
+  String get other_details => "Other Details";
+
+  String get request_offer_agreement_hint_text5 =>
+      "Ex: LANDLORD'S LIABILITY. The Guest and any of their guests hereby indemnify and hold harmless the Landlord against any and all claims of personal injury or property damage or loss arising from the use of the Premises regardless of the nature of the accident, injury or loss. The Guest expressly recognizes that any insurance for property damage or loss which the Landlord may maintain on the property does not cover the personal property of Tenant and that Tenant should purchase their own insurance for their guests if such coverage is desired.";
+
+  String get use => "use";
+
+  String get approve_borrow_request => 'Approve Room Borrow Request';
+  String get approve_item_borrow => 'Approve Item Borrow request';
+
+  String get approve_borrow_hint_text1 => "Tell your borrower do and dont's";
+  String get approve_borrow_alert_msg1 => "Please enter the do's and dont's";
+
+  String get approve_borrow_no_agreement_selected => "No Agreement Selected";
+  String get request_agreement_form_component_text =>
+      'Create/Use agreement between you and borrower on how your item/place can be used.';
+
+  String get approve_borrow_terms_acknowledgement_text1 =>
+      "I acknowledge that you can use the room on the mentioned dates.";
+  String get approve_borrow_terms_acknowledgement_text2 =>
+      "I acknowledge that you can use the item on the mentioned dates.";
+  String get approve_borrow_terms_acknowledgement_text3 =>
+      "Note: Please instruct on how to reach the location and do and don't accordingly.";
+  String get approve_borrow_terms_acknowledgement_text4 =>
+      "Note: Please create an agreement if you have specific instructions and/or requirements.";
+  String get approve_lending_offer => "Approve Lending Offer";
+  String get date_to_borrow_and_return => "Date to borrow and return";
+  String get date_to_check_in_out => "Date to Check In and Check Out";
+  String get addditional_instructions => "Additional Instructions";
+  String get addditional_instructions_error_text =>
+      "Please enter additional instructions";
+  String get additional_instructions_hint_item =>
+      "Ex: Lawnmower is available next door";
+  String get additional_instructions_hint_place =>
+      "Ex: Keys are available next door";
+  String get lending_approve_terms_item =>
+      "I acknowledge that you can lend the item(s) on the mentioned dates.";
+  String get lending_approve_terms_place =>
+      "I acknowledge that you can lend the place on the mentioned dates.";
+  String get lending => "Lending";
+  String get cannot_approve_multiple_borrowers =>
+      "You cannot approve multiple borrowers at once. Currently the items are with  **name. Once returned you can approve this request.";
+
+  String get borrower_responsibilities => "Borrower Responsibilities";
+  String get borrower_responsibilities_subtext =>
+      "Please check applicable sections to be added in the agreement.";
+  String get liability_damage => "Liability for damage";
+  String get use_disclaimer => "Usage/Disclaimer";
+  String get delivery_return_equipment => "Delivery and Return of Equipment";
+  String get maintain_repair => "Maintenance and Repair";
+  String get refund_deposit => "Refundable Deposit Needed?";
+  String get maintain_clean => "Maintenance and Cleanliness";
+  String get place_agreement_name_hint => "Ex: House for the weekend..";
+  String get add_new_place => "Add New Place";
+  String get update_place => "Update Place";
+  String get add_images_to_place => "Add One/Multiple Images of the place";
+  String get name_of_place => "Name of your place";
+  String get name_of_place_hint => "Apartment sunshine 3";
+  String get amenities => "Amenities";
+  String get amenities_hint => "Please select Amenities guests can utilize";
+  String get no_of_guests => "Number of guests";
+  String get bed_roooms => "Bed Rooms for guests";
+  String get bath_rooms => "Bath Room(s)";
+  String get common_spaces => "Common Spaces";
+  String get house_rules => "House Rules";
+  String get add_place => "Add Place";
+  String get lending_offer => "Lending Offer";
+  String get lending_offer_title_hint => "Ex:Lawnmower";
+  String get lending_offer_desc_hint => "Describe your lending";
+  String get validation_error_place_name => "Please enter name of your place";
+  String get validation_error_no_of_guests =>
+      "Please enter no of guests can stay";
+  String get validation_error_no_of_rooms =>
+      "Please enter no of rooms available";
+  String get validation_error_no_of_bathrooms =>
+      "Please enter no of bath rooms available";
+  String get validation_error_common_spaces => "Please specify common spaces";
+  String get validation_error_house_rules => "Please specify house rules";
+  String get validation_error_amenities => "Please select amenities";
+  String get validation_error_house_images => "Please add place images";
+  String get common_spaces_hint => "Ex: Sofa bed 1, Couch 1, Floor Mattress 1";
+  String get house_rules_hint => "Ex: Smoking allowed";
+  String get updating_place => "Updating place";
+  String get creating_place => "Creating Place";
+  String get bed_rooms => "Bedroom(s)";
+  String get guests => "Guest(s)";
+  String get creating_place_error =>
+      "There was error creating your place, Please try again.";
+  String get updating_place_error =>
+      "There was error creating your place, Please try again.";
 }

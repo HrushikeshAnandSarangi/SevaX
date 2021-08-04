@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/models/agreement_template_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/borrow_agreement_template_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
@@ -200,11 +201,83 @@ class SearchManager {
   }
 
   //searcch borrow agreement template
-  static Stream<List<BorrowAgreementTemplateModel>>
-      searchBorrowAgreementTemplate({
+  static Stream<List<AgreementTemplateModel>> searchAgreementTemplate({
     @required queryString,
   }) async* {
     String url =
+        '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/agreement_templates/_doc/_search';
+    dynamic body = json.encode({
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "multi_match": {
+                "query": queryString,
+                "fields": ["templateName"],
+                "type": "phrase_prefix"
+              }
+            }
+          ]
+        }
+      },
+    });
+    List<Map<String, dynamic>> hitList =
+        await _makeElasticSearchPostRequest(url, body);
+
+    log('hit ${hitList}');
+
+    List<AgreementTemplateModel> templatesList = [];
+    hitList.forEach((map) {
+      Map<String, dynamic> sourceMap = map['_source'];
+      var template = AgreementTemplateModel.fromMap(sourceMap);
+
+      if (template.softDelete == false) {
+        templatesList.add(template);
+      }
+    });
+    yield templatesList;
+  }
+
+  static Future<bool> searchAgrrementTemplateForDuplicate(
+      {@required String queryString}) async {
+    String url =
+        '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/agreement_templates/_doc/_search';
+
+    dynamic body = json.encode({
+      "query": {
+        "match": {"templateName": queryString}
+      }
+    });
+    List<Map<String, dynamic>> hitList =
+        await _makeElasticSearchPostRequest(url, body);
+//    await _makeElasticSearchPostRequestCommunityDuplicate(url, body);
+    bool templateFound = false;
+    for (var map in hitList) {
+      if (map['_source']['templateName'].toLowerCase() ==
+          queryString.toLowerCase()) {
+        templateFound = true;
+
+        break;
+      }
+    }
+
+    return templateFound;
+//    int count =
+//        await _makeElasticSearchPostRequestCommunityDuplicate(url, body);
+//    if (count > 0) {
+//      return true;
+//    } else {
+//      return false;
+//    }
+  }
+
+  //search borrow agreement template
+  static Stream<List<AgreementTemplateModel>> searchBorrowAgreementTemplate({
+    @required queryString,
+  }) async* {
+    String url =
+
+        ///query needs to be refactored to agreement_tmeplates (common for borrow requests and lending offers)
         '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/borrowagreement_templates/_doc/_search';
     dynamic body = json.encode({
       "query": {
@@ -226,10 +299,10 @@ class SearchManager {
 
     log('hit ${hitList}');
 
-    List<BorrowAgreementTemplateModel> templatesList = [];
+    List<AgreementTemplateModel> templatesList = [];
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
-      var template = BorrowAgreementTemplateModel.fromMap(sourceMap);
+      var template = AgreementTemplateModel.fromMap(sourceMap);
 
       if (template.softDelete == false) {
         templatesList.add(template);

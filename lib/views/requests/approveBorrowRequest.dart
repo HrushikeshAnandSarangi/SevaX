@@ -6,6 +6,7 @@ import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/ui/screens/borrow_agreement/borrow_agreement_pdf.dart';
+import 'package:sevaexchange/ui/screens/offers/pages/agreementForm.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -292,7 +293,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
                       location: location,
                       acceptorName: SevaCore.of(context).loggedInUser.fullname,
                     );
-                    borrowRequestSetHasCreatedAgreement(
+                    await borrowRequestSetHasCreatedAgreement(
                         requestModel: widget.requestModel);
                   } else {
                     await storeAcceptorDataBorrowRequest(
@@ -303,7 +304,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
                       location: location,
                       acceptorName: SevaCore.of(context).loggedInUser.fullname,
                     );
-                    borrowRequestSetHasCreatedAgreement(
+                    await borrowRequestSetHasCreatedAgreement(
                         requestModel: widget.requestModel);
                   }
                   widget.onTap?.call();
@@ -456,10 +457,10 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
                     context,
                     MaterialPageRoute(
                       fullscreenDialog: true,
-                      builder: (context) => RequestOfferAgreementForm(
-                        isRequest: true,
-                        roomOrTool: widget.requestModel.roomOrTool,
+                      builder: (context) => AgreementForm(
                         requestModel: widget.requestModel,
+                        isOffer: false,
+                        placeOrItem: widget.requestModel.roomOrTool,
                         communityId: widget.requestModel.communityId,
                         timebankId: widget.requestModel.timebankId,
                         onPdfCreated: (pdfLink, documentNameFinal) {

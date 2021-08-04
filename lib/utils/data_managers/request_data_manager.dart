@@ -11,6 +11,7 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/models/agreement_template_model.dart';
 import 'package:sevaexchange/models/basic_user_details.dart';
 import 'package:sevaexchange/models/category_model.dart';
 import 'package:sevaexchange/models/donation_model.dart';
@@ -19,7 +20,6 @@ import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/timebank_balance_transction_model.dart';
 import 'package:sevaexchange/new_baseline/models/acceptor_model.dart';
-import 'package:sevaexchange/new_baseline/models/borrow_agreement_template_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_template_model.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
@@ -1108,6 +1108,7 @@ Future<void> borrowRequestFeedbackBorrowerUpdate({
 Future<void> borrowRequestSetHasCreatedAgreement({
   @required RequestModel requestModel,
 }) async {
+  logger.e('COMES TO SET AGREEMENT LINK 1');
   await CollectionRef.requests.doc(requestModel.id).update({
     'hasBorrowAgreement': requestModel.hasBorrowAgreement,
     'borrowAgreementLink': requestModel.borrowAgreementLink,
@@ -1122,6 +1123,7 @@ Future<void> storeAcceptorDataBorrowRequest({
   GeoFirePoint location,
   String acceptorName,
 }) async {
+  logger.e('COMES TO SET AGREEMENT LINK 1');
   await CollectionRef.requests
       .doc(model.id)
       .collection('borrowRequestAcceptors')
@@ -1691,12 +1693,19 @@ Future<void> createProjectTemplate(
       .set(projectTemplateModel.toMap());
 }
 
+// Future<void> createBorrowAgreementTemplate(
+//     {@required
+//         BorrowAgreementTemplateModel borrowAgreementTemplateModel}) async {
+//   return await CollectionRef.borrowAgreementTemplates
+//       .doc(borrowAgreementTemplateModel.id)
+//       .set(borrowAgreementTemplateModel.toMap());
+// }
+
 Future<void> createBorrowAgreementTemplate(
-    {@required
-        BorrowAgreementTemplateModel borrowAgreementTemplateModel}) async {
-  return await CollectionRef.borrowAgreementTemplates
-      .doc(borrowAgreementTemplateModel.id)
-      .set(borrowAgreementTemplateModel.toMap());
+    {@required AgreementTemplateModel agreementTemplateModel}) async {
+  return await CollectionRef.agreementTemplates
+      .doc(agreementTemplateModel.id)
+      .set(agreementTemplateModel.toMap());
 }
 
 Future<void> createProject({@required ProjectModel projectModel}) async {
