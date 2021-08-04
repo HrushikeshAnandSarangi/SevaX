@@ -1202,7 +1202,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                               SizedBox(height: 30),
 
                               OfferDurationWidget(
-                                title: "${S.of(context).request_duration} **",
+                                title: "${S.of(context).request_duration} *",
                               ),
 
                               requestModel.requestType == RequestType.TIME
@@ -3826,7 +3826,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
             title: Text(S
                 .of(context)
                 .insufficientSevaCreditsDialog
-                .replaceFirst('**', credits.toString())),
+                .replaceFirst('***', credits.toString())),
             actions: <Widget>[
               CustomTextButton(
                 child: Text(
