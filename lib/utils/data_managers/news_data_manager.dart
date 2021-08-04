@@ -8,11 +8,9 @@ import 'package:meta/meta.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
-import 'package:sevaexchange/ui/utils/location_helper.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:location/location.dart';
 
-import '../app_config.dart';
 import '../location_utility.dart';
 
 Geoflutterfire geos = Geoflutterfire();
