@@ -1462,6 +1462,8 @@ class _DonationViewState extends State<DonationView> {
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             CustomTextButton(
+              color: Theme.of(context).primaryColor,
+              textColor: Colors.white,
               child: Text(S.of(context).ok),
               onPressed: () {
                 Navigator.of(context).pop();
