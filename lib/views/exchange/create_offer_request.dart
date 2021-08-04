@@ -125,7 +125,7 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
                           headerContainer(),
                           SizedBox(height: 14),
                           OfferDurationWidget(
-                            title: "${S.of(context).offer_duration} *",
+                            title: "${S.of(context).offer_duration} **",
                           ),
                           TimeRequest(),
                           Padding(
@@ -220,7 +220,7 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
           0: Text(
             timebankModel.parentTimebankId == FlavorConfig.values.timebankId
                 ? S.of(context).timebank_request(1)
-                :S.of(context).seva +
+                : S.of(context).seva +
                     timebankModel.name +
                     " ${S.of(context).group} " +
                     S.of(context).request,

@@ -412,12 +412,12 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               widget.isCreateProject
                   ? widget.projectTemplateModel != null
                       ? OfferDurationWidget(
-                          title: ' ${S.of(context).project_duration} *',
+                          title: ' ${S.of(context).project_duration} **',
                           startTime: startDate,
                           endTime: endDate,
                         )
                       : OfferDurationWidget(
-                          title: ' ${S.of(context).project_duration} *',
+                          title: ' ${S.of(context).project_duration} **',
                           //startTime: CalendarWidgetState.startDate,
                           //endTime: CalendarWidgetState.endDate
                         )

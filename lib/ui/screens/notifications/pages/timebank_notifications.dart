@@ -217,14 +217,13 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   onPressed: null,
                   photoUrl: userAddedModel.timebankImage,
                   title: S.of(context).member_joined_via_code_title.replaceAll(
-                      '**communityName**', userAddedModel.timebankName),
+                      '**communityName', userAddedModel.timebankName),
                   subTitle: S
                       .of(context)
                       .member_joined_via_code_subtitle
                       .replaceAll(
-                          '**communityName**', userAddedModel.timebankName)
-                      .replaceAll(
-                          '**fullName**', userAddedModel.addedMemberName),
+                          '**communityName', userAddedModel.timebankName)
+                      .replaceAll('**fullName', userAddedModel.addedMemberName),
                 );
                 break;
 
@@ -760,16 +759,16 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 return NotificationCard(
                   timestamp: notification.timestamp,
                   title: S.of(context).notifications_debited,
-                  subTitle:
-                      TimebankNotificationMessage.DEBIT_FULFILMENT_FROM_TIMEBANK
-                          .replaceFirst(
-                            '*n',
-                            (data.classDetails.numberOfClassHours +
-                                    data.classDetails.numberOfPreperationHours)
-                                .toString(),
-                          )
-                          .replaceFirst('*name', data.classDetails.classHost)
-                          .replaceFirst('*class', data.classDetails.classTitle),
+                  subTitle: TimebankNotificationMessage
+                      .DEBIT_FULFILMENT_FROM_TIMEBANK
+                      .replaceFirst(
+                        '**n',
+                        (data.classDetails.numberOfClassHours +
+                                data.classDetails.numberOfPreperationHours)
+                            .toString(),
+                      )
+                      .replaceFirst('**name', data.classDetails.classHost)
+                      .replaceFirst('**class', data.classDetails.classTitle),
                   entityName: data.classDetails.classHost,
                   onDismissed: () {
                     dismissTimebankNotification(
@@ -788,9 +787,9 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   title: S.of(context).notifications_credited,
                   subTitle: TimebankNotificationMessage
                       .CREDIT_FROM_OFFER_APPROVED
-                      .replaceFirst(
-                          '*n', data.classDetails.numberOfClassHours.toString())
-                      .replaceFirst('*class', data.classDetails.classTitle),
+                      .replaceFirst('**n',
+                          data.classDetails.numberOfClassHours.toString())
+                      .replaceFirst('**class', data.classDetails.classTitle),
                   // photoUrl: data.participantDetails.photourl,
                   entityName: data.participantDetails.fullname,
                   onDismissed: () {

@@ -46,7 +46,7 @@ class PersonalNotificationReducerForRequests {
     var reason = S
             .of(context)
             .notifications_incomplete_transaction
-            .replaceAll('***', deletionRequest.entityTitle) +
+            .replaceAll('**', deletionRequest.entityTitle) +
         '\n';
     if (deletionRequest.noOfOpenOffers > 0) {
       reason +=
@@ -103,7 +103,7 @@ class PersonalNotificationReducerForRequests {
           : "${requestData.entityTitle} ${S.of(context).notifications_could_not_delete}",
       subTitle: requestData.requestAccepted
           ? S.of(context).notifications_successfully_deleted.replaceAll(
-                    '***',
+                    '**',
                     requestData.entityTitle,
                   ) +
               " "
@@ -711,10 +711,10 @@ class PersonalNotificationReducerForRequests {
       timestamp: notification.timestamp,
       title: S.of(context).offer_updated,
       subTitle:
-          "${S.of(context).notifications_signed_up_for} ***eventName ${S.of(context).on} ***eventDate. ${S.of(context).notifications_event_modification} "
-              .replaceFirst('***eventName', eventData.eventName)
+          "${S.of(context).notifications_signed_up_for} **eventName ${S.of(context).on} **eventDate. ${S.of(context).notifications_event_modification} "
+              .replaceFirst('**eventName', eventData.eventName)
               .replaceFirst(
-                  '***eventDate',
+                  '**eventDate',
                   DateTime.fromMillisecondsSinceEpoch(
                     eventData.eventDate,
                   ).toString()),
@@ -742,10 +742,10 @@ class PersonalNotificationReducerForRequests {
       timestamp: notification.timestamp,
       title: S.of(context).request_updated,
       subTitle:
-          "${S.of(context).notifications_signed_up_for} ***eventName ${S.of(context).on} ***eventDate. ${S.of(context).notifications_event_modification} "
-              .replaceFirst('***eventName', eventData.eventName)
+          "${S.of(context).notifications_signed_up_for} **eventName ${S.of(context).on} **eventDate. ${S.of(context).notifications_event_modification} "
+              .replaceFirst('**eventName', eventData.eventName)
               .replaceFirst(
-                '***eventDate',
+                '**eventDate',
                 DateTime.fromMillisecondsSinceEpoch(
                   eventData.eventDate,
                 ).toString(),

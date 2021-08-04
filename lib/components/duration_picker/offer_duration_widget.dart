@@ -110,7 +110,7 @@ class OfferDurationWidgetState extends State<OfferDurationWidget> {
           Navigator.of(context)
               .push(MaterialPageRoute<List<DateTime>>(
             builder: (context) => CalendarPicker(
-                widget.title.replaceAll('*', ''),
+                widget.title.replaceAll('**', ''),
                 _calendarState,
                 startTime ?? DateTime.now(),
                 endTime ?? DateTime.now(),

@@ -729,14 +729,14 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         title: S.of(context).notifications_credited,
                         subTitle: UserNotificationMessage.CREDIT_FROM_OFFER
                                 .replaceFirst(
-                                  '*n',
+                                  '**n',
                                   (data.classDetails.numberOfClassHours +
                                           data.classDetails
                                               .numberOfPreperationHours)
                                       .toString(),
                                 )
                                 .replaceFirst(
-                                    '*class', data.classDetails.classTitle) +
+                                    '**class', data.classDetails.classTitle) +
                             " ",
                         onDismissed: onDismissed,
                       );
@@ -753,11 +753,11 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         subTitle: UserNotificationMessage
                                 .NEW_MEMBER_SIGNUP_OFFER
                                 .replaceFirst(
-                                  '*name',
+                                  '**name',
                                   data.participantDetails.fullname,
                                 )
                                 .replaceFirst(
-                                    '*class', data.classDetails.classTitle) +
+                                    '**class', data.classDetails.classTitle) +
                             " ",
                         onDismissed: onDismissed,
                       );
@@ -775,14 +775,14 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         subTitle: UserNotificationMessage
                                 .OFFER_FULFILMENT_ACHIEVED
                                 .replaceFirst(
-                                  '*n',
+                                  '**n',
                                   (data.classDetails.numberOfClassHours +
                                           data.classDetails
                                               .numberOfPreperationHours)
                                       .toString(),
                                 )
                                 .replaceFirst(
-                                    '*class', data.classDetails.classTitle) +
+                                    '**class', data.classDetails.classTitle) +
                             " ",
                         onDismissed: onDismissed,
                       );
@@ -799,12 +799,12 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         title: S.of(context).notifications_debited,
                         subTitle: UserNotificationMessage.DEBIT_FROM_OFFER
                                 .replaceFirst(
-                                  '*n',
+                                  '**n',
                                   data.classDetails.numberOfClassHours
                                       .toString(),
                                 )
                                 .replaceFirst(
-                                    '*class', data.classDetails.classTitle) +
+                                    '**class', data.classDetails.classTitle) +
                             " ",
                         onDismissed: onDismissed,
                       );
@@ -822,11 +822,11 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         subTitle: UserNotificationMessage
                                 .OFFER_SUBSCRIPTION_COMPLETED
                                 .replaceFirst(
-                                  '*class',
+                                  '**class',
                                   data.classDetails.classTitle,
                                 )
                                 .replaceFirst(
-                                    '*class', data.classDetails.classTitle) +
+                                    '**class', data.classDetails.classTitle) +
                             " ",
                         onDismissed: onDismissed,
                       );
@@ -844,7 +844,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         subTitle: UserNotificationMessage
                                 .FEEDBACK_FROM_SIGNUP_MEMBER
                                 .replaceFirst(
-                              '*class',
+                              '**class',
                               data.classDetails.classTitle,
                             ) +
                             " ",
@@ -871,7 +871,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         subTitle: UserNotificationMessage
                                 .FEEDBACK_FROM_SIGNUP_MEMBER
                                 .replaceFirst(
-                              '*class',
+                              '**class',
                               requestModel.title,
                             ) +
                             " ",

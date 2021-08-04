@@ -436,7 +436,7 @@ String getSuccessMessage(
   return S
       .of(context)
       .deletion_request_recieved
-      .replaceAll('***', _getModelType(softDeleteType));
+      .replaceAll('**', _getModelType(softDeleteType));
 }
 
 Future<String> showProfanityImageAlert({BuildContext context, String content}) {
