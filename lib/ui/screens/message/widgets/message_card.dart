@@ -26,6 +26,10 @@ class MessageCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (model.participants.length == 2 &&
+        model.participants[0] == model.participants[1]) {
+      return Container();
+    }
     String userId = SevaCore.of(context).loggedInUser.sevaUserID;
     String senderId = model.isTimebankMessage ? timebankId : userId;
     ParticipantInfo info = getSenderInfo(
