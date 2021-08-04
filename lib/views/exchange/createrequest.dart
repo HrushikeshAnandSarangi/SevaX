@@ -2230,22 +2230,32 @@ class RequestCreateFormState extends State<RequestCreateForm>
                       setState(() => {});
                     },
                   ),
-                  // _optionRadioButton<RequestType>(
-                  //   title: 'Borrow',
-                  //   value: RequestType.BORROW,
-                  //   isEnabled: true,
-                  //   groupvalue: requestModel.requestType,
-                  //   onChanged: (value) {
-                  //     //requestModel.isRecurring = true;
-                  //     requestModel.requestType = value;
-                  //     //By default instructor for One To Many Requests is the creator
-                  //     //instructorAdded = false;
-                  //     //requestModel.selectedInstructor = null;
-                  //     AppConfig.helpIconContextMember = HelpContextMemberType
-                  //         .time_requests; //need to make for Borrow requests
-                  //     setState(() => {});
-                  //   },
-                  // ),
+                  TransactionsMatrixCheck(
+                    upgradeDetails:
+                        AppConfig.upgradePlanBannerModel.cash_request,
+                    transaction_matrix_type: 'cash_goods_requests',
+                    comingFrom: widget.comingFrom,
+                    child: ConfigurationCheck(
+                      actionType: 'create_goods_request',
+                      role: memberType(timebankModel,
+                          SevaCore.of(context).loggedInUser.sevaUserID),
+                      child: _optionRadioButton<RequestType>(
+                        title: S.of(context).borrow,
+                        value: RequestType.BORROW,
+                        isEnabled: !widget.isOfferRequest,
+                        groupvalue: requestModel.requestType,
+                        onChanged: (value) {
+                          //requestModel.isRecurring = true;
+                          requestModel.requestType = value;
+                          instructorAdded = false;
+                          requestModel.selectedInstructor = null;
+                          AppConfig.helpIconContextMember =
+                              HelpContextMemberType.time_requests;
+                          setState(() => {});
+                        },
+                      ),
+                    ),
+                  ),
                 ],
               )
             ],
@@ -2480,6 +2490,28 @@ class RequestCreateFormState extends State<RequestCreateForm>
               : Container(),
 
           SizedBox(height: 15),
+
+          Text(
+            S.of(context).city + '/' + S.of(context).state,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Europa',
+              color: Colors.black,
+            ),
+          ),
+          SizedBox(height: 10),
+
+          Text(
+            L.of(context).provide_address,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Europa',
+              color: Colors.grey,
+            ),
+          ),
+          SizedBox(height: 10),
 
           Center(
             child: LocationPickerWidget(

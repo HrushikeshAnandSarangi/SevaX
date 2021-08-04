@@ -12,6 +12,7 @@ class TagBuilder {
     this.isMoneyRequest = false,
     this.isGoodsRequest = false,
     this.isOneToManyRequest = false,
+    this.isBorrowRequest = false,
   });
 
   final bool isPublic;
@@ -24,6 +25,7 @@ class TagBuilder {
   final bool isMoneyRequest;
   final bool isGoodsRequest;
   final bool isOneToManyRequest;
+  final bool isBorrowRequest;
 
   List<String> getTags(context) {
     List<String> tags = [];
@@ -57,6 +59,9 @@ class TagBuilder {
     }
     if (isOneToManyRequest) {
       tags.add('One to many');
+    }
+    if (isBorrowRequest) {
+      tags.add('Borrow');
     }
     return tags;
   }

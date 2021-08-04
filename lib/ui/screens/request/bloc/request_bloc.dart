@@ -2,6 +2,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/repositories/request_repository.dart';
+import 'package:sevaexchange/views/exchange/createrequest.dart';
 
 class RequestBloc {
   final _requests = BehaviorSubject<RequestLists>();
@@ -33,6 +34,11 @@ class RequestBloc {
 
           if (filter.oneToManyRequest &&
               model.requestType == RequestType.ONE_TO_MANY_REQUEST) {
+            requestLists.addRequest(userId, model);
+            continue;
+          }
+
+          if (filter.borrowRequest && model.requestType == RequestType.BORROW) {
             requestLists.addRequest(userId, model);
             continue;
           }
@@ -90,6 +96,7 @@ class RequestFilter {
   final bool goodsRequest;
   final bool cashRequest;
   final bool oneToManyRequest;
+  final bool borrowRequest;
   final bool publicRequest;
   final bool virtualRequest;
 
@@ -98,6 +105,7 @@ class RequestFilter {
     this.goodsRequest = false,
     this.cashRequest = false,
     this.oneToManyRequest = false,
+    this.borrowRequest = false,
     this.publicRequest = false,
     this.virtualRequest = false,
   });
@@ -107,6 +115,7 @@ class RequestFilter {
     bool goodsRequest,
     bool cashRequest,
     bool oneToManyRequest,
+    bool borrowRequest,
     bool publicRequest,
     bool virtualRequest,
   }) =>
@@ -115,6 +124,7 @@ class RequestFilter {
         goodsRequest: goodsRequest ?? this.goodsRequest,
         cashRequest: cashRequest ?? this.cashRequest,
         oneToManyRequest: oneToManyRequest ?? this.oneToManyRequest,
+        borrowRequest: borrowRequest ?? this.borrowRequest,
         publicRequest: publicRequest ?? this.publicRequest,
         virtualRequest: virtualRequest ?? this.virtualRequest,
       );
@@ -124,6 +134,7 @@ class RequestFilter {
       goodsRequest ||
       cashRequest ||
       oneToManyRequest ||
+      borrowRequest ||
       publicRequest ||
       virtualRequest;
 
@@ -133,6 +144,7 @@ class RequestFilter {
           this.goodsRequest == other.goodsRequest &&
           this.cashRequest == other.cashRequest &&
           this.oneToManyRequest == other.oneToManyRequest &&
+          this.borrowRequest == other.borrowRequest &&
           this.publicRequest == other.publicRequest &&
           this.virtualRequest == other.virtualRequest;
     } else {
@@ -150,6 +162,8 @@ class RequestFilter {
           model.requestType == RequestType.ONE_TO_MANY_REQUEST) {
         return true;
       } else if (goodsRequest && model.requestType == RequestType.GOODS) {
+        return true;
+      } else if (borrowRequest && model.requestType == RequestType.BORROW) {
         return true;
       } else if (publicRequest && model.public) {
         return true;

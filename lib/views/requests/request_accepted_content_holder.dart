@@ -64,8 +64,11 @@ class TabarView extends StatelessWidget {
               ),
               requestItem.requestType == RequestType.BORROW
                   ?
-                  //'UI TO BE MADE FOR BORROW REQUEST'
-                  Center(child: Text(''))
+                  //Different UI TO BE MADE FOR BORROW REQUEST ?
+                  RequestAcceptedSpendingView(
+                      requestModel: requestItem,
+                      timebankModel: timebankModel,
+                    )
                   : requestItem.requestType == RequestType.ONE_TO_MANY_REQUEST
                       ? RequestAcceptedSpendingViewOneToMany(
                           requestModel: requestItem,

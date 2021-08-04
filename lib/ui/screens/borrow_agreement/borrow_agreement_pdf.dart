@@ -12,9 +12,11 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:sevaexchange/components/pdf_screen.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -104,7 +106,7 @@ class BorrowAgreementPdf {
           Header(
               level: 2,
               text: documentName +
-                  ' |  For: ${placeOrItem == 'ROOM' ? 'ROOM' : 'ITEM(S)'}'),
+                  ' |  For: ${placeOrItem == 'ROOM' ? L.of(contextMain).place : L.of(contextMain).items}'),
 
           SizedBox(height: 10),
 
@@ -116,17 +118,17 @@ class BorrowAgreementPdf {
             Text('Agreement Details: ', style: TextStyle(fontSize: 16)),
             SizedBox(height: 15),
             (specificConditions != '' || specificConditions != null)
-                ? Text("Lender's Specific Conditions: ",
+                ? Text("Lender's Specific Conditions: " + specificConditions,
                     style: TextStyle(fontSize: 14))
                 : Container(),
             SizedBox(height: 10),
-            (isDamageLiability != null)
+            (isDamageLiability == true)
                 ? Text(
                     'The Borrower is responsible for the full cost of repair or replacement of any or all of the Equipment that is damaged, lost, confiscated, or stolen from the time Borrower assumes custody until it is returned to lender. If the Equipment is lost, stolen or damaged, Borrower agrees to promptly notify the Lender Representative designated above.',
                     style: TextStyle(fontSize: 14))
                 : Container(),
             SizedBox(height: 10),
-            (isUseDisclaimer != null)
+            (isUseDisclaimer == true)
                 ? Text(
                     'The Borrower shall be responsible for the proper use and deployment of the Equipment. The Borrower shall be responsible for training anyone using the Equipment on the proper use of the Equipment in accordance with any Equipment use procedures.',
                     style: TextStyle(fontSize: 14))
@@ -136,12 +138,12 @@ class BorrowAgreementPdf {
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                        (isRefundDepositNeeded != null)
+                        (isRefundDepositNeeded == true)
                             ? Text('Refund deposit legal text here.....',
                                 style: TextStyle(fontSize: 14))
                             : Container(),
                         SizedBox(height: 10),
-                        (isMaintainAndclean != null)
+                        (isMaintainAndclean == true)
                             ? Text(
                                 'Maintenance and cleanliness legal text here.....',
                                 style: TextStyle(fontSize: 14))
@@ -150,31 +152,36 @@ class BorrowAgreementPdf {
                 : Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                        (isDeliveryReturn != null)
+                        (isDeliveryReturn == true)
                             ? Text(
                                 'Title to the Equipment the subject of this Agreement shall remain with Lender. The Borrower shall be repsonsible for the safe packaging, proper import, export, shipping and receiving of the Equipment. The Equipment shall be returned within a reasonable amount of time after the Loan Period end date identified.',
                                 style: TextStyle(fontSize: 14))
                             : Container(),
                         SizedBox(height: 10),
-                        (isMaintainRepair != null)
+                        (isMaintainRepair == true)
                             ? Text(
                                 'Equipment shall be returned to Lender in as good condition as when received by the Borrower, except for reasonable wear and tear. During the Loan Period and prior to return, the Borrower agrees to assume all responsibility for maintenance and repair.',
                                 style: TextStyle(fontSize: 14))
                             : Container(),
                       ]),
           ]),
-          SizedBox(height: 10),
 
-          Divider(thickness: 1, color: PdfColors.grey),
-
-          SizedBox(height: 40),
+          SizedBox(height: 30),
 
           Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text('Terms of Service: ', style: TextStyle(fontSize: 16)),
             //additional texts here
             SizedBox(height: 15),
             Text(
-                'In the real world and online, communities and community members sometimes disagree. If you have a dispute with another Community member, we hope that you will be able to work it out amicably. However, if you cannot, please understand that SevaExchange is not responsible for the actions of its members; each member is responsible for their own actions and behavior, whether using SevaExchange or chatting over the back fence. Accordingly, to the maximum extent permitted by applicable law, you release us (and our officers, directors, agents, subsidiaries, joint ventures and employees) from claims, demands and damages (actual and consequential) of every kind and nature, known and unknown, arising out of or in any way connected with such disputes. If you are a California resident, you hereby waive California Civil Code §1542, which says: "A general release does not extend to claims that the creditor or releasing party does not know or suspect to exist in his or her favor at the time of executing the release, and that, if known by him or her, would have materially affected his or her settlement with the debtor or releasing party." ',
+                'In the real world and online, communities and community members sometimes disagree. If you have a dispute with another Community member, we hope that you will be able to work it out amicably." ',
+                style: TextStyle(fontSize: 14)),
+            SizedBox(height: 15),
+            Text(
+                'However, if you cannot, please understand that SevaExchange is not responsible for the actions of its members; each member is responsible for their own actions and behavior, whether using SevaExchange or chatting over the back fence. Accordingly, to the maximum extent permitted by applicable law, you release us (and our officers, directors, agents, subsidiaries, joint ventures and employees) from claims, demands and damages (actual and consequential) of every kind and nature, known and unknown, arising out of or in any way connected with such disputes. If you are a California resident, you hereby waive California Civil Code §1542, which says: "A general release does not extend to claims that the creditor or releasing party does not know or suspect to exist in his or her favor at the time of executing the release, and that, if known by him or her, would have materially affected his or her settlement with the debtor or releasing party." ',
+                style: TextStyle(fontSize: 14)),
+            SizedBox(height: 15),
+            Text(
+                'Accordingly, to the maximum extent permitted by applicable law, you release us (and our officers, directors, agents, subsidiaries, joint ventures and employees) from claims, demands and damages (actual and consequential) of every kind and nature, known and unknown, arising out of or in any way connected with such disputes. If you are a California resident, you hereby waive California Civil Code §1542, which says: "A general release does not extend to claims that the creditor or releasing party does not know or suspect to exist in his or her favor at the time of executing the release, and that, if known by him or her, would have materially affected his or her settlement with the debtor or releasing party." ',
                 style: TextStyle(fontSize: 14)),
             SizedBox(height: 15),
             Text(
@@ -190,7 +197,10 @@ class BorrowAgreementPdf {
               Text('Lender', style: TextStyle(fontSize: 16)),
               SizedBox(height: 15),
               Text(
-                requestModel.fullName,
+                isOffer
+                    ? SevaCore.of(contextMain).loggedInUser.fullname
+                    : requestModel
+                        .fullName, //need to modify according to offer model or request model
                 style: TextStyle(
                   decoration: TextDecoration.underline,
                 ),
@@ -198,8 +208,13 @@ class BorrowAgreementPdf {
             ]),
             SizedBox(width: 15),
             Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text('Borrower', style: TextStyle(fontSize: 16)),
+              SizedBox(height: 15),
               Text(
-                SevaCore.of(contextMain).loggedInUser.fullname,
+                isOffer
+                    ? requestModel
+                        .fullName //need to modify according to offer model or request model
+                    : SevaCore.of(contextMain).loggedInUser.fullname,
                 style: TextStyle(
                   decoration: TextDecoration.underline,
                 ),
@@ -211,7 +226,7 @@ class BorrowAgreementPdf {
             Text('Agreement Date', style: TextStyle(fontSize: 16)),
             SizedBox(height: 15),
             Text(
-              DateFormat('MMMM dd, yyyy @ h:mm a',
+              DateFormat('MMMM dd, yyyy | h:mm a',
                       Locale(getLangTag()).toLanguageTag())
                   .format(
                 getDateTimeAccToUserTimezone(
@@ -240,14 +255,14 @@ class BorrowAgreementPdf {
     borrowAgreementLinkFinal =
         await uploadDocument(requestModel.id, file, documentName);
 
-    //await openPdfViewer(borrowAgreementLinkFinal, 'test document', context);
-
     progressDialog.hide();
-    material.Navigator.of(contextMain).pop();
+
+    return borrowAgreementLinkFinal;
 
     //String borrowAgreementLink =
     //    'https://firebasestorage.googleapis.com/v0/b/sevax-dev-project-for-sevax.appspot.com/o/borrow_agreement_docs%2Fsample_pdf.pdf?alt=media&token=094b13b4-dcb2-4303-ad68-3e341227bf00';
-    return borrowAgreementLinkFinal;
+
+    //await openPdfViewer(borrowAgreementLinkFinal, 'test document', context);
   }
 }
 
@@ -296,9 +311,14 @@ Future<String> uploadDocument(
     ),
   );
   String documentURL = '';
-  uploadTask.whenComplete(() async {
-    documentURL = await ref.getDownloadURL();
+  try {
+    String documentURL =
+        await (await uploadTask.whenComplete(() => null)).ref.getDownloadURL();
+
+    logger.e('COMES Here 0 PDF Link:  ' + documentURL.toString());
     return documentURL;
-  });
-  return documentURL;
+  } catch (error) {
+    logger.e('Error uploading agreement pdf: ' + error.toString());
+    return documentURL;
+  }
 }

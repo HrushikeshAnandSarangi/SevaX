@@ -1980,24 +1980,6 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
 
               Navigator.of(context).pop();
 
-              //Map<String, dynamic> participantDetails = {};
-
-              // participantDetails = {
-              //   SevaCore.of(context).loggedInUser.email: {
-              //     'bio': SevaCore.of(context).loggedInUser.bio,
-              //     'email': SevaCore.of(context).loggedInUser.email,
-              //     'fullname': SevaCore.of(context).loggedInUser.fullname,
-              //     'photourl': SevaCore.of(context).loggedInUser.photoURL,
-              //     'sevauserid': SevaCore.of(context).loggedInUser.sevaUserID,
-              //     'communityId': SevaCore.of(context).loggedInUser.currentCommunity,
-              //     'timebankId': widget.requestItem
-              //         .timebankId, //will this work when sending notifications?
-              //   },
-              // };
-
-              //widget.requestItem.accepted = true;
-              //log('participant detailss map written to DB ----->');
-
               proccedWithCalander();
 
               // await updateAcceptBorrowRequest(
@@ -2015,6 +1997,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   void proccedWithCalander() {
     if (SevaCore.of(context).loggedInUser.calendarId != null) {
       showDialog(
+        barrierDismissible: false,
         context: context,
         builder: (_context) {
           return CalenderEventConfirmationDialog(
@@ -2041,6 +2024,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       );
     } else {
       showDialog(
+        barrierDismissible: false,
         context: context,
         builder: (_context) {
           return CalenderEventConfirmationDialog(
@@ -2621,7 +2605,9 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                             left: 7.0, right: 7, top: 5, bottom: 5),
                         child: Text(
                           S.of(context).request_approved_by_msg +
+                              ' ' +
                               snapshot.data.docs[0]['acceptorName'],
+                              
                           style: TextStyle(
                               fontSize: 15,
                               color: Colors.black,

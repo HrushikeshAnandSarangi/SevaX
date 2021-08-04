@@ -498,4 +498,7 @@ class L {
       "There was error creating your place, Please try again.";
   String get updating_place_error =>
       "There was error creating your place, Please try again.";
+
+  // 4th August
+  String get provide_address => "Please provide particular area or zipcode";
 }

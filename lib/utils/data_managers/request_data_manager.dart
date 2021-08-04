@@ -1108,7 +1108,7 @@ Future<void> borrowRequestFeedbackBorrowerUpdate({
 Future<void> borrowRequestSetHasCreatedAgreement({
   @required RequestModel requestModel,
 }) async {
-  logger.e('COMES TO SET AGREEMENT LINK 1');
+  logger.e('COMES TO SET AGREEMENT LINK 2');
   await CollectionRef.requests.doc(requestModel.id).update({
     'hasBorrowAgreement': requestModel.hasBorrowAgreement,
     'borrowAgreementLink': requestModel.borrowAgreementLink,

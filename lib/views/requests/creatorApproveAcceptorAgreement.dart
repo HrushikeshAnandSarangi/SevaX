@@ -146,6 +146,7 @@ class _CreatorApproveAcceptorAgreeementState
               style: TextStyle(color: Colors.white, fontFamily: 'Europa'),
             ),
             onPressed: () async {
+              
               approveMemberForVolunteerRequest(
                 model: widget.requestModel,
                 notificationId: widget.notificationId,
@@ -271,7 +272,9 @@ class _CreatorApproveAcceptorAgreeementState
                 width: 300,
                 height: 360,
                 child: SfPdfViewer.network(
-                    widget.requestModel.borrowAgreementLink),
+                  widget.requestModel.borrowAgreementLink,
+                  canShowPaginationDialog: false,
+                ),
               )
             : Container(),
         SizedBox(height: 20),

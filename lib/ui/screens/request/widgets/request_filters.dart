@@ -21,7 +21,7 @@ class RequestFilters extends StatelessWidget {
     this.stream,
     @required this.onTap,
     this.hideFilters,
-  })  : assert(hideFilters.length == 6),
+  })  : assert(hideFilters.length == 7),
         super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -83,6 +83,18 @@ class RequestFilters extends StatelessWidget {
             ),
             CustomChipExploreFilter(
               isHidden: hideFilters[4],
+              label: S.of(context).borrow,
+              isSelected: filter.borrowRequest,
+              onTap: () {
+                onTap(
+                  snapshot.data.copyWith(
+                    borrowRequest: !snapshot.data.borrowRequest,
+                  ),
+                );
+              },
+            ),
+            CustomChipExploreFilter(
+              isHidden: hideFilters[5],
               label: 'Public',
               isSelected: filter.publicRequest,
               onTap: () {
@@ -94,7 +106,7 @@ class RequestFilters extends StatelessWidget {
               },
             ),
             CustomChipExploreFilter(
-              isHidden: hideFilters[5],
+              isHidden: hideFilters[6],
               label: S.of(context).virtual,
               isSelected: filter.virtualRequest,
               onTap: () {

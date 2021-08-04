@@ -9,6 +9,7 @@ import 'package:sevaexchange/ui/screens/borrow_agreement/borrow_agreement_pdf.da
 import 'package:sevaexchange/ui/screens/offers/pages/agreementForm.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/requestOfferAgreementForm.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
@@ -285,6 +286,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
                   );
                 } else {
                   if (widget.requestModel.roomOrTool == 'ROOM') {
+                    logger.e('COMES HERE 25');
                     await storeAcceptorDataBorrowRequest(
                       model: widget.requestModel,
                       acceptorEmail: SevaCore.of(context).loggedInUser.email,
@@ -296,6 +298,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
                     await borrowRequestSetHasCreatedAgreement(
                         requestModel: widget.requestModel);
                   } else {
+                    logger.e('COMES HERE 26');
                     await storeAcceptorDataBorrowRequest(
                       model: widget.requestModel,
                       acceptorEmail: SevaCore.of(context).loggedInUser.email,
@@ -464,6 +467,8 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
                         communityId: widget.requestModel.communityId,
                         timebankId: widget.requestModel.timebankId,
                         onPdfCreated: (pdfLink, documentNameFinal) {
+                          logger.e('COMES BACK FROM ON PDF CREATED:  ' +
+                              pdfLink.toString());
                           borrowAgreementLinkFinal = pdfLink;
                           documentName = documentNameFinal;
                           widget.requestModel.borrowAgreementLink = pdfLink;

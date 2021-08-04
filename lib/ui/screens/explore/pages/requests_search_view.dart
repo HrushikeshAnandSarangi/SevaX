@@ -102,6 +102,8 @@ class RequestsSearchView extends StatelessWidget {
                                   request.requestType == RequestType.TIME,
                               isOneToManyRequest: request.requestType ==
                                   RequestType.ONE_TO_MANY_REQUEST,
+                              isBorrowRequest:
+                                  request.requestType == RequestType.BORROW,
                             ).getTags(context),
                           );
                         })
@@ -132,15 +134,15 @@ class RequestsSearchView extends StatelessWidget {
                               request.requestType == RequestType.TIME,
                           isOneToManyRequest: request.requestType ==
                               RequestType.ONE_TO_MANY_REQUEST,
+                          isBorrowRequest:
+                              request.requestType == RequestType.BORROW,
                         ).getTags(context));
               },
             );
           },
         ),
-        Text(
-          S.of(context).browse_requests_by_category,
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)
-        ),
+        Text(S.of(context).browse_requests_by_category,
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         SizedBox(height: 12),
         RequestCategories(
           onTap: (value) {

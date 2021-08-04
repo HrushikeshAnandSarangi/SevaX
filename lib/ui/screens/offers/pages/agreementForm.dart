@@ -18,6 +18,7 @@ import 'package:sevaexchange/ui/utils/debouncer.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
@@ -881,6 +882,9 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                         isRefundDepositNeeded,
                         isMaintainAndclean,
                       );
+
+                      logger.e('COMES Here 1.5 PDF Link:  ' +
+                          agreementLink.toString());
 
                       widget.onPdfCreated(agreementLink, documentName);
 
