@@ -24,7 +24,7 @@ Future<void> errorDialog({BuildContext context, String error}) async {
               ),
             ),
             onPressed: () {
-              Navigator.of(context, rootNavigator: true).pop();
+              Navigator.of(viewContext).pop();
             },
           ),
         ],
@@ -34,7 +34,8 @@ Future<void> errorDialog({BuildContext context, String error}) async {
   return true;
 }
 
-Future<bool> confirmationDialog({BuildContext context, String title, Function onConfirmed}) async {
+Future<bool> confirmationDialog(
+    {BuildContext context, String title, Function onConfirmed}) async {
   await showDialog(
     context: context,
     builder: (BuildContext viewContext) {
