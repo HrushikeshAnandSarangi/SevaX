@@ -378,7 +378,7 @@ class ToDo {
             },
             title: element.title,
             subTitle: element.description,
-            tag: 'HERE HERE',
+            tag: L.of(context).borrow_request_lender_pending_return_check,
             timeInMilliseconds: element.requestStart,
           ),
           taskTimestamp: element.requestStart,

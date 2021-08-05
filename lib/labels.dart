@@ -504,7 +504,7 @@ class L {
 
   String get borrow_request_lender => "Borrow Request Lender";
   String get borrow_request_lender_pending_return_check =>
-      "Borrow Request Lender - Return Acknowledgment Pending";
+      "Borrow Request Lender - Return Acknowledgment Pending (tap to complete request)";
   String get borrow_request_creator_awaiting_confirmation =>
       "Borrow Request - Awaiting Lender Confirmation";
 }
