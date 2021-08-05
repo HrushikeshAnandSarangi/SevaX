@@ -39,7 +39,10 @@ class ExplorePageBloc {
       {bool isUserLoggedIn = false, String sevaUserID, BuildContext context}) {
     ElasticSearchApi.getFeaturedCommunities().then((value) {
       _communities.add(value);
+    }).onError((error, stackTrace) {
+      _communities.addError(error);
     });
+    ;
     logger.e('USER ID CHECK 9:' + isUserLoggedIn.toString());
     if (isUserLoggedIn) {
       FirestoreManager.getPublicOffers().listen((event) {
@@ -54,18 +57,26 @@ class ExplorePageBloc {
     } else {
       ElasticSearchApi.getPublicOffers().then((value) {
         _offers.add(value);
+      }).onError((error, stackTrace) {
+        _offers.addError(error);
       });
       ElasticSearchApi.getPublicProjects(
         distanceFilterData: null,
         sevaUserID: sevaUserID,
       ).then((value) {
         _events.add(value);
+      }).onError((error, stackTrace) {
+        _events.addError(error);
       });
       ElasticSearchApi.getPublicRequests().then((value) {
         _requests.add(value);
+      }).onError((error, stackTrace) {
+        _requests.addError(error);
       });
       ElasticSearchApi.getAllCategories(context).then((value) {
         _categories.add(value);
+      }).onError((error, stackTrace) {
+        _categories.addError(error);
       });
     }
   }
