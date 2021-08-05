@@ -32,6 +32,7 @@ class UpgradePlanBannerModel {
     this.sponsored_groups,
     this.add_manual_time,
     this.onetomany_requests,
+    this.borrow_requests,
     this.multiple_super_admins,
     this.public_to_sevax_global,
     this.community_sponsors,
@@ -66,6 +67,7 @@ class UpgradePlanBannerModel {
   BannerDetails sponsored_groups;
   BannerDetails add_manual_time;
   BannerDetails onetomany_requests;
+  BannerDetails borrow_requests;
   BannerDetails public_to_sevax_global;
   BannerDetails community_sponsors;
   BannerDetails admin_role_customization;
@@ -155,6 +157,9 @@ class UpgradePlanBannerModel {
             : null,
         onetomany_requests: json.containsKey("onetomany_requests")
             ? BannerDetails.fromJson(json["onetomany_requests"])
+            : null,
+        borrow_requests: json.containsKey("borrow_requests")
+            ? BannerDetails.fromJson(json["borrow_requests"])
             : null,
         multiple_super_admins: json.containsKey("multiple_super_admins")
             ? BannerDetails.fromJson(json["multiple_super_admins"])
