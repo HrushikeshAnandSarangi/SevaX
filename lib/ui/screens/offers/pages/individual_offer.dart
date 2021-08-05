@@ -352,6 +352,33 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                   setState(() {});
                                 }),
                           ),
+                        ),
+                        TransactionsMatrixCheck(
+                          upgradeDetails: AppConfig.upgradePlanBannerModel
+                              .onetomany_offers, //lending offers banner to be added
+                          transaction_matrix_type: "lending_offers",
+                          comingFrom: ComingFrom.Offers,
+                          child: ConfigurationCheck(
+                            actionType: 'lending_offer',
+                            role: memberType(widget.timebankModel,
+                                SevaCore.of(context).loggedInUser.sevaUserID),
+                            child: _optionRadioButton(
+                                title: L.of(context).lending,
+                                value: RequestType.LENDING_OFFER,
+                                groupvalue: snapshot.data != null
+                                    ? snapshot.data
+                                    : RequestType.LENDING_OFFER,
+                                onChanged: (data) {
+                                  AppConfig.helpIconContextMember =
+                                      HelpContextMemberType.lending_offers;
+                                  _bloc.onTypeChanged(data);
+                                  offerType = data;
+                                  description_hint =
+                                      S.of(context).request_descrip_hint_text;
+
+                                  setState(() {});
+                                }),
+                          ),
                         )
                       ],
                     ),
@@ -596,6 +623,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                             ? RequestTypeWidget()
                             // ? Container()
                             : Container(),
+                        SizedBox(height: 10),
                         HideWidget(
                           hide: offerType == RequestType.ONE_TO_MANY_OFFER,
                           child: StreamBuilder<String>(
@@ -622,10 +650,12 @@ class _IndividualOfferState extends State<IndividualOffer> {
                           ),
                         ),
                         HideWidget(
-                            hide: offerType == RequestType.ONE_TO_MANY_OFFER,
+                            hide: offerType == RequestType.ONE_TO_MANY_OFFER ||
+                                offerType == RequestType.LENDING_OFFER,
                             child: SizedBox(height: 30)),
                         HideWidget(
-                          hide: offerType == RequestType.ONE_TO_MANY_OFFER,
+                          hide: offerType == RequestType.ONE_TO_MANY_OFFER ||
+                              offerType == RequestType.LENDING_OFFER,
                           child: StreamBuilder<String>(
                             stream: _bloc.offerDescription,
                             builder: (context, snapshot) {
@@ -1440,45 +1470,59 @@ class _IndividualOfferState extends State<IndividualOffer> {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          SizedBox(height: 20),
           Container(
             alignment: Alignment.bottomLeft,
-            child: CupertinoSegmentedControl<int>(
-              unselectedColor: Colors.grey[200],
-              selectedColor: Theme.of(context).primaryColor,
-              children: {
-                0: Padding(
-                  padding: EdgeInsets.only(left: 14, right: 14),
-                  child: Text(
-                    L.of(context).place, //Label to be created
-                    style: TextStyle(fontSize: 12.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  L.of(context).lending,
+                  style: TextStyle(
+                    fontSize: 16,
+                    //fontWeight: FontWeight.bold,
+                    fontFamily: 'Europa',
+                    color: Colors.black,
                   ),
                 ),
-                1: Padding(
-                  padding: EdgeInsets.only(left: 14, right: 14),
-                  child: Text(
-                    L.of(context).items, //Label to be created
-                    style: TextStyle(fontSize: 12.0),
-                  ),
-                ),
-              },
+                SizedBox(height: 10),
+                CupertinoSegmentedControl<int>(
+                  unselectedColor: Colors.grey[200],
+                  selectedColor: Theme.of(context).primaryColor,
+                  children: {
+                    0: Padding(
+                      padding: EdgeInsets.only(left: 14, right: 14),
+                      child: Text(
+                        L.of(context).place, //Label to be created
+                        style: TextStyle(fontSize: 12.0),
+                      ),
+                    ),
+                    1: Padding(
+                      padding: EdgeInsets.only(left: 14, right: 14),
+                      child: Text(
+                        L.of(context).items, //Label to be created
+                        style: TextStyle(fontSize: 12.0),
+                      ),
+                    ),
+                  },
 
-              borderColor: Colors.grey,
-              padding: EdgeInsets.only(left: 0.0, right: 0.0),
-              groupValue: _bloc.lendingOfferType,
-              onValueChanged: (int val) {
-                if (val != _bloc.lendingOfferType) {
-                  setState(() {
-                    if (val == 0) {
-                      _bloc.lendingOfferType = 0;
-                    } else {
-                      _bloc.lendingOfferType = 1;
+                  borderColor: Colors.grey,
+                  padding: EdgeInsets.only(left: 0.0, right: 0.0),
+                  groupValue: _bloc.lendingOfferType,
+                  onValueChanged: (int val) {
+                    if (val != _bloc.lendingOfferType) {
+                      setState(() {
+                        if (val == 0) {
+                          _bloc.lendingOfferType = 0;
+                        } else {
+                          _bloc.lendingOfferType = 1;
+                        }
+                        _bloc.lendingOfferType = val;
+                      });
                     }
-                    _bloc.lendingOfferType = val;
-                  });
-                }
-              },
-              //groupValue: sharedValue,
+                  },
+                  //groupValue: sharedValue,
+                ),
+              ],
             ),
           ),
           SizedBox(height: 20),
@@ -1499,7 +1543,9 @@ class _IndividualOfferState extends State<IndividualOffer> {
               );
             },
             child: Text(
-              'Select a place for lending*',
+              _bloc.lendingOfferType == 0
+                  ? L.of(context).select_a_place_lending
+                  : L.of(context).select_a_item_lending,
               style: TextStyle(
                 fontSize: 16,
                 //fontWeight: FontWeight.bold,
@@ -1543,7 +1589,41 @@ class _IndividualOfferState extends State<IndividualOffer> {
                     );
                   },
                 );
-              })
+              }),
+          SizedBox(height: 20),
+          OfferDurationWidget(
+            title: S.of(context).offer_duration,
+            startTime: widget.offerModel != null
+                ? DateTime.fromMillisecondsSinceEpoch(
+                    widget.offerModel.groupOfferDataModel.startDate,
+                  )
+                : null,
+            endTime: widget.offerModel != null
+                ? DateTime.fromMillisecondsSinceEpoch(
+                    widget.offerModel.groupOfferDataModel.endDate,
+                  )
+                : null,
+          ),
+          SizedBox(height: 20),
+          StreamBuilder<String>(
+            stream: _bloc.offerDescription,
+            builder: (context, snapshot) {
+              return CustomTextField(
+                controller: _descriptionController,
+                currentNode: _description,
+                nextNode: _availability,
+                value: snapshot.data,
+                heading: "${S.of(context).offer_description}*",
+                onChanged: _bloc.onOfferDescriptionChanged,
+                hint: description_hint != null
+                    ? description_hint
+                    : S.of(context).offer_description_hint,
+                maxLength: 500,
+                error: getValidationError(context, snapshot.error),
+              );
+            },
+          ),
+          SizedBox(height: 12),
         ]);
   }
 }
