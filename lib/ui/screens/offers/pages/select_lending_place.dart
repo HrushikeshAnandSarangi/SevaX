@@ -2,14 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/community_category_model.dart';
+import 'package:sevaexchange/new_baseline/models/lending_model.dart';
 import 'package:sevaexchange/new_baseline/models/lending_place_model.dart';
 import 'package:sevaexchange/repositories/community_repository.dart';
 import 'package:sevaexchange/repositories/lending_offer_repo.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_chip.dart';
+import 'package:sevaexchange/utils/extensions.dart';
+
+import 'add_update_lending_place.dart';
 
 class SelectLendingPlace extends StatefulWidget {
-  final Function(LendingPlaceModel) onSelected;
+  final Function(LendingModel) onSelected;
 
   const SelectLendingPlace({
     Key key,
@@ -43,7 +47,7 @@ class _SelectLendingPlaceState extends State<SelectLendingPlace> {
               if (snapshot.data == null) {
                 return LoadingIndicator();
               }
-              return TypeAheadField<LendingPlaceModel>(
+              return TypeAheadField<LendingModel>(
                 suggestionsBoxDecoration: SuggestionsBoxDecoration(
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -83,11 +87,18 @@ class _SelectLendingPlaceState extends State<SelectLendingPlace> {
                   ),
                 ),
                 suggestionsBoxController: controller,
+                noItemsFoundBuilder: (context) {
+                  return getSuggestionLayout(
+                    suggestion:
+                        _textEditingController.text.firstWordUpperCase(),
+                    add: S.of(context).add + ' ',
+                  );
+                },
                 itemBuilder: (BuildContext context, itemData) {
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      itemData.placeName,
+                      itemData.lendingPlaceModel.placeName,
                       style: TextStyle(fontSize: 16),
                     ),
                   );
@@ -96,13 +107,9 @@ class _SelectLendingPlaceState extends State<SelectLendingPlace> {
                   widget.onSelected(suggestion);
                 },
                 suggestionsCallback: (String pattern) async {
-                  // if (availableCategories.isEmpty) {
-                  //   availableCategories =
-                  //       await CommunityRepository.getCommunityCategories();
-                  // }
-                  var dataCopy = List<LendingPlaceModel>.from(snapshot.data);
-                  dataCopy
-                      .retainWhere((s) => s.placeName.toLowerCase().contains(
+                  var dataCopy = List<LendingModel>.from(snapshot.data);
+                  dataCopy.retainWhere((s) =>
+                      s.lendingPlaceModel.placeName.toLowerCase().contains(
                             pattern.toLowerCase(),
                           ));
                   return dataCopy;
@@ -112,5 +119,84 @@ class _SelectLendingPlaceState extends State<SelectLendingPlace> {
         SizedBox(height: 4),
       ],
     );
+  }
+
+  Widget getSuggestionLayout({
+    String suggestion,
+    String add,
+  }) {
+    return suggestion == ''
+        ? Padding(padding: const EdgeInsets.all(0))
+        : InkWell(
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) {
+                    return AddUpdateLendingPlace(
+                      lendingModel: null,
+                      enteredTitle: suggestion,
+                      onPlaceCreateUpdate: (LendingModel model) {
+                        widget.onSelected(model);
+                      },
+                    );
+                  },
+                ),
+              );
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Container(
+                height: 40,
+                alignment: Alignment.centerLeft,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          RichText(
+                            text: TextSpan(
+                              children: <TextSpan>[
+                                TextSpan(
+                                  text: add,
+                                  style: TextStyle(
+                                    color: Colors.blue,
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: "\"${suggestion}\"",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.blue,
+                                    decoration: TextDecoration.underline,
+                                    decorationColor: Colors.red,
+                                    decorationStyle: TextDecorationStyle.wavy,
+                                    decorationThickness: 1.5,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Text(
+                            S.of(context).no_data,
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Icon(
+                      Icons.add,
+                      color: Colors.grey,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
   }
 }

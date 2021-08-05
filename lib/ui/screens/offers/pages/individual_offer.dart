@@ -15,6 +15,7 @@ import 'package:sevaexchange/models/enums/help_context_enums.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
+import 'package:sevaexchange/new_baseline/models/lending_model.dart';
 import 'package:sevaexchange/new_baseline/models/lending_place_model.dart';
 import 'package:sevaexchange/ui/screens/calendar/add_to_calander.dart';
 import 'package:sevaexchange/ui/screens/offers/bloc/individual_offer_bloc.dart';
@@ -1526,51 +1527,34 @@ class _IndividualOfferState extends State<IndividualOffer> {
             ),
           ),
           SizedBox(height: 20),
-          InkWell(
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) {
-                    return AddUpdateLendingPlace(
-                      lendingPlaceModel: null,
-                      onPlaceCreateUpdate: (LendingPlaceModel model) {
-                        lendingPlaceModel = model;
-                        setState(() {});
-                      },
-                    );
-                  },
-                ),
-              );
-            },
-            child: Text(
-              _bloc.lendingOfferType == 0
-                  ? L.of(context).select_a_place_lending
-                  : L.of(context).select_a_item_lending,
-              style: TextStyle(
-                fontSize: 16,
-                //fontWeight: FontWeight.bold,
-                fontFamily: 'Europa',
-                color: Colors.black,
-              ),
+          Text(
+            _bloc.lendingOfferType == 0
+                ? L.of(context).select_a_place_lending
+                : L.of(context).select_a_item_lending,
+            style: TextStyle(
+              fontSize: 16,
+              //fontWeight: FontWeight.bold,
+              fontFamily: 'Europa',
+              color: Colors.black,
             ),
           ),
           SizedBox(
             height: 10,
           ),
-          SelectLendingPlace(onSelected: (LendingPlaceModel model) {
+          SelectLendingPlace(onSelected: (LendingModel model) {
             _bloc.onLendingModelAdded(model);
           }),
           SizedBox(
             height: 10,
           ),
-          StreamBuilder<LendingPlaceModel>(
+          StreamBuilder<LendingModel>(
               stream: _bloc.lendingPlaceModelStream,
               builder: (context, snapshot) {
                 if (snapshot.data == null || snapshot.hasError) {
                   return Container();
                 }
                 return LendingPlaceCardWidget(
-                  lendingPlaceModel: snapshot.data,
+                  lendingPlaceModel: snapshot.data.lendingPlaceModel,
                   onDelete: () {
                     _bloc.onLendingModelAdded(null);
                   },
@@ -1579,8 +1563,8 @@ class _IndividualOfferState extends State<IndividualOffer> {
                       MaterialPageRoute(
                         builder: (context) {
                           return AddUpdateLendingPlace(
-                            lendingPlaceModel: snapshot.data,
-                            onPlaceCreateUpdate: (LendingPlaceModel model) {
+                            lendingModel: snapshot.data,
+                            onPlaceCreateUpdate: (LendingModel model) {
                               _bloc.onLendingModelAdded(model);
                             },
                           );

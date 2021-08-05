@@ -942,4 +942,21 @@ class L {
 //3rd August
   String get select_a_place_lending => "Select a place for lending*";
   String get select_a_item_lending => "Select list of items for lending*";
+
+  //below labels yet to be added lending item labels
+  String get add_new_item => "Add New Item";
+  String get update_item => "Update Item";
+  String get add_images_to_item => "Add One/Multiple Images of the item";
+  String get name_of_item => "Name of your item";
+  String get name_of_item_hint => "Lawn Mover";
+  String get add_item => "Add Item";
+  String get validation_error_item_name => "Please enter name of your item";
+
+  String get validation_error_item_images => "Please add item images";
+  String get updating_item => "Updating item";
+  String get creating_item => "Creating item";
+  String get creating_item_error =>
+      "There was error creating your item, Please try again.";
+  String get updating_item_error =>
+      "There was error creating your item, Please try again.";
 }

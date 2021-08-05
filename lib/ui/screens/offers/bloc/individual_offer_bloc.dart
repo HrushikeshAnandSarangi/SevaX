@@ -5,6 +5,7 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/cash_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/lending_model.dart';
 import 'package:sevaexchange/new_baseline/models/lending_place_model.dart';
 import 'package:sevaexchange/ui/utils/offer_utility.dart';
 import 'package:sevaexchange/ui/utils/validators.dart';
@@ -36,7 +37,7 @@ class IndividualOfferBloc extends BlocBase with Validators {
   final _location = BehaviorSubject<CustomLocation>();
   final _status = BehaviorSubject<Status>.seeded(Status.IDLE);
   final _isVisible = BehaviorSubject<bool>.seeded(false);
-  final _lendingPlaceModel = BehaviorSubject<LendingPlaceModel>();
+  final _lendingModel = BehaviorSubject<LendingModel>();
 
   // final _isPublicVisible = BehaviorSubject<bool>.seeded(false);
   final _donationAmount = BehaviorSubject<int>();
@@ -74,8 +75,8 @@ class IndividualOfferBloc extends BlocBase with Validators {
 
   // Function(CashModel) get onCashModelChanged => _cashModel.sink.add;
   Function(bool) get isVisibleChanged => _isVisible.sink.add;
-  Function(LendingPlaceModel model) get onLendingModelAdded =>
-      _lendingPlaceModel.sink.add;
+  Function(LendingModel model) get onLendingModelAdded =>
+      _lendingModel.sink.add;
 
   void onOfferMadeVirtual(bool value) {
     if (value != null) {
@@ -118,8 +119,7 @@ class IndividualOfferBloc extends BlocBase with Validators {
 
   Stream<bool> get isPublicVisible =>
       CombineLatestStream.combine2(makeVirtual, isVisible, (a, b) => a && b);
-  Stream<LendingPlaceModel> get lendingPlaceModelStream =>
-      _lendingPlaceModel.stream;
+  Stream<LendingModel> get lendingPlaceModelStream => _lendingModel.stream;
 
   ///[Function] to create offer
   void createOrUpdateOffer(
@@ -339,5 +339,6 @@ class IndividualOfferBloc extends BlocBase with Validators {
     _goodsDonationDetails.close();
     _type.close();
     _minimumCredits.close();
+    _lendingModel.close();
   }
 }

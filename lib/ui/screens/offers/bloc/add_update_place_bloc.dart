@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/new_baseline/models/lending_model.dart';
 import 'package:sevaexchange/new_baseline/models/lending_place_model.dart';
 import 'package:sevaexchange/repositories/lending_offer_repo.dart';
 import 'package:sevaexchange/ui/utils/offer_utility.dart';
@@ -23,7 +24,7 @@ class AddUpdatePlaceBloc extends BlocBase {
   final _amenities = BehaviorSubject<Map<String, dynamic>>();
   final _message = BehaviorSubject<String>();
   final _status = BehaviorSubject<Status>.seeded(Status.IDLE);
-  final _model = BehaviorSubject<LendingPlaceModel>();
+  final _model = BehaviorSubject<LendingModel>();
 
   Stream<Status> get status => _status.stream;
 
@@ -46,21 +47,21 @@ class AddUpdatePlaceBloc extends BlocBase {
   Function(List<String> value) get onHouseImageAdded => _house_images.sink.add;
   Function(Map<String, dynamic>) get amenitiesChanged => _amenities.sink.add;
 
-  void loadData(LendingPlaceModel lendingPlaceModel) {
-    _house_images.add(lendingPlaceModel.houseImages.toList());
-    _amenities.add(lendingPlaceModel.amenities);
+  void loadData(LendingModel lendingModel) {
+    _house_images.add(lendingModel.lendingPlaceModel.houseImages.toList());
+    _amenities.add(lendingModel.lendingPlaceModel.amenities);
   }
 
   Map<String, dynamic> getSelectedAmenities() {
     return _amenities.value;
   }
 
-  LendingPlaceModel getLendingPlaceModel() {
+  LendingModel getLendingPlaceModel() {
     return _model.value;
   }
 
   void createLendingOfferPlace({UserModel creator}) {
-    LendingPlaceModel placeModel;
+    LendingModel lendingModel;
     if (!errorCheck()) {
       if (_amenities.value.values == null ||
           _amenities.value.values.length < 1) {
@@ -69,45 +70,50 @@ class AddUpdatePlaceBloc extends BlocBase {
         _message.add('create');
         var timestamp = DateTime.now().millisecondsSinceEpoch;
 
-        placeModel = LendingPlaceModel(
+        lendingModel = LendingModel(
             id: Utils.getUuid(),
-            placeName: _placeName.value,
-            noOfGuests: int.parse(_no_of_guests.value),
-            noOfRooms: int.parse(_no_of_rooms.value),
-            noOfBathRooms: int.parse(_no_of_bathRooms.value),
-            commonSpace: _commonSpaces.value,
-            houseRules: _house_rules.value,
-            houseImages: _house_images.value.toList(),
             creatorId: creator.sevaUserID,
             email: creator.email,
             timestamp: timestamp,
-            amenities: _amenities.value);
-        LendingOffersRepo.addNewLendingPlace(model: placeModel).then((_) {
-          _model.add(placeModel);
+            lendingPlaceModel: LendingPlaceModel(
+                placeName: _placeName.value,
+                noOfGuests: int.parse(_no_of_guests.value),
+                noOfRooms: int.parse(_no_of_rooms.value),
+                noOfBathRooms: int.parse(_no_of_bathRooms.value),
+                commonSpace: _commonSpaces.value,
+                houseRules: _house_rules.value,
+                houseImages: _house_images.value.toList(),
+                amenities: _amenities.value));
+        LendingOffersRepo.addNewLendingPlace(model: lendingModel).then((_) {
+          _model.add(lendingModel);
           _status.add(Status.COMPLETE);
         }).catchError((e) => _status.add(Status.ERROR));
       }
     }
   }
 
-  void updateLendingOfferPlace({LendingPlaceModel model}) async {
-    LendingPlaceModel placeModel = model;
+  void updateLendingOfferPlace({LendingModel model}) async {
+    LendingModel lendingModel = model;
     if (!errorCheck()) {
       if (_amenities.value.values == null ||
           _amenities.value.values.length < 1) {
         _message.add('amenities');
       } else {
-        placeModel.amenities = _amenities.value;
-        placeModel.placeName = _placeName.value;
-        placeModel.houseImages = _house_images.value.toList();
-        placeModel.noOfRooms = int.parse(_no_of_rooms.value);
-        placeModel.noOfGuests = int.parse(_no_of_guests.value);
-        placeModel.noOfBathRooms = int.parse(_no_of_bathRooms.value);
-        placeModel.commonSpace = _commonSpaces.value;
-        placeModel.houseRules = _house_rules.value;
+        lendingModel.lendingPlaceModel.amenities = _amenities.value;
+        lendingModel.lendingPlaceModel.placeName = _placeName.value;
+        lendingModel.lendingPlaceModel.houseImages =
+            _house_images.value.toList();
+        lendingModel.lendingPlaceModel.noOfRooms =
+            int.parse(_no_of_rooms.value);
+        lendingModel.lendingPlaceModel.noOfGuests =
+            int.parse(_no_of_guests.value);
+        lendingModel.lendingPlaceModel.noOfBathRooms =
+            int.parse(_no_of_bathRooms.value);
+        lendingModel.lendingPlaceModel.commonSpace = _commonSpaces.value;
+        lendingModel.lendingPlaceModel.houseRules = _house_rules.value;
 
-        LendingOffersRepo.updateNewLendingPlace(model: placeModel).then((_) {
-          _model.add(placeModel);
+        LendingOffersRepo.updateNewLendingPlace(model: lendingModel).then((_) {
+          _model.add(lendingModel);
           _status.add(Status.COMPLETE);
         }).catchError((e) => _status.add(Status.ERROR));
       }

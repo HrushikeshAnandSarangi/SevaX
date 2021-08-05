@@ -1,79 +1,49 @@
-import 'dart:developer';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/new_baseline/models/amenities_model.dart';
+import 'package:sevaexchange/new_baseline/models/lending_item_model.dart';
 import 'package:sevaexchange/new_baseline/models/lending_model.dart';
-import 'package:sevaexchange/new_baseline/models/lending_place_model.dart';
-import 'package:sevaexchange/repositories/lending_offer_repo.dart';
+
 import 'package:sevaexchange/ui/screens/image_picker/image_picker_dialog_mobile.dart';
-import 'package:sevaexchange/ui/screens/offers/bloc/add_update_place_bloc.dart';
-import 'package:sevaexchange/ui/screens/offers/pages/selecrt_amenities.dart';
+import 'package:sevaexchange/ui/screens/offers/bloc/add_update_item_bloc.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/custom_textfield.dart';
 import 'package:sevaexchange/ui/utils/offer_utility.dart';
-import 'package:sevaexchange/ui/utils/validators.dart';
-import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
-import 'package:sevaexchange/widgets/custom_chip.dart';
 import 'package:sevaexchange/widgets/full_screen_widget.dart';
 
-class AddUpdateLendingPlace extends StatefulWidget {
+class AddUpdateLendingItem extends StatefulWidget {
   final LendingModel lendingModel;
   final String enteredTitle;
-  final Function(LendingModel lendingModel) onPlaceCreateUpdate;
+  final Function(LendingModel lendingModel) onItemCreateUpdate;
 
-  AddUpdateLendingPlace(
-      {this.lendingModel, this.onPlaceCreateUpdate, this.enteredTitle});
+  AddUpdateLendingItem(
+      {this.lendingModel, this.onItemCreateUpdate, this.enteredTitle});
 
   @override
-  _AddUpdateLendingPlaceState createState() => _AddUpdateLendingPlaceState();
+  _AddUpdateLendingItemState createState() => _AddUpdateLendingItemState();
 }
 
-class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
+class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
   final _formKey = GlobalKey<FormState>();
   List<AmenitiesModel> amenitiesList = [];
   List<String> imagesList = [];
-  AddUpdatePlaceBloc _bloc = AddUpdatePlaceBloc();
-  FocusNode _placeName = FocusNode();
-  FocusNode _guests = FocusNode();
-  FocusNode _rooms = FocusNode();
-  FocusNode _bathrooms = FocusNode();
-  FocusNode _commonSPace = FocusNode();
-  FocusNode _houseRules = FocusNode();
-  TextEditingController _placeNameController = TextEditingController();
-  TextEditingController _guestsController = TextEditingController();
-  TextEditingController _roomsController = TextEditingController();
-  TextEditingController _bathroomsController = TextEditingController();
-  TextEditingController _commonSpaceController = TextEditingController();
-  TextEditingController _houseRulesController = TextEditingController();
+  AddUpdateItemBloc _bloc = AddUpdateItemBloc();
+  FocusNode _itemName = FocusNode();
+  TextEditingController _itemNameController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    if (widget.lendingModel != null) {
-      _bloc.loadData(widget.lendingModel);
-      _placeNameController.text =
-          widget.lendingModel.lendingPlaceModel.placeName;
-      _guestsController.text =
-          widget.lendingModel.lendingPlaceModel.noOfGuests.toString();
-      _roomsController.text =
-          widget.lendingModel.lendingPlaceModel.noOfRooms.toString();
-      _bathroomsController.text =
-          widget.lendingModel.lendingPlaceModel.noOfBathRooms.toString();
-      _commonSpaceController.text =
-          widget.lendingModel.lendingPlaceModel.commonSpace;
-      _houseRulesController.text =
-          widget.lendingModel.lendingPlaceModel.houseRules.toString();
+    if (widget.lendingModel.lendingItemModel != null) {
+      _bloc.loadData(widget.lendingModel.lendingItemModel);
+      _itemNameController.text = widget.lendingModel.lendingItemModel.itemName;
     } else {
       if (widget.enteredTitle != null) {
-        _placeNameController.text = widget.enteredTitle;
+        _itemNameController.text = widget.enteredTitle;
       }
     }
     setState(() {});
@@ -83,9 +53,9 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
         if (event == 'amenities') {
           showScaffold(L.of(context).validation_error_amenities);
         } else if (event == 'create') {
-          showScaffold(L.of(context).creating_place);
+          showScaffold(L.of(context).creating_item);
         } else if (event == 'update') {
-          showScaffold(L.of(context).updating_place);
+          showScaffold(L.of(context).updating_item);
         }
       }
     });
@@ -100,7 +70,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
-          L.of(context).add_new_place,
+          L.of(context).add_new_item,
           style: TextStyle(fontSize: 18, fontFamily: 'Europa'),
         ),
         centerTitle: true,
@@ -110,7 +80,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
           builder: (context, status) {
             if (status.data == Status.COMPLETE) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
-                widget.onPlaceCreateUpdate(_bloc.getLendingPlaceModel());
+                widget.onItemCreateUpdate(_bloc.getLendingItemModel());
                 Navigator.pop(context);
               });
             }
@@ -121,9 +91,9 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(
-                        widget.lendingModel.lendingPlaceModel == null
-                            ? L.of(context).creating_place
-                            : L.of(context).updating_place,
+                        widget.lendingModel.lendingItemModel == null
+                            ? L.of(context).creating_item
+                            : L.of(context).updating_item,
                       ),
                     ),
                   );
@@ -137,9 +107,9 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(
-                        widget.lendingModel.lendingPlaceModel == null
-                            ? L.of(context).creating_place_error
-                            : L.of(context).updating_place_error,
+                        widget.lendingModel.lendingItemModel == null
+                            ? L.of(context).creating_item_error
+                            : L.of(context).updating_item_error,
                       ),
                     ),
                   );
@@ -155,21 +125,21 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       StreamBuilder<String>(
-                        stream: _bloc.placeName,
+                        stream: _bloc.itemName,
                         builder: (context, snapshot) {
                           return CustomTextField(
-                            controller: _placeNameController,
-                            currentNode: _placeName,
-                            nextNode: _guests,
+                            controller: _itemNameController,
+                            currentNode: _itemName,
+                            nextNode: null,
                             value: snapshot.data,
-                            heading: "${L.of(context).name_of_place}",
+                            heading: "${L.of(context).name_of_item}",
                             onChanged: (String value) {
                               _bloc.onPlaceNameChanged(value);
                               // title = value;
                             },
-                            hint: L.of(context).name_of_place_hint,
+                            hint: L.of(context).name_of_item_hint,
                             maxLength: null,
-                            error: getAddPlaceValidationError(
+                            error: getAddItemValidationError(
                                 context, snapshot.error),
                           );
                         },
@@ -186,7 +156,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                                         ImagePickerType.LENDING_OFFER,
                                     onLinkCreated: (link) {
                                       imagesList.add(link);
-                                      _bloc.onHouseImageAdded(imagesList);
+                                      _bloc.onItemImageAdded(imagesList);
                                     },
                                   );
                                 });
@@ -213,7 +183,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                       ),
                       SizedBox(height: 20),
                       StreamBuilder<List<String>>(
-                        stream: _bloc.houseImages,
+                        stream: _bloc.itemImages,
                         builder: (builder, snapshot) {
                           // if (snapshot.connectionState == ConnectionState.waiting) {
                           //   return LoadingIndicator();
@@ -261,7 +231,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                                         child: InkWell(
                                           onTap: () {
                                             imagesList.removeAt(index);
-                                            _bloc.onHouseImageAdded(imagesList);
+                                            _bloc.onItemImageAdded(imagesList);
                                           },
                                           child: Container(
                                             decoration: BoxDecoration(
@@ -281,148 +251,6 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                                 ),
                               ),
                             ),
-                          );
-                        },
-                      ),
-                      SizedBox(height: 20),
-                      Text(
-                        L.of(context).amenities,
-                        style: TextStyle(fontSize: 18),
-                      ),
-                      SizedBox(height: 10),
-                      Text(
-                        L.of(context).amenities_hint,
-                        style: TextStyle(fontSize: 18),
-                      ),
-                      SizedBox(height: 8),
-                      SelectAmenities(
-                        languageCode:
-                            SevaCore.of(context).loggedInUser.language ?? 'en',
-                        selectedAmenities: _bloc.getSelectedAmenities() ?? {},
-                        onSelectedAmenitiesMap: (amenitiesMap) {
-                          if (amenitiesMap.values != null &&
-                              amenitiesMap.values.length > 0) {
-                            _bloc.amenitiesChanged(amenitiesMap);
-                            log('amenit ${amenitiesMap.values}');
-                            //setState(() {});
-                          }
-                        },
-                      ),
-                      SizedBox(height: 20),
-                      StreamBuilder<String>(
-                        stream: _bloc.noOfGuests,
-                        builder: (context, snapshot) {
-                          return CustomTextField(
-                            controller: _guestsController,
-                            currentNode: _guests,
-                            nextNode: _rooms,
-                            value: snapshot.data,
-                            heading: "${L.of(context).no_of_guests}",
-                            onChanged: (String value) {
-                              _bloc.onNoOfGuestsChanged(value);
-                              // title = value;
-                            },
-                            hint: 'Ex: 3',
-                            maxLength: 1,
-                            error: getAddPlaceValidationError(
-                                context, snapshot.error),
-                            formatters: [
-                              FilteringTextInputFormatter.allow(
-                                  Regex.numericRegex)
-                            ],
-                          );
-                        },
-                      ),
-                      SizedBox(height: 20),
-                      StreamBuilder<String>(
-                        stream: _bloc.noOfRooms,
-                        builder: (context, snapshot) {
-                          return CustomTextField(
-                            controller: _roomsController,
-                            currentNode: _rooms,
-                            nextNode: _bathrooms,
-                            value: snapshot.data,
-                            heading: "${L.of(context).bed_roooms}",
-                            onChanged: (String value) {
-                              _bloc.onNoOfRoomsChanged(value);
-                              // title = value;
-                            },
-                            hint: 'Ex: 2',
-                            maxLength: 1,
-                            error: getAddPlaceValidationError(
-                                context, snapshot.error),
-                            formatters: [
-                              FilteringTextInputFormatter.allow(
-                                  Regex.numericRegex)
-                            ],
-                          );
-                        },
-                      ),
-                      SizedBox(height: 20),
-                      StreamBuilder<String>(
-                        stream: _bloc.bathRooms,
-                        builder: (context, snapshot) {
-                          return CustomTextField(
-                            controller: _bathroomsController,
-                            currentNode: _bathrooms,
-                            nextNode: _commonSPace,
-                            value: snapshot.data,
-                            heading: "${L.of(context).bath_rooms}",
-                            onChanged: (String value) {
-                              _bloc.onBathRoomsChanged(value);
-                              // title = value;
-                            },
-                            hint: 'Ex: 1',
-                            maxLength: 1,
-                            error: getAddPlaceValidationError(
-                                context, snapshot.error),
-                            formatters: [
-                              FilteringTextInputFormatter.allow(
-                                  Regex.numericRegex)
-                            ],
-                          );
-                        },
-                      ),
-                      SizedBox(height: 20),
-                      StreamBuilder<String>(
-                        stream: _bloc.commonSpaces,
-                        builder: (context, snapshot) {
-                          return CustomTextField(
-                            controller: _commonSpaceController,
-                            currentNode: _commonSPace,
-                            nextNode: _houseRules,
-                            value: snapshot.data,
-                            heading: "${L.of(context).common_spaces}",
-                            onChanged: (String value) {
-                              _bloc.onCommonSpacesChanged(value);
-                              // title = value;
-                            },
-                            hint: L.of(context).common_spaces_hint,
-                            maxLength: null,
-                            error: getAddPlaceValidationError(
-                                context, snapshot.error),
-                          );
-                        },
-                      ),
-                      SizedBox(height: 20),
-                      StreamBuilder<String>(
-                        stream: _bloc.houseRules,
-                        builder: (context, snapshot) {
-                          return CustomTextField(
-                            controller: _houseRulesController,
-                            currentNode: _houseRules,
-                            value: snapshot.data,
-                            heading: "${L.of(context).house_rules}",
-                            onChanged: (String value) {
-                              _bloc.onHouseRulesChanged(value);
-                              // title = value;
-                            },
-                            hint: L.of(context).house_rules_hint,
-                            minLines: 5,
-                            maxLines: 5,
-                            maxLength: null,
-                            error: getAddPlaceValidationError(
-                                context, snapshot.error),
                           );
                         },
                       ),
@@ -454,9 +282,9 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                                   imagesList.length == 0) {
                                 showAlertMessage(
                                     context: context,
-                                    message: 'Add images to place');
+                                    message: 'Add images to item');
                               } else {
-                                if (widget.lendingModel.lendingPlaceModel ==
+                                if (widget.lendingModel.lendingItemModel ==
                                     null) {
                                   _bloc.createLendingOfferPlace(
                                       creator:
@@ -469,9 +297,9 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             },
                             shape: StadiumBorder(),
                             child: Text(
-                                widget.lendingModel.lendingPlaceModel == null
-                                    ? L.of(context).add_place
-                                    : L.of(context).update_place,
+                                widget.lendingModel.lendingItemModel == null
+                                    ? L.of(context).add_item
+                                    : L.of(context).update_item,
                                 style: TextStyle(fontSize: 20)),
                           ),
                         ),
@@ -499,19 +327,9 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
 
   @override
   void dispose() {
-    _houseRulesController.dispose();
-    _commonSpaceController.dispose();
-    _bathroomsController.dispose();
-    _placeNameController.dispose();
-    _guestsController.dispose();
-    _roomsController.dispose();
+    _itemNameController.dispose();
     _bloc.dispose();
-    _placeName.dispose();
-    _guests.dispose();
-    _rooms.dispose();
-    _bathrooms.dispose();
-    _commonSPace.dispose();
-    _houseRules.dispose();
+    _itemName.dispose();
     super.dispose();
   }
 }
