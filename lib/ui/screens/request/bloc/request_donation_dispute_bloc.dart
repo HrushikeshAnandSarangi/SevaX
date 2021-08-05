@@ -249,17 +249,20 @@ class RequestDonationDisputeBloc {
   }) async {
     var x = List.from(donatedGoods.keys);
     var y = List.from(_goodsRecieved.value.keys);
-    var donationStatus;
+    DonationStatus donationStatus;
 
     x.sort();
     y.sort();
     var status = listEquals(x, y);
+    donationStatus =
+        status ? DonationStatus.ACKNOWLEDGED : DonationStatus.MODIFIED;
+    donationModel.donationStatus = donationStatus;
 
     await _donationsRepository.acknowledgeDonation(
       requestType: donationModel.donationType,
       operatoreMode: operationMode,
-      donationStatus:
-          status ? DonationStatus.ACKNOWLEDGED : DonationStatus.MODIFIED,
+      donationStatus: donationStatus,
+
       acknowledgementNotification: getAcknowlegementNotification(
         model: donationModel,
         operatorMode: operationMode,
@@ -280,6 +283,7 @@ class RequestDonationDisputeBloc {
                   : donationModel.receiverDetails.email
               : donationModel.donorDetails.email,
       donationId: donationId,
+
       // if status is true that means the notification will go to user only as the request is acknowledged
       // if true then we check whether it should go to timebank or user
       //TODO: check the condition for all scenario
