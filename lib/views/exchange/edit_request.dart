@@ -1545,7 +1545,7 @@ class RequestEditFormState extends State<RequestEditForm> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          S.of(context).request_payment_description,
+          L.of(context).request_payment_description,
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
