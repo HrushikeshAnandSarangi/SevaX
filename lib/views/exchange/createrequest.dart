@@ -2164,10 +2164,11 @@ class RequestCreateFormState extends State<RequestCreateForm>
                   TransactionsMatrixCheck(
                     upgradeDetails:
                         AppConfig.upgradePlanBannerModel.cash_request,
-                    transaction_matrix_type: 'cash_goods_requests',
+                    transaction_matrix_type:
+                        'create_borrow_request', //to be added to config json
                     comingFrom: widget.comingFrom,
                     child: ConfigurationCheck(
-                      actionType: 'create_goods_request',
+                      actionType: 'create_borrow_request',
                       role: memberType(timebankModel,
                           SevaCore.of(context).loggedInUser.sevaUserID),
                       child: _optionRadioButton<RequestType>(

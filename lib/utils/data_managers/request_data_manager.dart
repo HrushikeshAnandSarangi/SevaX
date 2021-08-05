@@ -2093,6 +2093,8 @@ Stream<List<RequestModel>> getBorrowRequestCreatorWaitingReturnConfirmation({
   var data = CollectionRef.requests
       // .where('approvedUsers', arrayContains: userEmail)
       // .where('request_end', isLessThan: DateTime.now())
+      .where('email', isEqualTo: userEmail)
+      .where('approvedUsers', isNotEqualTo: [])
       .where('accepted', isEqualTo: false)
       .where('requestType', isEqualTo: 'BORROW')
       .snapshots();
