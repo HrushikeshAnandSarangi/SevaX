@@ -579,6 +579,38 @@ Future<void> readUserNotificationOneToManyWhenSpeakerIsRejectedCompletion({
   }
 }
 
+//Borrow Requests - to remove the notification if Lender acknowledges item/place received back from tasks page
+Future<void> readLenderNotificationIfAcceptedFromTasks({
+  @required RequestModel requestModel,
+  @required String userEmail,
+  @required bool fromNotification,
+}) async {
+  if (!fromNotification) {
+    logger.e('-------------User Email: ${userEmail}--------------');
+    logger.e('-------------RequestModel id: ${requestModel.id}--------------');
+    QuerySnapshot snapshotQuery = await CollectionRef.users
+        .doc(userEmail)
+        .collection('notifications')
+        .where('isRead', isEqualTo: false)
+        .where('type', isEqualTo: 'NOTIFICATION_TO_LENDER_RECEIVED_BACK_CHECK')
+        .where('data.id', isEqualTo: requestModel.id)
+        .get();
+    snapshotQuery.docs.forEach(
+      (document) async {
+        await CollectionRef.users
+            .doc(userEmail)
+            .collection('notifications')
+            .doc(document.id)
+            .update({
+          'isRead': true,
+        });
+      },
+    );
+  } else {
+    return null;
+  }
+}
+
 Stream<List<NotificationsModel>> getNotifications({
   String userEmail,
   @required String communityId,

@@ -24,10 +24,13 @@ import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_template_model.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
+import 'package:sevaexchange/repositories/notifications_repository.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/helpers/mailer.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:usage/uuid/uuid.dart';
 
@@ -2082,6 +2085,34 @@ Stream<List<RequestModel>> getSpeakerClaimedCompletionRequestStream({
   );
 }
 
+//for borrow request, request creator is waiting for Lender to confirm if item/place has been recieved back
+Stream<List<RequestModel>> getBorrowRequestCreatorWaitingReturnConfirmation({
+  @required String userEmail,
+  @required String userId,
+}) async* {
+  var data = CollectionRef.requests
+      // .where('approvedUsers', arrayContains: userEmail)
+      // .where('request_end', isLessThan: DateTime.now())
+      .where('accepted', isEqualTo: false)
+      .where('requestType', isEqualTo: 'BORROW')
+      .snapshots();
+
+  yield* data.transform(
+    StreamTransformer<QuerySnapshot, List<RequestModel>>.fromHandlers(
+      handleData: (snapshot, requestSink) {
+        List<RequestModel> requestListBorrowerWaiting = [];
+        snapshot.docs.forEach((document) {
+          RequestModel model = RequestModel.fromMap(document.data());
+          requestListBorrowerWaiting.add(model);
+        });
+        logger.e('--------> THISS:  ' +
+            requestListBorrowerWaiting.length.toString());
+        requestSink.add(requestListBorrowerWaiting);
+      },
+    ),
+  );
+}
+
 //getALl the categories
 Stream<List<CategoryModel>> getAllCategoriesStream(
     BuildContext context) async* {
@@ -2125,4 +2156,123 @@ Future<List<CategoryModel>> getSubCategoriesFuture(BuildContext context) async {
   });
   logger.i("subCat length ${categories.length}");
   return categories;
+}
+
+Future lenderReceivedBackCheck(
+    {NotificationsModel notification,
+    String notificationId,
+    @required RequestModel requestModelUpdated,
+    @required BuildContext context}) async {
+  showProgressForCreditRetrieval(context);
+
+  //Send Receipt Email to Lender & Borrowr
+  await MailBorrowRequestReceipts.sendBorrowRequestReceipts(
+      requestModelUpdated);
+  log('Came to send receipts to lender and borrower api');
+
+  //Send Notification To Lender to let them know it's acknowledged
+  await sendNotificationLenderReceipt(
+      communityId: requestModelUpdated.communityId,
+      timebankId: requestModelUpdated.timebankId,
+      sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+      userEmail: SevaCore.of(context).loggedInUser.email,
+      requestModel: requestModelUpdated,
+      context: context);
+
+  //NOTIFICATION_TO_ BORROWER _COMPLETION_FEEDBACK
+  await sendNotificationBorrowerRequestCompletedFeedback(
+      communityId: requestModelUpdated.communityId,
+      timebankId: requestModelUpdated.timebankId,
+      sevaUserId: requestModelUpdated.sevaUserId,
+      userEmail: requestModelUpdated.email,
+      requestModel: requestModelUpdated,
+      context: context);
+
+  if (notification != null) {
+    NotificationsRepository.readUserNotification(
+        notification.id, SevaCore.of(context).loggedInUser.email);
+  } else if (notificationId != null) {
+    NotificationsRepository.readUserNotification(
+        notificationId, SevaCore.of(context).loggedInUser.email);
+  }
+
+  FirestoreManager.requestComplete(model: requestModelUpdated);
+
+  Navigator.of(creditRequestDialogContextNew).pop();
+}
+
+Future<void> sendNotificationLenderReceipt(
+    {String communityId,
+    String sevaUserId,
+    String timebankId,
+    String userEmail,
+    RequestModel requestModel,
+    @required BuildContext context}) async {
+  NotificationsModel notification = NotificationsModel(
+      isTimebankNotification:
+          requestModel.requestMode == RequestMode.TIMEBANK_REQUEST,
+      id: Utils.getUuid(),
+      timebankId: FlavorConfig.values.timebankId,
+      data: requestModel.toMap(),
+      isRead: false,
+      type: NotificationType.NOTIFICATION_TO_LENDER_COMPLETION_RECEIPT,
+      communityId: communityId,
+      senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+      targetUserId: sevaUserId);
+
+  await CollectionRef.users
+      .doc(userEmail)
+      .collection("notifications")
+      .doc(notification.id)
+      .set(notification.toMap());
+
+  log('WRITTEN TO DB--------------------->>');
+}
+
+Future<void> sendNotificationBorrowerRequestCompletedFeedback(
+    {String communityId,
+    String sevaUserId,
+    String timebankId,
+    String userEmail,
+    RequestModel requestModel,
+    @required BuildContext context}) async {
+  NotificationsModel notification = NotificationsModel(
+      isTimebankNotification:
+          requestModel.requestMode == RequestMode.TIMEBANK_REQUEST,
+      id: Utils.getUuid(),
+      timebankId: timebankId,
+      data: requestModel.toMap(),
+      isRead: false,
+      type: NotificationType.NOTIFICATION_TO_BORROWER_COMPLETION_FEEDBACK,
+      communityId: communityId,
+      senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+      targetUserId: sevaUserId);
+
+  requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+      ? await CollectionRef.users
+          .doc(userEmail)
+          .collection('notifications')
+          .doc(notification.id)
+          .set(notification.toMap())
+      : await CollectionRef.timebank
+          .doc(timebankId)
+          .collection('notifications')
+          .doc(notification.id)
+          .set(notification.toMap());
+
+  log('SEND FEEDBACK NOTIFICATION TO BORROWER--------------------->>');
+}
+
+BuildContext creditRequestDialogContextNew;
+void showProgressForCreditRetrieval(BuildContext context) {
+  showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        creditRequestDialogContextNew = context;
+        return AlertDialog(
+          title: Text(S.of(context).please_wait),
+          content: LinearProgressIndicator(),
+        );
+      });
 }

@@ -1136,7 +1136,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
         timebankId: requestModelUpdated.timebankId,
         sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
         userEmail: SevaCore.of(context).loggedInUser.email,
-        requestModel: requestModelUpdated);
+        requestModel: requestModelUpdated,
+        context: context);
 
     //NOTIFICATION_TO_ BORROWER _COMPLETION_FEEDBACK
     await sendNotificationBorrowerRequestCompletedFeedback(
@@ -1144,7 +1145,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
         timebankId: requestModelUpdated.timebankId,
         sevaUserId: requestModelUpdated.sevaUserId,
         userEmail: requestModelUpdated.email,
-        requestModel: requestModelUpdated);
+        requestModel: requestModelUpdated,
+        context: context);
 
     //Make this notification isRead: true
     log('notification id:' + notification.id);
@@ -1448,66 +1450,6 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
       localtime,
     );
     return from;
-  }
-
-  Future<void> sendNotificationLenderReceipt(
-      {String communityId,
-      String sevaUserId,
-      String timebankId,
-      String userEmail,
-      RequestModel requestModel}) async {
-    NotificationsModel notification = NotificationsModel(
-        isTimebankNotification:
-            requestModel.requestMode == RequestMode.TIMEBANK_REQUEST,
-        id: Utils.getUuid(),
-        timebankId: FlavorConfig.values.timebankId,
-        data: requestModel.toMap(),
-        isRead: false,
-        type: NotificationType.NOTIFICATION_TO_LENDER_COMPLETION_RECEIPT,
-        communityId: communityId,
-        senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
-        targetUserId: sevaUserId);
-
-    await CollectionRef.users
-        .doc(userEmail)
-        .collection("notifications")
-        .doc(notification.id)
-        .set(notification.toMap());
-
-    log('WRITTEN TO DB--------------------->>');
-  }
-
-  Future<void> sendNotificationBorrowerRequestCompletedFeedback(
-      {String communityId,
-      String sevaUserId,
-      String timebankId,
-      String userEmail,
-      RequestModel requestModel}) async {
-    NotificationsModel notification = NotificationsModel(
-        isTimebankNotification:
-            requestModel.requestMode == RequestMode.TIMEBANK_REQUEST,
-        id: Utils.getUuid(),
-        timebankId: timebankId,
-        data: requestModel.toMap(),
-        isRead: false,
-        type: NotificationType.NOTIFICATION_TO_BORROWER_COMPLETION_FEEDBACK,
-        communityId: communityId,
-        senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
-        targetUserId: sevaUserId);
-
-    requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-        ? await CollectionRef.users
-            .doc(userEmail)
-            .collection('notifications')
-            .doc(notification.id)
-            .set(notification.toMap())
-        : await CollectionRef.timebank
-            .doc(timebankId)
-            .collection('notifications')
-            .doc(notification.id)
-            .set(notification.toMap());
-
-    log('SEND FEEDBACK NOTIFICATION TO BORROWER--------------------->>');
   }
 
   // //Send receipt mail to LENDER for end of Borrow Request

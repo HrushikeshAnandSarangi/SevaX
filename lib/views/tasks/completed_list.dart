@@ -4,6 +4,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/completed_tasks.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/tasks_card_wrapper.dart';
 import 'package:sevaexchange/views/core.dart';
 
 // TODO: Fix the hacks
@@ -14,7 +15,7 @@ class CompletedList extends StatefulWidget {
 }
 
 class _CompletedListState extends State<CompletedList> {
-  List<Widget> completedTasks = [];
+  List<TasksCardWrapper> completedTasks = [];
 
   Stream<Object> requestStream;
 

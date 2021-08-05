@@ -1270,7 +1270,6 @@ Map<String, RequestType> requestTypeMapper = {
   "GOODS": RequestType.GOODS,
   "BORROW": RequestType.BORROW,
   "ONE_TO_MANY_REQUEST": RequestType.ONE_TO_MANY_REQUEST,
-  "BORROW": RequestType.BORROW,
   "ONE_TO_MANY_OFFER": RequestType.ONE_TO_MANY_OFFER,
 };
 Map<String, RequestPaymentType> requestPaymentTypeMapper = {

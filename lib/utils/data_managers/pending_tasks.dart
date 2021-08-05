@@ -12,6 +12,7 @@ import 'package:sevaexchange/ui/screens/offers/pages/time_offer_participant.dart
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/to_do.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
+import 'package:sevaexchange/utils/tasks_card_wrapper.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -68,7 +69,7 @@ class PendingTasks {
     loggedinMemberEmail,
     loggedInmemberId,
   }) {
-    return CombineLatestStream.combine4(
+    return CombineLatestStream.combine5(
       FirestoreManager.getNotAcceptedRequestStream(
         userEmail: loggedinMemberEmail,
         userId: loggedInmemberId,
@@ -82,11 +83,16 @@ class PendingTasks {
         loggedInMemberId: loggedInmemberId,
         loggedInUserEmail: loggedinMemberEmail,
       ),
+      FirestoreManager.getBorrowRequestCreatorWaitingReturnConfirmation(
+        userId: loggedInmemberId,
+        userEmail: loggedinMemberEmail,
+      ),
       (
         pendingClaims,
         acceptedIndividualOffers,
         getSpeakerClaimedCompletionRequestStream,
         pendingCreditRequests,
+        borrowRequestCreatorWaitingReturnConfirmation,
         // oneToManyOffersCreated,
       ) =>
           [
@@ -94,6 +100,7 @@ class PendingTasks {
         acceptedIndividualOffers,
         getSpeakerClaimedCompletionRequestStream,
         pendingCreditRequests,
+        borrowRequestCreatorWaitingReturnConfirmation,
         // oneToManyOffersCreated,
       ],
     );
@@ -103,28 +110,31 @@ class PendingTasks {
     @required List<dynamic> pendingSink,
     @required BuildContext context,
   }) {
-    List<Widget> widgetList = [];
+    List<TasksCardWrapper> tasksList = [];
     List<RequestModel> requestList = pendingSink[0];
     requestList.forEach((model) {
-      widgetList.add(
-        ToDoCard(
-          title: model.title,
-          subTitle: model.description,
-          timeInMilliseconds: model.requestStart,
-          onTap: () async {},
-          tag: model.requestType == RequestType.ONE_TO_MANY_REQUEST
-              ? S.of(context).one_to_many_attendee_request
-              : model.requestType == RequestType.ONE_TO_MANY_OFFER
-                  ? S.of(context).one_to_many_attendee_offer
-                  : model.requestType == RequestType.TIME
-                      ? S.of(context).time
-                      : model.requestType == RequestType.GOODS
-                          ? S.of(context).goods
-                          : model.requestType == RequestType.CASH
-                              ? S.of(context).cash
-                              : model.requestType == RequestType.BORROW
-                                  ? S.of(context).borrow
-                                  : '',
+      tasksList.add(
+        TasksCardWrapper(
+          taskCard: ToDoCard(
+            title: model.title,
+            subTitle: model.description,
+            timeInMilliseconds: model.requestStart,
+            onTap: () async {},
+            tag: model.requestType == RequestType.ONE_TO_MANY_REQUEST
+                ? S.of(context).one_to_many_attendee_request
+                : model.requestType == RequestType.ONE_TO_MANY_OFFER
+                    ? S.of(context).one_to_many_attendee_offer
+                    : model.requestType == RequestType.TIME
+                        ? S.of(context).time
+                        : model.requestType == RequestType.GOODS
+                            ? S.of(context).goods
+                            : model.requestType == RequestType.CASH
+                                ? S.of(context).cash
+                                : model.requestType == RequestType.BORROW
+                                    ? S.of(context).borrow
+                                    : '',
+          ),
+          taskTimestamp: model.requestStart,
         ),
       );
     });
@@ -132,13 +142,16 @@ class PendingTasks {
     // //Signed up Individual Offers
     List<TimeOfferParticipantsModel> offersList = pendingSink[1];
     offersList.forEach((element) {
-      widgetList.add(
-        ToDoCard(
-          onTap: () async {},
-          title: element.requestTitle,
-          subTitle: '',
-          tag: S.of(context).one_to_many_attendee_offer,
-          timeInMilliseconds: element.requestEndDate,
+      tasksList.add(
+        TasksCardWrapper(
+          taskCard: ToDoCard(
+            onTap: () async {},
+            title: element.requestTitle,
+            subTitle: '',
+            tag: S.of(context).one_to_many_attendee_offer,
+            timeInMilliseconds: element.requestEndDate,
+          ),
+          taskTimestamp: element.requestEndDate,
         ),
       );
     });
@@ -146,13 +159,16 @@ class PendingTasks {
     // Speaker has claimed credits
     List<RequestModel> requestListSpeakerClaimed = pendingSink[2];
     requestListSpeakerClaimed.forEach((model) {
-      widgetList.add(
-        ToDoCard(
-          title: model.title,
-          subTitle: model.description,
-          timeInMilliseconds: model.requestStart,
-          onTap: () async {},
-          tag: S.of(context).one_to_many_request_speaker,
+      tasksList.add(
+        TasksCardWrapper(
+          taskCard: ToDoCard(
+            title: model.title,
+            subTitle: model.description,
+            timeInMilliseconds: model.requestStart,
+            onTap: () async {},
+            tag: S.of(context).one_to_many_request_speaker,
+          ),
+          taskTimestamp: model.requestStart,
         ),
       );
     });
@@ -172,18 +188,39 @@ class PendingTasks {
     // Claims Made to cretor of requests
     List<RequestModel> pendingRequestClaims = pendingSink[3];
     pendingRequestClaims.forEach((model) {
-      widgetList.add(
-        ToDoCard(
-          title: model.title,
-          subTitle: model.description,
-          timeInMilliseconds: model.requestStart,
-          onTap: () async {},
-          tag: S.of(context).time_request_volunteer,
+      tasksList.add(
+        TasksCardWrapper(
+          taskCard: ToDoCard(
+            title: model.title,
+            subTitle: model.description,
+            timeInMilliseconds: model.requestStart,
+            onTap: () async {},
+            tag: S.of(context).time_request_volunteer,
+          ),
         ),
       );
     });
 
-    return widgetList;
+    //for borrow request, request creator is waiting for Lender to confirm if item/place has been recieved back
+    List<RequestModel> borrowRequestCreatorAwaitingConfirmation =
+        pendingSink[4];
+    borrowRequestCreatorAwaitingConfirmation.forEach((model) {
+      tasksList.add(
+        TasksCardWrapper(
+          taskCard: ToDoCard(
+            title: model.title,
+            subTitle: model.description,
+            timeInMilliseconds: model.requestStart,
+            onTap: () async {},
+            tag: L.of(context).borrow_request_creator_awaiting_confirmation,
+          ),
+          taskTimestamp: model.requestStart,
+        ),
+      );
+    });
+
+    tasksList.sort((a, b) => b.taskTimestamp.compareTo(a.taskTimestamp));
+    return tasksList;
   }
 
   static Future oneToManySpeakerCompletesRequest(

@@ -21,6 +21,7 @@ import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/to_do.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
+import 'package:sevaexchange/utils/tasks_card_wrapper.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
@@ -77,7 +78,7 @@ class MyTasksListState extends State<MyTaskList> {
   RequestModel requestModelNew;
   Stream<dynamic> myTasksStream;
 
-  List<Widget> widgetList = [];
+  List<TasksCardWrapper> toDoItems = [];
 
   @override
   void initState() {
@@ -104,7 +105,7 @@ class MyTasksListState extends State<MyTaskList> {
           );
         }
 
-        widgetList = ToDo.classifyToDos(
+        toDoItems = ToDo.classifyToDos(
           context: context,
           toDoSink: snapshot.data,
           requestCallback: (requestModel) {
@@ -115,7 +116,7 @@ class MyTasksListState extends State<MyTaskList> {
           },
         );
 
-        if (widgetList.length == 0)
+        if (toDoItems.length == 0)
           return Center(
             child: Text(
               'No To Do\'s',
@@ -124,9 +125,9 @@ class MyTasksListState extends State<MyTaskList> {
 
         return ListView.builder(
           physics: NeverScrollableScrollPhysics(),
-          itemCount: widgetList.length,
+          itemCount: toDoItems.length,
           itemBuilder: (listContext, index) {
-            return widgetList[index];
+            return toDoItems[index];
           },
         );
       },

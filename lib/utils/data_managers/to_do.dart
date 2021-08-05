@@ -9,10 +9,16 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
+import 'package:sevaexchange/ui/screens/message/bloc/message_bloc.dart';
+import 'package:sevaexchange/ui/screens/notifications/bloc/notifications_bloc.dart';
+import 'package:sevaexchange/ui/screens/notifications/pages/combined_notification_page.dart';
 import 'package:sevaexchange/ui/screens/request/pages/oneToManySpeakerTimeEntryComplete_page.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/completed_tasks.dart';
+import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
+import 'package:sevaexchange/utils/tasks_card_wrapper.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -40,6 +46,26 @@ class ToDo {
       data.docs.forEach((element) {
         requestList.add(RequestModel.fromMap(element.data()));
       });
+      return sink.add(requestList);
+    }));
+  }
+
+  static Stream<List<RequestModel>> getBorrowRequestLenderReturnAcknowledgment({
+    String loggedInMemberEmail,
+  }) async* {
+    yield* CollectionRef.requests
+        .where('approvedUsers', arrayContains: loggedInMemberEmail)
+        .where('accepted', isEqualTo: false)
+        .where('requestType', isEqualTo: 'BORROW')
+        .snapshots()
+        .transform(
+            StreamTransformer<QuerySnapshot, List<RequestModel>>.fromHandlers(
+                handleData: (data, sink) {
+      List<RequestModel> requestList = [];
+      data.docs.forEach((element) {
+        requestList.add(RequestModel.fromMap(element.data()));
+      });
+      logger.e('LENGTH CHECK 1:  ' + requestList.length.toString());
       return sink.add(requestList);
     }));
   }
@@ -132,7 +158,7 @@ class ToDo {
     loggedinMemberEmail,
     loggedInmemberId,
   ) {
-    return CombineLatestStream.combine4(
+    return CombineLatestStream.combine5(
         getTaskStreamForUserWithEmail(
           userEmail: loggedinMemberEmail,
           userId: loggedInmemberId,
@@ -142,17 +168,21 @@ class ToDo {
         getSignedUpOneToManyRequests(
           loggedInMemberEmail: loggedinMemberEmail,
         ),
+        getBorrowRequestLenderReturnAcknowledgment(
+            loggedInMemberEmail: loggedinMemberEmail),
         (
           pendingClaims,
           acceptedOneToManyOffers,
           oneToManyOffersCreated,
           acceptedOneToManyRequests,
+          borrowRequestLenderReturnAcknowledgment,
         ) =>
             [
               pendingClaims,
               acceptedOneToManyOffers,
               oneToManyOffersCreated,
               acceptedOneToManyRequests,
+              borrowRequestLenderReturnAcknowledgment,
             ]);
   }
 
@@ -162,69 +192,78 @@ class ToDo {
     @required BuildContext context,
     @required ValueChanged<int> feedbackCallback,
   }) {
-    List<Widget> widgetList = [];
+    List<TasksCardWrapper> tasksList = [];
+    MessageBloc _messageBloc = MessageBloc();
+    NotificationsBloc _notificationsBloc = NotificationsBloc();
 
     List<RequestModel> requestList = toDoSink[0];
     requestList.forEach((model) {
       requestCallback(model);
       if (model.requestType == RequestType.ONE_TO_MANY_REQUEST &&
           model.accepted == false) {
-        widgetList.add(
-          ToDoCard(
-            requestModel: model,
-            isSpeaker: true,
-            title: model.title,
-            subTitle: model.description,
-            timeInMilliseconds: model.requestStart,
-            onTap: () {
-              model.isSpeakerCompleted
-                  ? log("")
-                  : Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return OneToManySpeakerTimeEntryComplete(
-                            userModel: SevaCore.of(context).loggedInUser,
-                            requestModel: model,
-                            onFinish: () async {
-                              await oneToManySpeakerCompletesRequest(
-                                context,
-                                model,
-                              );
-                            },
-                            isFromtasks: true,
-                          );
-                        },
-                      ),
-                    );
-            },
-            tag: S.of(context).one_to_many_request_speaker,
+        tasksList.add(
+          TasksCardWrapper(
+            taskCard: ToDoCard(
+              requestModel: model,
+              isSpeaker: true,
+              title: model.title,
+              subTitle: model.description,
+              timeInMilliseconds: model.requestStart,
+              onTap: () {
+                model.isSpeakerCompleted
+                    ? log("")
+                    : Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return OneToManySpeakerTimeEntryComplete(
+                              userModel: SevaCore.of(context).loggedInUser,
+                              requestModel: model,
+                              onFinish: () async {
+                                await oneToManySpeakerCompletesRequest(
+                                  context,
+                                  model,
+                                );
+                              },
+                              isFromtasks: true,
+                            );
+                          },
+                        ),
+                      );
+              },
+              tag: S.of(context).one_to_many_request_speaker,
+            ),
+            taskTimestamp: model.requestStart,
           ),
         );
       } else if (model.requestType == RequestType.ONE_TO_MANY_REQUEST &&
           model.accepted == true) {
         //
       } else {
-        widgetList.add(
-          ToDoCard(
-            timeInMilliseconds: model.requestStart,
-            tag: S.of(context).time_request_volunteer,
-            subTitle: model.description,
-            title: model.title,
-            onTap: () {
-              if (model.requestType == RequestType.BORROW) {
-                feedbackCallback(0);
-              } else {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => TaskCardView(
-                      requestModel: model,
-                      userTimezone: SevaCore.of(context).loggedInUser.timezone,
+        tasksList.add(
+          TasksCardWrapper(
+            taskCard: ToDoCard(
+              timeInMilliseconds: model.requestStart,
+              tag: S.of(context).time_request_volunteer,
+              subTitle: model.description,
+              title: model.title,
+              onTap: () {
+                if (model.requestType == RequestType.BORROW) {
+                  feedbackCallback(0);
+                } else {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => TaskCardView(
+                        requestModel: model,
+                        userTimezone:
+                            SevaCore.of(context).loggedInUser.timezone,
+                      ),
                     ),
-                  ),
-                );
-              }
-            },
+                  );
+                }
+              },
+            ),
+            taskTimestamp: model.requestStart,
           ),
         );
       }
@@ -233,13 +272,16 @@ class ToDo {
     //Signed up One to many Offers attendee
     List<OfferModel> offersList = toDoSink[1];
     offersList.forEach((element) {
-      widgetList.add(
-        ToDoCard(
-          onTap: () {},
-          title: element.groupOfferDataModel.classTitle,
-          subTitle: element.groupOfferDataModel.classDescription,
-          tag: S.of(context).one_to_many_offer_attende,
-          timeInMilliseconds: element.groupOfferDataModel.startDate,
+      tasksList.add(
+        TasksCardWrapper(
+          taskCard: ToDoCard(
+            onTap: () {},
+            title: element.groupOfferDataModel.classTitle,
+            subTitle: element.groupOfferDataModel.classDescription,
+            tag: S.of(context).one_to_many_offer_attende,
+            timeInMilliseconds: element.groupOfferDataModel.startDate,
+          ),
+          taskTimestamp: element.groupOfferDataModel.startDate,
         ),
       );
     });
@@ -247,13 +289,16 @@ class ToDo {
     //Created One to many Offers
     List<OfferModel> createdOneToManyOffers = toDoSink[2];
     createdOneToManyOffers.forEach((element) {
-      widgetList.add(
-        ToDoCard(
-          onTap: () {},
-          title: element.groupOfferDataModel.classTitle,
-          subTitle: element.groupOfferDataModel.classDescription,
-          tag: S.of(context).one_to_many_offer_speaker,
-          timeInMilliseconds: element.groupOfferDataModel.startDate,
+      tasksList.add(
+        TasksCardWrapper(
+          taskCard: ToDoCard(
+            onTap: () {},
+            title: element.groupOfferDataModel.classTitle,
+            subTitle: element.groupOfferDataModel.classDescription,
+            tag: S.of(context).one_to_many_offer_speaker,
+            timeInMilliseconds: element.groupOfferDataModel.startDate,
+          ),
+          taskTimestamp: element.groupOfferDataModel.startDate,
         ),
       );
     });
@@ -261,16 +306,88 @@ class ToDo {
     //Attendee for one to many request
     List<RequestModel> acceptedOneToManyRequests = toDoSink[3];
     acceptedOneToManyRequests.forEach((element) {
-      widgetList.add(ToDoCard(
-        onTap: () {},
-        title: element.title,
-        subTitle: element.description,
-        tag: S.of(context).one_to_many_request_attende,
-        timeInMilliseconds: element.requestStart,
-      ));
+      tasksList.add(
+        TasksCardWrapper(
+          taskCard: ToDoCard(
+            onTap: () {},
+            title: element.title,
+            subTitle: element.description,
+            tag: S.of(context).one_to_many_request_attende,
+            timeInMilliseconds: element.requestStart,
+          ),
+          taskTimestamp: element.requestStart,
+        ),
+      );
     });
 
-    return widgetList;
+    //Lender Borrow Request Pending Acknowledgement of Return of item/place
+    List<RequestModel> pendingReturnBorrowRequest = toDoSink[4];
+    pendingReturnBorrowRequest.forEach((element) {
+      tasksList.add(
+        TasksCardWrapper(
+          taskCard: ToDoCard(
+            onTap: () async {
+              showDialog(
+                context: context,
+                builder: (_context) => AlertDialog(
+                  title: Text(S.of(context).item_received_alert_dialouge),
+                  actions: [
+                    CustomTextButton(
+                      onPressed: () {
+                        Navigator.of(_context).pop();
+                      },
+                      child: Text(
+                        S.of(context).not_yet,
+                        style: TextStyle(
+                            fontSize: 17, color: Theme.of(context).accentColor),
+                      ),
+                    ),
+                    CustomTextButton(
+                      onPressed: () async {
+                        Navigator.of(_context).pop();
+
+                        log('timebank ID:  ' + element.timebankId);
+
+                        //Update request model to complete it
+                        //requestModelNew.approvedUsers = [];
+                        element.acceptors = [];
+                        element.accepted =
+                            true; //so that we can know that this request has completed
+                        element.isNotified = true; //resets to false otherwise
+
+                        await lenderReceivedBackCheck(
+                            notification: null,
+                            notificationId: null,
+                            requestModelUpdated: element,
+                            context: context);
+                        await FirestoreManager
+                            .readLenderNotificationIfAcceptedFromTasks(
+                          requestModel: element,
+                          userEmail: SevaCore.of(context).loggedInUser.email,
+                          fromNotification: false,
+                        );
+                      },
+                      child: Text(
+                        S.of(context).yes,
+                        style: TextStyle(fontSize: 17),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+            title: element.title,
+            subTitle: element.description,
+            tag: 'HERE HERE',
+            timeInMilliseconds: element.requestStart,
+          ),
+          taskTimestamp: element.requestStart,
+        ),
+      );
+    });
+
+    tasksList.sort((a, b) => b.taskTimestamp.compareTo(a.taskTimestamp));
+    return tasksList;
   }
 
   static Future oneToManySpeakerCompletesRequest(

@@ -4,6 +4,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/pending_tasks.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/tasks_card_wrapper.dart';
 import 'package:sevaexchange/views/core.dart';
 
 class NotAcceptedTaskList extends StatefulWidget {
@@ -11,7 +12,7 @@ class NotAcceptedTaskList extends StatefulWidget {
 }
 
 class NotAcceptedTaskListState extends State<NotAcceptedTaskList> {
-  List<Widget> peningItems = [];
+  List<TasksCardWrapper> pendingItems = [];
   //List<UserModel> userList = [];
 
   Stream<dynamic> requestStream;
@@ -28,7 +29,7 @@ class NotAcceptedTaskListState extends State<NotAcceptedTaskList> {
     requestStream.listen(
       (list) {
         if (!mounted) return;
-        peningItems = PendingTasks.classifyPendingTasks(
+        pendingItems = PendingTasks.classifyPendingTasks(
           pendingSink: list,
           context: context,
         );
@@ -44,7 +45,7 @@ class NotAcceptedTaskListState extends State<NotAcceptedTaskList> {
 
   @override
   Widget build(BuildContext context) {
-    if (peningItems.length == 0) {
+    if (pendingItems.length == 0) {
       return Padding(
         padding: const EdgeInsets.only(top: 58.0),
         child: Text(
@@ -54,10 +55,10 @@ class NotAcceptedTaskListState extends State<NotAcceptedTaskList> {
       );
     }
     return ListView.builder(
-      itemCount: peningItems.length,
+      itemCount: pendingItems.length,
       physics: NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
-        return peningItems[index];
+        return pendingItems[index];
 
         // return Card(
         //   child: ListTile(

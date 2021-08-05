@@ -501,4 +501,10 @@ class L {
 
   // 4th August
   String get provide_address => "Please provide particular area or zipcode";
+
+  String get borrow_request_lender => "Borrow Request Lender";
+  String get borrow_request_lender_pending_return_check =>
+      "Borrow Request Lender - Return Acknowledgment Pending";
+  String get borrow_request_creator_awaiting_confirmation =>
+      "Borrow Request - Awaiting Lender Confirmation";
 }
