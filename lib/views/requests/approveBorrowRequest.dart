@@ -61,9 +61,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
         ),
         centerTitle: true,
         title: Text(
-          widget.requestModel.roomOrTool == 'ROOM'
-              ? S.of(context).approve_borrow_request
-              : S.of(context).approve_item_borrow,
+          L.of(context).accept_borrow_request,
           style: TextStyle(
               fontFamily: "Europa", fontSize: 19, color: Colors.white),
         ),
@@ -83,42 +81,8 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
+            requestAgreementFormComponent(widget.requestModel.roomOrTool),
             SizedBox(height: 20),
-            Text(S.of(context).guests_can_do_and_dont,
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w600,
-                ),
-                textAlign: TextAlign.start),
-            SizedBox(height: 2),
-            TextFormField(
-              onFieldSubmitted: (v) {
-                FocusScope.of(context).unfocus();
-              },
-              onChanged: (enteredValue) {
-                doAndDonts = enteredValue;
-                setState(() {});
-              },
-              decoration: InputDecoration(
-                hintText: S.of(context).approve_borrow_hint_text1,
-                hintStyle: TextStyle(fontSize: 13, color: Colors.grey),
-                // labelText: 'No. of volunteers',
-              ),
-              keyboardType: TextInputType.text,
-              validator: (value) {
-                if (value.isEmpty) {
-                  return S.of(context).approve_borrow_alert_msg1;
-                } else {
-                  doAndDonts = value;
-                  setState(() {});
-                  return null;
-                }
-              },
-            ),
-            SizedBox(height: 20),
-            requestAgreementFormComponent,
-            SizedBox(height: 20),
-            locationWidget,
             termsAcknowledegmentText,
             bottomActionButtons,
           ],
@@ -136,54 +100,8 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            //SizedBox(height: 20),
-            // Text("Guests can do and don't*",
-            //     style: TextStyle(
-            //       fontSize: 20,
-            //       fontWeight: FontWeight.w600,
-            //     ),
-            //     textAlign: TextAlign.start),
-            // SizedBox(height: 10),
-            // TextFormField(
-            //   onFieldSubmitted: (v) {
-            //     FocusScope.of(context).unfocus();
-            //   },
-            //   onChanged: (enteredValue) {
-            //     doAndDonts = enteredValue;
-            //     setState(() {});
-            //   },
-            //   decoration: InputDecoration(
-            //     hintText:
-            //         "Tell your borrower do and dont's",
-            //     hintStyle: TextStyle(fontSize: 13, color: Colors.grey),
-            //     // labelText: 'No. of volunteers',
-            //   ),
-            //   keyboardType: TextInputType.text,
-            //   validator: (value) {
-            //     if (value.isEmpty) {
-            //       return "Please enter the do's and dont's";
-            //     } else {
-            //       doAndDonts = value;
-            //       setState(() {});
-            //       return null;
-            //     }
-            //   },
-            // ),
-
-            requestAgreementFormComponent,
-
+            requestAgreementFormComponent(widget.requestModel.roomOrTool),
             SizedBox(height: 20),
-            LocationPickerWidget(
-              selectedAddress: selectedAddress,
-              location: location,
-              onChanged: (LocationDataModel dataModel) {
-                setState(() {
-                  location = dataModel.geoPoint;
-                  selectedAddress = dataModel.location;
-                });
-              },
-            ),
-
             termsAcknowledegmentText,
             bottomActionButtons,
           ],
@@ -197,12 +115,15 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          L.of(context).your_location,
+          L.of(context).address,
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
         ),
-        SizedBox(height: 15),
-        Text(L.of(context).your_location_subtext,
-            style: TextStyle(fontSize: 15), textAlign: TextAlign.start),
+        SizedBox(height: 6),
+        Text(
+          L.of(context).address_of_location,
+          style: TextStyle(fontSize: 15),
+          softWrap: true,
+        ),
         SizedBox(height: 20),
         Center(
           child: LocationPickerWidget(
@@ -261,11 +182,12 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
       children: <Widget>[
         Container(
           height: 32,
+          width: 110,
           child: CustomElevatedButton(
-            padding: EdgeInsets.only(left: 11, right: 11),
+            padding: EdgeInsets.only(left: 5, right: 5),
             color: Colors.grey[300],
             child: Text(
-              S.of(context).acknowledge,
+              L.of(context).send,
               style: TextStyle(color: Colors.black, fontFamily: 'Europa'),
             ),
             onPressed: () async {
@@ -322,8 +244,9 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
         SizedBox(width: 5),
         Container(
           height: 32,
+          width: 110,
           child: CustomElevatedButton(
-            padding: EdgeInsets.only(left: 11, right: 11),
+            padding: EdgeInsets.only(left: 5, right: 5),
             color: Colors.grey[300],
             child: Text(
               S.of(context).message,
@@ -362,10 +285,40 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
     );
   }
 
-  Widget get requestAgreementFormComponent {
+  Widget requestAgreementFormComponent(String roomOrTool) {
+    // logger.e('ROOM OR TOOL:  ' + roomOrTool);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        SizedBox(height: 15),
+        Text(
+          L.of(context).details_of_the_request,
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+        ),
+        SizedBox(height: 10),
+        Text(
+          roomOrTool == "ROOM"
+              ? L.of(context).details_of_the_request_subtext_place
+              : L.of(context).details_of_the_request_subtext_item,
+          style: TextStyle(fontSize: 15),
+          softWrap: true,
+        ),
+        SizedBox(height: 15),
+        Text(
+          roomOrTool == "ROOM"
+              ? L.of(context).provide_place_for_lending
+              : L.of(context).provide_item_for_lending,
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+        ),
+        SizedBox(height: 10),
+        Text(
+          //widget depends on item or place (migrate from lending offers)
+          '<---- Personal place or items widgets to be integrated here (elastic search bar to find user personal items/place) ---->',
+          style: TextStyle(fontSize: 15),
+          softWrap: true,
+        ),
+        SizedBox(height: 15),
+        locationWidget,
         SizedBox(height: 15),
         Text(
           S.of(context).agreement,

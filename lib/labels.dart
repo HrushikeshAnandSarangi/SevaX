@@ -507,4 +507,15 @@ class L {
       "Borrow Request Lender - Return Acknowledgment Pending (tap to complete request)";
   String get borrow_request_creator_awaiting_confirmation =>
       "Borrow Request - Awaiting Lender Confirmation";
+  String get details_of_the_request => "Details of the Request";
+  String get details_of_the_request_subtext_item =>
+      "Please provide details of the item(s); agreement and location";
+  String get details_of_the_request_subtext_place =>
+      "Please provide details of the place; agreement and location";
+  String get accept_borrow_request => "Accept Borrow Request";
+  String get provide_item_for_lending => "Provide item(s) for lending";
+  String get provide_place_for_lending => "Provide a place for lending";
+  String get address => 'Address';
+  String get address_of_location => 'Address of location';
+  String get send => 'Send';
 }
