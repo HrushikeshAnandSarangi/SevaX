@@ -22,6 +22,7 @@ class ExploreSearchPageBloc {
   final _communities = BehaviorSubject<List<CommunityModel>>();
   final _featuredCommunities = BehaviorSubject<List<CommunityModel>>();
   final _events = BehaviorSubject<List<ProjectModel>>();
+  final _completedEvents = BehaviorSubject<bool>();
   final _requests = BehaviorSubject<List<RequestModel>>();
   final _offers = BehaviorSubject<List<OfferModel>>();
   final _selectedCommunityCategory = BehaviorSubject<String>.seeded('_');
@@ -46,6 +47,7 @@ class ExploreSearchPageBloc {
   Stream<List<CommunityModel>> get featuredCommunities =>
       _featuredCommunities.stream;
   Stream<int> get distance => _distance.stream;
+  Stream<bool> get completedEvents => _completedEvents.stream;
   Stream<String> get selectedCommunityCategoryId =>
       _selectedCommunityCategory.stream;
   Stream<String> get selectedRequestCategoryId =>
@@ -58,6 +60,7 @@ class ExploreSearchPageBloc {
   Function(String) get onRequestCategoryChanged =>
       _selectedRequestCategory.sink.add;
   Function(int) get distanceChanged => _distance.sink.add;
+  Function(bool) get onCompletedEventChanged => _completedEvents.sink.add;
 
   void onSearchChange(String value) {
     if (value != null || value != "") {
@@ -124,9 +127,21 @@ class ExploreSearchPageBloc {
           );
         });
 
+
+        _completedEvents.listen((value) {
+          ElasticSearchApi.getPublicProjects(
+              distanceFilterData: distanceFilterData,
+              sevaUserID: sevaUserID,
+              showCompletedEvent: value
+          ).then((value) {
+            _events.add(value);
+          });
+        });
+
         ElasticSearchApi.getPublicProjects(
           distanceFilterData: distanceFilterData,
           sevaUserID: sevaUserID,
+          showCompletedEvent: false
         ).then((value) {
           _events.add(value);
         });
@@ -188,12 +203,14 @@ class ExploreSearchPageBloc {
           },
         );
 
+
         ElasticSearchApi.searchPublicEvents(
           queryString: searchText,
           distanceFilterData: distanceFilterData,
         ).then(
           (data) => _events.add(data),
         );
+
         _offerFilter.listen((filter) {
           ElasticSearchApi.searchPublicOffers(
             queryString: searchText,

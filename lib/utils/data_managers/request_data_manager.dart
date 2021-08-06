@@ -706,7 +706,7 @@ Stream<List<ProjectModel>> getRecurringEvents({
   );
 }
 
-Stream<List<ProjectModel>> getAllProjectListStream(
+Stream<ProjectModelList> getAllProjectListStream(
     {String timebankid, bool isAdminOrOwner, BuildContext context}) async* {
   var query = CollectionRef.projects
       .where('timebanksPosted', arrayContains: timebankid)
@@ -716,10 +716,12 @@ Stream<List<ProjectModel>> getAllProjectListStream(
 
   var data = query.snapshots();
 
+
   yield* data.transform(
-    StreamTransformer<QuerySnapshot, List<ProjectModel>>.fromHandlers(
+    StreamTransformer<QuerySnapshot, ProjectModelList>.fromHandlers(
       handleData: (snapshot, projectSink) {
         List<ProjectModel> projectsList = [];
+        List<ProjectModel> completedProjectsList = [];
         snapshot.docs.forEach(
           (documentSnapshot) {
             // var a = Map<String, dynamic>.from(documentSnapshot.data);
@@ -736,14 +738,14 @@ Stream<List<ProjectModel>> getAllProjectListStream(
                       .contains(SevaCore.of(context).loggedInUser.sevaUserID) ||
                   model.creatorId ==
                       SevaCore.of(context).loggedInUser.sevaUserID) {
-                projectsList.add(model);
+                completedProjectsList.add(model);
               }
             } else {
               projectsList.add(model);
             }
           },
         );
-        projectSink.add(projectsList);
+        projectSink.add(ProjectModelList(projectsList, completedProjectsList));
       },
     ),
   );

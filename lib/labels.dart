@@ -336,4 +336,7 @@ class L {
 
   //4th aug
   String get request_payment_description => "Payment Method*";
+
+  //6th Aug
+  String get completed_events => "Completed Events";
 }

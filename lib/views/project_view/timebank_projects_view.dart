@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
@@ -48,10 +49,9 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
 
   @override
   Widget build(BuildContext context) {
-    isAdminOrOwner = widget.timebankModel.admins
-            .contains(SevaCore.of(context).loggedInUser.sevaUserID) ||
-        widget.timebankModel.organizers
-            .contains(SevaCore.of(context).loggedInUser.sevaUserID);
+    isAdminOrOwner =
+        widget.timebankModel.admins.contains(SevaCore.of(context).loggedInUser.sevaUserID) ||
+            widget.timebankModel.organizers.contains(SevaCore.of(context).loggedInUser.sevaUserID);
     return Scaffold(
       body: Column(
         children: <Widget>[
@@ -81,12 +81,11 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                   child: TransactionLimitCheck(
                     comingFrom: ComingFrom.Projects,
                     timebankId: widget.timebankId,
-                    isSoftDeleteRequested:
-                        widget.timebankModel.requestedSoftDelete,
+                    isSoftDeleteRequested: widget.timebankModel.requestedSoftDelete,
                     child: ConfigurationCheck(
                       actionType: 'create_events',
-                      role: memberType(widget.timebankModel,
-                          SevaCore.of(context).loggedInUser.sevaUserID),
+                      role: memberType(
+                          widget.timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
                       child: GestureDetector(
                         child: Container(
                           margin: EdgeInsets.only(left: 0),
@@ -106,13 +105,10 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
             ),
           ),
           Expanded(
-            child: StreamBuilder<List<ProjectModel>>(
+            child: StreamBuilder<ProjectModelList>(
               stream: FirestoreManager.getAllProjectListStream(
-                  timebankid: widget.timebankId,
-                  isAdminOrOwner: isAdminOrOwner,
-                  context: context),
-              builder: (BuildContext context,
-                  AsyncSnapshot<List<ProjectModel>> projectListSnapshot) {
+                  timebankid: widget.timebankId, isAdminOrOwner: isAdminOrOwner, context: context),
+              builder: (BuildContext context, AsyncSnapshot<ProjectModelList> projectListSnapshot) {
                 if (projectListSnapshot.hasError) {
                   log("===================== ===== > ${projectListSnapshot.error}");
                   return Text(S.of(context).general_stream_error);
@@ -121,10 +117,11 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                   case ConnectionState.waiting:
                     return LoadingIndicator();
                   default:
-                    List<ProjectModel> projectModelList =
-                        projectListSnapshot.data;
+                    List<ProjectModel> projectModelList = projectListSnapshot.data.events;
+                    List<ProjectModel> completedProjectModelList =
+                        projectListSnapshot.data.completedEvents;
 
-                    if (projectModelList.length == 0) {
+                    if (projectModelList.length == 0 && completedProjectModelList.length == 0) {
                       return Center(
                         child: Padding(
                           padding: const EdgeInsets.all(12),
@@ -137,63 +134,29 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                         ),
                       );
                     }
-                    return ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: projectModelList.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        ProjectModel project = projectModelList[index];
-                        int totalTask = project.completedRequests != null &&
-                                project.pendingRequests != null
-                            ? project.pendingRequests.length +
-                                project.completedRequests.length
-                            : 0;
-
-                        return ProjectsCard(
-                          isRecurring: project.isRecurring,
-                          timestamp: project.createdAt,
-                          startTime: project.startTime,
-                          endTime: project.endTime,
-                          title: project.name,
-                          description: project.description,
-                          photoUrl: project.photoUrl,
-                          location: project.address,
-                          tasks: totalTask,
-                          pendingTask: project.pendingRequests?.length,
-                          onTap: () {
-                            if (project.isRecurring)
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_context) => BlocProvider(
-                                    bloc: BlocProvider.of<HomeDashBoardBloc>(
-                                        context),
-                                    child: RecurringEventsList(
-                                      timebankId: widget.timebankId,
-                                      timebankModel: widget.timebankModel,
-                                      parentEventId: project.parentEventId,
+                    return SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Column(
+                            mainAxisSize: MainAxisSize.max,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: projectModelList.map((model) => getEventCard(model)).toList(),
+                          ),
+                          completedProjectModelList.length != 0
+                              ? Padding(
+                                  padding: const EdgeInsets.only(left: 8, top: 8),
+                                  child: Text(
+                                    L.of(context).completed_events,
+                                    style: TextStyle(
+                                      fontSize: 18,
                                     ),
                                   ),
-                                ),
-                              );
-                            else
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_context) => BlocProvider(
-                                    bloc: BlocProvider.of<HomeDashBoardBloc>(
-                                        context),
-                                    child: ProjectRequests(
-                                      ComingFrom.Projects,
-                                      timebankId: widget.timebankId,
-                                      projectModel: project,
-                                      timebankModel: widget.timebankModel,
-                                    ),
-                                  ),
-                                ),
-                              );
-                          },
-                        );
-                      },
+                                )
+                              : SizedBox(),
+                          ...completedProjectModelList.map((model) => getEventCard(model))
+                        ],
+                      ),
                     );
                 }
               },
@@ -204,10 +167,59 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
     );
   }
 
+  Widget getEventCard(ProjectModel project) {
+    int totalTask = project.completedRequests != null && project.pendingRequests != null
+        ? project.pendingRequests.length + project.completedRequests.length
+        : 0;
+
+    return ProjectsCard(
+      isRecurring: project.isRecurring,
+      timestamp: project.createdAt,
+      startTime: project.startTime,
+      endTime: project.endTime,
+      title: project.name,
+      description: project.description,
+      photoUrl: project.photoUrl,
+      location: project.address,
+      tasks: totalTask,
+      pendingTask: project.pendingRequests?.length,
+      onTap: () {
+        if (project.isRecurring)
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_context) => BlocProvider(
+                bloc: BlocProvider.of<HomeDashBoardBloc>(context),
+                child: RecurringEventsList(
+                  timebankId: widget.timebankId,
+                  timebankModel: widget.timebankModel,
+                  parentEventId: project.parentEventId,
+                ),
+              ),
+            ),
+          );
+        else
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_context) => BlocProvider(
+                bloc: BlocProvider.of<HomeDashBoardBloc>(context),
+                child: ProjectRequests(
+                  ComingFrom.Projects,
+                  timebankId: widget.timebankId,
+                  projectModel: project,
+                  timebankModel: widget.timebankModel,
+                ),
+              ),
+            ),
+          );
+      },
+    );
+  }
+
   void navigateToCreateProject() {
     if (widget.timebankModel.id == FlavorConfig.values.timebankId &&
-        !isAccessAvailable(widget.timebankModel,
-            SevaCore.of(context).loggedInUser.sevaUserID)) {
+        !isAccessAvailable(widget.timebankModel, SevaCore.of(context).loggedInUser.sevaUserID)) {
       showAdminAccessMessage(context: context);
     } else {
       Navigator.push(
