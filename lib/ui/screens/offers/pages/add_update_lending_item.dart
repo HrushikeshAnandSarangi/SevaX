@@ -38,7 +38,7 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
   @override
   void initState() {
     super.initState();
-    if (widget.lendingModel.lendingItemModel != null) {
+    if (widget.lendingModel != null) {
       _bloc.loadData(widget.lendingModel.lendingItemModel);
       _itemNameController.text = widget.lendingModel.lendingItemModel.itemName;
     } else {
@@ -91,7 +91,7 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(
-                        widget.lendingModel.lendingItemModel == null
+                        widget.lendingModel == null
                             ? L.of(context).creating_item
                             : L.of(context).updating_item,
                       ),
@@ -107,7 +107,7 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(
-                        widget.lendingModel.lendingItemModel == null
+                        widget.lendingModel == null
                             ? L.of(context).creating_item_error
                             : L.of(context).updating_item_error,
                       ),
@@ -284,8 +284,7 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                                     context: context,
                                     message: 'Add images to item');
                               } else {
-                                if (widget.lendingModel.lendingItemModel ==
-                                    null) {
+                                if (widget.lendingModel == null) {
                                   _bloc.createLendingOfferPlace(
                                       creator:
                                           SevaCore.of(context).loggedInUser);
@@ -297,7 +296,7 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                             },
                             shape: StadiumBorder(),
                             child: Text(
-                                widget.lendingModel.lendingItemModel == null
+                                widget.lendingModel == null
                                     ? L.of(context).add_item
                                     : L.of(context).update_item,
                                 style: TextStyle(fontSize: 20)),

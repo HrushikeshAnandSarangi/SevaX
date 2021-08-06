@@ -121,7 +121,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(
-                        widget.lendingModel.lendingPlaceModel == null
+                        widget.lendingModel == null
                             ? L.of(context).creating_place
                             : L.of(context).updating_place,
                       ),
@@ -137,7 +137,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(
-                        widget.lendingModel.lendingPlaceModel == null
+                        widget.lendingModel == null
                             ? L.of(context).creating_place_error
                             : L.of(context).updating_place_error,
                       ),
@@ -456,8 +456,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                                     context: context,
                                     message: 'Add images to place');
                               } else {
-                                if (widget.lendingModel.lendingPlaceModel ==
-                                    null) {
+                                if (widget.lendingModel == null) {
                                   _bloc.createLendingOfferPlace(
                                       creator:
                                           SevaCore.of(context).loggedInUser);
@@ -469,7 +468,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             },
                             shape: StadiumBorder(),
                             child: Text(
-                                widget.lendingModel.lendingPlaceModel == null
+                                widget.lendingModel == null
                                     ? L.of(context).add_place
                                     : L.of(context).update_place,
                                 style: TextStyle(fontSize: 20)),

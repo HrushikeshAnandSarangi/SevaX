@@ -18,13 +18,13 @@ class LendingOffersRepo {
     return modelList;
   }
 
-  static Future<List<LendingPlaceModel>> getAllLendingPlaces(
+  static Future<List<LendingModel>> getAllLendingPlaces(
       {String creatorId}) async {
-    List<LendingPlaceModel> modelList = [];
+    List<LendingModel> modelList = [];
     await CollectionRef.lendingItems
       ..where('creatorId', isEqualTo: creatorId).get().then((data) {
         data.docs.forEach((document) {
-          LendingPlaceModel model = LendingPlaceModel.fromMap(document.data());
+          LendingModel model = LendingModel.fromMap(document.data());
           modelList.add(model);
         });
       });

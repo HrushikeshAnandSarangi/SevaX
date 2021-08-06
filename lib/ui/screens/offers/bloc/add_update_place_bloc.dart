@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
+import 'package:sevaexchange/models/enums/lending_borrow_enums.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/lending_model.dart';
 import 'package:sevaexchange/new_baseline/models/lending_place_model.dart';
@@ -75,6 +76,7 @@ class AddUpdatePlaceBloc extends BlocBase {
             creatorId: creator.sevaUserID,
             email: creator.email,
             timestamp: timestamp,
+            lendingType: LendingType.PLACE,
             lendingPlaceModel: LendingPlaceModel(
                 placeName: _placeName.value,
                 noOfGuests: int.parse(_no_of_guests.value),

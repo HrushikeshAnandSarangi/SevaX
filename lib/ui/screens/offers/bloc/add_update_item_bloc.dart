@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
+import 'package:sevaexchange/models/enums/lending_borrow_enums.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/lending_item_model.dart';
 import 'package:sevaexchange/new_baseline/models/lending_model.dart';
@@ -52,6 +53,7 @@ class AddUpdateItemBloc extends BlocBase {
         creatorId: creator.sevaUserID,
         email: creator.email,
         timestamp: timestamp,
+        lendingType: LendingType.ITEM,
       );
       LendingOffersRepo.addNewLendingItem(model: lendingModel).then((_) {
         _model.add(lendingModel);

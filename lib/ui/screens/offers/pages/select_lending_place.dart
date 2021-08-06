@@ -2,33 +2,37 @@ import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/community_category_model.dart';
+import 'package:sevaexchange/models/enums/lending_borrow_enums.dart';
 import 'package:sevaexchange/new_baseline/models/lending_model.dart';
 import 'package:sevaexchange/new_baseline/models/lending_place_model.dart';
 import 'package:sevaexchange/repositories/community_repository.dart';
 import 'package:sevaexchange/repositories/lending_offer_repo.dart';
+import 'package:sevaexchange/ui/screens/offers/pages/add_update_lending_item.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_chip.dart';
 import 'package:sevaexchange/utils/extensions.dart';
 
 import 'add_update_lending_place.dart';
 
-class SelectLendingPlace extends StatefulWidget {
+class SelectLendingPlaceItem extends StatefulWidget {
   final Function(LendingModel) onSelected;
+  final LendingType lendingType;
 
-  const SelectLendingPlace({
+  const SelectLendingPlaceItem({
     Key key,
     this.onSelected,
+    this.lendingType,
   }) : super(key: key);
   @override
-  _SelectLendingPlaceState createState() => _SelectLendingPlaceState();
+  _SelectLendingPlaceItemState createState() => _SelectLendingPlaceItemState();
 }
 
-class _SelectLendingPlaceState extends State<SelectLendingPlace> {
-  LendingPlaceModel selectedModel = LendingPlaceModel();
+class _SelectLendingPlaceItemState extends State<SelectLendingPlaceItem> {
+  LendingModel selectedModel = LendingModel();
   // List<CommunityCategoryModel> availableCategories = [];
   SuggestionsBoxController controller = SuggestionsBoxController();
   TextEditingController _textEditingController = TextEditingController();
-  Future<List<LendingPlaceModel>> future;
+  Future<List<LendingModel>> future;
   bool isDataLoaded = false;
   @override
   void initState() {
@@ -89,8 +93,7 @@ class _SelectLendingPlaceState extends State<SelectLendingPlace> {
                 suggestionsBoxController: controller,
                 noItemsFoundBuilder: (context) {
                   return getSuggestionLayout(
-                    suggestion:
-                        _textEditingController.text.firstWordUpperCase(),
+                    suggestion: _textEditingController.text,
                     add: S.of(context).add + ' ',
                   );
                 },
@@ -98,7 +101,9 @@ class _SelectLendingPlaceState extends State<SelectLendingPlace> {
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      itemData.lendingPlaceModel.placeName,
+                      widget.lendingType == LendingType.ITEM
+                          ? itemData.lendingItemModel.itemName
+                          : itemData.lendingPlaceModel.placeName,
                       style: TextStyle(fontSize: 16),
                     ),
                   );
@@ -108,10 +113,17 @@ class _SelectLendingPlaceState extends State<SelectLendingPlace> {
                 },
                 suggestionsCallback: (String pattern) async {
                   var dataCopy = List<LendingModel>.from(snapshot.data);
-                  dataCopy.retainWhere((s) =>
-                      s.lendingPlaceModel.placeName.toLowerCase().contains(
-                            pattern.toLowerCase(),
-                          ));
+                  if (widget.lendingType == LendingType.ITEM) {
+                    dataCopy.retainWhere((s) =>
+                        s.lendingItemModel.itemName.toLowerCase().contains(
+                              pattern.toLowerCase(),
+                            ));
+                  } else {
+                    dataCopy.retainWhere((s) =>
+                        s.lendingPlaceModel.placeName.toLowerCase().contains(
+                              pattern.toLowerCase(),
+                            ));
+                  }
                   return dataCopy;
                 },
               );
@@ -129,19 +141,35 @@ class _SelectLendingPlaceState extends State<SelectLendingPlace> {
         ? Padding(padding: const EdgeInsets.all(0))
         : InkWell(
             onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) {
-                    return AddUpdateLendingPlace(
-                      lendingModel: null,
-                      enteredTitle: suggestion,
-                      onPlaceCreateUpdate: (LendingModel model) {
-                        widget.onSelected(model);
-                      },
-                    );
-                  },
-                ),
-              );
+              if (widget.lendingType == LendingType.ITEM) {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return AddUpdateLendingItem(
+                        lendingModel: null,
+                        enteredTitle: suggestion.firstWordUpperCase(),
+                        onItemCreateUpdate: (LendingModel model) {
+                          widget.onSelected(model);
+                        },
+                      );
+                    },
+                  ),
+                );
+              } else {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return AddUpdateLendingPlace(
+                        lendingModel: null,
+                        enteredTitle: suggestion.firstWordUpperCase(),
+                        onPlaceCreateUpdate: (LendingModel model) {
+                          widget.onSelected(model);
+                        },
+                      );
+                    },
+                  ),
+                );
+              }
             },
             child: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -166,7 +194,8 @@ class _SelectLendingPlaceState extends State<SelectLendingPlace> {
                                   ),
                                 ),
                                 TextSpan(
-                                  text: "\"${suggestion}\"",
+                                  text:
+                                      "\"${suggestion.firstWordUpperCase()}\"",
                                   style: TextStyle(
                                     fontSize: 16,
                                     color: Colors.blue,

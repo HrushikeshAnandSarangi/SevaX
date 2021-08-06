@@ -3,6 +3,7 @@
 //     final lendingPlaceModel = lendingPlaceModelFromMap(jsonString);
 
 import 'package:meta/meta.dart';
+import 'package:sevaexchange/models/enums/lending_borrow_enums.dart';
 import 'dart:convert';
 
 import 'package:sevaexchange/new_baseline/models/lending_item_model.dart';
@@ -82,5 +83,3 @@ Map<String, LendingType> lendingTypeMapper = {
   "PLACE": LendingType.PLACE,
   "ITEM": LendingType.ITEM,
 };
-
-enum LendingType { PLACE, ITEM }

@@ -12,6 +12,7 @@ import 'package:sevaexchange/components/repeat_availability/edit_repeat_widget.d
 import 'package:sevaexchange/components/repeat_availability/repeat_widget.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/enums/help_context_enums.dart';
+import 'package:sevaexchange/models/enums/lending_borrow_enums.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
@@ -24,6 +25,7 @@ import 'package:sevaexchange/ui/screens/offers/pages/add_update_lending_place.da
 import 'package:sevaexchange/ui/screens/offers/pages/select_lending_place.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/custom_dialog.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/custom_textfield.dart';
+import 'package:sevaexchange/ui/screens/offers/widgets/lending_item_card_widget.dart';
 import 'package:sevaexchange/ui/utils/offer_utility.dart';
 import 'package:sevaexchange/ui/utils/validators.dart';
 import 'package:sevaexchange/utils/app_config.dart';
@@ -39,7 +41,8 @@ import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/widgets/open_scope_checkbox_widget.dart';
 
 import '../../../../labels.dart';
-import 'lending_place_card_widget.dart';
+import 'add_update_lending_item.dart';
+import '../widgets/lending_place_card_widget.dart';
 
 class IndividualOffer extends StatefulWidget {
   final OfferModel offerModel;
@@ -1541,9 +1544,14 @@ class _IndividualOfferState extends State<IndividualOffer> {
           SizedBox(
             height: 10,
           ),
-          SelectLendingPlace(onSelected: (LendingModel model) {
-            _bloc.onLendingModelAdded(model);
-          }),
+          SelectLendingPlaceItem(
+            onSelected: (LendingModel model) {
+              _bloc.onLendingModelAdded(model);
+            },
+            lendingType: _bloc.lendingOfferType == 0
+                ? LendingType.PLACE
+                : LendingType.ITEM,
+          ),
           SizedBox(
             height: 10,
           ),
@@ -1553,26 +1561,52 @@ class _IndividualOfferState extends State<IndividualOffer> {
                 if (snapshot.data == null || snapshot.hasError) {
                   return Container();
                 }
-                return LendingPlaceCardWidget(
-                  lendingPlaceModel: snapshot.data.lendingPlaceModel,
-                  onDelete: () {
-                    _bloc.onLendingModelAdded(null);
-                  },
-                  onEdit: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return AddUpdateLendingPlace(
-                            lendingModel: snapshot.data,
-                            onPlaceCreateUpdate: (LendingModel model) {
-                              _bloc.onLendingModelAdded(model);
-                            },
-                          );
-                        },
-                      ),
-                    );
-                  },
-                );
+                if (snapshot.hasError) {
+                  return Container();
+                }
+                if (snapshot.data.lendingType == LendingType.ITEM) {
+                  return LendingItemCardWidget(
+                    lendingItemModel: snapshot.data.lendingItemModel,
+                    onDelete: () {
+                      _bloc.onLendingModelAdded(null);
+                    },
+                    onEdit: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return AddUpdateLendingItem(
+                              lendingModel: snapshot.data,
+                              onItemCreateUpdate: (LendingModel model) {
+                                _bloc.onLendingModelAdded(model);
+                              },
+                            );
+                          },
+                        ),
+                      );
+                    },
+                  );
+                } else {
+                  return LendingPlaceCardWidget(
+                    lendingPlaceModel: snapshot.data.lendingPlaceModel,
+                    onDelete: () {
+                      _bloc.onLendingModelAdded(null);
+                    },
+                    onEdit: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return AddUpdateLendingPlace(
+                              lendingModel: snapshot.data,
+                              onPlaceCreateUpdate: (LendingModel model) {
+                                _bloc.onLendingModelAdded(model);
+                              },
+                            );
+                          },
+                        ),
+                      );
+                    },
+                  );
+                }
               }),
           SizedBox(height: 20),
           OfferDurationWidget(
