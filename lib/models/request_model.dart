@@ -222,6 +222,7 @@ class RequestModel extends DataModel {
   List<String> imageUrls = [];
   String communityName;
   DocumentReference speakerInviteNotificationDocRef;
+  Map<String, String> requiredItems = {};
 
   RequestModel({
     this.id,
@@ -285,6 +286,7 @@ class RequestModel extends DataModel {
     this.oneToManyRequestAttenders,
     this.communityName,
     this.speakerInviteNotificationDocRef,
+    this.requiredItems,
   }) {
     log("===========Constructir called $communityId =======");
   }
@@ -590,6 +592,10 @@ class RequestModel extends DataModel {
     }
     if (map.containsKey('minimumCredits')) {
       this.minimumCredits = map['minimumCredits'];
+    }
+    if (map.containsKey("requiredItems")) {
+      this.requiredItems =
+          Map<String, String>.from(map["requiredItems"] ?? {}) ?? {};
     }
   }
 
@@ -897,6 +903,10 @@ class RequestModel extends DataModel {
       this.speakerInviteNotificationDocRef =
           map['speakerInviteNotificationDocRef'];
     }
+    if (map.containsKey("requiredItems")) {
+      this.requiredItems =
+          Map<String, String>.from(map["requiredItems"] ?? {}) ?? {};
+    }
   }
 
   @override
@@ -1174,6 +1184,9 @@ class RequestModel extends DataModel {
       object['imageUrls'] = this.imageUrls;
     } else {
       object['imageUrls'] = [];
+    }
+    if (this.requiredItems != null) {
+      object['requiredItems'] = Map<String, String>.from(this.requiredItems);
     }
     return object;
   }

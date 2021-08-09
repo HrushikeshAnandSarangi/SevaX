@@ -522,4 +522,8 @@ class L {
       "I acknowledge that you can use the room on the mentioned dates.";
   String get approve_borrow_terms_acknowledgement_text2 =>
       "I acknowledge that you can use the item(s) on the mentioned dates.";
+  String get select_a_item_lending =>
+      "Select list of related items for Borrow*";
+  String get items_validation =>
+      "You have not selected any Items. Please select one or more before creating the Borrow request.";
 }

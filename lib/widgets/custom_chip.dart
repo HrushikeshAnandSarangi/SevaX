@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
 
 class CustomChip extends StatelessWidget {
@@ -90,6 +91,48 @@ class CustomChipExploreFilter extends StatelessWidget {
           ),
           backgroundColor:
               isSelected ? Theme.of(context).primaryColor : Colors.transparent,
+        ),
+      ),
+    );
+  }
+}
+
+class CustomChipWithTick extends StatelessWidget {
+  final bool isSelected;
+  final VoidCallback onTap;
+  final String label;
+  final bool isHidden;
+
+  const CustomChipWithTick({
+    Key key,
+    this.isSelected,
+    this.onTap,
+    this.label,
+    this.isHidden = false,
+  }) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return HideWidget(
+      hide: isHidden,
+      child: InkWell(
+        onTap: onTap,
+        child: Chip(
+          avatar: isSelected
+              ? CircleAvatar(
+                  backgroundColor: Color(0xFFFFFFFF),
+                  foregroundColor: Color(0xFFF70C493),
+                  child: Icon(
+                    Icons.done,
+                    size: 22,
+                  ),
+                )
+              : Container(),
+          label: Text(
+            label,
+            style: TextStyle(color: isSelected ? Colors.white : Colors.black54),
+          ),
+          backgroundColor:
+              isSelected ? HexColor('#70C493') : HexColor('#EBECEF'),
         ),
       ),
     );
