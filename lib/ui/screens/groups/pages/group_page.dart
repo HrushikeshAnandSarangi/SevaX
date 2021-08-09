@@ -317,10 +317,11 @@ class _GroupPageState extends State<GroupPage> {
         return AlertDialog(
           title: Text(S.of(context).protected_timebank),
           content: Text(S.of(context).protected_timebank_group_creation_error),
+          actionsPadding: EdgeInsets.only(right: 20),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             CustomTextButton(
-              color: Theme.of(context).primaryColor,
+              color: Theme.of(context).accentColor,
               child: Text(S.of(context).close),
               textColor: Colors.white,
               onPressed: () {

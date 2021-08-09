@@ -690,6 +690,7 @@ class _EditProfilePageState extends State<EditProfilePage>
       });
       String imageUrl =
           await uploadImage(SevaCore.of(context).loggedInUser.email);
+      log("link ${imageUrl.toString()}");
 
       await profanityCheck(imageURL: imageUrl, storagePath: imageUrl);
     }
@@ -871,9 +872,20 @@ class _EditProfilePageState extends State<EditProfilePage>
                 children: <Widget>[
                   Spacer(),
                   CustomTextButton(
-                    padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                    color: HexColor("#d2d2d2"),
+                    textColor: Colors.white,
+                    child: Text(
+                      S.of(context).cancel,
+                      style: TextStyle(fontSize: dialogButtonSize),
+                    ),
+                    onPressed: () {
+                      Navigator.pop(viewContext);
+                    },
+                  ),
+                  SizedBox(width: 10),
+                  CustomTextButton(
                     color: Theme.of(context).accentColor,
-                    textColor: FlavorConfig.values.buttonTextColor,
+                    textColor: Colors.white,
                     child: Text(
                       S.of(context).update,
                       style: TextStyle(
@@ -902,16 +914,6 @@ class _EditProfilePageState extends State<EditProfilePage>
                       updateName(name);
                       Navigator.pop(viewContext);
                       isLoading = false;
-                    },
-                  ),
-                  CustomTextButton(
-                    child: Text(
-                      S.of(context).cancel,
-                      style: TextStyle(
-                          fontSize: dialogButtonSize, color: Colors.red),
-                    ),
-                    onPressed: () {
-                      Navigator.pop(viewContext);
                     },
                   ),
                 ],
@@ -972,9 +974,20 @@ class _EditProfilePageState extends State<EditProfilePage>
                 children: <Widget>[
                   Spacer(),
                   CustomTextButton(
-                    padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                    color: HexColor("#d2d2d2"),
+                    textColor: Colors.white,
+                    child: Text(
+                      S.of(context).cancel,
+                      style: TextStyle(fontSize: dialogButtonSize),
+                    ),
+                    onPressed: () {
+                      Navigator.pop(viewContext);
+                    },
+                  ),
+                  SizedBox(width: 10),
+                  CustomTextButton(
                     color: Theme.of(context).accentColor,
-                    textColor: FlavorConfig.values.buttonTextColor,
+                    textColor: Colors.white,
                     child: Text(
                       S.of(context).update,
                       style: TextStyle(
@@ -1005,16 +1018,6 @@ class _EditProfilePageState extends State<EditProfilePage>
 //                            setState(() {
 //                              widget.userModel.bio = this.usermodel.bio;
 //                            });
-                    },
-                  ),
-                  CustomTextButton(
-                    child: Text(
-                      S.of(context).cancel,
-                      style: TextStyle(
-                          fontSize: dialogButtonSize, color: Colors.red),
-                    ),
-                    onPressed: () {
-                      Navigator.pop(viewContext);
                     },
                   ),
                 ],
@@ -1073,7 +1076,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                   CustomTextButton(
                     padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                     shape: StadiumBorder(),
-                    color: Colors.grey,
+                    color: HexColor("#d2d2d2"),
                     child: Text(
                       S.of(context).cancel,
                       style: TextStyle(
@@ -1093,7 +1096,6 @@ class _EditProfilePageState extends State<EditProfilePage>
                     shape: StadiumBorder(),
                     padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                     color: Theme.of(context).accentColor,
-                    textColor: FlavorConfig.values.buttonTextColor,
                     child: Text(
                       S.of(context).log_out,
                       style: TextStyle(

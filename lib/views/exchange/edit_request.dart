@@ -24,11 +24,13 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/basic_user_details.dart';
 import 'package:sevaexchange/models/category_model.dart';
+import 'package:sevaexchange/models/enums/lending_borrow_enums.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/selectedSpeakerTimeDetails.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
+import 'package:sevaexchange/ui/screens/request/pages/select_borrow_item.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/debouncer.dart';
 import 'package:sevaexchange/utils/app_config.dart';
@@ -1057,7 +1059,52 @@ class RequestEditFormState extends State<RequestEditForm> {
                                             ])),
                                           ])
                                     : Container(height: 0, width: 0),
-
+                            HideWidget(
+                              hide: widget.requestModel.requestType !=
+                                  RequestType.BORROW,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    S.of(context).borrow,
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: 'Europa',
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  HideWidget(
+                                    hide: widget.requestModel.roomOrTool ==
+                                        LendingType.PLACE,
+                                    child: Text(
+                                      L.of(context).select_a_item_lending,
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        //fontWeight: FontWeight.bold,
+                                        fontFamily: 'Europa',
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  HideWidget(
+                                    hide: widget.requestModel.roomOrTool ==
+                                        LendingType.PLACE,
+                                    child: SelectBorrowItem(
+                                      selectedItems: widget.requestModel
+                                          .borrowModel.requiredItems,
+                                      onSelectedItems: (items) => {
+                                        widget.requestModel.borrowModel
+                                            .requiredItems = items
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                             SizedBox(height: 30),
 
                             OfferDurationWidget(
@@ -1418,7 +1465,7 @@ class RequestEditFormState extends State<RequestEditForm> {
 
   RegExp emailPattern = RegExp(
       r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
-  String mobilePattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
+  String mobilePattern = r'^[0-9]+$';
 
   Widget RequestPaymentZellePay() {
     return Column(
@@ -1552,7 +1599,7 @@ class RequestEditFormState extends State<RequestEditForm> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          S.of(context).request_payment_description,
+          L.of(context).request_payment_description,
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -2638,7 +2685,12 @@ class RequestEditFormState extends State<RequestEditForm> {
         showDialogForTitle(dialogTitle: S.of(context).goods_validation);
         return;
       }
-
+      if (widget.requestModel.requestType == RequestType.BORROW &&
+          (widget.requestModel.borrowModel.requiredItems == null ||
+              widget.requestModel.borrowModel.requiredItems.isEmpty)) {
+        showDialogForTitle(dialogTitle: L.of(context).items_validation);
+        return;
+      }
       if (widget.requestModel.isRecurring == true ||
           widget.requestModel.autoGenerated == true) {
         EditRepeatWidgetState.recurringDays =

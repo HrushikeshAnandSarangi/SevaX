@@ -660,8 +660,9 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                 .join_community_alert
                 .replaceAll(" **CommunityName", '')),
             actions: [
-              CustomElevatedButton(
-                color: Colors.red,
+              CustomTextButton(
+                color: Theme.of(context).primaryColor,
+                textColor: Colors.white,
                 onPressed: () => Navigator.of(dialogContext).pop(),
                 child: Text(S.of(context).ok),
               )

@@ -14,6 +14,7 @@ import 'package:sevaexchange/models/basic_user_details.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/acceptor_model.dart';
+import 'package:sevaexchange/new_baseline/models/borrow_accpetor_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
@@ -40,6 +41,7 @@ import 'package:sevaexchange/views/requests/approveBorrowRequest.dart';
 import 'package:sevaexchange/views/requests/donations/donation_view.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
+import 'package:sevaexchange/widgets/custom_chip.dart';
 import 'package:sevaexchange/widgets/custom_list_tile.dart';
 import 'package:sevaexchange/widgets/full_screen_widget.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
@@ -271,6 +273,11 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   SizedBox(height: 20),
                   requestTitleComponent,
                   SizedBox(height: 10),
+                  widget.requestItem.requestType == RequestType.BORROW &&
+                          widget.requestItem.roomOrTool == 'ITEM'
+                      ? borrowItemsWidget
+                      : Container(),
+                  SizedBox(height: 10),
                   getRequestModeComponent,
                   widget.requestItem.requestType == RequestType.BORROW
                       ? Container()
@@ -457,7 +464,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                       : requestDescriptionComponent,
                   SizedBox(height: 20),
                   (widget.requestItem.requestType == RequestType.BORROW &&
-                          widget.requestItem.roomOrTool == 'ROOM' &&
+                          widget.requestItem.roomOrTool == 'PLACE' &&
                           (SevaCore.of(context).loggedInUser.email ==
                                   widget.requestItem.email ||
                               widget.requestItem.approvedUsers.contains(
@@ -466,7 +473,6 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                       : Container(),
                   SizedBox(height: 20),
                   (widget.requestItem.requestType == RequestType.BORROW &&
-                          widget.requestItem.hasBorrowAgreement &&
                           widget.requestItem.approvedUsers.length > 0 &&
                           (SevaCore.of(context).loggedInUser.email ==
                                   widget.requestItem.email ||
@@ -1253,7 +1259,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                 SevaCore.of(context).loggedInUser.sevaUserID
             ? S.of(context).request_approved
             : S.of(context).request_has_been_assigned_to_a_member;
-      } else if (widget.requestItem.roomOrTool == 'ROOM') {
+      } else if (widget.requestItem.roomOrTool == 'PLACE') {
         textLabel = widget.requestItem.sevaUserId ==
                 SevaCore.of(context).loggedInUser.sevaUserID
             ? S.of(context).creator_of_request_message
@@ -1745,7 +1751,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                                         .request_has_been_assigned_to_a_member)
                                 : isApplied
                                     ? S.of(context).applied_for_request
-                                    : (widget.requestItem.roomOrTool == 'ROOM'
+                                    : (widget.requestItem.roomOrTool == 'PLACE'
                                         ? S.of(context).borrow_request_for_place
                                         : S
                                             .of(context)
@@ -1864,7 +1870,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           ),
           onPressed: () {
             if (widget.requestItem.requestType == RequestType.BORROW) {
-              //widget.requestItem.roomOrTool == 'ROOM'
+              //widget.requestItem.roomOrTool == 'PLACE'
               //?
               borrowApplyAction();
               //: proccedWithCalander();
@@ -2607,7 +2613,6 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                           S.of(context).request_approved_by_msg +
                               ' ' +
                               snapshot.data.docs[0]['acceptorName'],
-                              
                           style: TextStyle(
                               fontSize: 15,
                               color: Colors.black,
@@ -2619,7 +2624,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                     addressComponentBorrowRequestForApproved(
                         snapshot.data.docs[0]['selectedAddress']),
                     Text(
-                      S.of(context).instruction_for_stay,
+                      L.of(context).house_rules,
                       style: TextStyle(
                           fontSize: 15,
                           color: Colors.grey[800],
@@ -2627,7 +2632,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                     ),
                     SizedBox(height: 5),
                     Text(
-                      snapshot.data.docs[0]['doAndDonts'],
+                      'To Be Implemented', //fetch from lendingItems collection given place ID. then get house rules field.
                       style: TextStyle(fontSize: 16, color: Colors.grey),
                     ),
                   ],
@@ -2638,36 +2643,41 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   }
 
   Widget get approvedBorrowRequestViewAgreementComponent {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(height: 5),
-        GestureDetector(
-          child: Row(
-            children: [
-              Text(
-                  (widget.requestItem.borrowAgreementLink == null ||
-                          widget.requestItem.borrowAgreementLink == '')
-                      ? S.of(context).request_agreement_not_available
-                      : S.of(context).click_to_view_request_agreement,
-                  style: TextStyle(
-                      fontSize: 16,
-                      color: Theme.of(context).primaryColor,
-                      fontWeight: FontWeight.w600)),
-            ],
-          ),
-          onTap: () async {
-            if (widget.requestItem.borrowAgreementLink == null ||
-                widget.requestItem.borrowAgreementLink == '') {
-              return null;
-            } else {
-              await openPdfViewer(widget.requestItem.borrowAgreementLink,
-                  'Request Agreement Document', context);
-            }
-          },
-        ),
-      ],
-    );
+    return FutureBuilder<BorrowAcceptorModel>(
+        future: FirestoreManager.getBorrowRequestAcceptorModel(
+            requestId: widget.requestItem.id,
+            acceptorEmail: widget.requestItem.approvedUsers[0]),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return LoadingIndicator();
+          }
+          if (snapshot.data == null) {
+            return Center(
+              child: Text(S.of(context).request_agreement_not_available),
+            );
+          }
+          BorrowAcceptorModel borrowAcceptorModel = snapshot.data;
+          return GestureDetector(
+            child: Text(
+                borrowAcceptorModel.borrowAgreementLink == null ||
+                        borrowAcceptorModel.borrowAgreementLink == ''
+                    ? S.of(context).request_agreement_not_available
+                    : S.of(context).click_to_view_request_agreement,
+                style: TextStyle(
+                    fontSize: 16,
+                    color: Theme.of(context).primaryColor,
+                    fontWeight: FontWeight.w600)),
+            onTap: () async {
+              if (borrowAcceptorModel.borrowAgreementLink == null ||
+                  borrowAcceptorModel.borrowAgreementLink == '') {
+                return null;
+              } else {
+                await openPdfViewer(borrowAcceptorModel.borrowAgreementLink,
+                    'Request Agreement Document', context);
+              }
+            },
+          );
+        });
   }
 
   Widget get getCashDetailsForCashDonations {
@@ -3280,6 +3290,24 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           ],
         ),
       ],
+    );
+  }
+
+  Widget get borrowItemsWidget {
+    return Wrap(
+      runSpacing: 5.0,
+      spacing: 5.0,
+      children: widget.requestItem.borrowModel.requiredItems.values
+          .toList()
+          .map(
+            (value) => value == null
+                ? Container()
+                : CustomChipWithTick(
+                    label: value,
+                    isSelected: true,
+                  ),
+          )
+          .toList(),
     );
   }
 }

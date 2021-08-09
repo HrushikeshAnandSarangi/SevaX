@@ -20,6 +20,7 @@ import 'package:sevaexchange/utils/firestore_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/notification_manager.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/community/communitycreate.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/filters.dart';
@@ -176,11 +177,30 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                   Spacer(),
                   CustomTextButton(
                     padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                    shape: StadiumBorder(),
+                    color: HexColor("#d2d2d2"),
+                    textColor: Colors.white,
+                    child: Text(
+                      S.of(context).cancel,
+                      style: TextStyle(fontFamily: 'Europa'),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  CustomTextButton(
+                    padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                     color: Theme.of(context).accentColor,
-                    textColor: FlavorConfig.values.buttonTextColor,
                     child: Text(
                       S.of(context).log_out,
-                      style: TextStyle(fontFamily: 'Europa'),
+                      style: TextStyle(
+                        fontFamily: 'Europa',
+                        color: Colors.white,
+                        fontSize: 16,
+                      ),
                     ),
                     onPressed: () async {
                       // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -189,23 +209,13 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                       // ));
 
                       try {
-                        await FCMNotificationManager
-                            .removeDeviceRegisterationForMember(
-                                email: loggedInEmail);
+                        await FCMNotificationManager.removeDeviceRegisterationForMember(
+                            email: loggedInEmail);
                       } catch (e) {
                         throw e;
                       }
                       Navigator.of(context).pop();
                       _signOut(context);
-                    },
-                  ),
-                  CustomTextButton(
-                    child: Text(
-                      S.of(context).cancel,
-                      style: TextStyle(color: Colors.red, fontFamily: 'Europa'),
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pop();
                     },
                   ),
                 ],
@@ -240,8 +250,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
         Text(
           S.of(context).looking_existing_timebank,
           textAlign: TextAlign.center,
-          style: TextStyle(
-              color: Colors.black54, fontSize: 16, fontWeight: FontWeight.w500),
+          style: TextStyle(color: Colors.black54, fontSize: 16, fontWeight: FontWeight.w500),
         ),
         Padding(
           padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
@@ -270,8 +279,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                 ),
                 onPressed: () {
                   //searchTextController.clear();
-                  WidgetsBinding.instance.addPostFrameCallback(
-                      (_) => searchTextController.clear());
+                  WidgetsBinding.instance.addPostFrameCallback((_) => searchTextController.clear());
                 },
               ),
             ),
@@ -326,8 +334,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
               ModalRoute.withName('/'),
             );
           },
-          child:
-              Text(S.of(context).skip, style: TextStyle(color: Colors.white)),
+          child: Text(S.of(context).skip, style: TextStyle(color: Colors.white)),
         ),
       ]),
     );
@@ -377,13 +384,10 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
             itemBuilder: (BuildContext context, int index) {
               CompareUserStatus status;
 
-              status = _compareUserStatus(
-                  communityList[index], widget.loggedInUser.sevaUserID);
+              status = _compareUserStatus(communityList[index], widget.loggedInUser.sevaUserID);
 
               return timeBankWidget(
-                  communityModel: communityList[index],
-                  context: context,
-                  status: status);
+                  communityModel: communityList[index], context: context, status: status);
             },
           ),
         );
@@ -392,13 +396,11 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
   }
 
   Widget timeBankWidget(
-      {CommunityModel communityModel,
-      BuildContext context,
-      CompareUserStatus status}) {
+      {CommunityModel communityModel, BuildContext context, CompareUserStatus status}) {
     return ListTile(
       // onTap: goToNext(snapshot.data),
-      title: Text(communityModel.name,
-          style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w700)),
+      title:
+          Text(communityModel.name, style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w700)),
       subtitle: FutureBuilder(
         future: getUserForId(sevaUserId: communityModel.created_by),
         builder: (BuildContext context, AsyncSnapshot<UserModel> snapshot) {
@@ -419,13 +421,11 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
       ),
       trailing: Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
         CustomElevatedButton(
-          onPressed: communityModel.id !=
-                  SevaCore.of(context).loggedInUser.currentCommunity
+          onPressed: communityModel.id != SevaCore.of(context).loggedInUser.currentCommunity
               ? () {
                   var communityModell = communityModel;
                   createEditCommunityBloc.selectCommunity(communityModell);
-                  createEditCommunityBloc
-                      .updateUserDetails(SevaCore.of(context).loggedInUser);
+                  createEditCommunityBloc.updateUserDetails(SevaCore.of(context).loggedInUser);
                   // snapshot.data.comm
                   // unities[index].
                   Navigator.of(context).push(
@@ -591,13 +591,11 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                 ),
                 onPressed: () async {
                   globals.isFromOnBoarding = true;
-                  var timebankAdvisory =
-                      S.of(context).create_timebank_confirmation;
+                  var timebankAdvisory = S.of(context).create_timebank_confirmation;
                   Map<String, bool> onActivityResult =
                       await showTimebankAdvisory(dialogTitle: timebankAdvisory);
                   if (onActivityResult['PROCEED']) {
-                    createEditCommunityBloc
-                        .updateUserDetails(SevaCore.of(context).loggedInUser);
+                    createEditCommunityBloc.updateUserDetails(SevaCore.of(context).loggedInUser);
                     Navigator.push(
                       parentContext,
                       MaterialPageRoute(
@@ -633,6 +631,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
 //                fontSize: 16,
 //              ),
 //            ),
+          actionsPadding: EdgeInsets.only(right: 20),
             content: Form(
               child: Container(
                 height: 200,
@@ -650,7 +649,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
             actions: <Widget>[
               CustomTextButton(
                 shape: StadiumBorder(),
-                color: Colors.grey,
+                color: HexColor("#d2d2d2"),
                 child: Text(
                   S.of(context).cancel,
                   style: TextStyle(

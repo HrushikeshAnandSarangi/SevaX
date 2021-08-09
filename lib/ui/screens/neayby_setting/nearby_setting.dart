@@ -9,6 +9,7 @@ import 'package:sevaexchange/utils/utils.dart';
 
 class NearbySettingsWidget extends StatefulWidget {
   final UserModel loggedInUser;
+
   NearbySettingsWidget(this.loggedInUser);
 
   @override
@@ -16,9 +17,7 @@ class NearbySettingsWidget extends StatefulWidget {
 
   static int evaluatemaxRadiusForMember(NearBySettings nearBySettings) {
     const int DEFAULT_RADIUS_IN_MILES = 10;
-    if (nearBySettings != null &&
-        nearBySettings.radius != null &&
-        nearBySettings.isMiles != null) {
+    if (nearBySettings != null && nearBySettings.radius != null && nearBySettings.isMiles != null) {
       if (nearBySettings.isMiles) {
         var kmEq = (nearBySettings.radius * 1.6093).toInt();
         return kmEq;
@@ -57,10 +56,8 @@ class _NearbySettingsWidgetState extends State<NearbySettingsWidget> {
         ..radius = 10;
     }
 
-    selectedRadio =
-        NearbySettingsWidget.isInMiles(widget.loggedInUser?.nearBySettings);
-    rating = NearbySettingBloc.valueForSeekBar(
-            widget.loggedInUser?.nearBySettings, selectedRadio)
+    selectedRadio = NearbySettingsWidget.isInMiles(widget.loggedInUser?.nearBySettings);
+    rating = NearbySettingBloc.valueForSeekBar(widget.loggedInUser?.nearBySettings, selectedRadio)
         .toDouble();
   }
 
@@ -116,12 +113,8 @@ class _NearbySettingsWidgetState extends State<NearbySettingsWidget> {
             Container(
               width: MediaQuery.of(context).size.height,
               child: CupertinoSlider(
-                min: selectedRadio == NearbySettingBloc.MILES_SELECTION
-                    ? minMi
-                    : minKM,
-                max: selectedRadio == NearbySettingBloc.MILES_SELECTION
-                    ? maxMi
-                    : maxKM,
+                min: selectedRadio == NearbySettingBloc.MILES_SELECTION ? minMi : minKM,
+                max: selectedRadio == NearbySettingBloc.MILES_SELECTION ? maxMi : maxKM,
                 // divisions:
                 //     selectedRadio == NearbySettingBloc.MILES_SELECTION ? 8 : 13,
                 thumbColor: Theme.of(context).primaryColor,
@@ -188,8 +181,7 @@ class _NearbySettingsWidgetState extends State<NearbySettingsWidget> {
   }
 
   String appendDistanceUnit() {
-    return " " +
-        (selectedRadio == NearbySettingBloc.MILES_SELECTION ? 'M' : 'Kms');
+    return " " + (selectedRadio == NearbySettingBloc.MILES_SELECTION ? 'M' : 'Kms');
   }
 
   Container titleAndSubTitle() {
@@ -204,11 +196,17 @@ class _NearbySettingsWidgetState extends State<NearbySettingsWidget> {
             children: [
               Text(
                 S.of(context).nearby_settings_title,
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
               ),
-              Text(
-                double.parse((rating).toStringAsFixed(2)).toString() +
-                    appendDistanceUnit(),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12.0),
+                    color: Theme.of(context).accentColor),
+                child: Text(
+                  double.parse((rating).toStringAsFixed(2)).toString() + appendDistanceUnit(),
+                  style: TextStyle(color: Colors.white),
+                ),
               )
             ],
           ),
@@ -274,18 +272,13 @@ class NearbySettingBloc {
   }
 
   static int valueForSeekBar(NearBySettings nearBySettings, int distanceUnit) {
-    if (nearBySettings != null &&
-        nearBySettings.radius != null &&
-        nearBySettings.isMiles != null) {
+    if (nearBySettings != null && nearBySettings.radius != null && nearBySettings.isMiles != null) {
       return nearBySettings.radius.toInt();
     }
-    return distanceUnit == MILES_SELECTION
-        ? DEFAULT_RADIUS_IN_MILES
-        : DEFAULT_RADIUS_IN_KILOMETERS;
+    return distanceUnit == MILES_SELECTION ? DEFAULT_RADIUS_IN_MILES : DEFAULT_RADIUS_IN_KILOMETERS;
   }
 
-  static udpateNearbyRadius(
-      {String email, int radius, int selectedRadioVal}) async {
+  static udpateNearbyRadius({String email, int radius, int selectedRadioVal}) async {
     await CollectionRef.users.doc(email).update({
       'nearbySettings.radius': radius,
       'nearbySettings.isMiles':

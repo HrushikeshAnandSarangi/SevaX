@@ -22,19 +22,27 @@ class ElasticSearchApi {
   static final _url = FlavorConfig.values.elasticSearchBaseURL;
   static Future<List<Map<String, dynamic>>> _makeElasticSearchPostRequest(
       String url, dynamic body) async {
-    http.Response response = await http.post(
-      _url + url,
-      body: body,
-      headers: {
-        'authorization': 'basic dXNlcjpDaU4zNlVOaXhKeXE=',
-        "Accept": "application/json",
-        "Content-Type": "application/json"
-      },
-    );
+    http.Response response = await http
+        .post(
+          _url + url,
+          body: body,
+          headers: {
+            'authorization': 'basic dXNlcjpDaU4zNlVOaXhKeXE=',
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+          },
+        )
+        .timeout(Duration(
+          seconds: 5,
+        ))
+        .onError((error, stackTrace) {
+          return Future.error(error);
+        });
 
     Map<String, dynamic> bodyMap = json.decode(response.body);
     Map<String, dynamic> hitMap = bodyMap['hits'];
     List<Map<String, dynamic>> hitList = List.castFrom(hitMap['hits']);
+
     return hitList;
   }
 
@@ -78,8 +86,16 @@ class ElasticSearchApi {
         }
       },
     );
-    List<Map<String, dynamic>> hitList =
-        await _makeElasticSearchPostRequest(endPoint, body);
+    // List<Map<String, dynamic>> hitList =
+    //     await _makeElasticSearchPostRequest(endPoint, body);
+
+    List<Map<String, dynamic>> hitList;
+    try {
+      hitList = await _makeElasticSearchPostRequest(endPoint, body);
+    } catch (e) {
+      return Future.error("error");
+    }
+
     List<RequestModel> requestsList = [];
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
@@ -132,8 +148,15 @@ class ElasticSearchApi {
         }
       },
     );
-    List<Map<String, dynamic>> hitList =
-        await _makeElasticSearchPostRequest(endPoint, body);
+    // List<Map<String, dynamic>> hitList =
+    //     await _makeElasticSearchPostRequest(endPoint, body);
+
+    List<Map<String, dynamic>> hitList;
+    try {
+      hitList = await _makeElasticSearchPostRequest(endPoint, body);
+    } catch (e) {
+      return Future.error("error");
+    }
     List<ProjectModel> projectsList = [];
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
@@ -237,8 +260,16 @@ class ElasticSearchApi {
       }
     });
 
-    List<Map<String, dynamic>> hitList =
-        await _makeElasticSearchPostRequest(endPoint, body);
+    // List<Map<String, dynamic>> hitList =
+    //     await _makeElasticSearchPostRequest(endPoint, body);
+
+    List<Map<String, dynamic>> hitList;
+    try {
+      hitList = await _makeElasticSearchPostRequest(endPoint, body);
+    } catch (e) {
+      return Future.error("error");
+    }
+
     List<OfferModel> offersList = [];
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
@@ -347,8 +378,16 @@ class ElasticSearchApi {
     //   }
     // });
 
-    List<Map<String, dynamic>> hitList =
-        await _makeElasticSearchPostRequest(endPoint, body);
+    // List<Map<String, dynamic>> hitList =
+    //     await _makeElasticSearchPostRequest(endPoint, body);
+
+    List<Map<String, dynamic>> hitList;
+    try {
+      hitList = await _makeElasticSearchPostRequest(endPoint, body);
+    } catch (e) {
+      return Future.error("error");
+    }
+
     hitList.forEach((map) {
       try {
         Map<String, dynamic> sourceMap = map['_source'];
@@ -395,10 +434,18 @@ class ElasticSearchApi {
         }
       }
     });
-    List<Map<String, dynamic>> hitList = await _makeElasticSearchPostRequest(
-      endPoint,
-      body,
-    );
+    // List<Map<String, dynamic>> hitList = await _makeElasticSearchPostRequest(
+    //   endPoint,
+    //   body,
+    // );
+
+    List<Map<String, dynamic>> hitList;
+    try {
+      hitList = await _makeElasticSearchPostRequest(endPoint, body);
+    } catch (e) {
+      return Future.error("error");
+    }
+
     List<OfferModel> models = [];
     logger.i("Total Offer from Elastic ");
     hitList.forEach((map) {
@@ -436,8 +483,16 @@ class ElasticSearchApi {
         }
       }
     });
-    List<Map<String, dynamic>> hitList =
-        await _makeElasticSearchPostRequest(endPoint, body);
+
+    List<Map<String, dynamic>> hitList;
+    try {
+      hitList = await _makeElasticSearchPostRequest(endPoint, body);
+    } catch (e) {
+      return Future.error("error");
+    }
+    // List<Map<String, dynamic>> hitList =
+    //     await _makeElasticSearchPostRequest(endPoint, body);
+
     List<CommunityModel> models = [];
 
     hitList.forEach((map) {
@@ -481,8 +536,17 @@ class ElasticSearchApi {
         }
       },
     );
-    List<Map<String, dynamic>> hitList =
-        await _makeElasticSearchPostRequest(endPoint, body);
+
+    List<Map<String, dynamic>> hitList;
+    try {
+      hitList = await _makeElasticSearchPostRequest(endPoint, body);
+    } catch (e) {
+      return Future.error("error");
+    }
+
+    // List<Map<String, dynamic>> hitList =
+    //     await _makeElasticSearchPostRequest(endPoint, body);
+
     List<RequestModel> models = [];
 
     hitList.forEach((map) {
@@ -514,8 +578,16 @@ class ElasticSearchApi {
         "title_en.keyword": {"order": "asc"}
       }
     });
-    List<Map<String, dynamic>> hitList =
-        await _makeElasticSearchPostRequest(endPoint, body);
+
+    List<Map<String, dynamic>> hitList;
+    try {
+      hitList = await _makeElasticSearchPostRequest(endPoint, body);
+    } catch (e) {
+      return Future.error("error");
+    }
+    // List<Map<String, dynamic>> hitList =
+    //     await _makeElasticSearchPostRequest(endPoint, body);
+
     List<CategoryModel> categoryList = [];
 
     // log('Elastic seach categories result:  ' + hitList.toString());
@@ -542,8 +614,17 @@ class ElasticSearchApi {
         "en.keyword": {"order": "asc"}
       }
     });
-    List<Map<String, dynamic>> hitList =
-        await _makeElasticSearchPostRequest(endPoint, body);
+
+    List<Map<String, dynamic>> hitList;
+    try {
+      hitList = await _makeElasticSearchPostRequest(endPoint, body);
+    } catch (e) {
+      return Future.error("error");
+    }
+
+    // List<Map<String, dynamic>> hitList =
+    //     await _makeElasticSearchPostRequest(endPoint, body);
+
     List<CommunityCategoryModel> categoryList = [];
 
     hitList.forEach((map) {
@@ -575,8 +656,15 @@ class ElasticSearchApi {
         }
       },
     );
-    List<Map<String, dynamic>> hitList =
-        await _makeElasticSearchPostRequest(endPoint, body);
+    // List<Map<String, dynamic>> hitList =
+    //     await _makeElasticSearchPostRequest(endPoint, body);
+
+    List<Map<String, dynamic>> hitList;
+    try {
+      hitList = await _makeElasticSearchPostRequest(endPoint, body);
+    } catch (e) {
+      return Future.error("error");
+    }
     List<RequestModel> models = [];
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
@@ -611,8 +699,12 @@ class ElasticSearchApi {
         }
       }
     });
-    List<Map<String, dynamic>> hitList =
-        await _makeElasticSearchPostRequest(endPoint, body);
+    List<Map<String, dynamic>> hitList;
+    try {
+      hitList = await _makeElasticSearchPostRequest(endPoint, body);
+    } catch (e) {
+      return Future.error("error");
+    }
     List<ProjectModel> models = [];
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
@@ -671,8 +763,12 @@ class ElasticSearchApi {
         }
       }
     });
-    List<Map<String, dynamic>> hitList =
-        await _makeElasticSearchPostRequest(endPoint, body);
+    List<Map<String, dynamic>> hitList;
+    try {
+      hitList = await _makeElasticSearchPostRequest(endPoint, body);
+    } catch (e) {
+      return Future.error("error");
+    }
     List<CommunityModel> models = [];
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
@@ -709,8 +805,14 @@ class ElasticSearchApi {
         "featuredCommunity": {"order": "desc"}
       }
     });
-    List<Map<String, dynamic>> hitList =
-        await _makeElasticSearchPostRequest(endPoint, body);
+
+    List<Map<String, dynamic>> hitList;
+    try {
+      hitList = await _makeElasticSearchPostRequest(endPoint, body);
+    } catch (e) {
+      return Future.error("error");
+    }
+
     List<CommunityModel> models = [];
     // logger.wtf(hitList.length.toString() +
     //     "<><><><><><><><><><>>>>>>>>>>><<<<<<<<<<<");

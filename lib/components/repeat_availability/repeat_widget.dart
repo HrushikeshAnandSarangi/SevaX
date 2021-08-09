@@ -36,7 +36,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
     '10'
   ];
 
-  static List<bool> _selected;
+  static List<bool> _selected = [];
   static List<int> recurringDays = [];
   static bool isRecurring = false;
 

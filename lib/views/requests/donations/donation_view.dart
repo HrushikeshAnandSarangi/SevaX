@@ -46,7 +46,7 @@ class _DonationViewState extends State<DonationView> {
   ProgressDialog progressDialog;
   RegExp emailPattern = RegExp(
       r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
-  String mobilePattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
+  String mobilePattern = r'^[0-9]+$';
   List<String> donationsCategories = [];
   int amountEntered = 0;
   Map selectedList = {};
@@ -559,7 +559,7 @@ class _DonationViewState extends State<DonationView> {
   }
 
   String _validateEmailAndPhone(String value) {
-    String mobilePattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
+    String mobilePattern = r'^[0-9]+$';
     RegExp emailPattern = RegExp(
         r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
     RegExp regExp = RegExp(mobilePattern);
@@ -657,7 +657,7 @@ class _DonationViewState extends State<DonationView> {
               height: 10,
             ),
             Text(
-              S.of(context).request_payment_description,
+              L.of(context).request_payment_description,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -1462,6 +1462,8 @@ class _DonationViewState extends State<DonationView> {
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             CustomTextButton(
+              color: Theme.of(context).primaryColor,
+              textColor: Colors.white,
               child: Text(S.of(context).ok),
               onPressed: () {
                 Navigator.of(context).pop();

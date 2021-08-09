@@ -19,6 +19,7 @@ class CustomTextField extends StatelessWidget {
   final bool autovalidate;
   final textCapitalization;
   final int maxLines;
+  final int minLines;
   final int errorMaxLines;
   final void Function(String) onSaved;
   final InputDecoration decoration;
@@ -39,14 +40,16 @@ class CustomTextField extends StatelessWidget {
     this.textInputAction,
     this.textCapitalization,
     this.maxLines = 1,
+    this.minLines = 1,
     this.errorMaxLines,
     this.onSaved,
-    this.controller, this.decoration,
+    this.controller,
+    this.decoration,
   }) : super(key: key);
 
   final TextStyle titleStyle = TextStyle(
     fontSize: 16,
-    fontWeight: FontWeight.bold,
+    //fontWeight: FontWeight.bold,
     fontFamily: 'Europa',
     color: Colors.black,
   );
@@ -89,11 +92,12 @@ class CustomTextField extends StatelessWidget {
           inputFormatters: formatters,
           textCapitalization:
               textCapitalization ?? TextCapitalization.sentences,
-          decoration: decoration??InputDecoration(
-            hintText: hint ?? '',
-            errorText: error,
-            errorMaxLines: errorMaxLines,
-          ),
+          decoration: decoration ??
+              InputDecoration(
+                hintText: hint ?? '',
+                errorText: error,
+                errorMaxLines: errorMaxLines,
+              ),
           maxLength: maxLength,
           keyboardType: keyboardType,
           textInputAction:
@@ -107,6 +111,8 @@ class CustomTextField extends StatelessWidget {
           },
           validator: validator,
           onSaved: onSaved,
+          maxLines: maxLines,
+          minLines: minLines,
         ),
       ],
     );

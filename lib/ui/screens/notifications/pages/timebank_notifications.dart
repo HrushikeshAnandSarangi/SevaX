@@ -839,8 +839,8 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
               case NotificationType.DEBITED_SEVA_COINS_TIMEBANK:
                 return NotificationCard(
                   timestamp: notification.timestamp,
-                  title: S.of(context).seva_coins_debited,
-                  subTitle: S.of(context).seva_coins_debited,
+                  title: S.of(context).credits_debited,
+                  subTitle: S.of(context).credits_debited,
                   photoUrl: null,
                   entityName: S.of(context).debited,
                   onDismissed: () {
@@ -1105,6 +1105,8 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
         "comments": (results['didComment'] ? results['comment'] : "No comments"),
       });
       logger.i('here 2');
+
+      
 
       await sendMessageToMember(
           message: results['didComment'] ? results['comment'] : "No comments",

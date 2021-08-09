@@ -124,34 +124,35 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                       children: <Widget>[
                         projectModel.creatorId ==
                                 SevaCore.of(context).loggedInUser.sevaUserID
-                            ? Container(
-                                width: double.infinity,
-                                child: CustomTextButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => CreateEditProject(
-                                          timebankId: widget.timebankModel.id,
-                                          isCreateProject: false,
-                                          projectId: projectModel.id,
-                                          projectTemplateModel: null,
+                            ? Center(
+                              child: Container(
+                                  child: CustomTextButton(
+                                    color: Theme.of(context).primaryColor,
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => CreateEditProject(
+                                            timebankId: widget.timebankModel.id,
+                                            isCreateProject: false,
+                                            projectId: projectModel.id,
+                                            projectTemplateModel: null,
+                                          ),
                                         ),
-                                      ),
-                                    );
-                                  },
-                                  child: Text(
-                                    S.of(context).edit,
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        fontFamily: 'Europa',
-                                        fontWeight: FontWeight.bold,
-                                        color: FlavorConfig
-                                            .values.theme.primaryColor,
-                                        decoration: TextDecoration.underline),
+                                      );
+                                    },
+                                    child: Text(
+                                      S.of(context).edit,
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          fontFamily: 'Europa',
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                          ),
+                                    ),
                                   ),
                                 ),
-                              )
+                            )
                             : Container(),
                         headingText(S.of(context).title),
                         Text(projectModel.name ?? ""),

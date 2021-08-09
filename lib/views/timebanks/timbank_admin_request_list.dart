@@ -8,6 +8,7 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/ui/utils/debouncer.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 enum Actions { Approve, Reject, Remove, Promote, Demote, Exit, Loan, MakeOwner }
@@ -156,11 +157,22 @@ class _InputDonateDialogState extends State<InputDonateDialog> {
           ],
         ),
       ),
+      actionsPadding: EdgeInsets.only(right: 20),
       actions: <Widget>[
-        CustomElevatedButton(
-          padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+        CustomTextButton(
+          color: HexColor("#d2d2d2"),
+          textColor: Colors.white,
+          child: Text(
+            S.of(context).cancel,
+            style: TextStyle( fontSize: dialogButtonSize),
+          ),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        CustomTextButton(
           color: Theme.of(context).accentColor,
-          textColor: FlavorConfig.values.buttonTextColor,
+          textColor: Colors.white,
           child: Text(
             S.of(context).donate,
             style: TextStyle(
@@ -182,15 +194,6 @@ class _InputDonateDialogState extends State<InputDonateDialog> {
             }
           },
         ),
-        CustomTextButton(
-          child: Text(
-            S.of(context).cancel,
-            style: TextStyle(color: Colors.red, fontSize: dialogButtonSize),
-          ),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        )
       ],
     );
   }

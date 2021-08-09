@@ -15,6 +15,7 @@ import 'package:sevaexchange/components/pdf_screen.dart';
 import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
@@ -106,7 +107,43 @@ class BorrowAgreementPdf {
           Header(
               level: 2,
               text: documentName +
-                  ' |  For: ${placeOrItem == 'ROOM' ? L.of(contextMain).place : L.of(contextMain).items}'),
+                  ' |  For: ${placeOrItem == 'PLACE' ? L.of(contextMain).place : L.of(contextMain).items}'),
+
+          SizedBox(height: 7),
+
+          Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text('Lease Duration: ', style: TextStyle(fontSize: 16)),
+            SizedBox(width: 8),
+            Text(
+              DateFormat(
+                      'MMMM dd, yyyy @ h:mm a',
+                      Locale(AppConfig.prefs.getString('language_code'))
+                          .toLanguageTag())
+                  .format(
+                getDateTimeAccToUserTimezone(
+                  dateTime: DateTime.fromMillisecondsSinceEpoch(
+                      requestModel.requestStart),
+                  timezoneAbb: SevaCore.of(contextMain).loggedInUser.timezone,
+                ),
+              ), //start date and end date
+              style: TextStyle(fontSize: 14),
+            ),
+            Text('  -  ', style: TextStyle(fontSize: 14)),
+            Text(
+              DateFormat(
+                      'MMMM dd, yyyy @ h:mm a',
+                      Locale(AppConfig.prefs.getString('language_code'))
+                          .toLanguageTag())
+                  .format(
+                getDateTimeAccToUserTimezone(
+                  dateTime: DateTime.fromMillisecondsSinceEpoch(
+                      requestModel.requestEnd),
+                  timezoneAbb: SevaCore.of(contextMain).loggedInUser.timezone,
+                ),
+              ), //start date and end date
+              style: TextStyle(fontSize: 14),
+            ),
+          ]),
 
           SizedBox(height: 10),
 
@@ -134,7 +171,7 @@ class BorrowAgreementPdf {
                     style: TextStyle(fontSize: 14))
                 : Container(),
             SizedBox(height: 10),
-            placeOrItem == 'ROOM'
+            placeOrItem == 'PLACE'
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

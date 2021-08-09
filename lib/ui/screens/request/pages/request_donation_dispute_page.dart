@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
@@ -779,7 +780,7 @@ class _CashFlow extends StatelessWidget {
               height: 20,
             ),
             Text(
-              S.of(context).request_payment_description +
+              L.of(context).request_payment_description +
                   ': ' +
                   modeOfPayment(context),
               style: TextStyle(
@@ -946,7 +947,8 @@ class _GoodsFlow extends StatelessWidget {
         ),
         SizedBox(height: 10),
         Text(
-          status == DonationStatus.REQUESTED
+          status == DonationStatus.REQUESTED &&
+                  operatingMode == OperatingMode.CREATOR
               ? S.of(context).request_goods_offer.replaceAll("  ", " ")
               : operatingMode == OperatingMode.CREATOR
                   ? S.of(context).acknowledge_received

@@ -38,6 +38,7 @@ import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/new_baseline/models/user_insufficient_credits_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/calendar/add_to_calander.dart';
+import 'package:sevaexchange/ui/screens/request/pages/select_borrow_item.dart';
 import 'package:sevaexchange/ui/screens/request/widgets/skills_for_requests_widget.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/debouncer.dart';
@@ -1074,8 +1075,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
                               //                           isRequest: true,
                               //                           roomOrTool:
                               //                               roomOrTool == 1
-                              //                                   ? 'TOOL'
-                              //                                   : 'ROOM',
+                              //                                   ? 'ITEM'
+                              //                                   : 'PLACE',
                               //                           requestModel:
                               //                               requestModel,
                               //                           communityId: requestModel
@@ -1194,6 +1195,33 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                             }
                                           },
                                           //groupValue: sharedValue,
+                                        ),
+                                        SizedBox(height: 20),
+                                        HideWidget(
+                                          hide: roomOrTool == 0,
+                                          child: Text(
+                                            L.of(context).select_a_item_lending,
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              //fontWeight: FontWeight.bold,
+                                              fontFamily: 'Europa',
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        HideWidget(
+                                          hide: roomOrTool == 0,
+                                          child: SelectBorrowItem(
+                                            selectedItems: requestModel
+                                                .borrowModel.requiredItems,
+                                            onSelectedItems: (items) => {
+                                              requestModel.borrowModel
+                                                  .requiredItems = items
+                                            },
+                                          ),
                                         ),
                                       ],
                                     )
@@ -1603,7 +1631,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
         ]);
   }
 
-  String mobilePattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
+  String mobilePattern = r'^[0-9]+$';
   RegExp emailPattern = RegExp(
       r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
   String _validateEmailAndPhone(String value) {
@@ -1846,7 +1874,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          S.of(context).request_payment_description,
+          L.of(context).request_payment_description,
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -2410,12 +2438,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           RepeatWidget(),
-
-          SizedBox(height: 20),
-
-          // roomOrTool == 1
-          //     ? BorrowToolTitleField('Ex: Hammer or Chair...')
-          //     : Container(),
 
           SizedBox(height: 15),
 
@@ -3162,6 +3184,12 @@ class RequestCreateFormState extends State<RequestCreateForm>
         showDialogForTitle(dialogTitle: S.of(context).goods_validation);
         return;
       }
+      if (requestModel.requestType == RequestType.BORROW &&
+          (requestModel.borrowModel.requiredItems == null ||
+              requestModel.borrowModel.requiredItems.isEmpty)) {
+        showDialogForTitle(dialogTitle: L.of(context).items_validation);
+        return;
+      }
       communityModel = await FirestoreManager.getCommunityDetailsByCommunityId(
         communityId: SevaCore.of(context).loggedInUser.currentCommunity,
       );
@@ -3200,9 +3228,9 @@ class RequestCreateFormState extends State<RequestCreateForm>
           requestModel.requestType == RequestType.BORROW) {
         if (roomOrTool == 1) {
           //CHANGE to use enums
-          requestModel.roomOrTool = 'TOOL';
+          requestModel.roomOrTool = 'ITEM';
         } else {
-          requestModel.roomOrTool = 'ROOM';
+          requestModel.roomOrTool = 'PLACE';
         }
       }
 //Review done or not to be used to find out if Borrow request is completed or not
@@ -4257,8 +4285,8 @@ Future<Map<String, String>> getGoodsFuture() async {
 }
 
 enum BorrowRequestType {
-  TOOL,
-  ROOM,
+  ITEM,
+  PLACE,
 }
 
 class SevaBillingPlans {

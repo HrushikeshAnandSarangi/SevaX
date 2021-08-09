@@ -31,6 +31,10 @@ class _CollectionNames {
   final String projectTemplates = 'project_templates';
   final String requestCategories = 'requestCategories';
   final String agreementTemplates = 'agreementTemplates';
+  final String borrowItems = 'borrowItems';
+  final String amenities = 'amenities';
+  final String lendingItems = 'lendingItems';
+  final String borrowRequestAcceptors = 'borrowRequestAcceptors';
 }
 
 class CollectionRef {
@@ -111,7 +115,6 @@ class CollectionRef {
   static final CollectionReference agreementTemplates =
       _firestore.collection(_collectionNames.agreementTemplates);
 
-
   static final CollectionReference users =
       _firestore.collection(_collectionNames.users);
 
@@ -143,5 +146,17 @@ class CollectionRef {
       .doc(email)
       .collection(_collectionNames.notifications);
 
+  static final CollectionReference borrowItems =
+      _firestore.collection(_collectionNames.borrowItems);
+
   static WriteBatch get batch => _firestore.batch();
+  static final CollectionReference amenities =
+      _firestore.collection(_collectionNames.amenities);
+  static final CollectionReference lendingItems =
+      _firestore.collection(_collectionNames.lendingItems);
+  static CollectionReference borrowRequestAcceptors(String requestId) =>
+      _firestore
+          .collection(_collectionNames.requests)
+          .doc(requestId)
+          .collection(_collectionNames.borrowRequestAcceptors);
 }

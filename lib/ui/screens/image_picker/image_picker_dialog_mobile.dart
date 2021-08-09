@@ -86,6 +86,9 @@ class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
       case ImagePickerType.REGISTER:
         return registerType();
         break;
+      case ImagePickerType.LENDING_OFFER:
+        return lendingOfferType();
+        break;
       case ImagePickerType.MESSAGE:
       case ImagePickerType.PROJECT:
       case ImagePickerType.TIMEBANK:
@@ -118,6 +121,23 @@ class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
           height: 10,
         ),
         pdfWidget(),
+      ],
+    );
+  }
+
+  Widget lendingOfferType() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        cameraImageWidget(),
+        SizedBox(
+          height: 50,
+        ),
+        galleryImageWidget(),
+        SizedBox(
+          height: 10,
+        ),
       ],
     );
   }
@@ -282,7 +302,7 @@ class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
         color: FlavorConfig.values.theme.primaryColor,
         borderRadius: BorderRadius.circular(10),
       ),
-      height: 45,
+      height: 50,
       child: ListTile(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         onTap: onTap,
@@ -334,9 +354,12 @@ class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
       folderName = 'request_images/';
     } else if (widget.imagePickerType == ImagePickerType.SPONSOR) {
       folderName = 'sponsorsLogos/';
+    } else if (widget.imagePickerType == ImagePickerType.LENDING_OFFER) {
+      folderName = 'lendingImages/';
     } else {
       folderName = 'profile_images/';
     }
+
     Reference ref = FirebaseStorage.instance
         .ref()
         .child(folderName)
@@ -394,7 +417,12 @@ class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
         Navigator.of(dialogContext).pop();
       }
       showFailedLoadImage(context: context).then((value) {
-        Navigator.of(context).pop();
+        deleteFireBaseImage(imageUrl: imageURL).then((value) {
+          if (value) {
+            imagefile = null;
+          }
+          Navigator.of(context).pop();
+        });
       });
     } else {
       profanityStatusModel =
@@ -433,5 +461,6 @@ enum ImagePickerType {
   TIMEBANK,
   REGISTER,
   REQUEST,
+  LENDING_OFFER,
   SPONSOR
 }
