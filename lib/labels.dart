@@ -524,4 +524,6 @@ class L {
       "Select list of related items for Borrow*";
   String get items_validation =>
       "You have not selected any Items. Please select one or more before creating the Borrow request.";
+  String get accept_borrow_agreement_page_hint =>
+      "Please fill in your Item details, aggrement and location of your place to help the borrower.";
 }

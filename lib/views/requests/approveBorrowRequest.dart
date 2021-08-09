@@ -5,6 +5,7 @@ import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/lending_model.dart';
 import 'package:sevaexchange/ui/screens/borrow_agreement/borrow_agreement_pdf.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/agreementForm.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
@@ -13,6 +14,7 @@ import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/requestOfferAgreementForm.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
+import 'package:sevaexchange/widgets/custom_chip.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 
 import '../../labels.dart';
@@ -100,6 +102,79 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
+            borrowItemsWidget,
+            SizedBox(height: 10),
+            Text(
+              L.of(context).accept_borrow_agreement_page_hint,
+              style: TextStyle(fontSize: 16),
+            ),
+            SizedBox(height: 10),
+            SelectLendingPlaceItem(
+              onSelected: (LendingModel model) {
+                _bloc.onLendingModelAdded(model);
+              },
+              lendingType: _bloc.lendingOfferType == 0
+                  ? LendingType.PLACE
+                  : LendingType.ITEM,
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            SizedBox(height: 10),
+            StreamBuilder<List<LendingModel>>(
+                stream: _bloc.lendingPlaceModelStream,
+                builder: (context, snapshot) {
+                  if (snapshot.data == null || snapshot.hasError) {
+                    return Container();
+                  }
+                  if (snapshot.hasError) {
+                    return Container();
+                  }
+                  if (snapshot.data.lendingType == LendingType.ITEM) {
+                    return LendingItemCardWidget(
+                      lendingItemModel: snapshot.data.lendingItemModel,
+                      onDelete: () {
+                        _bloc.onLendingModelAdded(null);
+                      },
+                      onEdit: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return AddUpdateLendingItem(
+                                lendingModel: snapshot.data,
+                                onItemCreateUpdate: (LendingModel model) {
+                                  _bloc.onLendingModelAdded(model);
+                                },
+                              );
+                            },
+                          ),
+                        );
+                      },
+                    );
+                  } else {
+                    return LendingPlaceCardWidget(
+                      lendingPlaceModel: snapshot.data.lendingPlaceModel,
+                      onDelete: () {
+                        _bloc.onLendingModelAdded(null);
+                      },
+                      onEdit: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return AddUpdateLendingPlace(
+                                lendingModel: snapshot.data,
+                                onPlaceCreateUpdate: (LendingModel model) {
+                                  _bloc.onLendingModelAdded(model);
+                                },
+                              );
+                            },
+                          ),
+                        );
+                      },
+                    );
+                  }
+                }),
+            SizedBox(height: 20),
             requestAgreementFormComponent(widget.requestModel.roomOrTool),
             SizedBox(height: 20),
             termsAcknowledegmentText,
@@ -107,6 +182,24 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget get borrowItemsWidget {
+    return Wrap(
+      runSpacing: 5.0,
+      spacing: 5.0,
+      children: widget.requestModel.requiredItems.values
+          .toList()
+          .map(
+            (value) => value == null
+                ? Container()
+                : CustomChipWithTick(
+                    label: value,
+                    isSelected: true,
+                  ),
+          )
+          .toList(),
     );
   }
 
