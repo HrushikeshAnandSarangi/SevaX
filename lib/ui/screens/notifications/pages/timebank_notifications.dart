@@ -1163,6 +1163,8 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
       });
       logger.i('here 2');
 
+      
+
       await sendMessageToMember(
           message: results['didComment'] ? results['comment'] : "No comments",
           loggedInUser: loggedInUser);
