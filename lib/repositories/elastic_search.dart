@@ -741,7 +741,6 @@ class ElasticSearchApi {
         }
       }
     });
-    models.sort((a, b) => a.name.compareTo(b.name));
     return models;
   }
 
