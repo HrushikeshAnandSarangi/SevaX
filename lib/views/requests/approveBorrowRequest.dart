@@ -199,13 +199,14 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
                       content: Text(S.of(context).location_not_added),
                     ),
                   );
-                } else if (documentName == '') {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content:
-                          Text(S.of(context).snackbar_select_agreement_type),
-                    ),
-                  );
+                  // } else if (documentName == '') {
+                  //   ScaffoldMessenger.of(context).showSnackBar(
+                  //     SnackBar(
+                  //       content:
+                  //           Text(S.of(context).snackbar_select_agreement_type),
+                  //     ),
+                  //   );
+                  //
                 } else {
                   if (widget.requestModel.roomOrTool == 'ROOM') {
                     logger.e('COMES HERE 25');

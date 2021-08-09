@@ -425,10 +425,6 @@ class L {
   String get request_agreement_form_component_text =>
       'Create/Use agreement between you and borrower on how your item/place can be used.';
 
-  String get approve_borrow_terms_acknowledgement_text1 =>
-      "I acknowledge that you can use the room on the mentioned dates.";
-  String get approve_borrow_terms_acknowledgement_text2 =>
-      "I acknowledge that you can use the item on the mentioned dates.";
   String get approve_borrow_terms_acknowledgement_text3 =>
       "Note: Please instruct on how to reach the location and do and don't accordingly.";
   String get approve_borrow_terms_acknowledgement_text4 =>
@@ -520,4 +516,10 @@ class L {
   String get send => 'Send';
   //4th aug
   String get request_payment_description => "Payment Method*";
+
+  //9th August 2021
+  String get approve_borrow_terms_acknowledgement_text1 =>
+      "I acknowledge that you can use the room on the mentioned dates.";
+  String get approve_borrow_terms_acknowledgement_text2 =>
+      "I acknowledge that you can use the item(s) on the mentioned dates.";
 }
