@@ -345,39 +345,6 @@ class SearchManager {
 //    }
   }
 
-  static Future<bool> searchAgrrementTemplateForDuplicate(
-      {@required String queryString}) async {
-    String url =
-        '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/agreement_templates/_doc/_search';
-
-    dynamic body = json.encode({
-      "query": {
-        "match": {"templateName": queryString}
-      }
-    });
-    List<Map<String, dynamic>> hitList =
-        await _makeElasticSearchPostRequest(url, body);
-//    await _makeElasticSearchPostRequestCommunityDuplicate(url, body);
-    bool templateFound = false;
-    for (var map in hitList) {
-      if (map['_source']['templateName'].toLowerCase() ==
-          queryString.toLowerCase()) {
-        templateFound = true;
-
-        break;
-      }
-    }
-
-    return templateFound;
-//    int count =
-//        await _makeElasticSearchPostRequestCommunityDuplicate(url, body);
-//    if (count > 0) {
-//      return true;
-//    } else {
-//      return false;
-//    }
-  }
-
   static Future<bool> searchRequestCategoriesForDuplicate(
       {@required queryString, @required BuildContext context}) async {
     var key = S.of(context).localeName;

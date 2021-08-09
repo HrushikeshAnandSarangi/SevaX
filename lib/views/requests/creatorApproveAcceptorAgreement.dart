@@ -5,10 +5,12 @@ import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/borrow_accpetor_model.dart';
 import 'package:sevaexchange/ui/screens/borrow_agreement/borrow_agreement_pdf.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
@@ -44,7 +46,7 @@ class _CreatorApproveAcceptorAgreeementState
 
   String borrowAgreementLinkFinal = '';
   String documentName = '';
-
+  BorrowAcceptorModel borrowAcceptorModel;
   final _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _key = GlobalKey();
 
@@ -69,9 +71,24 @@ class _CreatorApproveAcceptorAgreeementState
               fontFamily: "Europa", fontSize: 19, color: Colors.white),
         ),
       ),
-      body: SingleChildScrollView(
-        child: mainPageAgreementComponent,
-      ),
+      body: FutureBuilder<BorrowAcceptorModel>(
+          future: FirestoreManager.getBorrowRequestAcceptorModel(
+              requestId: widget.requestModel.id,
+              acceptorEmail: widget.acceptorUserModel.email),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return LoadingIndicator();
+            }
+            if (snapshot.data == null) {
+              return Center(
+                child: Text(S.of(context).no_data),
+              );
+            }
+            borrowAcceptorModel = snapshot.data;
+            return SingleChildScrollView(
+              child: mainPageAgreementComponent,
+            );
+          }),
     );
   }
 
@@ -86,7 +103,7 @@ class _CreatorApproveAcceptorAgreeementState
           children: <Widget>[
             SizedBox(height: 10),
             requestAgreementFormComponent,
-            widget.requestModel.hasBorrowAgreement
+            borrowAcceptorModel.borrowAgreementLink != null
                 ? termsAcknowledegmentText
                 : Container(),
             SizedBox(height: 20),
@@ -248,7 +265,7 @@ class _CreatorApproveAcceptorAgreeementState
             Container(
               width: MediaQuery.of(context).size.width * 0.68,
               child: Text(
-                widget.requestModel.hasBorrowAgreement
+                borrowAcceptorModel.borrowAgreementLink != null
                     ? S.of(context).review_before_proceding_text
                     : S.of(context).lender_not_accepted_request_msg,
                 style: TextStyle(fontSize: 15),
@@ -263,7 +280,7 @@ class _CreatorApproveAcceptorAgreeementState
           ],
         ),
         SizedBox(height: 20),
-        widget.requestModel.hasBorrowAgreement
+        borrowAcceptorModel.borrowAgreementLink != null
             ? Container(
                 decoration:
                     BoxDecoration(border: Border.all(color: Colors.grey[200])),
@@ -271,13 +288,13 @@ class _CreatorApproveAcceptorAgreeementState
                 width: 300,
                 height: 360,
                 child: SfPdfViewer.network(
-                  widget.requestModel.borrowAgreementLink,
+                  borrowAcceptorModel.borrowAgreementLink,
                   canShowPaginationDialog: false,
                 ),
               )
             : Container(),
         SizedBox(height: 20),
-        widget.requestModel.hasBorrowAgreement
+        borrowAcceptorModel.borrowAgreementLink != null
             ? Container(
                 alignment: Alignment.center,
                 margin: EdgeInsets.only(right: 12),
@@ -306,7 +323,7 @@ class _CreatorApproveAcceptorAgreeementState
                     ],
                   ),
                   onPressed: () async {
-                    await openPdfViewer(widget.requestModel.borrowAgreementLink,
+                    await openPdfViewer(borrowAcceptorModel.borrowAgreementLink,
                         'Review Agreement', context);
                   },
                 ),

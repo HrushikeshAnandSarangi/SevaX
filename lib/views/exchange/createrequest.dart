@@ -1215,10 +1215,11 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                         HideWidget(
                                           hide: roomOrTool == 0,
                                           child: SelectBorrowItem(
-                                            selectedItems:
-                                                requestModel.requiredItems,
+                                            selectedItems: requestModel
+                                                .borrowModel.requiredItems,
                                             onSelectedItems: (items) => {
-                                              requestModel.requiredItems = items
+                                              requestModel.borrowModel
+                                                  .requiredItems = items
                                             },
                                           ),
                                         ),
@@ -3184,8 +3185,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
         return;
       }
       if (requestModel.requestType == RequestType.BORROW &&
-          (requestModel.requiredItems == null ||
-              requestModel.requiredItems.isEmpty)) {
+          (requestModel.borrowModel.requiredItems == null ||
+              requestModel.borrowModel.requiredItems.isEmpty)) {
         showDialogForTitle(dialogTitle: L.of(context).items_validation);
         return;
       }

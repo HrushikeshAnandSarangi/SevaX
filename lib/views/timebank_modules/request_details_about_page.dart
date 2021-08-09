@@ -14,6 +14,7 @@ import 'package:sevaexchange/models/basic_user_details.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/acceptor_model.dart';
+import 'package:sevaexchange/new_baseline/models/borrow_accpetor_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
@@ -472,7 +473,6 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                       : Container(),
                   SizedBox(height: 20),
                   (widget.requestItem.requestType == RequestType.BORROW &&
-                          widget.requestItem.hasBorrowAgreement &&
                           widget.requestItem.approvedUsers.length > 0 &&
                           (SevaCore.of(context).loggedInUser.email ==
                                   widget.requestItem.email ||
@@ -2643,36 +2643,41 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   }
 
   Widget get approvedBorrowRequestViewAgreementComponent {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(height: 5),
-        GestureDetector(
-          child: Row(
-            children: [
-              Text(
-                  (widget.requestItem.borrowAgreementLink == null ||
-                          widget.requestItem.borrowAgreementLink == '')
-                      ? S.of(context).request_agreement_not_available
-                      : S.of(context).click_to_view_request_agreement,
-                  style: TextStyle(
-                      fontSize: 16,
-                      color: Theme.of(context).primaryColor,
-                      fontWeight: FontWeight.w600)),
-            ],
-          ),
-          onTap: () async {
-            if (widget.requestItem.borrowAgreementLink == null ||
-                widget.requestItem.borrowAgreementLink == '') {
-              return null;
-            } else {
-              await openPdfViewer(widget.requestItem.borrowAgreementLink,
-                  'Request Agreement Document', context);
-            }
-          },
-        ),
-      ],
-    );
+    return FutureBuilder<BorrowAcceptorModel>(
+        future: FirestoreManager.getBorrowRequestAcceptorModel(
+            requestId: widget.requestItem.id,
+            acceptorEmail: widget.requestItem.approvedUsers[0]),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return LoadingIndicator();
+          }
+          if (snapshot.data == null) {
+            return Center(
+              child: Text(S.of(context).request_agreement_not_available),
+            );
+          }
+          BorrowAcceptorModel borrowAcceptorModel = snapshot.data;
+          return GestureDetector(
+            child: Text(
+                borrowAcceptorModel.borrowAgreementLink == null ||
+                        borrowAcceptorModel.borrowAgreementLink == ''
+                    ? S.of(context).request_agreement_not_available
+                    : S.of(context).click_to_view_request_agreement,
+                style: TextStyle(
+                    fontSize: 16,
+                    color: Theme.of(context).primaryColor,
+                    fontWeight: FontWeight.w600)),
+            onTap: () async {
+              if (borrowAcceptorModel.borrowAgreementLink == null ||
+                  borrowAcceptorModel.borrowAgreementLink == '') {
+                return null;
+              } else {
+                await openPdfViewer(borrowAcceptorModel.borrowAgreementLink,
+                    'Request Agreement Document', context);
+              }
+            },
+          );
+        });
   }
 
   Widget get getCashDetailsForCashDonations {
@@ -3292,7 +3297,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     return Wrap(
       runSpacing: 5.0,
       spacing: 5.0,
-      children: widget.requestItem.requiredItems.values
+      children: widget.requestItem.borrowModel.requiredItems.values
           .toList()
           .map(
             (value) => value == null
