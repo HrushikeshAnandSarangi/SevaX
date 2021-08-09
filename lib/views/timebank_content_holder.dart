@@ -512,7 +512,9 @@ class DiscussionList extends StatefulWidget {
   final String loggedInUser;
   final String timebankId;
   final TimebankModel timebankModel;
+
   DiscussionList({this.timebankId, this.loggedInUser, this.timebankModel});
+
   @override
   DiscussionListState createState() {
     return DiscussionListState();
@@ -705,14 +707,9 @@ class DiscussionListState extends State<DiscussionList> {
               );
             }
             if (newsList.length == 0) {
-              return Padding(
-                padding: const EdgeInsets.all(25.0),
-                child: Center(
-                  child: EmptyWidget(
-                    title: S.of(context).no_posts_title,
-                    sub_title: S.of(context).no_posts_description,
-                  ),
-                ),
+              return EmptyWidget(
+                title: S.of(context).no_posts_title,
+                sub_title: S.of(context).no_posts_description,
               );
             }
 
@@ -1108,12 +1105,20 @@ class DiscussionListState extends State<DiscussionList> {
                                               ),
                                               actions: <Widget>[
                                                 CustomTextButton(
-                                                  padding: EdgeInsets.fromLTRB(
-                                                      20, 5, 20, 5),
+                                                  color: HexColor("#d2d2d2"),
+                                                  textColor: Colors.white,
+                                                  child: Text(
+                                                    S.of(context).cancel,
+                                                  ),
+                                                  onPressed: () {
+                                                    Navigator.of(viewContext)
+                                                        .pop();
+                                                  },
+                                                ),
+                                                CustomTextButton(
                                                   color: Theme.of(context)
                                                       .accentColor,
-                                                  textColor: FlavorConfig
-                                                      .values.buttonTextColor,
+                                                  textColor: Colors.white,
                                                   child: Text(
                                                     S.of(context).report_feed,
                                                     style: TextStyle(
@@ -1146,17 +1151,6 @@ class DiscussionListState extends State<DiscussionList> {
                                                         .pop();
                                                   },
                                                 ),
-                                                CustomTextButton(
-                                                  child: Text(
-                                                    S.of(context).cancel,
-                                                    style: TextStyle(
-                                                        color: Colors.red),
-                                                  ),
-                                                  onPressed: () {
-                                                    Navigator.of(viewContext)
-                                                        .pop();
-                                                  },
-                                                ),
                                               ],
                                             );
                                           },
@@ -1172,10 +1166,14 @@ class DiscussionListState extends State<DiscussionList> {
                             searchSegmentBloc: getSearchBlocForShare(),
                             loggedInUser: SevaCore.of(context).loggedInUser,
                           ),
-
                           getOptionButtons(
                             Row(
                               children: <Widget>[
+                                Text('${news.likes.length}',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                    )),
                                 Padding(
                                   padding: const EdgeInsets.all(4.0),
                                   child: Center(
@@ -1193,11 +1191,6 @@ class DiscussionListState extends State<DiscussionList> {
                                           ),
                                   ),
                                 ),
-                                Text('${news.likes.length}',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14,
-                                    )),
                                 Padding(
                                     padding: EdgeInsets.only(left: 20),
                                     child: Align(
@@ -1268,13 +1261,16 @@ class DiscussionListState extends State<DiscussionList> {
       currentTimebankModel = _homePageBaseBloc
           .getTimebankModelFromCurrentCommunity(widget.timebankId);
 
-      currentTimebankModel.members.forEach((element) {
-        membersInTimebank.add(
-          _membersBloc.getMemberFromLocalData(
-            userId: element,
-          ),
+      if (currentTimebankModel != null)
+        currentTimebankModel.members.forEach(
+          (element) {
+            membersInTimebank.add(
+              _membersBloc.getMemberFromLocalData(
+                userId: element,
+              ),
+            );
+          },
         );
-      });
 
       searchSegmentBloc = SearchSegmentBloc();
       searchSegmentBloc.init(listOfMembersInTimebank: membersInTimebank);

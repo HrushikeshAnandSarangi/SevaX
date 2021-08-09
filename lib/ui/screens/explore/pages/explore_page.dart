@@ -821,57 +821,87 @@ class _ExplorePageState extends State<ExplorePage> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      S.of(context).featured_communities,
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
                     SizedBox(height: 10),
                     Container(
                       alignment: Alignment.centerLeft,
-                      height: 300,
                       child: StreamBuilder<List<CommunityModel>>(
-                          stream: _exploreBloc.communities,
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return Column(
-                                children: [
-                                  LoadingIndicator(),
-                                ],
-                              );
-                            }
-                            if (snapshot.data == null) {
-                              return Center(
-                                child: Text(S.of(context).no_timebanks_found),
-                              );
-                            }
-                            return ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: snapshot.data.length,
-                              scrollDirection: Axis.horizontal,
-                              itemBuilder: (context, index) {
-                                CommunityModel community = snapshot.data[index];
-                                return ExploreFeaturedCard(
-                                  imageUrl: community.logo_url,
-                                  communityName: community.name,
-                                  onTap: () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            ExploreCommunityDetails(
-                                          communityId: community.id,
-                                          isSignedUser: widget.isUserSignedIn,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                );
-                              },
+                        stream: _exploreBloc.communities,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Column(
+                              children: [
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    S.of(context).featured_communities,
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                                LoadingIndicator(),
+                              ],
                             );
-                          }),
+                          }
+
+                          if (snapshot.hasError) {
+                            return Container();
+                          }
+
+                          if (snapshot.data == null) {
+                            return Center(
+                              child: Text(S.of(context).no_timebanks_found),
+                            );
+                          }
+                          return Container(
+                            child: Column(
+                              children: [
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    S.of(context).featured_communities,
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 10),
+                                Container(
+                                  height: 300,
+                                  child: ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: snapshot.data.length,
+                                    scrollDirection: Axis.horizontal,
+                                    itemBuilder: (context, index) {
+                                      CommunityModel community =
+                                          snapshot.data[index];
+                                      return ExploreFeaturedCard(
+                                        imageUrl: community.logo_url,
+                                        communityName: community.name,
+                                        onTap: () {
+                                          Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ExploreCommunityDetails(
+                                                communityId: community.id,
+                                                isSignedUser:
+                                                    widget.isUserSignedIn,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ],
                 ),
@@ -884,11 +914,13 @@ class _ExplorePageState extends State<ExplorePage> {
                         ? Searches.getNearBYCommunities(geoPoint: geoPoint)
                         : Searches.getNearBYCommunities(geoPoint: geoPoint),
                     builder: (context, snapshot) {
+                      // ConnectionState.
+
                       if (snapshot.hasError) {
-                        return Text(snapshot.error);
+                        return Text(S.of(context).something_went_wrong);
                       }
 
-                      if (snapshot.connectionState == ConnectionState.waiting) {
+                      if (!snapshot.hasData) {
                         return LoadingIndicator();
                       }
 

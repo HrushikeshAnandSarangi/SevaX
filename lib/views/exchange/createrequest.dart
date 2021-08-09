@@ -1603,7 +1603,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
         ]);
   }
 
-  String mobilePattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
+  String mobilePattern = r'^[0-9]+$';
   RegExp emailPattern = RegExp(
       r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
   String _validateEmailAndPhone(String value) {
@@ -1846,7 +1846,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          S.of(context).request_payment_description,
+          L.of(context).request_payment_description,
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,

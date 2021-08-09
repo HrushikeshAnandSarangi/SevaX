@@ -208,9 +208,18 @@ class _FeedsTabViewState extends State<FeedsTabView>
             content: Text(S.of(context).report_feed_confirmation_message),
             actions: <Widget>[
               CustomTextButton(
-                padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                color: HexColor("#d2d2d2"),
+                textColor: Colors.white,
+                child: Text(
+                  S.of(context).cancel,
+                ),
+                onPressed: () {
+                  Navigator.of(viewContext).pop();
+                },
+              ),
+              CustomTextButton(
                 color: Theme.of(mContext).accentColor,
-                textColor: FlavorConfig.values.buttonTextColor,
+                textColor: Colors.white,
                 child: Text(
                   S.of(context).report_feed,
                   style: TextStyle(
@@ -234,15 +243,7 @@ class _FeedsTabViewState extends State<FeedsTabView>
                   setState(() {});
                 },
               ),
-              CustomTextButton(
-                child: Text(
-                  S.of(context).cancel,
-                  style: TextStyle(color: Colors.red),
-                ),
-                onPressed: () {
-                  Navigator.of(viewContext).pop();
-                },
-              ),
+
             ],
           );
         },

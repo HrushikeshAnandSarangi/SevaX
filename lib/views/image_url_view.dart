@@ -307,12 +307,12 @@ class _ImageUrlViewState extends State<ImageUrlView> {
         return AlertDialog(
           title: Text(S.of(context).imageurl_alert),
           content: Text(S.of(context).image_url_alert_desc),
+          actionsPadding: EdgeInsets.only(right: 20),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             CustomTextButton(
-              padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
               color: Theme.of(context).accentColor,
-              textColor: FlavorConfig.values.buttonTextColor,
+              textColor: Colors.white,
               child: Text(S.of(context).close),
               onPressed: () {
                 Navigator.of(context).pop();

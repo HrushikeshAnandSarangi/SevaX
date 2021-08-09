@@ -25,17 +25,16 @@ import 'package:sevaexchange/utils/utils.dart' as utils;
 class OneToManyCreatorCompleteRequestPage extends StatefulWidget {
   final RequestModel requestModel;
   final VoidCallback onFinish;
+
   // TODO needs flow correction to tasks model
-  OneToManyCreatorCompleteRequestPage(
-      {@required this.requestModel, @required this.onFinish});
+  OneToManyCreatorCompleteRequestPage({@required this.requestModel, @required this.onFinish});
 
   @override
   OneToManyCreatorCompleteRequestPageState createState() =>
       OneToManyCreatorCompleteRequestPageState();
 }
 
-class OneToManyCreatorCompleteRequestPageState
-    extends State<OneToManyCreatorCompleteRequestPage> {
+class OneToManyCreatorCompleteRequestPageState extends State<OneToManyCreatorCompleteRequestPage> {
   RequestModel requestModel;
 
   List tempAttendeesList = [];
@@ -64,10 +63,8 @@ class OneToManyCreatorCompleteRequestPageState
   }
 
   TextEditingController hoursController = TextEditingController();
-  TextEditingController selectedHoursPrepTimeController =
-      TextEditingController();
-  TextEditingController selectedHoursDeliveryTimeController =
-      TextEditingController();
+  TextEditingController selectedHoursPrepTimeController = TextEditingController();
+  TextEditingController selectedHoursDeliveryTimeController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -119,66 +116,42 @@ class OneToManyCreatorCompleteRequestPageState
                                         children: [
                                           CircleAvatar(
                                               backgroundImage: NetworkImage(
-                                                  (requestModel.selectedInstructor
-                                                                  .photoURL ==
-                                                              '' ||
+                                                  (requestModel.selectedInstructor.photoURL == '' ||
                                                           requestModel
-                                                                  .selectedInstructor
-                                                                  .photoURL ==
+                                                                  .selectedInstructor.photoURL ==
                                                               null)
                                                       ? defaultUserImageURL
-                                                      : requestModel
-                                                          .selectedInstructor
-                                                          .photoURL),
+                                                      : requestModel.selectedInstructor.photoURL),
                                               minRadius: 32.0),
                                         ],
                                       ),
                                       SizedBox(width: 20),
                                       Expanded(
                                         child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             SizedBox(height: 12),
                                             Text(
-                                                (requestModel.selectedInstructor
-                                                                .fullname ==
-                                                            '' ||
-                                                        requestModel
-                                                                .selectedInstructor
-                                                                .fullname ==
+                                                (requestModel.selectedInstructor.fullname == '' ||
+                                                        requestModel.selectedInstructor.fullname ==
                                                             null)
-                                                    ? S
-                                                        .of(context)
-                                                        .name_not_available
-                                                    : requestModel
-                                                        .selectedInstructor
-                                                        .fullname,
+                                                    ? S.of(context).name_not_available
+                                                    : requestModel.selectedInstructor.fullname,
                                                 style: TextStyle(
-                                                    fontSize: 20,
-                                                    fontWeight:
-                                                        FontWeight.w600),
-                                                overflow:
-                                                    TextOverflow.ellipsis),
+                                                    fontSize: 20, fontWeight: FontWeight.w600),
+                                                overflow: TextOverflow.ellipsis),
                                             SizedBox(height: 13),
                                             Text(
                                               requestModel.selectedSpeakerTimeDetails
                                                           .speakingTime ==
                                                       null
-                                                  ? S
-                                                          .of(context)
-                                                          .duration_of_session +
-                                                      '0'
-                                                  : S
-                                                          .of(context)
-                                                          .duration_of_session +
+                                                  ? S.of(context).duration_of_session + '0'
+                                                  : S.of(context).duration_of_session +
                                                       requestModel
-                                                          .selectedSpeakerTimeDetails
-                                                          .speakingTime
+                                                          .selectedSpeakerTimeDetails.speakingTime
                                                           .toString() +
                                                       ' ' +
-                                                      ((requestModel
-                                                                  .selectedSpeakerTimeDetails
+                                                      ((requestModel.selectedSpeakerTimeDetails
                                                                   .speakingTime >
                                                               1.0)
                                                           ? S.of(context).hours
@@ -190,20 +163,15 @@ class OneToManyCreatorCompleteRequestPageState
                                             ),
                                             SizedBox(height: 5),
                                             Text(
-                                              requestModel.selectedSpeakerTimeDetails
-                                                          .prepTime ==
+                                              requestModel.selectedSpeakerTimeDetails.prepTime ==
                                                       null
                                                   ? '0'
-                                                  : S
-                                                          .of(context)
-                                                          .time_to_prepare +
+                                                  : S.of(context).time_to_prepare +
                                                       requestModel
-                                                          .selectedSpeakerTimeDetails
-                                                          .prepTime
+                                                          .selectedSpeakerTimeDetails.prepTime
                                                           .toString() +
                                                       ' ' +
-                                                      ((requestModel
-                                                                  .selectedSpeakerTimeDetails
+                                                      ((requestModel.selectedSpeakerTimeDetails
                                                                   .prepTime >
                                                               1)
                                                           ? S.of(context).hours
@@ -224,8 +192,7 @@ class OneToManyCreatorCompleteRequestPageState
                             Stack(
                               alignment: Alignment.center,
                               children: [
-                                Icon(Icons.circle,
-                                    size: 78, color: Colors.indigo[300]),
+                                Icon(Icons.circle, size: 78, color: Colors.indigo[300]),
                                 Icon(Icons.done, size: 36, color: Colors.white),
                               ],
                             ),
@@ -241,8 +208,7 @@ class OneToManyCreatorCompleteRequestPageState
                     children: [
                       Container(
                           width: MediaQuery.of(context).size.width * 0.88,
-                          padding: EdgeInsets.only(
-                              left: 8, right: 8, top: 5, bottom: 6),
+                          padding: EdgeInsets.only(left: 8, right: 8, top: 5, bottom: 6),
                           color: Colors.grey[350],
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -250,14 +216,12 @@ class OneToManyCreatorCompleteRequestPageState
                             children: [
                               Text(
                                 S.of(context).attended_by,
-                                style: TextStyle(
-                                    fontSize: 17, fontWeight: FontWeight.w600),
+                                style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
                               ),
                               InkWell(
                                 onTap: () {
                                   setState(() {
-                                    tempAttendeesList =
-                                        List.from(attendeesList);
+                                    tempAttendeesList = List.from(attendeesList);
                                   });
                                 },
                                 child: Text(
@@ -289,23 +253,18 @@ class OneToManyCreatorCompleteRequestPageState
                             shrinkWrap: true,
                             reverse: true,
                             itemCount: tempAttendeesList.length,
-                            separatorBuilder:
-                                (BuildContext context, int index) => Divider(),
+                            separatorBuilder: (BuildContext context, int index) => Divider(),
                             itemBuilder: (context, index) {
                               return Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Row(
                                     children: [
                                       CircleAvatar(
                                           backgroundImage: NetworkImage(
-                                              tempAttendeesList[index]
-                                                          ['photoURL'] ==
-                                                      null
+                                              tempAttendeesList[index]['photoURL'] == null
                                                   ? defaultUserImageURL
-                                                  : tempAttendeesList[index]
-                                                      ['photoURL']),
+                                                  : tempAttendeesList[index]['photoURL']),
                                           minRadius: 25.0),
                                       SizedBox(width: 10),
                                       Text(
@@ -329,8 +288,7 @@ class OneToManyCreatorCompleteRequestPageState
                                         });
                                       }
                                     },
-                                    child: Icon(Icons.cancel_rounded,
-                                        color: Colors.grey, size: 32),
+                                    child: Icon(Icons.cancel_rounded, color: Colors.grey, size: 32),
                                   )
                                 ],
                               );
@@ -350,19 +308,12 @@ class OneToManyCreatorCompleteRequestPageState
                         child: Column(
                           children: [
                             Text(
-                                S
-                                    .of(context)
-                                    .speaker_complete_page_text_1
-                                    .replaceAll(
-                                        'speaker_name',
-                                        requestModel
-                                            .selectedInstructor.fullname),
-                                style: TextStyle(
-                                    color: Colors.grey, fontSize: 14)),
+                                S.of(context).speaker_complete_page_text_1.replaceAll(
+                                    'speaker_name', requestModel.selectedInstructor.fullname),
+                                style: TextStyle(color: Colors.grey, fontSize: 14)),
                             SizedBox(height: 15),
                             Text(S.of(context).speaker_complete_page_text_2,
-                                style: TextStyle(
-                                    color: Colors.grey, fontSize: 14)),
+                                style: TextStyle(color: Colors.grey, fontSize: 14)),
                           ],
                         ),
                       ),
@@ -388,125 +339,103 @@ class OneToManyCreatorCompleteRequestPageState
                                           .oneToManyRequestCreatorCompletingRequestDialog),
                                       actions: <Widget>[
                                         CustomTextButton(
+                                          color: Theme.of(context).accentColor,
+                                          child: Text(
+                                            S.of(context).no,
+                                            style: TextStyle(fontSize: 16, color: Colors.white),
+                                          ),
+                                          onPressed: () {
+                                            Navigator.of(viewContext).pop();
+                                          },
+                                        ),
+                                        CustomTextButton(
                                           color: Theme.of(context).primaryColor,
                                           child: Text(
                                             S.of(context).yes,
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                color: Colors.white),
+                                            style: TextStyle(fontSize: 16, color: Colors.white),
                                           ),
                                           onPressed: () async {
                                             showDialog(
                                                 barrierDismissible: false,
                                                 context: context,
                                                 builder: (createDialogContext) {
-                                                  viewContext =
-                                                      createDialogContext;
+                                                  viewContext = createDialogContext;
                                                   return AlertDialog(
-                                                    title: Text(
-                                                        S.of(context).loading),
-                                                    content:
-                                                        LinearProgressIndicator(),
+                                                    title: Text(S.of(context).loading),
+                                                    content: LinearProgressIndicator(),
                                                   );
                                                 });
 
                                             //give credits to timebank, then to speaker and attendees
-                                            double totalCredits = ((requestModel
-                                                        .maxCredits *
+                                            double totalCredits = ((requestModel.maxCredits *
                                                     tempAttendeesList.length) +
-                                                requestModel
-                                                    .selectedSpeakerTimeDetails
-                                                    .prepTime +
-                                                (requestModel
-                                                            .selectedSpeakerTimeDetails
+                                                requestModel.selectedSpeakerTimeDetails.prepTime +
+                                                (requestModel.selectedSpeakerTimeDetails
                                                             .speakingTime ==
                                                         null
                                                     ? 0.0
                                                     : requestModel
-                                                        .selectedSpeakerTimeDetails
-                                                        .speakingTime));
+                                                        .selectedSpeakerTimeDetails.speakingTime));
 
-                                            log('Total Credits: ' +
-                                                totalCredits.toString());
+                                            log('Total Credits: ' + totalCredits.toString());
 
-                                            double creditsToSpeaker = requestModel
-                                                    .selectedSpeakerTimeDetails
-                                                    .prepTime +
-                                                (requestModel
-                                                            .selectedSpeakerTimeDetails
-                                                            .speakingTime ==
-                                                        null
-                                                    ? 0.0
-                                                    : requestModel
-                                                        .selectedSpeakerTimeDetails
-                                                        .speakingTime);
+                                            double creditsToSpeaker =
+                                                requestModel.selectedSpeakerTimeDetails.prepTime +
+                                                    (requestModel.selectedSpeakerTimeDetails
+                                                                .speakingTime ==
+                                                            null
+                                                        ? 0.0
+                                                        : requestModel.selectedSpeakerTimeDetails
+                                                            .speakingTime);
 
                                             //Sevax global to timebank
-                                            await TransactionBloc()
-                                                .createNewTransaction(
-                                              FlavorConfig.values
-                                                  .timebankId, //sevax global timebank id
-                                              requestModel
-                                                  .timebankId, //timebank to be sent to id
-                                              DateTime.now()
-                                                  .millisecondsSinceEpoch,
+                                            await TransactionBloc().createNewTransaction(
+                                              FlavorConfig.values.timebankId,
+                                              //sevax global timebank id
+                                              requestModel.timebankId,
+                                              //timebank to be sent to id
+                                              DateTime.now().millisecondsSinceEpoch,
                                               totalCredits,
                                               true,
                                               "SEVAX_TO_TIMEBANK_ONETOMANY_COMPLETE",
                                               null,
                                               requestModel.id,
-                                              communityId:
-                                                  requestModel.communityId,
-                                              toEmailORId:
-                                                  requestModel.timebankId,
-                                              fromEmailORId: FlavorConfig
-                                                  .values.timebankId,
+                                              communityId: requestModel.communityId,
+                                              toEmailORId: requestModel.timebankId,
+                                              fromEmailORId: FlavorConfig.values.timebankId,
                                             );
 
                                             //to speaker and attendees
-                                            await TransactionBloc()
-                                                .createNewTransaction(
-                                                    requestModel.timebankId,
-                                                    requestModel
-                                                        .selectedInstructor
-                                                        .sevaUserID, //speaker user id
-                                                    DateTime.now()
-                                                        .millisecondsSinceEpoch,
-                                                    creditsToSpeaker,
-                                                    true,
-                                                    "TIMEBANK_TO_SPEAKER_ONETOMANY_COMPLETE",
-                                                    null,
-                                                    requestModel.id,
-                                                    communityId: requestModel
-                                                        .communityId,
-                                                    toEmailORId: requestModel
-                                                        .selectedInstructor
-                                                        .email,
-                                                    fromEmailORId:
-                                                        requestModel.email);
-
-                                            for (var attendee
-                                                in tempAttendeesList) {
-                                              await TransactionBloc()
-                                                  .createNewTransaction(
+                                            await TransactionBloc().createNewTransaction(
                                                 requestModel.timebankId,
-                                                attendee[
-                                                    'sevaUserID'], //each attendee
-                                                DateTime.now()
-                                                    .millisecondsSinceEpoch,
+                                                requestModel.selectedInstructor.sevaUserID,
+                                                //speaker user id
+                                                DateTime.now().millisecondsSinceEpoch,
+                                                creditsToSpeaker,
+                                                true,
+                                                "TIMEBANK_TO_SPEAKER_ONETOMANY_COMPLETE",
+                                                null,
+                                                requestModel.id,
+                                                communityId: requestModel.communityId,
+                                                toEmailORId: requestModel.selectedInstructor.email,
+                                                fromEmailORId: requestModel.email);
+
+                                            for (var attendee in tempAttendeesList) {
+                                              await TransactionBloc().createNewTransaction(
+                                                requestModel.timebankId,
+                                                attendee['sevaUserID'],
+                                                //each attendee
+                                                DateTime.now().millisecondsSinceEpoch,
                                                 requestModel.maxCredits,
                                                 true,
                                                 "TIMEBANK_TO_ATTENDEES_ONETOMANY_COMPLETE",
                                                 null,
                                                 requestModel.id,
-                                                communityId:
-                                                    requestModel.communityId,
+                                                communityId: requestModel.communityId,
                                                 toEmailORId: attendee['email'],
-                                                fromEmailORId:
-                                                    requestModel.email,
+                                                fromEmailORId: requestModel.email,
                                               );
-                                              log('Sent credit to:  ' +
-                                                  attendee['fullname']);
+                                              log('Sent credit to:  ' + attendee['fullname']);
                                             }
 
                                             //make request accepted true
@@ -556,13 +485,10 @@ class OneToManyCreatorCompleteRequestPageState
 
                                             //Send Feedback notitifications to Attendees
                                             if (tempAttendeesList.length >= 1) {
-                                              logger.wtf(
-                                                  'RESET LIST LENGTH:  ' +
-                                                      tempAttendeesList.length
-                                                          .toString());
+                                              logger.wtf('RESET LIST LENGTH:  ' +
+                                                  tempAttendeesList.length.toString());
                                               await sendFeedbackNotificationsToAttendees(
-                                                  attendeesList:
-                                                      tempAttendeesList,
+                                                  attendeesList: tempAttendeesList,
                                                   requestModel: requestModel,
                                                   context: context);
                                             }
@@ -575,27 +501,13 @@ class OneToManyCreatorCompleteRequestPageState
                                             widget.onFinish();
                                           },
                                         ),
-                                        CustomTextButton(
-                                          color: Theme.of(context).accentColor,
-                                          child: Text(
-                                            S.of(context).no,
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                color: Colors.white),
-                                          ),
-                                          onPressed: () {
-                                            Navigator.of(viewContext).pop();
-                                          },
-                                        ),
                                       ],
                                     );
                                   });
                             },
                             child: Text(
                               S.of(context).accept,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.black),
+                              style: TextStyle(fontWeight: FontWeight.w600, color: Colors.black),
                             ),
                             elevation: 0,
                             color: Colors.grey[200],
@@ -607,8 +519,7 @@ class OneToManyCreatorCompleteRequestPageState
                           padding: EdgeInsets.all(8.0),
                           child: CustomElevatedButton(
                             onPressed: () {
-                              UserModel loggedInUser =
-                                  SevaCore.of(context).loggedInUser;
+                              UserModel loggedInUser = SevaCore.of(context).loggedInUser;
 
                               ParticipantInfo sender = ParticipantInfo(
                                 id: loggedInUser.sevaUserID,
@@ -620,8 +531,7 @@ class OneToManyCreatorCompleteRequestPageState
                               ParticipantInfo reciever = ParticipantInfo(
                                 id: requestModel.selectedInstructor.sevaUserID,
                                 name: requestModel.selectedInstructor.fullname,
-                                photoUrl:
-                                    requestModel.selectedInstructor.photoURL,
+                                photoUrl: requestModel.selectedInstructor.photoURL,
                                 type: ChatType.TYPE_PERSONAL,
                               );
 
@@ -638,9 +548,7 @@ class OneToManyCreatorCompleteRequestPageState
                             },
                             child: Text(
                               S.of(context).message,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.black),
+                              style: TextStyle(fontWeight: FontWeight.w600, color: Colors.black),
                             ),
                             elevation: 0,
                             color: Colors.grey[200],
@@ -659,6 +567,7 @@ class OneToManyCreatorCompleteRequestPageState
   }
 
   BuildContext creditRequestDialogContext;
+
   void showProgressForCreditRetrieval() {
     showDialog(
         barrierDismissible: false,
@@ -672,77 +581,77 @@ class OneToManyCreatorCompleteRequestPageState
         });
   }
 
-  //void startTransaction() async {
-  //  if (_formKey.currentState.validate()) {
-  // TODO needs flow correction to tasks model (currently reliying on requests collection for changes which will be huge instead tasks have to be individual to users)
-  // int totalMinutes = 0;
+//void startTransaction() async {
+//  if (_formKey.currentState.validate()) {
+// TODO needs flow correction to tasks model (currently reliying on requests collection for changes which will be huge instead tasks have to be individual to users)
+// int totalMinutes = 0;
 
-  // if (requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST &&
-  //     requestModel.selectedInstructor.sevaUserID ==
-  //         SevaCore.of(context).loggedInUser.sevaUserID) {
-  //   totalMinutes = int.parse(selectedMinutesPrepTime) +
-  //       int.parse(selectedMinutesDeliveryTime) +
-  //       (int.parse(selectedHoursPrepTimeController.text) * 60) +
-  //       (int.parse(selectedHoursDeliveryTimeController.text) * 60);
-  // } else {
-  //   totalMinutes = int.parse(selectedMinuteValue) +
-  //       (int.parse(selectedHourValue) * 60);
-  //   // TODO needs flow correction need to be removed when tasks introduced- Eswar
-  // }
+// if (requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST &&
+//     requestModel.selectedInstructor.sevaUserID ==
+//         SevaCore.of(context).loggedInUser.sevaUserID) {
+//   totalMinutes = int.parse(selectedMinutesPrepTime) +
+//       int.parse(selectedMinutesDeliveryTime) +
+//       (int.parse(selectedHoursPrepTimeController.text) * 60) +
+//       (int.parse(selectedHoursDeliveryTimeController.text) * 60);
+// } else {
+//   totalMinutes = int.parse(selectedMinuteValue) +
+//       (int.parse(selectedHourValue) * 60);
+//   // TODO needs flow correction need to be removed when tasks introduced- Eswar
+// }
 
-  // this.requestModel.durationOfRequest = totalMinutes;
+// this.requestModel.durationOfRequest = totalMinutes;
 
-  // TransactionModel transactionModel = TransactionModel(
-  //   from: requestModel.sevaUserId,
-  //   to: SevaCore.of(context).loggedInUser.sevaUserID,
-  //   credits: totalMinutes / 60,
-  //   timestamp: DateTime.now().millisecondsSinceEpoch,
-  //   communityId: requestModel.communityId,
-  // );
+// TransactionModel transactionModel = TransactionModel(
+//   from: requestModel.sevaUserId,
+//   to: SevaCore.of(context).loggedInUser.sevaUserID,
+//   credits: totalMinutes / 60,
+//   timestamp: DateTime.now().millisecondsSinceEpoch,
+//   communityId: requestModel.communityId,
+// );
 
-  // if (requestModel.transactions == null) {
-  //   requestModel.transactions = [transactionModel];
-  // } else if (!requestModel.transactions
-  //     .any((model) => model.to == transactionModel.to)) {
-  //   requestModel.transactions.add(transactionModel);
-  // }
+// if (requestModel.transactions == null) {
+//   requestModel.transactions = [transactionModel];
+// } else if (!requestModel.transactions
+//     .any((model) => model.to == transactionModel.to)) {
+//   requestModel.transactions.add(transactionModel);
+// }
 
-  //FirestoreManager.requestComplete(model: requestModel);
+//FirestoreManager.requestComplete(model: requestModel);
 
-  // END OF CODE correction mentioned above
-  // await transactionBloc.createNewTransaction(
-  //   requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-  //       ? requestModel.sevaUserId
-  //       : requestModel.timebankId,
-  //   SevaCore.of(context).loggedInUser.sevaUserID,
-  //   DateTime.now().millisecondsSinceEpoch,
-  //   totalMinutes / 60,
-  //   false,
-  //   this.requestModel.requestMode == RequestMode.TIMEBANK_REQUEST
-  //       ? RequestMode.TIMEBANK_REQUEST.toString()
-  //       : RequestMode.PERSONAL_REQUEST.toString(),
-  //   this.requestModel.id,
-  //   this.requestModel.timebankId,
-  //   communityId: requestModel.communityId,
-  // );
+// END OF CODE correction mentioned above
+// await transactionBloc.createNewTransaction(
+//   requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+//       ? requestModel.sevaUserId
+//       : requestModel.timebankId,
+//   SevaCore.of(context).loggedInUser.sevaUserID,
+//   DateTime.now().millisecondsSinceEpoch,
+//   totalMinutes / 60,
+//   false,
+//   this.requestModel.requestMode == RequestMode.TIMEBANK_REQUEST
+//       ? RequestMode.TIMEBANK_REQUEST.toString()
+//       : RequestMode.PERSONAL_REQUEST.toString(),
+//   this.requestModel.id,
+//   this.requestModel.timebankId,
+//   communityId: requestModel.communityId,
+// );
 
-  // FirestoreManager.createTaskCompletedNotification(
-  //   model: NotificationsModel(
-  //     id: utils.Utils.getUuid(),
-  //     data: requestModel.toMap(),
-  //     type: NotificationType.RequestCompleted,
-  //     senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
-  //     targetUserId: requestModel.sevaUserId,
-  //     communityId: requestModel.communityId,
-  //     timebankId: requestModel.timebankId,
-  //     isTimebankNotification:
-  //         requestModel.requestMode == RequestMode.TIMEBANK_REQUEST,
-  //     isRead: false,
-  //   ),
-  // );
-  // Navigator.of(creditRequestDialogContext).pop();
-  // Navigator.of(context).pop();
-  // }
-  //}
+// FirestoreManager.createTaskCompletedNotification(
+//   model: NotificationsModel(
+//     id: utils.Utils.getUuid(),
+//     data: requestModel.toMap(),
+//     type: NotificationType.RequestCompleted,
+//     senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+//     targetUserId: requestModel.sevaUserId,
+//     communityId: requestModel.communityId,
+//     timebankId: requestModel.timebankId,
+//     isTimebankNotification:
+//         requestModel.requestMode == RequestMode.TIMEBANK_REQUEST,
+//     isRead: false,
+//   ),
+// );
+// Navigator.of(creditRequestDialogContext).pop();
+// Navigator.of(context).pop();
+// }
+//}
 
 }

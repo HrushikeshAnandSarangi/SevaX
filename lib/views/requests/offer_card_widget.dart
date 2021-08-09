@@ -4,6 +4,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
@@ -115,7 +116,7 @@ class OfferCardWidget extends StatelessWidget {
                 children: <Widget>[
                   Container(
                     height: 40,
-                    padding: EdgeInsets.only(bottom: 10),
+                    margin: EdgeInsets.only(bottom: 10),
                     child: CustomElevatedButton(
                       shape: StadiumBorder(),
                       color: Colors.indigo,
@@ -125,7 +126,7 @@ class OfferCardWidget extends StatelessWidget {
                         if (!offerAcceptors.contains(userModel.sevaUserID) &&
                             !offerInvites.contains(userModel.sevaUserID)) {
                           CollectionRef.offers.doc(offerId).update({
-                            'individualOfferDataModeferInvites':
+                            'individualOfferDataModel.offerInvites':
                                 FieldValue.arrayUnion([userModel.sevaUserID])
                           });
                           //Create a notification for other member

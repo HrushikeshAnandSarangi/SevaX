@@ -518,4 +518,6 @@ class L {
   String get address => 'Address';
   String get address_of_location => 'Address of location';
   String get send => 'Send';
+  //4th aug
+  String get request_payment_description => "Payment Method*";
 }
