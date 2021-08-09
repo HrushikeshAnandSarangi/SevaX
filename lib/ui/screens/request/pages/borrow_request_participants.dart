@@ -10,7 +10,8 @@ import 'package:sevaexchange/views/profile/profileviewer.dart';
 class BorrowRequestParticipants extends StatelessWidget {
   final UserModel userModel;
   final TimebankModel timebankModel;
-  final RequestModel requestModel;
+  final RequestModel
+      requestModel; //need to call borrowAcceptorModel here and refactor
 
   const BorrowRequestParticipants(
       {Key key, this.userModel, this.timebankModel, this.requestModel})
@@ -73,8 +74,6 @@ class BorrowRequestParticipants extends StatelessWidget {
     );
   }
 }
-
-
 
 enum LendingOfferStates {
   REQUESTED,
