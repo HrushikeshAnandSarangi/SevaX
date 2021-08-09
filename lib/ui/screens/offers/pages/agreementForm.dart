@@ -297,9 +297,13 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                                             .isDamageLiability ??
                                         isDamageLiability
                                     : isDamageLiability,
-                                onChanged: (Value) {
+                                onChanged: (value) {
                                   setState(() {
-                                    isDamageLiability = Value;
+                                    isDamageLiability = value;
+                                    if (selectedAgreementTemplate != null) {
+                                      selectedAgreementTemplate
+                                          .isDamageLiability = value;
+                                    }
                                   });
                                 },
                               ),
@@ -331,9 +335,13 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                                             .isUseDisclaimer ??
                                         isUseDisclaimer
                                     : isUseDisclaimer,
-                                onChanged: (Value) {
+                                onChanged: (value) {
                                   setState(() {
-                                    isUseDisclaimer = Value;
+                                    isUseDisclaimer = value;
+                                    if (selectedAgreementTemplate != null) {
+                                      selectedAgreementTemplate
+                                          .isUseDisclaimer = value;
+                                    }
                                   });
                                 },
                               ),
@@ -367,9 +375,14 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                                                   .isDeliveryReturn ??
                                               isDeliveryReturn
                                           : isDeliveryReturn,
-                                      onChanged: (Value) {
+                                      onChanged: (value) {
                                         setState(() {
-                                          isDeliveryReturn = Value;
+                                          isDeliveryReturn = value;
+                                          if (selectedAgreementTemplate !=
+                                              null) {
+                                            selectedAgreementTemplate
+                                                .isDeliveryReturn = value;
+                                          }
                                         });
                                       },
                                     ),
@@ -402,9 +415,14 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                                                   .isRefundDepositNeeded ??
                                               isRefundDepositNeeded
                                           : isRefundDepositNeeded,
-                                      onChanged: (Value) {
+                                      onChanged: (value) {
                                         setState(() {
-                                          isRefundDepositNeeded = Value;
+                                          isRefundDepositNeeded = value;
+                                          if (selectedAgreementTemplate !=
+                                              null) {
+                                            selectedAgreementTemplate
+                                                .isRefundDepositNeeded = value;
+                                          }
                                         });
                                       },
                                     ),
@@ -438,9 +456,14 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                                                   .isMaintainRepair ??
                                               isMaintainRepair
                                           : isMaintainRepair,
-                                      onChanged: (Value) {
+                                      onChanged: (value) {
                                         setState(() {
-                                          isMaintainRepair = Value;
+                                          isMaintainRepair = value;
+                                          if (selectedAgreementTemplate !=
+                                              null) {
+                                            selectedAgreementTemplate
+                                                .isMaintainRepair = value;
+                                          }
                                         });
                                       },
                                     ),
@@ -473,9 +496,14 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                                                   .isMaintainAndclean ??
                                               isMaintainAndclean
                                           : isMaintainAndclean,
-                                      onChanged: (Value) {
+                                      onChanged: (value) {
                                         setState(() {
-                                          isMaintainAndclean = Value;
+                                          isMaintainAndclean = value;
+                                          if (selectedAgreementTemplate !=
+                                              null) {
+                                            selectedAgreementTemplate
+                                                .isMaintainAndclean = value;
+                                          }
                                         });
                                       },
                                     ),
