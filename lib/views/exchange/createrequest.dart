@@ -38,6 +38,7 @@ import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/new_baseline/models/user_insufficient_credits_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/calendar/add_to_calander.dart';
+import 'package:sevaexchange/ui/screens/request/pages/select_borrow_item.dart';
 import 'package:sevaexchange/ui/screens/request/widgets/skills_for_requests_widget.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/debouncer.dart';
@@ -1194,6 +1195,32 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                             }
                                           },
                                           //groupValue: sharedValue,
+                                        ),
+                                        SizedBox(height: 20),
+                                        HideWidget(
+                                          hide: roomOrTool == 0,
+                                          child: Text(
+                                            L.of(context).select_a_item_lending,
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              //fontWeight: FontWeight.bold,
+                                              fontFamily: 'Europa',
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        HideWidget(
+                                          hide: roomOrTool == 0,
+                                          child: SelectBorrowItem(
+                                            selectedItems:
+                                                requestModel.requiredItems,
+                                            onSelectedItems: (items) => {
+                                              requestModel.requiredItems = items
+                                            },
+                                          ),
                                         ),
                                       ],
                                     )
@@ -2411,12 +2438,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
         children: <Widget>[
           RepeatWidget(),
 
-          SizedBox(height: 20),
-
-          // roomOrTool == 1
-          //     ? BorrowToolTitleField('Ex: Hammer or Chair...')
-          //     : Container(),
-
           SizedBox(height: 15),
 
           RequestDescriptionData(S.of(context).request_descrip_hint_text),
@@ -3160,6 +3181,12 @@ class RequestCreateFormState extends State<RequestCreateForm>
           (requestModel.goodsDonationDetails.requiredGoods == null ||
               requestModel.goodsDonationDetails.requiredGoods.isEmpty)) {
         showDialogForTitle(dialogTitle: S.of(context).goods_validation);
+        return;
+      }
+      if (requestModel.requestType == RequestType.BORROW &&
+          (requestModel.requiredItems == null ||
+              requestModel.requiredItems.isEmpty)) {
+        showDialogForTitle(dialogTitle: L.of(context).items_validation);
         return;
       }
       communityModel = await FirestoreManager.getCommunityDetailsByCommunityId(

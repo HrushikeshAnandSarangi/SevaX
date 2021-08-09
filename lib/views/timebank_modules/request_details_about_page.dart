@@ -40,6 +40,7 @@ import 'package:sevaexchange/views/requests/approveBorrowRequest.dart';
 import 'package:sevaexchange/views/requests/donations/donation_view.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
+import 'package:sevaexchange/widgets/custom_chip.dart';
 import 'package:sevaexchange/widgets/custom_list_tile.dart';
 import 'package:sevaexchange/widgets/full_screen_widget.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
@@ -270,6 +271,11 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                       : requestImages,
                   SizedBox(height: 20),
                   requestTitleComponent,
+                  SizedBox(height: 10),
+                  widget.requestItem.requestType == RequestType.BORROW &&
+                          widget.requestItem.roomOrTool == 'TOOL'
+                      ? borrowItemsWidget
+                      : Container(),
                   SizedBox(height: 10),
                   getRequestModeComponent,
                   widget.requestItem.requestType == RequestType.BORROW
@@ -2607,7 +2613,6 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                           S.of(context).request_approved_by_msg +
                               ' ' +
                               snapshot.data.docs[0]['acceptorName'],
-                              
                           style: TextStyle(
                               fontSize: 15,
                               color: Colors.black,
@@ -3280,6 +3285,24 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           ],
         ),
       ],
+    );
+  }
+
+  Widget get borrowItemsWidget {
+    return Wrap(
+      runSpacing: 5.0,
+      spacing: 5.0,
+      children: widget.requestItem.requiredItems.values
+          .toList()
+          .map(
+            (value) => value == null
+                ? Container()
+                : CustomChipWithTick(
+                    label: value,
+                    isSelected: true,
+                  ),
+          )
+          .toList(),
     );
   }
 }

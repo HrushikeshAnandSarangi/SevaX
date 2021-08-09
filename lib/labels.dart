@@ -520,4 +520,8 @@ class L {
   String get send => 'Send';
   //4th aug
   String get request_payment_description => "Payment Method*";
+  String get select_a_item_lending =>
+      "Select list of related items for Borrow*";
+  String get items_validation =>
+      "You have not selected any Items. Please select one or more before creating the Borrow request.";
 }
