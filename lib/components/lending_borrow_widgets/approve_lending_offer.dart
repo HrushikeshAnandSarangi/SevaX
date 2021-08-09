@@ -150,7 +150,7 @@ class _ApproveLendingOfferState extends State<ApproveLendingOffer> {
         Text(
             placeOrItem ==
                     LendingType.PLACE
-                        .readable //widget.offerModel.placeOrItem == 'ROOM'
+                        .readable //widget.offerModel.placeOrItem == 'PLACE'
                 ? L.of(context).lending_approve_terms_place
                 : L.of(context).lending_approve_terms_item,
             style: TextStyle(

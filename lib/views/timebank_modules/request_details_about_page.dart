@@ -273,7 +273,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   requestTitleComponent,
                   SizedBox(height: 10),
                   widget.requestItem.requestType == RequestType.BORROW &&
-                          widget.requestItem.roomOrTool == 'TOOL'
+                          widget.requestItem.roomOrTool == 'ITEM'
                       ? borrowItemsWidget
                       : Container(),
                   SizedBox(height: 10),
@@ -463,7 +463,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                       : requestDescriptionComponent,
                   SizedBox(height: 20),
                   (widget.requestItem.requestType == RequestType.BORROW &&
-                          widget.requestItem.roomOrTool == 'ROOM' &&
+                          widget.requestItem.roomOrTool == 'PLACE' &&
                           (SevaCore.of(context).loggedInUser.email ==
                                   widget.requestItem.email ||
                               widget.requestItem.approvedUsers.contains(
@@ -1259,7 +1259,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                 SevaCore.of(context).loggedInUser.sevaUserID
             ? S.of(context).request_approved
             : S.of(context).request_has_been_assigned_to_a_member;
-      } else if (widget.requestItem.roomOrTool == 'ROOM') {
+      } else if (widget.requestItem.roomOrTool == 'PLACE') {
         textLabel = widget.requestItem.sevaUserId ==
                 SevaCore.of(context).loggedInUser.sevaUserID
             ? S.of(context).creator_of_request_message
@@ -1751,7 +1751,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                                         .request_has_been_assigned_to_a_member)
                                 : isApplied
                                     ? S.of(context).applied_for_request
-                                    : (widget.requestItem.roomOrTool == 'ROOM'
+                                    : (widget.requestItem.roomOrTool == 'PLACE'
                                         ? S.of(context).borrow_request_for_place
                                         : S
                                             .of(context)
@@ -1870,7 +1870,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           ),
           onPressed: () {
             if (widget.requestItem.requestType == RequestType.BORROW) {
-              //widget.requestItem.roomOrTool == 'ROOM'
+              //widget.requestItem.roomOrTool == 'PLACE'
               //?
               borrowApplyAction();
               //: proccedWithCalander();

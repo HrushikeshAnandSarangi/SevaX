@@ -62,7 +62,7 @@ class _CreatorApproveAcceptorAgreeementState
         ),
         centerTitle: true,
         title: Text(
-          widget.requestModel.roomOrTool == 'ROOM'
+          widget.requestModel.roomOrTool == 'PLACE'
               ? 'Accept Room Borrow Request'
               : 'Accept Item Borrow request',
           style: TextStyle(
@@ -146,7 +146,6 @@ class _CreatorApproveAcceptorAgreeementState
               style: TextStyle(color: Colors.white, fontFamily: 'Europa'),
             ),
             onPressed: () async {
-              
               approveMemberForVolunteerRequest(
                 model: widget.requestModel,
                 notificationId: widget.notificationId,

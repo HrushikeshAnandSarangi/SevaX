@@ -27,7 +27,7 @@
 
 // class RequestOfferAgreementForm extends StatefulWidget {
 //   final bool isRequest; //false means offer
-//   final String roomOrTool; //'ROOM' or 'TOOL' (for request) (for offer same?)
+//   final String roomOrTool; //'PLACE' or 'ITEM' (for request) (for offer same?)
 //   final RequestModel requestModel;
 //   final String timebankId;
 //   final String communityId;
@@ -71,7 +71,7 @@
 //   String itemDescription = '';
 //   String additionalConditions = '';
 
-//   //ROOM specific fields variables below
+//   //PLACE specific fields variables below
 //   bool isFixedTerm = true; //if false then its long term
 //   bool isQuietHoursAllowed = false;
 //   bool isPetsAllowed = false;
@@ -214,10 +214,10 @@
 //                       //Text Fields
 //                       SizedBox(height: 15),
 
-//                       widget.roomOrTool == 'TOOL'
+//                       widget.roomOrTool == 'ITEM'
 //                           //TOOLS FORM BELOW
 //                           ? toolWidget
-//                           : //ROOM FORM BELOW
+//                           : //PLACE FORM BELOW
 //                           Column(
 //                               crossAxisAlignment: CrossAxisAlignment.start,
 //                               children: [

@@ -69,7 +69,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
         ),
       ),
       body: SingleChildScrollView(
-        child: widget.requestModel.roomOrTool == 'ROOM' ? roomForm : itemForm,
+        child: widget.requestModel.roomOrTool == 'PLACE' ? roomForm : itemForm,
       ),
     );
   }
@@ -240,7 +240,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
       children: [
         SizedBox(height: 20),
         Text(
-            widget.requestModel.roomOrTool == 'ROOM'
+            widget.requestModel.roomOrTool == 'PLACE'
                 ? S.of(context).approve_borrow_terms_acknowledgement_text1
                 : S.of(context).approve_borrow_terms_acknowledgement_text2,
             style: TextStyle(
@@ -251,7 +251,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
             textAlign: TextAlign.start),
         SizedBox(height: 15),
         Text(
-            widget.requestModel.roomOrTool == 'ROOM'
+            widget.requestModel.roomOrTool == 'PLACE'
                 ? S.of(context).approve_borrow_terms_acknowledgement_text3
                 : S.of(context).approve_borrow_terms_acknowledgement_text4,
             style: TextStyle(
@@ -300,7 +300,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
                     ),
                   );
                 } else {
-                  if (widget.requestModel.roomOrTool == 'ROOM') {
+                  if (widget.requestModel.roomOrTool == 'PLACE') {
                     logger.e('COMES HERE 25');
                     await storeAcceptorDataBorrowRequest(
                       model: widget.requestModel,
@@ -379,7 +379,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
   }
 
   Widget requestAgreementFormComponent(String roomOrTool) {
-    // logger.e('ROOM OR TOOL:  ' + roomOrTool);
+    // logger.e('PLACE OR ITEM:  ' + roomOrTool);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -390,7 +390,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
         ),
         SizedBox(height: 10),
         Text(
-          roomOrTool == "ROOM"
+          roomOrTool == "PLACE"
               ? L.of(context).details_of_the_request_subtext_place
               : L.of(context).details_of_the_request_subtext_item,
           style: TextStyle(fontSize: 15),
@@ -398,7 +398,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
         ),
         SizedBox(height: 15),
         Text(
-          roomOrTool == "ROOM"
+          roomOrTool == "PLACE"
               ? L.of(context).provide_place_for_lending
               : L.of(context).provide_item_for_lending,
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
