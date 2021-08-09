@@ -2624,7 +2624,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                     addressComponentBorrowRequestForApproved(
                         snapshot.data.docs[0]['selectedAddress']),
                     Text(
-                      S.of(context).instruction_for_stay,
+                      L.of(context).house_rules,
                       style: TextStyle(
                           fontSize: 15,
                           color: Colors.grey[800],
@@ -2632,7 +2632,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                     ),
                     SizedBox(height: 5),
                     Text(
-                      snapshot.data.docs[0]['doAndDonts'],
+                      'To Be Implemented', //fetch from lendingItems collection given place ID. then get house rules field.
                       style: TextStyle(fontSize: 16, color: Colors.grey),
                     ),
                   ],
