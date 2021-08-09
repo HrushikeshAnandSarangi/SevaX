@@ -8,10 +8,11 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/models/agreement_template_model.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/agreement_template_model.dart';
 import 'package:sevaexchange/models/models.dart';
-import 'package:sevaexchange/new_baseline/models/borrow_agreement_template_model.dart';
+// import 'package:sevaexchange/new_baseline/models/borrow_agreement_template_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_template_model.dart';
 import 'package:sevaexchange/utils/app_config.dart';
@@ -278,7 +279,7 @@ class SearchManager {
     String url =
 
         ///query needs to be refactored to agreement_tmeplates (common for borrow requests and lending offers)
-        '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/borrowagreement_templates/_doc/_search';
+        '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/agreement_templates/_doc/_search';
     dynamic body = json.encode({
       "query": {
         "bool": {
@@ -344,10 +345,10 @@ class SearchManager {
 //    }
   }
 
-  static Future<bool> searchBorrowAgrrementTemplateForDuplicate(
+  static Future<bool> searchAgrrementTemplateForDuplicate(
       {@required String queryString}) async {
     String url =
-        '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/borrowagreement_templates/_doc/_search';
+        '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/agreement_templates/_doc/_search';
 
     dynamic body = json.encode({
       "query": {

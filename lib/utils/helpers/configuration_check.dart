@@ -59,8 +59,6 @@ class ConfigurationCheck extends StatelessWidget {
     TimebankConfigurations configurations =
         AppConfig.timebankConfigurations ?? getConfigurationModel();
 
-    logger.d("y2k : " + configurations.admin.toString());
-
     switch (role) {
       case MemberType.CREATOR:
         return true;
@@ -68,9 +66,6 @@ class ConfigurationCheck extends StatelessWidget {
         return configurations.member != null &&
             configurations.member.contains(actionType);
       case MemberType.ADMIN:
-        logger.d(
-          ">> | Admin Configuration : " + configurations.admin.toString(),
-        );
         return configurations.admin != null &&
             configurations.admin.contains(actionType);
       case MemberType.SUPER_ADMIN:

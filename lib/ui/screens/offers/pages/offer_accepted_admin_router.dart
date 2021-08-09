@@ -4,6 +4,7 @@ import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/screens/offers/pages/lending_offer_participants.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/offer_invitation.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/time_offer_earnings.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/time_offer_participant.dart';
@@ -26,6 +27,8 @@ class OfferAcceptedAdminRouter extends StatelessWidget {
         ? tabslist = offerModel.offerType == OfferType.INDIVIDUAL_OFFER
             ? [
                 TimeOfferParticipants(
+                  //LendingOfferParticipants
+                  //above lending offer widget to be integrated
                   offerModel: offerModel,
                   timebankModel: timebankModel,
                 ),

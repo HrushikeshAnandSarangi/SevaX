@@ -12,14 +12,20 @@ import 'package:sevaexchange/components/repeat_availability/edit_repeat_widget.d
 import 'package:sevaexchange/components/repeat_availability/repeat_widget.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/enums/help_context_enums.dart';
+import 'package:sevaexchange/models/enums/lending_borrow_enums.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
+import 'package:sevaexchange/new_baseline/models/lending_model.dart';
+import 'package:sevaexchange/new_baseline/models/lending_place_model.dart';
 import 'package:sevaexchange/ui/screens/calendar/add_to_calander.dart';
 import 'package:sevaexchange/ui/screens/offers/bloc/individual_offer_bloc.dart';
 import 'package:sevaexchange/ui/screens/offers/bloc/one_to_many_offer_bloc.dart';
+import 'package:sevaexchange/ui/screens/offers/pages/add_update_lending_place.dart';
+import 'package:sevaexchange/ui/screens/offers/pages/select_lending_place.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/custom_dialog.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/custom_textfield.dart';
+import 'package:sevaexchange/ui/screens/offers/widgets/lending_item_card_widget.dart';
 import 'package:sevaexchange/ui/utils/offer_utility.dart';
 import 'package:sevaexchange/ui/utils/validators.dart';
 import 'package:sevaexchange/utils/app_config.dart';
@@ -33,6 +39,10 @@ import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/widgets/open_scope_checkbox_widget.dart';
+
+import '../../../../labels.dart';
+import 'add_update_lending_item.dart';
+import '../widgets/lending_place_card_widget.dart';
 
 class IndividualOffer extends StatefulWidget {
   final OfferModel offerModel;
@@ -69,6 +79,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
   TextEditingController _descriptionController = TextEditingController();
   TextEditingController _availabilityController = TextEditingController();
   TextEditingController _minimumCreditsController = TextEditingController();
+  LendingPlaceModel lendingPlaceModel;
 
   //one_to_many
   TextEditingController _one_to_many_titleController = TextEditingController();
@@ -345,6 +356,33 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                   setState(() {});
                                 }),
                           ),
+                        ),
+                        TransactionsMatrixCheck(
+                          upgradeDetails: AppConfig.upgradePlanBannerModel
+                              .onetomany_offers, //lending offers banner to be added
+                          transaction_matrix_type: "lending_offers",
+                          comingFrom: ComingFrom.Offers,
+                          child: ConfigurationCheck(
+                            actionType: 'lending_offer',
+                            role: memberType(widget.timebankModel,
+                                SevaCore.of(context).loggedInUser.sevaUserID),
+                            child: _optionRadioButton(
+                                title: L.of(context).lending,
+                                value: RequestType.LENDING_OFFER,
+                                groupvalue: snapshot.data != null
+                                    ? snapshot.data
+                                    : RequestType.LENDING_OFFER,
+                                onChanged: (data) {
+                                  AppConfig.helpIconContextMember =
+                                      HelpContextMemberType.lending_offers;
+                                  _bloc.onTypeChanged(data);
+                                  offerType = data;
+                                  description_hint =
+                                      S.of(context).request_descrip_hint_text;
+
+                                  setState(() {});
+                                }),
+                          ),
                         )
                       ],
                     ),
@@ -589,6 +627,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                             ? RequestTypeWidget()
                             // ? Container()
                             : Container(),
+                        SizedBox(height: 10),
                         HideWidget(
                           hide: offerType == RequestType.ONE_TO_MANY_OFFER,
                           child: StreamBuilder<String>(
@@ -615,10 +654,12 @@ class _IndividualOfferState extends State<IndividualOffer> {
                           ),
                         ),
                         HideWidget(
-                            hide: offerType == RequestType.ONE_TO_MANY_OFFER,
+                            hide: offerType == RequestType.ONE_TO_MANY_OFFER ||
+                                offerType == RequestType.LENDING_OFFER,
                             child: SizedBox(height: 30)),
                         HideWidget(
-                          hide: offerType == RequestType.ONE_TO_MANY_OFFER,
+                          hide: offerType == RequestType.ONE_TO_MANY_OFFER ||
+                              offerType == RequestType.LENDING_OFFER,
                           child: StreamBuilder<String>(
                             stream: _bloc.offerDescription,
                             builder: (context, snapshot) {
@@ -652,9 +693,12 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                   ? TimeRequest()
                                   : type == RequestType.CASH
                                       ? CashRequest()
-                                      : type == RequestType.ONE_TO_MANY_OFFER
-                                          ? OneToManyOffer()
-                                          : GoodsRequest();
+                                      : type == RequestType.LENDING_OFFER
+                                          ? LendingOffer()
+                                          : type ==
+                                                  RequestType.ONE_TO_MANY_OFFER
+                                              ? OneToManyOffer()
+                                              : GoodsRequest();
                             }),
                         // SizedBox(height: 10),
                         // Container(
@@ -1425,5 +1469,180 @@ class _IndividualOfferState extends State<IndividualOffer> {
     }
 
     _one_to_many_bloc.updateOneToManyOffer(widget.offerModel, editType);
+  }
+
+  Widget LendingOffer() {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Container(
+            alignment: Alignment.bottomLeft,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  L.of(context).lending,
+                  style: TextStyle(
+                    fontSize: 16,
+                    //fontWeight: FontWeight.bold,
+                    fontFamily: 'Europa',
+                    color: Colors.black,
+                  ),
+                ),
+                SizedBox(height: 10),
+                CupertinoSegmentedControl<int>(
+                  unselectedColor: Colors.grey[200],
+                  selectedColor: Theme.of(context).primaryColor,
+                  children: {
+                    0: Padding(
+                      padding: EdgeInsets.only(left: 14, right: 14),
+                      child: Text(
+                        L.of(context).place, //Label to be created
+                        style: TextStyle(fontSize: 12.0),
+                      ),
+                    ),
+                    1: Padding(
+                      padding: EdgeInsets.only(left: 14, right: 14),
+                      child: Text(
+                        L.of(context).items, //Label to be created
+                        style: TextStyle(fontSize: 12.0),
+                      ),
+                    ),
+                  },
+
+                  borderColor: Colors.grey,
+                  padding: EdgeInsets.only(left: 0.0, right: 0.0),
+                  groupValue: _bloc.lendingOfferType,
+                  onValueChanged: (int val) {
+                    if (val != _bloc.lendingOfferType) {
+                      setState(() {
+                        if (val == 0) {
+                          _bloc.lendingOfferType = 0;
+                        } else {
+                          _bloc.lendingOfferType = 1;
+                        }
+                        _bloc.lendingOfferType = val;
+                      });
+                    }
+                  },
+                  //groupValue: sharedValue,
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 20),
+          Text(
+            _bloc.lendingOfferType == 0
+                ? L.of(context).select_a_place_lending
+                : L.of(context).select_a_item_lending,
+            style: TextStyle(
+              fontSize: 16,
+              //fontWeight: FontWeight.bold,
+              fontFamily: 'Europa',
+              color: Colors.black,
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          SelectLendingPlaceItem(
+            onSelected: (LendingModel model) {
+              _bloc.onLendingModelAdded(model);
+            },
+            lendingType: _bloc.lendingOfferType == 0
+                ? LendingType.PLACE
+                : LendingType.ITEM,
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          StreamBuilder<LendingModel>(
+              stream: _bloc.lendingPlaceModelStream,
+              builder: (context, snapshot) {
+                if (snapshot.data == null || snapshot.hasError) {
+                  return Container();
+                }
+                if (snapshot.hasError) {
+                  return Container();
+                }
+                if (snapshot.data.lendingType == LendingType.ITEM) {
+                  return LendingItemCardWidget(
+                    lendingItemModel: snapshot.data.lendingItemModel,
+                    onDelete: () {
+                      _bloc.onLendingModelAdded(null);
+                    },
+                    onEdit: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return AddUpdateLendingItem(
+                              lendingModel: snapshot.data,
+                              onItemCreateUpdate: (LendingModel model) {
+                                _bloc.onLendingModelAdded(model);
+                              },
+                            );
+                          },
+                        ),
+                      );
+                    },
+                  );
+                } else {
+                  return LendingPlaceCardWidget(
+                    lendingPlaceModel: snapshot.data.lendingPlaceModel,
+                    onDelete: () {
+                      _bloc.onLendingModelAdded(null);
+                    },
+                    onEdit: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return AddUpdateLendingPlace(
+                              lendingModel: snapshot.data,
+                              onPlaceCreateUpdate: (LendingModel model) {
+                                _bloc.onLendingModelAdded(model);
+                              },
+                            );
+                          },
+                        ),
+                      );
+                    },
+                  );
+                }
+              }),
+          SizedBox(height: 20),
+          OfferDurationWidget(
+            title: S.of(context).offer_duration,
+            startTime: widget.offerModel != null
+                ? DateTime.fromMillisecondsSinceEpoch(
+                    widget.offerModel.groupOfferDataModel.startDate,
+                  )
+                : null,
+            endTime: widget.offerModel != null
+                ? DateTime.fromMillisecondsSinceEpoch(
+                    widget.offerModel.groupOfferDataModel.endDate,
+                  )
+                : null,
+          ),
+          SizedBox(height: 20),
+          StreamBuilder<String>(
+            stream: _bloc.offerDescription,
+            builder: (context, snapshot) {
+              return CustomTextField(
+                controller: _descriptionController,
+                currentNode: _description,
+                nextNode: _availability,
+                value: snapshot.data,
+                heading: "${S.of(context).offer_description}*",
+                onChanged: _bloc.onOfferDescriptionChanged,
+                hint: description_hint != null
+                    ? description_hint
+                    : S.of(context).offer_description_hint,
+                maxLength: 500,
+                error: getValidationError(context, snapshot.error),
+              );
+            },
+          ),
+          SizedBox(height: 12),
+        ]);
   }
 }

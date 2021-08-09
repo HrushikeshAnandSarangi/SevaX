@@ -9,7 +9,7 @@ extension Label on LendingType {
   String get readable {
     switch (this) {
       case LendingType.PLACE:
-        return 'ROOM';
+        return 'PLACE';
         break;
       case LendingType.ITEM:
         return 'ITEM';

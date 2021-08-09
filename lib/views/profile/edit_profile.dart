@@ -673,6 +673,7 @@ class _EditProfilePageState extends State<EditProfilePage>
         this._saving = true;
       });
       String imageUrl = await uploadImage(SevaCore.of(context).loggedInUser.email);
+      log("link ${imageUrl.toString()}");
 
       await profanityCheck(imageURL: imageUrl, storagePath: imageUrl);
     }

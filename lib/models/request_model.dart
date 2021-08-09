@@ -952,6 +952,12 @@ class RequestModel extends DataModel {
         case RequestType.TIME:
           object['requestType'] = "TIME";
           break;
+        case RequestType.LENDING_OFFER:
+          // TODO: Handle this case.
+          break;
+        case RequestType.ONE_TO_MANY_OFFER:
+          // TODO: Handle this case.
+          break;
       }
     } else {
       object['requestType'] = "TIME";
@@ -1220,6 +1226,12 @@ class RequestModel extends DataModel {
       case RequestType.ONE_TO_MANY_REQUEST:
         requestModel.oneToManyRequestAttenders = [];
         break;
+      case RequestType.LENDING_OFFER:
+        // TODO: Handle this case.
+        break;
+      case RequestType.ONE_TO_MANY_OFFER:
+        // TODO: Handle this case.
+        break;
     }
 
     return requestModel;
@@ -1264,6 +1276,7 @@ enum RequestType {
   GOODS,
   BORROW,
   ONE_TO_MANY_REQUEST,
+  LENDING_OFFER,
   ONE_TO_MANY_OFFER,
 }
 enum RequestPaymentType {
@@ -1283,6 +1296,7 @@ Map<String, RequestType> requestTypeMapper = {
   "GOODS": RequestType.GOODS,
   "BORROW": RequestType.BORROW,
   "ONE_TO_MANY_REQUEST": RequestType.ONE_TO_MANY_REQUEST,
+  "LENDING_OFFER": RequestType.LENDING_OFFER,
   "ONE_TO_MANY_OFFER": RequestType.ONE_TO_MANY_OFFER,
 };
 Map<String, RequestPaymentType> requestPaymentTypeMapper = {

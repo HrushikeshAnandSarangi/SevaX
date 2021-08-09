@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/cash_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/extensions.dart';
@@ -24,6 +25,8 @@ extension OfferTypeExtension on OfferType {
           return S.of(context).goods;
         case RequestType.TIME:
           return S.of(context).time;
+        case RequestType.LENDING_OFFER:
+          return L.of(context).lending;
         default:
           return 'Individual'; //Label to be created
       }
@@ -270,6 +273,7 @@ class OfferModel extends DataModel {
   List<String> timebanksPosted;
   bool virtual;
   Map<String, dynamic> participantDetails = {};
+  String placeOrItem;
 
   String communityName;
   OfferModel({
@@ -302,6 +306,7 @@ class OfferModel extends DataModel {
     this.public,
     this.timebanksPosted,
     this.virtual,
+    this.placeOrItem,
     this.participantDetails,
     this.photoUrlImage,
     this.liveMode,
@@ -329,6 +334,10 @@ class OfferModel extends DataModel {
 
     if (map.containsKey('virtual')) {
       this.virtual = map['virtual'];
+    }
+
+    if (map.containsKey('placeOrItem')) {
+      this.placeOrItem = map['placeOrItem'];
     }
 
     if (map.containsKey('requestType')) {
@@ -472,6 +481,10 @@ class OfferModel extends DataModel {
     }
     if (map.containsKey('virtual')) {
       this.virtual = map['virtual'];
+    }
+
+    if (map.containsKey('placeOrItem')) {
+      this.placeOrItem = map['placeOrItem'];
     }
 
     if (map.containsKey('requestType')) {
@@ -630,6 +643,10 @@ class OfferModel extends DataModel {
     }
     if (this.softDelete != null) {
       map['softDelete'] = this.softDelete;
+    }
+
+    if (this.placeOrItem != null) {
+      map['placeOrItem'] = this.placeOrItem;
     }
 
     if (this.id != null && this.id.isNotEmpty) {
@@ -795,6 +812,9 @@ class OfferModel extends DataModel {
     }
     if (this.public != null) {
       map['public'] = this.public;
+    }
+    if (this.placeOrItem != null) {
+      map['placeOrItem'] = this.placeOrItem;
     }
 
     if (this.communityName != null && this.communityName.isNotEmpty) {
