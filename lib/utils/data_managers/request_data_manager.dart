@@ -20,6 +20,7 @@ import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/timebank_balance_transction_model.dart';
 import 'package:sevaexchange/new_baseline/models/acceptor_model.dart';
+import 'package:sevaexchange/new_baseline/models/borrow_accpetor_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_template_model.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
@@ -1108,38 +1109,15 @@ Future<void> borrowRequestFeedbackBorrowerUpdate({
   });
 }
 
-Future<void> borrowRequestSetHasCreatedAgreement({
-  @required RequestModel requestModel,
-}) async {
-  logger.e('COMES TO SET AGREEMENT LINK 2');
-  await CollectionRef.requests.doc(requestModel.id).update({
-    'hasBorrowAgreement': requestModel.hasBorrowAgreement,
-    'borrowAgreementLink': requestModel.borrowAgreementLink,
-  });
-}
-
-Future<void> storeAcceptorDataBorrowRequest({
-  @required RequestModel model,
-  @required String acceptorEmail,
-  String doAndDonts,
-  String selectedAddress,
-  GeoFirePoint location,
-  String acceptorName,
-}) async {
+Future<void> storeAcceptorDataBorrowRequest(
+    {@required RequestModel model,
+    @required BorrowAcceptorModel borrowAcceptorModel}) async {
   logger.e('COMES TO SET AGREEMENT LINK 1');
   await CollectionRef.requests
       .doc(model.id)
       .collection('borrowRequestAcceptors')
-      .doc(acceptorEmail)
-      .set({
-    'acceptorEmail': acceptorEmail,
-    'doAndDonts': doAndDonts,
-    'location': location.data,
-    'acceptorName': acceptorName,
-    'requestStart': model.requestStart,
-    'selectedAddress': selectedAddress,
-    'roomOrTool': model.roomOrTool,
-  });
+      .doc(borrowAcceptorModel.acceptorEmail)
+      .set(borrowAcceptorModel.toMap());
 }
 
 Future<void> rejectRequestCompletion({
@@ -2277,4 +2255,15 @@ void showProgressForCreditRetrieval(BuildContext context) {
           content: LinearProgressIndicator(),
         );
       });
+}
+
+Future<BorrowAcceptorModel> getBorrowRequestAcceptorModel({
+  @required String requestId,
+  @required String acceptorEmail,
+}) async {
+  var documentsnapshot = await CollectionRef.borrowRequestAcceptors(requestId)
+      .doc(acceptorEmail)
+      .get();
+
+  return BorrowAcceptorModel.fromMap(documentsnapshot.data());
 }

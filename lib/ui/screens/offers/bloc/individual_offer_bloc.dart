@@ -5,6 +5,8 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/cash_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/lending_model.dart';
+import 'package:sevaexchange/new_baseline/models/lending_place_model.dart';
 import 'package:sevaexchange/ui/utils/offer_utility.dart';
 import 'package:sevaexchange/ui/utils/validators.dart';
 import 'package:sevaexchange/utils/app_config.dart';
@@ -18,6 +20,7 @@ class IndividualOfferBloc extends BlocBase with Validators {
   bool allowedCalenderEvent = false;
   bool offerCreatedBool = false;
   var timeOfferType = 0;
+  var lendingOfferType = 0;
 
   List<String> offerIds = [];
 
@@ -34,6 +37,7 @@ class IndividualOfferBloc extends BlocBase with Validators {
   final _location = BehaviorSubject<CustomLocation>();
   final _status = BehaviorSubject<Status>.seeded(Status.IDLE);
   final _isVisible = BehaviorSubject<bool>.seeded(false);
+  final _lendingModel = BehaviorSubject<LendingModel>();
 
   // final _isPublicVisible = BehaviorSubject<bool>.seeded(false);
   final _donationAmount = BehaviorSubject<int>();
@@ -71,6 +75,8 @@ class IndividualOfferBloc extends BlocBase with Validators {
 
   // Function(CashModel) get onCashModelChanged => _cashModel.sink.add;
   Function(bool) get isVisibleChanged => _isVisible.sink.add;
+  Function(LendingModel model) get onLendingModelAdded =>
+      _lendingModel.sink.add;
 
   void onOfferMadeVirtual(bool value) {
     if (value != null) {
@@ -113,6 +119,7 @@ class IndividualOfferBloc extends BlocBase with Validators {
 
   Stream<bool> get isPublicVisible =>
       CombineLatestStream.combine2(makeVirtual, isVisible, (a, b) => a && b);
+  Stream<LendingModel> get lendingPlaceModelStream => _lendingModel.stream;
 
   ///[Function] to create offer
   void createOrUpdateOffer(
@@ -304,6 +311,12 @@ class IndividualOfferBloc extends BlocBase with Validators {
           _donationAmount.addError(ValidationErrors.emptyErrorCash);
           flag = true;
         }
+      } else if (_type.value == RequestType.GOODS) {
+        if (_goodsDonationDetails.value.requiredGoods == null ||
+            _goodsDonationDetails.value.requiredGoods.length == 0) {
+          _goodsDonationDetails.addError(ValidationErrors.emptyErrorGoods);
+          flag = true;
+        }
       }
     }
 
@@ -326,5 +339,6 @@ class IndividualOfferBloc extends BlocBase with Validators {
     _goodsDonationDetails.close();
     _type.close();
     _minimumCredits.close();
+    _lendingModel.close();
   }
 }

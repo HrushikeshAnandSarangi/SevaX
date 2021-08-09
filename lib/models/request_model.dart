@@ -213,16 +213,14 @@ class RequestModel extends DataModel {
   List<String> timebanksPosted;
   bool public;
   bool virtualRequest;
-  bool hasBorrowAgreement;
   Map<dynamic, dynamic> participantDetails = {};
   String creatorName = '';
-  String borrowAgreementLink;
   bool isFromOfferRequest;
   int minimumCredits;
   List<String> imageUrls = [];
   String communityName;
   DocumentReference speakerInviteNotificationDocRef;
-  Map<String, String> requiredItems = {};
+  BorrowModel borrowModel;
 
   RequestModel({
     this.id,
@@ -274,11 +272,9 @@ class RequestModel extends DataModel {
     this.skills,
     this.public,
     this.virtualRequest,
-    this.hasBorrowAgreement,
     this.timebanksPosted,
     this.participantDetails,
     this.creatorName,
-    this.borrowAgreementLink,
     this.isFromOfferRequest,
     this.minimumCredits,
     this.liveMode,
@@ -286,7 +282,7 @@ class RequestModel extends DataModel {
     this.oneToManyRequestAttenders,
     this.communityName,
     this.speakerInviteNotificationDocRef,
-    this.requiredItems,
+    this.borrowModel,
   }) {
     log("===========Constructir called $communityId =======");
   }
@@ -339,12 +335,6 @@ class RequestModel extends DataModel {
       this.creatorName = map['creatorName'];
     } else {
       this.creatorName = "";
-    }
-
-    if (map.containsKey('borrowAgreementLink')) {
-      this.borrowAgreementLink = map['borrowAgreementLink'];
-    } else {
-      this.borrowAgreementLink = "";
     }
 
     if (map.containsKey('requestMode')) {
@@ -564,11 +554,6 @@ class RequestModel extends DataModel {
     } else {
       this.virtualRequest = false;
     }
-    if (map.containsKey('hasBorrowAgreement')) {
-      this.hasBorrowAgreement = map['hasBorrowAgreement'];
-    } else {
-      this.hasBorrowAgreement = map['hasBorrowAgreement'];
-    }
     if (map.containsKey('timebanksPosted')) {
       List<String> timebanksPosted = List.castFrom(map['timebanksPosted']);
       this.timebanksPosted = timebanksPosted;
@@ -593,9 +578,10 @@ class RequestModel extends DataModel {
     if (map.containsKey('minimumCredits')) {
       this.minimumCredits = map['minimumCredits'];
     }
-    if (map.containsKey("requiredItems")) {
-      this.requiredItems =
-          Map<String, String>.from(map["requiredItems"] ?? {}) ?? {};
+    if (map.containsKey('borrowModel')) {
+      this.borrowModel = BorrowModel.fromMap(map['borrowModel']);
+    } else {
+      this.borrowModel = new BorrowModel();
     }
   }
 
@@ -677,12 +663,6 @@ class RequestModel extends DataModel {
       this.creatorName = map['creatorName'];
     } else {
       this.creatorName = "";
-    }
-
-    if (map.containsKey('borrowAgreementLink')) {
-      this.borrowAgreementLink = map['borrowAgreementLink'];
-    } else {
-      this.borrowAgreementLink = "";
     }
 
     if (map.containsKey('title')) {
@@ -834,60 +814,57 @@ class RequestModel extends DataModel {
       this.timebanksPosted = [];
     }
 
-    if (map.containsKey('hasBorrowAgreement')) {
-      this.hasBorrowAgreement = map['hasBorrowAgreement'];
-      if (map.containsKey('timebanksPosted')) {
-        List<String> timebanksPosted = List.castFrom(map['timebanksPosted']);
-        this.timebanksPosted = timebanksPosted;
-      } else {
-        this.timebanksPosted = [];
-      }
-      if (map.containsKey('timebanksPosted')) {
-        List<String> timebanksPosted = List.castFrom(map['timebanksPosted']);
-        this.timebanksPosted = timebanksPosted;
-      } else {
-        this.timebanksPosted = [];
-      }
+    if (map.containsKey('timebanksPosted')) {
+      List<String> timebanksPosted = List.castFrom(map['timebanksPosted']);
+      this.timebanksPosted = timebanksPosted;
+    } else {
+      this.timebanksPosted = [];
+    }
+    if (map.containsKey('timebanksPosted')) {
+      List<String> timebanksPosted = List.castFrom(map['timebanksPosted']);
+      this.timebanksPosted = timebanksPosted;
+    } else {
+      this.timebanksPosted = [];
+    }
 
-      if (map.containsKey('public')) {
-        this.public = map['public'];
-      } else {
-        this.public = false;
-      }
-      if (map.containsKey('virtualRequest')) {
-        this.virtualRequest = map['virtualRequest'];
-      } else {
-        this.virtualRequest = false;
-      }
-      if (map.containsKey('timebanksPosted')) {
-        List<String> timebanksPosted = List.castFrom(map['timebanksPosted']);
-        this.timebanksPosted = timebanksPosted;
-      } else {
-        this.timebanksPosted = [];
-      }
+    if (map.containsKey('public')) {
+      this.public = map['public'];
+    } else {
+      this.public = false;
+    }
+    if (map.containsKey('virtualRequest')) {
+      this.virtualRequest = map['virtualRequest'];
+    } else {
+      this.virtualRequest = false;
+    }
+    if (map.containsKey('timebanksPosted')) {
+      List<String> timebanksPosted = List.castFrom(map['timebanksPosted']);
+      this.timebanksPosted = timebanksPosted;
+    } else {
+      this.timebanksPosted = [];
+    }
 
-      if (map.containsKey('participantDetails')) {
-        this.participantDetails = Map.castFrom(map['participantDetails']);
-      }
-      if (map.containsKey('isFromOfferRequest')) {
-        this.isFromOfferRequest = map['isFromOfferRequest'];
-      } else {
-        this.isFromOfferRequest = false;
-      }
-      if (map.containsKey('minimumCredits')) {
-        this.minimumCredits = map['minimumCredits'];
-      }
-      if (map.containsKey('liveMode')) {
-        this.liveMode = map['liveMode'];
-      } else {
-        this.liveMode = true;
-      }
-      if (map.containsKey('imageUrls')) {
-        List<String> imageUrls = List.castFrom(map['imageUrls']);
-        this.imageUrls = imageUrls;
-      } else {
-        this.imageUrls = [];
-      }
+    if (map.containsKey('participantDetails')) {
+      this.participantDetails = Map.castFrom(map['participantDetails']);
+    }
+    if (map.containsKey('isFromOfferRequest')) {
+      this.isFromOfferRequest = map['isFromOfferRequest'];
+    } else {
+      this.isFromOfferRequest = false;
+    }
+    if (map.containsKey('minimumCredits')) {
+      this.minimumCredits = map['minimumCredits'];
+    }
+    if (map.containsKey('liveMode')) {
+      this.liveMode = map['liveMode'];
+    } else {
+      this.liveMode = true;
+    }
+    if (map.containsKey('imageUrls')) {
+      List<String> imageUrls = List.castFrom(map['imageUrls']);
+      this.imageUrls = imageUrls;
+    } else {
+      this.imageUrls = [];
     }
     if (map.containsKey('oneToManyRequestAttenders')) {
       List<String> oneToManyRequestAttenders =
@@ -903,9 +880,10 @@ class RequestModel extends DataModel {
       this.speakerInviteNotificationDocRef =
           map['speakerInviteNotificationDocRef'];
     }
-    if (map.containsKey("requiredItems")) {
-      this.requiredItems =
-          Map<String, String>.from(map["requiredItems"] ?? {}) ?? {};
+    if (map.containsKey('borrowModel')) {
+      this.borrowModel = BorrowModel.fromMap(map['borrowModel']);
+    } else {
+      this.borrowModel = new BorrowModel();
     }
   }
 
@@ -952,6 +930,12 @@ class RequestModel extends DataModel {
         case RequestType.TIME:
           object['requestType'] = "TIME";
           break;
+        case RequestType.LENDING_OFFER:
+          // TODO: Handle this case.
+          break;
+        case RequestType.ONE_TO_MANY_OFFER:
+          // TODO: Handle this case.
+          break;
       }
     } else {
       object['requestType'] = "TIME";
@@ -967,13 +951,6 @@ class RequestModel extends DataModel {
       object['creatorName'] = this.creatorName;
     } else {
       object['creatorName'] = "";
-    }
-
-    if (this.borrowAgreementLink != null &&
-        this.borrowAgreementLink.isNotEmpty) {
-      object['borrowAgreementLink'] = this.borrowAgreementLink;
-    } else {
-      object['borrowAgreementLink'] = "";
     }
 
     if (this.title != null && this.title.isNotEmpty) {
@@ -1155,11 +1132,6 @@ class RequestModel extends DataModel {
     } else {
       object['virtualRequest'] = false;
     }
-    if (this.hasBorrowAgreement != null) {
-      object['hasBorrowAgreement'] = this.hasBorrowAgreement;
-    } else {
-      object['hasBorrowAgreement'] = false;
-    }
 
     if (this.timebanksPosted != null) {
       object['timebanksPosted'] = this.timebanksPosted;
@@ -1185,8 +1157,8 @@ class RequestModel extends DataModel {
     } else {
       object['imageUrls'] = [];
     }
-    if (this.requiredItems != null) {
-      object['requiredItems'] = Map<String, String>.from(this.requiredItems);
+    if (this.borrowModel != null) {
+      object['borrowModel'] = this.borrowModel.toMap();
     }
     return object;
   }
@@ -1219,6 +1191,12 @@ class RequestModel extends DataModel {
         break;
       case RequestType.ONE_TO_MANY_REQUEST:
         requestModel.oneToManyRequestAttenders = [];
+        break;
+      case RequestType.LENDING_OFFER:
+        // TODO: Handle this case.
+        break;
+      case RequestType.ONE_TO_MANY_OFFER:
+        // TODO: Handle this case.
         break;
     }
 
@@ -1257,6 +1235,24 @@ class GoodsDonationDetails {
       };
 }
 
+class BorrowModel {
+  Map<String, String> requiredItems;
+
+  BorrowModel({this.requiredItems});
+  String toString() {
+    return requiredItems.toString();
+  }
+
+  BorrowModel.fromMap(Map<dynamic, dynamic> map) {
+    if (map.containsKey("requiredItems")) {
+      this.requiredItems =
+          Map<String, String>.from(map["requiredItems"] ?? {}) ?? {};
+    }
+  }
+  Map<String, dynamic> toMap() =>
+      {"requiredItems": requiredItems == null ? null : requiredItems};
+}
+
 enum RequestMode { PERSONAL_REQUEST, TIMEBANK_REQUEST }
 enum RequestType {
   CASH,
@@ -1264,6 +1260,7 @@ enum RequestType {
   GOODS,
   BORROW,
   ONE_TO_MANY_REQUEST,
+  LENDING_OFFER,
   ONE_TO_MANY_OFFER,
 }
 enum RequestPaymentType {
@@ -1283,6 +1280,7 @@ Map<String, RequestType> requestTypeMapper = {
   "GOODS": RequestType.GOODS,
   "BORROW": RequestType.BORROW,
   "ONE_TO_MANY_REQUEST": RequestType.ONE_TO_MANY_REQUEST,
+  "LENDING_OFFER": RequestType.LENDING_OFFER,
   "ONE_TO_MANY_OFFER": RequestType.ONE_TO_MANY_OFFER,
 };
 Map<String, RequestPaymentType> requestPaymentTypeMapper = {

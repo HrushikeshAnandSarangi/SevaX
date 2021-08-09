@@ -89,7 +89,7 @@ class AddManualTimeBloc {
           model.actionBy = user.sevaUserID;
           model.status = ClaimStatus.Approved;
           model.relatedNotificationId = null;
-          await ManualTimeRepository.createClaim(model);       
+          await ManualTimeRepository.createClaim(model);
           await ManualTimeRepository.approveManualCreditClaim(
             memberTransactionModel:
                 ManualTimeRepository.getMemberTransactionModel(

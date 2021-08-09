@@ -107,7 +107,7 @@ class BorrowAgreementPdf {
           Header(
               level: 2,
               text: documentName +
-                  ' |  For: ${placeOrItem == 'ROOM' ? L.of(contextMain).place : L.of(contextMain).items}'),
+                  ' |  For: ${placeOrItem == 'PLACE' ? L.of(contextMain).place : L.of(contextMain).items}'),
 
           SizedBox(height: 7),
 
@@ -171,7 +171,7 @@ class BorrowAgreementPdf {
                     style: TextStyle(fontSize: 14))
                 : Container(),
             SizedBox(height: 10),
-            placeOrItem == 'ROOM'
+            placeOrItem == 'PLACE'
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

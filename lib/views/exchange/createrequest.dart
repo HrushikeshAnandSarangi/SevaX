@@ -1075,8 +1075,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
                               //                           isRequest: true,
                               //                           roomOrTool:
                               //                               roomOrTool == 1
-                              //                                   ? 'TOOL'
-                              //                                   : 'ROOM',
+                              //                                   ? 'ITEM'
+                              //                                   : 'PLACE',
                               //                           requestModel:
                               //                               requestModel,
                               //                           communityId: requestModel
@@ -1215,10 +1215,11 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                         HideWidget(
                                           hide: roomOrTool == 0,
                                           child: SelectBorrowItem(
-                                            selectedItems:
-                                                requestModel.requiredItems,
+                                            selectedItems: requestModel
+                                                .borrowModel.requiredItems,
                                             onSelectedItems: (items) => {
-                                              requestModel.requiredItems = items
+                                              requestModel.borrowModel
+                                                  .requiredItems = items
                                             },
                                           ),
                                         ),
@@ -3184,8 +3185,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
         return;
       }
       if (requestModel.requestType == RequestType.BORROW &&
-          (requestModel.requiredItems == null ||
-              requestModel.requiredItems.isEmpty)) {
+          (requestModel.borrowModel.requiredItems == null ||
+              requestModel.borrowModel.requiredItems.isEmpty)) {
         showDialogForTitle(dialogTitle: L.of(context).items_validation);
         return;
       }
@@ -3227,9 +3228,9 @@ class RequestCreateFormState extends State<RequestCreateForm>
           requestModel.requestType == RequestType.BORROW) {
         if (roomOrTool == 1) {
           //CHANGE to use enums
-          requestModel.roomOrTool = 'TOOL';
+          requestModel.roomOrTool = 'ITEM';
         } else {
-          requestModel.roomOrTool = 'ROOM';
+          requestModel.roomOrTool = 'PLACE';
         }
       }
 //Review done or not to be used to find out if Borrow request is completed or not
@@ -4284,8 +4285,8 @@ Future<Map<String, String>> getGoodsFuture() async {
 }
 
 enum BorrowRequestType {
-  TOOL,
-  ROOM,
+  ITEM,
+  PLACE,
 }
 
 class SevaBillingPlans {
