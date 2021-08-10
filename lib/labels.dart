@@ -1003,4 +1003,7 @@ class L {
   String get agree_to_signature_legal_text =>
       "By accepting the conditions on this page, your electronic signature is assumed and you are responsible for all terms included within.";
   String get applied_for_request => 'You have accepted the request';
+  String get agreement_to_be_signed => 'Agreement to be signed';
+  String get agreement_signed => 'You have signed the agreement';
+  String get responses => 'Responses';
 }

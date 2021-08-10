@@ -2267,3 +2267,26 @@ Future<BorrowAcceptorModel> getBorrowRequestAcceptorModel({
 
   return BorrowAcceptorModel.fromMap(documentsnapshot.data());
 }
+
+Stream<List<BorrowAcceptorModel>> getBorrowRequestAcceptorsModelStream({
+  @required String requestId,
+}) async* {
+  var data = await CollectionRef.borrowRequestAcceptors(requestId).snapshots();
+
+  yield* data.transform(
+    StreamTransformer<QuerySnapshot, List<BorrowAcceptorModel>>.fromHandlers(
+      handleData: (snapshot, requestSink) {
+        List<BorrowAcceptorModel> acceptorList = [];
+        snapshot.docs.forEach(
+          (documentSnapshot) {
+            BorrowAcceptorModel model =
+                BorrowAcceptorModel.fromMap(documentSnapshot.data());
+            // model.id = documentSnapshot.id;
+            acceptorList.add(model);
+          },
+        );
+        requestSink.add(acceptorList);
+      },
+    ),
+  );
+}

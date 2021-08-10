@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
+import 'package:sevaexchange/models/enums/lending_borrow_enums.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/new_baseline/models/borrow_accpetor_model.dart';
+import 'package:sevaexchange/ui/screens/offers/widgets/lending_item_card_widget.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/network_image.dart';
 import 'package:sevaexchange/widgets/custom_list_tile.dart';
 
 class BorrowRequestParticipantsCard extends StatelessWidget {
   final Padding padding;
   final String imageUrl;
-  final String name;
-  final String email;
   final Function onImageTap;
   final Widget buttonsContainer;
   final RequestModel requestModel;
@@ -21,15 +22,12 @@ class BorrowRequestParticipantsCard extends StatelessWidget {
       {Key key,
       this.padding,
       this.imageUrl,
-      this.name,
-      this.email,
       this.onImageTap,
       this.buttonsContainer = const SizedBox(),
       this.requestModel,
       this.context,
       this.borrowAcceptorModel})
-      : assert(name != null),
-        super(key: key);
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -51,11 +49,12 @@ class BorrowRequestParticipantsCard extends StatelessWidget {
                         imageUrl ?? defaultUserImageURL,
                         fit: BoxFit.cover,
                         onTap: onImageTap,
+                        size: 40,
                       ),
                     ),
                   ),
                 ),
-                SizedBox(width: 10),
+                SizedBox(width: 14),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -63,7 +62,7 @@ class BorrowRequestParticipantsCard extends StatelessWidget {
                     Container(
                       width: 115,
                       child: Text(
-                        name,
+                        borrowAcceptorModel.acceptorName,
                         maxLines: 3,
                         overflow: TextOverflow.ellipsis,
                         softWrap: true,
@@ -75,7 +74,8 @@ class BorrowRequestParticipantsCard extends StatelessWidget {
                     ),
                     SizedBox(height: 4),
                     Text(
-                      email, //add date on which potential borrower requested
+                      borrowAcceptorModel
+                          .acceptorEmail, //add date on which potential borrower requested
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -92,20 +92,38 @@ class BorrowRequestParticipantsCard extends StatelessWidget {
               ],
             ),
             SizedBox(height: 15),
+            // Row(
+            //   children: [
+            //     requestModel.roomOrTool == LendingType.ITEM.readable
+            //         //borrowAcceptorModel.borrowedItemsIds need to fetch data using the ids
+            //         ? LendingItemCardWidget(
+            //             lendingItemModel: lenderItems,
+            //             hidden: true,
+            //           )
+            //         : Text('Place Widget To be added here')
+            //   ],
+            // ),
+            SizedBox(height: 15),
             Row(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Expanded(
-                  child: Text(//Check if Item or Place and show relevant image
-                      'Umesh To Add Place or Items Widget Here From Lender Items'),
+                Chip(
+                  label: Text(
+                    requestModel.approvedUsers
+                            .contains(borrowAcceptorModel.acceptorEmail)
+                        ? L.of(context).agreement_signed
+                        : L.of(context).agreement_to_be_signed,
+                    style: TextStyle(color: Colors.black),
+                  ),
+                  backgroundColor: Colors.grey[200],
                 ),
               ],
             ),
-            SizedBox(height: 15),
             addressComponent,
             SizedBox(height: 5),
             Divider(
               color: Colors.grey[100],
-              thickness: 1,
+              thickness: 1.5,
             ),
           ],
         ),
@@ -116,9 +134,12 @@ class BorrowRequestParticipantsCard extends StatelessWidget {
   Widget get addressComponent {
     return requestModel.address != null
         ? CustomListTile(
-            leading: Icon(
-              Icons.location_on,
-              color: Colors.black,
+            leading: Padding(
+              padding: const EdgeInsets.only(top: 4),
+              child: Icon(
+                Icons.location_on,
+                color: Colors.black,
+              ),
             ),
             title: Text(
               S.of(context).location,

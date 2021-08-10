@@ -38,7 +38,7 @@ class _SelectLendingPlaceItemState extends State<SelectLendingPlaceItem> {
   bool isDataLoaded = false;
   @override
   void initState() {
-    future = LendingOffersRepo.getAllLendingPlaces();
+    future = LendingOffersRepo.getAllLendingItems();
 
     super.initState();
   }
@@ -94,7 +94,6 @@ class _SelectLendingPlaceItemState extends State<SelectLendingPlaceItem> {
                 ),
                 suggestionsBoxController: controller,
                 noItemsFoundBuilder: (context) {
-                  log('its here');
                   return getSuggestionLayout(
                     suggestion: _textEditingController.text,
                     add: S.of(context).add + ' ',
