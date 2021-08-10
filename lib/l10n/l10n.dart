@@ -6286,7 +6286,7 @@ class S {
       );
 
   String get sandbox_community => Intl.message(
-        'Sandbox Community',
+        'Sandbox Community  ',
         name: 'sandbox_community',
       );
 

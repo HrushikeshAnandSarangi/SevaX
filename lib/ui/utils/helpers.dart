@@ -94,6 +94,28 @@ handleVolunterFeedbackForTrustWorthynessNRealiablityScore(
           ratingCal(temp['0'] + temp['2']), user.trustworthinessscore)
     }, SetOptions(merge: true));
   }
+  if (type == FeedbackType.FOR_BORROW_REQUEST_BORROWER) {
+    var temp = results['ratings'];
+    logger.e('RESULTS:' + results.toString());
+    await CollectionRef.users.doc(model.approvedUsers.first).set({
+      'totalReviews': FieldValue.increment(1),
+      'reliabilityscore': averageReview(user.totalReviews,
+          ratingCal(temp['0'] + temp['1']), user.reliabilityscore),
+      'trustworthinessscore': averageReview(user.totalReviews,
+          ratingCal(temp['0'] + temp['2']), user.trustworthinessscore)
+    }, SetOptions(merge: true));
+  }
+  if (type == FeedbackType.FOR_BORROW_REQUEST_LENDER) {
+    var temp = results['ratings'];
+    logger.e('RESULTS:' + results.toString());
+    await CollectionRef.users.doc(model.email).set({
+      'totalReviews': FieldValue.increment(1),
+      'reliabilityscore': averageReview(user.totalReviews,
+          ratingCal(temp['0'] + temp['1']), user.reliabilityscore),
+      'trustworthinessscore': averageReview(user.totalReviews,
+          ratingCal(temp['0'] + temp['2']), user.trustworthinessscore)
+    }, SetOptions(merge: true));
+  }
 }
 
 void navigateToWebView({

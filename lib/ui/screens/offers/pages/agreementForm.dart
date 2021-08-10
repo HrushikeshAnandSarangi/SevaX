@@ -639,9 +639,13 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                                     emptyTextSpan(placeHolder: '.'),
                                     // emptyTextSpan(),
                                     TextSpan(
-                                      text: S
-                                          .of(context)
-                                          .login_agreement_message2,
+                                      text: ' ' +
+                                          L
+                                              .of(context)
+                                              .agree_to_signature_legal_text +
+                                          S
+                                              .of(context)
+                                              .login_agreement_message2,
                                     ),
                                     emptyTextSpan(),
                                     TextSpan(

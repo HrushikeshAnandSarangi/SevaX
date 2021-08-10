@@ -176,13 +176,14 @@ class BorrowAgreementPdf {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                         (isRefundDepositNeeded == true)
-                            ? Text('Refund deposit legal text here.....',
+                            ? Text(
+                                'The borrower will provide a refundable deposit as defined within the agreement with the lender. The Criteria established regarding the condition of the item or property upon return will also be defined in the agreement. ',
                                 style: TextStyle(fontSize: 14))
                             : Container(),
                         SizedBox(height: 10),
                         (isMaintainAndclean == true)
                             ? Text(
-                                'Maintenance and cleanliness legal text here.....',
+                                "All items and properties borrowed must be returned in a condition similar to the condition it is received by the borrower unless otherwise noted in the agreement. Specific details related to the item and the lender's requirements upon return should be noted in the contract and agreed upon prior to receipt by the borrower.",
                                 style: TextStyle(fontSize: 14))
                             : Container(),
                       ])

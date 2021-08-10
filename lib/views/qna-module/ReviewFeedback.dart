@@ -343,6 +343,7 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
     Widget widgettype;
     if (widget.feedbackType == FeedbackType.FOR_REQUEST_VOLUNTEER ||
         widget.feedbackType == FeedbackType.FOR_BORROW_REQUEST_BORROWER ||
+        widget.feedbackType == FeedbackType.FOR_BORROW_REQUEST_LENDER ||
         widget.feedbackType == FeedbackType.FOR_ONE_TO_MANY_REQUEST_ATTENDEE) {
       widgettype = StarRating();
     } else {
@@ -357,7 +358,7 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
               Container(
                 margin: EdgeInsets.only(top: 20, bottom: 0),
                 child: Text((questionIndex + 1).toString() +
-                    ' / ${widget.feedbackType == FeedbackType.FOR_REQUEST_VOLUNTEER ? 4 : 3}'),
+                    ' / ${getQuestions(widget.feedbackType).length}'),
               ),
               Container(
                 margin: EdgeInsets.only(left: 10, bottom: 10, top: 20),

@@ -271,7 +271,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
       children: [
         SizedBox(height: 20),
         Text(
-            widget.requestModel.roomOrTool == 'PLACE'
+            widget.requestModel.roomOrTool == LendingType.PLACE.readable
                 ? S.of(context).approve_borrow_terms_acknowledgement_text1
                 : S.of(context).approve_borrow_terms_acknowledgement_text2,
             style: TextStyle(
@@ -282,7 +282,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
             textAlign: TextAlign.start),
         SizedBox(height: 15),
         Text(
-            widget.requestModel.roomOrTool == 'PLACE'
+            widget.requestModel.roomOrTool == LendingType.PLACE.readable
                 ? S.of(context).approve_borrow_terms_acknowledgement_text3
                 : S.of(context).approve_borrow_terms_acknowledgement_text4,
             style: TextStyle(
@@ -347,7 +347,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
                         timestamp: DateTime.now().millisecondsSinceEpoch,
                         borrowAgreementLink: borrowAgreementLinkFinal,
                         // borrowedItemsIds: selectedModelsId.toList(),
-                        borrowedPlaceId: selectedLendingPlaceModel.id,
+                        // borrowedPlaceId: selectedLendingPlaceModel.id, //umesh to do //id is coming null
                         isApproved: false,
                       ),
                     );

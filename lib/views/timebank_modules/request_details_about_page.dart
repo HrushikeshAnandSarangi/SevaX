@@ -274,7 +274,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   requestTitleComponent,
                   SizedBox(height: 10),
                   widget.requestItem.requestType == RequestType.BORROW &&
-                          widget.requestItem.roomOrTool == 'ITEM'
+                          widget.requestItem.roomOrTool == 'ITEM' &&
+                          widget.requestItem.borrowModel.requiredItems != null
                       ? borrowItemsWidget
                       : Container(),
                   SizedBox(height: 10),

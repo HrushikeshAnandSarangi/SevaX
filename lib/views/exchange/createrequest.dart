@@ -3187,6 +3187,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
         return;
       }
       if (requestModel.requestType == RequestType.BORROW &&
+          roomOrTool == 1 //because was throwing dialog when creating for place
+          &&
           (requestModel.borrowModel.requiredItems == null ||
               requestModel.borrowModel.requiredItems.isEmpty)) {
         showDialogForTitle(dialogTitle: L.of(context).items_validation);
