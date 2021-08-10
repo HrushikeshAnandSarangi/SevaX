@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/models/request_model.dart';
+import 'package:sevaexchange/new_baseline/models/borrow_accpetor_model.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/network_image.dart';
+import 'package:sevaexchange/widgets/custom_list_tile.dart';
 
 class BorrowRequestParticipantsCard extends StatelessWidget {
   final Padding padding;
@@ -9,6 +13,9 @@ class BorrowRequestParticipantsCard extends StatelessWidget {
   final String email;
   final Function onImageTap;
   final Widget buttonsContainer;
+  final RequestModel requestModel;
+  final BorrowAcceptorModel borrowAcceptorModel;
+  final BuildContext context;
 
   const BorrowRequestParticipantsCard(
       {Key key,
@@ -17,7 +24,10 @@ class BorrowRequestParticipantsCard extends StatelessWidget {
       this.name,
       this.email,
       this.onImageTap,
-      this.buttonsContainer = const SizedBox()})
+      this.buttonsContainer = const SizedBox(),
+      this.requestModel,
+      this.context,
+      this.borrowAcceptorModel})
       : assert(name != null),
         super(key: key);
   @override
@@ -90,6 +100,8 @@ class BorrowRequestParticipantsCard extends StatelessWidget {
                 ),
               ],
             ),
+            SizedBox(height: 15),
+            addressComponent,
             SizedBox(height: 5),
             Divider(
               color: Colors.grey[100],
@@ -99,5 +111,27 @@ class BorrowRequestParticipantsCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget get addressComponent {
+    return requestModel.address != null
+        ? CustomListTile(
+            leading: Icon(
+              Icons.location_on,
+              color: Colors.black,
+            ),
+            title: Text(
+              S.of(context).location,
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.black,
+              ),
+              maxLines: 1,
+            ),
+            subtitle: borrowAcceptorModel.selectedAddress != null
+                ? Text(borrowAcceptorModel.selectedAddress)
+                : Text(''),
+          )
+        : Container();
   }
 }

@@ -96,14 +96,15 @@ class _CreatorApproveAcceptorAgreeementState
     return Form(
       key: _formKey,
       child: Padding(
-        padding: const EdgeInsets.only(top: 15.0, left: 30, right: 30),
+        padding: const EdgeInsets.only(top: 15.0, left: 25, right: 25),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             SizedBox(height: 10),
             requestAgreementFormComponent,
-            borrowAcceptorModel.borrowAgreementLink != null
+            borrowAcceptorModel.borrowAgreementLink != null &&
+                    borrowAcceptorModel.borrowAgreementLink != ''
                 ? termsAcknowledegmentText
                 : Container(),
             SizedBox(height: 20),
@@ -132,14 +133,19 @@ class _CreatorApproveAcceptorAgreeementState
             ),
             SizedBox(width: 15),
             Container(
-              width: 250,
-              child: Text(S.of(context).terms_acknowledgement_text,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.grey,
-                  ),
-                  textAlign: TextAlign.start),
+              width: 290,
+              child: Expanded(
+                child: Text(
+                    S.of(context).terms_acknowledgement_text +
+                        '. ' +
+                        L.of(context).agree_to_signature_legal_text,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.grey,
+                    ),
+                    textAlign: TextAlign.start),
+              ),
             ),
           ],
         ),
@@ -265,7 +271,8 @@ class _CreatorApproveAcceptorAgreeementState
             Container(
               width: MediaQuery.of(context).size.width * 0.68,
               child: Text(
-                borrowAcceptorModel.borrowAgreementLink != null
+                borrowAcceptorModel.borrowAgreementLink != null &&
+                        borrowAcceptorModel.borrowAgreementLink != ''
                     ? S.of(context).review_before_proceding_text
                     : S.of(context).lender_not_accepted_request_msg,
                 style: TextStyle(fontSize: 15),
@@ -280,7 +287,8 @@ class _CreatorApproveAcceptorAgreeementState
           ],
         ),
         SizedBox(height: 20),
-        borrowAcceptorModel.borrowAgreementLink != null
+        borrowAcceptorModel.borrowAgreementLink != null &&
+                borrowAcceptorModel.borrowAgreementLink != ''
             ? Container(
                 decoration:
                     BoxDecoration(border: Border.all(color: Colors.grey[200])),
@@ -294,7 +302,8 @@ class _CreatorApproveAcceptorAgreeementState
               )
             : Container(),
         SizedBox(height: 20),
-        borrowAcceptorModel.borrowAgreementLink != null
+        borrowAcceptorModel.borrowAgreementLink != null &&
+                borrowAcceptorModel.borrowAgreementLink != ''
             ? Container(
                 alignment: Alignment.center,
                 margin: EdgeInsets.only(right: 12),
@@ -305,13 +314,19 @@ class _CreatorApproveAcceptorAgreeementState
                     borderRadius: BorderRadius.circular(20),
                   ),
                   padding: EdgeInsets.all(0),
-                  color: Theme.of(context).primaryColor,
+                  color: borrowAcceptorModel.borrowAgreementLink != null &&
+                          borrowAcceptorModel.borrowAgreementLink != ''
+                      ? Theme.of(context).primaryColor
+                      : Colors.grey,
                   child: Row(
                     children: <Widget>[
                       SizedBox(width: 1),
                       Spacer(),
                       Text(
-                        S.of(context).review_agreement,
+                        borrowAcceptorModel.borrowAgreementLink != null &&
+                                borrowAcceptorModel.borrowAgreementLink != ''
+                            ? S.of(context).review_agreement
+                            : S.of(context).no_agrreement,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Colors.white,
@@ -323,8 +338,15 @@ class _CreatorApproveAcceptorAgreeementState
                     ],
                   ),
                   onPressed: () async {
-                    await openPdfViewer(borrowAcceptorModel.borrowAgreementLink,
-                        'Review Agreement', context);
+                    if (borrowAcceptorModel.borrowAgreementLink != null &&
+                        borrowAcceptorModel.borrowAgreementLink != '') {
+                      await openPdfViewer(
+                          borrowAcceptorModel.borrowAgreementLink,
+                          'Review Agreement',
+                          context);
+                    } else {
+                      return;
+                    }
                   },
                 ),
               )

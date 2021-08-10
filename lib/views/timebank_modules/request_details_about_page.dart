@@ -1751,7 +1751,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                                         .of(context)
                                         .request_has_been_assigned_to_a_member)
                                 : isApplied
-                                    ? S.of(context).applied_for_request
+                                    ? L.of(context).applied_for_request
                                     : (widget.requestItem.roomOrTool == 'PLACE'
                                         ? S.of(context).borrow_request_for_place
                                         : S

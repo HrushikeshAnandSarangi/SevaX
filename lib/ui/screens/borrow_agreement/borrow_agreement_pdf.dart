@@ -223,6 +223,10 @@ class BorrowAgreementPdf {
                 style: TextStyle(fontSize: 14)),
             SizedBox(height: 15),
             Text(
+                'If the lender and borrower adjust the return date of the item as defined in the agreement, it is the responsibility of the parties involved to maintain the agreement extension and it is not included in this process or the responsibility of Seva Exchange.',
+                style: TextStyle(fontSize: 14)),
+            SizedBox(height: 15),
+            Text(
                 'It is hereby acknowledged that while SevaExchange is furnishing this agreement and securely managing in their digital vault, SevaExchange is only providing this as a convenience to the two parties in this agreement. SevaExchange is indemnified from any loss or damage that occurs as a result of this transaction. Neither party will hold SevaExchange accountable and agree to completely absolve SevaExchange should there be any litigation arising from this transaction.',
                 style: TextStyle(fontSize: 14)),
           ]),
