@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:sevaexchange/new_baseline/models/amenities_model.dart';
 import 'package:sevaexchange/new_baseline/models/lending_item_model.dart';
 import 'package:sevaexchange/new_baseline/models/lending_model.dart';
@@ -19,15 +20,49 @@ class LendingOffersRepo {
   }
 
   static Future<List<LendingModel>> getAllLendingItems(
-      {String creatorId}) async {
+      {@required String creatorId}) async {
     List<LendingModel> modelList = [];
     await CollectionRef.lendingItems
-      ..where('creatorId', isEqualTo: creatorId).get().then((data) {
-        data.docs.forEach((document) {
-          LendingModel model = LendingModel.fromMap(document.data());
-          modelList.add(model);
-        });
+        .where('creatorId', isEqualTo: creatorId)
+        .get()
+        .then((data) {
+      data.docs.forEach((document) {
+        LendingModel model = LendingModel.fromMap(document.data());
+        modelList.add(model);
       });
+    });
+    return modelList;
+  }
+
+  static Future<List<LendingModel>> getAllLendingPlaces(
+      {@required String creatorId}) async {
+    List<LendingModel> modelList = [];
+    await CollectionRef.lendingItems
+        .where('creatorId', isEqualTo: creatorId)
+        .where('lendingType', isEqualTo: 'PLACE')
+        .get()
+        .then((data) {
+      data.docs.forEach((document) {
+        LendingModel model = LendingModel.fromMap(document.data());
+        modelList.add(model);
+      });
+    });
+    return modelList;
+  }
+
+  static Future<List<LendingModel>> getAllLendingItemModels(
+      {@required String creatorId}) async {
+    List<LendingModel> modelList = [];
+    await CollectionRef.lendingItems
+        .where('creatorId', isEqualTo: creatorId)
+        .where('lendingType', isEqualTo: 'ITEM')
+        .get()
+        .then((data) {
+      data.docs.forEach((document) {
+        LendingModel model = LendingModel.fromMap(document.data());
+        modelList.add(model);
+      });
+    });
     return modelList;
   }
 
