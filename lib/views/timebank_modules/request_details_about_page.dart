@@ -471,15 +471,6 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                       : requestDescriptionComponent,
                   SizedBox(height: 20),
                   (widget.requestItem.requestType == RequestType.BORROW &&
-                          widget.requestItem.roomOrTool == 'PLACE' &&
-                          (SevaCore.of(context).loggedInUser.email ==
-                                  widget.requestItem.email ||
-                              widget.requestItem.approvedUsers.contains(
-                                  SevaCore.of(context).loggedInUser.email)))
-                      ? approvedBorrowRequestDetailsComponent
-                      : Container(),
-                  SizedBox(height: 20),
-                  (widget.requestItem.requestType == RequestType.BORROW &&
                           widget.requestItem.approvedUsers.length > 0 &&
                           (SevaCore.of(context).loggedInUser.email ==
                                   widget.requestItem.email ||
@@ -2597,42 +2588,6 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     );
   }
 
-  Widget get approvedBorrowRequestDetailsComponent {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      widget.requestItem.approvedUsers.length > 0
-          ? StreamBuilder(
-              stream: CollectionRef.requests
-                  .doc(widget.requestItem.id)
-                  .collection('borrowRequestAcceptors')
-                  .where('acceptorEmail',
-                      isEqualTo: widget.requestItem.approvedUsers[0])
-                  .snapshots(),
-              builder: (context, snapshot) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 5),
-                    addressComponentBorrowRequestForApproved(
-                        snapshot.data.docs[0]['selectedAddress']),
-                    Text(
-                      L.of(context).house_rules,
-                      style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.grey[800],
-                          fontWeight: FontWeight.w600),
-                    ),
-                    SizedBox(height: 5),
-                    Text(
-                      'To Be Implemented', //fetch from lendingItems collection given place ID. then get house rules field.
-                      style: TextStyle(fontSize: 16, color: Colors.grey),
-                    ),
-                  ],
-                );
-              })
-          : Container(),
-    ]);
-  }
-
   Widget get approvedBorrowRequestViewAgreementComponent {
     return FutureBuilder<BorrowAcceptorModel>(
         future: FirestoreManager.getBorrowRequestAcceptorModel(
@@ -2759,6 +2714,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   }
                 },
               ),
+              addressComponentBorrowRequestForApproved(
+                  borrowAcceptorModel.selectedAddress ?? ''),
             ],
           );
         });
