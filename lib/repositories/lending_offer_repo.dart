@@ -18,7 +18,7 @@ class LendingOffersRepo {
     return modelList;
   }
 
-  static Future<List<LendingModel>> getAllLendingPlaces(
+  static Future<List<LendingModel>> getAllLendingItems(
       {String creatorId}) async {
     List<LendingModel> modelList = [];
     await CollectionRef.lendingItems
@@ -29,6 +29,24 @@ class LendingOffersRepo {
         });
       });
     return modelList;
+  }
+
+  static Future<List<LendingModel>> getApprovedLendingModels(
+      {List<String> lendingModelsIds}) async {
+    List<LendingModel> modelList = [];
+    for (int i = 0; i < lendingModelsIds.length; i += 1) {
+      LendingModel model =
+          await getLendingModel(lendingId: lendingModelsIds[i]);
+      modelList.add(model);
+    }
+    return modelList;
+  }
+
+  static Future<LendingModel> getLendingModel({String lendingId}) async {
+    var documentsnapshot =
+        await CollectionRef.lendingItems.doc(lendingId).get();
+    LendingModel model = LendingModel.fromMap(documentsnapshot.data());
+    return model;
   }
 
   static Future<void> addAmenitiesToDb({

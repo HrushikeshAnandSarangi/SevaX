@@ -11,15 +11,20 @@ import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/basic_user_details.dart';
+import 'package:sevaexchange/models/enums/lending_borrow_enums.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/acceptor_model.dart';
 import 'package:sevaexchange/new_baseline/models/borrow_accpetor_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
+import 'package:sevaexchange/new_baseline/models/lending_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
+import 'package:sevaexchange/repositories/lending_offer_repo.dart';
 import 'package:sevaexchange/ui/screens/borrow_agreement/borrow_agreement_pdf.dart';
 import 'package:sevaexchange/ui/screens/notifications/pages/personal_notifications.dart';
+import 'package:sevaexchange/ui/screens/offers/widgets/lending_item_card_widget.dart';
+import 'package:sevaexchange/ui/screens/offers/widgets/lending_place_card_widget.dart';
 import 'package:sevaexchange/ui/screens/request/pages/oneToManyCreatorCompleteRequestPage.dart';
 import 'package:sevaexchange/ui/screens/request/pages/oneToManySpeakerTimeEntryComplete_page.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
@@ -2658,25 +2663,84 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
             );
           }
           BorrowAcceptorModel borrowAcceptorModel = snapshot.data;
-          return GestureDetector(
-            child: Text(
-                borrowAcceptorModel.borrowAgreementLink == null ||
-                        borrowAcceptorModel.borrowAgreementLink == ''
-                    ? S.of(context).request_agreement_not_available
-                    : S.of(context).click_to_view_request_agreement,
-                style: TextStyle(
-                    fontSize: 16,
-                    color: Theme.of(context).primaryColor,
-                    fontWeight: FontWeight.w600)),
-            onTap: () async {
-              if (borrowAcceptorModel.borrowAgreementLink == null ||
-                  borrowAcceptorModel.borrowAgreementLink == '') {
-                return null;
-              } else {
-                await openPdfViewer(borrowAcceptorModel.borrowAgreementLink,
-                    'Request Agreement Document', context);
-              }
-            },
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              widget.requestItem.roomOrTool == LendingType.ITEM.readable
+                  ? FutureBuilder<List<LendingModel>>(
+                      future: LendingOffersRepo.getApprovedLendingModels(
+                          lendingModelsIds:
+                              borrowAcceptorModel.borrowedItemsIds),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return LoadingIndicator();
+                        }
+                        if (snapshot.data == null) {
+                          return Container();
+                        }
+                        List<LendingModel> modelList = snapshot.data;
+                        return ListView.builder(
+                            itemCount: modelList.length,
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.only(bottom: 8.0),
+                                child: LendingItemCardWidget(
+                                  hidden: true,
+                                  lendingItemModel:
+                                      modelList[index].lendingItemModel,
+                                ),
+                              );
+                            });
+                      })
+                  : FutureBuilder<LendingModel>(
+                      future: LendingOffersRepo.getLendingModel(
+                          lendingId: borrowAcceptorModel.borrowedPlaceId),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return LoadingIndicator();
+                        }
+                        if (snapshot.data == null) {
+                          return Container();
+                        }
+                        LendingModel model = snapshot.data;
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            LendingPlaceCardWidget(
+                              lendingPlaceModel: model.lendingPlaceModel,
+                              hidden: true,
+                            ),
+                          ],
+                        );
+                      }),
+              SizedBox(
+                height: 10,
+              ),
+              GestureDetector(
+                child: Text(
+                    borrowAcceptorModel.borrowAgreementLink == null ||
+                            borrowAcceptorModel.borrowAgreementLink == ''
+                        ? S.of(context).request_agreement_not_available
+                        : S.of(context).click_to_view_request_agreement,
+                    style: TextStyle(
+                        fontSize: 16,
+                        color: Theme.of(context).primaryColor,
+                        fontWeight: FontWeight.w600)),
+                onTap: () async {
+                  if (borrowAcceptorModel.borrowAgreementLink == null ||
+                      borrowAcceptorModel.borrowAgreementLink == '') {
+                    return null;
+                  } else {
+                    await openPdfViewer(borrowAcceptorModel.borrowAgreementLink,
+                        'Request Agreement Document', context);
+                  }
+                },
+              ),
+            ],
           );
         });
   }
