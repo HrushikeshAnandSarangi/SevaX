@@ -92,13 +92,17 @@ class BorrowRequestParticipantsCard extends StatelessWidget {
               ],
             ),
             SizedBox(height: 15),
-            Row(
-              children: [
-                requestModel.roomOrTool == LendingType.ITEM.readable
-                    ? LendingItemCardWidget()
-                    : Text('Place Widget To be added here')
-              ],
-            ),
+            // Row(
+            //   children: [
+            //     requestModel.roomOrTool == LendingType.ITEM.readable
+            //         //borrowAcceptorModel.borrowedItemsIds need to fetch data using the ids
+            //         ? LendingItemCardWidget(
+            //             lendingItemModel: lenderItems,
+            //             hidden: true,
+            //           )
+            //         : Text('Place Widget To be added here')
+            //   ],
+            // ),
             SizedBox(height: 15),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
