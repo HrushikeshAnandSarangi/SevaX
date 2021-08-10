@@ -418,7 +418,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
       );
     } else {
       this.requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
-      this.requestModel.requestType = RequestType.TIME;
+      // this.requestModel.requestType = RequestType.TIME;
 
       //making false and clearing map because TIME and ONE_TO_MANY_REQUEST use same widget
       instructorAdded = false;
@@ -452,7 +452,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
       );
     } else {
       this.requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
-      requestModel.requestType = RequestType.TIME;
+      // requestModel.requestType = RequestType.TIME;
 
       //making false and clearing map because TIME and ONE_TO_MANY_REQUEST use same widget
       // setState(() {
@@ -2264,10 +2264,10 @@ class RequestCreateFormState extends State<RequestCreateForm>
                   TransactionsMatrixCheck(
                     upgradeDetails:
                         AppConfig.upgradePlanBannerModel.cash_request,
-                    transaction_matrix_type: 'cash_goods_requests',
+                    transaction_matrix_type: 'borrow_request',
                     comingFrom: widget.comingFrom,
                     child: ConfigurationCheck(
-                      actionType: 'create_goods_request',
+                      actionType: 'create_borrow_request',
                       role: memberType(timebankModel,
                           SevaCore.of(context).loggedInUser.sevaUserID),
                       child: _optionRadioButton<RequestType>(
@@ -3079,7 +3079,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                 } else {
                   requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
 
-                  requestModel.requestType = RequestType.TIME;
+                  // requestModel.requestType = RequestType.TIME;
                   //making false and clearing map because TIME and ONE_TO_MANY_REQUEST use same widget
                   setState(() {
                     instructorAdded = false;
