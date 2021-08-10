@@ -136,11 +136,10 @@ class BorrowRequestParticipants extends StatelessWidget {
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
-                                          (requestModel.approvedUsers.length >
-                                                      0 &&
-                                                  !requestModel.approvedUsers
-                                                      .contains(userModel[index]
-                                                          .email))
+                                          !requestModel.borrowModel
+                                                      .itemsCollected &&
+                                                  !requestModel
+                                                      .borrowModel.itemsReturned
                                               ? ElevatedButton(
                                                   style:
                                                       ElevatedButton.styleFrom(
@@ -195,15 +194,11 @@ class BorrowRequestParticipants extends StatelessWidget {
                                                     }
                                                   },
                                                   child: Text(
-                                                    (requestModel.approvedUsers
-                                                                    .length >
-                                                                0 &&
-                                                            requestModel
-                                                                .approvedUsers
-                                                                .contains(
-                                                                    userModel[
-                                                                            index]
-                                                                        .email))
+                                                    requestModel.approvedUsers
+                                                            .contains(
+                                                                borrowAcceptorModel[
+                                                                        index]
+                                                                    .acceptorEmail)
                                                         ? S.of(context).accepted
                                                         : S.of(context).accept,
                                                     style: TextStyle(
@@ -217,8 +212,17 @@ class BorrowRequestParticipants extends StatelessWidget {
                                                   ),
                                                 )
                                               : Container(),
-                                          requestModel.approvedUsers.contains(
-                                                  userModel[index].email)
+
+                                          //Status when items have been collected by borrower/creator
+                                          (requestModel.borrowModel
+                                                      .itemsCollected &&
+                                                  !requestModel.borrowModel
+                                                      .itemsReturned &&
+                                                  requestModel.approvedUsers
+                                                      .contains(
+                                                          borrowAcceptorModel[
+                                                                  index]
+                                                              .acceptorEmail))
                                               ? ElevatedButton(
                                                   style:
                                                       ElevatedButton.styleFrom(
@@ -230,11 +234,13 @@ class BorrowRequestParticipants extends StatelessWidget {
                                                               .circular(30.0),
                                                     ),
                                                   ),
-                                                  onPressed: () async {
-                                                    // WHAT SHOULD HAPPEN HERE?
+                                                  onPressed: () {
+                                                    return;
                                                   },
                                                   child: Text(
-                                                    'Take Items',
+                                                    L
+                                                        .of(context)
+                                                        .items_collected,
                                                     style: TextStyle(
                                                         color: requestModel
                                                                     .approvedUsers
@@ -242,10 +248,50 @@ class BorrowRequestParticipants extends StatelessWidget {
                                                                 0
                                                             ? Colors.grey
                                                             : Colors.black,
-                                                        fontSize: 11.5),
+                                                        fontSize: 11),
                                                   ),
                                                 )
-                                              : Container()
+                                              : Container(),
+
+                                          //Status when items have been returned
+                                          (requestModel.borrowModel
+                                                      .itemsCollected &&
+                                                  requestModel.borrowModel
+                                                      .itemsReturned &&
+                                                  requestModel.approvedUsers
+                                                      .contains(
+                                                          borrowAcceptorModel[
+                                                                  index]
+                                                              .acceptorEmail))
+                                              ? ElevatedButton(
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                    primary: Colors.grey[300],
+                                                    shape:
+                                                        new RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          new BorderRadius
+                                                              .circular(30.0),
+                                                    ),
+                                                  ),
+                                                  onPressed: () {
+                                                    return;
+                                                  },
+                                                  child: Text(
+                                                    L
+                                                        .of(context)
+                                                        .items_returned,
+                                                    style: TextStyle(
+                                                        color: requestModel
+                                                                    .approvedUsers
+                                                                    .length >
+                                                                0
+                                                            ? Colors.grey
+                                                            : Colors.black,
+                                                        fontSize: 11),
+                                                  ),
+                                                )
+                                              : Container(),
                                         ],
                                       ),
                                     ),

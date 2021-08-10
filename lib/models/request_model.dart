@@ -1237,8 +1237,18 @@ class GoodsDonationDetails {
 
 class BorrowModel {
   Map<String, String> requiredItems = {};
+  bool itemsCollected = false;
+  bool itemsReturned = false;
+  bool isCheckedIn = false;
+  bool isCheckedOut = false;
 
-  BorrowModel({this.requiredItems});
+  BorrowModel(
+      {this.requiredItems,
+      this.itemsCollected,
+      this.itemsReturned,
+      this.isCheckedIn,
+      this.isCheckedOut});
+
   String toString() {
     return requiredItems.toString();
   }
@@ -1248,9 +1258,34 @@ class BorrowModel {
       this.requiredItems =
           Map<String, String>.from(map["requiredItems"] ?? {}) ?? {};
     }
+    if (map.containsKey('itemsCollected')) {
+      this.itemsCollected = map['itemsCollected'];
+    } else {
+      this.itemsCollected = false;
+    }
+    if (map.containsKey('itemsReturned')) {
+      this.itemsReturned = map['itemsReturned'];
+    } else {
+      this.itemsReturned = false;
+    }
+    if (map.containsKey('isCheckedIn')) {
+      this.isCheckedIn = map['isCheckedIn'];
+    } else {
+      this.isCheckedIn = false;
+    }
+    if (map.containsKey('isCheckedOut')) {
+      this.isCheckedOut = map['isCheckedOut'];
+    } else {
+      this.isCheckedOut = false;
+    }
   }
-  Map<String, dynamic> toMap() =>
-      {"requiredItems": requiredItems == null ? null : requiredItems};
+  Map<String, dynamic> toMap() => {
+        "requiredItems": requiredItems == null ? null : requiredItems,
+        "itemsCollected": itemsCollected == null ? false : itemsCollected,
+        "itemsReturned": itemsReturned == null ? false : itemsReturned,
+        "isCheckedIn": isCheckedIn == null ? false : isCheckedIn,
+        "isCheckedOut": isCheckedOut == null ? false : isCheckedOut,
+      };
 }
 
 enum RequestMode { PERSONAL_REQUEST, TIMEBANK_REQUEST }

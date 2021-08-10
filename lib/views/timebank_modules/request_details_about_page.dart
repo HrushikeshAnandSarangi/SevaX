@@ -278,9 +278,14 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                       : requestImages,
                   SizedBox(height: 20),
                   requestTitleComponent,
-                  SizedBox(height: 10),
+                  SizedBox(height: 5),
+                  widget.requestItem.requestType == RequestType.BORROW
+                      ? borrowRequestItemPlaceTag(widget.requestItem.roomOrTool)
+                      : Container(),
+                  SizedBox(height: 5),
                   widget.requestItem.requestType == RequestType.BORROW &&
-                          widget.requestItem.roomOrTool == 'ITEM' &&
+                          widget.requestItem.roomOrTool ==
+                              LendingType.ITEM.readable &&
                           widget.requestItem.borrowModel.requiredItems != null
                       ? borrowItemsWidget
                       : Container(),
@@ -472,10 +477,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   SizedBox(height: 20),
                   (widget.requestItem.requestType == RequestType.BORROW &&
                           widget.requestItem.approvedUsers.length > 0 &&
-                          (SevaCore.of(context).loggedInUser.email ==
-                                  widget.requestItem.email ||
-                              widget.requestItem.approvedUsers.contains(
-                                  SevaCore.of(context).loggedInUser.email)))
+                          (widget.requestItem.approvedUsers.contains(
+                              SevaCore.of(context).loggedInUser.email)))
                       ? approvedBorrowRequestViewAgreementComponent
                       : Container(),
                   SizedBox(height: 10),
@@ -1724,44 +1727,160 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   ),
                 ),
               )
-            : widget.requestItem.requestType == RequestType.BORROW
-                ? Expanded(
-                    child: RichText(
-                      text: TextSpan(
-                        style: TextStyle(color: Colors.black),
-                        children: [
-                          TextSpan(
-                            text: (widget.requestItem.approvedUsers.length >=
-                                        1 &&
-                                    widget.requestItem.requestType ==
-                                        RequestType.BORROW)
-                                ? ((widget.requestItem.sevaUserId ==
-                                            SevaCore.of(context)
-                                                .loggedInUser
-                                                .sevaUserID ||
-                                        SevaCore.of(context)
-                                                .loggedInUser
-                                                .email ==
-                                            widget.requestItem.approvedUsers[0])
-                                    ? S.of(context).request_approved
-                                    : S
-                                        .of(context)
-                                        .request_has_been_assigned_to_a_member)
-                                : isApplied
-                                    ? L.of(context).applied_for_request
-                                    : (widget.requestItem.roomOrTool == 'PLACE'
-                                        ? S.of(context).borrow_request_for_place
-                                        : S
-                                            .of(context)
-                                            .borrow_request_for_item),
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontFamily: 'Europa',
-                              fontWeight: FontWeight.bold,
+            : widget.requestItem.requestType == RequestType.BORROW &&
+                    widget.requestItem.approvedUsers
+                        .contains(SevaCore.of(context).loggedInUser.email)
+                ? Container(
+                    width: 370,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Expanded(
+                          child: RichText(
+                            text: TextSpan(
+                              style: TextStyle(color: Colors.black),
+                              children: [
+                                TextSpan(
+                                  text: (widget.requestItem.approvedUsers
+                                                  .length >=
+                                              1 &&
+                                          widget.requestItem.requestType ==
+                                              RequestType.BORROW)
+                                      ? ((widget.requestItem.sevaUserId ==
+                                                  SevaCore.of(context)
+                                                      .loggedInUser
+                                                      .sevaUserID ||
+                                              SevaCore.of(context)
+                                                      .loggedInUser
+                                                      .email ==
+                                                  widget.requestItem
+                                                      .approvedUsers[0])
+                                          ? S.of(context).request_approved
+                                          : S
+                                              .of(context)
+                                              .request_has_been_assigned_to_a_member)
+                                      : isApplied
+                                          ? L.of(context).applied_for_request
+                                          : (widget.requestItem.roomOrTool ==
+                                                  'PLACE'
+                                              ? S
+                                                  .of(context)
+                                                  .borrow_request_for_place
+                                              : S
+                                                  .of(context)
+                                                  .borrow_request_for_item),
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontFamily: 'Europa',
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                        Container(
+                          width: 153,
+                          child: CustomTextButton(
+                            color: Theme.of(context).primaryColor,
+                            child: Row(
+                              children: <Widget>[
+                                SizedBox(width: 1),
+                                Spacer(),
+                                Text(
+                                  widget.requestItem.borrowModel.itemsCollected
+                                      ? L.of(context).items_returned
+                                      : S.of(context).items_collected,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                Spacer(
+                                  flex: 1,
+                                ),
+                              ],
+                            ),
+                            onPressed: () async {
+                              if (!widget
+                                  .requestItem.borrowModel.itemsCollected) {
+                                logger.e('ITEMS GIVEN TO BORROWER');
+                                widget.requestItem.borrowModel.itemsCollected =
+                                    true;
+                                await updateRequest(
+                                    requestModel: widget.requestItem);
+                                Navigator.pop(context);
+                              } else if (widget.requestItem.borrowModel
+                                          .itemsCollected ==
+                                      true &&
+                                  !widget
+                                      .requestItem.borrowModel.itemsReturned) {
+                                logger.e(
+                                    'ITEMS RECEIVED BACK - COMES TO COMPLETE REQUEST');
+
+                                showDialog(
+                                  context: context,
+                                  builder: (_context) => AlertDialog(
+                                    title: Text(S
+                                        .of(context)
+                                        .item_received_alert_dialouge),
+                                    actions: [
+                                      CustomTextButton(
+                                        onPressed: () {
+                                          Navigator.of(_context).pop();
+                                        },
+                                        child: Text(
+                                          S.of(context).not_yet,
+                                          style: TextStyle(
+                                              fontSize: 17,
+                                              color: Theme.of(context)
+                                                  .accentColor),
+                                        ),
+                                      ),
+                                      CustomTextButton(
+                                        onPressed: () async {
+                                          widget.requestItem.borrowModel
+                                                  .itemsReturned =
+                                              true; //confirmed items are returned
+                                          widget.requestItem.acceptors = [];
+                                          widget.requestItem.accepted =
+                                              true; //so that we can know that this request has completed
+                                          widget.requestItem.isNotified =
+                                              true; //resets to false otherwise
+                                          var notificationId =
+                                              await getNotificationId(
+                                            SevaCore.of(context)
+                                                .loggedInUser, //redundant because function does not use user model
+                                            widget.requestItem,
+                                          );
+                                          await lenderReceivedBackCheck(
+                                              notificationId: notificationId,
+                                              requestModelUpdated:
+                                                  widget.requestItem,
+                                              context: context);
+
+                                          await updateRequest(
+                                              requestModel: widget.requestItem);
+
+                                          Navigator.of(_context).pop();
+
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text(
+                                          S.of(context).yes,
+                                          style: TextStyle(fontSize: 17),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              } else {
+                                return;
+                              }
+                            },
+                          ),
+                        ),
+                      ],
                     ),
                   )
                 : Expanded(
@@ -2607,8 +2726,10 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                L.of(context).offering_place_to +
-                    borrowAcceptorModel.acceptorName,
+                (widget.requestItem.roomOrTool == LendingType.ITEM.readable
+                        ? L.of(context).offering_items_to
+                        : L.of(context).offering_place_to) +
+                    widget.requestItem.creatorName,
                 style: TextStyle(
                     fontSize: 16,
                     color: Colors.black,
@@ -2618,8 +2739,10 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                 height: 5,
               ),
               Text(
-                L.of(context).length_of_stay +
-                    DateFormat('MMMM dddd, yyyy',
+                (widget.requestItem.roomOrTool == LendingType.ITEM.readable
+                        ? L.of(context).collect_and_return_items
+                        : L.of(context).length_of_stay) +
+                    DateFormat('dd MMMM , yyyy',
                             Locale(getLangTag()).toLanguageTag())
                         .format(
                       getDateTimeAccToUserTimezone(
@@ -2629,7 +2752,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                               SevaCore.of(context).loggedInUser.timezone),
                     ) +
                     ' to ' +
-                    DateFormat('MMMM dddd, yyyy',
+                    DateFormat('dd MMMM , yyyy',
                             Locale(getLangTag()).toLanguageTag())
                         .format(
                       getDateTimeAccToUserTimezone(
@@ -3349,6 +3472,25 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   ),
           )
           .toList(),
+    );
+  }
+
+  Widget borrowRequestItemPlaceTag(String requestType) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Chip(
+          label: Text(
+            requestType == LendingType.ITEM.readable
+                ? L.of(context).borrow_request_title + ' ' + L.of(context).items
+                : L.of(context).borrow_request_title +
+                    ' ' +
+                    L.of(context).place,
+            style: TextStyle(color: Colors.black),
+          ),
+          backgroundColor: Colors.grey[200],
+        ),
+      ],
     );
   }
 }
