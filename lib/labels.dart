@@ -1219,7 +1219,8 @@ class L {
 
   String get lender_acknowledged_feedback =>
       "The Lender has acknowledged completion of this request. Tap to leave a feedback.";
-// String get => ;
+
   String get offering_place_to => 'You are offering a place to ';
+
   String get length_of_stay => 'Length of stay between:  ';
 }
