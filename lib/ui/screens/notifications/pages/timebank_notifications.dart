@@ -1305,7 +1305,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
 
   void handleFeedBackNotificationBorrowRequest(
       BuildContext context, RequestModel requestModel, String notificationId) async {
-    logger.e("PRESSED TWO");
+    logger.e("handleFeedBackNotificationBorrowRequest TWO");
 
     Map results = await Navigator.of(context).push(
       MaterialPageRoute(
@@ -1318,7 +1318,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
 
     logger.e("###-------------#### INSIDE ${jsonEncode(results)}");
     if (results != null && results.containsKey('selection')) {
-      logger.e("INSIDE IF 1");
+      logger.e("INSIDE IF 1 handleFeedBackNotificationBorrowRequest");
       CollectionRef.reviews.add(
         {
           "reviewer": SevaCore.of(context).loggedInUser.email,
@@ -1330,7 +1330,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
         },
       );
 
-      logger.e("INSIDE IF 2");
+      logger.e("INSIDE IF 2 handleFeedBackNotificationBorrowRequest");
 
       await handleVolunterFeedbackForTrustWorthynessNRealiablityScore(
           FeedbackType.FOR_BORROW_REQUEST_BORROWER,

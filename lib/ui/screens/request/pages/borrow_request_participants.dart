@@ -26,77 +26,101 @@ class BorrowRequestParticipants extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(12.0),
-      child: FutureBuilder<BorrowAcceptorModel>(
-        future: FirestoreManager.getBorrowRequestAcceptorModel(
-            requestId: requestModel.id,
-            acceptorEmail: requestModel.approvedUsers.first),
+      child: StreamBuilder<List<BorrowAcceptorModel>>(
+        stream: FirestoreManager.getBorrowRequestAcceptorsModelStream(
+          requestId: requestModel.id,
+        ),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return LoadingIndicator();
+            return Padding(
+              padding: const EdgeInsets.only(top: 25.0),
+              child: LoadingIndicator(),
+            );
           }
           if (snapshot.data == null) {
             return Center(
-              child: Text(S.of(context).request_agreement_not_available),
+              child: Text(S.of(context).error_loading_data),
             );
           }
-          BorrowAcceptorModel borrowAcceptorModel = snapshot.data;
+          List<BorrowAcceptorModel> borrowAcceptorModel = snapshot.data;
 
-          return Column(
-            children: [
-              BorrowRequestParticipantsCard(
-                name: userModel.fullname,
-                imageUrl: userModel.photoURL,
-                email: userModel.email,
-                requestModel: requestModel,
-                borrowAcceptorModel: borrowAcceptorModel,
-                context: context,
-                onImageTap: () {
-                  Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (context) {
-                    return ProfileViewer(
-                      timebankId: timebankModel.id,
-                      entityName: timebankModel.name,
-                      isFromTimebank: isPrimaryTimebank(
-                          parentTimebankId: timebankModel.parentTimebankId),
-                      userEmail: userModel.email,
-                    );
-                  }));
-                },
-                buttonsContainer: Container(
-                  margin: EdgeInsets.only(top: 5),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.grey[300],
-                          shape: new RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(30.0),
+          return ListView.builder(
+              shrinkWrap: true,
+              itemCount: borrowAcceptorModel == null
+                  ? borrowAcceptorModel.length
+                  : borrowAcceptorModel.length,
+              itemBuilder: (BuildContext context, int index) {
+                if (borrowAcceptorModel != null) {
+                  return Container(
+                    margin: EdgeInsets.symmetric(horizontal: 5, vertical: 0),
+                    child: Container(
+                      // width: 400,
+                      // height: 250,
+                      child: BorrowRequestParticipantsCard(
+                        imageUrl: userModel.photoURL,
+                        requestModel: requestModel,
+                        borrowAcceptorModel: borrowAcceptorModel[index],
+                        context: context,
+                        onImageTap: () {
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (context) {
+                            return ProfileViewer(
+                              timebankId: timebankModel.id,
+                              entityName: timebankModel.name,
+                              isFromTimebank: isPrimaryTimebank(
+                                  parentTimebankId:
+                                      timebankModel.parentTimebankId),
+                              userEmail: userModel.email,
+                            );
+                          }));
+                        },
+                        buttonsContainer: Container(
+                          margin: EdgeInsets.only(top: 5),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  primary: Colors.grey[300],
+                                  shape: new RoundedRectangleBorder(
+                                    borderRadius:
+                                        new BorderRadius.circular(30.0),
+                                  ),
+                                ),
+                                onPressed: () async {
+                                  if (requestModel.approvedUsers.length <= 0) {
+                                    return null;
+                                  } else {
+                                    logger.e(requestModel.approvedUsers.length
+                                        .toString());
+                                    //When Borrower Accepts here take to Accept Borrow Request Page
+                                    //Change button status accordingly
+                                    //copy enum states from lending offers or something else
+                                    //Borrow to do
+                                  }
+                                },
+                                child: Text(
+                                  S.of(context).accept,
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 11.5),
+                                ),
+                              )
+                            ],
                           ),
                         ),
-                        onPressed: () async {
-                          if (requestModel.approvedUsers.length <= 0) {
-                            return null;
-                          } else {
-                            logger.e(
-                                requestModel.approvedUsers.length.toString());
-                            //When Borrower Accepts here take to Accept Borrow Request Page
-                            //Change button status accordingly
-                            //copy enum states from lending offers or something else
-                          }
-                        },
-                        child: Text(
-                          S.of(context).accept,
-                          style: TextStyle(color: Colors.black, fontSize: 11.5),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          );
+                      ),
+                    ),
+                  );
+                } else {
+                  return Center(
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 20),
+                      child: Text(S.of(context).error_loading_data),
+                    ),
+                  );
+                }
+              });
         },
       ),
     );
