@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/requests/request_accepted_spending_view.dart';
 import 'package:sevaexchange/views/requests/request_participants_view.dart';
 import 'package:sevaexchange/views/requests/request_accepted_view_one_to_many.dart';
@@ -21,6 +23,7 @@ class RequestAcceptedTabsViewHolder extends StatelessWidget {
     return TabarView(
       timebankModel: timebankModel,
       requestItem: requestItem,
+      context: context,
     );
   }
 }
@@ -28,8 +31,9 @@ class RequestAcceptedTabsViewHolder extends StatelessWidget {
 class TabarView extends StatelessWidget {
   final RequestModel requestItem;
   final TimebankModel timebankModel;
+  final BuildContext context;
 
-  TabarView({this.requestItem, this.timebankModel});
+  TabarView({this.requestItem, this.timebankModel, this.context});
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +48,9 @@ class TabarView extends StatelessWidget {
             tabs: [
               Tab(
                 child: Text(
-                  S.of(context).participants,
+                  requestItem.requestType == RequestType.BORROW
+                      ? L.of(context).responses
+                      : S.of(context).participants,
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),

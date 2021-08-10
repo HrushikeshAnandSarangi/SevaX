@@ -116,6 +116,10 @@ class ConfigurationsList {
         title_en: 'Create Goods Offers',
         type: 'offer'),
     ConfigurationModel(
+        id: 'create_borrow_request',
+        title_en: 'Create Borrow Request',
+        type: 'request'),
+    ConfigurationModel(
         id: 'create_money_offers',
         title_en: 'Create Money Offers',
         type: 'offer'),
@@ -167,6 +171,7 @@ class ConfigurationsList {
         id: 'accept_one_to_many_offer',
         title_en: 'Accept One To Many Offer',
         type: 'offer'),
+
   ];
 
   List<ConfigurationModel> getMemberData() {

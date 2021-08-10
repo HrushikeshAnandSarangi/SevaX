@@ -53,6 +53,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
         logger.e(error);
       }
     });
+   
   }
 
   Future<Map<String, dynamic>> getUserDetails({String memberEmail}) async {
@@ -122,6 +123,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                     userModel: userModel,
                     timebankModel: widget.timebankModel,
                     requestModel: requestModel,
+                  
                   );
                 } else {
                   return makeUserWidget(userModel, context, status);
