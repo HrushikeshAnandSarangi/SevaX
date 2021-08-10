@@ -171,6 +171,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
             SelectLendingPlaceItem(
               onSelected: (LendingModel model) {
                 selectedItemModels.add(model);
+                setState(() {});
               },
               lendingType: LendingType.ITEM,
             ),
@@ -179,12 +180,13 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
             ),
             ListView.builder(
                 itemCount: selectedItemModels.length,
+                shrinkWrap: true,
                 itemBuilder: (context, index) {
                   LendingModel model = selectedItemModels[index];
                   return LendingItemCardWidget(
                     lendingItemModel: model.lendingItemModel,
                     onDelete: () {
-                      selectedItemModels.add(model);
+                      selectedItemModels.remove(model);
                       setState(() {});
                     },
                     onEdit: () {
@@ -347,7 +349,8 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
                         timestamp: DateTime.now().millisecondsSinceEpoch,
                         borrowAgreementLink: borrowAgreementLinkFinal,
                         // borrowedItemsIds: selectedModelsId.toList(),
-                        // borrowedPlaceId: selectedLendingPlaceModel.id, //umesh to do //id is coming null
+                        borrowedPlaceId: selectedLendingPlaceModel
+                            .id, //umesh to do //id is coming null
                         isApproved: false,
                       ),
                     );
@@ -364,8 +367,9 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
                             SevaCore.of(context).loggedInUser.sevaUserID,
                         timestamp: DateTime.now().millisecondsSinceEpoch,
                         borrowAgreementLink: borrowAgreementLinkFinal,
-                        borrowedPlaceId: selectedLendingPlaceModel.id,
                         isApproved: false,
+                        borrowedItemsIds: List<String>.from(
+                            selectedItemModels.map((e) => e.id)).toList(),
                       ),
                     );
                   }

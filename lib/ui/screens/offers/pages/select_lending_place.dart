@@ -197,7 +197,7 @@ class _SelectLendingPlaceItemState extends State<SelectLendingPlaceItem> {
                                   ),
                                 ),
                                 TextSpan(
-                                  text: suggestion.firstWordUpperCase(),
+                                  text: suggestion,
                                   style: TextStyle(
                                     fontSize: 16,
                                     color: Colors.blue,
