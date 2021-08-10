@@ -39,7 +39,7 @@ class SponsorsWidget extends StatefulWidget {
 }
 
 class _SponsorsWidgetState extends State<SponsorsWidget> {
-  int indexPosition = 0;
+  int indexPosition;
   String userId = '';
 
   @override
