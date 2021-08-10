@@ -2707,9 +2707,14 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                           return Container();
                         }
                         LendingModel model = snapshot.data;
-                        return LendingPlaceCardWidget(
-                          lendingPlaceModel: model.lendingPlaceModel,
-                          hidden: true,
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            LendingPlaceCardWidget(
+                              lendingPlaceModel: model.lendingPlaceModel,
+                              hidden: true,
+                            ),
+                          ],
                         );
                       }),
               SizedBox(
