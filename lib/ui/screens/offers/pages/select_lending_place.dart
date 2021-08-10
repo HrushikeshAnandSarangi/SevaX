@@ -38,7 +38,7 @@ class _SelectLendingPlaceItemState extends State<SelectLendingPlaceItem> {
   bool isDataLoaded = false;
   @override
   void initState() {
-    future = LendingOffersRepo.getAllLendingPlaces();
+    future = LendingOffersRepo.getAllLendingItems();
 
     super.initState();
   }
