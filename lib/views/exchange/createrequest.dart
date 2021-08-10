@@ -1212,17 +1212,19 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                         SizedBox(
                                           height: 10,
                                         ),
-                                        // HideWidget(
-                                        //   hide: roomOrTool == 0,
-                                        //   child: SelectBorrowItem(
-                                        //     selectedItems: requestModel
-                                        //         .borrowModel.requiredItems,
-                                        //     onSelectedItems: (items) => {
-                                        //       requestModel.borrowModel
-                                        //           .requiredItems = items
-                                        //     },
-                                        //   ),
-                                        // ), //umesh to do  //requiredItems null error
+                                        HideWidget(
+                                          hide: roomOrTool == 0,
+                                          child: SelectBorrowItem(
+                                            selectedItems: requestModel
+                                                    .borrowModel
+                                                    .requiredItems ??
+                                                {},
+                                            onSelectedItems: (items) => {
+                                              requestModel.borrowModel
+                                                  .requiredItems = items
+                                            },
+                                          ),
+                                        ),
                                       ],
                                     )
                                   : Container(),
