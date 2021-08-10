@@ -994,4 +994,7 @@ class L {
       "There was error creating your item, Please try again.";
   String get updating_item_error =>
       "There was error creating your item, Please try again.";
+
+  String get agree_to_signature_legal_text =>
+      "By accepting the conditions on this page, your electronic signature is assumed and you are responsible for all terms included within.";
 }

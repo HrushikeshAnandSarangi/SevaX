@@ -331,7 +331,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
                         timestamp: DateTime.now().millisecondsSinceEpoch,
                         borrowAgreementLink: borrowAgreementLinkFinal,
                         // borrowedItemsIds: selectedModelsId.toList(),
-                        borrowedPlaceId: selectedLendingPlaceModel.id,
+                        // borrowedPlaceId: selectedLendingPlaceModel.id, //umesh to do //id is coming null
                         isApproved: false,
                       ),
                     );
