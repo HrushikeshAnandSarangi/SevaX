@@ -1216,7 +1216,9 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                           hide: roomOrTool == 0,
                                           child: SelectBorrowItem(
                                             selectedItems: requestModel
-                                                .borrowModel.requiredItems,
+                                                    .borrowModel
+                                                    .requiredItems ??
+                                                {},
                                             onSelectedItems: (items) => {
                                               requestModel.borrowModel
                                                   .requiredItems = items

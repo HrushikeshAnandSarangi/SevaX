@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
@@ -92,6 +94,7 @@ class _SelectLendingPlaceItemState extends State<SelectLendingPlaceItem> {
                 ),
                 suggestionsBoxController: controller,
                 noItemsFoundBuilder: (context) {
+                  log('its here');
                   return getSuggestionLayout(
                     suggestion: _textEditingController.text,
                     add: S.of(context).add + ' ',
@@ -194,8 +197,7 @@ class _SelectLendingPlaceItemState extends State<SelectLendingPlaceItem> {
                                   ),
                                 ),
                                 TextSpan(
-                                  text:
-                                      "\"${suggestion.firstWordUpperCase()}\"",
+                                  text: suggestion.firstWordUpperCase(),
                                   style: TextStyle(
                                     fontSize: 16,
                                     color: Colors.blue,

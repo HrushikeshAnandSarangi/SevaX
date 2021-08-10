@@ -21,6 +21,7 @@ import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/common_timebank_model_singleton.dart';
 import 'package:sevaexchange/utils/extensions.dart';
+import 'package:sevaexchange/utils/helpers/configuration_check.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -207,7 +208,7 @@ class _HomeDashBoardState extends State<HomeDashBoard>
                     if (AppConfig.timebankConfigurations == null)
                       AppConfig.timebankConfigurations =
                           data.timebankConfigurations ??
-                              TimebankConfigurations();
+                              getConfigurationModel();
 
                     timeBankModelSingleton.model = primaryTimebank;
                   }

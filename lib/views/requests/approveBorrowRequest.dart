@@ -94,10 +94,53 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
+            Text(
+              L.of(context).details_of_the_request,
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            Text(
+              L.of(context).accept_borrow_agreement_place_hint,
+              style: TextStyle(fontSize: 14, color: Colors.grey),
+            ),
+            SizedBox(height: 10),
+            SelectLendingPlaceItem(
+              onSelected: (LendingModel model) {
+                selectedLendingPlaceModel = model;
+                setState(() {});
+              },
+              lendingType: LendingType.PLACE,
+            ),
+            selectedLendingPlaceModel != null
+                ? LendingPlaceCardWidget(
+                    lendingPlaceModel:
+                        selectedLendingPlaceModel.lendingPlaceModel,
+                    onDelete: () {
+                      selectedLendingPlaceModel = null;
+                      setState(() {});
+                    },
+                    onEdit: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return AddUpdateLendingPlace(
+                              lendingModel: selectedLendingPlaceModel,
+                              onPlaceCreateUpdate: (LendingModel model) {
+                                selectedLendingPlaceModel = model;
+                                setState(() {});
+                              },
+                            );
+                          },
+                        ),
+                      );
+                    },
+                  )
+                : Container(),
+            SizedBox(height: 20),
             requestAgreementFormComponent(widget.requestModel.roomOrTool),
             SizedBox(height: 20),
             termsAcknowledegmentText,
             bottomActionButtons,
+            SizedBox(height: 20),
           ],
         ),
       ),
@@ -113,87 +156,60 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
+            Text(
+              L.of(context).accept_borrow_agreement_item_title,
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 10),
             borrowItemsWidget,
             SizedBox(height: 10),
             Text(
               L.of(context).accept_borrow_agreement_page_hint,
-              style: TextStyle(fontSize: 16),
+              style: TextStyle(fontSize: 14, color: Colors.grey),
             ),
             SizedBox(height: 10),
             SelectLendingPlaceItem(
               onSelected: (LendingModel model) {
                 selectedItemModels.add(model);
               },
-              lendingType:
-                  widget.requestModel.roomOrTool == LendingType.PLACE.readable
-                      ? LendingType.PLACE
-                      : LendingType.ITEM,
+              lendingType: LendingType.ITEM,
             ),
             SizedBox(
               height: 10,
             ),
-            SizedBox(height: 10),
-            HideWidget(
-              hide:
-                  widget.requestModel.roomOrTool == LendingType.PLACE.readable,
-              child: ListView.builder(
-                  itemCount: selectedItemModels.length,
-                  itemBuilder: (context, index) {
-                    LendingModel model = selectedItemModels[index];
-                    return LendingItemCardWidget(
-                      lendingItemModel: model.lendingItemModel,
-                      onDelete: () {
-                        selectedItemModels.add(model);
-                        setState(() {});
-                      },
-                      onEdit: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return AddUpdateLendingItem(
-                                lendingModel: model,
-                                onItemCreateUpdate: (LendingModel model) {
-                                  selectedItemModels.add(model);
-                                  setState(() {});
-                                },
-                              );
-                            },
-                          ),
-                        );
-                      },
-                    );
-                  }),
-            ),
-            HideWidget(
-              hide: widget.requestModel.roomOrTool == LendingType.ITEM.readable,
-              child: LendingPlaceCardWidget(
-                lendingPlaceModel: selectedLendingPlaceModel.lendingPlaceModel,
-                onDelete: () {
-                  selectedLendingPlaceModel = null;
-                  setState(() {});
-                },
-                onEdit: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return AddUpdateLendingPlace(
-                          lendingModel: selectedLendingPlaceModel,
-                          onPlaceCreateUpdate: (LendingModel model) {
-                            selectedLendingPlaceModel = model;
-                            setState(() {});
+            ListView.builder(
+                itemCount: selectedItemModels.length,
+                itemBuilder: (context, index) {
+                  LendingModel model = selectedItemModels[index];
+                  return LendingItemCardWidget(
+                    lendingItemModel: model.lendingItemModel,
+                    onDelete: () {
+                      selectedItemModels.add(model);
+                      setState(() {});
+                    },
+                    onEdit: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return AddUpdateLendingItem(
+                              lendingModel: model,
+                              onItemCreateUpdate: (LendingModel model) {
+                                selectedItemModels.add(model);
+                                setState(() {});
+                              },
+                            );
                           },
-                        );
-                      },
-                    ),
+                        ),
+                      );
+                    },
                   );
-                },
-              ),
-            ),
+                }),
             SizedBox(height: 20),
             requestAgreementFormComponent(widget.requestModel.roomOrTool),
             SizedBox(height: 20),
             termsAcknowledegmentText,
             bottomActionButtons,
+            SizedBox(height: 20),
           ],
         ),
       ),
@@ -224,7 +240,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
       children: [
         Text(
           L.of(context).address,
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
         ),
         SizedBox(height: 6),
         Text(
@@ -411,41 +427,14 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: 15),
-        Text(
-          L.of(context).details_of_the_request,
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-        ),
-        SizedBox(height: 10),
-        Text(
-          roomOrTool == "PLACE"
-              ? L.of(context).details_of_the_request_subtext_place
-              : L.of(context).details_of_the_request_subtext_item,
-          style: TextStyle(fontSize: 15),
-          softWrap: true,
-        ),
-        SizedBox(height: 15),
-        Text(
-          roomOrTool == "PLACE"
-              ? L.of(context).provide_place_for_lending
-              : L.of(context).provide_item_for_lending,
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-        ),
-        SizedBox(height: 10),
-        Text(
-          //widget depends on item or place (migrate from lending offers)
-          '<---- Personal place or items widgets to be integrated here (elastic search bar to find user personal items/place) ---->',
-          style: TextStyle(fontSize: 15),
-          softWrap: true,
-        ),
-        SizedBox(height: 15),
+        SizedBox(height: 8),
         locationWidget,
         SizedBox(height: 15),
         Text(
           S.of(context).agreement,
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
         ),
-        SizedBox(height: 10),
+        SizedBox(height: 8),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -453,12 +442,12 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
               width: MediaQuery.of(context).size.width * 0.68,
               child: Text(
                 S.of(context).request_agreement_form_component_text,
-                style: TextStyle(fontSize: 15),
+                style: TextStyle(fontSize: 14),
                 softWrap: true,
               ),
             ),
             Image(
-              width: 60,
+              width: 50,
               image: AssetImage(
                   'lib/assets/images/request_offer_agreement_icon.png'),
             ),
@@ -505,7 +494,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
             Container(
               alignment: Alignment.bottomCenter,
               margin: EdgeInsets.only(right: 12),
-              width: 100,
+              width: 90,
               height: 32,
               child: CustomTextButton(
                 shape: RoundedRectangleBorder(
