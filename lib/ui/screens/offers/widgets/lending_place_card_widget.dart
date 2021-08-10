@@ -30,40 +30,43 @@ class LendingPlaceCardWidget extends StatelessWidget {
           SizedBox(
             height: 8,
           ),
-          HideWidget(
-            hide: hidden,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  lendingPlaceModel.placeName,
-                  style: TextStyle(
-                    fontSize: 16,
-                    //fontWeight: FontWeight.bold,
-                    fontFamily: 'Europa',
-                    color: Colors.black,
-                  ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(
+                lendingPlaceModel.placeName,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: 'Europa',
+                  color: Colors.black,
                 ),
-                Spacer(),
-                InkWell(
+              ),
+              Spacer(),
+              HideWidget(
+                hide: hidden,
+                child: InkWell(
                   onTap: onEdit,
                   child: Icon(
                     Icons.edit,
                     color: HexColor('#606670'),
                   ),
                 ),
-                SizedBox(
-                  width: 8,
-                ),
-                InkWell(
+              ),
+              SizedBox(
+                width: 8,
+              ),
+              HideWidget(
+                hide: hidden,
+                child: InkWell(
                   onTap: onDelete,
                   child: Icon(
                     Icons.cancel_rounded,
                     color: HexColor('#BEBEBE'),
                   ),
-                )
-              ],
-            ),
+                ),
+              )
+            ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,

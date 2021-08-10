@@ -10,6 +10,7 @@ import 'package:sevaexchange/new_baseline/models/lending_place_model.dart';
 import 'package:sevaexchange/repositories/community_repository.dart';
 import 'package:sevaexchange/repositories/lending_offer_repo.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/add_update_lending_item.dart';
+import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_chip.dart';
 import 'package:sevaexchange/utils/extensions.dart';
@@ -35,10 +36,18 @@ class _SelectLendingPlaceItemState extends State<SelectLendingPlaceItem> {
   SuggestionsBoxController controller = SuggestionsBoxController();
   TextEditingController _textEditingController = TextEditingController();
   Future<List<LendingModel>> future;
-  bool isDataLoaded = false;
   @override
   void initState() {
-    future = LendingOffersRepo.getAllLendingItems();
+    Future.delayed(Duration.zero, () {
+      if (widget.lendingType == LendingType.ITEM) {
+        future = LendingOffersRepo.getAllLendingItemModels(
+            creatorId: SevaCore.of(context).loggedInUser.sevaUserID);
+      } else {
+        future = LendingOffersRepo.getAllLendingPlaces(
+            creatorId: SevaCore.of(context).loggedInUser.sevaUserID);
+      }
+      setState(() {});
+    });
 
     super.initState();
   }

@@ -25,6 +25,7 @@ import 'package:sevaexchange/ui/screens/borrow_agreement/borrow_agreement_pdf.da
 import 'package:sevaexchange/ui/screens/notifications/pages/personal_notifications.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/lending_item_card_widget.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/lending_place_card_widget.dart';
+import 'package:sevaexchange/ui/screens/offers/widgets/lending_place_details_widget.dart';
 import 'package:sevaexchange/ui/screens/request/pages/oneToManyCreatorCompleteRequestPage.dart';
 import 'package:sevaexchange/ui/screens/request/pages/oneToManySpeakerTimeEntryComplete_page.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
@@ -468,15 +469,6 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   widget.requestItem.requestType == RequestType.BORROW
                       ? Container()
                       : requestDescriptionComponent,
-                  SizedBox(height: 20),
-                  (widget.requestItem.requestType == RequestType.BORROW &&
-                          widget.requestItem.roomOrTool == 'PLACE' &&
-                          (SevaCore.of(context).loggedInUser.email ==
-                                  widget.requestItem.email ||
-                              widget.requestItem.approvedUsers.contains(
-                                  SevaCore.of(context).loggedInUser.email)))
-                      ? approvedBorrowRequestDetailsComponent
-                      : Container(),
                   SizedBox(height: 20),
                   (widget.requestItem.requestType == RequestType.BORROW &&
                           widget.requestItem.approvedUsers.length > 0 &&
@@ -2596,58 +2588,6 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     );
   }
 
-  Widget get approvedBorrowRequestDetailsComponent {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      widget.requestItem.approvedUsers.length > 0
-          ? StreamBuilder(
-              stream: CollectionRef.requests
-                  .doc(widget.requestItem.id)
-                  .collection('borrowRequestAcceptors')
-                  .where('acceptorEmail',
-                      isEqualTo: widget.requestItem.approvedUsers[0])
-                  .snapshots(),
-              builder: (context, snapshot) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      color: Colors.grey[300],
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                            left: 7.0, right: 7, top: 5, bottom: 5),
-                        child: Text(
-                          S.of(context).request_approved_by_msg +
-                              ' ' +
-                              snapshot.data.docs[0]['acceptorName'],
-                          style: TextStyle(
-                              fontSize: 15,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w600),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 5),
-                    addressComponentBorrowRequestForApproved(
-                        snapshot.data.docs[0]['selectedAddress']),
-                    Text(
-                      L.of(context).house_rules,
-                      style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.grey[800],
-                          fontWeight: FontWeight.w600),
-                    ),
-                    SizedBox(height: 5),
-                    Text(
-                      'To Be Implemented', //fetch from lendingItems collection given place ID. then get house rules field.
-                      style: TextStyle(fontSize: 16, color: Colors.grey),
-                    ),
-                  ],
-                );
-              })
-          : Container(),
-    ]);
-  }
-
   Widget get approvedBorrowRequestViewAgreementComponent {
     return FutureBuilder<BorrowAcceptorModel>(
         future: FirestoreManager.getBorrowRequestAcceptorModel(
@@ -2666,6 +2606,46 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Text(
+                L.of(context).offering_place_to +
+                    borrowAcceptorModel.acceptorName,
+                style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w600),
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              Text(
+                L.of(context).length_of_stay +
+                    DateFormat('MMMM dddd, yyyy',
+                            Locale(getLangTag()).toLanguageTag())
+                        .format(
+                      getDateTimeAccToUserTimezone(
+                          dateTime: DateTime.fromMillisecondsSinceEpoch(
+                              widget.requestItem.requestStart),
+                          timezoneAbb:
+                              SevaCore.of(context).loggedInUser.timezone),
+                    ) +
+                    ' to ' +
+                    DateFormat('MMMM dddd, yyyy',
+                            Locale(getLangTag()).toLanguageTag())
+                        .format(
+                      getDateTimeAccToUserTimezone(
+                          dateTime: DateTime.fromMillisecondsSinceEpoch(
+                              widget.requestItem.requestEnd),
+                          timezoneAbb:
+                              SevaCore.of(context).loggedInUser.timezone),
+                    ),
+                style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.grey,
+                    fontWeight: FontWeight.w600),
+              ),
+              SizedBox(
+                height: 10,
+              ),
               widget.requestItem.roomOrTool == LendingType.ITEM.readable
                   ? FutureBuilder<List<LendingModel>>(
                       future: LendingOffersRepo.getApprovedLendingModels(
@@ -2707,14 +2687,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                           return Container();
                         }
                         LendingModel model = snapshot.data;
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            LendingPlaceCardWidget(
-                              lendingPlaceModel: model.lendingPlaceModel,
-                              hidden: true,
-                            ),
-                          ],
+                        return LendingPlaceDetailsWidget(
+                          lendingModel: model,
                         );
                       }),
               SizedBox(
@@ -2740,6 +2714,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   }
                 },
               ),
+              addressComponentBorrowRequestForApproved(
+                  borrowAcceptorModel.selectedAddress ?? ''),
             ],
           );
         });
