@@ -220,7 +220,7 @@ class RequestModel extends DataModel {
   List<String> imageUrls = [];
   String communityName;
   DocumentReference speakerInviteNotificationDocRef;
-  BorrowModel borrowModel;
+  BorrowModel borrowModel = new BorrowModel();
 
   RequestModel({
     this.id,
@@ -1236,7 +1236,7 @@ class GoodsDonationDetails {
 }
 
 class BorrowModel {
-  Map<String, String> requiredItems;
+  Map<String, String> requiredItems = {};
 
   BorrowModel({this.requiredItems});
   String toString() {

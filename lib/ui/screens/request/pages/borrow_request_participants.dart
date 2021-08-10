@@ -2,74 +2,102 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/new_baseline/models/borrow_accpetor_model.dart';
 import 'package:sevaexchange/ui/screens/request/widgets/borrow_request_participants_card.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class BorrowRequestParticipants extends StatelessWidget {
   final UserModel userModel;
   final TimebankModel timebankModel;
-  final RequestModel
-      requestModel; //need to call borrowAcceptorModel here and refactor
+  final RequestModel requestModel;
 
-  const BorrowRequestParticipants(
-      {Key key, this.userModel, this.timebankModel, this.requestModel})
-      : super(key: key);
+  const BorrowRequestParticipants({
+    Key key,
+    this.userModel,
+    this.timebankModel,
+    this.requestModel,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(12.0),
-      child: Column(
-        children: [
-          BorrowRequestParticipantsCard(
-            name: userModel.fullname,
-            imageUrl: userModel.photoURL,
-            email: userModel.email,
-            onImageTap: () {
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                return ProfileViewer(
-                  timebankId: timebankModel.id,
-                  entityName: timebankModel.name,
-                  isFromTimebank: isPrimaryTimebank(
-                      parentTimebankId: timebankModel.parentTimebankId),
-                  userEmail: userModel.email,
-                );
-              }));
-            },
-            buttonsContainer: Container(
-              margin: EdgeInsets.only(top: 5),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.grey[300],
-                      shape: new RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(30.0),
-                      ),
-                    ),
-                    onPressed: () async {
-                      if (requestModel.approvedUsers.length <= 0) {
-                        return null;
-                      } else {
-                        logger.e(requestModel.approvedUsers.length.toString());
-                        //When Borrower Accepts here take to Accept Borrow Request Page
-                        //Change button status accordingly
-                        //copy enum states from lending offers or something else
-                      }
-                    },
-                    child: Text(
-                      S.of(context).accept,
-                      style: TextStyle(color: Colors.black, fontSize: 11.5),
-                    ),
-                  )
-                ],
+      child: FutureBuilder<BorrowAcceptorModel>(
+        future: FirestoreManager.getBorrowRequestAcceptorModel(
+            requestId: requestModel.id,
+            acceptorEmail: requestModel.approvedUsers.first),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return LoadingIndicator();
+          }
+          if (snapshot.data == null) {
+            return Center(
+              child: Text(S.of(context).request_agreement_not_available),
+            );
+          }
+          BorrowAcceptorModel borrowAcceptorModel = snapshot.data;
+
+          return Column(
+            children: [
+              BorrowRequestParticipantsCard(
+                name: userModel.fullname,
+                imageUrl: userModel.photoURL,
+                email: userModel.email,
+                requestModel: requestModel,
+                borrowAcceptorModel: borrowAcceptorModel,
+                context: context,
+                onImageTap: () {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) {
+                    return ProfileViewer(
+                      timebankId: timebankModel.id,
+                      entityName: timebankModel.name,
+                      isFromTimebank: isPrimaryTimebank(
+                          parentTimebankId: timebankModel.parentTimebankId),
+                      userEmail: userModel.email,
+                    );
+                  }));
+                },
+                buttonsContainer: Container(
+                  margin: EdgeInsets.only(top: 5),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.grey[300],
+                          shape: new RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.circular(30.0),
+                          ),
+                        ),
+                        onPressed: () async {
+                          if (requestModel.approvedUsers.length <= 0) {
+                            return null;
+                          } else {
+                            logger.e(
+                                requestModel.approvedUsers.length.toString());
+                            //When Borrower Accepts here take to Accept Borrow Request Page
+                            //Change button status accordingly
+                            //copy enum states from lending offers or something else
+                          }
+                        },
+                        child: Text(
+                          S.of(context).accept,
+                          style: TextStyle(color: Colors.black, fontSize: 11.5),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
               ),
-            ),
-          ),
-        ],
+            ],
+          );
+        },
       ),
     );
   }

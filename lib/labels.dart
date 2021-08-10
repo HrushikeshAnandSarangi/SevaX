@@ -974,7 +974,12 @@ class L {
   String get items_validation =>
       "You have not selected any Items. Please select one or more before creating the Borrow request.";
   String get accept_borrow_agreement_page_hint =>
-      "Please fill in your Item details, aggrement and location of your place to help the borrower.";
+      "Please fill in your Item details, agreement and location of your place to help the borrower.";
+  String get accept_borrow_agreement_place_hint =>
+      "Please provide details of your place; agreement and location.";
+  String get accept_borrow_agreement_item_title =>
+      "You are about to give Items for the borrower";
+  String get accept_borrow_agreement_place_title => "Details of the offer";
 //3rd August
   String get select_a_place_lending => "Select a place for lending*";
 
@@ -997,4 +1002,5 @@ class L {
 
   String get agree_to_signature_legal_text =>
       "By accepting the conditions on this page, your electronic signature is assumed and you are responsible for all terms included within.";
+  String get applied_for_request => 'You have accepted the request';
 }

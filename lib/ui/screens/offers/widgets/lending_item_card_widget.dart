@@ -3,13 +3,16 @@ import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/new_baseline/models/lending_item_model.dart';
 import 'package:sevaexchange/new_baseline/models/lending_place_model.dart';
 import 'package:sevaexchange/utils/utils.dart';
+import 'package:sevaexchange/widgets/hide_widget.dart';
 
 class LendingItemCardWidget extends StatelessWidget {
   final LendingItemModel lendingItemModel;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
+  bool hidden = false;
 
-  LendingItemCardWidget({this.lendingItemModel, this.onEdit, this.onDelete});
+  LendingItemCardWidget(
+      {this.lendingItemModel, this.onEdit, this.onDelete, this.hidden = false});
 
   @override
   Widget build(BuildContext context) {
@@ -35,21 +38,27 @@ class LendingItemCardWidget extends StatelessWidget {
             ),
           ),
           Spacer(),
-          InkWell(
-            onTap: onEdit,
-            child: Icon(
-              Icons.edit,
-              color: HexColor('#606670'),
+          HideWidget(
+            hide: hidden,
+            child: InkWell(
+              onTap: onEdit,
+              child: Icon(
+                Icons.edit,
+                color: HexColor('#606670'),
+              ),
             ),
           ),
           SizedBox(
             width: 8,
           ),
-          InkWell(
-            onTap: onDelete,
-            child: Icon(
-              Icons.cancel_rounded,
-              color: HexColor('#BEBEBE'),
+          HideWidget(
+            hide: hidden,
+            child: InkWell(
+              onTap: onDelete,
+              child: Icon(
+                Icons.cancel_rounded,
+                color: HexColor('#BEBEBE'),
+              ),
             ),
           )
         ],

@@ -45,10 +45,7 @@ class ConfigurationCheck extends StatelessWidget {
         : InkWell(
             onTap: () {
               log('role ${role}');
-              logger.i("y22k" +
-                  actionType +
-                  " <<<<<<<<<<<<<< " +
-                  AppConfig.timebankConfigurations.admin.toString());
+              log('type ${actionType}');
               actionNotAllowedDialog(context);
             },
             child: AbsorbPointer(absorbing: true, child: child),
@@ -202,7 +199,7 @@ TimebankConfigurations getConfigurationModel() {
       "accept_one_to_many_offer",
       "accept_time_offer",
       "accept_goods_offer",
-      "accept_money_offer"
+      "accept_money_offer",
     ],
   );
 }
