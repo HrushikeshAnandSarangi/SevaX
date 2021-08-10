@@ -1005,4 +1005,6 @@ class L {
   String get applied_for_request => 'You have accepted the request';
   String get agreement_to_be_signed => 'Agreement to be signed';
   String get agreement_signed => 'You have signed the agreement';
+  String get offering_place_to => 'You are offering a place to ';
+  String get length_of_stay => 'Length of stay between:  ';
 }

@@ -25,6 +25,7 @@ import 'package:sevaexchange/ui/screens/borrow_agreement/borrow_agreement_pdf.da
 import 'package:sevaexchange/ui/screens/notifications/pages/personal_notifications.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/lending_item_card_widget.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/lending_place_card_widget.dart';
+import 'package:sevaexchange/ui/screens/offers/widgets/lending_place_details_widget.dart';
 import 'package:sevaexchange/ui/screens/request/pages/oneToManyCreatorCompleteRequestPage.dart';
 import 'package:sevaexchange/ui/screens/request/pages/oneToManySpeakerTimeEntryComplete_page.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
@@ -2610,22 +2611,6 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      color: Colors.grey[300],
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                            left: 7.0, right: 7, top: 5, bottom: 5),
-                        child: Text(
-                          S.of(context).request_approved_by_msg +
-                              ' ' +
-                              snapshot.data.docs[0]['acceptorName'],
-                          style: TextStyle(
-                              fontSize: 15,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w600),
-                        ),
-                      ),
-                    ),
                     SizedBox(height: 5),
                     addressComponentBorrowRequestForApproved(
                         snapshot.data.docs[0]['selectedAddress']),
@@ -2666,6 +2651,46 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Text(
+                L.of(context).offering_place_to +
+                    borrowAcceptorModel.acceptorName,
+                style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w600),
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              Text(
+                L.of(context).length_of_stay +
+                    DateFormat('MMMM dddd, yyyy',
+                            Locale(getLangTag()).toLanguageTag())
+                        .format(
+                      getDateTimeAccToUserTimezone(
+                          dateTime: DateTime.fromMillisecondsSinceEpoch(
+                              widget.requestItem.requestStart),
+                          timezoneAbb:
+                              SevaCore.of(context).loggedInUser.timezone),
+                    ) +
+                    ' to ' +
+                    DateFormat('MMMM dddd, yyyy',
+                            Locale(getLangTag()).toLanguageTag())
+                        .format(
+                      getDateTimeAccToUserTimezone(
+                          dateTime: DateTime.fromMillisecondsSinceEpoch(
+                              widget.requestItem.requestEnd),
+                          timezoneAbb:
+                              SevaCore.of(context).loggedInUser.timezone),
+                    ),
+                style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.grey,
+                    fontWeight: FontWeight.w600),
+              ),
+              SizedBox(
+                height: 10,
+              ),
               widget.requestItem.roomOrTool == LendingType.ITEM.readable
                   ? FutureBuilder<List<LendingModel>>(
                       future: LendingOffersRepo.getApprovedLendingModels(
@@ -2707,14 +2732,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                           return Container();
                         }
                         LendingModel model = snapshot.data;
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            LendingPlaceCardWidget(
-                              lendingPlaceModel: model.lendingPlaceModel,
-                              hidden: true,
-                            ),
-                          ],
+                        return LendingPlaceDetailsWidget(
+                          lendingModel: model,
                         );
                       }),
               SizedBox(
