@@ -1006,4 +1006,8 @@ class L {
   String get agreement_to_be_signed => 'Agreement to be signed';
   String get agreement_signed => 'You have signed the agreement';
   String get responses => 'Responses';
+  String get you_have_received_responses => 'You have received ** response***.';
+  String get lenders => "Lenders";
+  String get already_accepted_lender =>
+      "You have already accepted a lender for this request.";
 }

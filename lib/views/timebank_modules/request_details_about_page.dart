@@ -1994,11 +1994,11 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
 
               proccedWithCalander();
 
-              // await updateAcceptBorrowRequest(
-              //   requestModel: widget.requestItem,
-              //   //participantDetails: participantDetails,
-              //   userEmail: SevaCore.of(context).loggedInUser.email,
-              // );
+              await updateAcceptBorrowRequest(
+                requestModel: widget.requestItem,
+                //participantDetails: participantDetails,
+                userEmail: SevaCore.of(context).loggedInUser.email,
+              );
             },
           ),
         ),
