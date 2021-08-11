@@ -11,6 +11,7 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/basic_user_details.dart';
 import 'package:sevaexchange/models/chat_model.dart';
+import 'package:sevaexchange/models/enums/lending_borrow_enums.dart';
 import 'package:sevaexchange/models/manual_time_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
@@ -1019,6 +1020,15 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                         true; //so that we can know that this request has completed
                                     requestModelNew.isNotified =
                                         true; //resets to false otherwise
+
+                                    if (requestModelNew.roomOrTool ==
+                                        LendingType.ITEM.readable) {
+                                      requestModelNew
+                                          .borrowModel.itemsReturned = true;
+                                    } else {
+                                      requestModelNew.borrowModel.isCheckedOut =
+                                          true;
+                                    }
 
                                     await lenderReceivedBackCheck(
                                         notification: notification,

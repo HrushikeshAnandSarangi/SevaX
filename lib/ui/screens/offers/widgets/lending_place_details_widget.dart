@@ -12,7 +12,8 @@ class LendingPlaceDetailsWidget extends StatefulWidget {
   LendingPlaceDetailsWidget({@required this.lendingModel});
 
   @override
-  _LendingPlaceDetailsWidgetState createState() => _LendingPlaceDetailsWidgetState();
+  _LendingPlaceDetailsWidgetState createState() =>
+      _LendingPlaceDetailsWidgetState();
 }
 
 class _LendingPlaceDetailsWidgetState extends State<LendingPlaceDetailsWidget> {

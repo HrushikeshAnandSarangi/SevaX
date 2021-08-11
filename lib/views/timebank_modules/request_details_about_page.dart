@@ -2396,18 +2396,21 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                 widget.requestItem.photoUrl ?? defaultUserImageURL,
               ),
               backgroundColor: Colors.white,
-              radius: MediaQuery.of(context).size.width / 11.5,
+              radius: MediaQuery.of(context).size.width / 12,
             ),
-            SizedBox(width: 30),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(widget.requestItem.fullName,
-                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 21),
-                    overflow: TextOverflow.ellipsis),
-                SizedBox(height: 7),
-                createdAt,
-              ],
+            SizedBox(width: 25),
+            Flexible(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.requestItem.fullName,
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 19),
+                  ),
+                  SizedBox(height: 7),
+                  createdAt,
+                ],
+              ),
             ),
           ],
         ),
@@ -2814,7 +2817,9 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           }
           BorrowAcceptorModel borrowAcceptorModel = snapshot.data;
           return Container(
-            height: 630,
+            height: widget.requestItem.roomOrTool == LendingType.ITEM.readable
+                ? 300
+                : 610, //to be fixed (give dynamic height)
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
