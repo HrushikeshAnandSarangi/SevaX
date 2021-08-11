@@ -800,6 +800,9 @@ class CreateEditCommunityViewFormState
                                 logger.i(
                                     'Remove Sponsors from Community:\n Name:${removedSponsors.name}\nLogo:${removedSponsors.logo}\nCreatedBy:${removedSponsors.createdBy}\nCreatedAt:${removedSponsors.createdAt}\n----------------------------------------------------------\n');
                               },
+                              onError: (error) {
+                                logger.e(error);
+                              },
                             ),
                           ),
                         ),

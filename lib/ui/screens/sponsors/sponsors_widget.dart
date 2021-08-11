@@ -24,6 +24,7 @@ class SponsorsWidget extends StatefulWidget {
     List<SponsorDataModel> sponsors,
     SponsorDataModel addedSponsors,
   ) onSponsorsAdded;
+  final Function(dynamic error) onError;
   final Function(
     List<SponsorDataModel> sponsors,
     SponsorDataModel removedSponsors,
@@ -37,6 +38,7 @@ class SponsorsWidget extends StatefulWidget {
     this.textSize = 18.0,
     this.onSponsorsRemoved,
     this.isAdminVerified = false,
+    this.onError,
   });
 
   @override
@@ -310,7 +312,6 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                                 onTap: () {
                                   indexPosition = index;
                                   Navigator.of(dialogContext).pop();
-
                                   showEnterNameDialog(context);
                                 },
                                 title: Text(S.of(context).edit_name),
@@ -474,24 +475,29 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                       ),
                     ),
                     onPressed: () async {
-                      if (_formKey.currentState.validate()) {
-                        _formKey.currentState.save();
-                        if (indexPosition == null) {
-                          Navigator.of(viewContext).pop();
-                          await addImageAlert(
-                            name: name,
-                            context: context,
-                          );
-                          name = null;
-                        } else {
-                          widget.sponsors[indexPosition].name = name;
-                          indexPosition = null;
-                          name = null;
-                          addedSponsors = widget.sponsors[indexPosition];
-                          widget.onSponsorsAdded(
-                              widget.sponsors, addedSponsors);
-                          Navigator.of(viewContext).pop();
+                      try {
+                        if (_formKey.currentState.validate()) {
+                          _formKey.currentState.save();
+                          if (indexPosition == null) {
+                            Navigator.of(viewContext).pop();
+                            await addImageAlert(
+                              name: name,
+                              context: context,
+                            );
+                            name = null;
+                          } else {
+                            widget.sponsors[indexPosition].name = name;
+                            indexPosition = null;
+                            name = null;
+                            addedSponsors = widget.sponsors[indexPosition];
+                            widget.onSponsorsAdded(
+                                widget.sponsors, addedSponsors);
+                            Navigator.of(viewContext).pop();
+                          }
                         }
+                      } catch (e) {
+                        widget.onError(e);
+                        rethrow;
                       }
                     },
                   ),
@@ -526,30 +532,35 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                 padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                 color: Theme.of(context).accentColor,
                 onPressed: () async {
-                  SponsorDataModel sponsorModel = SponsorDataModel(
-                      name: name,
-                      createdAt: DateTime.now().millisecondsSinceEpoch,
-                      createdBy: SevaCore.of(context).loggedInUser.sevaUserID,
-                      logo: null);
-                  if (indexPosition == null) {
-                    if (widget.sponsors == null) {
-                      List<SponsorDataModel> x = [];
-                      x.add(sponsorModel);
-                      widget.sponsors = x;
-                      addedSponsors = sponsorModel;
-                      // sponsors.add(sponsorModel);
+                  try {
+                    SponsorDataModel sponsorModel = SponsorDataModel(
+                        name: name,
+                        createdAt: DateTime.now().millisecondsSinceEpoch,
+                        createdBy: SevaCore.of(context).loggedInUser.sevaUserID,
+                        logo: null);
+                    if (indexPosition == null) {
+                      if (widget.sponsors == null) {
+                        List<SponsorDataModel> x = [];
+                        x.add(sponsorModel);
+                        widget.sponsors = x;
+                        addedSponsors = sponsorModel;
+                        // sponsors.add(sponsorModel);
+                      } else {
+                        widget.sponsors.add(sponsorModel);
+                        addedSponsors = sponsorModel;
+                      }
                     } else {
-                      widget.sponsors.add(sponsorModel);
-                      addedSponsors = sponsorModel;
+                      widget.sponsors[indexPosition] = sponsorModel;
+                      addedSponsors = widget.sponsors[indexPosition];
                     }
-                  } else {
-                    widget.sponsors[indexPosition] = sponsorModel;
-                    addedSponsors = widget.sponsors[indexPosition];
-                  }
-                  indexPosition = null;
-                  widget.onSponsorsAdded(widget.sponsors, addedSponsors);
+                    indexPosition = null;
+                    widget.onSponsorsAdded(widget.sponsors, addedSponsors);
 
-                  Navigator.of(viewContext).pop();
+                    Navigator.of(viewContext).pop();
+                  } catch (e) {
+                    widget.onError(e);
+                    rethrow;
+                  }
                 },
                 child: Text(
                   S.of(context).skip,
@@ -601,30 +612,35 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
         return ImagePickerDialogMobile(
           imagePickerType: ImagePickerType.SPONSOR,
           onLinkCreated: (link) {
-            SponsorDataModel sponsorModel = SponsorDataModel(
-              name: name,
-              createdAt: DateTime.now().millisecondsSinceEpoch,
-              createdBy: userId,
-              logo: link,
-            );
-            if (indexPosition == null) {
-              if (widget.sponsors == null) {
-                List<SponsorDataModel> x = [];
-                x.add(sponsorModel);
-                widget.sponsors = x;
-                addedSponsors = sponsorModel;
+            try {
+              SponsorDataModel sponsorModel = SponsorDataModel(
+                name: name,
+                createdAt: DateTime.now().millisecondsSinceEpoch,
+                createdBy: userId,
+                logo: link,
+              );
+              if (indexPosition == null) {
+                if (widget.sponsors == null) {
+                  List<SponsorDataModel> x = [];
+                  x.add(sponsorModel);
+                  widget.sponsors = x;
+                  addedSponsors = sponsorModel;
+                } else {
+                  widget.sponsors.add(sponsorModel);
+                  addedSponsors = sponsorModel;
+                }
               } else {
-                widget.sponsors.add(sponsorModel);
-                addedSponsors = sponsorModel;
+                widget.sponsors[indexPosition] = sponsorModel;
+                addedSponsors = widget.sponsors[indexPosition];
               }
-            } else {
-              widget.sponsors[indexPosition] = sponsorModel;
-              addedSponsors = widget.sponsors[indexPosition];
-            }
-            widget.onSponsorsAdded(widget.sponsors, addedSponsors);
-            indexPosition = null;
-            if (isEdit) {
-              Navigator.of(dialogContext).pop();
+              widget.onSponsorsAdded(widget.sponsors, addedSponsors);
+              indexPosition = null;
+              if (isEdit) {
+                Navigator.of(dialogContext).pop();
+              }
+            } catch (e) {
+              widget.onError(e);
+              rethrow;
             }
           },
         );

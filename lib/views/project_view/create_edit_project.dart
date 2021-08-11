@@ -593,6 +593,9 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   logger.i(
                       'Remove Sponsors from Event:\n Name:${removedSponsors.name}\nLogo:${removedSponsors.logo}\nCreatedBy:${removedSponsors.createdBy}\nCreatedAt:${removedSponsors.createdAt}\n----------------------------------------------------------\n');
                 },
+                onError: (error) {
+                  logger.e(error);
+                },
               ),
               SizedBox(
                 height: 10,
