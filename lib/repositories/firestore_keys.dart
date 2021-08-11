@@ -30,7 +30,7 @@ class _CollectionNames {
   final String claimedRequestStatus = 'claimedRequestStatus';
   final String projectTemplates = 'project_templates';
   final String requestCategories = 'requestCategories';
-  final String agreementTemplates = 'agreement_templates';
+  final String agreementTemplates = 'agreementTemplates';
   final String borrowItems = 'borrowItems';
   final String amenities = 'amenities';
   final String lendingItems = 'lendingItems';
