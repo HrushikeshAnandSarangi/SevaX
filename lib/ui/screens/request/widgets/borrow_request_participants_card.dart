@@ -10,11 +10,11 @@ import 'package:sevaexchange/ui/screens/offers/widgets/lending_item_card_widget.
 import 'package:sevaexchange/ui/screens/offers/widgets/lending_place_card_widget.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/lending_place_details_widget.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/network_image.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/widgets/custom_list_tile.dart';
 
 class BorrowRequestParticipantsCard extends StatelessWidget {
   final Padding padding;
-  final String imageUrl;
   final Function onImageTap;
   final Widget buttonsContainer;
   final RequestModel requestModel;
@@ -26,7 +26,6 @@ class BorrowRequestParticipantsCard extends StatelessWidget {
   const BorrowRequestParticipantsCard(
       {Key key,
       this.padding,
-      this.imageUrl,
       this.onImageTap,
       this.buttonsContainer = const SizedBox(),
       this.requestModel,
@@ -37,6 +36,8 @@ class BorrowRequestParticipantsCard extends StatelessWidget {
       : super(key: key);
   @override
   Widget build(BuildContext context) {
+    logger
+        .e('Lending Model Items Length 2: ' + lendingModelList.length.toString());
     return Padding(
       padding: padding ?? EdgeInsets.symmetric(horizontal: 2, vertical: 6),
       child: Container(
@@ -53,7 +54,8 @@ class BorrowRequestParticipantsCard extends StatelessWidget {
                     child: AspectRatio(
                       aspectRatio: 1,
                       child: CustomNetworkImage(
-                        imageUrl ?? defaultUserImageURL,
+                        borrowAcceptorModel.acceptorphotoURL ??
+                            defaultUserImageURL,
                         fit: BoxFit.cover,
                         onTap: onImageTap,
                         size: 40,

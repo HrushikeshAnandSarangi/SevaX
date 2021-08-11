@@ -1159,7 +1159,7 @@ class L {
 
   String get provide_item_for_lending => "Provide item(s) for lending";
 
-  String get provide_place_for_lending => "Provide a place for lending";
+  String get provide_place_for_lending => "Provide a place for lending*";
 
   String get address => 'Address';
 
@@ -1305,4 +1305,6 @@ class L {
   String get collect_items => 'Collect Items';
   String get return_items => 'Return Items';
   String get lent_to => 'Lent to: ';
+  String get place_not_added => 'Place not added';
+  String get items_not_added => 'Item(s) not added';
 }

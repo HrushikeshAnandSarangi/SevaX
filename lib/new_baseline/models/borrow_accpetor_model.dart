@@ -2,18 +2,18 @@ import 'package:meta/meta.dart';
 import 'dart:convert';
 
 class BorrowAcceptorModel {
-  BorrowAcceptorModel({
-    this.acceptorEmail,
-    this.acceptorId,
-    this.acceptorName,
-    this.acceptorMobile,
-    this.borrowAgreementLink,
-    this.selectedAddress,
-    this.isApproved,
-    this.borrowedItemsIds,
-    this.borrowedPlaceId,
-    this.timestamp,
-  });
+  BorrowAcceptorModel(
+      {this.acceptorEmail,
+      this.acceptorId,
+      this.acceptorName,
+      this.acceptorMobile,
+      this.borrowAgreementLink,
+      this.selectedAddress,
+      this.isApproved,
+      this.borrowedItemsIds,
+      this.borrowedPlaceId,
+      this.timestamp,
+      @required this.acceptorphotoURL});
 
   String acceptorEmail;
   String acceptorId;
@@ -25,6 +25,7 @@ class BorrowAcceptorModel {
   List<String> borrowedItemsIds;
   String borrowedPlaceId;
   int timestamp;
+  String acceptorphotoURL;
 
   factory BorrowAcceptorModel.fromJson(String str) =>
       BorrowAcceptorModel.fromMap(json.decode(str));
@@ -52,6 +53,8 @@ class BorrowAcceptorModel {
         borrowedPlaceId:
             json["borrowedPlaceId"] == null ? null : json["borrowedPlaceId"],
         timestamp: json["timestamp"] == null ? null : json["timestamp"],
+        acceptorphotoURL:
+            json["acceptorphotoURL"] == null ? null : json["acceptorphotoURL"],
       );
 
   Map<String, dynamic> toMap() => {
@@ -68,5 +71,6 @@ class BorrowAcceptorModel {
             : List<dynamic>.from(borrowedItemsIds.map((x) => x)),
         "borrowedPlaceId": borrowedPlaceId == null ? null : borrowedPlaceId,
         "timestamp": timestamp == null ? null : timestamp,
+        "acceptorphotoURL": acceptorphotoURL == null ? null : acceptorphotoURL,
       };
 }

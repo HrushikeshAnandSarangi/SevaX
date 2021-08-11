@@ -88,7 +88,8 @@ class BorrowRequestParticipants extends StatelessWidget {
                     itemCount: borrowAcceptorModel.length,
                     itemBuilder: (BuildContext context, int index) {
                       if (borrowAcceptorModel != null) {
-                        return requestModel.roomOrTool == LendingType.ITEM
+                        return requestModel.roomOrTool ==
+                                LendingType.ITEM.readable
                             ? FutureBuilder<List<LendingModel>>(
                                 future:
                                     LendingOffersRepo.getApprovedLendingModels(
@@ -113,8 +114,6 @@ class BorrowRequestParticipants extends StatelessWidget {
                                       // width: 400,
                                       // height: 250,
                                       child: BorrowRequestParticipantsCard(
-                                        imageUrl:
-                                            '', //need to add to borrowAcceptorModel
                                         requestModel: requestModel,
                                         borrowAcceptorModel:
                                             borrowAcceptorModel[index],
@@ -336,8 +335,6 @@ class BorrowRequestParticipants extends StatelessWidget {
                                       // width: 400,
                                       // height: 250,
                                       child: BorrowRequestParticipantsCard(
-                                        imageUrl:
-                                            '', //need to add to borrowAcceptorModel
                                         requestModel: requestModel,
                                         borrowAcceptorModel:
                                             borrowAcceptorModel[index],
