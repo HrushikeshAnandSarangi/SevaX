@@ -1008,4 +1008,6 @@ class L {
   String get responses => 'Responses';
   String get offering_place_to => 'You are offering a place to ';
   String get length_of_stay => 'Length of stay between:  ';
+  String get lending_offer_location_hint =>
+      'location will help members to locate the place easily.';
 }

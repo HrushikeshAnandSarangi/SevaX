@@ -29,6 +29,8 @@ class BorrowAgreementPdf {
       //Add place model / item model from lending offers (to get details of place/item conditions ex: no of occupants, house rules, etc.. )
       String documentName,
       bool isOffer,
+      int startTime,
+      int endTime,
       String placeOrItem,
       String specificConditions,
       bool isDamageLiability,
@@ -122,7 +124,7 @@ class BorrowAgreementPdf {
                   .format(
                 getDateTimeAccToUserTimezone(
                   dateTime: DateTime.fromMillisecondsSinceEpoch(
-                      requestModel.requestStart),
+                      !isOffer ? requestModel.requestStart : startTime),
                   timezoneAbb: SevaCore.of(contextMain).loggedInUser.timezone,
                 ),
               ), //start date and end date
@@ -137,7 +139,7 @@ class BorrowAgreementPdf {
                   .format(
                 getDateTimeAccToUserTimezone(
                   dateTime: DateTime.fromMillisecondsSinceEpoch(
-                      requestModel.requestEnd),
+                      !isOffer ? requestModel.requestEnd : endTime),
                   timezoneAbb: SevaCore.of(contextMain).loggedInUser.timezone,
                 ),
               ), //start date and end date
@@ -253,10 +255,7 @@ class BorrowAgreementPdf {
               Text('Borrower', style: TextStyle(fontSize: 16)),
               SizedBox(height: 15),
               Text(
-                isOffer
-                    ? requestModel
-                        .fullName //need to modify according to offer model or request model
-                    : SevaCore.of(contextMain).loggedInUser.fullname,
+                ' ',
                 style: TextStyle(
                   decoration: TextDecoration.underline,
                 ),
@@ -287,15 +286,17 @@ class BorrowAgreementPdf {
 
     final String dir = (await getApplicationDocumentsDirectory()).path;
     final String path =
-        '$dir/${documentName != null ? documentName + '_' + requestModel.sevaUserId : 'agreement_sevax'}.pdf';
-    log("path to pdf file is " + path);
+        '$dir/${documentName != null ? documentName + '_' + SevaCore.of(contextMain).loggedInUser.sevaUserID : 'agreement_sevax'}.pdf';
 
     final File file = File(path);
     await file.writeAsBytes(await pdf.save());
 
-    log("requestModel check   " + requestModel.id.toString());
-    borrowAgreementLinkFinal =
-        await uploadDocument(requestModel.id, file, documentName);
+    borrowAgreementLinkFinal = await uploadDocument(
+        isOffer
+            ? SevaCore.of(contextMain).loggedInUser.sevaUserID
+            : requestModel.id,
+        file,
+        documentName);
 
     progressDialog.hide();
 

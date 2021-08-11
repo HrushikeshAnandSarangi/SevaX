@@ -358,6 +358,8 @@ class RequestModel extends DataModel {
         this.requestType = RequestType.ONE_TO_MANY_REQUEST;
       } else if (map['requestType'] == "BORROW") {
         this.requestType = RequestType.BORROW;
+      } else if (map['requestType'] == "LENDING_OFFER") {
+        this.requestType = RequestType.LENDING_OFFER;
       } else {
         this.requestType = RequestType.TIME;
       }
@@ -635,6 +637,8 @@ class RequestModel extends DataModel {
         this.requestType = RequestType.ONE_TO_MANY_REQUEST;
       } else if (map['requestType'] == "BORROW") {
         this.requestType = RequestType.BORROW;
+      } else if (map['requestType'] == "LENDING_OFFER") {
+        this.requestType = RequestType.LENDING_OFFER;
       } else {
         this.requestType = RequestType.TIME;
       }
@@ -931,10 +935,12 @@ class RequestModel extends DataModel {
           object['requestType'] = "TIME";
           break;
         case RequestType.LENDING_OFFER:
-          // TODO: Handle this case.
+          object['requestType'] = "LENDING_OFFER";
+
           break;
         case RequestType.ONE_TO_MANY_OFFER:
-          // TODO: Handle this case.
+          object['requestType'] = "ONE_TO_MANY_OFFER";
+
           break;
       }
     } else {

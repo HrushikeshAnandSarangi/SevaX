@@ -104,6 +104,14 @@ class ConfigurationsList {
         id: 'accept_one_to_many_offer',
         title_en: 'Accept One To Many Offer',
         type: 'offer'),
+    ConfigurationModel(
+        id: 'create_lending_offers',
+        title_en: 'Create Lending Offers',
+        type: 'offer'),
+    ConfigurationModel(
+        id: 'accept_lending_offers',
+        title_en: 'Accept Lending Offers',
+        type: 'offer'),
   ];
 
   final List<ConfigurationModel> memberConfigurationsList = [
@@ -171,7 +179,14 @@ class ConfigurationsList {
         id: 'accept_one_to_many_offer',
         title_en: 'Accept One To Many Offer',
         type: 'offer'),
-
+    ConfigurationModel(
+        id: 'create_lending_offers',
+        title_en: 'Create Lending Offers',
+        type: 'offer'),
+    ConfigurationModel(
+        id: 'accept_lending_offers',
+        title_en: 'Accept Lending Offers',
+        type: 'offer'),
   ];
 
   List<ConfigurationModel> getMemberData() {

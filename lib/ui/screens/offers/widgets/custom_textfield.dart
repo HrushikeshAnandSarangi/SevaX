@@ -49,7 +49,7 @@ class CustomTextField extends StatelessWidget {
 
   final TextStyle titleStyle = TextStyle(
     fontSize: 16,
-    //fontWeight: FontWeight.bold,
+    fontWeight: FontWeight.w700,
     fontFamily: 'Europa',
     color: Colors.black,
   );
