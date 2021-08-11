@@ -572,13 +572,26 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                     : SponsorsMode.EDIT,
                 sponsors: projectModel.sponsors,
                 isAdminVerified: false,
-                onSponsorsAdded: (List<SponsorDataModel> sponsorsData) {
-                  projectModel.sponsors = sponsorsData;
-                  setState(() {});
+                onSponsorsAdded: (
+                  List<SponsorDataModel> sponsorsData,
+                  SponsorDataModel addedSponsors,
+                ) {
+                  setState(() {
+                    projectModel.sponsors = sponsorsData;
+                  });
+                  logger.i(
+                      'Added Sponsors in Event:\n Name:${addedSponsors.name}\nLogo:${addedSponsors.logo}\nCreatedBy:${addedSponsors.createdBy}\nCreatedAt:${addedSponsors.createdAt}\n----------------------------------------------------------\n');
                 },
-                onSponsorsRemoved: (List<SponsorDataModel> sponsorsData) {
-                  projectModel.sponsors = sponsorsData;
-                  setState(() {});
+                onSponsorsRemoved: (
+                  List<SponsorDataModel> sponsorsData,
+                  SponsorDataModel removedSponsors,
+                ) {
+                  setState(() {
+                    projectModel.sponsors = sponsorsData;
+                  });
+
+                  logger.i(
+                      'Remove Sponsors from Event:\n Name:${removedSponsors.name}\nLogo:${removedSponsors.logo}\nCreatedBy:${removedSponsors.createdBy}\nCreatedAt:${removedSponsors.createdAt}\n----------------------------------------------------------\n');
                 },
               ),
               SizedBox(

@@ -20,8 +20,14 @@ class SponsorsWidget extends StatefulWidget {
   final Color textColor;
   final double textSize;
   final bool isAdminVerified;
-  final Function(List<SponsorDataModel> sponsors) onSponsorsAdded;
-  final Function(List<SponsorDataModel> sponsors) onSponsorsRemoved;
+  final Function(
+    List<SponsorDataModel> sponsors,
+    SponsorDataModel addedSponsors,
+  ) onSponsorsAdded;
+  final Function(
+    List<SponsorDataModel> sponsors,
+    SponsorDataModel removedSponsors,
+  ) onSponsorsRemoved;
 
   SponsorsWidget({
     @required this.sponsors,
@@ -40,6 +46,8 @@ class SponsorsWidget extends StatefulWidget {
 class _SponsorsWidgetState extends State<SponsorsWidget> {
   int indexPosition;
   String userId = '';
+  SponsorDataModel removedSponsors;
+  SponsorDataModel addedSponsors;
 
   @override
   Widget build(BuildContext context) {
@@ -134,8 +142,10 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                           ),
                           ListTile(
                             onTap: () async {
+                              removedSponsors = widget.sponsors[index];
                               widget.sponsors.removeAt(index);
-                              widget.onSponsorsRemoved(widget.sponsors);
+                              widget.onSponsorsRemoved(
+                                  widget.sponsors, removedSponsors);
                               Navigator.of(dialogContext).pop();
                             },
                             title: Text(S.of(context).delete),
@@ -308,8 +318,10 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                               ),
                               ListTile(
                                 onTap: () async {
+                                  removedSponsors = widget.sponsors[index];
                                   widget.sponsors.removeAt(index);
-                                  widget.onSponsorsRemoved(widget.sponsors);
+                                  widget.onSponsorsRemoved(
+                                      widget.sponsors, removedSponsors);
                                   Navigator.of(dialogContext).pop();
                                 },
                                 title: Text(S.of(context).delete),
@@ -475,7 +487,9 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                           widget.sponsors[indexPosition].name = name;
                           indexPosition = null;
                           name = null;
-                          widget.onSponsorsAdded(widget.sponsors);
+                          addedSponsors = widget.sponsors[indexPosition];
+                          widget.onSponsorsAdded(
+                              widget.sponsors, addedSponsors);
                           Navigator.of(viewContext).pop();
                         }
                       }
@@ -522,15 +536,18 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                       List<SponsorDataModel> x = [];
                       x.add(sponsorModel);
                       widget.sponsors = x;
+                      addedSponsors = sponsorModel;
                       // sponsors.add(sponsorModel);
                     } else {
                       widget.sponsors.add(sponsorModel);
+                      addedSponsors = sponsorModel;
                     }
                   } else {
                     widget.sponsors[indexPosition] = sponsorModel;
+                    addedSponsors = widget.sponsors[indexPosition];
                   }
                   indexPosition = null;
-                  widget.onSponsorsAdded(widget.sponsors);
+                  widget.onSponsorsAdded(widget.sponsors, addedSponsors);
 
                   Navigator.of(viewContext).pop();
                 },
@@ -578,28 +595,6 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
   }
 
   void chooseImage({BuildContext context, String name, bool isEdit}) async {
-    // GetImageModel _getImageModel =
-    //     await PickImage<Future<String>>().chooseImage(context);
-    // SponsorDataModel sponsorModel = SponsorDataModel(
-    //   name: name,
-    //   createdAt: DateTime.now().millisecondsSinceEpoch,
-    //   createdBy: userId,
-    //   logo: _getImageModel.url,
-    // );
-    // if (indexPosition == null) {
-    //   if (widget.sponsors == null) {
-    //     List<SponsorDataModel> x = [];
-    //     x.add(sponsorModel);
-    //     widget.sponsors = x;
-    //   } else {
-    //     widget.sponsors.add(sponsorModel);
-    //   }
-    // } else {
-    //   widget.sponsors[indexPosition] = sponsorModel;
-    // }
-
-    // widget.onSponsorsAdded(widget.sponsors);
-    // indexPosition = null;
     showDialog(
       context: context,
       builder: (BuildContext dialogContext) {
@@ -617,16 +612,17 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                 List<SponsorDataModel> x = [];
                 x.add(sponsorModel);
                 widget.sponsors = x;
+                addedSponsors = sponsorModel;
               } else {
                 widget.sponsors.add(sponsorModel);
+                addedSponsors = sponsorModel;
               }
             } else {
               widget.sponsors[indexPosition] = sponsorModel;
+              addedSponsors = widget.sponsors[indexPosition];
             }
-
-            widget.onSponsorsAdded(widget.sponsors);
+            widget.onSponsorsAdded(widget.sponsors, addedSponsors);
             indexPosition = null;
-
             if (isEdit) {
               Navigator.of(dialogContext).pop();
             }

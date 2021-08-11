@@ -35,6 +35,7 @@ import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -775,19 +776,29 @@ class CreateEditCommunityViewFormState
                                 admins: timebankModel.admins,
                                 organizers: timebankModel.organizers,
                               ),
-                              onSponsorsAdded:
-                                  (List<SponsorDataModel> sponsorsData) {
-                                snapshot.data.timebank.updateValueByKey(
-                                  'sponsors',
-                                  sponsorsData,
-                                );
-                                timebankModel.sponsors = sponsorsData;
-                                setState(() {});
+                              onSponsorsAdded: (
+                                List<SponsorDataModel> sponsorsData,
+                                SponsorDataModel addedSponsors,
+                              ) {
+                                setState(() {
+                                  snapshot.data.timebank.updateValueByKey(
+                                    'sponsors',
+                                    sponsorsData,
+                                  );
+                                  timebankModel.sponsors = sponsorsData;
+                                });
+                                logger.i(
+                                    'Added Sponsors in Community:\n Name:${addedSponsors.name}\nLogo:${addedSponsors.logo}\nCreatedBy:${addedSponsors.createdBy}\nCreatedAt:${addedSponsors.createdAt}\n----------------------------------------------------------\n');
                               },
-                              onSponsorsRemoved:
-                                  (List<SponsorDataModel> sponsorsData) {
-                                timebankModel.sponsors = sponsorsData;
-                                setState(() {});
+                              onSponsorsRemoved: (
+                                List<SponsorDataModel> sponsorsData,
+                                SponsorDataModel removedSponsors,
+                              ) {
+                                setState(() {
+                                  timebankModel.sponsors = sponsorsData;
+                                });
+                                logger.i(
+                                    'Remove Sponsors from Community:\n Name:${removedSponsors.name}\nLogo:${removedSponsors.logo}\nCreatedBy:${removedSponsors.createdBy}\nCreatedAt:${removedSponsors.createdAt}\n----------------------------------------------------------\n');
                               },
                             ),
                           ),
