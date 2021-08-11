@@ -2018,7 +2018,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
         children: <Widget>[
           (requestModel.requestType == RequestType.BORROW && roomOrTool == 1)
               ? Text(
-                  S.of(context).request_tools_description,
+                  S.of(context).request_description,
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,

@@ -1076,7 +1076,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                                   ),
                                   HideWidget(
                                     hide: widget.requestModel.roomOrTool ==
-                                        LendingType.PLACE,
+                                        LendingType.PLACE.readable,
                                     child: Text(
                                       L.of(context).select_a_item_lending,
                                       style: TextStyle(
@@ -1092,7 +1092,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                                   ),
                                   HideWidget(
                                     hide: widget.requestModel.roomOrTool ==
-                                        LendingType.PLACE,
+                                        LendingType.PLACE.readable,
                                     child: SelectBorrowItem(
                                       selectedItems: widget.requestModel
                                           .borrowModel.requiredItems,

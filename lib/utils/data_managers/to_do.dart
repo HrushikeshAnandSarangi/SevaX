@@ -5,9 +5,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/models/enums/lending_borrow_enums.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
+import 'package:sevaexchange/new_baseline/models/borrow_accpetor_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/message_bloc.dart';
 import 'package:sevaexchange/ui/screens/notifications/bloc/notifications_bloc.dart';
@@ -158,7 +160,7 @@ class ToDo {
     loggedinMemberEmail,
     loggedInmemberId,
   ) {
-    return CombineLatestStream.combine5(
+    return CombineLatestStream.combine6(
         getTaskStreamForUserWithEmail(
           userEmail: loggedinMemberEmail,
           userId: loggedInmemberId,
@@ -170,12 +172,17 @@ class ToDo {
         ),
         getBorrowRequestLenderReturnAcknowledgment(
             loggedInMemberEmail: loggedinMemberEmail),
+        FirestoreManager.getBorrowRequestCreatorToCollectReturnItems(
+          userId: loggedInmemberId,
+          userEmail: loggedinMemberEmail,
+        ),
         (
           pendingClaims,
           acceptedOneToManyOffers,
           oneToManyOffersCreated,
           acceptedOneToManyRequests,
           borrowRequestLenderReturnAcknowledgment,
+          borrowRequestCreatorWaitingReturnConfirmation,
         ) =>
             [
               pendingClaims,
@@ -183,6 +190,7 @@ class ToDo {
               oneToManyOffersCreated,
               acceptedOneToManyRequests,
               borrowRequestLenderReturnAcknowledgment,
+              borrowRequestCreatorWaitingReturnConfirmation,
             ]);
   }
 
@@ -384,6 +392,79 @@ class ToDo {
           taskTimestamp: element.requestStart,
         ),
       );
+    });
+
+    //for borrow request, request creator / Borrower needs to see in To do when needs to collect or check in
+    List<RequestModel> borrowRequestCreatorAwaitingConfirmation = toDoSink[5];
+    borrowRequestCreatorAwaitingConfirmation.forEach((model) async {
+      // BorrowAcceptorModel borrowAcceptorModel =
+      //     await FirestoreManager.getBorrowRequestAcceptorModel(
+      //         requestId: model.id, acceptorEmail: model.approvedUsers.first);
+      if (model.roomOrTool == LendingType.ITEM.readable) {
+        //FOR BORROW ITEMS
+        if (!model.borrowModel.itemsCollected) {
+          //items to be collected status
+          tasksList.add(
+            TasksCardWrapper(
+              taskCard: ToDoCard(
+                title: model.title,
+                subTitle: L.of(context).collect_items,
+                timeInMilliseconds: model.requestStart,
+                onTap: () async {},
+                tag: L.of(context).borrow_request_collect_items_tag,
+              ),
+              taskTimestamp: model.requestStart,
+            ),
+          );
+        } else if (model
+                .borrowModel.itemsCollected && //items to be returned status
+            !model.borrowModel.itemsReturned) {
+          tasksList.add(
+            TasksCardWrapper(
+              taskCard: ToDoCard(
+                title: model.title,
+                subTitle: L.of(context).return_items,
+                timeInMilliseconds: model.requestEnd,
+                onTap: () async {},
+                tag: L.of(context).borrow_request_return_items_tag,
+              ),
+              taskTimestamp: model.requestStart,
+            ),
+          );
+        }
+        //FOR BORROW PLACE
+      } else {
+        if (!model.borrowModel.isCheckedIn) {
+          //items to be collected status
+          tasksList.add(
+            TasksCardWrapper(
+              taskCard: ToDoCard(
+                title: model.title,
+                subTitle: L.of(context).check_in_pending,
+                timeInMilliseconds: model.requestStart,
+                onTap: () async {},
+                tag: L.of(context).check_in,
+              ),
+              taskTimestamp: model.requestStart,
+            ),
+          );
+        } else if (model
+                .borrowModel.isCheckedIn && //items to be returned status
+            !model.borrowModel.isCheckedOut) {
+          tasksList.add(
+            TasksCardWrapper(
+              taskCard: ToDoCard(
+                title: model.title,
+                subTitle: L.of(context).check_out,
+                timeInMilliseconds: model.requestEnd,
+                onTap: () async {},
+                tag: L.of(context).check_out,
+              ),
+              taskTimestamp: model.requestStart,
+            ),
+          );
+        }
+      }
     });
 
     tasksList.sort((a, b) => b.taskTimestamp.compareTo(a.taskTimestamp));

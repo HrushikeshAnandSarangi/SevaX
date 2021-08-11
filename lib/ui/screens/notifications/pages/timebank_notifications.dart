@@ -513,8 +513,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   },
                   photoUrl: model.photoUrl,
                   title: '${model.title}',
-                  subTitle:
-                      "The Lender has acknowledged completion of this request. Tap to leave a feedback.",
+                  subTitle: L.of(context).lender_acknowledged_feedback,
                 );
                 break;
 
@@ -1106,8 +1105,6 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
       });
       logger.i('here 2');
 
-      
-
       await sendMessageToMember(
           message: results['didComment'] ? results['comment'] : "No comments",
           loggedInUser: loggedInUser);
@@ -1322,7 +1319,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
       CollectionRef.reviews.add(
         {
           "reviewer": SevaCore.of(context).loggedInUser.email,
-          "reviewed": requestModel.approvedUsers.first,              //TODO
+          "reviewed": requestModel.approvedUsers.first, //TODO
           "ratings": results['selection'],
           "requestId": "testId",
           "comments": results['didComment'] ? results['comment'] : "No comments",
@@ -1345,13 +1342,11 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
           offerTitle: requestModel.title,
           isFromOfferRequest: requestModel.isFromOfferRequest);*/
 
-
       FirestoreManager.readTimeBankNotification(
         notificationId: notificationId,
         timebankId: requestModel.timebankId,
       );
-
-    }else{
+    } else {
       logger.e("NOT ADDED");
     }
   }

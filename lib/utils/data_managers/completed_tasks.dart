@@ -169,7 +169,7 @@ class CompletedTasks {
           TasksCardWrapper(
             taskCard: ToDoCard(
               title: model.title,
-              subTitle: model.description,
+              subTitle: L.of(context).lent_to + model.fullName,
               timeInMilliseconds: model.requestStart,
               onTap: () async {},
               tag: L.of(context).borrow_request_lender,

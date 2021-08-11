@@ -5,31 +5,39 @@ import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/enums/lending_borrow_enums.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/new_baseline/models/borrow_accpetor_model.dart';
+import 'package:sevaexchange/new_baseline/models/lending_model.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/lending_item_card_widget.dart';
+import 'package:sevaexchange/ui/screens/offers/widgets/lending_place_card_widget.dart';
+import 'package:sevaexchange/ui/screens/offers/widgets/lending_place_details_widget.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/network_image.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/widgets/custom_list_tile.dart';
 
 class BorrowRequestParticipantsCard extends StatelessWidget {
   final Padding padding;
-  final String imageUrl;
   final Function onImageTap;
   final Widget buttonsContainer;
   final RequestModel requestModel;
   final BorrowAcceptorModel borrowAcceptorModel;
   final BuildContext context;
+  final List<LendingModel> lendingModelList;
+  final LendingModel lendingPlaceModel;
 
   const BorrowRequestParticipantsCard(
       {Key key,
       this.padding,
-      this.imageUrl,
       this.onImageTap,
       this.buttonsContainer = const SizedBox(),
       this.requestModel,
       this.context,
-      this.borrowAcceptorModel})
+      this.borrowAcceptorModel,
+      this.lendingModelList,
+      this.lendingPlaceModel})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
+    logger
+        .e('Lending Model Items Length 2: ' + lendingModelList.length.toString());
     return Padding(
       padding: padding ?? EdgeInsets.symmetric(horizontal: 2, vertical: 6),
       child: Container(
@@ -46,7 +54,8 @@ class BorrowRequestParticipantsCard extends StatelessWidget {
                     child: AspectRatio(
                       aspectRatio: 1,
                       child: CustomNetworkImage(
-                        imageUrl ?? defaultUserImageURL,
+                        borrowAcceptorModel.acceptorphotoURL ??
+                            defaultUserImageURL,
                         fit: BoxFit.cover,
                         onTap: onImageTap,
                         size: 40,
@@ -91,19 +100,45 @@ class BorrowRequestParticipantsCard extends StatelessWidget {
                 buttonsContainer
               ],
             ),
-            SizedBox(height: 15),
-            // Row(
-            //   children: [
-            //     requestModel.roomOrTool == LendingType.ITEM.readable
-            //         //borrowAcceptorModel.borrowedItemsIds need to fetch data using the ids
-            //         ? LendingItemCardWidget(
-            //             lendingItemModel: lenderItems,
-            //             hidden: true,
-            //           )
-            //         : Text('Place Widget To be added here')
-            //   ],
-            // ),
-            SizedBox(height: 15),
+            SizedBox(height: 20),
+            Row(
+              children: [
+                requestModel.roomOrTool == LendingType.ITEM.readable
+                    //borrowAcceptorModel.borrowedItemsIds need to fetch data using the ids
+                    ? Container(
+                        // height: 400,
+                        width: 300,
+                        child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: lendingModelList.length ?? 0,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Column(
+                                children: [
+                                  LendingItemCardWidget(
+                                    lendingItemModel: lendingModelList[index]
+                                        .lendingItemModel,
+                                    hidden: true,
+                                  ),
+                                  SizedBox(height: 10),
+                                ],
+                              );
+                            }),
+                      )
+                    : Container(
+                        // height: 400,
+                        width: 300,
+                        child: Column(
+                          children: [
+                            LendingPlaceDetailsWidget(
+                              lendingModel: lendingPlaceModel,
+                            ),
+                            SizedBox(height: 10),
+                          ],
+                        ),
+                      ),
+              ],
+            ),
+            SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [

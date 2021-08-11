@@ -2063,14 +2063,12 @@ Stream<List<RequestModel>> getSpeakerClaimedCompletionRequestStream({
   );
 }
 
-//for borrow request, request creator is waiting for Lender to confirm if item/place has been recieved back
-Stream<List<RequestModel>> getBorrowRequestCreatorWaitingReturnConfirmation({
+//for borrow request, request creator / Borrower needs to see in To do when needs to collect or check in
+Stream<List<RequestModel>> getBorrowRequestCreatorToCollectReturnItems({
   @required String userEmail,
   @required String userId,
 }) async* {
   var data = CollectionRef.requests
-      // .where('approvedUsers', arrayContains: userEmail)
-      // .where('request_end', isLessThan: DateTime.now())
       .where('email', isEqualTo: userEmail)
       .where('approvedUsers', isNotEqualTo: [])
       .where('accepted', isEqualTo: false)

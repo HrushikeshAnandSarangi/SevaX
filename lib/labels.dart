@@ -26,6 +26,7 @@ class L {
 //       "Note: Upon completing the one to many offer, the combined prep time and session hours will be credited to you.";
 
   String get add_to_calender => "Add to calender";
+
   String get profanity_text_alert =>
       'The SevaX App has a policy of not allowing profane or explicit language. Please revise your text.';
 
@@ -189,6 +190,7 @@ class L {
   String get max_image_size => 'Maximum size: 5MB';
 
   String get exp_date => "Exp. Date";
+
   String get camera_not_available => "Camera not available";
 
   String get loading_camera => "Loading Camera...";
@@ -196,6 +198,7 @@ class L {
   String get internet_connection_lost => 'Internet connection lost';
 
   String get update_available => 'Update Available';
+
   String get update_app => "Update App";
 
   String get update_msg =>
@@ -236,6 +239,7 @@ class L {
   String get enter_delivery_time => 'Enter Delivery Time';
 
   String get choose_item_agreement => "Select Item(s) Agreement";
+
   String get choose_place_agreement => "Select Place Agreement";
 
   String get usage_term => "Usage term*";
@@ -254,6 +258,7 @@ class L {
 
   String get item_returned_hint_text =>
       'Ex: item must be returned in the same condition.';
+
   String get description_of_item => "Description of item(s)";
 
   String get place_returned_hint_text =>
@@ -262,10 +267,14 @@ class L {
   String get attending => "Attending";
 
   String get invited_speaker => "Invited Speaker";
+
   String get description_not_updated => "Description not yet updated";
+
   String get terms_acknowledgement_text =>
       "I accept the terms of use as per the agreement";
+
   String get agreement => "Agreement";
+
   String get lender_not_accepted_request_msg =>
       "Lender has not created an agreement for this request";
 
@@ -277,13 +286,17 @@ class L {
   String get guests_can_do_and_dont => "Guests can do and don't*";
 
   String get snackbar_select_agreement_type => "Select an agreement type";
+
   String get add_manual_time => "Add Manual Time";
 
   String get trustworthiness => "Trustworthiness";
+
   String get reliabilitysocre => "Reliabilityscore";
+
   String get cv_not_available => "CV not available";
 
   String get change_document => "Change document";
+
   String get add_document => "Add document";
 
   String get sign_up_with_apple => 'Sign up with Apple';
@@ -292,19 +305,26 @@ class L {
 
   // labels on june 10
   String get do_you_want_to_add => "Do you want to add this";
+
   String get event_to_calender => "event to calender";
 
   String get seva_community_name_not_updated =>
       "Seva Community name not updated";
+
   String get create_new => "Create New";
+
   String get choose_previous_agreement => "Choose previous agreement";
 
   String get no_agrreement => "No Agreement";
+
   String get fixed => "Fixed";
 
   String get long_term_month_to_month => 'Long-term (Month to Month)';
+
   String get request_offer_agreement_hint_text => "Ex :3";
+
   String get request_offer_agreement_hint_text2 => "Ex: \$300";
+
   String get request_offer_agreement_hint_text3 =>
       'Ex: Gas-powered lawnmower in mint condition with full tank of gas.';
 
@@ -315,7 +335,9 @@ class L {
       'Ex: Lawnmower must be cleaned and operable with a full tank of gas.';
 
   String get document_name => "Document Name*";
+
   String get please_enter_doc_name => "Please enter document name";
+
   String get other_details => "Other Details";
 
   String get request_offer_agreement_hint_text5 =>
@@ -324,48 +346,64 @@ class L {
   String get use => "use";
 
   String get approve_borrow_request => 'Approve Room Borrow Request';
+
   String get approve_item_borrow => 'Approve Item Borrow request';
 
   String get approve_borrow_hint_text1 => "Tell your borrower do and dont's";
+
   String get approve_borrow_alert_msg1 => "Please enter the do's and dont's";
 
   String get approve_borrow_no_agreement_selected => "No Agreement Selected";
+
   String get request_agreement_form_component_text =>
       'Create/Use agreement between you and borrower on how your item/place can be used.';
 
   String get approve_borrow_terms_acknowledgement_text1 =>
       "I acknowledge that you can use the room on the mentioned dates.";
+
   String get approve_borrow_terms_acknowledgement_text2 =>
       "I acknowledge that you can use the item on the mentioned dates.";
+
   String get approve_borrow_terms_acknowledgement_text3 =>
       "Note: Please instruct on how to reach the location and do and don't accordingly.";
+
   String get approve_borrow_terms_acknowledgement_text4 =>
       "Note: Please create an agreement if you have specific instructions and/or requirements.";
 
   String get error_was_thrown => "Error was Thrown";
+
   String get max_250_characters => '* max 250 characters';
 
   String get doc_pdf => "Document.pdf";
 
   String get credits => "Credits:";
+
   String get could_not_launch => "Could not launch";
 
   String get need_a_place => "Need a  place";
+
   String get item => "Item";
+
   String get borrow => "Borrow";
+
   String get choose_skills_for_request => "Choose skills for request";
+
   String get creating_request_with_underscore_not_allowed =>
       'Creating request with "_" is not allowed';
 
   String get selected_skills => "Selected Skills";
 
   String get request_tools_description => "Request tools description*";
+
   String get seva => "Seva";
+
   String get test_community => "Test Community";
 
   String get you_already_created_test_community =>
       'You already created a test community.';
+
   String get selected_value => "Selected value :";
+
   String get upgrade_plan_msg1 => "Sorry Couldn't fetch data";
 
   String get upgrade_plan_disable_msg1 =>
@@ -373,28 +411,38 @@ class L {
 
   String get upgrade_plan_disable_msg2 =>
       'This is currently not permitted. Please see the following link for more information: http://web.sevaxapp.com/';
+
   String get upgrade_plan_disable_msg3 =>
       'This is currently not permitted. Please contact the Community Creator for more information';
 
   String get edit_name => "Edit Name";
 
   String get sponsored_by => "Sponsored By";
+
   String get sponsor_name => "Sponsor name";
 
   String get no_search_result_found => "No search result found";
+
   String get join_seva_community => "Join Seva Community";
 
   String get please_switch_to_access =>
       'Please switch seva community to access ';
+
   String get please_join_seva_to_access =>
       'Please join seva community to access ';
+
   String get no_events_available => "No Events Available";
+
   String get ack => "Ack";
+
   String get enter_the_amount_received => "Enter the amount recieved";
 
   String get virtual_requests => "Virtual requests";
+
   String get name_not_available => "Name not available";
+
   String get attended_by => "Attended by";
+
   String get reset_list => "Reset list";
 
   String get join_community_to_view_updates =>
@@ -542,124 +590,207 @@ class L {
 
 //Lending Offer Labels Below
   String get approve_lending_offer => "Approve Lending Offer";
+
   String get date_to_borrow_and_return => "Date to borrow and return";
+
   String get date_to_check_in_out => "Date to Check In and Check Out";
+
   String get addditional_instructions => "Additional Instructions";
+
   String get addditional_instructions_error_text =>
       "Please enter additional instructions";
+
   String get additional_instructions_hint_item =>
       "Ex: Lawnmower is available next door";
+
   String get additional_instructions_hint_place =>
       "Ex: Keys are available next door";
+
   String get lending_approve_terms_item =>
       "I acknowledge that you can lend the item(s) on the mentioned dates.";
+
   String get lending_approve_terms_place =>
       "I acknowledge that you can lend the place on the mentioned dates.";
+
   String get lending => "Lending";
+
   String get cannot_approve_multiple_borrowers =>
       "You cannot approve multiple borrowers at once. Currently the items are with  **name. Once returned you can approve this request.";
 
   String get borrower_responsibilities => "Borrower Responsibilities";
+
   String get borrower_responsibilities_subtext =>
       "Please check applicable sections to be added in the agreement.";
+
   String get liability_damage => "Liability for damage";
+
   String get use_disclaimer => "Use/Disclaimer";
+
   String get delivery_return_equipment => "Delivery and Return of Equipment";
+
   String get maintain_repair => "Maintenance and Repair";
+
   String get place_agreement_name_hint => "Ex: House for the weekend..";
 
 //below labels yet to be added
   String get add_new_place => "Add New Place";
+
   String get update_place => "Update Place";
+
   String get add_images_to_place => "Add One/Multiple Images of the place";
+
   String get name_of_place => "Name of your place";
+
   String get name_of_place_hint => "Apartment sunshine 3";
+
   String get amenities => "Amenities";
+
   String get amenities_hint => "Please select Amenities guests can utilize";
+
   String get no_of_guests => "Number of guests";
+
   String get bed_roooms => "Bed Rooms for guests";
+
   String get bath_rooms => "Bath Room(s)";
+
   String get common_spaces => "Common Spaces";
+
   String get house_rules => "House Rules";
+
   String get add_place => "Add Place";
+
   String get lending_offer => "Lending Offer";
+
   String get lending_offer_title_hint => "Ex:Lawnmower";
+
   String get lending_offer_desc_hint => "Describe your lending";
+
   String get validation_error_place_name => "Please enter name of your place";
+
   String get validation_error_no_of_guests =>
       "Please enter no of guests can stay";
+
   String get validation_error_no_of_rooms =>
       "Please enter no of rooms available";
+
   String get validation_error_no_of_bathrooms =>
       "Please enter no of bath rooms available";
+
   String get validation_error_common_spaces => "Please specify common spaces";
+
   String get validation_error_house_rules => "Please specify house rules";
+
   String get validation_error_amenities => "Please select amenities";
+
   String get validation_error_house_images => "Please add place images";
+
   String get common_spaces_hint => "Ex: Sofa bed 1, Couch 1, Floor Mattress 1";
+
   String get house_rules_hint => "Ex: Smoking allowed";
+
   String get place => "Place";
+
   String get items => "Item(s)";
+
   String get updating_place => "Updating place";
+
   String get creating_place => "Creating Place";
+
   String get bed_rooms => "Bedroom(s)";
+
   String get guests => "Guest(s)";
+
   String get creating_place_error =>
       "There was error creating your place, Please try again.";
+
   String get updating_place_error =>
       "There was error creating your place, Please try again.";
 
   String get sevax => "SevaX";
+
   String get plans => "Plans";
+
   String get invoice_history => "Invoice History";
+
   String get subscription_period => "Subscription Period";
+
   String get effective_date => "Effective Date";
+
   String get invoice_amount => "Invoice Amount";
+
   String get next_invoice_date => "Next Invoice Date";
+
   String get monthly => "Monthly";
+
   String get download => "Download";
+
   String get annual => "Annual";
+
   String get inactive => "Inactive";
+
   String get date_not_available => "Date not available";
+
   String get not_available => "not available";
+
   String get edit_current_plan => "Edit Current Plan";
+
   String get cancel_plan => "Cancel Plan";
+
   String get card_ending_with => "Card ending with ";
+
   String get show_previous_invoices => "show previous invoices";
+
   String get show_less_invoices => "show less invoices";
+
   String get my_cards => "My Cards";
+
   String get payment_method => "Payment Method";
+
   String get pay_by => "Pay by";
+
   String get country => "Country";
+
   String get company => "Company";
+
   String get additional => "Additional";
+
   String get usd => "USD";
 
   String get to_do => "To Do";
+
   String get one_to_many_offer_attende => "One to Many Offer Attendee";
+
   String get one_to_many_offer_speaker => "One to Many Offer Speaker";
+
   String get time_request_volunteer => "Time Request Volunteer";
+
   String get time_offer_volunteer => "Accepted Time Offer";
+
   String get one_to_many_request_speaker => "One to Many Request Speaker";
+
   String get one_to_many_request_attende => "One to Many Request attendee";
 
   String get completed_one_to_many_offer_attende_title =>
       "This one to many offer has completed.";
+
   String get completed_one_to_many_offer_attende_subtitle =>
       "This one to many offer has completed.";
 
   String get completed_one_to_many_offer_speaker_title =>
       "This one to many offer has completed.";
+
   String get completed_one_to_many_offer_speaker_subtitle =>
       "This one to many offer has completed.";
 
   String get completed_one_to_many_request_attende_title =>
       "This one to many offer has completed.";
+
   String get completed_one_to_many_request_attende_subtitle =>
       "This one to many offer has completed.";
 
   String get completed_one_to_many_request_speaker_title =>
       "This one to many offer has completed.";
+
   String get completed_one_to_many_request_speaker_subtitle =>
       "This one to many offer has completed.";
 
@@ -667,21 +798,25 @@ class L {
 
   String get to_do_one_to_many_offer_attende_title =>
       "This one to many offer has completed.";
+
   String get to_do_one_to_many_offer_attende_subtitle =>
       "This one to many offer has completed.";
 
   String get to_do_one_to_many_reuqest_speaker_title =>
       "This one to many reuqest has completed.";
+
   String get to_do_one_to_many_reuqest_speaker_subtitle =>
       "This one to many request has completed.";
 
   String get to_do_one_to_many_request_attende_title =>
       "This one to many offer has completed.";
+
   String get to_do_one_to_many_request_attende_subtitle =>
       "This one to many offer has completed.";
 
   String get to_do_one_to_many_request_speaker_title =>
       "This one to many offer has completed.";
+
   String get to_do_one_to_many_request_speaker_subtitle =>
       "This one to many offer has completed.";
 
@@ -700,13 +835,18 @@ class L {
 
 //TODO PENDING LIST
   String get one_to_many_attendee_offer => "One to Many Offer Attendee";
+
   String get one_to_many_speaker_offer => "One to Many Offer Speaker";
+
   String get one_to_many_attendee_request => "One to Many Request Attendee";
+
   String get one_to_many_speaker_request => "One to Many Offer Speaker";
 
 //RECURRING EVENTS
   String get do_not_copy => "Do not copy";
+
   String get proceed_with_copying => "Proceed with copying.";
+
   String get copy_requests_in_events =>
       "You have requested to make this a recurring event. Would you like to include all the requests within this event over to all the remaining events?";
 
@@ -738,6 +878,7 @@ class L {
 //OFFERS LABELS STARTS HERE
   String get offer_description_error =>
       "Please give a detailed description of the class you’re offering.";
+
   String get invitation_accepted =>
       "Invitation Accepted."; //done in mobile & web
   String get invitation_accepted_subtitle =>
@@ -755,6 +896,7 @@ class L {
   String get option_two => "One Time"; //done in mobile & web
   String get minimum_credits_offer => //done in web
       "This offer does not meet your minimum credit requirement.";
+
   String get speaker_claim_form_field_title =>
       "How much prep time did you require for this request?"; //done in web
   String get speaker_claim_form_field_title_hint =>
@@ -776,23 +918,29 @@ class L {
       'This request has a maximum number of participants. That limit has been reached.'; //done in web
   String get reject_request_completion => //done in mobile & web
       "Are you sure you want to reject this request for completion?";
+
   String get speaker_reject_invite_dialog => //done in mobile & web
       "Are you sure you want to reject this invitation to speak?";
+
   String get join_community_alert => //already in json  //done in web
       "This action is only available to members of Community **CommunityName. Please request to join the community first before you can perform this action.";
+
   String get switch_community => //done in mobile & web //already in json
       "You need to switch Seva Communities in order to access Groups in another Community.";
+
   String get sign_in_alert =>
       "You need to sign in or register to view this."; //done in web //already in json
   String get explore_page_title_text =>
       "Explore Opportunities"; //done in mobile & web
   String get explore_page_subtitle_text => //done in mobile & web //already in json
       "Find communities near you or online communities that interest you. You can offer to volunteer your services or request any assistance or search for Community Events.";
+
   String get select_speaker_hint =>
       "Ex: Name of speaker."; //done in mobile & web
   String get my_groups => "My Groups"; //done in mobile & web
   String get onetomanyrequest_create_new_event => //done in mobile & web
       "A new event will be created and linked to this request.";
+
   String get speaker_requested_completion_notification =>
       "This request has been completed."; //done web
   String get request_completed_by_speaker =>
@@ -841,6 +989,7 @@ class L {
   String get onetomanyrequest_member_invite_notif_subtitle =>
       'admin_name in community_name has invited you to join the webinar_name on date_webinar at time_webinar. Tap to accept the invitation.'; // done in web
   String get select_a_speaker_dialog => 'Select a speaker';
+
   String get onetomanyrequest_title_hint =>
       "Ex: Implicit Bias webinar."; //done in web
   String get total_no_of_participants =>
@@ -873,31 +1022,49 @@ class L {
   String get choose_plan => "Choose Plan";
 
   String get new_comminity_message => "Select a child or branch community";
+
   String get go_to_community_chat => "View child community Messaging Rooms";
+
   String get no_child_communities => "No child communities";
+
   String get community_chat => "Child Messaging Rooms";
+
 // }
 
   String get add_cover_picture => "Add Cover Picture";
+
   String get or_drag_and_drop => "or drag and drop";
+
   String get cover_picture_label => "Seva Community Cover Picture";
+
   String get cover_picture_label_group => "Group Cover Picture";
+
   String get cover_picture_label_event => "Event Cover Picture";
 
   String get crop_photo => "Crop Photo";
 
   String get my_request_categories => "My Request Subcategories";
+
   String get add_new_request_category => "Add new request subcategory";
+
   String get edit_request_category => "Edit subcategory";
+
   String get add_new_subcategory => "Add new subcategory";
+
   String get add_new_subcategory_hint => "Subcategory title";
+
   String get select_photo => "Select Photo";
+
   String get photo_selected => "Photo Selected";
+
   String get please_enter_title => "Please enter title";
+
   String get request_category_exists => "Request subcategory exists";
+
   String get no_subcategories_created => "No Request Subcategories Created";
 
   String get change_pricing_options => 'Change Pricing Options';
+
   String get occurrences => "Occurrences";
 
 //13 july
@@ -906,9 +1073,13 @@ class L {
   String get this_is_a_repeating_request => "This is a repeating request";
 
   String get other_payment_title_hint => "Ex: IndieGoGo or Revolut";
+
   String get other_payment_details_hint => "Ex: Email, Phone Number, ID";
+
   String get other_payment_details => "Payment Method Details";
+
   String get other_payment_name => "Payment Method Name";
+
   String get deleted_events_create_request_message =>
       "This event is going to be deleted. As a result, requests cannot be created.";
 
@@ -920,94 +1091,222 @@ class L {
 
 //29th july
   String get careers_explore => "Careers";
+
   String get communities_explore => "Communities";
+
   String get discover_explore => "Discover";
+
   String get diversity_belonging_explore => "Diversity Belonging";
+
   String get guidebooks_explore => "Guidebooks";
+
   String get hosting_explore => "Hosting";
+
   String get host_a_community_explore => "Host a community";
+
   String get organize_an_event_explore => "Organize an event";
+
   String get policies_explore => "Policies";
+
   String get news_explore => "News";
+
   String get trust_and_safety_explore => "Trust & Safety";
 
 //30th July
   String get loan_success => "You have donated credits successfully";
+
   String get yes => "Yes";
+
   String get no => "No";
+
   String get any_distance => "Any Distance";
 
   //3rd August 2021
   String get admin_borrow_request_received_back_check =>
       "If you have you received your item/place back click the button below to complete this.";
+
   String get borrow_request_title => "Borrow Request";
+
   String get your_location => "Your location";
+
   String get your_location_subtext =>
       "location will help members to connect easily.";
 
   String get refund_deposit => "Refundable Deposit Needed?";
+
   String get maintain_clean => "Maintenance and Cleanliness";
+
   // 4th August
   String get provide_address => "Please provide particular area or zipcode";
 
   String get borrow_request_lender => "Borrow Request Lender";
+
   String get borrow_request_lender_pending_return_check =>
       "Borrow Request Lender - Return Acknowledgment Pending (tap to complete request)";
+
   String get borrow_request_creator_awaiting_confirmation =>
       "Borrow Request - Awaiting Lender Confirmation";
+
   String get details_of_the_request => "Details of the Request";
+
   String get details_of_the_request_subtext_item =>
       "Please provide details of the item(s); agreement and location";
+
   String get details_of_the_request_subtext_place =>
       "Please provide details of the place; agreement and location";
+
   String get accept_borrow_request => "Accept Borrow Request";
+
   String get provide_item_for_lending => "Provide item(s) for lending";
-  String get provide_place_for_lending => "Provide a place for lending";
+
+  String get provide_place_for_lending => "Provide a place for lending*";
+
   String get address => 'Address';
+
   String get address_of_location => 'Address of location';
+
   String get send => 'Send';
+
   //4th aug
   String get request_payment_description => "Payment Method*";
 
   String get select_a_item_lending =>
       "Select list of related items for Borrow*";
+
   String get items_validation =>
       "You have not selected any Items. Please select one or more before creating the Borrow request.";
+
   String get accept_borrow_agreement_page_hint =>
       "Please fill in your Item details, agreement and location of your place to help the borrower.";
+
   String get accept_borrow_agreement_place_hint =>
       "Please provide details of your place; agreement and location.";
+
   String get accept_borrow_agreement_item_title =>
       "You are about to give Items for the borrower";
+
   String get accept_borrow_agreement_place_title => "Details of the offer";
+
 //3rd August
   String get select_a_place_lending => "Select a place for lending*";
 
   //below labels yet to be added lending item labels
   String get add_new_item => "Add New Item";
+
   String get update_item => "Update Item";
+
   String get add_images_to_item => "Add One/Multiple Images of the item";
+
   String get name_of_item => "Name of your item";
+
   String get name_of_item_hint => "Lawn Mover";
+
   String get add_item => "Add Item";
+
   String get validation_error_item_name => "Please enter name of your item";
 
   String get validation_error_item_images => "Please add item images";
+
   String get updating_item => "Updating item";
+
   String get creating_item => "Creating item";
+
   String get creating_item_error =>
       "There was error creating your item, Please try again.";
+
   String get updating_item_error =>
       "There was error creating your item, Please try again.";
 
   String get agree_to_signature_legal_text =>
       "By accepting the conditions on this page, your electronic signature is assumed and you are responsible for all terms included within.";
+
   String get applied_for_request => 'You have accepted the request';
+
   String get agreement_to_be_signed => 'Agreement to be signed';
+
   String get agreement_signed => 'You have signed the agreement';
+
   String get responses => 'Responses';
+  String get you_have_received_responses => 'You have received ** response***.';
+  String get lenders => "Lenders";
+  String get already_accepted_lender =>
+      "You have already accepted a lender for this request.";
+
+  //10 Aug
+  String get borrow_request_agreement => 'Borrow Request Agreement';
+
+  String get lending_offer_agreement => 'Lending Offer Agreement';
+
+  String get lease_duration => 'Lease Duration: ';
+
+  String get agreement_details => 'Agreement Details: ';
+
+  String get lenders_specific_conditions => "Lender's Specific Conditions: ";
+
+  String get agreement_damage_liability =>
+      'The Borrower is responsible for the full cost of repair or replacement of any or all of the Equipment that is damaged, lost, confiscated, or stolen from the time Borrower assumes custody until it is returned to lender. If the Equipment is lost, stolen or damaged, Borrower agrees to promptly notify the Lender Representative designated above.';
+
+  String get agreement_user_disclaimer =>
+      'The Borrower shall be responsible for the proper use and deployment of the Equipment. The Borrower shall be responsible for training anyone using the Equipment on the proper use of the Equipment in accordance with any Equipment use procedures.';
+
+  String get agreement_refund_deposit =>
+      'The borrower will provide a refundable deposit as defined within the agreement with the lender. The Criteria established regarding the condition of the item or property upon return will also be defined in the agreement. ';
+
+  String get agreement_maintain_and_clean =>
+      "All items and properties borrowed must be returned in a condition similar to the condition it is received by the borrower unless otherwise noted in the agreement. Specific details related to the item and the lender's requirements upon return should be noted in the contract and agreed upon prior to receipt by the borrower.";
+
+  String get agreement_delivery_return =>
+      'Title to the Equipment the subject of this Agreement shall remain with Lender. The Borrower shall be repsonsible for the safe packaging, proper import, export, shipping and receiving of the Equipment. The Equipment shall be returned within a reasonable amount of time after the Loan Period end date identified.';
+
+  String get agreement_maintain_and_repair =>
+      'Equipment shall be returned to Lender in as good condition as when received by the Borrower, except for reasonable wear and tear. During the Loan Period and prior to return, the Borrower agrees to assume all responsibility for maintenance and repair.';
+
+  String get terms_of_service => 'Terms of Service: ';
+
+  String get borrow_lender_dispute =>
+      'In the real world and online, communities and community members sometimes disagree. If you have a dispute with another Community member, we hope that you will be able to work it out amicably." ';
+
+  String get borrow_request_seva_disclaimer =>
+      'However, if you cannot, please understand that SevaExchange is not responsible for the actions of its members; each member is responsible for their own actions and behavior, whether using SevaExchange or chatting over the back fence. Accordingly, to the maximum extent permitted by applicable law, you release us (and our officers, directors, agents, subsidiaries, joint ventures and employees) from claims, demands and damages (actual and consequential) of every kind and nature, known and unknown, arising out of or in any way connected with such disputes. If you are a California resident, you hereby waive California Civil Code §1542, which says: "A general release does not extend to claims that the creditor or releasing party does not know or suspect to exist in his or her favor at the time of executing the release, and that, if known by him or her, would have materially affected his or her settlement with the debtor or releasing party." ';
+
+  String get civil_code_dispute =>
+      'Accordingly, to the maximum extent permitted by applicable law, you release us (and our officers, directors, agents, subsidiaries, joint ventures and employees) from claims, demands and damages (actual and consequential) of every kind and nature, known and unknown, arising out of or in any way connected with such disputes. If you are a California resident, you hereby waive California Civil Code §1542, which says: "A general release does not extend to claims that the creditor or releasing party does not know or suspect to exist in his or her favor at the time of executing the release, and that, if known by him or her, would have materially affected his or her settlement with the debtor or releasing party." ';
+
+  String get agreement_amending_disclaimer =>
+      'If the lender and borrower adjust the return date of the item as defined in the agreement, it is the responsibility of the parties involved to maintain the agreement extension and it is not included in this process or the responsibility of Seva Exchange.';
+
+  String get agreement_final_acknowledgement =>
+      'It is hereby acknowledged that while SevaExchange is furnishing this agreement and securely managing in their digital vault, SevaExchange is only providing this as a convenience to the two parties in this agreement. SevaExchange is indemnified from any loss or damage that occurs as a result of this transaction. Neither party will hold SevaExchange accountable and agree to completely absolve SevaExchange should there be any litigation arising from this transaction.';
+
+  String get lender => 'Lender';
+
+  String get borrower => 'Borrower';
+
+  String get agreement_date => 'Agreement Date';
+
+  String get lender_acknowledged_feedback =>
+      "The Lender has acknowledged completion of this request. Tap to leave a feedback.";
+
   String get offering_place_to => 'You are offering a place to ';
+  String get offering_items_to => 'You are offering item(s) to ';
+
   String get length_of_stay => 'Length of stay between:  ';
+  String get collect_and_return_items => 'Collect and Return items:  ';
+  String get items_collected => 'Item(s) Collected';
+  String get items_returned => 'Item(s) Returned';
+  String get checked_in => 'Checked In';
+  String get checked_out => 'Checked Out';
+  String get check_out => 'Check Out';
+  String get check_in => 'Check In';
+  String get check_in_pending => 'Check in pending';
+  String get borrow_request_collect_items_tag =>
+      'Borrow Request - Collect Items';
+  String get borrow_request_return_items_tag => 'Borrow Request - Return Items';
+  String get collect_items => 'Collect Items';
+  String get return_items => 'Return Items';
+  String get lent_to => 'Lent to: ';
+  String get place_not_added => 'Place not added';
+  String get items_not_added => 'Item(s) not added';
   String get lending_offer_location_hint =>
       'location will help members to locate the place easily.';
 }

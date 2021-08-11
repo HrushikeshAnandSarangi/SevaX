@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/new_baseline/models/lending_model.dart';
+import 'package:sevaexchange/ui/utils/icons.dart';
 import 'package:sevaexchange/utils/utils.dart';
 
 import '../../../../labels.dart';
@@ -11,11 +12,55 @@ class LendingPlaceDetailsWidget extends StatefulWidget {
   LendingPlaceDetailsWidget({@required this.lendingModel});
 
   @override
-  _LendingPlaceDetailsWidgetState createState() =>
-      _LendingPlaceDetailsWidgetState();
+  _LendingPlaceDetailsWidgetState createState() => _LendingPlaceDetailsWidgetState();
 }
 
 class _LendingPlaceDetailsWidgetState extends State<LendingPlaceDetailsWidget> {
+  String getImageAssetIcon(String title) {
+    switch (title) {
+      case 'Wardrobe':
+        return AmenityAssetIcon.closet;
+      case 'Dedicated Workspace':
+        return AmenityAssetIcon.workspace;
+      case 'Parking':
+        return AmenityAssetIcon.parking;
+      case 'Swimming Pool':
+        return AmenityAssetIcon.swimming_pool;
+      case 'Tea / Coffee Maker':
+        return AmenityAssetIcon.coffee_machine;
+      case 'Ironing Board':
+        return AmenityAssetIcon.ironing_board;
+      case 'Kitchen':
+        return AmenityAssetIcon.kitchen;
+      case 'Alarm Clock':
+        return AmenityAssetIcon.alarm_clock;
+      case 'AC':
+        return AmenityAssetIcon.air_conditioner;
+      case 'Electronic Safe / Locker':
+        return AmenityAssetIcon.safe_locker;
+      case 'Dental Kit':
+        return AmenityAssetIcon.dental_kit;
+      case 'BathTub':
+        return AmenityAssetIcon.bath_tub;
+      case 'Wifi':
+        return AmenityAssetIcon.wifi;
+      case 'Tv':
+        return AmenityAssetIcon.television;
+      case 'Shaving Kit':
+        return AmenityAssetIcon.shaving_kit;
+      case 'Mini Bar / Mini Fridge':
+        return AmenityAssetIcon.mini_fridge;
+      case 'Iron':
+        return AmenityAssetIcon.iron;
+      case 'Hangers':
+        return AmenityAssetIcon.clothes_hanger;
+      case 'Luggage Rack':
+        return AmenityAssetIcon.luggage_rack;
+      default:
+        return AmenityAssetIcon.amenities;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -36,14 +81,23 @@ class _LendingPlaceDetailsWidgetState extends State<LendingPlaceDetailsWidget> {
             mainAxisSpacing: 0.2,
             physics: NeverScrollableScrollPhysics(),
             children: widget.lendingModel.lendingPlaceModel.amenities.values
-                .map((title) => Text(
-                      title,
-                      style: TextStyle(
-                        color: HexColor(
-                          '#606670',
+                .map((title) => Row(
+                      children: [
+                        Container(
+                            height: 20.0,
+                            width: 20.0,
+                            margin: EdgeInsets.only(right: 5),
+                            child: Image.asset(getImageAssetIcon(title))),
+                        Text(
+                          title,
+                          style: TextStyle(
+                            color: HexColor(
+                              '#606670',
+                            ),
+                            fontSize: 14,
+                          ),
                         ),
-                        fontSize: 14,
-                      ),
+                      ],
                     ))
                 .toList()),
         SizedBox(

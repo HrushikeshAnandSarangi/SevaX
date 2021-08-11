@@ -53,7 +53,6 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
         logger.e(error);
       }
     });
-   
   }
 
   Future<Map<String, dynamic>> getUserDetails({String memberEmail}) async {
@@ -110,27 +109,29 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
           snap.sort((a, b) =>
               a.fullname.toLowerCase().compareTo(b.fullname.toLowerCase()));
 
-          return ListView(
-            children: <Widget>[
-              ...snap.map((userModel) {
-                // return Text(f['fullname']);
+          logger.e('borrowAcceptorModel length 1: ' + snap.length.toString());
 
-                UserRequestStatusType status;
-                status =
-                    getUserRequestStatusType(userModel.email, requestModel);
-                if (requestModel.requestType == RequestType.BORROW) {
-                  return BorrowRequestParticipants(
-                    userModel: userModel,
-                    timebankModel: widget.timebankModel,
-                    requestModel: requestModel,
-                  
-                  );
-                } else {
+          if (requestModel.requestType == RequestType.BORROW) {
+            return BorrowRequestParticipants(
+              userModel: snap,
+              timebankModel: widget.timebankModel,
+              requestModel: requestModel,
+            );
+          } else {
+            return ListView(
+              children: <Widget>[
+                ...snap.map((userModel) {
+                  // return Text(f['fullname']);
+
+                  UserRequestStatusType status;
+                  status =
+                      getUserRequestStatusType(userModel.email, requestModel);
+
                   return makeUserWidget(userModel, context, status);
-                }
-              }).toList()
-            ],
-          );
+                }).toList()
+              ],
+            );
+          }
         });
   }
 

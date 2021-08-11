@@ -278,9 +278,14 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                       : requestImages,
                   SizedBox(height: 20),
                   requestTitleComponent,
-                  SizedBox(height: 10),
+                  SizedBox(height: 5),
+                  widget.requestItem.requestType == RequestType.BORROW
+                      ? borrowRequestItemPlaceTag(widget.requestItem.roomOrTool)
+                      : Container(),
+                  SizedBox(height: 5),
                   widget.requestItem.requestType == RequestType.BORROW &&
-                          widget.requestItem.roomOrTool == 'ITEM' &&
+                          widget.requestItem.roomOrTool ==
+                              LendingType.ITEM.readable &&
                           widget.requestItem.borrowModel.requiredItems != null
                       ? borrowItemsWidget
                       : Container(),
@@ -472,8 +477,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   SizedBox(height: 20),
                   (widget.requestItem.requestType == RequestType.BORROW &&
                           widget.requestItem.approvedUsers.length > 0 &&
-                          (SevaCore.of(context).loggedInUser.email ==
-                                  widget.requestItem.email ||
+                          (widget.requestItem.email ==
+                                  SevaCore.of(context).loggedInUser.email ||
                               widget.requestItem.approvedUsers.contains(
                                   SevaCore.of(context).loggedInUser.email)))
                       ? approvedBorrowRequestViewAgreementComponent
@@ -1724,44 +1729,248 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   ),
                 ),
               )
-            : widget.requestItem.requestType == RequestType.BORROW
-                ? Expanded(
-                    child: RichText(
-                      text: TextSpan(
-                        style: TextStyle(color: Colors.black),
-                        children: [
-                          TextSpan(
-                            text: (widget.requestItem.approvedUsers.length >=
-                                        1 &&
-                                    widget.requestItem.requestType ==
-                                        RequestType.BORROW)
-                                ? ((widget.requestItem.sevaUserId ==
-                                            SevaCore.of(context)
-                                                .loggedInUser
-                                                .sevaUserID ||
-                                        SevaCore.of(context)
-                                                .loggedInUser
-                                                .email ==
-                                            widget.requestItem.approvedUsers[0])
-                                    ? S.of(context).request_approved
-                                    : S
-                                        .of(context)
-                                        .request_has_been_assigned_to_a_member)
-                                : isApplied
-                                    ? L.of(context).applied_for_request
-                                    : (widget.requestItem.roomOrTool == 'PLACE'
-                                        ? S.of(context).borrow_request_for_place
-                                        : S
-                                            .of(context)
-                                            .borrow_request_for_item),
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontFamily: 'Europa',
-                              fontWeight: FontWeight.bold,
+            : widget.requestItem.requestType == RequestType.BORROW &&
+                    widget.requestItem.approvedUsers
+                        .contains(SevaCore.of(context).loggedInUser.email)
+                ? Container(
+                    width: 370,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Expanded(
+                          child: RichText(
+                            text: TextSpan(
+                              style: TextStyle(color: Colors.black),
+                              children: [
+                                TextSpan(
+                                  text: (widget.requestItem.approvedUsers
+                                                  .length >=
+                                              1 &&
+                                          widget.requestItem.requestType ==
+                                              RequestType.BORROW)
+                                      ? ((widget.requestItem.sevaUserId ==
+                                                  SevaCore.of(context)
+                                                      .loggedInUser
+                                                      .sevaUserID ||
+                                              SevaCore.of(context)
+                                                      .loggedInUser
+                                                      .email ==
+                                                  widget.requestItem
+                                                      .approvedUsers[0])
+                                          ? S.of(context).request_approved
+                                          : S
+                                              .of(context)
+                                              .request_has_been_assigned_to_a_member)
+                                      : isApplied
+                                          ? L.of(context).applied_for_request
+                                          : (widget.requestItem.roomOrTool ==
+                                                  'PLACE'
+                                              ? S
+                                                  .of(context)
+                                                  .borrow_request_for_place
+                                              : S
+                                                  .of(context)
+                                                  .borrow_request_for_item),
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontFamily: 'Europa',
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                        Container(
+                          width: 153,
+                          child: CustomTextButton(
+                            color: Theme.of(context).primaryColor,
+                            child: Row(
+                              children: <Widget>[
+                                SizedBox(width: 1),
+                                Spacer(),
+                                Text(
+                                  widget.requestItem.roomOrTool ==
+                                          LendingType.PLACE.readable
+                                      ? widget.requestItem.borrowModel
+                                              .isCheckedIn
+                                          ? L.of(context).check_out
+                                          : L.of(context).check_in
+                                      : widget.requestItem.borrowModel
+                                              .itemsCollected
+                                          ? L.of(context).items_returned
+                                          : S.of(context).items_collected,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                Spacer(
+                                  flex: 1,
+                                ),
+                              ],
+                            ),
+                            onPressed: () async {
+                              if (widget.requestItem.roomOrTool ==
+                                  LendingType.ITEM.readable) {
+                                if (!widget
+                                    .requestItem.borrowModel.itemsCollected) {
+                                  logger.e('ITEMS GIVEN TO BORROWER');
+                                  widget.requestItem.borrowModel
+                                      .itemsCollected = true;
+                                  await updateRequest(
+                                      requestModel: widget.requestItem);
+                                  Navigator.pop(context);
+                                } else if (widget.requestItem.borrowModel
+                                            .itemsCollected ==
+                                        true &&
+                                    !widget.requestItem.borrowModel
+                                        .itemsReturned) {
+                                  logger.e(
+                                      'ITEMS RECEIVED BACK - COMES TO COMPLETE REQUEST');
+
+                                  showDialog(
+                                    context: context,
+                                    builder: (_context) => AlertDialog(
+                                      title: Text(S
+                                          .of(context)
+                                          .item_received_alert_dialouge),
+                                      actions: [
+                                        CustomTextButton(
+                                          onPressed: () {
+                                            Navigator.of(_context).pop();
+                                          },
+                                          child: Text(
+                                            S.of(context).not_yet,
+                                            style: TextStyle(
+                                                fontSize: 17,
+                                                color: Theme.of(context)
+                                                    .accentColor),
+                                          ),
+                                        ),
+                                        CustomTextButton(
+                                          onPressed: () async {
+                                            widget.requestItem.borrowModel
+                                                    .itemsReturned =
+                                                true; //confirmed items are returned
+                                            widget.requestItem.acceptors = [];
+                                            widget.requestItem.accepted =
+                                                true; //so that we can know that this request has completed
+                                            widget.requestItem.isNotified =
+                                                true; //resets to false otherwise
+                                            var notificationId =
+                                                await getNotificationId(
+                                              SevaCore.of(context)
+                                                  .loggedInUser, //redundant because function does not use user model
+                                              widget.requestItem,
+                                            ).then((notificationId) async {
+                                              await lenderReceivedBackCheck(
+                                                  notificationId:
+                                                      notificationId,
+                                                  requestModelUpdated:
+                                                      widget.requestItem,
+                                                  context: context);
+
+                                              await updateRequest(
+                                                  requestModel:
+                                                      widget.requestItem);
+
+                                              Navigator.of(_context).pop();
+
+                                              Navigator.pop(context);
+                                            });
+                                          },
+                                          child: Text(
+                                            S.of(context).yes,
+                                            style: TextStyle(fontSize: 17),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                } else {
+                                  return;
+                                }
+                              } else {
+                                if (!widget
+                                    .requestItem.borrowModel.isCheckedIn) {
+                                  widget.requestItem.borrowModel.isCheckedIn =
+                                      true;
+                                  await updateRequest(
+                                      requestModel: widget.requestItem);
+                                  Navigator.pop(context);
+                                } else if (widget.requestItem.borrowModel
+                                            .isCheckedIn ==
+                                        true &&
+                                    !widget
+                                        .requestItem.borrowModel.isCheckedOut) {
+                                  showDialog(
+                                    context: context,
+                                    builder: (_context) => AlertDialog(
+                                      title: Text(S
+                                          .of(context)
+                                          .item_received_alert_dialouge),
+                                      actions: [
+                                        CustomTextButton(
+                                          onPressed: () {
+                                            Navigator.of(_context).pop();
+                                          },
+                                          child: Text(
+                                            S.of(context).not_yet,
+                                            style: TextStyle(
+                                                fontSize: 17,
+                                                color: Theme.of(context)
+                                                    .accentColor),
+                                          ),
+                                        ),
+                                        CustomTextButton(
+                                          onPressed: () async {
+                                            widget.requestItem.borrowModel
+                                                    .isCheckedOut =
+                                                true; //confirmed items are returned
+                                            widget.requestItem.acceptors = [];
+                                            widget.requestItem.accepted =
+                                                true; //so that we can know that this request has completed
+                                            widget.requestItem.isNotified =
+                                                true; //resets to false otherwise
+
+                                            await getNotificationId(
+                                              SevaCore.of(context)
+                                                  .loggedInUser, //redundant because function does not use user model
+                                              widget.requestItem,
+                                            ).then((notificationId) async {
+                                              await lenderReceivedBackCheck(
+                                                  notificationId:
+                                                      notificationId,
+                                                  requestModelUpdated:
+                                                      widget.requestItem,
+                                                  context: context);
+
+                                              await updateRequest(
+                                                  requestModel:
+                                                      widget.requestItem);
+
+                                              Navigator.of(_context).pop();
+
+                                              Navigator.pop(context);
+                                            });
+                                          },
+                                          child: Text(
+                                            S.of(context).yes,
+                                            style: TextStyle(fontSize: 17),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                } else {
+                                  return;
+                                }
+                              }
+                            },
+                          ),
+                        ),
+                      ],
                     ),
                   )
                 : Expanded(
@@ -1986,11 +2195,11 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
 
               proccedWithCalander();
 
-              // await updateAcceptBorrowRequest(
-              //   requestModel: widget.requestItem,
-              //   //participantDetails: participantDetails,
-              //   userEmail: SevaCore.of(context).loggedInUser.email,
-              // );
+              await updateAcceptBorrowRequest(
+                requestModel: widget.requestItem,
+                //participantDetails: participantDetails,
+                userEmail: SevaCore.of(context).loggedInUser.email,
+              );
             },
           ),
         ),
@@ -2187,15 +2396,15 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                 widget.requestItem.photoUrl ?? defaultUserImageURL,
               ),
               backgroundColor: Colors.white,
-              radius: MediaQuery.of(context).size.width / 10.5,
+              radius: MediaQuery.of(context).size.width / 11.5,
             ),
             SizedBox(width: 30),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(widget.requestItem.creatorName,
-                    style:
-                        TextStyle(fontWeight: FontWeight.w500, fontSize: 21)),
+                Text(widget.requestItem.fullName,
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 21),
+                    overflow: TextOverflow.ellipsis),
                 SizedBox(height: 7),
                 createdAt,
               ],
@@ -2217,6 +2426,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
         "${S.of(context).hosted_by} ${widget.requestItem.fullName ?? ""}",
         style: titleStyle,
         maxLines: 1,
+        overflow: TextOverflow.ellipsis,
       ),
     );
   }
@@ -2603,120 +2813,141 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
             );
           }
           BorrowAcceptorModel borrowAcceptorModel = snapshot.data;
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                L.of(context).offering_place_to +
-                    borrowAcceptorModel.acceptorName,
-                style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w600),
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              Text(
-                L.of(context).length_of_stay +
-                    DateFormat('MMMM dddd, yyyy',
-                            Locale(getLangTag()).toLanguageTag())
-                        .format(
-                      getDateTimeAccToUserTimezone(
-                          dateTime: DateTime.fromMillisecondsSinceEpoch(
-                              widget.requestItem.requestStart),
-                          timezoneAbb:
-                              SevaCore.of(context).loggedInUser.timezone),
-                    ) +
-                    ' to ' +
-                    DateFormat('MMMM dddd, yyyy',
-                            Locale(getLangTag()).toLanguageTag())
-                        .format(
-                      getDateTimeAccToUserTimezone(
-                          dateTime: DateTime.fromMillisecondsSinceEpoch(
-                              widget.requestItem.requestEnd),
-                          timezoneAbb:
-                              SevaCore.of(context).loggedInUser.timezone),
-                    ),
-                style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.grey,
-                    fontWeight: FontWeight.w600),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              widget.requestItem.roomOrTool == LendingType.ITEM.readable
-                  ? FutureBuilder<List<LendingModel>>(
-                      future: LendingOffersRepo.getApprovedLendingModels(
-                          lendingModelsIds:
-                              borrowAcceptorModel.borrowedItemsIds),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return LoadingIndicator();
-                        }
-                        if (snapshot.data == null) {
-                          return Container();
-                        }
-                        List<LendingModel> modelList = snapshot.data;
-                        return ListView.builder(
-                            itemCount: modelList.length,
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            itemBuilder: (context, index) {
-                              return Padding(
-                                padding: const EdgeInsets.only(bottom: 8.0),
-                                child: LendingItemCardWidget(
-                                  hidden: true,
-                                  lendingItemModel:
-                                      modelList[index].lendingItemModel,
+          return Container(
+            height: 630,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                widget.requestItem.email ==
+                        SevaCore.of(context).loggedInUser.email
+                    ? Container()
+                    : Expanded(
+                        child: Text(
+                          (widget.requestItem.roomOrTool ==
+                                      LendingType.ITEM.readable
+                                  ? L.of(context).offering_items_to
+                                  : L.of(context).offering_place_to) +
+                              widget.requestItem.creatorName,
+                          style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                Text(
+                  (widget.requestItem.roomOrTool == LendingType.ITEM.readable
+                          ? L.of(context).collect_and_return_items
+                          : L.of(context).length_of_stay) +
+                      DateFormat('dd MMM,\nhh:mm a',
+                              Locale(getLangTag()).toLanguageTag())
+                          .format(
+                        getDateTimeAccToUserTimezone(
+                            dateTime: DateTime.fromMillisecondsSinceEpoch(
+                                widget.requestItem.requestStart),
+                            timezoneAbb:
+                                SevaCore.of(context).loggedInUser.timezone),
+                      ) +
+                      ' to ' +
+                      DateFormat('dd MMM,\nhh:mm a',
+                              Locale(getLangTag()).toLanguageTag())
+                          .format(
+                        getDateTimeAccToUserTimezone(
+                            dateTime: DateTime.fromMillisecondsSinceEpoch(
+                                widget.requestItem.requestEnd),
+                            timezoneAbb:
+                                SevaCore.of(context).loggedInUser.timezone),
+                      ),
+                  style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey,
+                      fontWeight: FontWeight.w600),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                widget.requestItem.roomOrTool == LendingType.ITEM.readable
+                    ? FutureBuilder<List<LendingModel>>(
+                        future: LendingOffersRepo.getApprovedLendingModels(
+                            lendingModelsIds:
+                                borrowAcceptorModel.borrowedItemsIds),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return LoadingIndicator();
+                          }
+                          if (snapshot.data == null) {
+                            return Container();
+                          }
+                          List<LendingModel> modelList = snapshot.data;
+                          return ListView.builder(
+                              itemCount: modelList.length,
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemBuilder: (context, index) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(bottom: 8.0),
+                                  child: LendingItemCardWidget(
+                                    hidden: true,
+                                    lendingItemModel:
+                                        modelList[index].lendingItemModel,
+                                  ),
+                                );
+                              });
+                        })
+                    : FutureBuilder<LendingModel>(
+                        future: LendingOffersRepo.getLendingModel(
+                            lendingId: borrowAcceptorModel.borrowedPlaceId),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return LoadingIndicator();
+                          }
+                          if (snapshot.data == null) {
+                            return Container();
+                          }
+                          LendingModel model = snapshot.data;
+                          return Container(
+                            width: 400,
+                            // height: 450,
+                            child: Column(
+                              children: [
+                                LendingPlaceDetailsWidget(
+                                  lendingModel: model,
                                 ),
-                              );
-                            });
-                      })
-                  : FutureBuilder<LendingModel>(
-                      future: LendingOffersRepo.getLendingModel(
-                          lendingId: borrowAcceptorModel.borrowedPlaceId),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return LoadingIndicator();
-                        }
-                        if (snapshot.data == null) {
-                          return Container();
-                        }
-                        LendingModel model = snapshot.data;
-                        return LendingPlaceDetailsWidget(
-                          lendingModel: model,
-                        );
-                      }),
-              SizedBox(
-                height: 10,
-              ),
-              GestureDetector(
-                child: Text(
-                    borrowAcceptorModel.borrowAgreementLink == null ||
-                            borrowAcceptorModel.borrowAgreementLink == ''
-                        ? S.of(context).request_agreement_not_available
-                        : S.of(context).click_to_view_request_agreement,
-                    style: TextStyle(
-                        fontSize: 16,
-                        color: Theme.of(context).primaryColor,
-                        fontWeight: FontWeight.w600)),
-                onTap: () async {
-                  if (borrowAcceptorModel.borrowAgreementLink == null ||
-                      borrowAcceptorModel.borrowAgreementLink == '') {
-                    return null;
-                  } else {
-                    await openPdfViewer(borrowAcceptorModel.borrowAgreementLink,
-                        'Request Agreement Document', context);
-                  }
-                },
-              ),
-              addressComponentBorrowRequestForApproved(
-                  borrowAcceptorModel.selectedAddress ?? ''),
-            ],
+                              ],
+                            ),
+                          );
+                        }),
+                SizedBox(
+                  height: 10,
+                ),
+                GestureDetector(
+                  child: Text(
+                      borrowAcceptorModel.borrowAgreementLink == null ||
+                              borrowAcceptorModel.borrowAgreementLink == ''
+                          ? S.of(context).request_agreement_not_available
+                          : S.of(context).click_to_view_request_agreement,
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.w600)),
+                  onTap: () async {
+                    if (borrowAcceptorModel.borrowAgreementLink == null ||
+                        borrowAcceptorModel.borrowAgreementLink == '') {
+                      return null;
+                    } else {
+                      await openPdfViewer(
+                          borrowAcceptorModel.borrowAgreementLink,
+                          'Request Agreement Document',
+                          context);
+                    }
+                  },
+                ),
+                addressComponentBorrowRequestForApproved(
+                    borrowAcceptorModel.selectedAddress ?? ''),
+              ],
+            ),
           );
         });
   }
@@ -3349,6 +3580,25 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   ),
           )
           .toList(),
+    );
+  }
+
+  Widget borrowRequestItemPlaceTag(String requestType) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Chip(
+          label: Text(
+            requestType == LendingType.ITEM.readable
+                ? L.of(context).borrow_request_title + ' ' + L.of(context).items
+                : L.of(context).borrow_request_title +
+                    ' ' +
+                    L.of(context).place,
+            style: TextStyle(color: Colors.black),
+          ),
+          backgroundColor: Colors.grey[200],
+        ),
+      ],
     );
   }
 }

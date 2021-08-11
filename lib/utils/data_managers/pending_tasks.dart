@@ -69,7 +69,7 @@ class PendingTasks {
     loggedinMemberEmail,
     loggedInmemberId,
   }) {
-    return CombineLatestStream.combine5(
+    return CombineLatestStream.combine4(
       FirestoreManager.getNotAcceptedRequestStream(
         userEmail: loggedinMemberEmail,
         userId: loggedInmemberId,
@@ -83,16 +83,11 @@ class PendingTasks {
         loggedInMemberId: loggedInmemberId,
         loggedInUserEmail: loggedinMemberEmail,
       ),
-      FirestoreManager.getBorrowRequestCreatorWaitingReturnConfirmation(
-        userId: loggedInmemberId,
-        userEmail: loggedinMemberEmail,
-      ),
       (
         pendingClaims,
         acceptedIndividualOffers,
         getSpeakerClaimedCompletionRequestStream,
         pendingCreditRequests,
-        borrowRequestCreatorWaitingReturnConfirmation,
         // oneToManyOffersCreated,
       ) =>
           [
@@ -100,7 +95,6 @@ class PendingTasks {
         acceptedIndividualOffers,
         getSpeakerClaimedCompletionRequestStream,
         pendingCreditRequests,
-        borrowRequestCreatorWaitingReturnConfirmation,
         // oneToManyOffersCreated,
       ],
     );
@@ -202,23 +196,6 @@ class PendingTasks {
       );
     });
 
-    //for borrow request, request creator is waiting for Lender to confirm if item/place has been recieved back
-    List<RequestModel> borrowRequestCreatorAwaitingConfirmation =
-        pendingSink[4];
-    borrowRequestCreatorAwaitingConfirmation.forEach((model) {
-      tasksList.add(
-        TasksCardWrapper(
-          taskCard: ToDoCard(
-            title: model.title,
-            subTitle: model.description,
-            timeInMilliseconds: model.requestStart,
-            onTap: () async {},
-            tag: L.of(context).borrow_request_creator_awaiting_confirmation,
-          ),
-          taskTimestamp: model.requestStart,
-        ),
-      );
-    });
     tasksList.sort((a, b) => b.taskTimestamp.compareTo(a.taskTimestamp));
     return tasksList;
   }
