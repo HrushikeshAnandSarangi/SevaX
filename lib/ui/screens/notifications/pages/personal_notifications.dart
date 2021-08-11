@@ -40,6 +40,7 @@ import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
+import 'package:sevaexchange/views/requests/approveBorrowRequest.dart';
 import 'package:sevaexchange/views/tasks/my_tasks_list.dart';
 import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
@@ -286,24 +287,32 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                               '${requestModel.fullName} ${S.of(context).notifications_requested_join} ${requestModel.title}, ${S.of(context).notifications_tap_to_view}',
                           title: L.of(context).join_borrow_request,
                           onPressed: () {
-                            Navigator.push(
-                              context,
+                            Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (_context) => RequestDetailsAboutPage(
-                                  requestItem: requestModel,
-                                  timebankModel: timebankModel,
-                                  isAdmin: false,
-                                  // communityModel: communityModel,
-                                  // communityModel: B
-                                  // locProvider.of<HomeDashBoardBloc>(context).selectedCommunityModel,
+                                builder: (context) => AcceptBorrowRequest(
+                                  requestModel: requestModel,
+                                  timeBankId: requestModel.timebankId,
+                                  userId: SevaCore.of(context)
+                                      .loggedInUser
+                                      .sevaUserID,
+                                  parentContext: context,
+                                  onTap: () async {
+                                    // proccedWithCalander();
+
+                                    //Call above function here if possible or call the relevant functions here
+                                    // 1) add user to acceptors
+                                    // 2) add user to borrowRequestAcceptors subcollection
+
+                                    Navigator.of(context).pop();
+                                    NotificationsRepository
+                                        .readUserNotification(
+                                      notification.id,
+                                      user.email,
+                                    );
+                                  },
                                 ),
                               ),
-                            ).then((value) {
-                              NotificationsRepository.readUserNotification(
-                                notification.id,
-                                user.email,
-                              );
-                            });
+                            );
                           },
                           timestamp: notification.timestamp,
                         );
