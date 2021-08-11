@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/components/calendar_events/models/calendar_response.dart';
 import 'package:sevaexchange/components/calendar_events/models/kloudless_models.dart';
 import 'package:sevaexchange/components/calendar_events/repo/calendar_repo.dart';
 import 'package:sevaexchange/models/offer_model.dart';

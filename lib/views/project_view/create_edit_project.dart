@@ -863,42 +863,11 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                           KloudlessWidgetManager<CreateMode, ProjectModel>()
                               .syncCalendar(
                             context: context,
-                            builder: KloudlessWidgetBuilder(
-
-                              stateOfCalendarCallback:
-                                  CalStateBuilder<ProjectModel>(
-                                stateId: projectModel.id,
-                                memberEmailAddress:
-                                    SevaCore.of(context).loggedInUser.email,
-                                environment: ENVIRONMENT.DEVELOPMENT,
-                                model: projectModel,
-                              ),
-                              attendeeDetails: AttendeDetails(
-                                attendee: Attendee(
-                                  email:
-                                      SevaCore.of(context).loggedInUser.email,
-                                  name: SevaCore.of(context)
-                                      .loggedInUser
-                                      .fullname,
-                                ),
-                                calendar: CalanderBuilder(
-                                  caledarScope: SevaCore.of(context)
-                                      .loggedInUser
-                                      .calendarScope,
-                                  calendarAccId: SevaCore.of(context)
-                                      .loggedInUser
-                                      .calendarAccId,
-                                  calendarAccessToken: SevaCore.of(context)
-                                      .loggedInUser
-                                      .calendarAccessToken,
-                                  calendarEmail: SevaCore.of(context)
-                                      .loggedInUser
-                                      .calendarEmail,
-                                  calendarId: SevaCore.of(context)
-                                      .loggedInUser
-                                      .calendarId,
-                                ),
-                              ),
+                            builder: KloudlessWidgetBuilder()
+                                .fromContext<ProjectModel>(
+                              context: context,
+                              model: projectModel,
+                              stateId: projectModel.id,
                             ),
                           );
 

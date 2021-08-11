@@ -2,6 +2,7 @@ import 'dart:core';
 
 import 'package:flutter/cupertino.dart';
 import 'package:sevaexchange/components/calendar_events/models/calendar_response.dart';
+import 'package:sevaexchange/views/core.dart';
 
 class Mode {}
 
@@ -84,24 +85,54 @@ class EventMetaData {
 }
 
 class KloudlessWidgetBuilder {
-  final String authorizationUrl;
-  final String clienId;
-  final String redirectUrl;
-  final CalStateBuilder stateOfCalendarCallback;
-  final AttendeDetails attendeeDetails;
-  final EventMetaData initialEventDetails;
+  String authorizationUrl;
+  String clienId;
+  String redirectUrl;
+  CalStateBuilder stateOfCalendarCallback;
+  AttendeDetails attendeeDetails;
+  EventMetaData initialEventDetails;
 
-  final Function onPressed;
+  Function onPressed;
 
   KloudlessWidgetBuilder({
     this.clienId = "B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh",
-    this.redirectUrl = "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth",
+    this.redirectUrl =
+        "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth",
     this.authorizationUrl = "https://api.kloudless.com/v1/oauth",
     this.onPressed,
     this.stateOfCalendarCallback,
     this.attendeeDetails,
     this.initialEventDetails,
   });
+
+  KloudlessWidgetBuilder fromContext<T>({
+    BuildContext context,
+    String stateId,
+    T model,
+  }) {
+    stateOfCalendarCallback = CalStateBuilder<T>(
+      stateId: stateId,
+      memberEmailAddress: SevaCore.of(context).loggedInUser.email,
+      environment: ENVIRONMENT.DEVELOPMENT,
+      model: model,
+    );
+
+    attendeeDetails = AttendeDetails(
+      attendee: Attendee(
+        email: SevaCore.of(context).loggedInUser.email,
+        name: SevaCore.of(context).loggedInUser.fullname,
+      ),
+      calendar: CalanderBuilder(
+        caledarScope: SevaCore.of(context).loggedInUser.calendarScope,
+        calendarAccId: SevaCore.of(context).loggedInUser.calendarAccId,
+        calendarAccessToken:
+            SevaCore.of(context).loggedInUser.calendarAccessToken,
+        calendarEmail: SevaCore.of(context).loggedInUser.calendarEmail,
+        calendarId: SevaCore.of(context).loggedInUser.calendarId,
+      ),
+    );
+    return this;
+  }
 }
 
 class CalanderBuilder {
