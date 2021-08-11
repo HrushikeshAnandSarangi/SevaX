@@ -477,8 +477,10 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   SizedBox(height: 20),
                   (widget.requestItem.requestType == RequestType.BORROW &&
                           widget.requestItem.approvedUsers.length > 0 &&
-                          (widget.requestItem.approvedUsers.contains(
-                              SevaCore.of(context).loggedInUser.email)))
+                          (widget.requestItem.email ==
+                                  SevaCore.of(context).loggedInUser.email ||
+                              widget.requestItem.approvedUsers.contains(
+                                  SevaCore.of(context).loggedInUser.email)))
                       ? approvedBorrowRequestViewAgreementComponent
                       : Container(),
                   SizedBox(height: 10),
@@ -2306,13 +2308,13 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                 widget.requestItem.photoUrl ?? defaultUserImageURL,
               ),
               backgroundColor: Colors.white,
-              radius: MediaQuery.of(context).size.width / 10.5,
+              radius: MediaQuery.of(context).size.width / 11.5,
             ),
             SizedBox(width: 30),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(widget.requestItem.creatorName,
+                Text(widget.requestItem.fullName,
                     style:
                         TextStyle(fontWeight: FontWeight.w500, fontSize: 21)),
                 SizedBox(height: 7),
@@ -2336,6 +2338,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
         "${S.of(context).hosted_by} ${widget.requestItem.fullName ?? ""}",
         style: titleStyle,
         maxLines: 1,
+        overflow: TextOverflow.ellipsis,
       ),
     );
   }
@@ -2725,24 +2728,27 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                (widget.requestItem.roomOrTool == LendingType.ITEM.readable
-                        ? L.of(context).offering_items_to
-                        : L.of(context).offering_place_to) +
-                    widget.requestItem.creatorName,
-                style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w600),
-              ),
-              SizedBox(
-                height: 5,
-              ),
+              widget.requestItem.email ==
+                      SevaCore.of(context).loggedInUser.email
+                  ? Container()
+                  : Expanded(
+                      child: Text(
+                        (widget.requestItem.roomOrTool ==
+                                    LendingType.ITEM.readable
+                                ? L.of(context).offering_items_to
+                                : L.of(context).offering_place_to) +
+                            widget.requestItem.creatorName,
+                        style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w600),
+                      ),
+                    ),
               Text(
                 (widget.requestItem.roomOrTool == LendingType.ITEM.readable
                         ? L.of(context).collect_and_return_items
                         : L.of(context).length_of_stay) +
-                    DateFormat('dd MMMM , yyyy',
+                    DateFormat('dd MMM,\nhh:mm a',
                             Locale(getLangTag()).toLanguageTag())
                         .format(
                       getDateTimeAccToUserTimezone(
@@ -2752,7 +2758,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                               SevaCore.of(context).loggedInUser.timezone),
                     ) +
                     ' to ' +
-                    DateFormat('dd MMMM , yyyy',
+                    DateFormat('dd MMM,\nhh:mm a',
                             Locale(getLangTag()).toLanguageTag())
                         .format(
                       getDateTimeAccToUserTimezone(
@@ -2762,7 +2768,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                               SevaCore.of(context).loggedInUser.timezone),
                     ),
                 style: TextStyle(
-                    fontSize: 15,
+                    fontSize: 14,
                     color: Colors.grey,
                     fontWeight: FontWeight.w600),
               ),
