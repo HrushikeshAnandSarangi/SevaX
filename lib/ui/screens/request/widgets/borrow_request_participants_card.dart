@@ -20,6 +20,7 @@ class BorrowRequestParticipantsCard extends StatelessWidget {
   final BorrowAcceptorModel borrowAcceptorModel;
   final BuildContext context;
   final List<LendingModel> lendingModelList;
+  final LendingModel lendingPlaceModel;
 
   const BorrowRequestParticipantsCard(
       {Key key,
@@ -30,7 +31,8 @@ class BorrowRequestParticipantsCard extends StatelessWidget {
       this.requestModel,
       this.context,
       this.borrowAcceptorModel,
-      this.lendingModelList})
+      this.lendingModelList,
+      this.lendingPlaceModel})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -122,22 +124,17 @@ class BorrowRequestParticipantsCard extends StatelessWidget {
                     : Container(
                         // height: 400,
                         width: 300,
-                        child: ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: lendingModelList.length ?? 0,
-                            itemBuilder: (BuildContext context, int index) {
-                              return Column(
-                                children: [
-                                  LendingPlaceCardWidget(
-                                    // lendingPlaceModel: lendingModelList[index]
-                                    //     .lendingItemModel,
-                                    hidden: true,
-                                  ),
-                                  SizedBox(height: 10),
-                                ],
-                              );
-                            }),
-                      )
+                        child: Column(
+                          children: [
+                            LendingPlaceCardWidget(
+                              lendingPlaceModel:
+                                  lendingPlaceModel.lendingPlaceModel,
+                              hidden: true,
+                            ),
+                            SizedBox(height: 10),
+                          ],
+                        ),
+                      ),
               ],
             ),
             SizedBox(height: 10),

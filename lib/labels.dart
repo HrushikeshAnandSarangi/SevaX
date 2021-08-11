@@ -1296,4 +1296,9 @@ class L {
   String get items_returned => 'Item(s) Returned';
   String get checked_in => 'Checked In';
   String get checked_out => 'Checked Out';
+  String get borrow_request_collect_items_tag =>
+      'Borrow Request - Collect Items';
+  String get borrow_request_return_items_tag => 'Borrow Request - Return Items';
+  String get collect_items => 'Collect Items';
+  String get return_items => 'Return Items';
 }
