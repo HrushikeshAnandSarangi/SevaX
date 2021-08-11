@@ -44,6 +44,9 @@ class AddToCalendar extends StatefulWidget {
 enum CalanderType { iCAL, GOOGLE_CALANDER, OUTLOOK }
 
 class AddToCalendarState extends State<AddToCalendar> {
+
+
+
   Future<void> googleCalanderIntegration() async {
     logger.i("inside google callllll");
     Map<String, dynamic> stateOfcalendarCallback = {
@@ -100,6 +103,7 @@ class AddToCalendarState extends State<AddToCalendar> {
       "createType": widget.requestModel != null ? "REQUEST" : "OFFER",
       "offerCreationOrListing": true
     };
+   
     var stateVar = jsonEncode(stateOfcalendarCallback);
     String redirectUrl =
         "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";

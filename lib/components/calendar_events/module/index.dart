@@ -1,0 +1,202 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:sevaexchange/components/calendar_events/models/kloudless_models.dart';
+import 'package:sevaexchange/components/calendar_events/repo/calendar_repo.dart';
+import 'package:sevaexchange/models/offer_model.dart';
+import 'package:sevaexchange/models/request_model.dart';
+import 'package:sevaexchange/new_baseline/models/project_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+class KloudlessWidgetManager<M extends Mode, T> {
+  syncCalendar({
+    KloudlessWidgetBuilder builder,
+    @required BuildContext context,
+  }) {
+    return builder.attendeeDetails.calendar.defined
+        ? _existingMember(
+            context,
+            builder: builder,
+          )
+        : _newMember(
+            context,
+            builder: builder,
+          );
+  }
+
+  Future<dynamic> _newMember(
+    BuildContext context, {
+    @required KloudlessWidgetBuilder builder,
+  }) {
+    return showDialog(
+      context: context,
+      builder: (_) {
+        return new AlertDialog(
+          title: Text('Add your Calendar'),
+          content: NewCalendarRegisteration(
+            builder,
+          ),
+        );
+      },
+    );
+  }
+
+  Future<dynamic> _existingMember(
+    BuildContext context, {
+    @required KloudlessWidgetBuilder builder,
+  }) {
+    return showDialog(
+      context: context,
+      builder: (_) {
+        return new AlertDialog(
+          title: Text("Do you want to add this to your Calender?"),
+          actions: [
+            ElevatedButton(
+              child: Text('No'),
+              onPressed: () {
+                Navigator.of(_).pop();
+              },
+            ),
+            ElevatedButton(
+              child: Text('Yes'),
+              onPressed: () async {
+                //Create an event againest the registered calendar of the member
+
+                KloudlessCalendarEvent canendarEvent;
+                Navigator.of(_).pop();
+                switch (T) {
+                  case ProjectModel:
+                    ProjectModel model = builder.stateOfCalendarCallback.model;
+                    //hit the create event API from calandar
+                    canendarEvent = KloudlessCalendarEvent(
+                      eventTitle: model.name,
+                      eventDescription: model.description,
+                      eventLocation: model.address ?? 'Location not added',
+                      eventStart:
+                          DateTime.fromMillisecondsSinceEpoch(model.startTime)
+                              .toIso8601String(),
+                      eventEnd: DateTime.fromMillisecondsSinceEpoch(
+                        model.endTime,
+                      ).toIso8601String(),
+                    );
+
+                    break;
+
+                  case OfferModel:
+                    OfferModel model = builder.stateOfCalendarCallback.model;
+                    canendarEvent = KloudlessCalendarEvent(
+                      eventTitle: model.groupOfferDataModel.classTitle,
+                      eventDescription:
+                          model.groupOfferDataModel.classDescription,
+                      eventLocation:
+                          model.selectedAdrress ?? 'Location not added',
+                      eventStart: DateTime.fromMillisecondsSinceEpoch(
+                              model.groupOfferDataModel.startDate)
+                          .toIso8601String(),
+                      eventEnd: DateTime.fromMillisecondsSinceEpoch(
+                              model.groupOfferDataModel.endDate)
+                          .toIso8601String(),
+                    );
+
+                    break;
+
+                  case RequestModel:
+                    RequestModel model = builder.stateOfCalendarCallback.model;
+                    canendarEvent = KloudlessCalendarEvent(
+                      eventTitle: model.title,
+                      eventDescription: model.description,
+                      eventLocation: model.address ?? 'Location not added',
+                      eventStart: DateTime.fromMillisecondsSinceEpoch(
+                              model.requestStart)
+                          .toIso8601String(),
+                      eventEnd:
+                          DateTime.fromMillisecondsSinceEpoch(model.requestEnd)
+                              .toIso8601String(),
+                    );
+                    break;
+
+                  default:
+                    throw Exception("Please specify the details of model");
+                }
+
+                //Check Mode of Opertion
+                switch (M) {
+                  case CreateMode:
+                    await CalendarAPIRepo.createEventInCalendar(
+                      calendarAccountId:
+                          builder.attendeeDetails.calendar.calendarAccId,
+                      calendarId: builder.attendeeDetails.calendar.calendarId,
+                      event: canendarEvent,
+                    ).then((eventId) {
+                      if (eventId != null) {
+                        logger.d("Event Successfully created");
+
+                        CollectionRef.projects
+                            .doc(builder.stateOfCalendarCallback.model.id)
+                            .update({
+                              "eventMetaData": EventMetaData(
+                                calendar: builder.attendeeDetails.calendar,
+                                eventId: eventId,
+                              ).toMap(),
+                            })
+                            .then((value) => logger.d("Value Completed!"))
+                            .catchError((onError) {
+                              logger.d("On Error : " + onError);
+                            });
+                      } else {
+                        logger.d("Failed to create event created");
+                      }
+                    }).catchError((e) {
+                      logger.d("ERROR : " + e.toString());
+                    });
+                    break;
+
+                  case ApplyMode:
+                    await CalendarAPIRepo.updateAttendiesInCalendarEvent(
+                      eventMetaData:
+                          builder.stateOfCalendarCallback.model.eventMetaData,
+                      event: canendarEvent,
+                      attendeDetails: builder.attendeeDetails,
+                    )
+                        .then((value) => logger.i(
+                            "updateAttendiesInCalendarEvent Completed without any errors"))
+                        .catchError((onError) => logger.i(
+                            "updateAttendiesInCalendarEvent finished with an error! $onError"));
+                    break;
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class NewCalendarRegisteration extends StatelessWidget {
+  final KloudlessWidgetBuilder builder;
+  NewCalendarRegisteration(this.builder);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        ListTile(
+          title: Text('Google Calandar'),
+          onTap: () {
+            String authURL =
+                "${builder.authorizationUrl}?client_id=${builder.clienId}&response_type=code&scope=google_calendar&redirect_uri=${builder.redirectUrl}&state=${builder.stateOfCalendarCallback.toMap()}";
+            //LAUNCH URL
+            canLaunch(Uri.parse(authURL).toString()).then((value) {
+              if (value) {
+                launch(Uri.parse(authURL).toString());
+              }
+            });
+            logger.d(authURL.toString());
+          },
+        ),
+      ],
+    );
+  }
+}
