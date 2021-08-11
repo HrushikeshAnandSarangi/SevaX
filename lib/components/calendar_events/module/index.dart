@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/components/calendar_events/models/calendar_response.dart';
@@ -63,11 +64,13 @@ class KloudlessWidgetManager<M extends Mode, T> {
               child: Text('Yes'),
               onPressed: () async {
                 //Create an event againest the registered calendar of the member
-
+                CollectionReference collectionReferenece;
                 KloudlessCalendarEvent canendarEvent;
                 Navigator.of(_).pop();
                 switch (T) {
                   case ProjectModel:
+                    collectionReferenece = CollectionRef.projects;
+
                     ProjectModel model = builder.stateOfCalendarCallback.model;
                     //hit the create event API from calandar
                     canendarEvent = KloudlessCalendarEvent(
@@ -85,6 +88,8 @@ class KloudlessWidgetManager<M extends Mode, T> {
                     break;
 
                   case OfferModel:
+                    collectionReferenece = CollectionRef.offers;
+
                     OfferModel model = builder.stateOfCalendarCallback.model;
                     canendarEvent = KloudlessCalendarEvent(
                       eventTitle: model.groupOfferDataModel.classTitle,
@@ -103,6 +108,8 @@ class KloudlessWidgetManager<M extends Mode, T> {
                     break;
 
                   case RequestModel:
+                    collectionReferenece = CollectionRef.requests;
+
                     RequestModel model = builder.stateOfCalendarCallback.model;
                     canendarEvent = KloudlessCalendarEvent(
                       eventTitle: model.title,
@@ -133,7 +140,7 @@ class KloudlessWidgetManager<M extends Mode, T> {
                       if (eventId != null) {
                         logger.d("Event Successfully created");
 
-                        CollectionRef.projects
+                        collectionReferenece
                             .doc(builder.stateOfCalendarCallback.model.id)
                             .update({
                               "eventMetaData": EventMetaData(
@@ -161,7 +168,8 @@ class KloudlessWidgetManager<M extends Mode, T> {
                       attendeDetails: builder.attendeeDetails,
                     )
                         .then((value) => logger.i(
-                            "updateAttendiesInCalendarEvent Completed without any errors"))
+                              "updateAttendiesInCalendarEvent Completed without any errors",
+                            ))
                         .catchError((onError) => logger.i(
                             "updateAttendiesInCalendarEvent finished with an error! $onError"));
                     break;

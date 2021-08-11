@@ -17,6 +17,8 @@ import 'package:progress_dialog/progress_dialog.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
+import 'package:sevaexchange/components/calendar_events/models/kloudless_models.dart';
+import 'package:sevaexchange/components/calendar_events/module/index.dart';
 import 'package:sevaexchange/components/common_help_icon.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
 import 'package:sevaexchange/components/goods_dynamic_selection_createRequest.dart';
@@ -3419,20 +3421,22 @@ class RequestCreateFormState extends State<RequestCreateForm>
               speakerNotificationDocRef);
         }
 
+        // Navigator.pushReplacement(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) {
+        //       return AddToCalendar(
+        //           isOfferRequest: widget.isOfferRequest,
+        //           offer: widget.offer,
+        //           requestModel: requestModel,
+        //           userModel: widget.userModel,
+        //           eventsIdsArr: eventsIdsArr,);
+        //     },
+        //   ),
+        // );
+
         Navigator.pop(dialogContext);
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) {
-              return AddToCalendar(
-                  isOfferRequest: widget.isOfferRequest,
-                  offer: widget.offer,
-                  requestModel: requestModel,
-                  userModel: widget.userModel,
-                  eventsIdsArr: eventsIdsArr);
-            },
-          ),
-        );
+
         // await _settingModalBottomSheet(context);
       }
     }
@@ -3798,6 +3802,16 @@ class RequestCreateFormState extends State<RequestCreateForm>
     if (confirmationDialogContext != null) {
       Navigator.pop(confirmationDialogContext);
     }
+
+
+    KloudlessWidgetManager<CreateMode, RequestModel>().syncCalendar(
+      context: context,
+      builder: KloudlessWidgetBuilder().fromContext<RequestModel>(
+        context: context,
+        model: requestModel,
+        stateId: requestModel.id,
+      ),
+    );
     if (widget.isOfferRequest == true && widget.userModel != null) {
       Navigator.pop(context, {'response': 'ACCEPTED'});
     } else {
