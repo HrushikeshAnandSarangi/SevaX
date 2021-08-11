@@ -1159,7 +1159,7 @@ class L {
 
   String get provide_item_for_lending => "Provide item(s) for lending";
 
-  String get provide_place_for_lending => "Provide a place for lending";
+  String get provide_place_for_lending => "Provide a place for lending*";
 
   String get address => 'Address';
 
@@ -1296,9 +1296,17 @@ class L {
   String get items_returned => 'Item(s) Returned';
   String get checked_in => 'Checked In';
   String get checked_out => 'Checked Out';
+  String get check_out => 'Check Out';
+  String get check_in => 'Check In';
+  String get check_in_pending => 'Check in pending';
   String get borrow_request_collect_items_tag =>
       'Borrow Request - Collect Items';
   String get borrow_request_return_items_tag => 'Borrow Request - Return Items';
   String get collect_items => 'Collect Items';
   String get return_items => 'Return Items';
+  String get lent_to => 'Lent to: ';
+  String get place_not_added => 'Place not added';
+  String get items_not_added => 'Item(s) not added';
+  String get lending_offer_location_hint =>
+      'location will help members to locate the place easily.';
 }

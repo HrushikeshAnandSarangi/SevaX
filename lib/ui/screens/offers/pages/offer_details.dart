@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:sevaexchange/components/rich_text_view/rich_text_view.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/models/enums/lending_borrow_enums.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
@@ -28,6 +29,7 @@ import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/custom_dialogs/custom_dialog.dart';
 import 'package:sevaexchange/widgets/custom_list_tile.dart';
+import 'package:sevaexchange/widgets/hide_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../flavor_config.dart';
@@ -55,23 +57,6 @@ class OfferDetails extends StatelessWidget {
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    // return Align(
-    //   alignment: Alignment.topLeft,
-    //   child: Container(
-    //     color: Colors.teal,
-    //     child: ImagesPreview(
-    //       urls: [
-    //         "https://picsum.photos/200",
-    //         "https://picsum.photos/200",
-    //         "https://picsum.photos/200",
-    //         "https://picsum.photos/200",
-    //         "https://picsum.photos/200",
-    //         "https://picsum.photos/200",
-    //       ],
-    //     ),
-    //   ),
-    // );
-
     return Column(
       children: <Widget>[
         Expanded(
@@ -81,6 +66,23 @@ class OfferDetails extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
+                  HideWidget(
+                    hide: offerModel.type != RequestType.LENDING_OFFER,
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: Container(
+                        color: Colors.teal,
+                        child: ImagesPreview(
+                            urls: offerModel.lendingOfferDetailsModel
+                                        .lendingModel.lendingType ==
+                                    LendingType.PLACE
+                                ? offerModel.lendingOfferDetailsModel
+                                    .lendingModel.lendingPlaceModel.houseImages
+                                : offerModel.lendingOfferDetailsModel
+                                    .lendingModel.lendingItemModel.itemImages),
+                      ),
+                    ),
+                  ),
                   Padding(
                     padding: const EdgeInsets.only(left: 2.0),
                     child: Text(

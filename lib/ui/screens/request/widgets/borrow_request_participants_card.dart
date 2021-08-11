@@ -8,12 +8,13 @@ import 'package:sevaexchange/new_baseline/models/borrow_accpetor_model.dart';
 import 'package:sevaexchange/new_baseline/models/lending_model.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/lending_item_card_widget.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/lending_place_card_widget.dart';
+import 'package:sevaexchange/ui/screens/offers/widgets/lending_place_details_widget.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/network_image.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/widgets/custom_list_tile.dart';
 
 class BorrowRequestParticipantsCard extends StatelessWidget {
   final Padding padding;
-  final String imageUrl;
   final Function onImageTap;
   final Widget buttonsContainer;
   final RequestModel requestModel;
@@ -25,7 +26,6 @@ class BorrowRequestParticipantsCard extends StatelessWidget {
   const BorrowRequestParticipantsCard(
       {Key key,
       this.padding,
-      this.imageUrl,
       this.onImageTap,
       this.buttonsContainer = const SizedBox(),
       this.requestModel,
@@ -36,6 +36,8 @@ class BorrowRequestParticipantsCard extends StatelessWidget {
       : super(key: key);
   @override
   Widget build(BuildContext context) {
+    logger.e('Lending Model Items Length 2: ' +
+        borrowAcceptorModel.acceptorphotoURL.toString());
     return Padding(
       padding: padding ?? EdgeInsets.symmetric(horizontal: 2, vertical: 6),
       child: Container(
@@ -52,7 +54,10 @@ class BorrowRequestParticipantsCard extends StatelessWidget {
                     child: AspectRatio(
                       aspectRatio: 1,
                       child: CustomNetworkImage(
-                        imageUrl ?? defaultUserImageURL,
+                        (borrowAcceptorModel.acceptorphotoURL != null &&
+                                borrowAcceptorModel.acceptorphotoURL != '')
+                            ? borrowAcceptorModel.acceptorphotoURL
+                            : defaultUserImageURL,
                         fit: BoxFit.cover,
                         onTap: onImageTap,
                         size: 40,
@@ -126,10 +131,8 @@ class BorrowRequestParticipantsCard extends StatelessWidget {
                         width: 300,
                         child: Column(
                           children: [
-                            LendingPlaceCardWidget(
-                              lendingPlaceModel:
-                                  lendingPlaceModel.lendingPlaceModel,
-                              hidden: true,
+                            LendingPlaceDetailsWidget(
+                              lendingModel: lendingPlaceModel,
                             ),
                             SizedBox(height: 10),
                           ],

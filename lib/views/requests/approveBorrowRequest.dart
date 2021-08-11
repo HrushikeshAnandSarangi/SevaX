@@ -98,9 +98,15 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
               L.of(context).details_of_the_request,
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
+            SizedBox(height: 5),
             Text(
               L.of(context).accept_borrow_agreement_place_hint,
               style: TextStyle(fontSize: 14, color: Colors.grey),
+            ),
+            SizedBox(height: 10),
+            Text(
+              L.of(context).provide_place_for_lending,
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 10),
             SelectLendingPlaceItem(
@@ -319,6 +325,29 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
             onPressed: () async {
               //donation approved
               if (_formKey.currentState.validate()) {
+                if (selectedLendingPlaceModel == null &&
+                    widget.requestModel.roomOrTool ==
+                        LendingType.PLACE.readable) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(L.of(context).place_not_added),
+                    ),
+                  );
+
+                  return;
+                }
+
+                if (selectedItemModels.length == 0 &&
+                    widget.requestModel.roomOrTool ==
+                        LendingType.ITEM.readable) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(L.of(context).items_not_added),
+                    ),
+                  );
+
+                  return;
+                }
                 if (location == null) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
@@ -340,19 +369,20 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
                     await storeAcceptorDataBorrowRequest(
                       model: widget.requestModel,
                       borrowAcceptorModel: BorrowAcceptorModel(
-                        acceptorEmail: SevaCore.of(context).loggedInUser.email,
-                        selectedAddress: selectedAddress,
-                        acceptorName:
-                            SevaCore.of(context).loggedInUser.fullname,
-                        acceptorId:
-                            SevaCore.of(context).loggedInUser.sevaUserID,
-                        timestamp: DateTime.now().millisecondsSinceEpoch,
-                        borrowAgreementLink: borrowAgreementLinkFinal,
-                        // borrowedItemsIds: selectedModelsId.toList(),
-                        borrowedPlaceId: selectedLendingPlaceModel
-                            .id, //umesh to do //id is coming null
-                        isApproved: false,
-                      ),
+                          acceptorEmail:
+                              SevaCore.of(context).loggedInUser.email,
+                          selectedAddress: selectedAddress,
+                          acceptorName:
+                              SevaCore.of(context).loggedInUser.fullname,
+                          acceptorId:
+                              SevaCore.of(context).loggedInUser.sevaUserID,
+                          timestamp: DateTime.now().millisecondsSinceEpoch,
+                          borrowAgreementLink: borrowAgreementLinkFinal,
+                          // borrowedItemsIds: selectedModelsId.toList(),
+                          borrowedPlaceId: selectedLendingPlaceModel.id,
+                          isApproved: false,
+                          acceptorphotoURL:
+                              SevaCore.of(context).loggedInUser.photoURL),
                     );
                   } else {
                     logger.e('COMES HERE 26');
@@ -360,6 +390,8 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
                       model: widget.requestModel,
                       borrowAcceptorModel: BorrowAcceptorModel(
                         acceptorEmail: SevaCore.of(context).loggedInUser.email,
+                        acceptorphotoURL:
+                            SevaCore.of(context).loggedInUser.photoURL,
                         selectedAddress: selectedAddress,
                         acceptorName:
                             SevaCore.of(context).loggedInUser.fullname,
@@ -533,6 +565,8 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
                         placeOrItem: widget.requestModel.roomOrTool,
                         communityId: widget.requestModel.communityId,
                         timebankId: widget.requestModel.timebankId,
+                        startTime: widget.requestModel.requestStart,
+                        endTime: widget.requestModel.requestEnd,
                         onPdfCreated: (pdfLink, documentNameFinal) {
                           logger.e('COMES BACK FROM ON PDF CREATED:  ' +
                               pdfLink.toString());
