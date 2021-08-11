@@ -13,6 +13,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/agreement_form__selection_model.dart';
 import 'package:sevaexchange/models/agreement_template_model.dart';
 import 'package:sevaexchange/models/enums/lending_borrow_enums.dart';
+import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/new_baseline/models/borrow_agreement_template_model.dart';
 import 'package:sevaexchange/ui/screens/borrow_agreement/borrow_agreement_pdf.dart';
@@ -37,10 +38,11 @@ class AgreementForm extends StatefulWidget {
   final RequestModel requestModel;
   final bool isOffer;
   final String placeOrItem;
-  // final LendingOfferModel lendingOfferModel;
-  // final LendingOfferModel lendingOfferModel;
+  final OfferModel offerModel;
   final String timebankId;
   final String communityId;
+  final int startTime;
+  final int endTime;
   final void Function(String borrowAgreementLinkFinal, String documentName)
       onPdfCreated;
 
@@ -51,7 +53,9 @@ class AgreementForm extends StatefulWidget {
     this.timebankId, // @required this.timebankId,
     this.communityId, // @required this.communityId,
     @required this.onPdfCreated,
-    // this.lendingOfferModel,
+    this.offerModel,
+    this.startTime,
+    this.endTime,
   });
 
   @override
@@ -821,6 +825,8 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                       widget.requestModel,
                       documentName,
                       widget.isOffer,
+                      widget.startTime,
+                      widget.endTime,
                       widget.placeOrItem,
                       specificConditions,
                       isDamageLiability,
@@ -907,6 +913,8 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                         widget.requestModel,
                         documentName,
                         widget.isOffer,
+                        widget.startTime,
+                        widget.endTime,
                         widget.placeOrItem,
                         specificConditions,
                         isDamageLiability,

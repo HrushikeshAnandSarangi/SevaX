@@ -1307,4 +1307,6 @@ class L {
   String get lent_to => 'Lent to: ';
   String get place_not_added => 'Place not added';
   String get items_not_added => 'Item(s) not added';
+  String get lending_offer_location_hint =>
+      'location will help members to locate the place easily.';
 }

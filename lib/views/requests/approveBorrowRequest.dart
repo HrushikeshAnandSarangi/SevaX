@@ -565,6 +565,8 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
                         placeOrItem: widget.requestModel.roomOrTool,
                         communityId: widget.requestModel.communityId,
                         timebankId: widget.requestModel.timebankId,
+                        startTime: widget.requestModel.requestStart,
+                        endTime: widget.requestModel.requestEnd,
                         onPdfCreated: (pdfLink, documentNameFinal) {
                           logger.e('COMES BACK FROM ON PDF CREATED:  ' +
                               pdfLink.toString());

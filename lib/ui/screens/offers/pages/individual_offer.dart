@@ -18,10 +18,12 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/lending_model.dart';
 import 'package:sevaexchange/new_baseline/models/lending_place_model.dart';
+import 'package:sevaexchange/ui/screens/borrow_agreement/borrow_agreement_pdf.dart';
 import 'package:sevaexchange/ui/screens/calendar/add_to_calander.dart';
 import 'package:sevaexchange/ui/screens/offers/bloc/individual_offer_bloc.dart';
 import 'package:sevaexchange/ui/screens/offers/bloc/one_to_many_offer_bloc.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/add_update_lending_place.dart';
+import 'package:sevaexchange/ui/screens/offers/pages/agreementForm.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/select_lending_place.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/custom_dialog.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/custom_textfield.dart';
@@ -70,7 +72,8 @@ class _IndividualOfferState extends State<IndividualOffer> {
   CommunityModel communityModel;
   String selectedAddress;
   CustomLocation customLocation;
-
+  String borrowAgreementLinkFinal = '';
+  String documentName = '';
   // String title = '';
   String title_hint;
   String description_hint;
@@ -117,6 +120,23 @@ class _IndividualOfferState extends State<IndividualOffer> {
             widget.offerModel.individualOfferDataModel.schedule;
         offerType = widget.offerModel.type;
         _bloc.onTypeChanged(widget.offerModel.type);
+        if (widget.offerModel.type == RequestType.LENDING_OFFER) {
+          _bloc.lendingOfferType = widget.offerModel.lendingOfferDetailsModel
+                      .lendingModel.lendingType ==
+                  LendingType.PLACE
+              ? 0
+              : 1;
+          if (widget.offerModel.lendingOfferDetailsModel
+                  .lendingOfferAgreementLink !=
+              null) {
+            borrowAgreementLinkFinal = widget.offerModel
+                    .lendingOfferDetailsModel.lendingOfferAgreementLink ??
+                '';
+            documentName = widget.offerModel.lendingOfferDetailsModel
+                    .lendingOfferAgreementName ??
+                '';
+          }
+        }
       } else {
         _one_to_many_bloc.loadData(widget.offerModel);
         _one_to_many_titleController.text =
@@ -148,13 +168,17 @@ class _IndividualOfferState extends State<IndividualOffer> {
       _bloc.onTypeChanged(RequestType.TIME);
       offerType = RequestType.TIME;
     }
+
     super.initState();
     getCommunity();
     _bloc.errorMessage.listen((event) {
       if (event.isNotEmpty && event != null) {
         //hideProgress();
-        showScaffold(
-            event == 'goods' ? S.of(context).select_goods_category : null);
+        showScaffold(event == 'goods'
+            ? S.of(context).select_goods_category
+            : event == 'lending'
+                ? 'Please select lending Item/Place'
+                : '');
       }
     });
     _one_to_many_bloc.classSizeError.listen((error) {
@@ -363,7 +387,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                           transaction_matrix_type: "lending_offers",
                           comingFrom: ComingFrom.Offers,
                           child: ConfigurationCheck(
-                            actionType: 'lending_offer',
+                            actionType: 'create_lending_offers',
                             role: memberType(widget.timebankModel,
                                 SevaCore.of(context).loggedInUser.sevaUserID),
                             child: _optionRadioButton(
@@ -700,50 +724,6 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                               ? OneToManyOffer()
                                               : GoodsRequest();
                             }),
-                        // SizedBox(height: 10),
-                        // Container(
-                        //   alignment: Alignment.bottomLeft,
-                        //   child: CupertinoSegmentedControl<int>(
-                        //     unselectedColor: Colors.grey[200],
-                        //     selectedColor: Theme.of(context).primaryColor,
-                        //     children: {
-                        //       0: Padding(
-                        //         padding: EdgeInsets.only(left: 14, right: 14),
-                        //         child: Text(
-                        //           L
-                        //               .of(context)
-                        //               .option_one,
-                        //           style: TextStyle(fontSize: 12.0),
-                        //         ),
-                        //       ),
-                        //       1: Padding(
-                        //         padding: EdgeInsets.only(left: 14, right: 14),
-                        //         child: Text(
-                        //           L
-                        //               .of(context)
-                        //               .option_two,
-                        //           style: TextStyle(fontSize: 12.0),
-                        //         ),
-                        //       ),
-                        //     },
-                        //     borderColor: Colors.grey,
-                        //     padding: EdgeInsets.only(left: 0.0, right: 0.0),
-                        //     groupValue: _bloc.timeOfferType,
-                        //     onValueChanged: (int val) {
-                        //       if (val != _bloc.timeOfferType) {
-                        //         setState(() {
-                        //           if (val == 0) {
-                        //             _bloc.timeOfferType = 0;
-                        //           } else {
-                        //             _bloc.timeOfferType = 1;
-                        //           }
-                        //           _bloc.timeOfferType = val;
-                        //         });
-                        //       }
-                        //     },
-                        //     //groupValue: sharedValue,
-                        //   ),
-                        // ),
                         HideWidget(
                             hide: offerType == RequestType.ONE_TO_MANY_OFFER,
                             child: SizedBox(height: 25)),
@@ -1071,7 +1051,6 @@ class _IndividualOfferState extends State<IndividualOffer> {
                             ),
                           ),
                         ),
-
                         HideWidget(
                           hide: offerType == RequestType.ONE_TO_MANY_OFFER,
                           child: CustomElevatedButton(
@@ -1096,47 +1075,100 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                       );
                                       return;
                                     }
-                                    if (widget.offerModel == null) {
-                                      if (SevaCore.of(context)
-                                              .loggedInUser
-                                              .calendarId !=
-                                          null) {
-                                        _bloc.allowedCalenderEvent = true;
-                                        await _bloc.createOrUpdateOffer(
-                                            user: SevaCore.of(context)
-                                                .loggedInUser,
-                                            timebankId: widget.timebankId,
-                                            communityName:
-                                                communityModel.name ?? '');
-                                      } else {
-                                        _bloc.allowedCalenderEvent = true;
-                                        await _bloc.createOrUpdateOffer(
-                                            user: SevaCore.of(context)
-                                                .loggedInUser,
-                                            timebankId: widget.timebankId,
-                                            communityName:
-                                                communityModel.name ?? '');
-                                        if (_bloc.offerCreatedBool) {
-                                          Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) {
-                                                return AddToCalendar(
-                                                    isOfferRequest: false,
-                                                    offer: _bloc.mainOfferModel,
-                                                    requestModel: null,
-                                                    userModel: null,
-                                                    eventsIdsArr:
-                                                        _bloc.offerIds);
-                                              },
-                                            ),
+                                    if (offerType ==
+                                        RequestType.LENDING_OFFER) {
+                                      FocusScope.of(context).unfocus();
+                                      if (OfferDurationWidgetState
+                                                  .starttimestamp !=
+                                              0 &&
+                                          OfferDurationWidgetState
+                                                  .endtimestamp !=
+                                              0) {
+                                        _bloc.startTime =
+                                            OfferDurationWidgetState
+                                                .starttimestamp;
+                                        _bloc.endTime = OfferDurationWidgetState
+                                            .endtimestamp;
+                                        if (_bloc.endTime <= _bloc.startTime) {
+                                          errorDialog(
+                                            context: context,
+                                            error: S
+                                                .of(context)
+                                                .validation_error_end_date_greater,
                                           );
+                                          return;
                                         }
+                                        if (widget.offerModel == null) {
+                                          await _bloc.createLendingOffer(
+                                              user: SevaCore.of(context)
+                                                  .loggedInUser,
+                                              timebankId: widget.timebankId,
+                                              communityName:
+                                                  communityModel.name ?? '',
+                                              lendingAgreementLink:
+                                                  borrowAgreementLinkFinal,
+                                              lendingOfferAgreementName:
+                                                  documentName);
+                                        } else {
+                                          _bloc.updateLendingOffer(
+                                              offerModel: widget.offerModel,
+                                              lendingOfferAgreementName:
+                                                  documentName ?? '',
+                                              lendingOfferAgreementLink:
+                                                  borrowAgreementLinkFinal);
+                                        }
+                                      } else {
+                                        errorDialog(
+                                          context: context,
+                                          error: S
+                                              .of(context)
+                                              .offer_start_end_date,
+                                        );
                                       }
                                     } else {
-                                      _bloc.updateIndividualOffer(
-                                        widget.offerModel,
-                                      );
+                                      if (widget.offerModel == null) {
+                                        if (SevaCore.of(context)
+                                                .loggedInUser
+                                                .calendarId !=
+                                            null) {
+                                          _bloc.allowedCalenderEvent = true;
+                                          await _bloc.createOrUpdateOffer(
+                                              user: SevaCore.of(context)
+                                                  .loggedInUser,
+                                              timebankId: widget.timebankId,
+                                              communityName:
+                                                  communityModel.name ?? '');
+                                        } else {
+                                          _bloc.allowedCalenderEvent = true;
+                                          await _bloc.createOrUpdateOffer(
+                                              user: SevaCore.of(context)
+                                                  .loggedInUser,
+                                              timebankId: widget.timebankId,
+                                              communityName:
+                                                  communityModel.name ?? '');
+                                          if (_bloc.offerCreatedBool) {
+                                            Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) {
+                                                  return AddToCalendar(
+                                                      isOfferRequest: false,
+                                                      offer:
+                                                          _bloc.mainOfferModel,
+                                                      requestModel: null,
+                                                      userModel: null,
+                                                      eventsIdsArr:
+                                                          _bloc.offerIds);
+                                                },
+                                              ),
+                                            );
+                                          }
+                                        }
+                                      } else {
+                                        _bloc.updateIndividualOffer(
+                                          widget.offerModel,
+                                        );
+                                      }
                                     }
                                   },
                             child: status.data == Status.LOADING
@@ -1473,24 +1505,26 @@ class _IndividualOfferState extends State<IndividualOffer> {
 
   Widget LendingOffer() {
     return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Container(
-            alignment: Alignment.bottomLeft,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  L.of(context).lending,
-                  style: TextStyle(
-                    fontSize: 16,
-                    //fontWeight: FontWeight.bold,
-                    fontFamily: 'Europa',
-                    color: Colors.black,
-                  ),
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Container(
+          alignment: Alignment.bottomLeft,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                L.of(context).lending,
+                style: TextStyle(
+                  fontSize: 16,
+                  //fontWeight: FontWeight.bold,
+                  fontFamily: 'Europa',
+                  color: Colors.black,
                 ),
-                SizedBox(height: 10),
-                CupertinoSegmentedControl<int>(
+              ),
+              SizedBox(height: 10),
+              HideWidget(
+                hide: widget.offerModel != null,
+                child: CupertinoSegmentedControl<int>(
                   unselectedColor: Colors.grey[200],
                   selectedColor: Theme.of(context).primaryColor,
                   children: {
@@ -1527,122 +1561,251 @@ class _IndividualOfferState extends State<IndividualOffer> {
                   },
                   //groupValue: sharedValue,
                 ),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(height: 20),
+        Text(
+          _bloc.lendingOfferType == 0
+              ? L.of(context).select_a_place_lending
+              : L.of(context).select_a_item_lending,
+          style: TextStyle(
+            fontSize: 16,
+            //fontWeight: FontWeight.bold,
+            fontFamily: 'Europa',
+            color: Colors.black,
+          ),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        SelectLendingPlaceItem(
+          onSelected: (LendingModel model) {
+            _bloc.onLendingModelAdded(model);
+          },
+          lendingType: _bloc.lendingOfferType == 0
+              ? LendingType.PLACE
+              : LendingType.ITEM,
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        StreamBuilder<LendingModel>(
+            stream: _bloc.lendingPlaceModelStream,
+            builder: (context, snapshot) {
+              if (snapshot.data == null || snapshot.hasError) {
+                return Container();
+              }
+              if (snapshot.hasError) {
+                return Container();
+              }
+              if (snapshot.data.lendingType == LendingType.ITEM) {
+                return LendingItemCardWidget(
+                  lendingItemModel: snapshot.data.lendingItemModel,
+                  onDelete: () {
+                    _bloc.onLendingModelAdded(null);
+                  },
+                  onEdit: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return AddUpdateLendingItem(
+                            lendingModel: snapshot.data,
+                            onItemCreateUpdate: (LendingModel model) {
+                              _bloc.onLendingModelAdded(model);
+                            },
+                          );
+                        },
+                      ),
+                    );
+                  },
+                );
+              } else {
+                return LendingPlaceCardWidget(
+                  lendingPlaceModel: snapshot.data.lendingPlaceModel,
+                  onDelete: () {
+                    _bloc.onLendingModelAdded(null);
+                  },
+                  onEdit: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return AddUpdateLendingPlace(
+                            lendingModel: snapshot.data,
+                            onPlaceCreateUpdate: (LendingModel model) {
+                              _bloc.onLendingModelAdded(model);
+                            },
+                          );
+                        },
+                      ),
+                    );
+                  },
+                );
+              }
+            }),
+        SizedBox(height: 20),
+        OfferDurationWidget(
+          title: S.of(context).offer_duration,
+          startTime: widget.offerModel != null
+              ? DateTime.fromMillisecondsSinceEpoch(
+                  widget.offerModel.lendingOfferDetailsModel.startDate,
+                )
+              : null,
+          endTime: widget.offerModel != null
+              ? DateTime.fromMillisecondsSinceEpoch(
+                  widget.offerModel.lendingOfferDetailsModel.endDate,
+                )
+              : null,
+        ),
+        SizedBox(height: 20),
+        StreamBuilder<String>(
+          stream: _bloc.offerDescription,
+          builder: (context, snapshot) {
+            return CustomTextField(
+              controller: _descriptionController,
+              currentNode: _description,
+              nextNode: _availability,
+              value: snapshot.data,
+              heading: "${S.of(context).offer_description}*",
+              onChanged: _bloc.onOfferDescriptionChanged,
+              hint: description_hint != null
+                  ? description_hint
+                  : S.of(context).offer_description_hint,
+              maxLength: 500,
+              error: getValidationError(context, snapshot.error),
+            );
+          },
+        ),
+        SizedBox(height: 12),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(documentName != null ? S.of(context).view : ' '),
+                GestureDetector(
+                    child: Container(
+                      alignment: Alignment.topLeft,
+                      width: MediaQuery.of(context).size.width * 0.55,
+                      child: Text(
+                        documentName != null || documentName != ''
+                            ? documentName
+                            : S
+                                .of(context)
+                                .approve_borrow_no_agreement_selected,
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            color: documentName != null
+                                ? Theme.of(context).primaryColor
+                                : Colors.grey),
+                        softWrap: true,
+                      ),
+                    ),
+                    onTap: () async {
+                      if (documentName != '') {
+                        await openPdfViewer(
+                            borrowAgreementLinkFinal, documentName, context);
+                      } else {
+                        return null;
+                      }
+                    }),
               ],
             ),
-          ),
-          SizedBox(height: 20),
-          Text(
-            _bloc.lendingOfferType == 0
-                ? L.of(context).select_a_place_lending
-                : L.of(context).select_a_item_lending,
-            style: TextStyle(
-              fontSize: 16,
-              //fontWeight: FontWeight.bold,
-              fontFamily: 'Europa',
-              color: Colors.black,
+            Container(
+              alignment: Alignment.bottomCenter,
+              margin: EdgeInsets.only(right: 12),
+              width: 90,
+              height: 32,
+              child: CustomTextButton(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                padding: EdgeInsets.all(0),
+                color: Theme.of(context).primaryColor,
+                child: Row(
+                  children: <Widget>[
+                    SizedBox(width: 1),
+                    Spacer(),
+                    Text(
+                      S.of(context).change,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                    Spacer(
+                      flex: 1,
+                    ),
+                  ],
+                ),
+                onPressed: () async {
+                  FocusScope.of(context).unfocus();
+                  if (OfferDurationWidgetState.starttimestamp != 0 &&
+                      OfferDurationWidgetState.endtimestamp != 0) {
+                    _bloc.startTime = OfferDurationWidgetState.starttimestamp;
+                    _bloc.endTime = OfferDurationWidgetState.endtimestamp;
+                    if (_bloc.endTime <= _bloc.startTime) {
+                      errorDialog(
+                        context: context,
+                        error: S.of(context).validation_error_end_date_greater,
+                      );
+                      return;
+                    }
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        fullscreenDialog: true,
+                        builder: (context) => AgreementForm(
+                          endTime: _bloc.endTime,
+                          startTime: _bloc.startTime,
+                          requestModel: null,
+                          isOffer: true,
+                          placeOrItem: _bloc.lendingOfferType == 0
+                              ? LendingType.PLACE.readable
+                              : LendingType.ITEM.readable,
+                          communityId: SevaCore.of(context)
+                              .loggedInUser
+                              .currentCommunity,
+                          timebankId: widget.timebankId,
+                          onPdfCreated: (pdfLink, documentNameFinal) {
+                            logger.e('COMES BACK FROM ON PDF CREATED:  ' +
+                                pdfLink.toString());
+                            borrowAgreementLinkFinal = pdfLink;
+                            documentName = documentNameFinal;
+                            // when request is created check if above value is stored in document
+                            setState(() => {});
+                          },
+                        ),
+                      ),
+                    );
+                  } else {
+                    errorDialog(
+                      context: context,
+                      error: S.of(context).offer_start_end_date,
+                    );
+                  }
+                },
+              ),
             ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          SelectLendingPlaceItem(
-            onSelected: (LendingModel model) {
-              _bloc.onLendingModelAdded(model);
-            },
-            lendingType: _bloc.lendingOfferType == 0
-                ? LendingType.PLACE
-                : LendingType.ITEM,
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          StreamBuilder<LendingModel>(
-              stream: _bloc.lendingPlaceModelStream,
-              builder: (context, snapshot) {
-                if (snapshot.data == null || snapshot.hasError) {
-                  return Container();
-                }
-                if (snapshot.hasError) {
-                  return Container();
-                }
-                if (snapshot.data.lendingType == LendingType.ITEM) {
-                  return LendingItemCardWidget(
-                    lendingItemModel: snapshot.data.lendingItemModel,
-                    onDelete: () {
-                      _bloc.onLendingModelAdded(null);
-                    },
-                    onEdit: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return AddUpdateLendingItem(
-                              lendingModel: snapshot.data,
-                              onItemCreateUpdate: (LendingModel model) {
-                                _bloc.onLendingModelAdded(model);
-                              },
-                            );
-                          },
-                        ),
-                      );
-                    },
-                  );
-                } else {
-                  return LendingPlaceCardWidget(
-                    lendingPlaceModel: snapshot.data.lendingPlaceModel,
-                    onDelete: () {
-                      _bloc.onLendingModelAdded(null);
-                    },
-                    onEdit: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return AddUpdateLendingPlace(
-                              lendingModel: snapshot.data,
-                              onPlaceCreateUpdate: (LendingModel model) {
-                                _bloc.onLendingModelAdded(model);
-                              },
-                            );
-                          },
-                        ),
-                      );
-                    },
-                  );
-                }
-              }),
-          SizedBox(height: 20),
-          OfferDurationWidget(
-            title: S.of(context).offer_duration,
-            startTime: widget.offerModel != null
-                ? DateTime.fromMillisecondsSinceEpoch(
-                    widget.offerModel.groupOfferDataModel.startDate,
-                  )
-                : null,
-            endTime: widget.offerModel != null
-                ? DateTime.fromMillisecondsSinceEpoch(
-                    widget.offerModel.groupOfferDataModel.endDate,
-                  )
-                : null,
-          ),
-          SizedBox(height: 20),
-          StreamBuilder<String>(
-            stream: _bloc.offerDescription,
-            builder: (context, snapshot) {
-              return CustomTextField(
-                controller: _descriptionController,
-                currentNode: _description,
-                nextNode: _availability,
-                value: snapshot.data,
-                heading: "${S.of(context).offer_description}*",
-                onChanged: _bloc.onOfferDescriptionChanged,
-                hint: description_hint != null
-                    ? description_hint
-                    : S.of(context).offer_description_hint,
-                maxLength: 500,
-                error: getValidationError(context, snapshot.error),
-              );
-            },
-          ),
-          SizedBox(height: 12),
-        ]);
+          ],
+        ),
+        SizedBox(height: 10),
+        Text(
+          L.of(context).address,
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+        ),
+        SizedBox(height: 6),
+        Text(
+          L.of(context).lending_offer_location_hint,
+          style: TextStyle(fontSize: 15),
+          softWrap: true,
+        ),
+        SizedBox(height: 5),
+      ],
+    );
   }
 }
