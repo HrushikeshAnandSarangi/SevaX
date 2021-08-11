@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/models/enums/lending_borrow_enums.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
@@ -399,35 +400,70 @@ class ToDo {
       // BorrowAcceptorModel borrowAcceptorModel =
       //     await FirestoreManager.getBorrowRequestAcceptorModel(
       //         requestId: model.id, acceptorEmail: model.approvedUsers.first);
-      if (!model.borrowModel.itemsCollected) {
-        //items to be collected status
-        tasksList.add(
-          TasksCardWrapper(
-            taskCard: ToDoCard(
-              title: model.title,
-              subTitle: L.of(context).collect_items,
-              timeInMilliseconds: model.requestStart,
-              onTap: () async {},
-              tag: L.of(context).borrow_request_collect_items_tag,
+      if (model.roomOrTool == LendingType.ITEM.readable) {
+        //FOR BORROW ITEMS
+        if (!model.borrowModel.itemsCollected) {
+          //items to be collected status
+          tasksList.add(
+            TasksCardWrapper(
+              taskCard: ToDoCard(
+                title: model.title,
+                subTitle: L.of(context).collect_items,
+                timeInMilliseconds: model.requestStart,
+                onTap: () async {},
+                tag: L.of(context).borrow_request_collect_items_tag,
+              ),
+              taskTimestamp: model.requestStart,
             ),
-            taskTimestamp: model.requestStart,
-          ),
-        );
-      } else if (model
-              .borrowModel.itemsCollected && //items to be returned status
-          !model.borrowModel.itemsReturned) {
-        tasksList.add(
-          TasksCardWrapper(
-            taskCard: ToDoCard(
-              title: model.title,
-              subTitle: L.of(context).return_items,
-              timeInMilliseconds: model.requestStart,
-              onTap: () async {},
-              tag: L.of(context).borrow_request_return_items_tag,
+          );
+        } else if (model
+                .borrowModel.itemsCollected && //items to be returned status
+            !model.borrowModel.itemsReturned) {
+          tasksList.add(
+            TasksCardWrapper(
+              taskCard: ToDoCard(
+                title: model.title,
+                subTitle: L.of(context).return_items,
+                timeInMilliseconds: model.requestEnd,
+                onTap: () async {},
+                tag: L.of(context).borrow_request_return_items_tag,
+              ),
+              taskTimestamp: model.requestStart,
             ),
-            taskTimestamp: model.requestStart,
-          ),
-        );
+          );
+        }
+        //FOR BORROW PLACE
+      } else {
+        if (!model.borrowModel.isCheckedIn) {
+          //items to be collected status
+          tasksList.add(
+            TasksCardWrapper(
+              taskCard: ToDoCard(
+                title: model.title,
+                subTitle: L.of(context).check_in_pending,
+                timeInMilliseconds: model.requestStart,
+                onTap: () async {},
+                tag: L.of(context).check_in,
+              ),
+              taskTimestamp: model.requestStart,
+            ),
+          );
+        } else if (model
+                .borrowModel.isCheckedIn && //items to be returned status
+            !model.borrowModel.isCheckedOut) {
+          tasksList.add(
+            TasksCardWrapper(
+              taskCard: ToDoCard(
+                title: model.title,
+                subTitle: L.of(context).check_out,
+                timeInMilliseconds: model.requestEnd,
+                onTap: () async {},
+                tag: L.of(context).check_out,
+              ),
+              taskTimestamp: model.requestStart,
+            ),
+          );
+        }
       }
     });
 

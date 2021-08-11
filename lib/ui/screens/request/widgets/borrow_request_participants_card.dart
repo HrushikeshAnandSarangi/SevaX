@@ -8,6 +8,7 @@ import 'package:sevaexchange/new_baseline/models/borrow_accpetor_model.dart';
 import 'package:sevaexchange/new_baseline/models/lending_model.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/lending_item_card_widget.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/lending_place_card_widget.dart';
+import 'package:sevaexchange/ui/screens/offers/widgets/lending_place_details_widget.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/network_image.dart';
 import 'package:sevaexchange/widgets/custom_list_tile.dart';
 
@@ -126,10 +127,8 @@ class BorrowRequestParticipantsCard extends StatelessWidget {
                         width: 300,
                         child: Column(
                           children: [
-                            LendingPlaceCardWidget(
-                              lendingPlaceModel:
-                                  lendingPlaceModel.lendingPlaceModel,
-                              hidden: true,
+                            LendingPlaceDetailsWidget(
+                              lendingModel: lendingPlaceModel,
                             ),
                             SizedBox(height: 10),
                           ],
