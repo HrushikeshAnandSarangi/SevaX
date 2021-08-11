@@ -712,7 +712,8 @@ class ElasticSearchApi {
 
         //explore events listing page
         if (showCompletedEvent) {
-          if (endDate.isBefore(DateTime.now())) {
+          if (endDate.isAfter(DateTime.now().subtract(Duration(days: 365))) &&
+              endDate.isBefore(DateTime.now())) {
             if (AppConfig.isTestCommunity != null && AppConfig.isTestCommunity) {
               if (!model.liveMode) models.add(model);
             } else {
