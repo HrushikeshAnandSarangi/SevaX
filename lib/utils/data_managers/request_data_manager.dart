@@ -1112,7 +1112,6 @@ Future<void> borrowRequestFeedbackBorrowerUpdate({
 Future<void> storeAcceptorDataBorrowRequest(
     {@required RequestModel model,
     @required BorrowAcceptorModel borrowAcceptorModel}) async {
-  logger.e('COMES TO SET AGREEMENT LINK 1');
   await CollectionRef.requests
       .doc(model.id)
       .collection('borrowRequestAcceptors')

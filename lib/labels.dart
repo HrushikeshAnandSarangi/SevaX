@@ -1309,4 +1309,5 @@ class L {
   String get items_not_added => 'Item(s) not added';
   String get lending_offer_location_hint =>
       'location will help members to locate the place easily.';
+  String get join_borrow_request => 'Invited to accept request';
 }

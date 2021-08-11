@@ -2191,15 +2191,14 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
             onTap: () async {
               log('Came out of accept borrow request');
 
-              Navigator.of(context).pop();
-
               proccedWithCalander();
 
-              await updateAcceptBorrowRequest(
-                requestModel: widget.requestItem,
-                //participantDetails: participantDetails,
-                userEmail: SevaCore.of(context).loggedInUser.email,
-              );
+              // await updateAcceptBorrowRequest(
+              //   requestModel: widget.requestItem,
+              //   //participantDetails: participantDetails,
+              //   userEmail: SevaCore.of(context).loggedInUser.email,
+              // );
+              Navigator.of(context).pop();
             },
           ),
         ),
