@@ -176,7 +176,27 @@ flutter:
     - images/intro_screens/Messaging_and_communication.png
     - images/intro_screens/Requests_and_Offers.png
     - images/intro_screens/What_is_a_timebank_and_how_can_people_find_and_join_one.png
-    # card images
+    # amenities icons
+    - images/icons/amenities_icons/amenities.png
+    - images/icons/amenities_icons/air_conditioner.png
+    - images/icons/amenities_icons/alarm_clock.png
+    - images/icons/amenities_icons/bath_tub.png
+    - images/icons/amenities_icons/closet.png
+    - images/icons/amenities_icons/clothes_hanger.png
+    - images/icons/amenities_icons/coffee_machine.png
+    - images/icons/amenities_icons/dental_kit.png
+    - images/icons/amenities_icons/iron.png
+    - images/icons/amenities_icons/ironing_board.png
+    - images/icons/amenities_icons/kitchen.png
+    - images/icons/amenities_icons/luggage_rack.png
+    - images/icons/amenities_icons/mini_fridge.png
+    - images/icons/amenities_icons/parking.png
+    - images/icons/amenities_icons/safe_locker.png
+    - images/icons/amenities_icons/shaving_kit.png
+    - images/icons/amenities_icons/swimming_pool.png
+    - images/icons/amenities_icons/television.png
+    - images/icons/amenities_icons/wifi.png
+    - images/icons/amenities_icons/workspace.png
 
   fonts:
     # - family: Montserrat
