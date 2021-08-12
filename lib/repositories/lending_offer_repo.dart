@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/new_baseline/models/amenities_model.dart';
@@ -52,6 +54,8 @@ class LendingOffersRepo {
 
   static Future<List<LendingModel>> getAllLendingItemModels(
       {@required String creatorId}) async {
+    log('items repo ${creatorId}');
+
     List<LendingModel> modelList = [];
     await CollectionRef.lendingItems
         .where('creatorId', isEqualTo: creatorId)
@@ -61,8 +65,11 @@ class LendingOffersRepo {
       data.docs.forEach((document) {
         LendingModel model = LendingModel.fromMap(document.data());
         modelList.add(model);
+        log('items len ${modelList.length}');
       });
     });
+    log('items len ${modelList.length}');
+
     return modelList;
   }
 

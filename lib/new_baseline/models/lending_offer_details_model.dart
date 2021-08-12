@@ -6,14 +6,21 @@ class LendingOfferDetailsModel {
     this.endDate,
     this.lendingModel,
     this.lendingOfferAgreementLink,
+    this.lendingOfferApprovedAgreementLink,
     this.lendingOfferAgreementName,
+    this.offerAcceptors,
+    this.offerInvites,
+    this.approvedUsers,
   });
   int startDate;
   int endDate;
   LendingModel lendingModel;
   String lendingOfferAgreementLink;
+  String lendingOfferApprovedAgreementLink;
   String lendingOfferAgreementName;
-
+  List<String> offerAcceptors = [];
+  List<String> offerInvites = [];
+  List<String> approvedUsers = [];
   factory LendingOfferDetailsModel.fromMap(Map<String, dynamic> json) =>
       LendingOfferDetailsModel(
         startDate: json["startDate"] == null ? null : json["startDate"],
@@ -21,12 +28,25 @@ class LendingOfferDetailsModel {
         lendingOfferAgreementLink: json["lendingOfferAgreementLink"] == null
             ? null
             : json["lendingOfferAgreementLink"],
+        lendingOfferApprovedAgreementLink:
+            json["lendingOfferApprovedAgreementLink"] == null
+                ? null
+                : json["lendingOfferApprovedAgreementLink"],
         lendingOfferAgreementName: json["lendingOfferAgreementName"] == null
             ? null
             : json["lendingOfferAgreementName"],
         lendingModel: json["lendingModel"] == null
             ? null
             : LendingModel.fromMap(json["lendingModel"]),
+        offerAcceptors: json["offerAcceptors"] == null
+            ? []
+            : List<String>.from(json["offerAcceptors"].map((x) => x)),
+        offerInvites: json["offerInvites"] == null
+            ? []
+            : List<String>.from(json["offerInvites"].map((x) => x)),
+        approvedUsers: json["approvedUsers"] == null
+            ? []
+            : List<String>.from(json["approvedUsers"].map((x) => x)),
       );
 
   Map<String, dynamic> toMap() => {
@@ -35,9 +55,22 @@ class LendingOfferDetailsModel {
         "lendingOfferAgreementLink": lendingOfferAgreementLink == null
             ? null
             : lendingOfferAgreementLink,
+        "lendingOfferApprovedAgreementLink":
+            lendingOfferApprovedAgreementLink == null
+                ? null
+                : lendingOfferApprovedAgreementLink,
         "lendingOfferAgreementName": lendingOfferAgreementName == null
             ? null
             : lendingOfferAgreementName,
         "lendingModel": lendingModel == null ? null : lendingModel.toMap(),
+        "offerAcceptors": offerAcceptors == null
+            ? []
+            : List<dynamic>.from(offerAcceptors.map((x) => x)),
+        "offerInvites": offerInvites == null
+            ? []
+            : List<dynamic>.from(offerInvites.map((x) => x)),
+        "approvedUsers": approvedUsers == null
+            ? []
+            : List<dynamic>.from(approvedUsers.map((x) => x)),
       };
 }

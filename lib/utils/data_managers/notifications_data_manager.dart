@@ -77,6 +77,7 @@ Future<void> withdrawAcceptRequestNotification({
           .where('type', isEqualTo: 'RequestAccept')
           .where('data.id', isEqualTo: requestModel.id)
           .where('data.email', isEqualTo: requestModel.email)
+          .where('senderUserId', isEqualTo: loggedInUser.sevaUserID)
           .get();
       snapshotQuery.docs.forEach(
         (document) async {

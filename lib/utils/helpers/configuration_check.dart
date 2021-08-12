@@ -17,6 +17,8 @@ extension ConfigurationCheckExtension on ConfigurationCheck {
         return 'accept_goods_offer';
       case RequestType.TIME:
         return 'accept_time_offer';
+      case RequestType.LENDING_OFFER:
+        return 'accept_lending_offers';
 
       default:
         return 'accept_time_offer';
@@ -152,7 +154,8 @@ TimebankConfigurations getConfigurationModel() {
       "accept_one_to_many_offer",
       "accept_time_offer",
       "accept_goods_offer",
-      "accept_money_offer"
+      "accept_money_offer",
+      "accept_lending_offers"
     ],
     member: [
       "create_feeds",
@@ -168,6 +171,7 @@ TimebankConfigurations getConfigurationModel() {
       "create_endorsed_group",
       "create_private_group",
       "accept_one_to_many_offer",
+      "accept_lending_offers"
     ],
     superAdmin: [
       "create_feeds",
@@ -200,6 +204,7 @@ TimebankConfigurations getConfigurationModel() {
       "accept_time_offer",
       "accept_goods_offer",
       "accept_money_offer",
+      "accept_lending_offers"
     ],
   );
 }
@@ -233,7 +238,8 @@ TimebankConfigurations getFriendAndPlanConfigurationModel() {
       "accept_one_to_many_offer",
       "accept_time_offer",
       "accept_goods_offer",
-      "accept_money_offer"
+      "accept_money_offer",
+      "accept_lending_offers"
     ],
     member: [
       "create_feeds",
@@ -249,6 +255,7 @@ TimebankConfigurations getFriendAndPlanConfigurationModel() {
       "create_endorsed_group",
       "create_private_group",
       "accept_one_to_many_offer",
+      "accept_lending_offers",
     ],
     superAdmin: [
       "create_feeds",
@@ -277,7 +284,8 @@ TimebankConfigurations getFriendAndPlanConfigurationModel() {
       "accept_one_to_many_offer",
       "accept_time_offer",
       "accept_goods_offer",
-      "accept_money_offer"
+      "accept_money_offer",
+      "accept_lending_offers"
     ],
   );
 }
@@ -301,7 +309,8 @@ TimebankConfigurations getNeighbourhoodPlanConfigurationModel() {
       "accept_one_to_many_offer",
       "accept_time_offer",
       "accept_goods_offer",
-      "accept_money_offer"
+      "accept_money_offer",
+      "accept_lending_offers"
     ],
     member: [
       "create_feeds",
@@ -313,6 +322,7 @@ TimebankConfigurations getNeighbourhoodPlanConfigurationModel() {
       "create_virtual_offer",
       "create_public_offer",
       "accept_one_to_many_offer",
+      "accept_lending_offers"
     ],
     superAdmin: [
       "create_feeds",
@@ -331,7 +341,8 @@ TimebankConfigurations getNeighbourhoodPlanConfigurationModel() {
       "accept_one_to_many_offer",
       "accept_time_offer",
       "accept_goods_offer",
-      "accept_money_offer"
+      "accept_money_offer",
+      "accept_lending_offers"
     ],
   );
 }
@@ -363,7 +374,8 @@ TimebankConfigurations getGroupConfigurationModel() {
       "accept_one_to_many_offer",
       "accept_time_offer",
       "accept_goods_offer",
-      "accept_money_offer"
+      "accept_money_offer",
+      "accept_lending_offers"
     ],
     member: [
       "create_feeds",
@@ -379,6 +391,7 @@ TimebankConfigurations getGroupConfigurationModel() {
       "create_endorsed_group",
       "create_private_group",
       "accept_one_to_many_offer",
+      "accept_lending_offers"
     ],
     superAdmin: [
       "billing_access",
@@ -409,7 +422,8 @@ TimebankConfigurations getGroupConfigurationModel() {
       "accept_one_to_many_offer",
       "accept_time_offer",
       "accept_goods_offer",
-      "accept_money_offer"
+      "accept_money_offer",
+      "accept_lending_offers"
     ],
   );
 }
@@ -445,7 +459,8 @@ TimebankConfigurations getNonProfitConfigurationModel() {
       "accept_one_to_many_offer",
       "accept_time_offer",
       "accept_goods_offer",
-      "accept_money_offer"
+      "accept_money_offer",
+      "accept_lending_offers"
     ],
     member: [
       "create_feeds",
@@ -462,6 +477,7 @@ TimebankConfigurations getNonProfitConfigurationModel() {
       "create_private_group",
       "one_to_many_offer",
       "accept_one_to_many_offer",
+      "accept_lending_offers"
     ],
     superAdmin: [
       "create_feeds",
@@ -492,7 +508,8 @@ TimebankConfigurations getNonProfitConfigurationModel() {
       "accept_one_to_many_offer",
       "accept_time_offer",
       "accept_goods_offer",
-      "accept_money_offer"
+      "accept_money_offer",
+      "accept_lending_offers"
     ],
   );
 }
@@ -528,7 +545,8 @@ TimebankConfigurations getEnterpriseConfigurationModel() {
       "accept_one_to_many_offer",
       "accept_time_offer",
       "accept_goods_offer",
-      "accept_money_offer"
+      "accept_money_offer",
+      "accept_lending_offers"
     ],
     member: [
       "create_feeds",
@@ -545,6 +563,7 @@ TimebankConfigurations getEnterpriseConfigurationModel() {
       "create_private_group",
       "one_to_many_offer",
       "accept_one_to_many_offer",
+      "accept_lending_offers"
     ],
     superAdmin: [
       "create_feeds",
@@ -575,7 +594,8 @@ TimebankConfigurations getEnterpriseConfigurationModel() {
       "accept_one_to_many_offer",
       "accept_time_offer",
       "accept_goods_offer",
-      "accept_money_offer"
+      "accept_money_offer",
+      "accept_lending_offers"
     ],
   );
 }
@@ -611,7 +631,8 @@ TimebankConfigurations getCommunityPlanConfigurationModel() {
       "accept_one_to_many_offer",
       "accept_time_offer",
       "accept_goods_offer",
-      "accept_money_offer"
+      "accept_money_offer",
+      "accept_lending_offers",
     ],
     member: [
       "create_feeds",
@@ -628,6 +649,7 @@ TimebankConfigurations getCommunityPlanConfigurationModel() {
       "create_private_group",
       "one_to_many_offer",
       "accept_one_to_many_offer",
+      "accept_lending_offers",
     ],
     superAdmin: [
       "create_feeds",
@@ -658,7 +680,8 @@ TimebankConfigurations getCommunityPlanConfigurationModel() {
       "accept_one_to_many_offer",
       "accept_time_offer",
       "accept_goods_offer",
-      "accept_money_offer"
+      "accept_money_offer",
+      "accept_lending_offers",
     ],
   );
 }
@@ -694,7 +717,8 @@ TimebankConfigurations getCommunityPlusPlanConfigurationModel() {
       "accept_one_to_many_offer",
       "accept_time_offer",
       "accept_goods_offer",
-      "accept_money_offer"
+      "accept_money_offer",
+      "accept_lending_offers",
     ],
     member: [
       "create_feeds",
@@ -711,6 +735,7 @@ TimebankConfigurations getCommunityPlusPlanConfigurationModel() {
       "create_private_group",
       "one_to_many_offer",
       "accept_one_to_many_offer",
+      "accept_lending_offers",
     ],
     superAdmin: [
       "create_feeds",
@@ -741,7 +766,8 @@ TimebankConfigurations getCommunityPlusPlanConfigurationModel() {
       "accept_one_to_many_offer",
       "accept_time_offer",
       "accept_goods_offer",
-      "accept_money_offer"
+      "accept_money_offer",
+      "accept_lending_offers",
     ],
   );
 }
@@ -773,7 +799,8 @@ TimebankConfigurations getPrivateConfigurationModel() {
       "accept_one_to_many_offer",
       "accept_time_offer",
       "accept_goods_offer",
-      "accept_money_offer"
+      "accept_money_offer",
+      "accept_lending_offers",
     ],
     member: [
       "create_feeds",
@@ -790,6 +817,7 @@ TimebankConfigurations getPrivateConfigurationModel() {
       "create_private_group",
       "one_to_many_offer",
       "accept_one_to_many_offer",
+      "accept_lending_offers",
     ],
     superAdmin: [
       "create_feeds",
@@ -816,7 +844,8 @@ TimebankConfigurations getPrivateConfigurationModel() {
       "accept_one_to_many_offer",
       "accept_time_offer",
       "accept_goods_offer",
-      "accept_money_offer"
+      "accept_money_offer",
+      "accept_lending_offers",
     ],
   );
 }

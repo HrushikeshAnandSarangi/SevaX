@@ -45,6 +45,8 @@ List<String> getOfferParticipants({OfferModel offerDataModel}) {
     return offerDataModel.goodsDonationDetails.donors ?? [];
   } else if (offerDataModel.type == RequestType.CASH) {
     return offerDataModel.cashModel.donors ?? [];
+  } else if (offerDataModel.type == RequestType.LENDING_OFFER) {
+    return offerDataModel.lendingOfferDetailsModel.offerAcceptors ?? [];
   } else {
     return offerDataModel.offerType == OfferType.INDIVIDUAL_OFFER
         ? offerDataModel.individualOfferDataModel.offerAcceptors ?? []

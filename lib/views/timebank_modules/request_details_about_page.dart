@@ -23,6 +23,7 @@ import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/repositories/lending_offer_repo.dart';
 import 'package:sevaexchange/ui/screens/borrow_agreement/borrow_agreement_pdf.dart';
 import 'package:sevaexchange/ui/screens/notifications/pages/personal_notifications.dart';
+import 'package:sevaexchange/ui/screens/offers/pages/lending_offer_details.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/lending_item_card_widget.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/lending_place_card_widget.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/lending_place_details_widget.dart';
@@ -1979,7 +1980,12 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                         style: TextStyle(color: Colors.black),
                         children: [
                           TextSpan(
-                            text: isApplied
+                            text: widget.requestItem.approvedUsers.contains(
+                                        SevaCore.of(context)
+                                            .loggedInUser
+                                            .email) ||
+                                    widget.requestItem.acceptors.contains(
+                                        SevaCore.of(context).loggedInUser.email)
                                 ? S.of(context).accepted_this_request
                                 : S.of(context).particpate_in_request_question,
                             style: TextStyle(
@@ -2178,7 +2184,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   }
 
   void borrowApplyAction() async {
-    if (isApplied) {
+    if (widget.requestItem.acceptors
+        .contains(SevaCore.of(context).loggedInUser.email)) {
       _withdrawRequest();
     } else {
       Navigator.of(context).push(
@@ -2693,46 +2700,6 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     }
   }
 
-  Widget addressComponentBorrowRequestForApproved(String address) {
-    String locationSubitleFinal = '';
-    String locationTitle = '';
-
-    if (address != null) {
-      List locationTitleList = address.split(',');
-      locationTitle = locationTitleList[0];
-
-      List locationSubitleList = address.split(',');
-      locationSubitleList.removeAt(0);
-
-      locationSubitleFinal = locationSubitleList
-          .toString()
-          .replaceAll('[', '')
-          .replaceAll(']', '');
-
-      return address != null
-          ? CustomListTile(
-              leading: Icon(
-                Icons.location_on,
-                color: Colors.black,
-              ),
-              title: Text(
-                address.trim() != null ? locationTitle : '',
-                style: titleStyle,
-                maxLines: 1,
-              ),
-              subtitle: address != null
-                  ? Text(locationSubitleFinal.trim(),
-                      style: TextStyle(
-                          color: Colors.grey, fontWeight: FontWeight.w600))
-                  : Text(''),
-            )
-          : Container();
-    } else {
-      return Text(S.of(context).location_not_provided,
-          style: TextStyle(color: Colors.grey));
-    }
-  }
-
   Widget get trailingComponent {
     return Container(
       height: 39,
@@ -2956,7 +2923,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   },
                 ),
                 addressComponentBorrowRequestForApproved(
-                    borrowAcceptorModel.selectedAddress ?? ''),
+                    borrowAcceptorModel.selectedAddress ?? '', context),
               ],
             ),
           );

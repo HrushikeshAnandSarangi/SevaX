@@ -1122,8 +1122,8 @@ class L {
   String get any_distance => "Any Distance";
 
   //3rd August 2021
-  String get admin_borrow_request_received_back_check =>
-      "If you have you received your item/place back click the button below to complete this.";
+  // String get admin_borrow_request_received_back_check =>
+  //     "If you have received your item/place back click the button below to complete this.";
 
   String get borrow_request_title => "Borrow Request";
 
@@ -1309,5 +1309,10 @@ class L {
   String get items_not_added => 'Item(s) not added';
   String get lending_offer_location_hint =>
       'location will help members to locate the place easily.';
+  String get offer_agreement_not_available => 'Request agreement not available';
+
+  String get click_to_view_offer_agreement => 'Click to view offer agreement';
   String get join_borrow_request => 'Invited to accept request';
+  String get admin_borrow_request_received_back_check =>
+      "If you have received your item/place back click the button below to complete this."; //add again label changed
 }

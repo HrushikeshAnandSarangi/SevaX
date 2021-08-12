@@ -2686,6 +2686,8 @@ class RequestEditFormState extends State<RequestEditForm> {
         return;
       }
       if (widget.requestModel.requestType == RequestType.BORROW &&
+          roomOrTool ==
+              1 && //because was throwing dialog when creating for place
           (widget.requestModel.borrowModel.requiredItems == null ||
               widget.requestModel.borrowModel.requiredItems.isEmpty)) {
         showDialogForTitle(dialogTitle: L.of(context).items_validation);

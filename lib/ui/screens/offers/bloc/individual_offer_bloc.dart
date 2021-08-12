@@ -6,7 +6,7 @@ import 'package:sevaexchange/models/cash_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/lending_model.dart';
-import 'package:sevaexchange/new_baseline/models/lending_offer_details.dart';
+import 'package:sevaexchange/new_baseline/models/lending_offer_details_model.dart';
 import 'package:sevaexchange/new_baseline/models/lending_place_model.dart';
 import 'package:sevaexchange/ui/utils/offer_utility.dart';
 import 'package:sevaexchange/ui/utils/validators.dart';
@@ -121,7 +121,7 @@ class IndividualOfferBloc extends BlocBase with Validators {
 
   Stream<bool> get isPublicVisible =>
       CombineLatestStream.combine2(makeVirtual, isVisible, (a, b) => a && b);
-  Stream<LendingModel> get lendingPlaceModelStream => _lendingModel.stream;
+  Stream<LendingModel> get lendingModelStream => _lendingModel.stream;
 
   ///[Function] to create offer
   void createOrUpdateOffer(
