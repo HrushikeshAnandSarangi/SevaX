@@ -13,6 +13,7 @@ import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_page_base_bloc.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/bookmarked_offers.dart';
+import 'package:sevaexchange/ui/screens/offers/pages/lending_offer_details.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/users_circle_avatar_list.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/ui/utils/icons.dart';
@@ -57,173 +58,173 @@ class OfferDetails extends StatelessWidget {
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Expanded(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 20, 16, 0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  HideWidget(
-                    hide: offerModel.type != RequestType.LENDING_OFFER,
-                    child: Align(
-                      alignment: Alignment.topLeft,
-                      child: Container(
-                        color: Colors.teal,
-                        child: ImagesPreview(
-                            urls: offerModel.lendingOfferDetailsModel
-                                        .lendingModel.lendingType ==
-                                    LendingType.PLACE
-                                ? offerModel.lendingOfferDetailsModel
-                                    .lendingModel.lendingPlaceModel.houseImages
-                                : offerModel.lendingOfferDetailsModel
-                                    .lendingModel.lendingItemModel.itemImages),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 2.0),
-                    child: Text(
-                      getOfferTitle(offerDataModel: offerModel),
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  CustomListTile(
-                    leading: Icon(
-                      Icons.access_time,
-                      color: Colors.grey,
-                    ),
-                    title: Text(
-                      S.of(context).posted_on,
-                      style: titleStyle,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    subtitle: Text(
-                      DateFormat('EEEEEEE, MMMM dd h:mm a', "en").format(
-                        getDateTimeAccToUserTimezone(
-                          dateTime: DateTime.fromMillisecondsSinceEpoch(
-                            offerModel?.groupOfferDataModel?.startDate != null
-                                ? offerModel?.groupOfferDataModel?.startDate
-                                : offerModel.timestamp,
-                          ),
-                          timezoneAbb:
-                              SevaCore.of(context).loggedInUser.timezone,
-                        ),
-                      ),
-                      style: subTitleStyle,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    trailing: Offstage(
-                      offstage: offerModel.sevaUserId !=
-                              SevaCore.of(context).loggedInUser.sevaUserID ||
-                          (getOfferParticipants(offerDataModel: offerModel)
-                                  .isNotEmpty &&
-                              offerModel.offerType == OfferType.GROUP_OFFER),
-                      child: Row(
-                        children: [
-                          Container(
-                            height: 40,
-                            width: 80,
-                            child: CustomTextButton(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              color: Color.fromRGBO(44, 64, 140, 1),
-                              child: Text(
-                                S.of(context).edit,
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              onPressed: () {
-                                Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                    builder: (context) => IndividualOffer(
-                                      offerModel: offerModel,
-                                      timebankId: offerModel.timebankId,
-                                      loggedInMemberUserId: SevaCore.of(context)
-                                          .loggedInUser
-                                          .sevaUserID,
-                                      timebankModel: timebankModel,
-                                    ),
-                                  ),
-                                );
-                              },
+    return offerModel.type == RequestType.LENDING_OFFER
+        ? LendingOfferDetails(
+            offerModel: offerModel,
+            comingFrom: comingFrom,
+            timebankModel: timebankModel,
+          )
+        : Column(
+            children: <Widget>[
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 20, 16, 0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(left: 2.0),
+                          child: Text(
+                            getOfferTitle(offerDataModel: offerModel),
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                          oneToManyOfferCancellation(context),
-                        ],
-                      ),
-                    ),
-                  ),
-                  offerModel.selectedAdrress != null
-                      ? CustomListTile(
+                        ),
+                        SizedBox(height: 10),
+                        CustomListTile(
                           leading: Icon(
-                            Icons.location_on,
+                            Icons.access_time,
                             color: Colors.grey,
                           ),
                           title: Text(
-                            S.of(context).location,
+                            S.of(context).posted_on,
+                            style: titleStyle,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          subtitle: Text(
+                            DateFormat('EEEEEEE, MMMM dd h:mm a', "en").format(
+                              getDateTimeAccToUserTimezone(
+                                dateTime: DateTime.fromMillisecondsSinceEpoch(
+                                  offerModel?.groupOfferDataModel?.startDate !=
+                                          null
+                                      ? offerModel
+                                          ?.groupOfferDataModel?.startDate
+                                      : offerModel.timestamp,
+                                ),
+                                timezoneAbb:
+                                    SevaCore.of(context).loggedInUser.timezone,
+                              ),
+                            ),
+                            style: subTitleStyle,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          trailing: Offstage(
+                            offstage: offerModel.sevaUserId !=
+                                    SevaCore.of(context)
+                                        .loggedInUser
+                                        .sevaUserID ||
+                                (getOfferParticipants(
+                                            offerDataModel: offerModel)
+                                        .isNotEmpty &&
+                                    offerModel.offerType ==
+                                        OfferType.GROUP_OFFER),
+                            child: Row(
+                              children: [
+                                Container(
+                                  height: 40,
+                                  width: 80,
+                                  child: CustomTextButton(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    color: Color.fromRGBO(44, 64, 140, 1),
+                                    child: Text(
+                                      S.of(context).edit,
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    onPressed: () {
+                                      Navigator.of(context).pushReplacement(
+                                        MaterialPageRoute(
+                                          builder: (context) => IndividualOffer(
+                                            offerModel: offerModel,
+                                            timebankId: offerModel.timebankId,
+                                            loggedInMemberUserId:
+                                                SevaCore.of(context)
+                                                    .loggedInUser
+                                                    .sevaUserID,
+                                            timebankModel: timebankModel,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                                oneToManyOfferCancellation(context),
+                              ],
+                            ),
+                          ),
+                        ),
+                        offerModel.selectedAdrress != null
+                            ? CustomListTile(
+                                leading: Icon(
+                                  Icons.location_on,
+                                  color: Colors.grey,
+                                ),
+                                title: Text(
+                                  S.of(context).location,
+                                  style: titleStyle,
+                                  maxLines: 1,
+                                ),
+                                subtitle: Text(
+                                  offerModel.selectedAdrress,
+                                  style: subTitleStyle,
+                                  maxLines: 1,
+                                ),
+                              )
+                            : Container(),
+                        CustomListTile(
+                          leading: Icon(
+                            Icons.person,
+                            color: Colors.grey,
+                          ),
+                          title: Text(
+                            "${S.of(context).offered_by} ${offerModel.fullName}",
                             style: titleStyle,
                             maxLines: 1,
                           ),
-                          subtitle: Text(
-                            offerModel.selectedAdrress,
-                            style: subTitleStyle,
-                            maxLines: 1,
+                        ),
+                        offerModel.type == RequestType.GOODS
+                            ? Container(
+                                padding:
+                                    EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
+                                child: showGoodsDonationDetails(
+                                    context, offerModel))
+                            : offerModel.type == RequestType.CASH
+                                ? showCashDonationDetails(context, offerModel)
+                                : Container(),
+
+                        Container(
+                          padding: EdgeInsets.all(8.0),
+                          child: RichTextView(
+                            text:
+                                getOfferDescription(offerDataModel: offerModel),
                           ),
-                        )
-                      : Container(),
-                  CustomListTile(
-                    leading: Icon(
-                      Icons.person,
-                      color: Colors.grey,
-                    ),
-                    title: Text(
-                      "${S.of(context).offered_by} ${offerModel.fullName}",
-                      style: titleStyle,
-                      maxLines: 1,
-                    ),
-                  ),
-                  offerModel.type == RequestType.GOODS
-                      ? Container(
-                          padding: EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
-                          child: showGoodsDonationDetails(context, offerModel))
-                      : offerModel.type == RequestType.CASH
-                          ? showCashDonationDetails(context, offerModel)
-                          : Container(),
+                        ),
 
-                  Container(
-                    padding: EdgeInsets.all(8.0),
-                    child: RichTextView(
-                      text: getOfferDescription(offerDataModel: offerModel),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: UserCircleAvatarList(
+                            sizeOfClass:
+                                offerModel.groupOfferDataModel.sizeOfClass,
+                          ),
+                        ),
+                        //Spacer(),
+                      ],
                     ),
                   ),
-
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: UserCircleAvatarList(
-                      sizeOfClass: offerModel.groupOfferDataModel.sizeOfClass,
-                    ),
-                  ),
-                  //Spacer(),
-                ],
+                ),
               ),
-            ),
-          ),
-        ),
-        getBottombar(
-          context,
-          SevaCore.of(context).loggedInUser.sevaUserID,
-        ),
-      ],
-    );
+              getBottombar(
+                context,
+                SevaCore.of(context).loggedInUser.sevaUserID,
+              ),
+            ],
+          );
   }
 
   Widget showCashDonationDetails(BuildContext context, OfferModel offerModel) {
@@ -894,69 +895,5 @@ class OfferDetails extends StatelessWidget {
             ),
           );
         });
-  }
-}
-
-class ImagesPreview extends StatefulWidget {
-  final List<String> urls;
-
-  ImagesPreview({@required this.urls});
-
-  @override
-  State<StatefulWidget> createState() {
-    return ImagesPreviewState();
-  }
-}
-
-class ImagesPreviewState extends State<ImagesPreview> {
-  PageController pageController = new PageController();
-  int pageIndex = 0;
-  @override
-  Widget build(BuildContext context) {
-    log("_" + pageIndex.toString());
-    return Column(
-      children: [
-        AspectRatio(
-          aspectRatio: 16 / 9,
-          child: Container(
-            color: Colors.red,
-            child: PageView.builder(
-              itemCount: widget.urls.length,
-              itemBuilder: (_, index) {
-                return Image.network(
-                  widget.urls[index],
-                  fit: BoxFit.fitWidth,
-                );
-              },
-              controller: pageController,
-              onPageChanged: (pageIndex) {
-                this.pageIndex = pageIndex;
-                log(this.pageIndex.toString());
-              },
-            ),
-          ),
-        ),
-        Row(
-          children: [
-            IconButton(
-              icon: Icon(Icons.play_arrow_sharp),
-              onPressed: () => pageController.animateToPage(
-                pageIndex > 0 ? --pageIndex : pageIndex,
-                curve: Curves.linearToEaseOut,
-                duration: Duration(seconds: 1),
-              ),
-            ),
-            IconButton(
-              icon: Icon(Icons.arrow_drop_down_circle_rounded),
-              onPressed: () => pageController.animateToPage(
-                pageIndex < (widget.urls.length - 1) ? ++pageIndex : pageIndex,
-                curve: Curves.easeIn,
-                duration: Duration(seconds: 1),
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
   }
 }

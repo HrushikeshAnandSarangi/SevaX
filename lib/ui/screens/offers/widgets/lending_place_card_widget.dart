@@ -83,13 +83,13 @@ class LendingPlaceCardWidget extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget title(String title) {
-    return Text(title,
-        style: TextStyle(
-          fontSize: 14,
-          fontFamily: 'Europa',
-          color: HexColor('#9B9B9B'),
-        ));
-  }
+Widget title(String title) {
+  return Text(title,
+      style: TextStyle(
+        fontSize: 14,
+        fontFamily: 'Europa',
+        color: HexColor('#9B9B9B'),
+      ));
 }

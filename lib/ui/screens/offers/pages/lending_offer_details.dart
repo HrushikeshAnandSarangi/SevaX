@@ -1,0 +1,706 @@
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/models/enums/lending_borrow_enums.dart';
+import 'package:sevaexchange/models/offer_model.dart';
+import 'package:sevaexchange/models/request_model.dart';
+import 'package:sevaexchange/new_baseline/models/lending_item_model.dart';
+import 'package:sevaexchange/new_baseline/models/lending_place_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/screens/borrow_agreement/borrow_agreement_pdf.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/home_page_base_bloc.dart';
+import 'package:sevaexchange/ui/screens/offers/widgets/lending_item_card_widget.dart';
+import 'package:sevaexchange/ui/screens/offers/widgets/lending_place_card_widget.dart';
+import 'package:sevaexchange/ui/screens/offers/widgets/lending_place_details_widget.dart';
+import 'package:sevaexchange/ui/utils/date_formatter.dart';
+import 'package:sevaexchange/ui/utils/helpers.dart';
+import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
+import 'package:sevaexchange/utils/helpers/configuration_check.dart';
+import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
+import 'package:sevaexchange/utils/utils.dart';
+import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
+import 'package:sevaexchange/widgets/custom_list_tile.dart';
+import 'package:sevaexchange/widgets/hide_widget.dart';
+import 'package:sevaexchange/utils/utils.dart' as utils;
+
+import '../../../../labels.dart';
+
+class LendingOfferDetails extends StatefulWidget {
+  final OfferModel offerModel;
+  final TimebankModel timebankModel;
+  final ComingFrom comingFrom;
+
+  LendingOfferDetails({this.offerModel, this.timebankModel, this.comingFrom});
+
+  @override
+  _LendingOfferDetailsState createState() => _LendingOfferDetailsState();
+}
+
+class _LendingOfferDetailsState extends State<LendingOfferDetails> {
+  LendingPlaceModel lendingPlaceModel;
+  LendingItemModel lendingItemModel;
+  LendingType lendingType;
+  @override
+  void initState() {
+    // TODO: implement initState
+    if (widget.offerModel.lendingOfferDetailsModel.lendingModel.lendingType ==
+        LendingType.PLACE) {
+      lendingPlaceModel = widget
+          .offerModel.lendingOfferDetailsModel.lendingModel.lendingPlaceModel;
+      lendingType = LendingType.PLACE;
+    } else {
+      lendingItemModel = widget
+          .offerModel.lendingOfferDetailsModel.lendingModel.lendingItemModel;
+
+      lendingType = LendingType.ITEM;
+    }
+    setState(() {});
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Container(
+                      color: Colors.teal,
+                      child: ImagesPreview(
+                          urls: widget.offerModel.lendingOfferDetailsModel
+                                      .lendingModel.lendingType ==
+                                  LendingType.PLACE
+                              ? widget.offerModel.lendingOfferDetailsModel
+                                  .lendingModel.lendingPlaceModel.houseImages
+                              : widget.offerModel.lendingOfferDetailsModel
+                                  .lendingModel.lendingItemModel.itemImages),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 20, 16, 0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          lendingType == LendingType.ITEM
+                              ? lendingItemModel.itemName
+                              : lendingPlaceModel.placeName,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: 'Europa',
+                            color: Colors.black,
+                          ),
+                        ),
+                        lendingType == LendingType.PLACE
+                            ? Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  title('${lendingPlaceModel.noOfGuests}'
+                                      ' ${L.of(context).guests} '),
+                                  title('${lendingPlaceModel.noOfRooms}'
+                                      ' ${L.of(context).bed_rooms} .'),
+                                  title('${lendingPlaceModel.noOfBathRooms}'
+                                      ' ${L.of(context).bath_rooms} '),
+                                ],
+                              )
+                            : Container(),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        CustomListTile(
+                          leading: Stack(
+                            alignment: AlignmentDirectional.center,
+                            children: [
+                              Card(
+                                color: Colors.transparent,
+                                elevation: 3,
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      width: 58,
+                                      height: 15,
+                                      decoration: BoxDecoration(
+                                          color: Theme.of(context).accentColor,
+                                          border: Border.all(
+                                            color: Colors.transparent,
+                                          ),
+                                          borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(7),
+                                              topRight: Radius.circular(7))),
+                                    ),
+                                    Container(
+                                      width: 58,
+                                      height: 38,
+                                      decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          border: Border.all(
+                                            color: Colors.white,
+                                          ),
+                                          borderRadius: BorderRadius.only(
+                                              bottomLeft: Radius.circular(7),
+                                              bottomRight: Radius.circular(7))),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 12.0),
+                                child: Text(
+                                  DateFormat('dd',
+                                          Locale(getLangTag()).toLanguageTag())
+                                      .format(
+                                    getDateTimeAccToUserTimezone(
+                                        dateTime:
+                                            DateTime.fromMillisecondsSinceEpoch(
+                                                widget
+                                                    .offerModel
+                                                    .lendingOfferDetailsModel
+                                                    .startDate),
+                                        timezoneAbb: SevaCore.of(context)
+                                            .loggedInUser
+                                            .timezone),
+                                  ),
+                                  style: TextStyle(
+                                      fontSize: 24, color: Colors.grey[700]),
+                                ),
+                              ),
+                            ],
+                          ),
+                          title: Padding(
+                            padding: const EdgeInsets.only(top: 16.0, left: 8),
+                            child: date,
+                          ),
+                          subtitle: Padding(
+                            padding: const EdgeInsets.only(left: 8),
+                            child: dateDetailsComponentLendingOffer,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        lendingType == LendingType.ITEM
+                            ? LendingItemCardWidget(
+                                hidden: true,
+                                lendingItemModel: lendingItemModel,
+                              )
+                            : AmenitiesAndHouseRules(
+                                lendingModel: widget.offerModel
+                                    .lendingOfferDetailsModel.lendingModel,
+                              ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          S.of(context).description,
+                          style: titleStyle,
+                        ),
+                        Text(
+                          widget.offerModel.individualOfferDataModel
+                                  .description ??
+                              " ",
+                          style: TextStyle(fontSize: 16, color: Colors.grey),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        InkWell(
+                          child: Text(
+                            widget.offerModel.lendingOfferDetailsModel
+                                            .lendingOfferAgreementLink ==
+                                        null ||
+                                    widget.offerModel.lendingOfferDetailsModel
+                                            .lendingOfferAgreementLink ==
+                                        ''
+                                ? L.of(context).offer_agreement_not_available
+                                : L.of(context).click_to_view_offer_agreement,
+                            style: TextStyle(
+                                fontSize: 16,
+                                color: Theme.of(context).primaryColor,
+                                fontWeight: FontWeight.w600),
+                          ),
+                          onTap: () async {
+                            if (widget.offerModel.lendingOfferDetailsModel
+                                        .lendingOfferAgreementLink ==
+                                    null ||
+                                widget.offerModel.lendingOfferDetailsModel
+                                        .lendingOfferAgreementLink ==
+                                    '') {
+                              return null;
+                            } else {
+                              await openPdfViewer(
+                                  widget.offerModel.lendingOfferDetailsModel
+                                      .lendingOfferAgreementLink,
+                                  widget.offerModel.lendingOfferDetailsModel
+                                          .lendingOfferAgreementName ??
+                                      'Lending Offer Agreement Document',
+                                  context);
+                            }
+                          },
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        addressComponentBorrowRequestForApproved(
+                            widget.offerModel.selectedAdrress ?? '', context),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        lendingOfferCreatorWidget,
+                        SizedBox(
+                          height: 10,
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+          getBottomBar(
+            context,
+            SevaCore.of(context).loggedInUser.sevaUserID,
+          )
+        ],
+      ),
+    );
+  }
+
+  bool canDeleteOffer = false;
+
+  Widget getBottomBar(BuildContext context, String userId) {
+    bool isAccepted =
+        getOfferParticipants(offerDataModel: widget.offerModel).contains(
+      userId,
+    );
+    bool isCreator = widget.offerModel.sevaUserId == userId;
+    canDeleteOffer = isCreator &&
+        widget.offerModel.lendingOfferDetailsModel.offerAcceptors.length == 0 &&
+        widget.offerModel.lendingOfferDetailsModel.approvedUsers.length == 0;
+    return Container(
+      decoration: BoxDecoration(color: Colors.white54, boxShadow: [
+        BoxShadow(color: Colors.grey[300], offset: Offset(2.0, 2.0))
+      ]),
+      child: Padding(
+        padding:
+            const EdgeInsets.only(top: 20.0, left: 20, bottom: 20, right: 5),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Container(
+              margin: EdgeInsets.only(right: 5),
+              child: RichText(
+                text: TextSpan(
+                  style: TextStyle(color: Colors.black),
+                  children: [
+                    canDeleteOffer
+                        ? TextSpan(
+                            text: '${S.of(context).you_created_offer}',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          )
+                        : TextSpan(
+                            text: isCreator
+                                ? S.of(context).you_created_offer
+                                : isAccepted
+                                    ? S.of(context).accepted_offer_msg
+                                    : S.of(context).would_like_to_accept_offer,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Wrap(
+              alignment: WrapAlignment.start,
+              // mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                canDeleteOffer ||
+                        utils.isDeletable(
+                          communityCreatorId: widget.timebankModel != null
+                              ? isPrimaryTimebank(
+                                  parentTimebankId:
+                                      widget.timebankModel.parentTimebankId,
+                                )
+                                  ? widget.timebankModel.creatorId
+                                  : (widget.timebankModel.managedCreatorIds !=
+                                              null &&
+                                          widget.timebankModel.managedCreatorIds
+                                                  .length >
+                                              0)
+                                      ? widget
+                                          .timebankModel.managedCreatorIds[0]
+                                      : ''
+                              : '',
+                          // communityCreatorId: timebankModel != null ,
+                          context: context,
+                          contentCreatorId: widget.offerModel.sevaUserId,
+                          timebankCreatorId: widget.timebankModel.creatorId,
+                        )
+                    ? deleteActionButton(isAccepted, context)
+                    : Container(),
+                Offstage(
+                  offstage: isCreator || isAccepted,
+                  child: Container(
+                    width: isAccepted ? 150 : 120,
+                    height: 32,
+                    child: ConfigurationCheck(
+                      actionType:
+                          ConfigurationCheckExtension.getOfferAcceptanceKey(
+                        widget.offerModel,
+                      ),
+                      role: memberType(widget.timebankModel,
+                          SevaCore.of(context).loggedInUser.sevaUserID),
+                      child: CustomTextButton(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                        color: Color.fromRGBO(44, 64, 140, 0.7),
+                        child: Row(
+                          children: <Widget>[
+                            SizedBox(width: 1),
+                            Container(
+                              width: 30,
+                              height: 30,
+                              decoration: BoxDecoration(
+                                color: Color.fromRGBO(44, 64, 140, 1),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                Icons.check,
+                                color: Colors.white,
+                              ),
+                            ),
+                            Spacer(),
+                            Text(
+                              isAccepted
+                                  ? S.of(context).accepted_offer
+                                  : S.of(context).accept_offer,
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                            Spacer(
+                              flex: 2,
+                            ),
+                          ],
+                        ),
+                        onPressed: () async {
+                          TimebankModel timebankModel;
+                          if (Provider.of<HomePageBaseBloc>(context,
+                                      listen: false)
+                                  .timebankModel(
+                                      widget.offerModel.timebankId) ==
+                              null) {
+                            timebankModel = await utils.getTimeBankForId(
+                                timebankId: widget.offerModel.timebankId);
+                          } else {
+                            timebankModel = Provider.of<HomePageBaseBloc>(
+                                    context,
+                                    listen: false)
+                                .timebankModel(widget.offerModel.timebankId);
+                          }
+                          if (!isAccepted) {
+                            //TO DO accept and send notification to lending offer creator and create acceptor model and push it to subcollections
+                          } else {
+                            offerActions(context, widget.offerModel,
+                                    ComingFrom.Offers)
+                                .then((_) => Navigator.of(context).pop());
+                            // }
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget get date {
+    return Text(
+      DateFormat('EEEEEEE, MMMM dd', Locale(getLangTag()).toLanguageTag())
+          .format(
+        getDateTimeAccToUserTimezone(
+            dateTime: DateTime.fromMillisecondsSinceEpoch(
+                widget.offerModel.lendingOfferDetailsModel.startDate),
+            timezoneAbb: SevaCore.of(context).loggedInUser.timezone),
+      ),
+      style: titleStyle,
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+    );
+  }
+
+  Widget get dateDetailsComponentLendingOffer {
+    return Text(
+      DateFormat.MMMd(getLangTag()).add_jm().format(
+                getDateTimeAccToUserTimezone(
+                  dateTime: DateTime.fromMillisecondsSinceEpoch(
+                    widget.offerModel.lendingOfferDetailsModel.startDate,
+                  ),
+                  timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
+                ),
+              ) +
+          ' - ' +
+          DateFormat.MMMd(getLangTag()).add_jm().format(
+                getDateTimeAccToUserTimezone(
+                  dateTime: DateTime.fromMillisecondsSinceEpoch(
+                      widget.offerModel.lendingOfferDetailsModel.endDate),
+                  timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
+                ),
+              ),
+      style: TextStyle(
+          fontSize: 13, fontWeight: FontWeight.w600, color: Colors.grey),
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+    );
+  }
+
+  Widget get lendingOfferCreatorWidget {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: 10),
+        Text(
+          S.of(context).posted_by,
+          style: titleStyle,
+          maxLines: 1,
+        ),
+        SizedBox(height: 10),
+        Row(
+          children: [
+            CircleAvatar(
+              backgroundImage: NetworkImage(
+                widget.offerModel.photoUrlImage ?? defaultUserImageURL,
+              ),
+              backgroundColor: Colors.white,
+              radius: MediaQuery.of(context).size.width / 11.5,
+            ),
+            SizedBox(width: 30),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(widget.offerModel.fullName,
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 21,
+                        color: HexColor('#49485D')),
+                    overflow: TextOverflow.ellipsis),
+                SizedBox(height: 7),
+              ],
+            ),
+          ],
+        ),
+        SizedBox(height: 20),
+      ],
+    );
+  }
+
+  Widget deleteActionButton(bool isAccepted, BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(right: 10),
+      width: isAccepted ? 150 : 120,
+      height: 32,
+      child: CustomTextButton(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        padding: EdgeInsets.all(0),
+        color: Colors.green,
+        child: Row(
+          children: <Widget>[
+            SizedBox(width: 1),
+            Spacer(),
+            Text(
+              '${S.of(context).delete}',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            Spacer(
+              flex: 1,
+            ),
+          ],
+        ),
+        onPressed: () async {
+          deleteOffer(context: context, offerId: widget.offerModel.id);
+        },
+      ),
+    );
+  }
+}
+
+class ImagesPreview extends StatefulWidget {
+  final List<String> urls;
+
+  ImagesPreview({@required this.urls});
+
+  @override
+  State<StatefulWidget> createState() {
+    return ImagesPreviewState();
+  }
+}
+
+class ImagesPreviewState extends State<ImagesPreview> {
+  PageController pageController = new PageController();
+  int pageIndex = 0;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: AspectRatio(
+        aspectRatio: 16 / 9,
+        child: Stack(
+          children: [
+            Container(
+              color: Colors.white,
+              child: PageView.builder(
+                itemCount: widget.urls.length,
+                itemBuilder: (_, index) {
+                  return Image.network(
+                    widget.urls[index],
+                    fit: BoxFit.fitWidth,
+                  );
+                },
+                controller: pageController,
+                onPageChanged: (pageIndex) {
+                  this.pageIndex = pageIndex;
+                },
+              ),
+            ),
+            Align(
+              alignment: Alignment.topRight,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 5, left: 5),
+                child: Row(
+                  children: [
+                    InkWell(
+                      onTap: () => pageController.animateToPage(
+                        pageIndex > 0 ? --pageIndex : pageIndex,
+                        curve: Curves.linearToEaseOut,
+                        duration: Duration(seconds: 1),
+                      ),
+                      child: Container(
+                        height: 30,
+                        width: 30,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: HexColor('#626262'),
+                        ),
+                        child: Icon(
+                          Icons.arrow_back_ios,
+                          color: HexColor('#FAFAFA'),
+                          size: 15,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 8,
+                    ),
+                    InkWell(
+                      onTap: () => pageController.animateToPage(
+                        pageIndex < (widget.urls.length - 1)
+                            ? ++pageIndex
+                            : pageIndex,
+                        curve: Curves.easeIn,
+                        duration: Duration(seconds: 1),
+                      ),
+                      child: Container(
+                        height: 30,
+                        width: 30,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: HexColor('#626262'),
+                        ),
+                        child: Icon(
+                          Icons.arrow_forward_ios,
+                          color: HexColor(
+                            '#FAFAFA',
+                          ),
+                          size: 15,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+Widget addressComponentBorrowRequestForApproved(
+    String address, BuildContext context) {
+  String locationSubitleFinal = '';
+  String locationTitle = '';
+
+  if (address != null) {
+    List locationTitleList = address.split(',');
+    locationTitle = locationTitleList[0];
+
+    List locationSubitleList = address.split(',');
+    locationSubitleList.removeAt(0);
+
+    locationSubitleFinal =
+        locationSubitleList.toString().replaceAll('[', '').replaceAll(']', '');
+
+    return address != null
+        ? CustomListTile(
+            leading: Icon(
+              Icons.location_on,
+              color: Colors.black,
+            ),
+            title: Text(
+              address.trim() != null ? locationTitle : '',
+              style: titleStyle,
+              maxLines: 1,
+            ),
+            subtitle: address != null
+                ? Text(locationSubitleFinal.trim(),
+                    style: TextStyle(
+                        color: Colors.grey, fontWeight: FontWeight.w600))
+                : Text(''),
+          )
+        : Container();
+  } else {
+    return Text(S.of(context).location_not_provided,
+        style: TextStyle(color: Colors.grey));
+  }
+}
+
+TextStyle titleStyle =
+    TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.bold);
+
+TextStyle subTitleStyle = TextStyle(
+  fontSize: 14,
+);

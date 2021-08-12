@@ -73,7 +73,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
   String selectedAddress;
   CustomLocation customLocation;
   String borrowAgreementLinkFinal = '';
-  String documentName = '';
+  String documentName;
   // String title = '';
   String title_hint;
   String description_hint;
@@ -1592,7 +1592,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
           height: 10,
         ),
         StreamBuilder<LendingModel>(
-            stream: _bloc.lendingPlaceModelStream,
+            stream: _bloc.lendingModelStream,
             builder: (context, snapshot) {
               if (snapshot.data == null || snapshot.hasError) {
                 return Container();
@@ -1692,7 +1692,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                       alignment: Alignment.topLeft,
                       width: MediaQuery.of(context).size.width * 0.55,
                       child: Text(
-                        documentName != null || documentName != ''
+                        documentName != null
                             ? documentName
                             : S
                                 .of(context)

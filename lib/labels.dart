@@ -1309,4 +1309,7 @@ class L {
   String get items_not_added => 'Item(s) not added';
   String get lending_offer_location_hint =>
       'location will help members to locate the place easily.';
+  String get offer_agreement_not_available => 'Request agreement not available';
+
+  String get click_to_view_offer_agreement => 'Click to view offer agreement';
 }
