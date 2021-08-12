@@ -33,8 +33,7 @@ class AmenitiesAndHouseRules extends StatefulWidget {
   final LendingModel lendingModel;
   AmenitiesAndHouseRules({@required this.lendingModel});
   @override
-  _AmenitiesAndHouseRulesState createState() =>
-      _AmenitiesAndHouseRulesState();
+  _AmenitiesAndHouseRulesState createState() => _AmenitiesAndHouseRulesState();
 }
 
 class _AmenitiesAndHouseRulesState extends State<AmenitiesAndHouseRules> {
