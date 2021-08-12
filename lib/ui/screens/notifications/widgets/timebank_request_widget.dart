@@ -146,7 +146,10 @@ class TimebankRequestWidget extends StatelessWidget {
                     Center(
                         child: requestModel.requestType == RequestType.BORROW
                             ? Text(
-                                "${S.of(context).notifications_by_approving} ${userModel.fullname},"+ S.of(context).you_will_go_ahead_with_them_for_request,
+                                "${S.of(context).notifications_by_approving} ${userModel.fullname}," +
+                                    S
+                                        .of(context)
+                                        .you_will_go_ahead_with_them_for_request,
                                 style: TextStyle(
                                   //LABEL NEEDED FROM CLIENT FOR ABOVE TEXT
                                   fontStyle: FontStyle.italic,
