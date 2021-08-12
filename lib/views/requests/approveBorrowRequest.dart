@@ -337,7 +337,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
                   return;
                 }
 
-                if (selectedItemModels == null &&
+                if (selectedItemModels.length == 0 &&
                     widget.requestModel.roomOrTool ==
                         LendingType.ITEM.readable) {
                   ScaffoldMessenger.of(context).showSnackBar(

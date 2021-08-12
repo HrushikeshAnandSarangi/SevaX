@@ -159,8 +159,10 @@ class BorrowAgreementPdf {
           Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(L.of(contextMain).agreement_details,
                 style: TextStyle(fontSize: 16)),
-            SizedBox(height: 15),
-            (specificConditions != '' || specificConditions != null)
+            specificConditions.isNotEmpty && specificConditions != null
+                ? SizedBox(height: 15)
+                : Container(),
+            (specificConditions.isNotEmpty && specificConditions != null)
                 ? Text(
                     L.of(contextMain).lenders_specific_conditions +
                         specificConditions,
@@ -208,7 +210,7 @@ class BorrowAgreementPdf {
                       ]),
           ]),
 
-          SizedBox(height: 30),
+          SizedBox(height: 25),
 
           Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(L.of(contextMain).terms_of_service,
@@ -253,7 +255,10 @@ class BorrowAgreementPdf {
               Text(L.of(contextMain).borrower, style: TextStyle(fontSize: 16)),
               SizedBox(height: 15),
               Text(
-                ' ',
+                isOffer
+                    ? requestModel
+                        .fullName //need to modify according to offer model or request model
+                    : SevaCore.of(contextMain).loggedInUser.fullname,
                 style: TextStyle(
                   decoration: TextDecoration.underline,
                 ),

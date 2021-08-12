@@ -11,12 +11,14 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/basic_user_details.dart';
 import 'package:sevaexchange/models/chat_model.dart';
+import 'package:sevaexchange/models/enums/lending_borrow_enums.dart';
 import 'package:sevaexchange/models/manual_time_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/one_to_many_notification_data_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/acceptor_model.dart';
 import 'package:sevaexchange/new_baseline/models/user_added_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/repositories/notifications_repository.dart';
@@ -39,12 +41,15 @@ import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
+import 'package:sevaexchange/views/requests/approveBorrowRequest.dart';
 import 'package:sevaexchange/views/tasks/my_tasks_list.dart';
+import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/custom_dialogs/custom_dialog.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/ui/utils/helpers.dart';
+import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 
 import '../../../../labels.dart';
 
@@ -263,12 +268,67 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       );
 
                     case NotificationType.RequestInvite:
-                      return PersonalNotificationReducerForRequests
-                          .getInvitationForRequest(
-                        notification: notification,
-                        user: user,
-                        context: context,
-                      );
+                      RequestModel requestModel = RequestModel.fromMap(
+                          notification.data['requestModel']);
+                      TimebankModel timebankModel = TimebankModel.fromMap(
+                          notification.data['timebankModel']);
+                      logger.e(
+                          'Here 21.5: ' + requestModel.requestType.toString());
+                      if (requestModel.requestType == RequestType.BORROW) {
+                        return NotificationCard(
+                          entityName: requestModel.fullName,
+                          isDissmissible: true,
+                          onDismissed: () {
+                            NotificationsRepository.readUserNotification(
+                              notification.id,
+                              user.email,
+                            );
+                          },
+                          photoUrl: requestModel.photoUrl,
+                          subTitle:
+                              '${requestModel.fullName} ${S.of(context).notifications_requested_join} ${requestModel.title}, ${S.of(context).notifications_tap_to_view}',
+                          title: L.of(context).join_borrow_request,
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => AcceptBorrowRequest(
+                                  requestModel: requestModel,
+                                  timeBankId: requestModel.timebankId,
+                                  userId: SevaCore.of(context)
+                                      .loggedInUser
+                                      .sevaUserID,
+                                  parentContext: context,
+                                  onTap: () async {
+                                    //<----------- New Calendar Feature to be added here ----------->
+
+                                    await acceptBorrowRequest(
+                                        context: context,
+                                        timebankModel: timebankModel,
+                                        requestModel: requestModel);
+                                    NotificationsRepository
+                                        .readUserNotification(
+                                      notification.id,
+                                      user.email,
+                                    );
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ),
+                            );
+                          },
+                          timestamp: notification.timestamp,
+                        );
+                      } else {
+                        logger.e('HERE 24');
+                        return PersonalNotificationReducerForRequests
+                            .getInvitationForRequest(
+                          notification: notification,
+                          user: user,
+                          context: context,
+                        );
+                      }
+                      break;
+
                     case NotificationType.OfferRequestInvite:
                       return PersonalNotificationReducerForRequests
                           .getOfferRequestInvitation(
@@ -1019,6 +1079,15 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                         true; //so that we can know that this request has completed
                                     requestModelNew.isNotified =
                                         true; //resets to false otherwise
+
+                                    if (requestModelNew.roomOrTool ==
+                                        LendingType.ITEM.readable) {
+                                      requestModelNew
+                                          .borrowModel.itemsReturned = true;
+                                    } else {
+                                      requestModelNew.borrowModel.isCheckedOut =
+                                          true;
+                                    }
 
                                     await lenderReceivedBackCheck(
                                         notification: notification,

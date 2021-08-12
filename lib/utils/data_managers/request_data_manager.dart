@@ -1112,12 +1112,55 @@ Future<void> borrowRequestFeedbackBorrowerUpdate({
 Future<void> storeAcceptorDataBorrowRequest(
     {@required RequestModel model,
     @required BorrowAcceptorModel borrowAcceptorModel}) async {
-  logger.e('COMES TO SET AGREEMENT LINK 1');
   await CollectionRef.requests
       .doc(model.id)
       .collection('borrowRequestAcceptors')
       .doc(borrowAcceptorModel.acceptorEmail)
       .set(borrowAcceptorModel.toMap());
+}
+
+Future<void> removeAcceptorDataBorrowRequest(
+    {@required RequestModel requestModel,
+    @required String acceptorEmail}) async {
+  await CollectionRef.requests
+      .doc(requestModel.id)
+      .collection('borrowRequestAcceptors')
+      .doc(acceptorEmail)
+      .delete();
+
+  logger.e('REMOVED ACCEPTOR FROM borrowRequestAcceptors subcollection');
+}
+
+//accept borrow request (currently used in personal notifications)
+Future<void> acceptBorrowRequest(
+    {@required RequestModel requestModel,
+    @required TimebankModel timebankModel,
+    @required BuildContext context}) async {
+  Set<String> acceptorList = Set.from(requestModel.acceptors);
+  acceptorList.add(SevaCore.of(context).loggedInUser.email);
+
+  requestModel.acceptors = acceptorList.toList();
+  AcceptorModel acceptorModel = AcceptorModel(
+    sevauserid: SevaCore.of(context).loggedInUser.sevaUserID,
+    memberPhotoUrl: SevaCore.of(context).loggedInUser.photoURL,
+    communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+    communityName: timebankModel.name,
+    //communityModel.name,
+    memberName: SevaCore.of(context).loggedInUser.fullname,
+    memberEmail: SevaCore.of(context).loggedInUser.email,
+    timebankId: timebankModel.id,
+  );
+  requestModel.participantDetails[SevaCore.of(context).loggedInUser.email] =
+      acceptorModel.toMap();
+
+  acceptRequest(
+    loggedInUser: SevaCore.of(context).loggedInUser,
+    requestModel: requestModel,
+    senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+    communityId: requestModel.communityId,
+    directToMember: !timebankModel.protected,
+    acceptorModel: acceptorModel,
+  );
 }
 
 Future<void> rejectRequestCompletion({

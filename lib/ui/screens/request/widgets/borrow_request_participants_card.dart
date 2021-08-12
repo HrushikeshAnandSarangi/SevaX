@@ -36,8 +36,8 @@ class BorrowRequestParticipantsCard extends StatelessWidget {
       : super(key: key);
   @override
   Widget build(BuildContext context) {
-    logger
-        .e('Lending Model Items Length 2: ' + lendingModelList.length.toString());
+    logger.e('Lending Model Items Length 2: ' +
+        borrowAcceptorModel.acceptorphotoURL.toString());
     return Padding(
       padding: padding ?? EdgeInsets.symmetric(horizontal: 2, vertical: 6),
       child: Container(
@@ -54,8 +54,10 @@ class BorrowRequestParticipantsCard extends StatelessWidget {
                     child: AspectRatio(
                       aspectRatio: 1,
                       child: CustomNetworkImage(
-                        borrowAcceptorModel.acceptorphotoURL ??
-                            defaultUserImageURL,
+                        (borrowAcceptorModel.acceptorphotoURL != null &&
+                                borrowAcceptorModel.acceptorphotoURL != '')
+                            ? borrowAcceptorModel.acceptorphotoURL
+                            : defaultUserImageURL,
                         fit: BoxFit.cover,
                         onTap: onImageTap,
                         size: 40,

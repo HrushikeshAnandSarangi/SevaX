@@ -363,6 +363,12 @@ class ToDo {
                             true; //so that we can know that this request has completed
                         element.isNotified = true; //resets to false otherwise
 
+                        if (element.roomOrTool == LendingType.ITEM.readable) {
+                          element.borrowModel.itemsReturned = true;
+                        } else {
+                          element.borrowModel.isCheckedOut = true;
+                        }
+
                         await lenderReceivedBackCheck(
                             notification: null,
                             notificationId: null,

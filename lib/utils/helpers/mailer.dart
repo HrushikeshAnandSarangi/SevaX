@@ -65,7 +65,8 @@ class MailDonationReciept {
 }
 
 class MailBorrowRequestReceipts {
-  static Future<void> sendBorrowRequestReceipts(RequestModel requestModel) async {
+  static Future<void> sendBorrowRequestReceipts(
+      RequestModel requestModel) async {
     try {
       log('inside send borrow requests receipts api');
       await http.post(
