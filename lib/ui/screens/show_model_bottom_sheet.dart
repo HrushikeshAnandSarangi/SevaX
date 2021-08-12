@@ -1,44 +1,57 @@
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/upgrade_plan-banner_details_model.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 
-class CustomeShowModalBottomSheetModel {
-  final ComingFrom comingFrom;
-  final BannerDetails bannerDetails;
-  final String transaction_matrix_type;
-  final String iconUrl;
-  final Function onTapTransactionsMatrixCheck;
-
-  CustomeShowModalBottomSheetModel(
-    this.comingFrom,
-    this.bannerDetails,
-    this.transaction_matrix_type,
-    this.iconUrl,
-    this.onTapTransactionsMatrixCheck,
-  );
+enum CustomeBottomShetCalendar {
+  GOOGLE,
+  OUTLOOK,
+  ICLOUD_CALENDAR,
 }
 
-void customeShowModalBottomSheet({
-  @required BuildContext context,
-  @required String title,
-  @required String actionButton,
+class CustomeShowModalBottomSheet {
   @required
-      List<CustomeShowModalBottomSheetModel> customeShowModalBottomSheetModel,
-  @required Function onPressedOfActionButton,
-  EdgeInsetsGeometry titlePadding,
-  EdgeInsetsGeometry transactionsMatrixCheckPadding,
-}) {
-  assert(customeShowModalBottomSheetModel.length != 3);
-  showModalBottomSheet(
+  final ComingFrom comingFrom;
+  @required
+  final BannerDetails bannerDetails;
+  final EdgeInsetsGeometry titlePadding;
+  final EdgeInsetsGeometry transactionsMatrixCheckPadding;
+
+  CustomeShowModalBottomSheet({
+    this.comingFrom,
+    this.bannerDetails,
+    this.titlePadding,
+    this.transactionsMatrixCheckPadding,
+  });
+
+  Future<void> customeShowModalBottomSheet({
+    @required BuildContext context,
+    @required String title,
+    @required String skipButtonTitle,
+    @required Function onSkippedPressed,
+    @required
+        final Function(CustomeBottomShetCalendar caendarType)
+            onTapTransactionsMatrixCheck,
+  }) {
+    List<CustomeBottomShetCalendar> customeCalendar = [
+      CustomeBottomShetCalendar.GOOGLE,
+      CustomeBottomShetCalendar.OUTLOOK,
+      CustomeBottomShetCalendar.ICLOUD_CALENDAR,
+    ];
+    List<String> imageUrl = [
+      "lib/assets/images/googlecal.png",
+      "lib/assets/images/outlookcal.png",
+      "lib/assets/images/ical.png",
+    ];
+    // assert(customeShowModalBottomSheetModel.length != 3);
+    return showModalBottomSheet(
       context: context,
       builder: (BuildContext bc) {
         return Container(
           child: new Wrap(
             children: <Widget>[
               Padding(
-                padding: titlePadding ?? const EdgeInsets.fromLTRB(8, 8, 0, 8),
+                padding: titlePadding ?? EdgeInsets.fromLTRB(8, 8, 0, 8),
                 child: Text(
                   title ?? '',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
@@ -46,29 +59,24 @@ void customeShowModalBottomSheet({
               ),
               Padding(
                 padding: transactionsMatrixCheckPadding ??
-                    const EdgeInsets.fromLTRB(6, 6, 6, 6),
+                    EdgeInsets.fromLTRB(6, 6, 6, 6),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: List.generate(
                     3,
                     (index) => TransactionsMatrixCheck(
-                      comingFrom:
-                          customeShowModalBottomSheetModel[index].comingFrom,
-                      upgradeDetails:
-                          customeShowModalBottomSheetModel[index].bannerDetails,
-                      transaction_matrix_type:
-                          customeShowModalBottomSheetModel[index]
-                              .transaction_matrix_type,
+                      comingFrom: comingFrom,
+                      upgradeDetails: bannerDetails,
+                      transaction_matrix_type: "calendar_sync",
                       child: GestureDetector(
                         child: CircleAvatar(
                           backgroundColor: Colors.white,
                           radius: 40,
-                          child: Image.asset(
-                              customeShowModalBottomSheetModel[index].iconUrl),
+                          child: Image.asset(imageUrl[index]),
                         ),
-                        onTap: customeShowModalBottomSheetModel[index]
-                            .onTapTransactionsMatrixCheck,
+                        onTap: () => onTapTransactionsMatrixCheck(
+                            customeCalendar[index]),
                       ),
                     ),
                   ),
@@ -79,16 +87,17 @@ void customeShowModalBottomSheet({
                   Spacer(),
                   CustomTextButton(
                     child: Text(
-                      actionButton,
-                      style: TextStyle(
-                          color: FlavorConfig.values.theme.primaryColor),
+                      skipButtonTitle,
+                      style: TextStyle(color: Colors.purple),
                     ),
-                    onPressed: onPressedOfActionButton,
+                    onPressed: onSkippedPressed,
                   ),
                 ],
               )
             ],
           ),
         );
-      });
+      },
+    );
+  }
 }
