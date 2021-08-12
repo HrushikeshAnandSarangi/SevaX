@@ -6,7 +6,7 @@ import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/cash_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/lending_model.dart';
-import 'package:sevaexchange/new_baseline/models/lending_offer_details.dart';
+import 'package:sevaexchange/new_baseline/models/lending_offer_details_model.dart';
 import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/utils/helpers/location_helper.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';

@@ -42,11 +42,12 @@ class _SelectLendingPlaceItemState extends State<SelectLendingPlaceItem> {
       if (widget.lendingType == LendingType.ITEM) {
         future = LendingOffersRepo.getAllLendingItemModels(
             creatorId: SevaCore.of(context).loggedInUser.sevaUserID);
+        setState(() {});
       } else {
         future = LendingOffersRepo.getAllLendingPlaces(
             creatorId: SevaCore.of(context).loggedInUser.sevaUserID);
+        setState(() {});
       }
-      setState(() {});
     });
 
     super.initState();

@@ -6,61 +6,10 @@ import 'package:sevaexchange/utils/utils.dart';
 import '../../../../labels.dart';
 import 'lending_place_card_widget.dart';
 
-class LendingPlaceDetailsWidget extends StatefulWidget {
+class LendingPlaceDetailsWidget extends StatelessWidget {
   final LendingModel lendingModel;
 
   LendingPlaceDetailsWidget({@required this.lendingModel});
-
-  @override
-  _LendingPlaceDetailsWidgetState createState() =>
-      _LendingPlaceDetailsWidgetState();
-}
-
-class _LendingPlaceDetailsWidgetState extends State<LendingPlaceDetailsWidget> {
-  String getImageAssetIcon(String title) {
-    switch (title) {
-      case 'Wardrobe':
-        return AmenityAssetIcon.closet;
-      case 'Dedicated Workspace':
-        return AmenityAssetIcon.workspace;
-      case 'Parking':
-        return AmenityAssetIcon.parking;
-      case 'Swimming Pool':
-        return AmenityAssetIcon.swimming_pool;
-      case 'Tea / Coffee Maker':
-        return AmenityAssetIcon.coffee_machine;
-      case 'Ironing Board':
-        return AmenityAssetIcon.ironing_board;
-      case 'Kitchen':
-        return AmenityAssetIcon.kitchen;
-      case 'Alarm Clock':
-        return AmenityAssetIcon.alarm_clock;
-      case 'AC':
-        return AmenityAssetIcon.air_conditioner;
-      case 'Electronic Safe / Locker':
-        return AmenityAssetIcon.safe_locker;
-      case 'Dental Kit':
-        return AmenityAssetIcon.dental_kit;
-      case 'BathTub':
-        return AmenityAssetIcon.bath_tub;
-      case 'Wifi':
-        return AmenityAssetIcon.wifi;
-      case 'Tv':
-        return AmenityAssetIcon.television;
-      case 'Shaving Kit':
-        return AmenityAssetIcon.shaving_kit;
-      case 'Mini Bar / Mini Fridge':
-        return AmenityAssetIcon.mini_fridge;
-      case 'Iron':
-        return AmenityAssetIcon.iron;
-      case 'Hangers':
-        return AmenityAssetIcon.clothes_hanger;
-      case 'Luggage Rack':
-        return AmenityAssetIcon.luggage_rack;
-      default:
-        return AmenityAssetIcon.amenities;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,12 +17,31 @@ class _LendingPlaceDetailsWidgetState extends State<LendingPlaceDetailsWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         LendingPlaceCardWidget(
-          lendingPlaceModel: widget.lendingModel.lendingPlaceModel,
+          lendingPlaceModel: lendingModel.lendingPlaceModel,
           hidden: true,
         ),
         SizedBox(
           height: 10,
         ),
+        AmenitiesAndHouseRules(lendingModel: lendingModel)
+      ],
+    );
+  }
+}
+
+class AmenitiesAndHouseRules extends StatefulWidget {
+  final LendingModel lendingModel;
+  AmenitiesAndHouseRules({@required this.lendingModel});
+  @override
+  _AmenitiesAndHouseRulesState createState() => _AmenitiesAndHouseRulesState();
+}
+
+class _AmenitiesAndHouseRulesState extends State<AmenitiesAndHouseRules> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
         GridView.count(
             shrinkWrap: true,
             crossAxisCount: 2,
@@ -117,5 +85,50 @@ class _LendingPlaceDetailsWidgetState extends State<LendingPlaceDetailsWidget> {
         ),
       ],
     );
+  }
+}
+
+String getImageAssetIcon(String title) {
+  switch (title) {
+    case 'Wardrobe':
+      return AmenityAssetIcon.closet;
+    case 'Dedicated Workspace':
+      return AmenityAssetIcon.workspace;
+    case 'Parking':
+      return AmenityAssetIcon.parking;
+    case 'Swimming Pool':
+      return AmenityAssetIcon.swimming_pool;
+    case 'Tea / Coffee Maker':
+      return AmenityAssetIcon.coffee_machine;
+    case 'Ironing Board':
+      return AmenityAssetIcon.ironing_board;
+    case 'Kitchen':
+      return AmenityAssetIcon.kitchen;
+    case 'Alarm Clock':
+      return AmenityAssetIcon.alarm_clock;
+    case 'AC':
+      return AmenityAssetIcon.air_conditioner;
+    case 'Electronic Safe / Locker':
+      return AmenityAssetIcon.safe_locker;
+    case 'Dental Kit':
+      return AmenityAssetIcon.dental_kit;
+    case 'BathTub':
+      return AmenityAssetIcon.bath_tub;
+    case 'Wifi':
+      return AmenityAssetIcon.wifi;
+    case 'Tv':
+      return AmenityAssetIcon.television;
+    case 'Shaving Kit':
+      return AmenityAssetIcon.shaving_kit;
+    case 'Mini Bar / Mini Fridge':
+      return AmenityAssetIcon.mini_fridge;
+    case 'Iron':
+      return AmenityAssetIcon.iron;
+    case 'Hangers':
+      return AmenityAssetIcon.clothes_hanger;
+    case 'Luggage Rack':
+      return AmenityAssetIcon.luggage_rack;
+    default:
+      return AmenityAssetIcon.amenities;
   }
 }
