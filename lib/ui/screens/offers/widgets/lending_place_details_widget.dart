@@ -12,8 +12,7 @@ class LendingPlaceDetailsWidget extends StatefulWidget {
   LendingPlaceDetailsWidget({@required this.lendingModel});
 
   @override
-  _LendingPlaceDetailsWidgetState createState() =>
-      _LendingPlaceDetailsWidgetState();
+  _LendingPlaceDetailsWidgetState createState() => _LendingPlaceDetailsWidgetState();
 }
 
 class _LendingPlaceDetailsWidgetState extends State<LendingPlaceDetailsWidget> {
@@ -79,7 +78,7 @@ class _LendingPlaceDetailsWidgetState extends State<LendingPlaceDetailsWidget> {
             crossAxisCount: 2,
             childAspectRatio: 6 / 1,
             crossAxisSpacing: 0.0,
-            mainAxisSpacing: 0.2,
+            mainAxisSpacing: 5.0,
             physics: NeverScrollableScrollPhysics(),
             children: widget.lendingModel.lendingPlaceModel.amenities.values
                 .map((title) => Row(
@@ -89,13 +88,16 @@ class _LendingPlaceDetailsWidgetState extends State<LendingPlaceDetailsWidget> {
                             width: 20.0,
                             margin: EdgeInsets.only(right: 5),
                             child: Image.asset(getImageAssetIcon(title))),
-                        Text(
-                          title,
-                          style: TextStyle(
-                            color: HexColor(
-                              '#606670',
+                        Expanded(
+                          child: Text(
+                            title,
+                            maxLines: 2,
+                            style: TextStyle(
+                              color: HexColor(
+                                '#606670',
+                              ),
+                              fontSize: 14,
                             ),
-                            fontSize: 14,
                           ),
                         ),
                       ],
