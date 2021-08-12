@@ -113,7 +113,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
 
           if (requestModel.requestType == RequestType.BORROW) {
             return BorrowRequestParticipants(
-              userModel: snap,
+              userModelList: snap,
               timebankModel: widget.timebankModel,
               requestModel: requestModel,
             );

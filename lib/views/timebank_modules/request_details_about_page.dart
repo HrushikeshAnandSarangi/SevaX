@@ -2353,6 +2353,13 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
         communityId: widget.requestItem.communityId,
         directToMember: !widget.timebankModel.protected,
       );
+
+      if (widget.requestItem.requestType == RequestType.BORROW) {
+        removeAcceptorDataBorrowRequest(
+            acceptorEmail: SevaCore.of(context).loggedInUser.email,
+            requestModel: widget.requestItem);
+      }
+
       Navigator.pop(context);
     } else {
       _showAlreadyApprovedMessage();

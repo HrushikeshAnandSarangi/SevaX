@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -16,17 +17,19 @@ class RequestTabHolder extends StatelessWidget {
   RequestTabHolder({this.isAdmin, this.communityModel});
   @override
   Widget build(BuildContext context) {
-    List<String> titles = [
-      S.of(context).about,
-      S.of(context).search,
-      S.of(context).accepted
-    ];
     return StreamBuilder(
       stream: timeBankBloc.timebankController,
       builder: (context, AsyncSnapshot<TimebankController> snapshot) {
         if (snapshot.data != null && snapshot.data.selectedrequest != null) {
           var requestModel = snapshot.data.selectedrequest;
           TimebankModel timebank = snapshot.data.selectedtimebank;
+          List<String> titles = [
+            S.of(context).about,
+            S.of(context).search,
+            requestModel.requestType == RequestType.BORROW
+                ? L.of(context).responses
+                : S.of(context).accepted
+          ];
           return DefaultTabController(
             length: 3,
             child: Scaffold(

@@ -18,6 +18,7 @@ import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/one_to_many_notification_data_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/acceptor_model.dart';
 import 'package:sevaexchange/new_baseline/models/user_added_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/repositories/notifications_repository.dart';
@@ -48,6 +49,7 @@ import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/custom_dialogs/custom_dialog.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/ui/utils/helpers.dart';
+import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 
 import '../../../../labels.dart';
 
@@ -297,18 +299,18 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                       .sevaUserID,
                                   parentContext: context,
                                   onTap: () async {
-                                    // proccedWithCalander();
+                                    //<----------- New Calendar Feature to be added here ----------->
 
-                                    //Call above function here if possible or call the relevant functions here
-                                    // 1) add user to acceptors
-                                    // 2) add user to borrowRequestAcceptors subcollection
-
-                                    Navigator.of(context).pop();
+                                    await acceptBorrowRequest(
+                                        context: context,
+                                        timebankModel: timebankModel,
+                                        requestModel: requestModel);
                                     NotificationsRepository
                                         .readUserNotification(
                                       notification.id,
                                       user.email,
                                     );
+                                    Navigator.of(context).pop();
                                   },
                                 ),
                               ),

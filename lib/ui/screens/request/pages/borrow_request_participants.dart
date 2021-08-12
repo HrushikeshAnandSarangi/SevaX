@@ -18,13 +18,13 @@ import 'package:sevaexchange/views/requests/creatorApproveAcceptorAgreement.dart
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class BorrowRequestParticipants extends StatelessWidget {
-  final List<UserModel> userModel;
+  final List<UserModel> userModelList;
   final TimebankModel timebankModel;
   final RequestModel requestModel;
 
   const BorrowRequestParticipants({
     Key key,
-    this.userModel,
+    this.userModelList,
     this.timebankModel,
     this.requestModel,
   }) : super(key: key);
@@ -198,8 +198,10 @@ class BorrowRequestParticipants extends StatelessWidget {
                                                                     var notificationId =
                                                                         await RequestNotificationManager
                                                                             .getNotificationId(
-                                                                      userModel[
-                                                                          index],
+                                                                      getUserModel(
+                                                                          userModelList,
+                                                                          borrowAcceptorModel[index]
+                                                                              .acceptorEmail),
                                                                       requestModel,
                                                                     );
                                                                     //Creator accepts lender
@@ -219,8 +221,9 @@ class BorrowRequestParticipants extends StatelessWidget {
                                                                               .sevaUserID,
                                                                           parentContext:
                                                                               context,
-                                                                          acceptorUserModel:
-                                                                              userModel[index],
+                                                                          acceptorUserModel: getUserModel(
+                                                                              userModelList,
+                                                                              borrowAcceptorModel[index].acceptorEmail),
                                                                           notificationId:
                                                                               notificationId,
                                                                         ),
@@ -367,8 +370,10 @@ class BorrowRequestParticipants extends StatelessWidget {
                                                                     var notificationId =
                                                                         await RequestNotificationManager
                                                                             .getNotificationId(
-                                                                      userModel[
-                                                                          index],
+                                                                      getUserModel(
+                                                                          userModelList,
+                                                                          borrowAcceptorModel[index]
+                                                                              .acceptorEmail),
                                                                       requestModel,
                                                                     );
                                                                     //Creator accepts lender
@@ -388,8 +393,9 @@ class BorrowRequestParticipants extends StatelessWidget {
                                                                               .sevaUserID,
                                                                           parentContext:
                                                                               context,
-                                                                          acceptorUserModel:
-                                                                              userModel[index],
+                                                                          acceptorUserModel: getUserModel(
+                                                                              userModelList,
+                                                                              borrowAcceptorModel[index].acceptorEmail),
                                                                           notificationId:
                                                                               notificationId,
                                                                         ),
@@ -487,6 +493,12 @@ extension ReadableLendingOfferStates on LendingOfferStates {
         return LendingOfferStates.REQUESTED;
     }
   }
+}
+
+UserModel getUserModel(List<UserModel> userModelList, String email) {
+  UserModel userModel;
+  userModel = userModelList.firstWhere((element) => element.email == email);
+  return userModel;
 }
 
 Future<dynamic> alreadyAcceptedLenderDialog(BuildContext context) {

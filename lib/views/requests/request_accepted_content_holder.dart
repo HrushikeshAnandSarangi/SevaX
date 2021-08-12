@@ -38,57 +38,58 @@ class TabarView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: DefaultTabController(
-        length: 2,
-        child: Scaffold(
-          appBar: TabBar(
-            labelColor: Colors.black,
-            indicatorColor: Colors.black,
-            indicatorSize: TabBarIndicatorSize.label,
-            tabs: [
-              Tab(
-                child: Text(
-                  requestItem.requestType == RequestType.BORROW
-                      ? L.of(context).responses
-                      : S.of(context).participants,
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
-              Tab(
-                child: Text(
-                  S.of(context).completed,
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
-            ],
-          ),
-          body: TabBarView(
-            children: [
-              RequestParticipantsView(
+      body: requestItem.requestType == RequestType.BORROW
+          ? DefaultTabController(
+              length: 1,
+              child: RequestParticipantsView(
                 requestModel: requestItem,
                 timebankModel: timebankModel,
               ),
-              requestItem.requestType == RequestType.BORROW
-                  ?
-                  //Different UI TO BE MADE FOR BORROW REQUEST ?
-                  RequestAcceptedSpendingView(
+            )
+          : DefaultTabController(
+              length: 2,
+              child: Scaffold(
+                appBar: TabBar(
+                  labelColor: Colors.black,
+                  indicatorColor: Colors.black,
+                  indicatorSize: TabBarIndicatorSize.label,
+                  tabs: [
+                    Tab(
+                      child: Text(
+                        requestItem.requestType == RequestType.BORROW
+                            ? L.of(context).responses
+                            : S.of(context).participants,
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Tab(
+                      child: Text(
+                        S.of(context).completed,
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ],
+                ),
+                body: TabBarView(
+                  children: [
+                    RequestParticipantsView(
                       requestModel: requestItem,
                       timebankModel: timebankModel,
-                    )
-                  : requestItem.requestType == RequestType.ONE_TO_MANY_REQUEST
-                      ? RequestAcceptedSpendingViewOneToMany(
-                          requestModel: requestItem,
-                          timebankModel: timebankModel,
-                        ) //<--------- 'One to many completed page' ------------>
+                    ),
+                    requestItem.requestType == RequestType.ONE_TO_MANY_REQUEST
+                        ? RequestAcceptedSpendingViewOneToMany(
+                            requestModel: requestItem,
+                            timebankModel: timebankModel,
+                          ) //<--------- 'One to many completed page' ------------>
 
-                      : RequestAcceptedSpendingView(
-                          requestModel: requestItem,
-                          timebankModel: timebankModel,
-                        ),
-            ],
-          ),
-        ),
-      ),
+                        : RequestAcceptedSpendingView(
+                            requestModel: requestItem,
+                            timebankModel: timebankModel,
+                          ),
+                  ],
+                ),
+              ),
+            ),
     );
   }
 }
