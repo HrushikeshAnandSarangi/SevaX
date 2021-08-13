@@ -57,7 +57,7 @@ android {
             keyPassword keystoreProperties['keyPassword']
             // storeFile file(keystoreProperties['storeFile'])
             //  storeFile file('/Users/xyz/Desktop/seva-exchange/android/key.jks')
-            storeFile file('D:/UIPEP/seva-exchange/android/key.jks')
+            // storeFile file('D:/UIPEP/seva-exchange/android/key.jks')
             storeFile file('Keystore')
             storePassword keystoreProperties['storePassword']
         }
