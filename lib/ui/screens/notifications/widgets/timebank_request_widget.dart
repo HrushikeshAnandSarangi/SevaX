@@ -10,6 +10,7 @@ import 'package:sevaexchange/ui/screens/notifications/widgets/custom_close_butto
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_shimmer.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/request_accepted_widget.dart';
+import 'package:sevaexchange/ui/screens/offers/widgets/custom_dialog.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/creatorApproveAcceptorAgreement.dart';
@@ -49,8 +50,14 @@ class TimebankRequestWidget extends StatelessWidget {
             }
             UserModel user = snapshot.data;
             return NotificationCard(
+              onDismissed: () {
+                FirestoreManager.readTimeBankNotification(
+                  notificationId: notification.id,
+                  timebankId: notification.timebankId,
+                );
+              },
               timestamp: notification.timestamp,
-              isDissmissible: false,
+              isDissmissible: true,
               title: model.title,
               subTitle:
                   '${S.of(context).notifications_request_accepted_by} ${user.fullname}, ${S.of(context).notifications_waiting_for_approval}',
@@ -58,19 +65,25 @@ class TimebankRequestWidget extends StatelessWidget {
               entityName: user.fullname,
               onPressed: () {
                 if (model.requestType == RequestType.BORROW) {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => CreatorApproveAcceptorAgreeement(
-                        requestModel: model,
-                        timeBankId: model.timebankId,
-                        userId: SevaCore.of(context).loggedInUser.sevaUserID,
-                        parentContext: context,
-                        acceptorUserModel: user,
-                        notificationId: notification.id,
-                        //onTap: () async {},
+                  if (model.approvedUsers.length >= 1) {
+                    errorDialog(
+                        context: context,
+                        error: L.of(context).already_accepted_lender);
+                  } else {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => CreatorApproveAcceptorAgreeement(
+                          requestModel: model,
+                          timeBankId: model.timebankId,
+                          userId: SevaCore.of(context).loggedInUser.sevaUserID,
+                          parentContext: context,
+                          acceptorUserModel: user,
+                          notificationId: notification.id,
+                          //onTap: () async {},
+                        ),
                       ),
-                    ),
-                  );
+                    );
+                  }
                 } else {
                   showDialogForApproval(
                     context: context,

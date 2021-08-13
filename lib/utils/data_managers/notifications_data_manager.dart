@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/claimedRequestStatus.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/new_baseline/models/borrow_accpetor_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart';
@@ -607,6 +608,41 @@ Future<void> readLenderNotificationIfAcceptedFromTasks({
         });
       },
     );
+  } else {
+    return null;
+  }
+}
+
+//Borrow Request - reads it if accepted from request details page
+Future<String> readBorrowerRequestAcceptNotification({
+  @required RequestModel requestModel,
+  @required BorrowAcceptorModel borrowAcceptorModel,
+  @required bool fromNotification,
+}) async {
+  if (!fromNotification) {
+    logger.e(
+        '-------------User Email: ${borrowAcceptorModel.acceptorEmail}--------------');
+    logger.e('-------------RequestModel id: ${requestModel.id}--------------');
+    QuerySnapshot snapshotQuery = await CollectionRef.timebank
+        .doc(requestModel.timebankId)
+        .collection('notifications')
+        .where('isRead', isEqualTo: false)
+        .where('type', isEqualTo: 'RequestAccept')
+        .where('data.id', isEqualTo: requestModel.id)
+        .where('senderUserId', isEqualTo: borrowAcceptorModel.acceptorId)
+        .get();
+    // snapshotQuery.docs.forEach(
+    //   (document) async {
+    //     await CollectionRef.timebank
+    //         .doc(requestModel.timebankId)
+    //         .collection('notifications')
+    //         .doc(document.id)
+    //         .update({
+    //       'isRead': true,
+    //     });
+    //   },
+    // );
+    return snapshotQuery.docs[0].id;
   } else {
     return null;
   }
