@@ -242,9 +242,10 @@ class BorrowAgreementPdf {
               SizedBox(height: 15),
               Text(
                 isOffer
-                    ? SevaCore.of(contextMain).loggedInUser.fullname
-                    : requestModel
-                        .fullName, //need to modify according to offer model or request model
+                    ? requestModel.fullName
+                    : SevaCore.of(contextMain)
+                        .loggedInUser
+                        .fullname, //need to modify according to offer model or request model
                 style: TextStyle(
                   decoration: TextDecoration.underline,
                 ),
@@ -256,9 +257,9 @@ class BorrowAgreementPdf {
               SizedBox(height: 15),
               Text(
                 isOffer
-                    ? requestModel
-                        .fullName //need to modify according to offer model or request model
-                    : SevaCore.of(contextMain).loggedInUser.fullname,
+                    ? SevaCore.of(contextMain).loggedInUser.fullname
+                    : requestModel
+                        .fullName, //need to modify according to offer model or request model
                 style: TextStyle(
                   decoration: TextDecoration.underline,
                 ),
