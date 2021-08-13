@@ -9,6 +9,7 @@ class NotificationsModel extends DataModel {
   Map<String, dynamic> data;
   String targetUserId;
   String senderUserId;
+  String senderPhotoUrl;
   bool isRead;
   String timebankId;
   String communityId;
@@ -22,6 +23,7 @@ class NotificationsModel extends DataModel {
     this.targetUserId,
     this.isRead = false,
     this.senderUserId,
+    this.senderPhotoUrl,
     this.timebankId,
     this.communityId,
     this.timestamp,
@@ -47,6 +49,9 @@ class NotificationsModel extends DataModel {
 
     if (map.containsKey('senderUserId')) {
       this.senderUserId = map['senderUserId'];
+    }
+    if (map.containsKey('senderPhotoUrl')) {
+      this.senderPhotoUrl = map['senderPhotoUrl'];
     }
 
     if (map.containsKey('data')) {
@@ -85,6 +90,9 @@ class NotificationsModel extends DataModel {
 
     if (this.senderUserId != null) {
       map['senderUserId'] = this.senderUserId;
+    }
+    if (this.senderPhotoUrl != null) {
+      map['senderPhotoUrl'] = this.senderPhotoUrl;
     }
 
     if (this.type != null) {
@@ -330,6 +338,19 @@ Map<String, NotificationType> typeMapper = {
       NotificationType.COMMUNITY_ADDED_TO_MESSAGE_ROOM,
   "COMMUNITY_REMOVED_FROM_MESSAGE_ROOM":
       NotificationType.COMMUNITY_REMOVED_FROM_MESSAGE_ROOM,
+
+  //Lending offers
+  "MEMBER_ACCEPT_LENDING_OFFER": NotificationType.MEMBER_ACCEPT_LENDING_OFFER,
+  "NOTIFICATION_TO_BORROWER_APPROVED_OFFER":
+      NotificationType.NOTIFICATION_TO_BORROWER_APPROVED_OFFER,
+  "NOTIFICATION_TO_LENDER_PLACE_CHECKED_IN":
+      NotificationType.NOTIFICATION_TO_LENDER_PLACE_CHECKED_IN,
+  "NOTIFICATION_TO_LENDER_PLACE_CHECKED_OUT":
+      NotificationType.NOTIFICATION_TO_LENDER_PLACE_CHECKED_OUT,
+  "NOTIFICATION_TO_LENDER_ITEMS_COLLECTED":
+      NotificationType.NOTIFICATION_TO_LENDER_ITEMS_COLLECTED,
+  "NOTIFICATION_TO_LENDER_ITEMS_RETURNED":
+      NotificationType.NOTIFICATION_TO_LENDER_ITEMS_RETURNED,
 };
 
 ClearNotificationModel clearNotificationModelFromJson(String str) =>

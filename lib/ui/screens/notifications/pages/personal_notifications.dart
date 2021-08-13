@@ -1,6 +1,4 @@
-import 'dart:convert';
 import 'dart:developer';
-import 'dart:html';
 
 // import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
@@ -1165,7 +1163,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         onPressed: () {
                           //To be implemented by lending offer team
                         },
-                        photoUrl: defaultUserImageURL,
+                        photoUrl:
+                            notification.senderPhotoUrl ?? defaultUserImageURL,
                         title: '${model.individualOfferDataModel.title}',
                         subTitle: S
                             .of(context)

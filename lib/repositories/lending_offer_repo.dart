@@ -125,16 +125,16 @@ class LendingOffersRepo {
       {@required OfferModel model,
       @required BorrowAcceptorModel borrowAcceptorModel}) async {
     NotificationsModel notification = NotificationsModel(
-      timebankId: model.timebankId,
-      id: utils.Utils.getUuid(),
-      targetUserId: model.sevaUserId,
-      senderUserId: borrowAcceptorModel.acceptorId,
-      type: NotificationType.MEMBER_ACCEPT_LENDING_OFFER,
-      data: model.toMap(),
-      communityId: model.communityId,
-      isTimebankNotification: false,
-      isRead: false,
-    );
+        timebankId: model.timebankId,
+        id: utils.Utils.getUuid(),
+        targetUserId: model.sevaUserId,
+        senderUserId: borrowAcceptorModel.acceptorId,
+        type: NotificationType.MEMBER_ACCEPT_LENDING_OFFER,
+        data: model.toMap(),
+        communityId: model.communityId,
+        isTimebankNotification: false,
+        isRead: false,
+        senderPhotoUrl: borrowAcceptorModel.acceptorphotoURL);
     WriteBatch batch = CollectionRef.batch;
     var offersRef = CollectionRef.offers.doc(model.id);
     var lenderNotificationRef =
