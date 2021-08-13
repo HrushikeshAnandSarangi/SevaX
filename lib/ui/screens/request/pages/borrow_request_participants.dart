@@ -53,8 +53,7 @@ class BorrowRequestParticipants extends StatelessWidget {
             }
             List<BorrowAcceptorModel> borrowAcceptorModel = snapshot.data;
 
-            logger.e('borrowAcceptorModel length 2: ' +
-                borrowAcceptorModel.length.toString());
+            logger.e('borrowAcceptorModel length 2: ' + borrowAcceptorModel.length.toString());
 
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -65,10 +64,8 @@ class BorrowRequestParticipants extends StatelessWidget {
                     L
                         .of(context)
                         .you_have_received_responses
-                        .replaceFirst(
-                            '**', borrowAcceptorModel.length.toString())
-                        .replaceFirst(
-                            '***', borrowAcceptorModel.length > 1 ? 's' : ''),
+                        .replaceFirst('**', borrowAcceptorModel.length.toString())
+                        .replaceFirst('***', borrowAcceptorModel.length > 1 ? 's' : ''),
                     style: TextStyle(color: Colors.black, fontSize: 16),
                   ),
                 ),
@@ -88,190 +85,144 @@ class BorrowRequestParticipants extends StatelessWidget {
                     itemCount: borrowAcceptorModel.length,
                     itemBuilder: (BuildContext context, int index) {
                       if (borrowAcceptorModel != null) {
-                        return requestModel.roomOrTool ==
-                                LendingType.ITEM.readable
+                        return requestModel.roomOrTool == LendingType.ITEM.readable
                             ? FutureBuilder<List<LendingModel>>(
-                                future:
-                                    LendingOffersRepo.getApprovedLendingModels(
-                                        lendingModelsIds:
-                                            borrowAcceptorModel[index]
-                                                .borrowedItemsIds),
+                                future: LendingOffersRepo.getApprovedLendingModels(
+                                    lendingModelsIds: borrowAcceptorModel[index].borrowedItemsIds),
                                 builder: (context, snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
+                                  if (snapshot.connectionState == ConnectionState.waiting) {
                                     return LoadingIndicator();
                                   }
                                   if (snapshot.data == null) {
                                     return Container();
                                   }
-                                  List<LendingModel> lendingModelList =
-                                      snapshot.data;
+                                  List<LendingModel> lendingModelList = snapshot.data;
 
                                   return Container(
-                                    margin: EdgeInsets.symmetric(
-                                        horizontal: 4, vertical: 0),
+                                    margin: EdgeInsets.symmetric(horizontal: 4, vertical: 0),
                                     child: Container(
                                       // width: 400,
                                       // height: 250,
                                       child: BorrowRequestParticipantsCard(
                                         requestModel: requestModel,
-                                        borrowAcceptorModel:
-                                            borrowAcceptorModel[index],
+                                        borrowAcceptorModel: borrowAcceptorModel[index],
                                         context: context,
                                         lendingModelList: lendingModelList,
                                         onImageTap: () {
-                                          Navigator.of(context).push(
-                                              MaterialPageRoute(
-                                                  builder: (context) {
+                                          logger
+                                              .d("@@REQ ${borrowAcceptorModel[index].acceptorId}");
+                                          Navigator.of(context)
+                                              .push(MaterialPageRoute(builder: (context) {
                                             return ProfileViewer(
                                               timebankId: timebankModel.id,
                                               entityName: timebankModel.name,
                                               isFromTimebank: isPrimaryTimebank(
-                                                  parentTimebankId:
-                                                      timebankModel
-                                                          .parentTimebankId),
+                                                  parentTimebankId: timebankModel.parentTimebankId),
+                                              userId: borrowAcceptorModel[index].acceptorId,
+                                              userEmail: borrowAcceptorModel[index].acceptorEmail,
                                             );
                                           }));
                                         },
-                                        buttonsContainer:
-                                            ((requestModel.borrowModel
-                                                        .itemsCollected) &&
-                                                    requestModel.approvedUsers
-                                                        .contains(
-                                                            borrowAcceptorModel[
-                                                                    index]
-                                                                .acceptorEmail))
-                                                ? Chip(
-                                                    label: Text(
-                                                      (requestModel.borrowModel
-                                                                  .itemsCollected &&
-                                                              requestModel
-                                                                  .borrowModel
-                                                                  .itemsReturned)
-                                                          ? L
-                                                              .of(context)
-                                                              .items_returned
-                                                          : L
-                                                              .of(context)
-                                                              .items_collected,
-                                                      style: TextStyle(
-                                                          color: Colors.grey,
-                                                          fontSize: 11),
-                                                    ),
-                                                  )
-                                                : Container(
-                                                    margin:
-                                                        EdgeInsets.only(top: 5),
-                                                    child: Row(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .center,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        !requestModel
-                                                                    .borrowModel
-                                                                    .itemsCollected &&
-                                                                !requestModel
-                                                                    .borrowModel
-                                                                    .itemsReturned
-                                                            ? ElevatedButton(
-                                                                style: ElevatedButton
-                                                                    .styleFrom(
-                                                                  primary: Colors
-                                                                          .grey[
-                                                                      300],
-                                                                  shape:
-                                                                      new RoundedRectangleBorder(
-                                                                    borderRadius:
-                                                                        new BorderRadius.circular(
-                                                                            30.0),
-                                                                  ),
-                                                                ),
-                                                                onPressed:
-                                                                    () async {
-                                                                  if (requestModel
-                                                                          .approvedUsers
-                                                                          .length <=
-                                                                      0) {
-                                                                    var notificationId =
-                                                                        await RequestNotificationManager
-                                                                            .getNotificationId(
-                                                                      getUserModel(
-                                                                          userModelList,
-                                                                          borrowAcceptorModel[index]
-                                                                              .acceptorEmail),
-                                                                      requestModel,
-                                                                    );
-                                                                    //Creator accepts lender
-                                                                    Navigator.of(
-                                                                            context)
-                                                                        .push(
-                                                                      MaterialPageRoute(
-                                                                        builder:
-                                                                            (context) =>
-                                                                                CreatorApproveAcceptorAgreeement(
-                                                                          requestModel:
-                                                                              requestModel,
-                                                                          timeBankId:
-                                                                              requestModel.timebankId,
-                                                                          userId: SevaCore.of(context)
-                                                                              .loggedInUser
-                                                                              .sevaUserID,
-                                                                          parentContext:
-                                                                              context,
-                                                                          acceptorUserModel: getUserModel(
+                                        buttonsContainer: ((requestModel
+                                                    .borrowModel.itemsCollected) &&
+                                                requestModel.approvedUsers.contains(
+                                                    borrowAcceptorModel[index].acceptorEmail))
+                                            ? Chip(
+                                                label: Text(
+                                                  (requestModel.borrowModel.itemsCollected &&
+                                                          requestModel.borrowModel.itemsReturned)
+                                                      ? L.of(context).items_returned
+                                                      : L.of(context).items_collected,
+                                                  style:
+                                                      TextStyle(color: Colors.grey, fontSize: 11),
+                                                ),
+                                              )
+                                            : Container(
+                                                margin: EdgeInsets.only(top: 5),
+                                                child: Row(
+                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  children: [
+                                                    !requestModel.borrowModel.itemsCollected &&
+                                                            !requestModel.borrowModel.itemsReturned
+                                                        ? ElevatedButton(
+                                                            style: ElevatedButton.styleFrom(
+                                                              primary: Colors.grey[300],
+                                                              shape: new RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    new BorderRadius.circular(30.0),
+                                                              ),
+                                                            ),
+                                                            onPressed: () async {
+                                                              if (requestModel
+                                                                      .approvedUsers.length <=
+                                                                  0) {
+                                                                var notificationId =
+                                                                    await RequestNotificationManager
+                                                                        .getNotificationId(
+                                                                  getUserModel(
+                                                                      userModelList,
+                                                                      borrowAcceptorModel[index]
+                                                                          .acceptorEmail),
+                                                                  requestModel,
+                                                                );
+                                                                //Creator accepts lender
+                                                                Navigator.of(context).push(
+                                                                  MaterialPageRoute(
+                                                                    builder: (context) =>
+                                                                        CreatorApproveAcceptorAgreeement(
+                                                                      requestModel: requestModel,
+                                                                      timeBankId:
+                                                                          requestModel.timebankId,
+                                                                      userId: SevaCore.of(context)
+                                                                          .loggedInUser
+                                                                          .sevaUserID,
+                                                                      parentContext: context,
+                                                                      acceptorUserModel:
+                                                                          getUserModel(
                                                                               userModelList,
-                                                                              borrowAcceptorModel[index].acceptorEmail),
-                                                                          notificationId:
-                                                                              notificationId,
-                                                                        ),
-                                                                      ),
-                                                                    );
-                                                                  } else {
-                                                                    //show dialog
-                                                                    await alreadyAcceptedLenderDialog(
-                                                                        context);
-                                                                  }
-                                                                },
-                                                                child: Text(
-                                                                  requestModel
-                                                                          .approvedUsers
-                                                                          .contains(borrowAcceptorModel[index]
-                                                                              .acceptorEmail)
-                                                                      ? S
-                                                                          .of(
-                                                                              context)
-                                                                          .accepted
-                                                                      : S
-                                                                          .of(context)
-                                                                          .accept,
-                                                                  style: TextStyle(
-                                                                      color: requestModel.approvedUsers.length > 0
-                                                                          ? Colors
-                                                                              .grey
-                                                                          : Colors
-                                                                              .black,
-                                                                      fontSize:
-                                                                          11.5),
-                                                                ),
-                                                              )
-                                                            : Container(),
-                                                      ],
-                                                    ),
-                                                  ),
+                                                                              borrowAcceptorModel[
+                                                                                      index]
+                                                                                  .acceptorEmail),
+                                                                      notificationId:
+                                                                          notificationId,
+                                                                    ),
+                                                                  ),
+                                                                );
+                                                              } else {
+                                                                //show dialog
+                                                                await alreadyAcceptedLenderDialog(
+                                                                    context);
+                                                              }
+                                                            },
+                                                            child: Text(
+                                                              requestModel.approvedUsers.contains(
+                                                                      borrowAcceptorModel[index]
+                                                                          .acceptorEmail)
+                                                                  ? S.of(context).accepted
+                                                                  : S.of(context).accept,
+                                                              style: TextStyle(
+                                                                  color: requestModel.approvedUsers
+                                                                              .length >
+                                                                          0
+                                                                      ? Colors.grey
+                                                                      : Colors.black,
+                                                                  fontSize: 11.5),
+                                                            ),
+                                                          )
+                                                        : Container(),
+                                                  ],
+                                                ),
+                                              ),
                                       ),
                                     ),
                                   );
                                 })
                             : FutureBuilder<LendingModel>(
                                 future: LendingOffersRepo.getLendingModel(
-                                    lendingId: borrowAcceptorModel[index]
-                                        .borrowedPlaceId),
+                                    lendingId: borrowAcceptorModel[index].borrowedPlaceId),
                                 builder: (context, snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
+                                  if (snapshot.connectionState == ConnectionState.waiting) {
                                     return LoadingIndicator();
                                   }
                                   if (snapshot.data == null) {
@@ -280,159 +231,118 @@ class BorrowRequestParticipants extends StatelessWidget {
                                   LendingModel lendingModelList = snapshot.data;
 
                                   return Container(
-                                    margin: EdgeInsets.symmetric(
-                                        horizontal: 5, vertical: 0),
+                                    margin: EdgeInsets.symmetric(horizontal: 5, vertical: 0),
                                     child: Container(
                                       // width: 400,
                                       // height: 250,
                                       child: BorrowRequestParticipantsCard(
                                         requestModel: requestModel,
-                                        borrowAcceptorModel:
-                                            borrowAcceptorModel[index],
+                                        borrowAcceptorModel: borrowAcceptorModel[index],
                                         context: context,
                                         lendingPlaceModel: lendingModelList,
                                         onImageTap: () {
-                                          Navigator.of(context).push(
-                                              MaterialPageRoute(
-                                                  builder: (context) {
+                                          Navigator.of(context)
+                                              .push(MaterialPageRoute(builder: (context) {
                                             return ProfileViewer(
                                               timebankId: timebankModel.id,
                                               entityName: timebankModel.name,
                                               isFromTimebank: isPrimaryTimebank(
-                                                  parentTimebankId:
-                                                      timebankModel
-                                                          .parentTimebankId),
+                                                  parentTimebankId: timebankModel.parentTimebankId),
+                                              userId: borrowAcceptorModel[index].acceptorId,
+                                              userEmail: borrowAcceptorModel[index].acceptorEmail,
                                             );
                                           }));
                                         },
-                                        buttonsContainer:
-                                            ((requestModel.borrowModel
-                                                        .isCheckedIn) &&
-                                                    requestModel.approvedUsers
-                                                        .contains(
-                                                            borrowAcceptorModel[
-                                                                    index]
-                                                                .acceptorEmail))
-                                                ? Chip(
-                                                    label: Text(
-                                                      (requestModel.borrowModel
-                                                                  .isCheckedIn &&
-                                                              requestModel
-                                                                  .borrowModel
-                                                                  .isCheckedOut)
-                                                          ? L
-                                                              .of(context)
-                                                              .checked_out
-                                                          : L
-                                                              .of(context)
-                                                              .checked_in,
-                                                      style: TextStyle(
-                                                          color: Colors.grey,
-                                                          fontSize: 11),
-                                                    ),
-                                                  )
-                                                : Container(
-                                                    margin:
-                                                        EdgeInsets.only(top: 5),
-                                                    child: Row(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .center,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        !requestModel
-                                                                    .borrowModel
-                                                                    .isCheckedIn &&
-                                                                !requestModel
-                                                                    .borrowModel
-                                                                    .isCheckedOut
-                                                            ? ElevatedButton(
-                                                                style: ElevatedButton
-                                                                    .styleFrom(
-                                                                  primary: Colors
-                                                                          .grey[
-                                                                      300],
-                                                                  shape:
-                                                                      new RoundedRectangleBorder(
-                                                                    borderRadius:
-                                                                        new BorderRadius.circular(
-                                                                            30.0),
-                                                                  ),
-                                                                ),
-                                                                onPressed:
-                                                                    () async {
-                                                                  if (requestModel
-                                                                          .approvedUsers
-                                                                          .length <=
-                                                                      0) {
-                                                                    var notificationId =
-                                                                        await RequestNotificationManager
-                                                                            .getNotificationId(
-                                                                      getUserModel(
-                                                                          userModelList,
-                                                                          borrowAcceptorModel[index]
-                                                                              .acceptorEmail),
-                                                                      requestModel,
-                                                                    );
-                                                                    //Creator accepts lender
-                                                                    Navigator.of(
-                                                                            context)
-                                                                        .push(
-                                                                      MaterialPageRoute(
-                                                                        builder:
-                                                                            (context) =>
-                                                                                CreatorApproveAcceptorAgreeement(
-                                                                          requestModel:
-                                                                              requestModel,
-                                                                          timeBankId:
-                                                                              requestModel.timebankId,
-                                                                          userId: SevaCore.of(context)
-                                                                              .loggedInUser
-                                                                              .sevaUserID,
-                                                                          parentContext:
-                                                                              context,
-                                                                          acceptorUserModel: getUserModel(
+                                        buttonsContainer: ((requestModel.borrowModel.isCheckedIn) &&
+                                                requestModel.approvedUsers.contains(
+                                                    borrowAcceptorModel[index].acceptorEmail))
+                                            ? Chip(
+                                                label: Text(
+                                                  (requestModel.borrowModel.isCheckedIn &&
+                                                          requestModel.borrowModel.isCheckedOut)
+                                                      ? L.of(context).checked_out
+                                                      : L.of(context).checked_in,
+                                                  style:
+                                                      TextStyle(color: Colors.grey, fontSize: 11),
+                                                ),
+                                              )
+                                            : Container(
+                                                margin: EdgeInsets.only(top: 5),
+                                                child: Row(
+                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  children: [
+                                                    !requestModel.borrowModel.isCheckedIn &&
+                                                            !requestModel.borrowModel.isCheckedOut
+                                                        ? ElevatedButton(
+                                                            style: ElevatedButton.styleFrom(
+                                                              primary: Colors.grey[300],
+                                                              shape: new RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    new BorderRadius.circular(30.0),
+                                                              ),
+                                                            ),
+                                                            onPressed: () async {
+                                                              if (requestModel
+                                                                      .approvedUsers.length <=
+                                                                  0) {
+                                                                var notificationId =
+                                                                    await RequestNotificationManager
+                                                                        .getNotificationId(
+                                                                  getUserModel(
+                                                                      userModelList,
+                                                                      borrowAcceptorModel[index]
+                                                                          .acceptorEmail),
+                                                                  requestModel,
+                                                                );
+                                                                //Creator accepts lender
+                                                                Navigator.of(context).push(
+                                                                  MaterialPageRoute(
+                                                                    builder: (context) =>
+                                                                        CreatorApproveAcceptorAgreeement(
+                                                                      requestModel: requestModel,
+                                                                      timeBankId:
+                                                                          requestModel.timebankId,
+                                                                      userId: SevaCore.of(context)
+                                                                          .loggedInUser
+                                                                          .sevaUserID,
+                                                                      parentContext: context,
+                                                                      acceptorUserModel:
+                                                                          getUserModel(
                                                                               userModelList,
-                                                                              borrowAcceptorModel[index].acceptorEmail),
-                                                                          notificationId:
-                                                                              notificationId,
-                                                                        ),
-                                                                      ),
-                                                                    );
-                                                                  } else {
-                                                                    //show dialog
-                                                                    await alreadyAcceptedLenderDialog(
-                                                                        context);
-                                                                  }
-                                                                },
-                                                                child: Text(
-                                                                  requestModel
-                                                                          .approvedUsers
-                                                                          .contains(borrowAcceptorModel[index]
-                                                                              .acceptorEmail)
-                                                                      ? S
-                                                                          .of(
-                                                                              context)
-                                                                          .accepted
-                                                                      : S
-                                                                          .of(context)
-                                                                          .accept,
-                                                                  style: TextStyle(
-                                                                      color: requestModel.approvedUsers.length > 0
-                                                                          ? Colors
-                                                                              .grey
-                                                                          : Colors
-                                                                              .black,
-                                                                      fontSize:
-                                                                          11.5),
-                                                                ),
-                                                              )
-                                                            : Container(),
-                                                      ],
-                                                    ),
-                                                  ),
+                                                                              borrowAcceptorModel[
+                                                                                      index]
+                                                                                  .acceptorEmail),
+                                                                      notificationId:
+                                                                          notificationId,
+                                                                    ),
+                                                                  ),
+                                                                );
+                                                              } else {
+                                                                //show dialog
+                                                                await alreadyAcceptedLenderDialog(
+                                                                    context);
+                                                              }
+                                                            },
+                                                            child: Text(
+                                                              requestModel.approvedUsers.contains(
+                                                                      borrowAcceptorModel[index]
+                                                                          .acceptorEmail)
+                                                                  ? S.of(context).accepted
+                                                                  : S.of(context).accept,
+                                                              style: TextStyle(
+                                                                  color: requestModel.approvedUsers
+                                                                              .length >
+                                                                          0
+                                                                      ? Colors.grey
+                                                                      : Colors.black,
+                                                                  fontSize: 11.5),
+                                                            ),
+                                                          )
+                                                        : Container(),
+                                                  ],
+                                                ),
+                                              ),
                                       ),
                                     ),
                                   );
@@ -533,114 +443,112 @@ Future<dynamic> alreadyAcceptedLenderDialog(BuildContext context) {
       });
 }
 
-  // List<Widget> getActions({
-  //   OfferAcceptanceStatus status,
-  //   OfferBloc bloc,
-  //   String offerId,
-  //   String acceptorDoumentId,
-  //   String notificationId,
-  //   String hostEmail,
-  //   BuildContext context,
-  //   UserModel user,
-  // }) {
-  //   switch (status) {
-  //     case OfferAcceptanceStatus.ACCEPTED:
-  //       return [
-  //         CustomElevatedButton(
-  //           color: Colors.green,
-  //           onPressed: () async {},
-  //           child: Text(
-  //             'Approved',
-  //             style: TextStyle(color: Colors.white),
-  //           ),
-  //         ),
-  //         SizedBox(
-  //           width: 5,
-  //         ),
-  //       ];
+// List<Widget> getActions({
+//   OfferAcceptanceStatus status,
+//   OfferBloc bloc,
+//   String offerId,
+//   String acceptorDoumentId,
+//   String notificationId,
+//   String hostEmail,
+//   BuildContext context,
+//   UserModel user,
+// }) {
+//   switch (status) {
+//     case OfferAcceptanceStatus.ACCEPTED:
+//       return [
+//         CustomElevatedButton(
+//           color: Colors.green,
+//           onPressed: () async {},
+//           child: Text(
+//             'Approved',
+//             style: TextStyle(color: Colors.white),
+//           ),
+//         ),
+//         SizedBox(
+//           width: 5,
+//         ),
+//       ];
 
-  //     case OfferAcceptanceStatus.REJECTED:
-  //       return [
-  //         CustomElevatedButton(
-  //           color: Colors.red,
-  //           onPressed: () {},
-  //           child: Text(
-  //             'Declined',
-  //             style: TextStyle(color: Colors.white),
-  //           ),
-  //         )
-  //       ];
+//     case OfferAcceptanceStatus.REJECTED:
+//       return [
+//         CustomElevatedButton(
+//           color: Colors.red,
+//           onPressed: () {},
+//           child: Text(
+//             'Declined',
+//             style: TextStyle(color: Colors.white),
+//           ),
+//         )
+//       ];
 
-  //     case OfferAcceptanceStatus.REQUESTED:
-  //       return [
-  //         IconButton(
-  //           icon: Icon(
-  //             Icons.chat_bubble,
-  //             color: Colors.grey,
-  //           ),
-  //           iconSize: 30,
-  //           onPressed: null,
-  //         ),
-  //         SizedBox(
-  //           width: 5,
-  //         ),
-  //         ElevatedButton(
-  //           style: ElevatedButton.styleFrom(
-  //             primary: Colors.grey[300],
-  //             shape: new RoundedRectangleBorder(
-  //               borderRadius: new BorderRadius.circular(30.0),
-  //             ),
-  //           ),
-  //           onPressed: () async {
-  //             //on approve functionality here.
+//     case OfferAcceptanceStatus.REQUESTED:
+//       return [
+//         IconButton(
+//           icon: Icon(
+//             Icons.chat_bubble,
+//             color: Colors.grey,
+//           ),
+//           iconSize: 30,
+//           onPressed: null,
+//         ),
+//         SizedBox(
+//           width: 5,
+//         ),
+//         ElevatedButton(
+//           style: ElevatedButton.styleFrom(
+//             primary: Colors.grey[300],
+//             shape: new RoundedRectangleBorder(
+//               borderRadius: new BorderRadius.circular(30.0),
+//             ),
+//           ),
+//           onPressed: () async {
+//             //on approve functionality here.
 
-  //             //Dialog box also to restrict approving more than one Borrower at a time.
-  //             bool isCurrentlyLent = true;
-  //             if (isCurrentlyLent) {
-  //               await cannotApproveMultipleDialog(context);
-  //             }
-  //             // bloc.updateOfferAcceptorAction(
-  //             //   notificationId: notificationId,
-  //             //   acceptorDocumentId: acceptorDoumentId,
-  //             //   offerId: offerId,
-  //             //   action: OfferAcceptanceStatus.ACCEPTED,
-  //             //   hostEmail: hostEmail,
-  //             // );
-  //           },
-  //           child: Text(
-  //             S.of(context).approve,
-  //             style: TextStyle(color: Colors.black, fontSize: 11.5),
-  //           ),
-  //         ),
-  //         SizedBox(
-  //           width: 8,
-  //         ),
-  //         ElevatedButton(
-  //           style: ElevatedButton.styleFrom(
-  //             primary: Colors.grey[300],
-  //             shape: new RoundedRectangleBorder(
-  //               borderRadius: new BorderRadius.circular(30.0),
-  //             ),
-  //           ),
-  //           onPressed: () {
-  //             // bloc.updateOfferAcceptorAction(
-  //             //   notificationId: notificationId,
-  //             //   acceptorDocumentId: acceptorDoumentId,
-  //             //   offerId: offerId,
-  //             //   // action: OfferAcceptanceStatus.REJECTED,
-  //             //   hostEmail: hostEmail,
-  //             // );
-  //           },
-  //           child: Padding(
-  //             padding: const EdgeInsets.only(left: 4.0, right: 4.0),
-  //             child: Text(
-  //               S.of(context).reject,
-  //               style: TextStyle(color: Colors.black, fontSize: 11.5),
-  //             ),
-  //           ),
-  //         )
-  //       ];
-  //   }
-  // }
-
-
+//             //Dialog box also to restrict approving more than one Borrower at a time.
+//             bool isCurrentlyLent = true;
+//             if (isCurrentlyLent) {
+//               await cannotApproveMultipleDialog(context);
+//             }
+//             // bloc.updateOfferAcceptorAction(
+//             //   notificationId: notificationId,
+//             //   acceptorDocumentId: acceptorDoumentId,
+//             //   offerId: offerId,
+//             //   action: OfferAcceptanceStatus.ACCEPTED,
+//             //   hostEmail: hostEmail,
+//             // );
+//           },
+//           child: Text(
+//             S.of(context).approve,
+//             style: TextStyle(color: Colors.black, fontSize: 11.5),
+//           ),
+//         ),
+//         SizedBox(
+//           width: 8,
+//         ),
+//         ElevatedButton(
+//           style: ElevatedButton.styleFrom(
+//             primary: Colors.grey[300],
+//             shape: new RoundedRectangleBorder(
+//               borderRadius: new BorderRadius.circular(30.0),
+//             ),
+//           ),
+//           onPressed: () {
+//             // bloc.updateOfferAcceptorAction(
+//             //   notificationId: notificationId,
+//             //   acceptorDocumentId: acceptorDoumentId,
+//             //   offerId: offerId,
+//             //   // action: OfferAcceptanceStatus.REJECTED,
+//             //   hostEmail: hostEmail,
+//             // );
+//           },
+//           child: Padding(
+//             padding: const EdgeInsets.only(left: 4.0, right: 4.0),
+//             child: Text(
+//               S.of(context).reject,
+//               style: TextStyle(color: Colors.black, fontSize: 11.5),
+//             ),
+//           ),
+//         )
+//       ];
+//   }
+// }

@@ -31,7 +31,9 @@ class LendingPlaceDetailsWidget extends StatelessWidget {
 
 class AmenitiesAndHouseRules extends StatefulWidget {
   final LendingModel lendingModel;
+
   AmenitiesAndHouseRules({@required this.lendingModel});
+
   @override
   _AmenitiesAndHouseRulesState createState() => _AmenitiesAndHouseRulesState();
 }
@@ -47,7 +49,7 @@ class _AmenitiesAndHouseRulesState extends State<AmenitiesAndHouseRules> {
             crossAxisCount: 2,
             childAspectRatio: 6 / 1,
             crossAxisSpacing: 0.0,
-            mainAxisSpacing: 0.2,
+            mainAxisSpacing: 5.0,
             physics: NeverScrollableScrollPhysics(),
             children: widget.lendingModel.lendingPlaceModel.amenities.values
                 .map((title) => Row(
@@ -57,13 +59,15 @@ class _AmenitiesAndHouseRulesState extends State<AmenitiesAndHouseRules> {
                             width: 20.0,
                             margin: EdgeInsets.only(right: 5),
                             child: Image.asset(getImageAssetIcon(title))),
-                        Text(
-                          title,
-                          style: TextStyle(
-                            color: HexColor(
-                              '#606670',
+                        Expanded(
+                          child: Text(
+                            title,
+                            style: TextStyle(
+                              color: HexColor(
+                                '#606670',
+                              ),
+                              fontSize: 14,
                             ),
-                            fontSize: 14,
                           ),
                         ),
                       ],

@@ -1980,7 +1980,12 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                         style: TextStyle(color: Colors.black),
                         children: [
                           TextSpan(
-                            text: isApplied
+                            text: widget.requestItem.approvedUsers.contains(
+                                        SevaCore.of(context)
+                                            .loggedInUser
+                                            .email) ||
+                                    widget.requestItem.acceptors.contains(
+                                        SevaCore.of(context).loggedInUser.email)
                                 ? S.of(context).accepted_this_request
                                 : S.of(context).particpate_in_request_question,
                             style: TextStyle(
@@ -2179,7 +2184,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   }
 
   void borrowApplyAction() async {
-    if (isApplied) {
+    if (widget.requestItem.acceptors
+        .contains(SevaCore.of(context).loggedInUser.email)) {
       _withdrawRequest();
     } else {
       Navigator.of(context).push(

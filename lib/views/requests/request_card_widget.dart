@@ -192,6 +192,12 @@ class RequestCardWidget extends StatelessWidget {
                                   userModel.email,
                                 );
 
+                                if (requestModel.requestType ==
+                                    RequestType.BORROW) {
+                                  requestModel.invitedUsers
+                                      .add(userModel.sevaUserID);
+                                }
+
                                 sendNotification(
                                   requestModel: requestModel,
                                   userModel: userModel,

@@ -11,6 +11,7 @@ import 'package:sevaexchange/ui/screens/image_picker/image_picker_dialog_mobile.
 import 'package:sevaexchange/ui/screens/offers/bloc/add_update_item_bloc.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/custom_textfield.dart';
 import 'package:sevaexchange/ui/utils/offer_utility.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/full_screen_widget.dart';
@@ -20,8 +21,7 @@ class AddUpdateLendingItem extends StatefulWidget {
   final String enteredTitle;
   final Function(LendingModel lendingModel) onItemCreateUpdate;
 
-  AddUpdateLendingItem(
-      {this.lendingModel, this.onItemCreateUpdate, this.enteredTitle});
+  AddUpdateLendingItem({this.lendingModel, this.onItemCreateUpdate, this.enteredTitle});
 
   @override
   _AddUpdateLendingItemState createState() => _AddUpdateLendingItemState();
@@ -41,9 +41,11 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
     if (widget.lendingModel != null) {
       _bloc.loadData(widget.lendingModel.lendingItemModel);
       _itemNameController.text = widget.lendingModel.lendingItemModel.itemName;
+      _bloc.onPlaceNameChanged(widget.lendingModel.lendingItemModel.itemName);
     } else {
       if (widget.enteredTitle != null) {
         _itemNameController.text = widget.enteredTitle;
+        _bloc.onPlaceNameChanged(widget.enteredTitle);
       }
     }
     setState(() {});
@@ -139,8 +141,7 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                             },
                             hint: L.of(context).name_of_item_hint,
                             maxLength: null,
-                            error: getAddItemValidationError(
-                                context, snapshot.error),
+                            error: getAddItemValidationError(context, snapshot.error),
                           );
                         },
                       ),
@@ -152,8 +153,7 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                                 context: context,
                                 builder: (BuildContext dialogContext) {
                                   return ImagePickerDialogMobile(
-                                    imagePickerType:
-                                        ImagePickerType.LENDING_OFFER,
+                                    imagePickerType: ImagePickerType.LENDING_OFFER,
                                     onLinkCreated: (link) {
                                       imagesList.add(link);
                                       _bloc.onItemImageAdded(imagesList);
@@ -171,12 +171,8 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                                         defaultCameraImageURL,
                                       ),
                                       fit: BoxFit.cover),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(75.0)),
-                                  boxShadow: [
-                                    BoxShadow(
-                                        blurRadius: 7.0, color: Colors.black12)
-                                  ]),
+                                  borderRadius: BorderRadius.all(Radius.circular(75.0)),
+                                  boxShadow: [BoxShadow(blurRadius: 7.0, color: Colors.black12)]),
                             ),
                           ),
                         ),
@@ -188,9 +184,7 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                           // if (snapshot.connectionState == ConnectionState.waiting) {
                           //   return LoadingIndicator();
                           // }
-                          if (snapshot.hasError ||
-                              snapshot.data == null ||
-                              !snapshot.hasData) {
+                          if (snapshot.hasError || snapshot.data == null || !snapshot.hasData) {
                             return Container();
                           }
                           imagesList = snapshot.data;
@@ -211,8 +205,7 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                                         onTap: () {
                                           showDialog(
                                               context: context,
-                                              builder:
-                                                  (BuildContext dialogContext) {
+                                              builder: (BuildContext dialogContext) {
                                                 return FullScreenImage(
                                                   imageUrl: imagesList[index],
                                                 );
@@ -220,10 +213,8 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                                         },
                                         child: Container(
                                           child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              child: Image.network(
-                                                  imagesList[index])),
+                                              borderRadius: BorderRadius.circular(10),
+                                              child: Image.network(imagesList[index])),
                                         ),
                                       ),
                                       Align(
@@ -261,8 +252,7 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                           width: 200,
                           child: CustomElevatedButton(
                             onPressed: () async {
-                              var connResult =
-                                  await Connectivity().checkConnectivity();
+                              var connResult = await Connectivity().checkConnectivity();
                               if (connResult == ConnectivityResult.none) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
@@ -270,27 +260,21 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                                     action: SnackBarAction(
                                       label: S.of(context).dismiss,
                                       onPressed: () =>
-                                          ScaffoldMessenger.of(context)
-                                              .hideCurrentSnackBar(),
+                                          ScaffoldMessenger.of(context).hideCurrentSnackBar(),
                                     ),
                                   ),
                                 );
                                 return;
                               }
 
-                              if (imagesList == null ||
-                                  imagesList.length == 0) {
-                                showAlertMessage(
-                                    context: context,
-                                    message: 'Add images to item');
+                              if (imagesList == null || imagesList.length == 0) {
+                                showAlertMessage(context: context, message: 'Add images to item');
                               } else {
                                 if (widget.lendingModel == null) {
                                   _bloc.createLendingOfferPlace(
-                                      creator:
-                                          SevaCore.of(context).loggedInUser);
+                                      creator: SevaCore.of(context).loggedInUser);
                                 } else {
-                                  _bloc.updateLendingOfferPlace(
-                                      model: widget.lendingModel);
+                                  _bloc.updateLendingOfferPlace(model: widget.lendingModel);
                                 }
                               }
                             },
