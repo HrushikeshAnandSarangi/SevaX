@@ -204,7 +204,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
                             return AddUpdateLendingItem(
                               lendingModel: model,
                               onItemCreateUpdate: (LendingModel model) {
-                                selectedItemModels.add(model);
+                                // selectedItemModels.add(model);
                                 setState(() {});
                               },
                             );
