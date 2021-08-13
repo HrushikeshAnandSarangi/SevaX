@@ -1318,4 +1318,5 @@ class L {
       'Lender has not created an agreement for this offer';
   String get admin_borrow_request_received_back_check =>
       "If you have received your item/place back click the button below to complete this."; //add again label changed
+  String get please_add_amenities => "Please add Amenities";
 }

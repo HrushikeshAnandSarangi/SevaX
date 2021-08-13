@@ -2791,7 +2791,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           BorrowAcceptorModel borrowAcceptorModel = snapshot.data;
           return Container(
             height: widget.requestItem.roomOrTool == LendingType.ITEM.readable
-                ? 300
+                ? 320
                 : 610, //to be fixed (give dynamic height)
             child: Column(
               mainAxisSize: MainAxisSize.min,
