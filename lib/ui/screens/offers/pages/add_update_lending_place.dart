@@ -450,11 +450,18 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                                 return;
                               }
 
+                              if (_bloc.getSelectedAmenities().isEmpty) {
+                                showAlertMessage(
+                                    context: context,
+                                    message:
+                                        L.of(context).please_add_amenities);
+                              }
+
                               if (imagesList == null ||
                                   imagesList.length == 0) {
                                 showAlertMessage(
                                     context: context,
-                                    message: 'Add images to place');
+                                    message: L.of(context).add_images_to_place);
                               } else {
                                 if (widget.lendingModel == null) {
                                   _bloc.createLendingOfferPlace(

@@ -127,15 +127,16 @@ class BorrowRequestParticipantsCard extends StatelessWidget {
                             }),
                       )
                     : Container(
-                        // height: 400,
-                        width: 300,
-                        child: Column(
-                          children: [
-                            LendingPlaceDetailsWidget(
-                              lendingModel: lendingPlaceModel,
-                            ),
-                            SizedBox(height: 10),
-                          ],
+                        // width: 370,
+                        child: Expanded(
+                          child: Column(
+                            children: [
+                              LendingPlaceDetailsWidget(
+                                lendingModel: lendingPlaceModel,
+                              ),
+                              SizedBox(height: 10),
+                            ],
+                          ),
                         ),
                       ),
               ],
