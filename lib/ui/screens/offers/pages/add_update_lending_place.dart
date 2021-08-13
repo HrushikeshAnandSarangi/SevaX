@@ -468,7 +468,8 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                                 return;
                               }
 
-                              if (_bloc.getSelectedAmenities().isEmpty) {
+                              if (_bloc.getSelectedAmenities() == {} ||
+                                  _bloc.getSelectedAmenities() == null) {
                                 showAlertMessage(
                                     context: context,
                                     message:
