@@ -26,6 +26,7 @@ import 'package:sevaexchange/new_baseline/models/project_template_model.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/repositories/notifications_repository.dart';
+import 'package:sevaexchange/repositories/timebank_repository.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/mailer.dart';
@@ -2229,15 +2230,31 @@ Future<void> sendNotificationLenderReceipt(
     String userEmail,
     RequestModel requestModel,
     @required BuildContext context}) async {
+  bool isOutsideCommunity = false;
+
+  List<TimebankModel> timebanks =
+      await TimebankRepository.getTimebanksWhichUserIsPartOf(
+    sevaUserId,
+    communityId,
+  );
+
+  TimebankModel finalTimebank = timebanks
+      .firstWhere((element) => element.id == timebankId, orElse: () => null);
+  if (finalTimebank == null) {
+    isOutsideCommunity = false;
+  } else {
+    isOutsideCommunity = finalTimebank.members.contains(sevaUserId);
+  }
+
   NotificationsModel notification = NotificationsModel(
-      isTimebankNotification:
-          requestModel.requestMode == RequestMode.TIMEBANK_REQUEST,
+      isTimebankNotification: isOutsideCommunity ? false : true,
       id: Utils.getUuid(),
       timebankId: FlavorConfig.values.timebankId,
       data: requestModel.toMap(),
       isRead: false,
       type: NotificationType.NOTIFICATION_TO_LENDER_COMPLETION_RECEIPT,
-      communityId: communityId,
+      communityId:
+          isOutsideCommunity ? FlavorConfig.values.timebankId : communityId,
       senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
       targetUserId: sevaUserId);
 

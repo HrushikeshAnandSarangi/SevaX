@@ -642,7 +642,11 @@ Future<String> readBorrowerRequestAcceptNotification({
     //     });
     //   },
     // );
-    return snapshotQuery.docs[0].id;
+    if (snapshotQuery.docs.length >= 1) {
+      return snapshotQuery.docs[0].id;
+    } else {
+      return '';
+    }
   } else {
     return null;
   }

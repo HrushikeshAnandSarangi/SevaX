@@ -471,9 +471,9 @@ class RequestModel extends DataModel {
       this.maxCredits = map['maxCredits'];
     }
 
-    if (map.containsKey('location')) {
-      this.location = getLocation(map);
-    }
+    // if (map.containsKey('location')) {
+    //   this.location = getLocation(map);
+    // }
 
     if (map.containsKey('isRecurring')) {
       this.isRecurring = map['isRecurring'];
@@ -759,9 +759,9 @@ class RequestModel extends DataModel {
       this.numberOfApprovals = map['numberOfApprovals'];
     }
 
-    if (map.containsKey('location')) {
-      this.location = getLocation(map);
-    }
+    // if (map.containsKey('location')) {
+    //   this.location = getLocation(map);
+    // }
 
     if (map.containsKey('isRecurring')) {
       this.isRecurring = map['isRecurring'];
