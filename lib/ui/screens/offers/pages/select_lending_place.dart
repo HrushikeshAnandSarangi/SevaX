@@ -26,16 +26,20 @@ class SelectLendingPlaceItem extends StatefulWidget {
     this.onSelected,
     this.lendingType,
   }) : super(key: key);
+
   @override
   _SelectLendingPlaceItemState createState() => _SelectLendingPlaceItemState();
 }
 
 class _SelectLendingPlaceItemState extends State<SelectLendingPlaceItem> {
   LendingModel selectedModel = LendingModel();
+
   // List<CommunityCategoryModel> availableCategories = [];
   SuggestionsBoxController controller = SuggestionsBoxController();
   TextEditingController _textEditingController = TextEditingController();
+  FocusNode suggestionFocusNode = FocusNode();
   Future<List<LendingModel>> future;
+
   @override
   void initState() {
     Future.delayed(Duration.zero, () {
@@ -49,7 +53,6 @@ class _SelectLendingPlaceItemState extends State<SelectLendingPlaceItem> {
         setState(() {});
       }
     });
-
     super.initState();
   }
 
@@ -72,6 +75,7 @@ class _SelectLendingPlaceItemState extends State<SelectLendingPlaceItem> {
                 },
                 hideOnError: true,
                 textFieldConfiguration: TextFieldConfiguration(
+                  focusNode: suggestionFocusNode,
                   controller: _textEditingController,
                   decoration: InputDecoration(
                     hintText: S.of(context).search,
@@ -126,13 +130,12 @@ class _SelectLendingPlaceItemState extends State<SelectLendingPlaceItem> {
                 suggestionsCallback: (String pattern) async {
                   var dataCopy = List<LendingModel>.from(snapshot.data);
                   if (widget.lendingType == LendingType.ITEM) {
-                    dataCopy.retainWhere((s) =>
-                        s.lendingItemModel.itemName.toLowerCase().contains(
-                              pattern.toLowerCase(),
-                            ));
+                    dataCopy.retainWhere((s) => s.lendingItemModel.itemName.toLowerCase().contains(
+                          pattern.toLowerCase(),
+                        ));
                   } else {
-                    dataCopy.retainWhere((s) =>
-                        s.lendingPlaceModel.placeName.toLowerCase().contains(
+                    dataCopy
+                        .retainWhere((s) => s.lendingPlaceModel.placeName.toLowerCase().contains(
                               pattern.toLowerCase(),
                             ));
                   }
@@ -153,6 +156,8 @@ class _SelectLendingPlaceItemState extends State<SelectLendingPlaceItem> {
         ? Padding(padding: const EdgeInsets.all(0))
         : InkWell(
             onTap: () {
+              suggestionFocusNode.unfocus();
+              _textEditingController.clear();
               if (widget.lendingType == LendingType.ITEM) {
                 Navigator.of(context).push(
                   MaterialPageRoute(
@@ -166,7 +171,11 @@ class _SelectLendingPlaceItemState extends State<SelectLendingPlaceItem> {
                       );
                     },
                   ),
-                );
+                ).then((_) {
+                  future = LendingOffersRepo.getAllLendingItemModels(
+                      creatorId: SevaCore.of(context).loggedInUser.sevaUserID);
+                  setState(() {});
+                });
               } else {
                 Navigator.of(context).push(
                   MaterialPageRoute(
@@ -180,7 +189,11 @@ class _SelectLendingPlaceItemState extends State<SelectLendingPlaceItem> {
                       );
                     },
                   ),
-                );
+                ).then((_) {
+                  future = LendingOffersRepo.getAllLendingPlaces(
+                      creatorId: SevaCore.of(context).loggedInUser.sevaUserID);
+                  setState(() {});
+                });
               }
             },
             child: Padding(
