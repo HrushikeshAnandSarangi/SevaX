@@ -176,7 +176,9 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
             SizedBox(height: 10),
             SelectLendingPlaceItem(
               onSelected: (LendingModel model) {
-                selectedItemModels.add(model);
+                if (!selectedItemModels.contains(model)) {
+                  selectedItemModels.add(model);
+                }
                 setState(() {});
               },
               lendingType: LendingType.ITEM,

@@ -333,9 +333,8 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
             SizedBox(
               width: 10,
             ),
-            Wrap(
-              alignment: WrapAlignment.start,
-              // mainAxisAlignment: MainAxisAlignment.start,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 canDeleteOffer ||
                         utils.isDeletable(
@@ -361,6 +360,30 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                         )
                     ? deleteActionButton(isAccepted, context)
                     : Container(),
+                SizedBox(
+                  height: 8,
+                ),
+                Offstage(
+                  offstage: !isCreator,
+                  child: Container(
+                    width: 120,
+                    height: 32,
+                    child: CustomTextButton(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                      color: Color.fromRGBO(44, 64, 140, 0.7),
+                      child: Text(
+                        S.of(context).edit,
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      onPressed: () async {},
+                    ),
+                  ),
+                ),
                 Offstage(
                   offstage: isCreator || isAccepted,
                   child: Container(

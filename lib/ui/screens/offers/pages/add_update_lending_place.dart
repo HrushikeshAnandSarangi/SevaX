@@ -59,21 +59,39 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
     super.initState();
     if (widget.lendingModel != null) {
       _bloc.loadData(widget.lendingModel);
+
       _placeNameController.text =
           widget.lendingModel.lendingPlaceModel.placeName;
+      _bloc.onPlaceNameChanged(widget.lendingModel.lendingPlaceModel.placeName);
+
       _guestsController.text =
           widget.lendingModel.lendingPlaceModel.noOfGuests.toString();
+      _bloc.onNoOfGuestsChanged(
+          widget.lendingModel.lendingPlaceModel.noOfGuests.toString());
+
       _roomsController.text =
           widget.lendingModel.lendingPlaceModel.noOfRooms.toString();
+      _bloc.onNoOfRoomsChanged(
+          widget.lendingModel.lendingPlaceModel.noOfRooms.toString());
+
       _bathroomsController.text =
           widget.lendingModel.lendingPlaceModel.noOfBathRooms.toString();
+      _bloc.onBathRoomsChanged(
+          widget.lendingModel.lendingPlaceModel.noOfBathRooms.toString());
+
       _commonSpaceController.text =
           widget.lendingModel.lendingPlaceModel.commonSpace;
+      _bloc.onCommonSpacesChanged(
+          widget.lendingModel.lendingPlaceModel.commonSpace);
+
       _houseRulesController.text =
           widget.lendingModel.lendingPlaceModel.houseRules.toString();
+      _bloc.onHouseRulesChanged(
+          widget.lendingModel.lendingPlaceModel.houseRules.toString());
     } else {
       if (widget.enteredTitle != null) {
         _placeNameController.text = widget.enteredTitle;
+        _bloc.onPlaceNameChanged(widget.enteredTitle);
       }
     }
     setState(() {});
