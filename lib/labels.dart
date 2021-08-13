@@ -1313,6 +1313,9 @@ class L {
 
   String get click_to_view_offer_agreement => 'Click to view offer agreement';
   String get join_borrow_request => 'Invited to accept request';
+  String get withdraw_lending_offer => 'Click here to withdraw your request';
+  String get lender_not_created_agreement =>
+      'Lender has not created an agreement for this offer';
   String get admin_borrow_request_received_back_check =>
       "If you have received your item/place back click the button below to complete this."; //add again label changed
 }

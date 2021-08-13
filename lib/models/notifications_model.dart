@@ -202,7 +202,15 @@ enum NotificationType {
 
   //offer request invite
   OfferRequestInvite,
-  TimeOfferInvitationFromCreator
+  TimeOfferInvitationFromCreator,
+
+  //lending offers notification
+  MEMBER_ACCEPT_LENDING_OFFER,
+  NOTIFICATION_TO_BORROWER_APPROVED_OFFER,
+  NOTIFICATION_TO_LENDER_PLACE_CHECKED_IN,
+  NOTIFICATION_TO_LENDER_PLACE_CHECKED_OUT,
+  NOTIFICATION_TO_LENDER_ITEMS_COLLECTED,
+  NOTIFICATION_TO_LENDER_ITEMS_RETURNED
 }
 
 //Check the method

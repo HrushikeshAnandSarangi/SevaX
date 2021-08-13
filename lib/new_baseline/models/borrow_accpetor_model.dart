@@ -48,7 +48,7 @@ class BorrowAcceptorModel {
             json["selectedAddress"] == null ? null : json["selectedAddress"],
         isApproved: json["isApproved"] == null ? null : json["isApproved"],
         borrowedItemsIds: json["borrowedItemsIds"] == null
-            ? null
+            ? []
             : List<String>.from(json["borrowedItemsIds"].map((x) => x)),
         borrowedPlaceId:
             json["borrowedPlaceId"] == null ? null : json["borrowedPlaceId"],
@@ -67,7 +67,7 @@ class BorrowAcceptorModel {
         "selectedAddress": selectedAddress == null ? null : selectedAddress,
         "isApproved": isApproved == null ? null : isApproved,
         "borrowedItemsIds": borrowedItemsIds == null
-            ? null
+            ? []
             : List<dynamic>.from(borrowedItemsIds.map((x) => x)),
         "borrowedPlaceId": borrowedPlaceId == null ? null : borrowedPlaceId,
         "timestamp": timestamp == null ? null : timestamp,

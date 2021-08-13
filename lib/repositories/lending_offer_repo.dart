@@ -2,12 +2,16 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/models/notifications_model.dart';
+import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/new_baseline/models/amenities_model.dart';
+import 'package:sevaexchange/new_baseline/models/borrow_accpetor_model.dart';
 import 'package:sevaexchange/new_baseline/models/lending_item_model.dart';
 import 'package:sevaexchange/new_baseline/models/lending_model.dart';
 import 'package:sevaexchange/new_baseline/models/lending_place_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/extensions.dart';
+import 'package:sevaexchange/utils/utils.dart' as utils;
 
 class LendingOffersRepo {
   static Future<List<AmenitiesModel>> getAllAmenities() async {
@@ -115,5 +119,58 @@ class LendingOffersRepo {
 
   static Future<void> updateNewLendingItem({LendingModel model}) async {
     await CollectionRef.lendingItems.doc(model.id).update(model.toMap());
+  }
+
+  static Future<void> storeAcceptorDataLendingOffer(
+      {@required OfferModel model,
+      @required BorrowAcceptorModel borrowAcceptorModel}) async {
+    NotificationsModel notification = NotificationsModel(
+      timebankId: model.timebankId,
+      id: utils.Utils.getUuid(),
+      targetUserId: model.sevaUserId,
+      senderUserId: borrowAcceptorModel.acceptorId,
+      type: NotificationType.MEMBER_ACCEPT_LENDING_OFFER,
+      data: model.toMap(),
+      communityId: model.communityId,
+      isTimebankNotification: false,
+      isRead: false,
+    );
+    WriteBatch batch = CollectionRef.batch;
+    var offersRef = CollectionRef.offers.doc(model.id);
+    var lenderNotificationRef =
+        CollectionRef.userNotification(model.email).doc(notification.id);
+    var offerAcceptorsReference = CollectionRef.lendingOfferAcceptors(model.id)
+        .doc(borrowAcceptorModel.acceptorEmail);
+    batch.update(offersRef, {
+      'lendingOfferDetailsModel.offerAcceptors':
+          FieldValue.arrayUnion([borrowAcceptorModel.acceptorEmail]),
+    });
+
+    batch.set(
+      offerAcceptorsReference,
+      borrowAcceptorModel.toMap(),
+      SetOptions(merge: true),
+    );
+    batch.set(
+      lenderNotificationRef,
+      notification.toMap(),
+      SetOptions(merge: true),
+    );
+    await batch.commit();
+  }
+
+  static Future<void> removeAcceptorLending(
+      {@required OfferModel model, @required String acceptorEmail}) async {
+    WriteBatch batch = CollectionRef.batch;
+    var offersRef = CollectionRef.offers.doc(model.id);
+    var offerAcceptorsReference =
+        CollectionRef.lendingOfferAcceptors(model.id).doc(acceptorEmail);
+    batch.update(offersRef, {
+      'lendingOfferDetailsModel.offerAcceptors':
+          FieldValue.arrayRemove([acceptorEmail]),
+    });
+
+    batch.delete(offerAcceptorsReference);
+    await batch.commit();
   }
 }

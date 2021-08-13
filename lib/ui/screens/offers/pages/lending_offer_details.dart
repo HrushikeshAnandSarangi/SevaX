@@ -6,9 +6,11 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/enums/lending_borrow_enums.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
+import 'package:sevaexchange/new_baseline/models/borrow_accpetor_model.dart';
 import 'package:sevaexchange/new_baseline/models/lending_item_model.dart';
 import 'package:sevaexchange/new_baseline/models/lending_place_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/repositories/lending_offer_repo.dart';
 import 'package:sevaexchange/ui/screens/borrow_agreement/borrow_agreement_pdf.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_page_base_bloc.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/lending_item_card_widget.dart';
@@ -28,6 +30,8 @@ import 'package:sevaexchange/widgets/hide_widget.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 
 import '../../../../labels.dart';
+import 'borrower_accept_lending_offer.dart';
+import 'individual_offer.dart';
 
 class LendingOfferDetails extends StatefulWidget {
   final OfferModel offerModel;
@@ -271,10 +275,15 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
               ),
             ),
           ),
-          getBottomBar(
-            context,
-            SevaCore.of(context).loggedInUser.sevaUserID,
-          )
+          lendingType == LendingType.PLACE
+              ? getPlaceBottomBar(
+                  context,
+                  SevaCore.of(context).loggedInUser.sevaUserID,
+                )
+              : getItemBottomBar(
+                  context,
+                  SevaCore.of(context).loggedInUser.sevaUserID,
+                )
         ],
       ),
     );
@@ -282,11 +291,14 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
 
   bool canDeleteOffer = false;
 
-  Widget getBottomBar(BuildContext context, String userId) {
+  Widget getPlaceBottomBar(BuildContext context, String userId) {
     bool isAccepted =
         getOfferParticipants(offerDataModel: widget.offerModel).contains(
       userId,
     );
+    var approvedUsers =
+        widget.offerModel.lendingOfferDetailsModel.approvedUsers ?? [];
+    bool isApproved = approvedUsers.contains(userId);
     bool isCreator = widget.offerModel.sevaUserId == userId;
     canDeleteOffer = isCreator &&
         widget.offerModel.lendingOfferDetailsModel.offerAcceptors.length == 0 &&
@@ -297,7 +309,7 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
       ]),
       child: Padding(
         padding:
-            const EdgeInsets.only(top: 20.0, left: 20, bottom: 20, right: 5),
+            const EdgeInsets.only(top: 20.0, left: 10, bottom: 20, right: 5),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -319,7 +331,7 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                             text: isCreator
                                 ? S.of(context).you_created_offer
                                 : isAccepted
-                                    ? S.of(context).accepted_offer_msg
+                                    ? L.of(context).withdraw_lending_offer
                                     : S.of(context).would_like_to_accept_offer,
                             style: TextStyle(
                               fontSize: 16,
@@ -331,7 +343,217 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
               ),
             ),
             SizedBox(
-              width: 10,
+              width: 5,
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                canDeleteOffer ||
+                        utils.isDeletable(
+                          communityCreatorId: widget.timebankModel != null
+                              ? isPrimaryTimebank(
+                                  parentTimebankId:
+                                      widget.timebankModel.parentTimebankId,
+                                )
+                                  ? widget.timebankModel.creatorId
+                                  : (widget.timebankModel.managedCreatorIds !=
+                                              null &&
+                                          widget.timebankModel.managedCreatorIds
+                                                  .length >
+                                              0)
+                                      ? widget
+                                          .timebankModel.managedCreatorIds[0]
+                                      : ''
+                              : '',
+                          // communityCreatorId: timebankModel != null ,
+                          context: context,
+                          contentCreatorId: widget.offerModel.sevaUserId,
+                          timebankCreatorId: widget.timebankModel.creatorId,
+                        )
+                    ? deleteActionButton(isAccepted, context)
+                    : Container(),
+                SizedBox(
+                  height: 8,
+                ),
+                Offstage(
+                  offstage: !isCreator,
+                  child: Container(
+                    width: 100,
+                    height: 32,
+                    child: CustomTextButton(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      color: Color.fromRGBO(44, 64, 140, 0.7),
+                      child: Text(
+                        S.of(context).edit,
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      onPressed: () async {
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                            builder: (context) => IndividualOffer(
+                              offerModel: widget.offerModel,
+                              timebankId: widget.offerModel.timebankId,
+                              loggedInMemberUserId:
+                                  SevaCore.of(context).loggedInUser.sevaUserID,
+                              timebankModel: widget.timebankModel,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+                Offstage(
+                  offstage: isCreator || isAccepted,
+                  child: Container(
+                    width: 110,
+                    height: 32,
+                    child: ConfigurationCheck(
+                      actionType:
+                          ConfigurationCheckExtension.getOfferAcceptanceKey(
+                        widget.offerModel,
+                      ),
+                      role: memberType(widget.timebankModel,
+                          SevaCore.of(context).loggedInUser.sevaUserID),
+                      child: CustomTextButton(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        color: Color.fromRGBO(44, 64, 140, 0.7),
+                        child: Row(
+                          children: <Widget>[
+                            SizedBox(width: 1),
+                            Container(
+                              width: 25,
+                              height: 25,
+                              decoration: BoxDecoration(
+                                color: Color.fromRGBO(44, 64, 140, 1),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                Icons.check,
+                                color: Colors.white,
+                              ),
+                            ),
+                            Spacer(),
+                            Text(
+                              isAccepted
+                                  ? S.of(context).cancel
+                                  : S.of(context).yes,
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                            Spacer(
+                              flex: 2,
+                            ),
+                          ],
+                        ),
+                        onPressed: () async {
+                          TimebankModel timebankModel;
+                          if (Provider.of<HomePageBaseBloc>(context,
+                                      listen: false)
+                                  .timebankModel(
+                                      widget.offerModel.timebankId) ==
+                              null) {
+                            timebankModel = await utils.getTimeBankForId(
+                                timebankId: widget.offerModel.timebankId);
+                          } else {
+                            timebankModel = Provider.of<HomePageBaseBloc>(
+                                    context,
+                                    listen: false)
+                                .timebankModel(widget.offerModel.timebankId);
+                          }
+                          if (!isAccepted) {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    BorrowerAcceptLendingOffer(
+                                  offerModel: widget.offerModel,
+                                  timeBankId: widget.offerModel.timebankId,
+                                  notificationId: null,
+                                ),
+                              ),
+                            );
+
+                            //TO DO accept and send notification to lending offer creator and create acceptor model and push it to subcollections
+                          } else {
+                            await LendingOffersRepo.removeAcceptorLending(
+                                    model: widget.offerModel,
+                                    acceptorEmail:
+                                        SevaCore.of(context).loggedInUser.email)
+                                .then((_) => Navigator.of(context).pop());
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget getItemBottomBar(BuildContext context, String userId) {
+    bool isAccepted =
+        getOfferParticipants(offerDataModel: widget.offerModel).contains(
+      userId,
+    );
+    var approvedUsers =
+        widget.offerModel.lendingOfferDetailsModel.approvedUsers ?? [];
+    bool isApproved = approvedUsers.contains(userId);
+    bool isCreator = widget.offerModel.sevaUserId == userId;
+    canDeleteOffer = isCreator &&
+        widget.offerModel.lendingOfferDetailsModel.offerAcceptors.length == 0 &&
+        widget.offerModel.lendingOfferDetailsModel.approvedUsers.length == 0;
+    return Container(
+      decoration: BoxDecoration(color: Colors.white54, boxShadow: [
+        BoxShadow(color: Colors.grey[300], offset: Offset(2.0, 2.0))
+      ]),
+      child: Padding(
+        padding:
+            const EdgeInsets.only(top: 20.0, left: 10, bottom: 20, right: 5),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Container(
+              margin: EdgeInsets.only(right: 5),
+              child: RichText(
+                text: TextSpan(
+                  style: TextStyle(color: Colors.black),
+                  children: [
+                    canDeleteOffer
+                        ? TextSpan(
+                            text: '${S.of(context).you_created_offer}',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          )
+                        : TextSpan(
+                            text: isCreator
+                                ? S.of(context).you_created_offer
+                                : isAccepted
+                                    ? L.of(context).withdraw_lending_offer
+                                    : S.of(context).would_like_to_accept_offer,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(
+              width: 5,
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -380,12 +602,24 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                           color: Colors.white,
                         ),
                       ),
-                      onPressed: () async {},
+                      onPressed: () async {
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                            builder: (context) => IndividualOffer(
+                              offerModel: widget.offerModel,
+                              timebankId: widget.offerModel.timebankId,
+                              loggedInMemberUserId:
+                                  SevaCore.of(context).loggedInUser.sevaUserID,
+                              timebankModel: widget.timebankModel,
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ),
                 Offstage(
-                  offstage: isCreator || isAccepted,
+                  offstage: isCreator,
                   child: Container(
                     width: isAccepted ? 150 : 120,
                     height: 32,
@@ -406,8 +640,8 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                           children: <Widget>[
                             SizedBox(width: 1),
                             Container(
-                              width: 30,
-                              height: 30,
+                              width: 25,
+                              height: 25,
                               decoration: BoxDecoration(
                                 color: Color.fromRGBO(44, 64, 140, 1),
                                 shape: BoxShape.circle,
@@ -420,8 +654,8 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                             Spacer(),
                             Text(
                               isAccepted
-                                  ? S.of(context).accepted_offer
-                                  : S.of(context).accept_offer,
+                                  ? S.of(context).cancel
+                                  : S.of(context).yes,
                               style: TextStyle(
                                 color: Colors.white,
                               ),
@@ -447,10 +681,23 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                                 .timebankModel(widget.offerModel.timebankId);
                           }
                           if (!isAccepted) {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    BorrowerAcceptLendingOffer(
+                                  offerModel: widget.offerModel,
+                                  timeBankId: widget.offerModel.timebankId,
+                                  notificationId: null,
+                                ),
+                              ),
+                            );
+
                             //TO DO accept and send notification to lending offer creator and create acceptor model and push it to subcollections
                           } else {
-                            offerActions(context, widget.offerModel,
-                                    ComingFrom.Offers)
+                            await LendingOffersRepo.removeAcceptorLending(
+                                    model: widget.offerModel,
+                                    acceptorEmail:
+                                        SevaCore.of(context).loggedInUser.email)
                                 .then((_) => Navigator.of(context).pop());
                             // }
                           }
@@ -549,8 +796,8 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
 
   Widget deleteActionButton(bool isAccepted, BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(right: 10),
-      width: isAccepted ? 150 : 120,
+      margin: EdgeInsets.only(right: 5),
+      width: 110,
       height: 32,
       child: CustomTextButton(
         shape: RoundedRectangleBorder(

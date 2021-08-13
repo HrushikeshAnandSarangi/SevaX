@@ -35,6 +35,7 @@ class _CollectionNames {
   final String amenities = 'amenities';
   final String lendingItems = 'lendingItems';
   final String borrowRequestAcceptors = 'borrowRequestAcceptors';
+  final String lendingOfferAcceptors = 'lendingOfferAcceptors';
 }
 
 class CollectionRef {
@@ -159,4 +160,8 @@ class CollectionRef {
           .collection(_collectionNames.requests)
           .doc(requestId)
           .collection(_collectionNames.borrowRequestAcceptors);
+  static CollectionReference lendingOfferAcceptors(String offerId) => _firestore
+      .collection(_collectionNames.offers)
+      .doc(offerId)
+      .collection(_collectionNames.lendingOfferAcceptors);
 }

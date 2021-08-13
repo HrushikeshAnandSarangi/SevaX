@@ -1731,7 +1731,9 @@ class _IndividualOfferState extends State<IndividualOffer> {
                     SizedBox(width: 1),
                     Spacer(),
                     Text(
-                      S.of(context).change,
+                      documentName != null
+                          ? S.of(context).change
+                          : S.of(context).add,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.white,

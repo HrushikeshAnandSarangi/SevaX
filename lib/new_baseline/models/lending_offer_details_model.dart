@@ -11,6 +11,10 @@ class LendingOfferDetailsModel {
     this.offerAcceptors,
     this.offerInvites,
     this.approvedUsers,
+    this.collectedItems,
+    this.returnedItems,
+    this.checkedIn,
+    this.checkedOut,
   });
   int startDate;
   int endDate;
@@ -21,6 +25,10 @@ class LendingOfferDetailsModel {
   List<String> offerAcceptors = [];
   List<String> offerInvites = [];
   List<String> approvedUsers = [];
+  bool collectedItems;
+  bool returnedItems;
+  bool checkedIn;
+  bool checkedOut;
   factory LendingOfferDetailsModel.fromMap(Map<String, dynamic> json) =>
       LendingOfferDetailsModel(
         startDate: json["startDate"] == null ? null : json["startDate"],
@@ -47,6 +55,16 @@ class LendingOfferDetailsModel {
         approvedUsers: json["approvedUsers"] == null
             ? []
             : List<String>.from(json["approvedUsers"].map((x) => x)),
+        collectedItems: json["collectedItems"] == null
+            ? false
+            : json["collectedItems"] ?? false,
+        returnedItems: json["returnedItems"] == null
+            ? false
+            : json["returnedItems"] ?? false,
+        checkedIn:
+            json["checkedIn"] == null ? false : json["checkedIn"] ?? false,
+        checkedOut:
+            json["checkedOut"] == null ? false : json["checkedOut"] ?? false,
       );
 
   Map<String, dynamic> toMap() => {
@@ -72,5 +90,9 @@ class LendingOfferDetailsModel {
         "approvedUsers": approvedUsers == null
             ? []
             : List<dynamic>.from(approvedUsers.map((x) => x)),
+        "collectedItems": collectedItems == null ? false : collectedItems,
+        "returnedItems": returnedItems == null ? false : returnedItems,
+        "checkedIn": checkedIn == null ? false : checkedIn,
+        "checkedOut": checkedOut == null ? false : checkedOut,
       };
 }
