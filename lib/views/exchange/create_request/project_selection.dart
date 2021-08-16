@@ -6,18 +6,8 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/widgets/multi_select/flutter_multiselect.dart';
 
+// ignore: must_be_immutable
 class ProjectSelection extends StatefulWidget {
-  ProjectSelection(
-      {Key key,
-        this.requestModel,
-        this.admin,
-        this.projectModelList,
-        this.selectedProject,
-        this.timebankModel,
-        this.userModel,
-        this.createEvent,
-        this.setcreateEventState})
-      : super(key: key);
   final bool admin;
   final List<ProjectModel> projectModelList;
   final ProjectModel selectedProject;
@@ -26,6 +16,18 @@ class ProjectSelection extends StatefulWidget {
   UserModel userModel;
   bool createEvent;
   VoidCallback setcreateEventState;
+
+  ProjectSelection(
+      {Key key,
+      this.requestModel,
+      this.admin,
+      this.projectModelList,
+      this.selectedProject,
+      this.timebankModel,
+      this.userModel,
+      this.createEvent,
+      this.setcreateEventState})
+      : super(key: key);
 
   @override
   ProjectSelectionState createState() => ProjectSelectionState();
@@ -44,8 +46,7 @@ class ProjectSelectionState extends State<ProjectSelection> {
       list.add({
         "name": widget.projectModelList[i].name,
         "code": widget.projectModelList[i].id,
-        "timebankproject":
-        widget.projectModelList[i].mode == ProjectMode.TIMEBANK_PROJECT,
+        "timebankproject": widget.projectModelList[i].mode == ProjectMode.TIMEBANK_PROJECT,
       });
     }
     return MultiSelect(
@@ -67,27 +68,26 @@ class ProjectSelectionState extends State<ProjectSelection> {
           SizedBox(width: 4),
           widget.requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST
               ? GestureDetector(
-            onTap: () {
-              setState(() {
-                widget.createEvent = !widget.createEvent;
-                widget.requestModel.projectId = '';
-                log('projectId1:  ' +
-                    widget.requestModel.projectId.toString());
-                log('createEvent1:  ' + widget.createEvent.toString());
-              });
-              widget.setcreateEventState();
-            },
-            child: Padding(
-              padding: const EdgeInsets.only(top: 1.8),
-              child: Icon(Icons.add_circle_outline_rounded,
-                  size: 28,
-                  color: widget.createEvent ? Colors.green : Colors.grey),
-            ),
-          )
+                  onTap: () {
+                    setState(() {
+                      widget.createEvent = !widget.createEvent;
+                      widget.requestModel.projectId = '';
+                      log('projectId1:  ' + widget.requestModel.projectId.toString());
+                      log('createEvent1:  ' + widget.createEvent.toString());
+                    });
+                    widget.setcreateEventState();
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 1.8),
+                    child: Icon(Icons.add_circle_outline_rounded,
+                        size: 28, color: widget.createEvent ? Colors.green : Colors.grey),
+                  ),
+                )
               : Container()
         ],
       ),
-      maxLength: 1, // optional
+      maxLength: 1,
+      // optional
       hintText: S.of(context).tap_to_select,
       validator: (dynamic value) {
         if (value == null) {

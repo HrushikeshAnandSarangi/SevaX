@@ -288,48 +288,6 @@ class RequestEditFormState extends State<RequestEditForm> {
     // }
   }
 
-  // void get _fetchCurrentlocation async {
-  //   try {
-  //     Location templocation = Location();
-  //     bool _serviceEnabled;
-  //     PermissionStatus _permissionGranted;
-
-  //     _serviceEnabled = await templocation.serviceEnabled();
-  //     if (!_serviceEnabled) {
-  //       _serviceEnabled = await templocation.requestService();
-  //       if (!_serviceEnabled) {
-  //         return;
-  //       }
-  //     }
-
-  //     _permissionGranted = await templocation.hasPermission();
-  //     if (_permissionGranted == PermissionStatus.denied) {
-  //       _permissionGranted = await templocation.requestPermission();
-  //       if (_permissionGranted != PermissionStatus.granted) {
-  //         return;
-  //       }
-  //     }
-  //     Location().getLocation().then((onValue) {
-  //       location = GeoFirePoint(onValue.latitude, onValue.longitude);
-  //       LocationUtility()
-  //           .getFormattedAddress(
-  //         location.latitude,
-  //         location.longitude,
-  //       )
-  //           .then((address) {
-  //         setState(() {
-  //           this.selectedAddress = address;
-  //         });
-  //       });
-  //     });
-  //   } on PlatformException catch (e) {
-  //     if (e.code == 'PERMISSION_DENIED') {
-  //       //error = e.message;
-  //     } else if (e.code == 'SERVICE_STATUS_ERROR') {
-  //       //error = e.message;
-  //     }
-  //   }
-  // }
 
   Future<void> fetchRemoteConfig() async {
     AppConfig.remoteConfig = await RemoteConfig.instance;
@@ -397,79 +355,6 @@ class RequestEditFormState extends State<RequestEditForm> {
     }
   }
 
-  // Widget get assignProjectToRequestContainerWidget {
-  //   return InkWell(
-  //     splashColor: Colors.transparent,
-  //     focusColor: Colors.transparent,
-  //     hoverColor: Colors.transparent,
-  //     onTap: () async {
-  //       ExtendedNavigator.ofRouter<RequestsRouter>()
-  //           .pushAssignProjectToRequest(
-  //         timebankModel: timebankModel,
-  //         userModel: BlocProvider.of<AuthBloc>(context).user,
-  //         timebankProjectsList: timebankProjects,
-  //         personalProjectsList: userPersonalProjects,
-  //       )
-  //           .then((projectModelRes) {
-  //         if (projectModelRes != '') {
-  //           selectedProjectModel = projectModelRes;
-  //           //this.requestModel.projectId = selectedProjectModel.id;
-  //           tempProjectId = selectedProjectModel.id;
-  //           updateProject = true;
-  //           setState(() {});
-  //         }
-  //       });
-  //     },
-  //     child: Column(
-  //       mainAxisSize: MainAxisSize.min,
-  //       crossAxisAlignment: CrossAxisAlignment.start,
-  //       children: [
-  //         Row(
-  //           children: [
-  //             Text(S.of(context).assign_to_project,
-  //                 style: TextStyle(
-  //                     fontSize: 16,
-  //                     fontWeight: FontWeight.w600,
-  //                     color: Colors.black87)),
-  //             Spacer(),
-  //             Icon(
-  //               Icons.arrow_drop_down_circle,
-  //               size: 30,
-  //               color: Theme.of(context).primaryColor,
-  //             )
-  //           ],
-  //         ),
-  //         SizedBox(
-  //           height: 10,
-  //         ),
-  //         Chip(
-  //           label: Container(
-  //             constraints: BoxConstraints(
-  //                 maxWidth: MediaQuery.of(context).size.width - 80.0),
-  //             child: Text(
-  //                 selectedProjectModel == null
-  //                     ? S.of(context).unassigned
-  //                     : selectedProjectModel.name,
-  //                 overflow: TextOverflow.ellipsis),
-  //           ),
-  //           deleteIcon: Icon(
-  //             Icons.cancel,
-  //             size: 20,
-  //           ),
-  //           deleteIconColor: Colors.black38,
-  //           onDeleted: () {
-  //             if (selectedProjectModel != null) {
-  //               selectedProjectModel = null;
-  //               //selectedProjectModel.id = '';
-  //               tempProjectId = '';
-  //               setState(() {});
-  //             }
-  //           },
-  //         )
-  //       ],
-  //     ),
-  //   );
-  // }
   void updateExitWithConfirmationValue(
       BuildContext context, int index, String value) {
     ExitWithConfirmation.of(context).fieldValues[index] = value;
@@ -4092,28 +3977,6 @@ class _GoodsDynamicSelection2State extends State<GoodsDynamicSelection2> {
         ));
   }
 
-  // FutureBuilder<SpellCheckResult> searchUserDefinedEntity({
-  //   String keyword,
-  //   String language,
-  // }) {
-  //   return FutureBuilder<SpellCheckResult>(
-  //     future: SpellCheckManager.evaluateSpellingFor(
-  //       keyword,
-  //       language: language,
-  //     ),
-  //     builder: (context, snapshot) {
-  //       if (snapshot.connectionState == ConnectionState.waiting) {
-  //         return getLinearLoading;
-  //       }
-
-  //       return getSuggestionLayout(
-  //         suggestion:
-  //             !snapshot.data.hasErros ? snapshot.data.correctSpelling : keyword,
-  //       );
-  //     },
-  //   );
-  // }
-
   FutureBuilder<SpellCheckResult> searchUserDefinedEntity({
     String keyword,
     String language,
@@ -4225,60 +4088,6 @@ class _GoodsDynamicSelection2State extends State<GoodsDynamicSelection2> {
           )),
     );
   }
-// Padding getSuggestionLayout({
-//   String suggestion,
-// }) {
-//   return Padding(
-//     padding: const EdgeInsets.all(18.0),
-//     child: GestureDetector(
-//       onTap: () async {
-//         _textEditingController.clear();
-//         controller.close();
-//         var goodsId = Uuid().generateV4();
-//         await addGoodsToDb(
-//           goodsId: goodsId,
-//           goodsLanguage: 'en',
-//           goodsTitle: suggestion,
-//         );
-//         goods[goodsId] = suggestion;
 
-//         if (!_selectedGoods.containsValue(suggestion)) {
-//           controller.close();
-//           String id = goods.keys.firstWhere((k) => goods[k] == suggestion);
-//           _selectedGoods[id] = suggestion;
-//           setState(() {});
-//         }
-//       },
-//       child: Container(
-//           height: 40,
-//           alignment: Alignment.centerLeft,
-//           child: Row(
-//             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//             children: [
-//               Expanded(
-//                 child: Column(
-//                   crossAxisAlignment: CrossAxisAlignment.start,
-//                   mainAxisAlignment: MainAxisAlignment.start,
-//                   children: [
-//                     Text(
-//                       "${S.of(context).add.toUpperCase()} \"${suggestion}\"",
-//                       style: TextStyle(fontSize: 16, color: Colors.blue),
-//                     ),
-//                     Text(
-//                       S.of(context).no_data,
-//                       style: TextStyle(fontSize: 16, color: Colors.grey),
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//               Icon(
-//                 Icons.add,
-//                 color: Colors.grey,
-//               ),
-//             ],
-//           )),
-//     ),
-//   );
-// }
 }
 

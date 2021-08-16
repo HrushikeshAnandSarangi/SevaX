@@ -1,80 +1,45 @@
-/*
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/components/repeat_availability/repeat_widget.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
-import 'package:sevaexchange/models/models.dart';
-import 'package:sevaexchange/new_baseline/models/project_model.dart';
+import 'package:sevaexchange/labels.dart';
+import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 
-class BorrowRequestWidget extends StatelessWidget {
-  AsyncSnapshot<TimebankModel> snapshot;
-  final List<ProjectModel> projectModelList;
+class BorrowRequest extends StatefulWidget {
+  final Widget addToProjectContainer;
+  GeoFirePoint location;
+  String selectedAddress;
+  Widget categoryWidget;
+  final Widget requestDescription;
 
-  BorrowRequestWidget({this.snapshot, this.projectModelList});
+  BorrowRequest({
+    this.addToProjectContainer,
+    this.requestDescription,
+    this.selectedAddress,
+    this.location,
+    this.categoryWidget,
+  });
 
+  @override
+  _BorrowRequestState createState() => _BorrowRequestState();
+}
+
+class _BorrowRequestState extends State<BorrowRequest> {
   @override
   Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
       RepeatWidget(),
       SizedBox(height: 15),
-
-      RequestDescriptionData(S.of(context).request_descrip_hint_text),
+      widget.requestDescription,
       SizedBox(height: 20),
       //Same hint for Room and Tools ?
       // Choose Category and Sub Category
-      InkWell(
-        child: Column(
-          children: [
-            Row(
-              children: [
-                categoryMode == null
-                    ? Text(
-                        S.of(context).choose_category,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Europa',
-                          color: Colors.black,
-                        ),
-                      )
-                    : Text(
-                        "${categoryMode}",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Europa',
-                          color: Colors.black,
-                        ),
-                      ),
-                Spacer(),
-                Icon(
-                  Icons.arrow_forward_ios_outlined,
-                  size: 16,
-                ),
-              ],
-            ),
-            SizedBox(height: 20),
-            selectedCategoryModels != null && selectedCategoryModels.length > 0
-                ? Wrap(
-                    alignment: WrapAlignment.start,
-                    crossAxisAlignment: WrapCrossAlignment.start,
-                    children: _buildselectedSubCategories(),
-                  )
-                : Container(),
-          ],
-        ),
-        onTap: () => moveToCategory(),
-      ),
+      widget.categoryWidget,
       SizedBox(height: 20),
-      isFromRequest(
-        projectId: widget.projectId,
-      )
-          ? addToProjectContainer(
-              snapshot,
-              projectModelList,
-              requestModel,
-            )
-          : Container(),
+      widget.addToProjectContainer,
 
       SizedBox(height: 15),
 
@@ -102,22 +67,17 @@ class BorrowRequestWidget extends StatelessWidget {
 
       Center(
         child: LocationPickerWidget(
-          selectedAddress: selectedAddress,
-          location: location,
+          selectedAddress: widget.selectedAddress,
+          location: widget.location,
           onChanged: (LocationDataModel dataModel) {
             log("received data model");
             setState(() {
-              location = dataModel.geoPoint;
-              this.selectedAddress = dataModel.location;
+              widget.location = dataModel.geoPoint;
+              widget.selectedAddress = dataModel.location;
             });
           },
         ),
       )
     ]);
   }
-
-  bool isFromRequest({String projectId}) {
-    return projectId == null || projectId.isEmpty || projectId == "";
-  }
 }
-*/

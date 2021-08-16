@@ -19,8 +19,6 @@ import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 
 class TimeRequest extends StatefulWidget {
-  final AsyncSnapshot<TimebankModel> snapshot;
-  final List<ProjectModel> projectModelList;
   final RequestModel requestModel;
   final bool isOfferRequest;
   final OfferModel offer;
@@ -31,8 +29,6 @@ class TimeRequest extends StatefulWidget {
   Widget categoryWidget;
 
   TimeRequest({
-    this.snapshot,
-    this.projectModelList,
     this.requestModel,
     this.isOfferRequest,
     this.offer,
