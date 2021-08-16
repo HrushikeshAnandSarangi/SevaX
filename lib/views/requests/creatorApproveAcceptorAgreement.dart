@@ -134,18 +134,16 @@ class _CreatorApproveAcceptorAgreeementState
             SizedBox(width: 15),
             Container(
               width: 290,
-              child: Expanded(
-                child: Text(
-                    S.of(context).terms_acknowledgement_text +
-                        '. ' +
-                        L.of(context).agree_to_signature_legal_text,
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.grey,
-                    ),
-                    textAlign: TextAlign.start),
-              ),
+              child: Text(
+                  S.of(context).terms_acknowledgement_text +
+                      '. ' +
+                      L.of(context).agree_to_signature_legal_text,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey,
+                  ),
+                  textAlign: TextAlign.start),
             ),
           ],
         ),
