@@ -46,6 +46,7 @@ import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/svea_credits_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/exchange/create_request/request_enums.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
 import 'package:sevaexchange/views/onboarding/interests_view.dart';
 import 'package:sevaexchange/views/requests/onetomany_request_instructor_card.dart';
@@ -4281,4 +4282,3 @@ class _GoodsDynamicSelection2State extends State<GoodsDynamicSelection2> {
 // }
 }
 
-enum TotalCreditseMode { EDIT_MODE, CREATE_MODE }
