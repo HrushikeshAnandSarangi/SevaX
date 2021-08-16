@@ -12,7 +12,6 @@ class LendingParticipantCard extends StatelessWidget {
   final double radius;
   final String imageUrl;
   final String name;
-  final String bio;
   final double rating;
   final Function onMessageTapped;
   final Function onTap;
@@ -25,7 +24,6 @@ class LendingParticipantCard extends StatelessWidget {
       this.radius = 8,
       this.imageUrl,
       this.name,
-      this.bio,
       this.onMessageTapped,
       this.onTap,
       this.rating,
@@ -38,7 +36,7 @@ class LendingParticipantCard extends StatelessWidget {
     return Padding(
       padding: padding ?? EdgeInsets.symmetric(horizontal: 2, vertical: 6),
       child: Container(
-        width: MediaQuery.of(context).size.width * 0.92,
+        width: MediaQuery.of(context).size.width * 0.94,
         child: Column(
           children: [
             Row(
@@ -46,7 +44,7 @@ class LendingParticipantCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 CircleAvatar(
-                  radius: 35,
+                  radius: 25,
                   child: ClipOval(
                     child: AspectRatio(
                       aspectRatio: 1,
@@ -58,7 +56,7 @@ class LendingParticipantCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(width: 10),
+                SizedBox(width: 8),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,

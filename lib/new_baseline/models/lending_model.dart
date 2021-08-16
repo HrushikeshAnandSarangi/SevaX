@@ -83,3 +83,62 @@ Map<String, LendingType> lendingTypeMapper = {
   "PLACE": LendingType.PLACE,
   "ITEM": LendingType.ITEM,
 };
+enum LendingOfferStatus {
+  REQUESTED,
+  ACCEPTED,
+  REJECTED,
+  CHECKED_IN,
+  CHECKED_OUT,
+  ITEMS_COLLECTED,
+  ITEMS_RETURNED,
+}
+
+extension ReadableLendingOfferStatus on LendingOfferStatus {
+  String get readable {
+    switch (this) {
+      case LendingOfferStatus.REQUESTED:
+        return 'REQUESTED';
+
+      case LendingOfferStatus.ACCEPTED:
+        return 'ACCEPTED';
+
+      case LendingOfferStatus.REJECTED:
+        return 'REJECTED';
+      case LendingOfferStatus.CHECKED_IN:
+        return 'CHECKED_IN';
+      case LendingOfferStatus.CHECKED_OUT:
+        return 'CHECKED_OUT';
+      case LendingOfferStatus.ITEMS_COLLECTED:
+        return 'ITEMS_COLLECTED';
+      case LendingOfferStatus.ITEMS_RETURNED:
+        return 'ITEMS_RETURNED';
+
+      default:
+        return 'REQUESTED';
+    }
+  }
+
+  static LendingOfferStatus getValue(String value) {
+    switch (value) {
+      case 'REQUESTED':
+        return LendingOfferStatus.REQUESTED;
+
+      case 'ACCEPTED':
+        return LendingOfferStatus.ACCEPTED;
+
+        return LendingOfferStatus.CHECKED_IN;
+      case 'CHECKED_IN':
+        return LendingOfferStatus.CHECKED_OUT;
+      case 'CHECKED_OUT':
+        return LendingOfferStatus.ITEMS_COLLECTED;
+      case 'ITEMS_COLLECTED':
+        return LendingOfferStatus.ITEMS_RETURNED;
+      case 'ITEMS_RETURNED':
+        return LendingOfferStatus.REJECTED;
+      case 'REJECTED':
+
+      default:
+        return LendingOfferStatus.REQUESTED;
+    }
+  }
+}

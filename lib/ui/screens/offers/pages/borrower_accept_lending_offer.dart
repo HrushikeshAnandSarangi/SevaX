@@ -9,8 +9,10 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/borrow_accpetor_model.dart';
+import 'package:sevaexchange/new_baseline/models/lending_model.dart';
 import 'package:sevaexchange/repositories/lending_offer_repo.dart';
 import 'package:sevaexchange/ui/screens/borrow_agreement/borrow_agreement_pdf.dart';
+import 'package:sevaexchange/ui/screens/offers/pages/time_offer_participant.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
@@ -155,6 +157,8 @@ class _BorrowerAcceptLendingOfferState
                 await LendingOffersRepo.storeAcceptorDataLendingOffer(
                     model: widget.offerModel,
                     borrowAcceptorModel: BorrowAcceptorModel(
+                        communityId:
+                            SevaCore.of(context).loggedInUser.currentCommunity,
                         acceptorphotoURL:
                             SevaCore.of(context).loggedInUser.photoURL ??
                                 defaultUserImageURL,
@@ -177,12 +181,15 @@ class _BorrowerAcceptLendingOfferState
                         acceptorMobile: '',
                         acceptorName:
                             SevaCore.of(context).loggedInUser.fullname,
-                        selectedAddress: widget.offerModel.selectedAdrress));
+                        selectedAddress: widget.offerModel.selectedAdrress,
+                        status: LendingOfferStatus.REQUESTED));
                 Navigator.of(context).pop();
               } else {
                 await LendingOffersRepo.storeAcceptorDataLendingOffer(
                     model: widget.offerModel,
                     borrowAcceptorModel: BorrowAcceptorModel(
+                      communityId:
+                          SevaCore.of(context).loggedInUser.currentCommunity,
                       acceptorphotoURL:
                           SevaCore.of(context).loggedInUser.photoURL ??
                               defaultUserImageURL,
@@ -206,6 +213,7 @@ class _BorrowerAcceptLendingOfferState
                       acceptorMobile: '',
                       acceptorName: SevaCore.of(context).loggedInUser.fullname,
                       selectedAddress: widget.offerModel.selectedAdrress,
+                      status: LendingOfferStatus.REQUESTED,
                     ));
                 Navigator.of(context).pop();
               }

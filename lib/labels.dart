@@ -1319,4 +1319,7 @@ class L {
   String get admin_borrow_request_received_back_check =>
       "If you have received your item/place back click the button below to complete this."; //add again label changed
   String get please_add_amenities => "Please add Amenities";
+  String get items_taken => "Item(s) taken";
+  String get arrived => "Arrived";
+  String get departed => "Departed";
 }

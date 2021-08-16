@@ -4,6 +4,9 @@ import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/offer_participants_model.dart';
+import 'package:sevaexchange/new_baseline/models/borrow_accpetor_model.dart';
+import 'package:sevaexchange/new_baseline/models/lending_model.dart';
+import 'package:sevaexchange/repositories/lending_offer_repo.dart';
 import 'package:sevaexchange/ui/screens/offers/bloc/offer_bloc.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/time_offer_participant.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
@@ -28,8 +31,9 @@ class LendingOfferParticipants extends StatelessWidget {
   Widget build(BuildContext context) {
     final _bloc = BlocProvider.of<OfferBloc>(context);
     return SingleChildScrollView(
-      child: StreamBuilder<List<LendingOfferParticipantsModel>>(
-        stream: _bloc.timeOfferParticipants2,
+      child: StreamBuilder<List<BorrowAcceptorModel>>(
+        stream:
+            LendingOffersRepo.getLendingOfferAcceptors(offerId: offerModel.id),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return LoadingIndicator();
@@ -41,6 +45,7 @@ class LendingOfferParticipants extends StatelessWidget {
               child: Center(child: Text(S.of(context).no_participants_yet)),
             );
           }
+          List<BorrowAcceptorModel> acceptorsList = snapshot.data;
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -57,35 +62,43 @@ class LendingOfferParticipants extends StatelessWidget {
                 itemCount: snapshot.data.length,
                 physics: NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
+                  BorrowAcceptorModel acceptorModel = acceptorsList[index];
                   return Column(
                     children: [
                       LendingParticipantCard(
-                        name: 'Jesse Gonzalez',
-                        imageUrl:
+                        name: acceptorModel.acceptorName,
+                        imageUrl: acceptorModel.acceptorphotoURL ??
                             'https://www.pngitem.com/pimgs/m/404-4042710_circle-profile-picture-png-transparent-png.png',
-                        bio: 'test bio test bio test bio',
                         onImageTap: () {
-                          Navigator.of(context)
-                              .push(MaterialPageRoute(builder: (context) {
-                            return ProfileViewer(
-                              timebankId: timebankModel.id,
-                              entityName: timebankModel.name,
-                              isFromTimebank: isPrimaryTimebank(
-                                  parentTimebankId:
-                                      timebankModel.parentTimebankId),
-                              userEmail: 'email@yopmail.com',
-                            );
-                          }));
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return ProfileViewer(
+                                  timebankId: timebankModel.id,
+                                  entityName: timebankModel.name,
+                                  isFromTimebank: isPrimaryTimebank(
+                                      parentTimebankId:
+                                          timebankModel.parentTimebankId),
+                                  userEmail: acceptorModel.acceptorEmail,
+                                );
+                              },
+                            ),
+                          );
                         },
                         // rating: double.parse(snapshot.data[index].participantDetails.),
                         onMessageTapped: () {
-                          // onMessageClick(
-                          //   context,
-                          //   SevaCore.of(context).loggedInUser,
-                          //   snapshot.data[index].participantDetails,
-                          //   offerModel.timebankId,
-                          //   offerModel.communityId,
-                          // );
+                          onMessageClick(
+                            context,
+                            SevaCore.of(context).loggedInUser,
+                            ParticipantInfo(
+                                id: acceptorModel.acceptorId,
+                                photoUrl: acceptorModel.acceptorphotoURL,
+                                name: acceptorModel.acceptorName,
+                                type: ChatType.TYPE_PERSONAL,
+                                communityId: acceptorModel.communityId),
+                            offerModel.timebankId,
+                            offerModel.communityId,
+                          );
                         },
                         buttonsContainer: Container(
                           margin: EdgeInsets.only(top: 5),
@@ -94,14 +107,13 @@ class LendingOfferParticipants extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: getActions(
                               bloc: _bloc,
-                              acceptorDoumentId: snapshot.data[index].id,
-                              offerId: snapshot.data[index].offerId,
+                              acceptorDoumentId: acceptorModel.acceptorEmail,
+                              offerId: offerModel.id,
                               status: snapshot.data[index].status,
                               notificationId:
-                                  snapshot.data[index].acceptorNotificationId,
-                              hostEmail: snapshot.data[index].hostEmail,
-                              lendingOfferParticipantsModel:
-                                  snapshot.data[index],
+                                  acceptorModel.notificationId ?? '',
+                              hostEmail: offerModel.email,
+                              borrowAcceptorModel: acceptorModel,
                               context: context,
                               user: SevaCore.of(context).loggedInUser,
                             ),
@@ -159,18 +171,18 @@ class LendingOfferParticipants extends StatelessWidget {
   }
 
   List<Widget> getActions({
-    OfferAcceptanceStatus status,
+    LendingOfferStatus status,
     OfferBloc bloc,
     String offerId,
     String acceptorDoumentId,
     String notificationId,
     String hostEmail,
-    LendingOfferParticipantsModel lendingOfferParticipantsModel,
+    BorrowAcceptorModel borrowAcceptorModel,
     BuildContext context,
     UserModel user,
   }) {
     switch (status) {
-      case OfferAcceptanceStatus.ACCEPTED:
+      case LendingOfferStatus.ACCEPTED:
         return [
           CustomElevatedButton(
             color: Colors.green,
@@ -185,19 +197,70 @@ class LendingOfferParticipants extends StatelessWidget {
           ),
         ];
 
-      case OfferAcceptanceStatus.REJECTED:
+      case LendingOfferStatus.REJECTED:
         return [
           CustomElevatedButton(
             color: Colors.red,
             onPressed: () {},
             child: Text(
-              'Declined',
+              'Rejected',
               style: TextStyle(color: Colors.white),
             ),
           )
         ];
-
-      case OfferAcceptanceStatus.REQUESTED:
+      case LendingOfferStatus.ITEMS_RETURNED:
+        return [
+          CustomElevatedButton(
+            color: Colors.red,
+            onPressed: () {
+              //To be implemented by lending offer team
+            },
+            child: Text(
+              S.of(context).review,
+              style: TextStyle(color: Colors.white),
+            ),
+          )
+        ];
+      case LendingOfferStatus.ITEMS_COLLECTED:
+        return [
+          CustomElevatedButton(
+            color: Colors.red,
+            onPressed: () {
+              //To be implemented by lending offer team
+            },
+            child: Text(
+              L.of(context).items_taken,
+              style: TextStyle(color: Colors.white),
+            ),
+          )
+        ];
+      case LendingOfferStatus.CHECKED_IN:
+        return [
+          CustomElevatedButton(
+            color: Colors.red,
+            onPressed: () {
+              //To be implemented by lending offer team
+            },
+            child: Text(
+              L.of(context).arrived,
+              style: TextStyle(color: Colors.white),
+            ),
+          )
+        ];
+      case LendingOfferStatus.CHECKED_OUT:
+        return [
+          CustomElevatedButton(
+            color: Colors.red,
+            onPressed: () {
+              //To be implemented by lending offer team
+            },
+            child: Text(
+              L.of(context).departed,
+              style: TextStyle(color: Colors.white),
+            ),
+          )
+        ];
+      case LendingOfferStatus.REQUESTED:
         return [
           IconButton(
             icon: Icon(
@@ -207,9 +270,6 @@ class LendingOfferParticipants extends StatelessWidget {
             iconSize: 30,
             onPressed: null,
           ),
-          SizedBox(
-            width: 5,
-          ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               primary: Colors.grey[300],
@@ -218,20 +278,20 @@ class LendingOfferParticipants extends StatelessWidget {
               ),
             ),
             onPressed: () async {
-              //on approve functionality here.
-
               //Dialog box also to restrict approving more than one Borrower at a time.
-              bool isCurrentlyLent = true;
+              bool isCurrentlyLent = false;
+              if (offerModel.lendingOfferDetailsModel.approvedUsers != null &&
+                  offerModel.lendingOfferDetailsModel.approvedUsers.length >
+                      0) {
+                isCurrentlyLent = true;
+              }
+
               if (isCurrentlyLent) {
                 await cannotApproveMultipleDialog(context);
+              } else {
+                //To be implemented by lending offer team
+
               }
-              // bloc.updateOfferAcceptorAction(
-              //   notificationId: notificationId,
-              //   acceptorDocumentId: acceptorDoumentId,
-              //   offerId: offerId,
-              //   action: OfferAcceptanceStatus.ACCEPTED,
-              //   hostEmail: hostEmail,
-              // );
             },
             child: Text(
               S.of(context).approve,
@@ -249,13 +309,11 @@ class LendingOfferParticipants extends StatelessWidget {
               ),
             ),
             onPressed: () {
-              // bloc.updateOfferAcceptorAction(
-              //   notificationId: notificationId,
-              //   acceptorDocumentId: acceptorDoumentId,
-              //   offerId: offerId,
-              //   // action: OfferAcceptanceStatus.REJECTED,
-              //   hostEmail: hostEmail,
-              // );
+              LendingOffersRepo.updateOfferAcceptorAction(
+                borrowAcceptorModel: borrowAcceptorModel,
+                action: OfferAcceptanceStatus.REJECTED,
+                model: offerModel,
+              );
             },
             child: Padding(
               padding: const EdgeInsets.only(left: 4.0, right: 4.0),
@@ -272,7 +330,7 @@ class LendingOfferParticipants extends StatelessWidget {
   void onMessageClick(
     context,
     UserModel loggedInUser,
-    ParticipantDetails user,
+    ParticipantInfo receiver,
     String timebankId,
     String communityId,
   ) {
@@ -283,19 +341,11 @@ class LendingOfferParticipants extends StatelessWidget {
       type: ChatType.TYPE_PERSONAL,
     );
 
-    ParticipantInfo reciever = ParticipantInfo(
-      id: user.sevauserid,
-      photoUrl: user.photourl,
-      name: user.fullname,
-      type: ChatType.TYPE_PERSONAL,
-    );
-
     List<String> showToCommunities = [];
     try {
       String communityId1 = loggedInUser.currentCommunity;
 
-      String communityId2 =
-          offerModel.participantDetails[user.sevauserid]['communityId'];
+      String communityId2 = receiver.communityId;
 
       if (communityId1 != null &&
           communityId2 != null &&
@@ -314,7 +364,7 @@ class LendingOfferParticipants extends StatelessWidget {
       timebankId: timebankId,
       communityId: communityId,
       sender: sender,
-      reciever: reciever,
+      reciever: receiver,
       showToCommunities:
           showToCommunities.isNotEmpty ? showToCommunities : null,
       interCommunity: showToCommunities.isNotEmpty,

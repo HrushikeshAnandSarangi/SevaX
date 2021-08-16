@@ -4,6 +4,7 @@ import 'package:rxdart/subjects.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/offer_participants_model.dart';
 import 'package:sevaexchange/models/transaction_model.dart';
+import 'package:sevaexchange/new_baseline/models/borrow_accpetor_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/lending_offer_participants.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/time_offer_participant.dart';
@@ -17,15 +18,12 @@ class OfferBloc extends BlocBase {
       BehaviorSubject<List<TimeOfferParticipantsModel>>();
   final _timeOfferParticipants =
       BehaviorSubject<List<TimeOfferParticipantsModel>>();
-  final _timeOfferParticipants2 =
-      BehaviorSubject<List<LendingOfferParticipantsModel>>();
+
   OfferModel offerModel;
 
   Stream<List<OfferParticipantsModel>> get participants => _participants.stream;
   Stream<List<TimeOfferParticipantsModel>> get timeOfferParticipants =>
       _timeOfferParticipants.stream;
-  Stream<List<LendingOfferParticipantsModel>> get timeOfferParticipants2 =>
-      _timeOfferParticipants2.stream;
 
   Stream<List<TimeOfferParticipantsModel>> get completedParticipants =>
       _completedParticipants.stream;
@@ -73,7 +71,6 @@ class OfferBloc extends BlocBase {
         }
       });
       _timeOfferParticipants.add(offer);
-      _timeOfferParticipants2.add(offer2); //TEMP TO BE DELETED
       _completedParticipants.add(completedParticipants);
     });
   }

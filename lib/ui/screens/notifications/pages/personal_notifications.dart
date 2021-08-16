@@ -1154,21 +1154,30 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       );
                       break;
                     case NotificationType.MEMBER_ACCEPT_LENDING_OFFER:
-                      var model = OfferModel.fromMap(notification.data);
+                      return PersonalNotificationsReducerForOffer
+                          .getNotificationForLendingOfferAccept(
+                        notification: notification,
+                      );
+
+                      break;
+                    case NotificationType
+                        .NOTIFICATION_TO_BORROWER_REJECTED_LENDING_OFFER:
+                      OfferModel model = OfferModel.fromMap(notification.data);
                       return NotificationCard(
                         timestamp: notification.timestamp,
-                        entityName: 'NAME',
+                        entityName: model.fullName,
+                        title: model.individualOfferDataModel.title,
                         isDissmissible: true,
-                        onDismissed: onDismissed,
-                        onPressed: () {
-                          //To be implemented by lending offer team
+                        onDismissed: () {
+                          NotificationsRepository.readUserNotification(
+                            notification.id,
+                            user.email,
+                          );
                         },
-                        photoUrl:
-                            notification.senderPhotoUrl ?? defaultUserImageURL,
-                        title: '${model.individualOfferDataModel.title}',
-                        subTitle: S
-                            .of(context)
-                            .lender_acknowledged_request_completion,
+                        onPressed: null,
+                        photoUrl: model.photoUrlImage,
+                        subTitle:
+                            '${S.of(context).notifications_request_rejected_by} ${model.fullName} ',
                       );
                       break;
                     default:
@@ -1207,8 +1216,6 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
     await CollectionRef.requests.doc(requestModel['id']).update({
       'isSpeakerCompleted': true,
     });
-
-    log('sends timebank notif oneToManySpeakerReclaimRejection');
   }
 
   void _handleFeedBackNotificationAction(

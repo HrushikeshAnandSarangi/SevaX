@@ -938,6 +938,45 @@ class PersonalNotificationsReducerForOffer {
       title: S.of(context).offer_invitation_notification_title,
     );
   }
+
+  static Widget getNotificationForLendingOfferAccept({
+    NotificationsModel notification,
+  }) {
+    var model = OfferModel.fromMap(notification.data);
+
+    return FutureBuilder<UserModel>(
+      future: UserRepository.fetchUserById(notification.senderUserId),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Container();
+        }
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return NotificationShimmer();
+        }
+        UserModel user = snapshot.data;
+        return user != null && user.fullname != null
+            ? NotificationCard(
+                timestamp: notification.timestamp,
+                entityName: 'NAME',
+                isDissmissible: true,
+                onPressed: () {
+                  //To be implemented by lending offer team
+                },
+                photoUrl: notification.senderPhotoUrl ?? defaultUserImageURL,
+                title: '${model.individualOfferDataModel.title}',
+                subTitle:
+                    "${user.fullname} ${S.of(context).accepted} ${model.individualOfferDataModel.title}",
+                onDismissed: () {
+                  NotificationsRepository.readUserNotification(
+                    notification.id,
+                    notification.targetUserId,
+                  );
+                },
+              )
+            : Container();
+      },
+    );
+  }
 }
 
 class PersonalNotificationsRedcerForDonations {

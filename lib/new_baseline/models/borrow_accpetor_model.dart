@@ -1,19 +1,27 @@
 import 'package:meta/meta.dart';
 import 'dart:convert';
 
+import 'package:sevaexchange/ui/screens/offers/pages/time_offer_participant.dart';
+
+import 'lending_model.dart';
+
 class BorrowAcceptorModel {
-  BorrowAcceptorModel(
-      {this.acceptorEmail,
-      this.acceptorId,
-      this.acceptorName,
-      this.acceptorMobile,
-      this.borrowAgreementLink,
-      this.selectedAddress,
-      this.isApproved,
-      this.borrowedItemsIds,
-      this.borrowedPlaceId,
-      this.timestamp,
-      @required this.acceptorphotoURL});
+  BorrowAcceptorModel({
+    this.acceptorEmail,
+    this.acceptorId,
+    this.acceptorName,
+    this.acceptorMobile,
+    this.borrowAgreementLink,
+    this.selectedAddress,
+    this.isApproved,
+    this.borrowedItemsIds,
+    this.borrowedPlaceId,
+    this.notificationId,
+    this.timestamp,
+    this.acceptorphotoURL,
+    this.status,
+    this.communityId,
+  });
 
   String acceptorEmail;
   String acceptorId;
@@ -24,8 +32,11 @@ class BorrowAcceptorModel {
   bool isApproved;
   List<String> borrowedItemsIds;
   String borrowedPlaceId;
+  String notificationId;
   int timestamp;
   String acceptorphotoURL;
+  LendingOfferStatus status;
+  String communityId;
 
   factory BorrowAcceptorModel.fromJson(String str) =>
       BorrowAcceptorModel.fromMap(json.decode(str));
@@ -55,6 +66,12 @@ class BorrowAcceptorModel {
         timestamp: json["timestamp"] == null ? null : json["timestamp"],
         acceptorphotoURL:
             json["acceptorphotoURL"] == null ? null : json["acceptorphotoURL"],
+        notificationId:
+            json["notificationId"] == null ? null : json["notificationId"],
+        communityId: json["communityId"] == null ? null : json["communityId"],
+        status: json["status"] == null
+            ? LendingOfferStatus.REQUESTED
+            : ReadableLendingOfferStatus.getValue(json["status"]),
       );
 
   Map<String, dynamic> toMap() => {
@@ -72,5 +89,8 @@ class BorrowAcceptorModel {
         "borrowedPlaceId": borrowedPlaceId == null ? null : borrowedPlaceId,
         "timestamp": timestamp == null ? null : timestamp,
         "acceptorphotoURL": acceptorphotoURL == null ? null : acceptorphotoURL,
+        "notificationId": notificationId == null ? null : notificationId,
+        "communityId": communityId == null ? null : communityId,
+        "status": status == null ? null : status.readable,
       };
 }

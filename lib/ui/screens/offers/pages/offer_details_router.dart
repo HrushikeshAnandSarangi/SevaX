@@ -4,6 +4,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/offers/bloc/offer_bloc.dart';
+import 'package:sevaexchange/ui/screens/offers/pages/lending_offer_participants.dart';
 import 'package:sevaexchange/ui/screens/request/pages/donation_accepted_page.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -186,9 +187,15 @@ class _OfferDetailsRouterState extends State<OfferDetailsRouter> {
                                       offerModel: widget.offerModel,
                                       timebankModel: timebankModel,
                                     )
-                                  : DonationAcceptedPage(
-                                      offermodel: widget.offerModel,
-                                    ),
+                                  : widget.offerModel.type ==
+                                          RequestType.LENDING_OFFER
+                                      ? LendingOfferParticipants(
+                                          timebankModel: timebankModel,
+                                          offerModel: widget.offerModel,
+                                        )
+                                      : DonationAcceptedPage(
+                                          offermodel: widget.offerModel,
+                                        ),
                             ]
                           : <Widget>[
                               OfferDetails(
