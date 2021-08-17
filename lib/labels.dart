@@ -593,7 +593,7 @@ class L {
 
   String get date_to_borrow_and_return => "Date to borrow and return";
 
-  String get date_to_check_in_out => "Date to Check In and Check Out";
+  String get date_to_check_in_out => "Date of Arrival and Expected Departure";
 
   String get addditional_instructions => "Additional Instructions";
 

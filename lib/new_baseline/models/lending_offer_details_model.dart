@@ -15,6 +15,7 @@ class LendingOfferDetailsModel {
     this.returnedItems,
     this.checkedIn,
     this.checkedOut,
+    this.agreementConfig,
   });
   int startDate;
   int endDate;
@@ -29,6 +30,7 @@ class LendingOfferDetailsModel {
   bool returnedItems;
   bool checkedIn;
   bool checkedOut;
+  Map<String, dynamic> agreementConfig = {};
   factory LendingOfferDetailsModel.fromMap(Map<String, dynamic> json) =>
       LendingOfferDetailsModel(
         startDate: json["startDate"] == null ? null : json["startDate"],
@@ -65,6 +67,9 @@ class LendingOfferDetailsModel {
             json["checkedIn"] == null ? false : json["checkedIn"] ?? false,
         checkedOut:
             json["checkedOut"] == null ? false : json["checkedOut"] ?? false,
+        agreementConfig: json["agreementConfig"] == null
+            ? {}
+            : Map<String, dynamic>.from(json["agreementConfig"]) ?? {},
       );
 
   Map<String, dynamic> toMap() => {
@@ -94,5 +99,6 @@ class LendingOfferDetailsModel {
         "returnedItems": returnedItems == null ? false : returnedItems,
         "checkedIn": checkedIn == null ? false : checkedIn,
         "checkedOut": checkedOut == null ? false : checkedOut,
+        "agreementConfig": agreementConfig == null ? null : agreementConfig,
       };
 }

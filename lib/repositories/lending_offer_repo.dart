@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/models/enums/lending_borrow_enums.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/new_baseline/models/amenities_model.dart';
@@ -146,7 +147,7 @@ class LendingOffersRepo {
     var lenderNotificationRef =
         CollectionRef.userNotification(model.email).doc(notification.id);
     var offerAcceptorsReference = CollectionRef.lendingOfferAcceptors(model.id)
-        .doc(borrowAcceptorModel.acceptorEmail);
+        .doc(borrowAcceptorModel.id);
     batch.update(offersRef, {
       'lendingOfferDetailsModel.offerAcceptors':
           FieldValue.arrayUnion([borrowAcceptorModel.acceptorEmail]),
@@ -165,15 +166,17 @@ class LendingOffersRepo {
     await batch.commit();
   }
 
-  static Future<void> removeAcceptorLending(
-      {@required OfferModel model, @required String acceptorEmail}) async {
+  static Future<void> removeAcceptorLending({
+    @required OfferModel model,
+    @required String acceptorEmail,
+  }) async {
     WriteBatch batch = CollectionRef.batch;
     var offersRef = CollectionRef.offers.doc(model.id);
-    var offerAcceptorsReference =
-        CollectionRef.lendingOfferAcceptors(model.id).doc(acceptorEmail);
+
     BorrowAcceptorModel borrowAcceptorModel = await getBorrowAcceptorModel(
         offerId: model.id, accteptorEmail: acceptorEmail);
-
+    var offerAcceptorsReference = CollectionRef.lendingOfferAcceptors(model.id)
+        .doc(borrowAcceptorModel.id);
     batch.update(offersRef, {
       'lendingOfferDetailsModel.offerAcceptors':
           FieldValue.arrayRemove([acceptorEmail]),
@@ -207,10 +210,10 @@ class LendingOffersRepo {
     );
   }
 
-  static void updateOfferAcceptorAction(
+  static Future<void> updateOfferAcceptorAction(
       {OfferAcceptanceStatus action,
       @required OfferModel model,
-      @required BorrowAcceptorModel borrowAcceptorModel}) {
+      @required BorrowAcceptorModel borrowAcceptorModel}) async {
     var batch = CollectionRef.batch;
     NotificationsModel notification = NotificationsModel(
         timebankId: model.timebankId,
@@ -223,12 +226,18 @@ class LendingOffersRepo {
         isTimebankNotification: false,
         isRead: false,
         senderPhotoUrl: model.photoUrlImage);
+    var offersRef = CollectionRef.offers.doc(model.id);
+
+    batch.update(offersRef, {
+      'lendingOfferDetailsModel.offerAcceptors':
+          FieldValue.arrayRemove([borrowAcceptorModel.acceptorEmail]),
+    });
     var acceptorNotificationRef =
         CollectionRef.userNotification(borrowAcceptorModel.acceptorEmail)
             .doc(notification.id);
     batch.update(
         CollectionRef.lendingOfferAcceptors(model.id)
-            .doc(borrowAcceptorModel.acceptorEmail),
+            .doc(borrowAcceptorModel.id),
         {"status": action.readable});
     batch.set(
       acceptorNotificationRef,
@@ -245,11 +254,64 @@ class LendingOffersRepo {
 
   static Future<BorrowAcceptorModel> getBorrowAcceptorModel(
       {String offerId, String accteptorEmail}) async {
-    var documentsnapshot = await CollectionRef.lendingOfferAcceptors(offerId)
-        .doc(accteptorEmail)
-        .get();
-    BorrowAcceptorModel model =
-        BorrowAcceptorModel.fromMap(documentsnapshot.data());
+    BorrowAcceptorModel model;
+    await CollectionRef.lendingOfferAcceptors(offerId)
+        .where('acceptorEmail', isEqualTo: accteptorEmail)
+        .get()
+        .then((data) {
+      data.docs.forEach((document) {
+        model = BorrowAcceptorModel.fromMap(document.data());
+      });
+    });
     return model;
+  }
+
+  static Future<void> approveLendingOffer(
+      {@required OfferModel model,
+      @required BorrowAcceptorModel borrowAcceptorModel,
+      @required String lendingOfferApprovedAgreementLink}) async {
+    model.lendingOfferDetailsModel.offerAcceptors
+        .remove(borrowAcceptorModel.acceptorEmail);
+    model.lendingOfferDetailsModel.approvedUsers
+        .add(borrowAcceptorModel.acceptorEmail);
+    model.lendingOfferDetailsModel.lendingOfferApprovedAgreementLink =
+        lendingOfferApprovedAgreementLink ?? '';
+    // if (model.lendingOfferDetailsModel.lendingModel.lendingType ==
+    //     LendingType.PLACE) {
+    //   model.lendingOfferDetailsModel.checkedIn = true;
+    // } else {
+    //   model.lendingOfferDetailsModel.collectedItems = true;
+    // }
+    NotificationsModel notification = NotificationsModel(
+        timebankId: model.timebankId,
+        id: utils.Utils.getUuid(),
+        targetUserId: borrowAcceptorModel.acceptorId,
+        senderUserId: model.sevaUserId,
+        type: NotificationType.NOTIFICATION_TO_BORROWER_APPROVED_LENDING_OFFER,
+        data: model.toMap(),
+        communityId: borrowAcceptorModel.communityId,
+        isTimebankNotification: false,
+        isRead: false,
+        senderPhotoUrl: model.photoUrlImage);
+    WriteBatch batch = CollectionRef.batch;
+    var offersRef = CollectionRef.offers.doc(model.id);
+    var acceptorNotificationRef =
+        CollectionRef.userNotification(borrowAcceptorModel.acceptorEmail)
+            .doc(notification.id);
+    var offerAcceptorsReference = CollectionRef.lendingOfferAcceptors(model.id)
+        .doc(borrowAcceptorModel.id);
+    batch.update(offersRef, model.toMap());
+    batch.update(
+        CollectionRef.userNotification(model.email)
+            .doc(borrowAcceptorModel.notificationId),
+        {"isRead": true});
+    batch.update(offerAcceptorsReference,
+        {"status": LendingOfferStatus.APPROVED.readable, "isApproved": true});
+    batch.set(
+      acceptorNotificationRef,
+      notification.toMap(),
+      SetOptions(merge: true),
+    );
+    await batch.commit();
   }
 }

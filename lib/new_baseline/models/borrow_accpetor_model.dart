@@ -7,6 +7,7 @@ import 'lending_model.dart';
 
 class BorrowAcceptorModel {
   BorrowAcceptorModel({
+    this.id,
     this.acceptorEmail,
     this.acceptorId,
     this.acceptorName,
@@ -23,6 +24,7 @@ class BorrowAcceptorModel {
     this.communityId,
   });
 
+  String id;
   String acceptorEmail;
   String acceptorId;
   String acceptorName;
@@ -45,6 +47,7 @@ class BorrowAcceptorModel {
 
   factory BorrowAcceptorModel.fromMap(Map<String, dynamic> json) =>
       BorrowAcceptorModel(
+        id: json["id"] == null ? null : json["id"],
         acceptorEmail:
             json["acceptorEmail"] == null ? null : json["acceptorEmail"],
         acceptorId: json["acceptorId"] == null ? null : json["acceptorId"],
@@ -70,11 +73,12 @@ class BorrowAcceptorModel {
             json["notificationId"] == null ? null : json["notificationId"],
         communityId: json["communityId"] == null ? null : json["communityId"],
         status: json["status"] == null
-            ? LendingOfferStatus.REQUESTED
+            ? LendingOfferStatus.ACCEPTED
             : ReadableLendingOfferStatus.getValue(json["status"]),
       );
 
   Map<String, dynamic> toMap() => {
+        "id": id == null ? null : id,
         "acceptorEmail": acceptorEmail == null ? null : acceptorEmail,
         "acceptorId": acceptorId == null ? null : acceptorId,
         "acceptorName": acceptorName == null ? null : acceptorName,

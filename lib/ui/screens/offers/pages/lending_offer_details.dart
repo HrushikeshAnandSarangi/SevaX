@@ -259,6 +259,10 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                         SizedBox(
                           height: 10,
                         ),
+                        LendingOfferProgressWidget(),
+                        SizedBox(
+                          height: 10,
+                        ),
                         addressComponentBorrowRequestForApproved(
                             widget.offerModel.selectedAdrress ?? '', context),
                         SizedBox(
@@ -574,13 +578,33 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
               //TO DO accept and send notification to lending offer creator and create acceptor model and push it to subcollections
             } else {
               await LendingOffersRepo.removeAcceptorLending(
-                      model: widget.offerModel,
-                      acceptorEmail: SevaCore.of(context).loggedInUser.email)
-                  .then((_) => Navigator.of(context).pop());
+                model: widget.offerModel,
+                acceptorEmail: SevaCore.of(context).loggedInUser.email,
+              ).then((_) => Navigator.of(context).pop());
             }
           },
         ),
       ),
+    );
+  }
+
+  Widget LendingOfferProgressWidget() {
+    return Container(
+      padding: EdgeInsets.all(5),
+      decoration: BoxDecoration(color: Colors.white54, boxShadow: [
+        BoxShadow(
+          color: Colors.grey[300],
+        )
+      ]),
+      width: MediaQuery.of(context).size.width,
+      height: 240,
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text(S.of(context).request_approved_by_msg,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            )),
+      ]),
     );
   }
 

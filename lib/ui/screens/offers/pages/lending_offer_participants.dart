@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/components/lending_borrow_widgets/approve_lending_offer.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/chat_model.dart';
+import 'package:sevaexchange/models/enums/lending_borrow_enums.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/offer_participants_model.dart';
 import 'package:sevaexchange/new_baseline/models/borrow_accpetor_model.dart';
 import 'package:sevaexchange/new_baseline/models/lending_model.dart';
 import 'package:sevaexchange/repositories/lending_offer_repo.dart';
+import 'package:sevaexchange/ui/screens/borrow_agreement/borrow_agreement_pdf.dart';
 import 'package:sevaexchange/ui/screens/offers/bloc/offer_bloc.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/time_offer_participant.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/requests/offer_join_request.dart';
@@ -131,7 +135,8 @@ class LendingOfferParticipants extends StatelessWidget {
     );
   }
 
-  Future<dynamic> cannotApproveMultipleDialog(BuildContext context) {
+  Future<dynamic> cannotApproveMultipleDialog(
+      BuildContext context, String name) {
     return showDialog(
         context: context,
         builder: (dialogContext) {
@@ -155,7 +160,7 @@ class LendingOfferParticipants extends StatelessWidget {
                   Text(L
                       .of(context)
                       .cannot_approve_multiple_borrowers
-                      .replaceAll(" **name", 'Daniel James')),
+                      .replaceAll(" **name", name)),
                 ],
               ),
             ), //replace with active/current borrower name
@@ -182,14 +187,14 @@ class LendingOfferParticipants extends StatelessWidget {
     UserModel user,
   }) {
     switch (status) {
-      case LendingOfferStatus.ACCEPTED:
+      case LendingOfferStatus.APPROVED:
         return [
           CustomElevatedButton(
-            color: Colors.green,
+            color: HexColor('#FAFAFA'),
             onPressed: () async {},
             child: Text(
               'Approved',
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(color: Colors.black),
             ),
           ),
           SizedBox(
@@ -200,67 +205,67 @@ class LendingOfferParticipants extends StatelessWidget {
       case LendingOfferStatus.REJECTED:
         return [
           CustomElevatedButton(
-            color: Colors.red,
+            color: HexColor('#FAFAFA'),
             onPressed: () {},
             child: Text(
               'Rejected',
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(color: Colors.black),
             ),
           )
         ];
       case LendingOfferStatus.ITEMS_RETURNED:
         return [
           CustomElevatedButton(
-            color: Colors.red,
+            color: HexColor('#FAFAFA'),
             onPressed: () {
               //To be implemented by lending offer team
             },
             child: Text(
               S.of(context).review,
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(color: Colors.black),
             ),
           )
         ];
       case LendingOfferStatus.ITEMS_COLLECTED:
         return [
           CustomElevatedButton(
-            color: Colors.red,
+            color: HexColor('#FAFAFA'),
             onPressed: () {
               //To be implemented by lending offer team
             },
             child: Text(
               L.of(context).items_taken,
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(color: Colors.black),
             ),
           )
         ];
       case LendingOfferStatus.CHECKED_IN:
         return [
           CustomElevatedButton(
-            color: Colors.red,
+            color: HexColor('#FAFAFA'),
             onPressed: () {
               //To be implemented by lending offer team
             },
             child: Text(
               L.of(context).arrived,
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(color: Colors.black),
             ),
           )
         ];
       case LendingOfferStatus.CHECKED_OUT:
         return [
           CustomElevatedButton(
-            color: Colors.red,
+            color: HexColor('#FAFAFA'),
             onPressed: () {
               //To be implemented by lending offer team
             },
             child: Text(
               L.of(context).departed,
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(color: Colors.black),
             ),
           )
         ];
-      case LendingOfferStatus.REQUESTED:
+      case LendingOfferStatus.ACCEPTED:
         return [
           IconButton(
             icon: Icon(
@@ -287,10 +292,19 @@ class LendingOfferParticipants extends StatelessWidget {
               }
 
               if (isCurrentlyLent) {
-                await cannotApproveMultipleDialog(context);
+                await cannotApproveMultipleDialog(
+                    context, borrowAcceptorModel.acceptorName ?? '');
               } else {
-                //To be implemented by lending offer team
-
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    // fullscreenDialog: true,
+                    builder: (context) => ApproveLendingOffer(
+                      offerModel: offerModel,
+                      borrowAcceptorModel: borrowAcceptorModel,
+                    ),
+                  ),
+                );
               }
             },
             child: Text(

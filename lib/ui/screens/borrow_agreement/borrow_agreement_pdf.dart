@@ -13,6 +13,7 @@ import 'package:pdf/widgets.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:sevaexchange/components/pdf_screen.dart';
 import 'package:sevaexchange/labels.dart';
+import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/utils/app_config.dart';
@@ -26,6 +27,7 @@ class BorrowAgreementPdf {
   Future<String> borrowAgreementPdf(
       material.BuildContext contextMain,
       RequestModel requestModel,
+      String borrower,
       //Add place model / item model from lending offers (to get details of place/item conditions ex: no of occupants, house rules, etc.. )
       String documentName,
       bool isOffer,
@@ -242,10 +244,9 @@ class BorrowAgreementPdf {
               SizedBox(height: 15),
               Text(
                 isOffer
-                    ? requestModel.fullName
-                    : SevaCore.of(contextMain)
-                        .loggedInUser
-                        .fullname, //need to modify according to offer model or request model
+                    ? SevaCore.of(contextMain).loggedInUser.fullname
+                    : requestModel
+                        .fullName, //need to modify according to offer model or request model
                 style: TextStyle(
                   decoration: TextDecoration.underline,
                 ),
@@ -257,7 +258,7 @@ class BorrowAgreementPdf {
               SizedBox(height: 15),
               Text(
                 isOffer
-                    ? SevaCore.of(contextMain).loggedInUser.fullname
+                    ? borrower
                     : requestModel
                         .fullName, //need to modify according to offer model or request model
                 style: TextStyle(

@@ -338,7 +338,8 @@ class IndividualOfferBloc extends BlocBase with Validators {
       String timebankId,
       String communityName,
       String lendingAgreementLink,
-      String lendingOfferAgreementName}) {
+      String lendingOfferAgreementName,
+      Map<String, dynamic> agreementConfig}) {
     //   print(errorCheck());
     if (!errorCheck()) {
       if (_lendingModel.value == null) {
@@ -381,7 +382,8 @@ class IndividualOfferBloc extends BlocBase with Validators {
               ..lendingOfferAgreementLink = lendingAgreementLink
               ..lendingOfferAgreementName = lendingOfferAgreementName
               ..startDate = startTime
-              ..endDate = endTime,
+              ..endDate = endTime
+              ..agreementConfig = agreementConfig ?? {},
             individualOfferDataModel: IndividualOfferDataModel()
               ..title = _title.value
               ..description = _offerDescription.value
@@ -393,14 +395,7 @@ class IndividualOfferBloc extends BlocBase with Validators {
             public: _makePublic.value ?? false,
             virtual: _makeVirtual.value ?? false,
             liveMode: !AppConfig.isTestCommunity,
-            cashModel: CashModel(
-              donors: [],
-              achdetails: ACHModel(),
-              paymentType: RequestPaymentType.ACH,
-              amountRaised: 0,
-              minAmount: 0,
-              targetAmount: 0,
-            ),
+            cashModel: CashModel(),
             goodsDonationDetails: _goodsDonationDetails.value,
             timebanksPosted: _makePublic.value ?? false
                 ? [timebankId, FlavorConfig.values.timebankId]
@@ -420,7 +415,8 @@ class IndividualOfferBloc extends BlocBase with Validators {
   void updateLendingOffer(
       {OfferModel offerModel,
       String lendingOfferAgreementLink,
-      String lendingOfferAgreementName}) {
+      String lendingOfferAgreementName,
+      Map<String, dynamic> agreementConfig}) {
     OfferModel offer = offerModel;
     if (!errorCheck()) {
       if (_lendingModel.value == null) {
@@ -435,7 +431,8 @@ class IndividualOfferBloc extends BlocBase with Validators {
           ..lendingOfferAgreementLink = lendingOfferAgreementLink
           ..lendingOfferAgreementName = lendingOfferAgreementName
           ..startDate = startTime
-          ..endDate = endTime;
+          ..endDate = endTime
+          ..agreementConfig = agreementConfig ?? {};
         offer.timebanksPosted = _makeVirtual.value
             ? [offer.timebankId, FlavorConfig.values.timebankId]
             : [offer.timebankId];

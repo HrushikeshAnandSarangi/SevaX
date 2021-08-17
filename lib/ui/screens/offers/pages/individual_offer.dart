@@ -74,6 +74,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
   CustomLocation customLocation;
   String borrowAgreementLinkFinal = '';
   String documentName;
+  Map<String, dynamic> agreementConfig;
   // String title = '';
   String title_hint;
   String description_hint;
@@ -135,6 +136,9 @@ class _IndividualOfferState extends State<IndividualOffer> {
             documentName = widget.offerModel.lendingOfferDetailsModel
                     .lendingOfferAgreementName ??
                 '';
+            agreementConfig =
+                widget.offerModel.lendingOfferDetailsModel.agreementConfig ??
+                    {};
           }
         }
       } else {
@@ -1108,14 +1112,16 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                               lendingAgreementLink:
                                                   borrowAgreementLinkFinal,
                                               lendingOfferAgreementName:
-                                                  documentName);
+                                                  documentName,
+                                              agreementConfig: agreementConfig);
                                         } else {
                                           _bloc.updateLendingOffer(
                                               offerModel: widget.offerModel,
                                               lendingOfferAgreementName:
                                                   documentName ?? '',
                                               lendingOfferAgreementLink:
-                                                  borrowAgreementLinkFinal);
+                                                  borrowAgreementLinkFinal,
+                                              agreementConfig: agreementConfig);
                                         }
                                       } else {
                                         errorDialog(
@@ -1773,11 +1779,11 @@ class _IndividualOfferState extends State<IndividualOffer> {
                               .loggedInUser
                               .currentCommunity,
                           timebankId: widget.timebankId,
-                          onPdfCreated: (pdfLink, documentNameFinal) {
-                            logger.e('COMES BACK FROM ON PDF CREATED:  ' +
-                                pdfLink.toString());
+                          onPdfCreated:
+                              (pdfLink, documentNameFinal, agreementConfigg) {
                             borrowAgreementLinkFinal = pdfLink;
                             documentName = documentNameFinal;
+                            agreementConfig = agreementConfigg;
                             // when request is created check if above value is stored in document
                             setState(() => {});
                           },

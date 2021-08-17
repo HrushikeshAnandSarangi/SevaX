@@ -84,7 +84,7 @@ Map<String, LendingType> lendingTypeMapper = {
   "ITEM": LendingType.ITEM,
 };
 enum LendingOfferStatus {
-  REQUESTED,
+  APPROVED,
   ACCEPTED,
   REJECTED,
   CHECKED_IN,
@@ -96,8 +96,8 @@ enum LendingOfferStatus {
 extension ReadableLendingOfferStatus on LendingOfferStatus {
   String get readable {
     switch (this) {
-      case LendingOfferStatus.REQUESTED:
-        return 'REQUESTED';
+      case LendingOfferStatus.APPROVED:
+        return 'APPROVED';
 
       case LendingOfferStatus.ACCEPTED:
         return 'ACCEPTED';
@@ -120,11 +120,11 @@ extension ReadableLendingOfferStatus on LendingOfferStatus {
 
   static LendingOfferStatus getValue(String value) {
     switch (value) {
-      case 'REQUESTED':
-        return LendingOfferStatus.REQUESTED;
-
       case 'ACCEPTED':
         return LendingOfferStatus.ACCEPTED;
+
+      case 'APPROVED':
+        return LendingOfferStatus.APPROVED;
 
         return LendingOfferStatus.CHECKED_IN;
       case 'CHECKED_IN':
@@ -138,7 +138,7 @@ extension ReadableLendingOfferStatus on LendingOfferStatus {
       case 'REJECTED':
 
       default:
-        return LendingOfferStatus.REQUESTED;
+        return LendingOfferStatus.ACCEPTED;
     }
   }
 }

@@ -15,6 +15,7 @@ import 'package:sevaexchange/ui/screens/borrow_agreement/borrow_agreement_pdf.da
 import 'package:sevaexchange/ui/screens/offers/pages/time_offer_participant.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
@@ -157,6 +158,7 @@ class _BorrowerAcceptLendingOfferState
                 await LendingOffersRepo.storeAcceptorDataLendingOffer(
                     model: widget.offerModel,
                     borrowAcceptorModel: BorrowAcceptorModel(
+                        id: Utils.getUuid(),
                         communityId:
                             SevaCore.of(context).loggedInUser.currentCommunity,
                         acceptorphotoURL:
@@ -182,12 +184,13 @@ class _BorrowerAcceptLendingOfferState
                         acceptorName:
                             SevaCore.of(context).loggedInUser.fullname,
                         selectedAddress: widget.offerModel.selectedAdrress,
-                        status: LendingOfferStatus.REQUESTED));
+                        status: LendingOfferStatus.ACCEPTED));
                 Navigator.of(context).pop();
               } else {
                 await LendingOffersRepo.storeAcceptorDataLendingOffer(
                     model: widget.offerModel,
                     borrowAcceptorModel: BorrowAcceptorModel(
+                      id: Utils.getUuid(),
                       communityId:
                           SevaCore.of(context).loggedInUser.currentCommunity,
                       acceptorphotoURL:
@@ -213,7 +216,7 @@ class _BorrowerAcceptLendingOfferState
                       acceptorMobile: '',
                       acceptorName: SevaCore.of(context).loggedInUser.fullname,
                       selectedAddress: widget.offerModel.selectedAdrress,
-                      status: LendingOfferStatus.REQUESTED,
+                      status: LendingOfferStatus.ACCEPTED,
                     ));
                 Navigator.of(context).pop();
               }

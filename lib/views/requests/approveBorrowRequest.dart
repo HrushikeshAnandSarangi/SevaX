@@ -569,7 +569,8 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
                         timebankId: widget.requestModel.timebankId,
                         startTime: widget.requestModel.requestStart,
                         endTime: widget.requestModel.requestEnd,
-                        onPdfCreated: (pdfLink, documentNameFinal) {
+                        onPdfCreated:
+                            (pdfLink, documentNameFinal, agreementConfig) {
                           logger.e('COMES BACK FROM ON PDF CREATED:  ' +
                               pdfLink.toString());
                           borrowAgreementLinkFinal = pdfLink;
