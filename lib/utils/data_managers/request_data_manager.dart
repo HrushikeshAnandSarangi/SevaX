@@ -39,7 +39,6 @@ import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/mail_content_template.dart';
 import 'package:usage/uuid/uuid.dart';
-import 'package:http/http.dart' as http;
 
 import '../app_config.dart';
 import '../svea_credits_manager.dart';
@@ -2342,52 +2341,4 @@ Future<DocumentReference> sendNotificationToMemberOneToManyRequest(
   return CollectionRef.users.doc(userEmail).collection("notifications").doc(notification.id);
 }
 
-
-
-
-Future<void> getCategoriesFromApi(String query) async {
-  try {
-    var response = await http.post(
-      "https://proxy.sevaexchange.com/" + "http://ai.api.sevaxapp.com/request_categories",
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control": "Allow-Headers",
-        "x-requested-with": "x-requested-by"
-      },
-      body: jsonEncode({
-        "description": query,
-      }),
-    );
-    log('respinse ${response.body}');
-    log('respinse ${response.statusCode}');
-
-    if (response.statusCode == 200) {
-      Map<String, dynamic> bodyMap = json.decode(response.body);
-      List<String> categoriesList =
-      bodyMap.containsKey('string_vec') ? List.castFrom(bodyMap['string_vec']) : [];
-      if (categoriesList != null && categoriesList.length > 0) {
-        getCategoryModels(categoriesList);
-      }
-    } else {
-      return null;
-    }
-  } catch (exception) {
-    log(exception.toString());
-    return null;
-  }
-}
-
-Future<void> getCategoryModels(List<String> categoriesList) async {
-  List<CategoryModel> modelList = [];
-  for (int i = 0; i < categoriesList.length; i += 1) {
-    CategoryModel categoryModel = await FirestoreManager.getCategoryForId(
-      categoryID: categoriesList[i],
-    );
-    modelList.add(categoryModel);
-  }
-  if (modelList != null && modelList.length > 0) {
-    categoryMode = S.of(context).suggested_categories;
-    updateInformation(modelList);
-  }
-}
 
