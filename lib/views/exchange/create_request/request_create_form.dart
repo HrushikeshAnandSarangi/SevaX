@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:http/http.dart' as http;
-import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
 import 'package:sevaexchange/components/repeat_availability/repeat_widget.dart';
@@ -27,38 +26,26 @@ import 'package:sevaexchange/models/selectedSpeakerTimeDetails.dart';
 import 'package:sevaexchange/new_baseline/models/acceptor_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
-import 'package:sevaexchange/new_baseline/models/user_insufficient_credits_model.dart';
-import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/calendar/add_to_calander.dart';
-import 'package:sevaexchange/ui/screens/request/pages/select_borrow_item.dart';
 import 'package:sevaexchange/ui/utils/debouncer.dart';
 import 'package:sevaexchange/utils/app_config.dart';
-import 'package:sevaexchange/utils/deep_link_manager/invitation_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/configuration_check.dart';
-import 'package:sevaexchange/utils/helpers/mailer.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/svea_credits_manager.dart';
-import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/exchange/borrow_request.dart';
 import 'package:sevaexchange/views/exchange/cash_request.dart';
 import 'package:sevaexchange/views/exchange/create_request/project_selection.dart';
 import 'package:sevaexchange/views/exchange/goods_request.dart';
-import 'package:sevaexchange/views/exchange/mail_content_template.dart';
 import 'package:sevaexchange/views/exchange/request_utils.dart';
 import 'package:sevaexchange/views/exchange/time_request.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
-import 'package:sevaexchange/views/requests/onetomany_request_instructor_card.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
-import 'package:sevaexchange/widgets/custom_info_dialog.dart';
-import 'package:sevaexchange/widgets/hide_widget.dart';
-import 'package:sevaexchange/widgets/open_scope_checkbox_widget.dart';
 import 'package:sevaexchange/widgets/select_category.dart';
-import 'package:sevaexchange/widgets/user_profile_image.dart';
 
 import '../../core.dart';
 
@@ -95,27 +82,24 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
   final volunteersTextFocus = FocusNode();
   ProjectModel selectedProjectModel = null;
   RequestModel requestModel;
-  bool isPulicCheckboxVisible = false;
   End end = End();
   var focusNodes = List.generate(18, (_) => FocusNode());
   List<String> eventsIdsArr = [];
   List<String> selectedCategoryIds = [];
   bool comingFromDynamicLink = false;
   GeoFirePoint location;
-  double sevaCoinsValue = 0;
   String hoursMessage;
   String selectedAddress;
   int sharedValue = 0;
   final _debouncer = Debouncer(milliseconds: 500);
   String _selectedTimebankId;
-  final TextEditingController searchTextController = TextEditingController();
-  final searchOnChange = BehaviorSubject<String>();
   var validItems = [];
   bool isAdmin = false;
   UserModel selectedInstructorModel;
   SelectedSpeakerTimeDetails selectedSpeakerTimeDetails =
       new SelectedSpeakerTimeDetails(speakingTime: 0.0, prepTime: 0);
   DocumentReference speakerNotificationDocRef;
+  RequestUtils requestUtils = RequestUtils();
 
   //Below variable for One to Many Requests
   bool createEvent = false;
@@ -132,14 +116,10 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
   void initState() {
     super.initState();
     AppConfig.helpIconContextMember = HelpContextMemberType.time_requests;
-
     WidgetsBinding.instance.addObserver(this);
     _selectedTimebankId = widget.timebankId;
-
     getProjectsByFuture = FirestoreManager.getAllProjectListFuture(timebankid: widget.timebankId);
-
     _initializeRequestModel();
-
     getTimebankAdminStatus = getTimebankDetailsbyFuture(
       timebankId: _selectedTimebankId,
     );
@@ -213,82 +193,6 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
     super.didChangeDependencies();
   }
 
-  Widget addToProjectContainer(
-    snapshot,
-    projectModelList,
-    requestModel,
-    projectId,
-  ) {
-    if (isFromRequest(projectId: projectId)) {
-      if (snapshot.hasError) return Text(snapshot.error.toString());
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return Container();
-      }
-      timebankModel = snapshot.data;
-      if (isAccessAvailable(snapshot.data, SevaCore.of(context).loggedInUser.sevaUserID) &&
-          requestModel.requestMode == RequestMode.TIMEBANK_REQUEST) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            (requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST && createEvent)
-                ? Container()
-                : Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Flexible(
-                        child: ProjectSelection(
-                          setcreateEventState: () {
-                            createEvent = !createEvent;
-                            setState(() {});
-                          },
-                          createEvent: createEvent,
-                          requestModel: requestModel,
-                          projectModelList: projectModelList,
-                          selectedProject: null,
-                          admin: isAccessAvailable(
-                              snapshot.data, SevaCore.of(context).loggedInUser.sevaUserID),
-                        ),
-                      ),
-                    ],
-                  ),
-            createEvent
-                ? GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        createEvent = !createEvent;
-                        requestModel.projectId = '';
-                        log('projectId2:  ' + requestModel.projectId.toString());
-                        log('createEvent2:  ' + createEvent.toString());
-                      });
-                    },
-                    child: Row(
-                      children: [
-                        Icon(Icons.check_box, size: 19, color: Colors.green),
-                        SizedBox(width: 5),
-                        Expanded(
-                          child: Text(
-                            S.of(context).onetomanyrequest_create_new_event,
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                : Container(),
-          ],
-        );
-      } else {
-        this.requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
-
-        //making false and clearing map because TIME and ONE_TO_MANY_REQUEST use same widget
-        instructorAdded = false;
-        requestModel.selectedInstructor = null;
-
-        return Container();
-      }
-    }
-    return Container();
-  }
-
   Widget headerContainer(snapshot) {
     if (snapshot.hasError) return Text(snapshot.error.toString());
     if (snapshot.connectionState == ConnectionState.waiting) {
@@ -355,602 +259,121 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               headerContainer(snapshot),
-//                            TransactionsMatrixCheck(transaction_matrix_type: "cash_goods_requests", child: RequestTypeWidget()),
                               RequestTypeWidgetCommunityRequests(),
                               RequestTypeWidgetPersonalRequests(),
                               SizedBox(height: 14),
-                              Text(
-                                "${S.of(context).request_title}",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'Europa',
-                                  color: Colors.black,
-                                ),
-                              ),
-                              TextFormField(
-                                autovalidateMode: AutovalidateMode.onUserInteraction,
-                                onChanged: (value) {
-                                  updateExitWithConfirmationValue(context, 1, value);
-                                },
-                                onFieldSubmitted: (v) {
-                                  FocusScope.of(context).requestFocus(focusNodes[0]);
-                                },
-                                decoration: InputDecoration(
-                                  errorMaxLines: 2,
-                                  hintText: requestModel.requestType == RequestType.TIME
-                                      ? S.of(context).request_title_hint
-                                      : requestModel.requestType == RequestType.CASH
-                                          ? S.of(context).cash_request_title_hint
-                                          : requestModel.requestType ==
-                                                  RequestType.ONE_TO_MANY_REQUEST
-                                              ? S.of(context).onetomanyrequest_title_hint
-                                              : requestModel.requestType == RequestType.BORROW
-                                                  ? S.of(context).request_title_hint
-                                                  : "Ex: Non-perishable goods for Food Bank...",
-                                  hintStyle: hintTextStyle,
-                                ),
-                                textInputAction: TextInputAction.next,
-                                keyboardType: TextInputType.text,
-                                initialValue: widget.offer != null && widget.isOfferRequest
-                                    ? getOfferTitle(
-                                        offerDataModel: widget.offer,
-                                      )
-                                    : "",
-                                textCapitalization: TextCapitalization.sentences,
-                                validator: (value) {
-                                  if (value.isEmpty) {
-                                    return S.of(context).request_subject;
-                                  } else if (profanityDetector.isProfaneString(value)) {
-                                    return S.of(context).profanity_text_alert;
-                                  } else if (value.substring(0, 1).contains('_') &&
-                                      !AppConfig.testingEmails.contains(AppConfig.loggedInEmail)) {
-                                    return S
-                                        .of(context)
-                                        .creating_request_with_underscore_not_allowed;
-                                  } else {
-                                    requestModel.title = value;
-                                    return null;
+                              Builder(
+                                builder: (_) {
+                                  switch (requestModel.requestType) {
+                                    case RequestType.TIME:
+                                      return TimeRequest(
+                                        requestModel: requestModel,
+                                        offer: widget.offer,
+                                        isOfferRequest: widget.isOfferRequest,
+                                        selectedAddress: selectedAddress,
+                                        location: location,
+                                        isAdmin: isAdmin,
+                                        createEvent: createEvent,
+                                        instructorAdded: instructorAdded,
+                                        timebankModel: snapshot.data,
+                                        projectModelList: projectModelList,
+                                        projectId: widget.projectId,
+                                        selectedInstructorModel: selectedInstructorModel,
+                                        categoryWidget: categoryWidget(),
+                                        timebankId: widget.timebankId,
+                                        comingFrom: widget.comingFrom,
+                                        onCreateEventChanged: (value) => createEvent = value,
+                                        onDescriptionChanged: (value) =>
+                                            getCategoriesFromApi(value),
+                                      );
+                                      break;
+                                    case RequestType.CASH:
+                                      return CashRequest(
+                                        isOfferRequest: widget.isOfferRequest,
+                                        offer: widget.offer,
+                                        requestDescription: RequestDescriptionData(
+                                            S.of(context).cash_request_data_hint_text),
+                                        projectModelList: projectModelList,
+                                        requestModel: requestModel,
+                                        comingFrom: widget.comingFrom,
+                                        timebankId: widget.timebankId,
+                                        timebankModel: snapshot.data,
+                                        categoryWidget: categoryWidget(),
+                                        createEvent: createEvent,
+                                        onCreateEventChanged: (value) => createEvent = value,
+                                        projectId: widget.projectId,
+                                        instructorAdded: instructorAdded,
+                                      );
+                                      break;
+                                    case RequestType.GOODS:
+                                      return GoodsRequest(
+                                        requestModel: requestModel,
+                                        categoryWidget: categoryWidget(),
+                                        timebankModel: snapshot.data,
+                                        timebankId: widget.timebankId,
+                                        comingFrom: widget.comingFrom,
+                                        isOfferRequest: widget.isOfferRequest,
+                                        offer: widget.offer,
+                                        instructorAdded: instructorAdded,
+                                        projectId: widget.projectId,
+                                        createEvent: createEvent,
+                                        onCreateEventChanged: (value) => createEvent = value,
+                                        projectModelList: projectModelList,
+                                        requestDescription: RequestDescriptionData(
+                                            S.of(context).goods_request_data_hint_text),
+                                      );
+                                      break;
+                                    case RequestType.BORROW:
+                                      return BorrowRequest(
+                                        requestDescription: RequestDescriptionData(
+                                            S.of(context).request_descrip_hint_text),
+                                        selectedAddress: selectedAddress,
+                                        location: location,
+                                        categoryWidget: categoryWidget(),
+                                        requestModel: requestModel,
+                                        offer: widget.offer,
+                                        createEvent: createEvent,
+                                        projectId: widget.projectId,
+                                        instructorAdded: instructorAdded,
+                                        onCreateEventChanged: (value) => createEvent = value,
+                                        projectModelList: projectModelList,
+                                        timebankModel: snapshot.data,
+                                        comingFrom: widget.comingFrom,
+                                        timebankId: widget.timebankId,
+                                        isOfferRequest: widget.isOfferRequest,
+                                      );
+                                      break;
+                                    case RequestType.ONE_TO_MANY_REQUEST:
+                                      return TimeRequest(
+                                        requestModel: requestModel,
+                                        offer: widget.offer,
+                                        isOfferRequest: widget.isOfferRequest,
+                                        selectedAddress: selectedAddress,
+                                        location: location,
+                                        isAdmin: isAdmin,
+                                        createEvent: createEvent,
+                                        instructorAdded: instructorAdded,
+                                        timebankModel: snapshot.data,
+                                        projectId: widget.projectId,
+                                        projectModelList: projectModelList,
+                                        selectedInstructorModel: selectedInstructorModel,
+                                        timebankId: widget.timebankId,
+                                        comingFrom: widget.comingFrom,
+                                        categoryWidget: categoryWidget(),
+                                        onCreateEventChanged: (value) => createEvent = value,
+                                        onDescriptionChanged: (value) =>
+                                            getCategoriesFromApi(value),
+                                      );
+                                      break;
+                                    case RequestType.LENDING_OFFER:
+                                      return Container();
+                                      break;
+                                    case RequestType.ONE_TO_MANY_OFFER:
+                                      return Container();
+                                      break;
                                   }
+                                  return Container();
                                 },
-                              ),
-                              SizedBox(height: 15),
-                              //Instructor to be assigned to One to many requests widget Here
-                              instructorAdded
-                                  ? Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        SizedBox(height: 20),
-                                        Text(
-                                          S.of(context).selected_speaker,
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                            fontFamily: 'Europa',
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                        SizedBox(height: 15),
-                                        Padding(
-                                          padding: const EdgeInsets.only(left: 0, right: 10),
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.center,
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: <Widget>[
-                                              // SizedBox(
-                                              //   height: 15,
-                                              // ),
-                                              Row(
-                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                crossAxisAlignment: CrossAxisAlignment.center,
-                                                children: <Widget>[
-                                                  UserProfileImage(
-                                                    photoUrl:
-                                                        requestModel.selectedInstructor.photoURL,
-                                                    email: requestModel.selectedInstructor.email,
-                                                    userId:
-                                                        requestModel.selectedInstructor.sevaUserID,
-                                                    height: 75,
-                                                    width: 75,
-                                                    timebankModel: timebankModel,
-                                                  ),
-                                                  SizedBox(
-                                                    width: 15,
-                                                  ),
-                                                  Expanded(
-                                                    child: Text(
-                                                      requestModel.selectedInstructor.fullname ??
-                                                          S.of(context).name_not_available,
-                                                      style: TextStyle(
-                                                          color: Colors.black,
-                                                          fontSize: 18,
-                                                          fontWeight: FontWeight.bold),
-                                                    ),
-                                                  ),
-                                                  SizedBox(
-                                                    width: 15,
-                                                  ),
-                                                  Container(
-                                                    height: 37,
-                                                    padding: EdgeInsets.only(bottom: 0),
-                                                    child: InkWell(
-                                                      child: Icon(
-                                                        Icons.cancel_rounded,
-                                                        size: 30,
-                                                        color: Colors.grey,
-                                                      ),
-                                                      onTap: () {
-                                                        setState(() {
-                                                          instructorAdded = false;
-                                                          requestModel.selectedInstructor = null;
-                                                        });
-                                                      },
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  : requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST
-                                      ? Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                              SizedBox(height: 20),
-                                              Text(
-                                                S.of(context).select_a_speaker,
-                                                style: TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontFamily: 'Europa',
-                                                  color: Colors.black,
-                                                ),
-                                              ),
-                                              SizedBox(height: 15),
-                                              TextField(
-                                                style: TextStyle(color: Colors.black),
-                                                controller: searchTextController,
-                                                onChanged: _search,
-                                                autocorrect: true,
-                                                decoration: InputDecoration(
-                                                  suffixIcon: IconButton(
-                                                      icon: Icon(
-                                                        Icons.clear,
-                                                        color: Colors.black54,
-                                                      ),
-                                                      onPressed: () {
-                                                        setState(() {
-                                                          searchTextController.clear();
-                                                        });
-                                                      }),
-                                                  alignLabelWithHint: true,
-                                                  isDense: true,
-                                                  prefixIcon: Icon(
-                                                    Icons.search,
-                                                    color: Colors.grey,
-                                                  ),
-                                                  contentPadding:
-                                                      EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
-                                                  filled: true,
-                                                  fillColor: Colors.grey[200],
-                                                  focusedBorder: OutlineInputBorder(
-                                                    borderSide: BorderSide(color: Colors.white),
-                                                    borderRadius: BorderRadius.circular(15.7),
-                                                  ),
-                                                  enabledBorder: UnderlineInputBorder(
-                                                      borderSide: BorderSide(color: Colors.white),
-                                                      borderRadius: BorderRadius.circular(15.7)),
-                                                  hintText: S.of(context).select_speaker_hint,
-                                                  hintStyle: TextStyle(
-                                                    color: Colors.black45,
-                                                    fontSize: 14,
-                                                  ),
-                                                  floatingLabelBehavior:
-                                                      FloatingLabelBehavior.never,
-                                                ),
-                                              ),
-
-                                              //SizedBox(height: 5),
-
-                                              Container(
-                                                  child: Column(children: [
-                                                StreamBuilder<List<UserModel>>(
-                                                  stream: SearchManager.searchUserInSevaX(
-                                                    queryString: searchTextController.text,
-                                                    //validItems: validItems,
-                                                  ),
-                                                  builder: (context, snapshot) {
-                                                    if (snapshot.hasError) {
-                                                      Text(snapshot.error.toString());
-                                                    }
-                                                    if (!snapshot.hasData) {
-                                                      return Center(
-                                                        child: SizedBox(
-                                                          height: 48,
-                                                          width: 40,
-                                                          child: Container(
-                                                            margin:
-                                                                const EdgeInsets.only(top: 12.0),
-                                                            child: CircularProgressIndicator(),
-                                                          ),
-                                                        ),
-                                                      );
-                                                    }
-
-                                                    List<UserModel> userList = snapshot.data;
-                                                    userList.removeWhere((user) =>
-                                                        user.sevaUserID ==
-                                                            SevaCore.of(context)
-                                                                .loggedInUser
-                                                                .sevaUserID ||
-                                                        user.sevaUserID == requestModel.sevaUserId);
-
-                                                    if (userList.length == 0) {
-                                                      return Row(
-                                                        mainAxisAlignment: MainAxisAlignment.center,
-                                                        children: [
-                                                          Expanded(
-                                                            child: Card(
-                                                              shape: RoundedRectangleBorder(
-                                                                side: BorderSide(
-                                                                    color: Colors.transparent,
-                                                                    width: 0),
-                                                                borderRadius: BorderRadius.vertical(
-                                                                    bottom: Radius.circular(7.0)),
-                                                              ),
-                                                              borderOnForeground: false,
-                                                              shadowColor: Colors.white24,
-                                                              elevation: 5,
-                                                              child: Padding(
-                                                                padding: const EdgeInsets.only(
-                                                                    left: 15.0, top: 11.0),
-                                                                child: Text(
-                                                                  S.of(context).no_member_found,
-                                                                  style: TextStyle(
-                                                                    color: Colors.grey,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      );
-                                                    }
-
-                                                    if (searchTextController.text.trim().length <
-                                                        3) {
-                                                      return Row(
-                                                        mainAxisAlignment: MainAxisAlignment.start,
-                                                        children: [
-                                                          Expanded(
-                                                            child: Card(
-                                                              shape: RoundedRectangleBorder(
-                                                                side: BorderSide(
-                                                                    color: Colors.transparent,
-                                                                    width: 0),
-                                                                borderRadius: BorderRadius.vertical(
-                                                                    bottom: Radius.circular(7.0)),
-                                                              ),
-                                                              borderOnForeground: false,
-                                                              shadowColor: Colors.white24,
-                                                              elevation: 5,
-                                                              child: Padding(
-                                                                padding: const EdgeInsets.only(
-                                                                    left: 15.0, top: 11.0),
-                                                                child: Text(
-                                                                  S
-                                                                      .of(context)
-                                                                      .validation_error_search_min_characters,
-                                                                  style: TextStyle(
-                                                                    color: Colors.grey,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      );
-                                                    } else {
-                                                      return Scrollbar(
-                                                        child: Center(
-                                                          child: Card(
-                                                            shape: RoundedRectangleBorder(
-                                                              side: BorderSide(
-                                                                  color: Colors.transparent,
-                                                                  width: 0),
-                                                              borderRadius:
-                                                                  BorderRadius.circular(10),
-                                                            ),
-                                                            borderOnForeground: false,
-                                                            shadowColor: Colors.white24,
-                                                            elevation: 5,
-                                                            child: LimitedBox(
-                                                              maxHeight: MediaQuery.of(context)
-                                                                      .size
-                                                                      .width *
-                                                                  0.55,
-                                                              maxWidth: 90,
-                                                              child: ListView.separated(
-                                                                  primary: false,
-                                                                  //physics: NeverScrollableScroflutter card bordellPhysics(),
-                                                                  shrinkWrap: true,
-                                                                  padding: EdgeInsets.zero,
-                                                                  itemCount: userList.length,
-                                                                  separatorBuilder:
-                                                                      (BuildContext context,
-                                                                              int index) =>
-                                                                          Divider(),
-                                                                  itemBuilder: (context, index) {
-                                                                    UserModel user =
-                                                                        userList[index];
-
-                                                                    List<String> timeBankIds =
-                                                                        snapshot.data[index]
-                                                                                .favoriteByTimeBank ??
-                                                                            [];
-                                                                    List<String> memberId =
-                                                                        user.favoriteByMember ?? [];
-
-                                                                    return OneToManyInstructorCard(
-                                                                      userModel: user,
-                                                                      timebankModel: timebankModel,
-                                                                      isAdmin: isAdmin,
-                                                                      //refresh: refresh,
-                                                                      currentCommunity:
-                                                                          SevaCore.of(context)
-                                                                              .loggedInUser
-                                                                              .currentCommunity,
-                                                                      loggedUserId:
-                                                                          SevaCore.of(context)
-                                                                              .loggedInUser
-                                                                              .sevaUserID,
-                                                                      isFavorite: isAdmin
-                                                                          ? timeBankIds.contains(
-                                                                              requestModel
-                                                                                  .timebankId)
-                                                                          : memberId.contains(
-                                                                              SevaCore.of(context)
-                                                                                  .loggedInUser
-                                                                                  .sevaUserID),
-                                                                      addStatus: S.of(context).add,
-                                                                      onAddClick: () {
-                                                                        setState(() {
-                                                                          selectedInstructorModel =
-                                                                              user;
-                                                                          instructorAdded = true;
-                                                                          requestModel
-                                                                                  .selectedInstructor =
-                                                                              BasicUserDetails(
-                                                                            fullname: user.fullname,
-                                                                            email: user.email,
-                                                                            photoURL: user.photoURL,
-                                                                            sevaUserID:
-                                                                                user.sevaUserID,
-                                                                          );
-                                                                        });
-                                                                      },
-                                                                    );
-                                                                  }),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      );
-                                                    }
-                                                  },
-                                                ),
-                                              ])),
-                                            ])
-                                      : Container(height: 0, width: 0),
-                              requestModel.requestType == RequestType.BORROW
-                                  ? Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        SizedBox(height: 12),
-                                        Text(
-                                          S.of(context).borrow,
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                            fontFamily: 'Europa',
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                        SizedBox(height: 10),
-                                        CupertinoSegmentedControl<int>(
-                                          unselectedColor: Colors.grey[200],
-                                          selectedColor: Theme.of(context).primaryColor,
-                                          children: {
-                                            0: Padding(
-                                              padding: EdgeInsets.only(left: 14, right: 14),
-                                              child: Text(
-                                                L.of(context).place,
-                                                style: TextStyle(fontSize: 12.0),
-                                              ),
-                                            ),
-                                            1: Padding(
-                                              padding: EdgeInsets.only(left: 14, right: 14),
-                                              child: Text(
-                                                L.of(context).items,
-                                                style: TextStyle(fontSize: 12.0),
-                                              ),
-                                            ),
-                                          },
-                                          borderColor: Colors.grey,
-                                          padding: EdgeInsets.only(left: 0.0, right: 0.0),
-                                          groupValue: roomOrTool,
-                                          onValueChanged: (int val) {
-                                            if (val != roomOrTool) {
-                                              setState(() {
-                                                if (val == 0) {
-                                                  roomOrTool = 0;
-                                                } else {
-                                                  roomOrTool = 1;
-                                                }
-                                                roomOrTool = val;
-                                              });
-                                              log('Room or Tool: ' + roomOrTool.toString());
-                                            }
-                                          },
-                                          //groupValue: sharedValue,
-                                        ),
-                                        SizedBox(height: 20),
-                                        HideWidget(
-                                          hide: roomOrTool == 0,
-                                          child: Text(
-                                            L.of(context).select_a_item_lending,
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              //fontWeight: FontWeight.bold,
-                                              fontFamily: 'Europa',
-                                              color: Colors.black,
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        HideWidget(
-                                          hide: roomOrTool == 0,
-                                          child: SelectBorrowItem(
-                                            selectedItems:
-                                                requestModel.borrowModel.requiredItems ?? {},
-                                            onSelectedItems: (items) =>
-                                                {requestModel.borrowModel.requiredItems = items},
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  : Container(),
-
-                              SizedBox(height: 30),
-
-                              OfferDurationWidget(
-                                title: "${S.of(context).request_duration} *",
-                              ),
-
-                              requestModel.requestType == RequestType.TIME
-                                  ?
-                                  // TimeRequest(snapshot, projectModelList)
-                                  TimeRequest(
-                                      requestModel: requestModel,
-                                      offer: widget.offer,
-                                      isOfferRequest: widget.isOfferRequest,
-                                      selectedAddress: selectedAddress,
-                                      location: location,
-                                      categoryWidget: categoryWidget(),
-                                      addToProjectContainer: addToProjectContainer(snapshot,
-                                          projectModelList, requestModel, widget.projectId),
-                                      onDescriptionChanged: (value) => getCategoriesFromApi(value),
-                                    )
-                                  : requestModel.requestType == RequestType.CASH
-                                      ? CashRequest(
-                                          isOfferRequest: widget.isOfferRequest,
-                                          offer: widget.offer,
-                                          requestDescription: RequestDescriptionData(
-                                              S.of(context).cash_request_data_hint_text),
-                                          projectModelList: projectModelList,
-                                          requestModel: requestModel,
-                                          categoryWidget: categoryWidget(),
-                                          addToProjectContainer: addToProjectContainer(snapshot,
-                                              projectModelList, requestModel, widget.projectId),
-                                        )
-                                      : requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST
-                                          ? TimeRequest(
-                                              requestModel: requestModel,
-                                              offer: widget.offer,
-                                              isOfferRequest: widget.isOfferRequest,
-                                              selectedAddress: selectedAddress,
-                                              location: location,
-                                              categoryWidget: categoryWidget(),
-                                              addToProjectContainer: addToProjectContainer(snapshot,
-                                                  projectModelList, requestModel, widget.projectId),
-                                              onDescriptionChanged: (value) =>
-                                                  getCategoriesFromApi(value),
-                                            )
-                                          : requestModel.requestType == RequestType.BORROW
-                                              ? BorrowRequest(
-                                                  requestDescription: RequestDescriptionData(
-                                                      S.of(context).request_descrip_hint_text),
-                                                  selectedAddress: selectedAddress,
-                                                  location: location,
-                                                  categoryWidget: categoryWidget(),
-                                                  addToProjectContainer: addToProjectContainer(
-                                                      snapshot,
-                                                      projectModelList,
-                                                      requestModel,
-                                                      widget.projectId),
-                                                )
-                                              : GoodsRequest(
-                                                  requestModel: requestModel,
-                                                  categoryWidget: categoryWidget(),
-                                                  requestDescription: RequestDescriptionData(
-                                                      S.of(context).goods_request_data_hint_text),
-                                                  addToProjectContainer: addToProjectContainer(
-                                                      snapshot,
-                                                      projectModelList,
-                                                      requestModel,
-                                                      widget.projectId),
-                                                ),
-
-                              HideWidget(
-                                hide: AppConfig.isTestCommunity,
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 8),
-                                  child: ConfigurationCheck(
-                                    actionType: 'create_virtual_request',
-                                    role: memberType(timebankModel,
-                                        SevaCore.of(context).loggedInUser.sevaUserID),
-                                    child: OpenScopeCheckBox(
-                                        infoType: InfoType.VirtualRequest,
-                                        isChecked: requestModel.virtualRequest,
-                                        checkBoxTypeLabel: CheckBoxType.type_VirtualRequest,
-                                        onChangedCB: (bool val) {
-                                          if (requestModel.virtualRequest != val) {
-                                            this.requestModel.virtualRequest = val;
-
-                                            if (!val) {
-                                              requestModel.public = false;
-                                              isPulicCheckboxVisible = false;
-                                            } else {
-                                              isPulicCheckboxVisible = true;
-                                            }
-
-                                            setState(() {});
-                                          }
-                                        }),
-                                  ),
-                                ),
-                              ),
-                              HideWidget(
-                                hide: !isPulicCheckboxVisible ||
-                                    requestModel.requestMode == RequestMode.PERSONAL_REQUEST ||
-                                    widget.timebankId == FlavorConfig.values.timebankId,
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 10),
-                                  child: TransactionsMatrixCheck(
-                                    comingFrom: widget.comingFrom,
-                                    upgradeDetails:
-                                        AppConfig.upgradePlanBannerModel.public_to_sevax_global,
-                                    transaction_matrix_type: 'create_public_request',
-                                    child: ConfigurationCheck(
-                                      actionType: 'create_public_request',
-                                      role: memberType(timebankModel,
-                                          SevaCore.of(context).loggedInUser.sevaUserID),
-                                      child: OpenScopeCheckBox(
-                                          infoType: InfoType.OpenScopeEvent,
-                                          isChecked: requestModel.public,
-                                          checkBoxTypeLabel: CheckBoxType.type_Requests,
-                                          onChangedCB: (bool val) {
-                                            if (requestModel.public != val) {
-                                              this.requestModel.public = val;
-                                              setState(() {});
-                                            }
-                                          }),
-                                    ),
-                                  ),
-                                ),
                               ),
                               Padding(
                                 padding: const EdgeInsets.symmetric(vertical: 30.0),
@@ -1006,7 +429,7 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
               getCategoriesFromApi(value);
             });
           }
-          updateExitWithConfirmationValue(context, 9, value);
+          requestUtils.updateExitWithConfirmationValue(context, 9, value);
         },
         focusNode: focusNodes[0],
         onFieldSubmitted: (v) {
@@ -1016,7 +439,7 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
         decoration: InputDecoration(
           errorMaxLines: 2,
           hintText: hintTextDesc,
-          hintStyle: hintTextStyle,
+          hintStyle: requestUtils.hintTextStyle,
         ),
         initialValue: widget.offer != null && widget.isOfferRequest
             ? getOfferDescription(
@@ -1025,6 +448,7 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
             : "",
         keyboardType: TextInputType.multiline,
         maxLines: 1,
+        // ignore: missing_return
         validator: (value) {
           if (value.isEmpty) {
             return S.of(context).validation_error_general_text;
@@ -1057,7 +481,7 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
                   ConfigurationCheck(
                     actionType: 'create_time_request',
                     role: memberType(timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
-                    child: optionRadioButton<RequestType>(
+                    child: requestUtils.optionRadioButton<RequestType>(
                       title: S.of(context).request_type_time,
                       isEnabled: !widget.isOfferRequest,
                       value: RequestType.TIME,
@@ -1076,7 +500,7 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
                     comingFrom: widget.comingFrom,
                     upgradeDetails: AppConfig.upgradePlanBannerModel.goods_request,
                     transaction_matrix_type: 'cash_goods_requests',
-                    child: optionRadioButton<RequestType>(
+                    child: requestUtils.optionRadioButton<RequestType>(
                       title: S.of(context).request_type_goods,
                       isEnabled: !(widget.isOfferRequest ?? false),
                       value: RequestType.GOODS,
@@ -1101,7 +525,7 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
                     child: ConfigurationCheck(
                       actionType: 'create_money_request',
                       role: memberType(timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
-                      child: optionRadioButton<RequestType>(
+                      child: requestUtils.optionRadioButton<RequestType>(
                         title: S.of(context).request_type_cash,
                         value: RequestType.CASH,
                         isEnabled: !widget.isOfferRequest,
@@ -1124,7 +548,7 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
                     upgradeDetails: AppConfig.upgradePlanBannerModel.onetomany_requests,
                     transaction_matrix_type: 'onetomany_requests',
                     comingFrom: widget.comingFrom,
-                    child: optionRadioButton<RequestType>(
+                    child: requestUtils.optionRadioButton<RequestType>(
                       title: S.of(context).one_to_many,
                       // TODO => sentence case
                       value: RequestType.ONE_TO_MANY_REQUEST,
@@ -1154,7 +578,7 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
                     child: ConfigurationCheck(
                       actionType: 'create_borrow_request',
                       role: memberType(timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
-                      child: optionRadioButton<RequestType>(
+                      child: requestUtils.optionRadioButton<RequestType>(
                         title: S.of(context).borrow,
                         value: RequestType.BORROW,
                         isEnabled: !widget.isOfferRequest,
@@ -1193,7 +617,7 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
               ),
               Column(
                 children: <Widget>[
-                  optionRadioButton<RequestType>(
+                  requestUtils.optionRadioButton<RequestType>(
                     title: S.of(context).request_type_time,
                     isEnabled: !widget.isOfferRequest,
                     value: RequestType.TIME,
@@ -1219,7 +643,7 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
                     child: ConfigurationCheck(
                       actionType: 'create_borrow_request',
                       role: memberType(timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
-                      child: optionRadioButton<RequestType>(
+                      child: requestUtils.optionRadioButton<RequestType>(
                         title: S.of(context).borrow,
                         value: RequestType.BORROW,
                         isEnabled: !widget.isOfferRequest,
@@ -1246,7 +670,6 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
   // get data from Category class
   List<CategoryModel> selectedCategoryModels = [];
   String categoryMode;
-  Map<String, dynamic> _selectedSkillsMap = {};
 
   void updateInformation(List<CategoryModel> category) {
     if (category != null && category.length > 0) {
@@ -1416,16 +839,6 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
     );
   }
 
-  void _search(String queryString) {
-    if (queryString.length == 3) {
-      setState(() {
-        searchOnChange.add(queryString);
-      });
-    } else {
-      searchOnChange.add(queryString);
-    }
-  }
-
   bool isFromRequest({String projectId}) {
     return projectId == null || projectId.isEmpty || projectId == "";
   }
@@ -1540,21 +953,23 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
     }
 
     if (_formKey.currentState.validate()) {
+      FocusScope.of(context).unfocus();
       // validate request start and end date
 
       if (requestModel.requestStart == 0 || requestModel.requestEnd == 0) {
-        showDialogForTitle(dialogTitle: S.of(context).validation_error_no_date, context: context);
+        requestUtils.showDialogForTitle(
+            dialogTitle: S.of(context).validation_error_no_date, context: context);
         return;
       }
 
       if (OfferDurationWidgetState.starttimestamp == OfferDurationWidgetState.endtimestamp) {
-        showDialogForTitle(
+        requestUtils.showDialogForTitle(
             dialogTitle: S.of(context).validation_error_same_start_date_end_date, context: context);
         return;
       }
 
       if (OfferDurationWidgetState.starttimestamp > OfferDurationWidgetState.endtimestamp) {
-        showDialogForTitle(
+        requestUtils.showDialogForTitle(
             dialogTitle: S.of(context).validation_error_end_date_greater, context: context);
         return;
       }
@@ -1562,7 +977,8 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
       if (requestModel.requestType == RequestType.GOODS &&
           (requestModel.goodsDonationDetails.requiredGoods == null ||
               requestModel.goodsDonationDetails.requiredGoods.isEmpty)) {
-        showDialogForTitle(dialogTitle: S.of(context).goods_validation, context: context);
+        requestUtils.showDialogForTitle(
+            dialogTitle: S.of(context).goods_validation, context: context);
         return;
       }
       if (requestModel.requestType == RequestType.BORROW &&
@@ -1570,14 +986,14 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
           &&
           (requestModel.borrowModel.requiredItems == null ||
               requestModel.borrowModel.requiredItems.isEmpty)) {
-        showDialogForTitle(dialogTitle: L.of(context).items_validation, context: context);
+        requestUtils.showDialogForTitle(
+            dialogTitle: L.of(context).items_validation, context: context);
         return;
       }
       communityModel = await FirestoreManager.getCommunityDetailsByCommunityId(
         communityId: SevaCore.of(context).loggedInUser.currentCommunity,
       );
       if (widget.isOfferRequest && widget.userModel != null) {
-
         //TODO
         requestModel.participantDetails = {};
         requestModel.participantDetails[widget.userModel.email] = AcceptorModel(
@@ -1595,7 +1011,7 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
           (requestModel.requestType == RequestType.TIME ||
               requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST)) {
         if (requestModel.recurringDays.length == 0) {
-          showDialogForTitle(
+          requestUtils.showDialogForTitle(
               dialogTitle: S.of(context).validation_error_empty_recurring_days, context: context);
           return;
         }
@@ -1620,7 +1036,8 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
           (requestModel.selectedInstructor.toMap().isEmpty ||
               requestModel.selectedInstructor == null ||
               instructorAdded == false)) {
-        showDialogForTitle(dialogTitle: S.of(context).select_a_speaker_dialog, context: context);
+        requestUtils.showDialogForTitle(
+            dialogTitle: S.of(context).select_a_speaker_dialog, context: context);
         return;
       }
 
@@ -1656,10 +1073,11 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
             communityId: timebankModel.communityId,
           );
           if (!onBalanceCheckResult.hasSuffiientCredits) {
-            showInsufficientBalance(onBalanceCheckResult.credits, context);
+            requestUtils.showInsufficientBalance(onBalanceCheckResult.credits, context);
             await sendInsufficentNotificationToAdmin(
-              creditsNeeded: onBalanceCheckResult.credits,
-            );
+                creditsNeeded: onBalanceCheckResult.credits,
+                context: context,
+                timebankModel: timebankModel);
             return;
           }
           break;
@@ -1729,7 +1147,7 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
           requestModel.allowedCalenderUsers = [];
         }
 
-        await createProjectOneToManyRequest(
+        await requestUtils.createProjectOneToManyRequest(
           context: context,
           requestModel: requestModel,
           projectModel: widget.projectModel,
@@ -1751,14 +1169,20 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
                 communityId: requestModel.communityId,
                 timebankId: requestModel.timebankId,
                 sevaUserId: selectedInstructorModel.sevaUserID,
-                userEmail: selectedInstructorModel.email);
+                userEmail: selectedInstructorModel.email,
+                context: context,
+                requestModel: requestModel);
           } else {
             // send sevax global notification for user who is not part of the community for this request
             speakerNotificationDocRef = await sendNotificationToMemberOneToManyRequest(
                 communityId: FlavorConfig.values.timebankId,
                 timebankId: FlavorConfig.values.timebankId,
                 sevaUserId: selectedInstructorModel.sevaUserID,
-                userEmail: selectedInstructorModel.email);
+                userEmail: selectedInstructorModel.email,
+                context: context,
+                requestModel: requestModel);
+
+            //Sending only if instructor is not part of the community of the request
             await sendMailToInstructor(
                 senderEmail: 'noreply@sevaexchange.com', //requestModel.email,
                 receiverEmail: selectedInstructorModel.email,
@@ -1782,9 +1206,9 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
               speakerNotificationDocRef);
         }
       } else {
-        linearProgressForCreatingRequest();
+        requestUtils.linearProgressForCreatingRequest(context);
 
-        await createProjectOneToManyRequest(
+        await requestUtils.createProjectOneToManyRequest(
             context: context,
             requestModel: requestModel,
             projectModel: widget.projectModel,
@@ -1805,14 +1229,20 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
                 communityId: requestModel.communityId,
                 timebankId: requestModel.timebankId,
                 sevaUserId: selectedInstructorModel.sevaUserID,
-                userEmail: selectedInstructorModel.email);
+                userEmail: selectedInstructorModel.email,
+                context: context,
+                requestModel: requestModel);
           } else {
             // send sevax global notification for user who is not part of the community for this request
             speakerNotificationDocRef = await sendNotificationToMemberOneToManyRequest(
                 communityId: FlavorConfig.values.timebankId,
                 timebankId: FlavorConfig.values.timebankId,
                 sevaUserId: selectedInstructorModel.sevaUserID,
-                userEmail: selectedInstructorModel.email);
+                userEmail: selectedInstructorModel.email,
+                context: context,
+                requestModel: requestModel);
+
+            //Sending only if instructor is not part of the community of the request
             await sendMailToInstructor(
                 senderEmail: 'noreply@sevaexchange.com', //requestModel.email,
                 receiverEmail: selectedInstructorModel.email,
@@ -1825,7 +1255,12 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
           }
         }
 
-        eventsIdsArr = await _writeToDB();
+        eventsIdsArr = await writeToDB(
+          context: context,
+          offer: widget.offer,
+          requestModel: requestModel,
+          timebankModel: timebankModel,
+        );
         await _updateProjectModel();
 
         //below is to add speaker to inivted members when request is created
@@ -1836,8 +1271,9 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
               selectedInstructorModel.email,
               speakerNotificationDocRef);
         }
+        Navigator.of(context, rootNavigator: true).pop();
 
-        Navigator.pop(dialogContext);
+        // Navigator.pop(dialogContext);
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -1856,85 +1292,18 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
     }
   }
 
-  Future<DocumentReference> sendNotificationToMemberOneToManyRequest(
-      {String communityId, String sevaUserId, String timebankId, String userEmail}) async {
-
-    NotificationsModel notification = NotificationsModel(
-        id: utils.Utils.getUuid(),
-        timebankId: FlavorConfig.values.timebankId,
-        data: requestModel.toMap(),
-        isRead: false,
-        isTimebankNotification: false,
-        type: NotificationType.OneToManyRequestAccept,
-        communityId: communityId,
-        senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
-        //BlocProvider.of<AuthBloc>(context).user.sevaUserID,
-        targetUserId: sevaUserId);
-
-    await CollectionRef.users
-        .doc(userEmail)
-        .collection("notifications")
-        .doc(notification.id)
-        .set(notification.toMap());
-
-    return speakerNotificationDocRef =
-        CollectionRef.users.doc(userEmail).collection("notifications").doc(notification.id);
-  }
-
-  Future updateInvitedSpeakerForRequest(String requestID, String sevaUserId, String email,
-      DocumentReference speakerNotificationDocRef) async {
-    var batch = CollectionRef.batch;
-
-    batch.update(CollectionRef.requests.doc(requestID), {
-      'invitedUsers': FieldValue.arrayUnion([sevaUserId]),
-      'speakerInviteNotificationDocRef': speakerNotificationDocRef,
-    });
-
-    batch.update(
-      CollectionRef.users.doc(email),
-      {
-        'invitedRequests': FieldValue.arrayUnion([requestID])
-      },
-    );
-
-    await batch.commit();
-  }
-
-//Sending only if instructor is not part of the community of the request
-  Future<bool> sendMailToInstructor({
-    String senderEmail,
-    String receiverEmail,
-    String communityName,
-    String requestName,
-    String requestCreatorName,
-    String receiverName,
-    var startDate,
-    var endDate,
-  }) async {
-    return await SevaMailer.createAndSendEmail(
-        mailContent: MailContent.createMail(
-            mailSender: senderEmail,
-            mailReciever: receiverEmail,
-            mailSubject: requestCreatorName + ' from ' + communityName + ' has invited you',
-            mailContent: getMailContentTemplate(
-                requestName: requestName,
-                requestCreatorName: requestCreatorName,
-                receiverName: receiverName,
-                communityName: communityName,
-                startDate: startDate)));
-  }
-
   void continueCreateRequest({BuildContext confirmationDialogContext}) async {
-    linearProgressForCreatingRequest();
+    requestUtils.linearProgressForCreatingRequest(context);
 
-    List<String> resVar = await _writeToDB();
+    List<String> resVar = await writeToDB(
+        context: context,
+        timebankModel: timebankModel,
+        requestModel: requestModel,
+        offer: widget.offer);
     eventsIdsArr = resVar;
     await _updateProjectModel();
     Navigator.pop(dialogContext);
 
-    // if (resVar.length == 0 && requestModel.requestType != RequestType.BORROW) {
-    //   showInsufficientBalance();
-    // }
     if (confirmationDialogContext != null) {
       Navigator.pop(confirmationDialogContext);
     }
@@ -1945,50 +1314,6 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
     }
   }
 
-  void linearProgressForCreatingRequest() {
-    showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (createDialogContext) {
-          dialogContext = createDialogContext;
-          return AlertDialog(
-            title: Text(S.of(context).creating_request),
-            content: LinearProgressIndicator(),
-          );
-        });
-  }
-
-  Future<List<String>> _writeToDB() async {
-    if (requestModel.id == null) return [];
-
-    List<String> resultVar = [];
-    if (!requestModel.isRecurring) {
-      await FirestoreManager.createRequest(requestModel: requestModel);
-      //create invitation if its from offer only for cash and goods
-      try {
-        await OfferInvitationManager.handleInvitationNotificationForRequestCreatedFromOffer(
-          currentCommunity: SevaCore.of(context).loggedInUser.currentCommunity,
-          offerModel: widget.offer,
-          requestModel: requestModel,
-          senderSevaUserID: requestModel.sevaUserId,
-          timebankModel: timebankModel,
-        );
-      } on Exception catch (exception) {
-        //Log to crashlytics
-      }
-
-      resultVar.add(requestModel.id);
-      return resultVar;
-    } else {
-      resultVar = await FirestoreManager.createRecurringEvents(
-        requestModel: requestModel,
-        communityId: SevaCore.of(context).loggedInUser.currentCommunity,
-        timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
-      );
-      return resultVar;
-    }
-  }
-
   Future _updateProjectModel() async {
     if (widget.projectId.isNotEmpty && !requestModel.isRecurring) {
       ProjectModel projectModel = widget.projectModel;
@@ -1996,38 +1321,5 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
       projectModel.pendingRequests.add(requestModel.id);
       await FirestoreManager.updateProject(projectModel: projectModel);
     }
-  }
-
-  void sendInsufficentNotificationToAdmin({
-    double creditsNeeded,
-  }) async {
-    log('creditsNeeded:  ' + creditsNeeded.toString());
-
-    UserInsufficentCreditsModel userInsufficientModel = UserInsufficentCreditsModel(
-      senderName: SevaCore.of(context).loggedInUser.fullname,
-      senderId: SevaCore.of(context).loggedInUser.sevaUserID,
-      senderPhotoUrl: SevaCore.of(context).loggedInUser.photoURL,
-      timebankId: timebankModel.id,
-      timebankName: timebankModel.name,
-      creditsNeeded: creditsNeeded,
-    );
-
-    NotificationsModel notification = NotificationsModel(
-        id: utils.Utils.getUuid(),
-        timebankId: timebankModel.id,
-        data: userInsufficientModel.toMap(),
-        isRead: false,
-        type: NotificationType.TYPE_MEMBER_HAS_INSUFFICENT_CREDITS,
-        communityId: timebankModel.communityId,
-        senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
-        targetUserId: timebankModel.creatorId);
-
-    await CollectionRef.timebank
-        .doc(timebankModel.id)
-        .collection("notifications")
-        .doc(notification.id)
-        .set((notification..isTimebankNotification = true).toMap());
-
-    log('writtent to DB');
   }
 }

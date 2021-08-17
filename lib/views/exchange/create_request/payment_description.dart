@@ -16,6 +16,8 @@ class PaymentDescription extends StatefulWidget {
 
 class _PaymentDescriptionState extends State<PaymentDescription> {
   final profanityDetector = ProfanityDetector();
+  RequestUtils requestUtils = RequestUtils();
+
 
   @override
   Widget build(BuildContext context) {
@@ -126,7 +128,7 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
       TextFormField(
         autovalidateMode: AutovalidateMode.onUserInteraction,
         onChanged: (value) {
-          updateExitWithConfirmationValue(context, 3, value);
+          requestUtils.updateExitWithConfirmationValue(context, 3, value);
         },
         textInputAction: TextInputAction.next,
         keyboardType: TextInputType.multiline,
@@ -155,7 +157,7 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
       TextFormField(
         autovalidateMode: AutovalidateMode.onUserInteraction,
         onChanged: (value) {
-          updateExitWithConfirmationValue(context, 4, value);
+          requestUtils.updateExitWithConfirmationValue(context, 4, value);
         },
         textInputAction: TextInputAction.next,
         keyboardType: TextInputType.multiline,
@@ -185,7 +187,7 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
         maxLength: 30,
         autovalidateMode: AutovalidateMode.onUserInteraction,
         onChanged: (value) {
-          updateExitWithConfirmationValue(context, 5, value);
+          requestUtils.updateExitWithConfirmationValue(context, 5, value);
         },
         textInputAction: TextInputAction.next,
         keyboardType: TextInputType.multiline,
@@ -215,7 +217,7 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
         maxLength: 30,
         autovalidateMode: AutovalidateMode.onUserInteraction,
         onChanged: (value) {
-          updateExitWithConfirmationValue(context, 6, value);
+          requestUtils.updateExitWithConfirmationValue(context, 6, value);
         },
         textInputAction: TextInputAction.next,
         keyboardType: TextInputType.multiline,
@@ -239,13 +241,13 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
       TextFormField(
         autovalidateMode: AutovalidateMode.onUserInteraction,
         onChanged: (value) {
-          updateExitWithConfirmationValue(context, 7, value);
+          requestUtils.updateExitWithConfirmationValue(context, 7, value);
         },
         textInputAction: TextInputAction.next,
         decoration: InputDecoration(
           errorMaxLines: 2,
           hintText: S.of(context).request_payment_descriptionZelle_inputhint,
-          hintStyle: hintTextStyle,
+          hintStyle: requestUtils.hintTextStyle,
         ),
         // initialValue: widget.offer != null && widget.isOfferRequest
         //     ? getOfferDescription(
@@ -285,13 +287,13 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
       TextFormField(
         autovalidateMode: AutovalidateMode.onUserInteraction,
         onChanged: (value) {
-          updateExitWithConfirmationValue(context, 8, value);
+          requestUtils.updateExitWithConfirmationValue(context, 8, value);
         },
         textInputAction: TextInputAction.next,
         decoration: InputDecoration(
           errorMaxLines: 2,
           hintText: 'Ex: Paypal ID (phone or email)',
-          hintStyle: hintTextStyle,
+          hintStyle: requestUtils.hintTextStyle,
         ),
         keyboardType: TextInputType.emailAddress,
         maxLines: 1,
@@ -322,7 +324,7 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
         decoration: InputDecoration(
           errorMaxLines: 2,
           hintText: S.of(context).venmo_hint,
-          hintStyle: hintTextStyle,
+          hintStyle: requestUtils.hintTextStyle,
         ),
         keyboardType: TextInputType.emailAddress,
         maxLines: 1,
@@ -346,13 +348,13 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
       TextFormField(
         autovalidateMode: AutovalidateMode.onUserInteraction,
         onChanged: (value) {
-          updateExitWithConfirmationValue(context, 7, value);
+          requestUtils.updateExitWithConfirmationValue(context, 7, value);
         },
         textInputAction: TextInputAction.next,
         decoration: InputDecoration(
           errorMaxLines: 2,
           hintText: 'Ex: Swift ID',
-          hintStyle: hintTextStyle,
+          hintStyle: requestUtils.hintTextStyle,
         ),
         // initialValue: widget.offer != null && widget.isOfferRequest
         //     ? getOfferDescription(
@@ -396,7 +398,7 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
         decoration: InputDecoration(
           errorMaxLines: 2,
           hintText: S.of(context).other_payment_title_hint,
-          hintStyle: hintTextStyle,
+          hintStyle: requestUtils.hintTextStyle,
         ),
         keyboardType: TextInputType.multiline,
         maxLines: 1,
@@ -438,7 +440,7 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
         decoration: InputDecoration(
           errorMaxLines: 2,
           hintText: S.of(context).other_payment_details_hint,
-          hintStyle: hintTextStyle,
+          hintStyle: requestUtils.hintTextStyle,
         ),
         validator: (value) {
           if (value.isEmpty || value == null) {
