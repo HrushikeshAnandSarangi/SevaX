@@ -21,6 +21,8 @@ import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
+import 'lending_offer_participants.dart';
+
 class BorrowerAcceptLendingOffer extends StatefulWidget {
   final String timeBankId;
   final OfferModel offerModel;
@@ -157,7 +159,7 @@ class _BorrowerAcceptLendingOfferState
                   LendingType.PLACE) {
                 await LendingOffersRepo.storeAcceptorDataLendingOffer(
                     model: widget.offerModel,
-                    borrowAcceptorModel: BorrowAcceptorModel(
+                    lendingOfferAcceptorModel: LendingOfferAcceptorModel(
                         id: Utils.getUuid(),
                         communityId:
                             SevaCore.of(context).loggedInUser.currentCommunity,
@@ -189,7 +191,7 @@ class _BorrowerAcceptLendingOfferState
               } else {
                 await LendingOffersRepo.storeAcceptorDataLendingOffer(
                     model: widget.offerModel,
-                    borrowAcceptorModel: BorrowAcceptorModel(
+                    lendingOfferAcceptorModel: LendingOfferAcceptorModel(
                       id: Utils.getUuid(),
                       communityId:
                           SevaCore.of(context).loggedInUser.currentCommunity,

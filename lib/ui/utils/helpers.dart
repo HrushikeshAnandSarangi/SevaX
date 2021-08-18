@@ -24,7 +24,8 @@ bool isPrimaryTimebank({@required String parentTimebankId}) {
 }
 
 handleVolunterFeedbackForTrustWorthynessNRealiablityScore(
-    FeedbackType type, results, RequestModel model, UserModel user) async {
+    FeedbackType type, results, RequestModel model, UserModel user,
+    {OfferModel offerModel}) async {
   /* Here are the questions that should be asked (replacing the current ones)
     How likely are you to recommend this person / service to a friend, on a scale between 0-10 where 0 = Not at all Likely and 10 = Extremely Likely
 
@@ -115,9 +116,36 @@ handleVolunterFeedbackForTrustWorthynessNRealiablityScore(
           ratingCal(temp['0'] + temp['1']), user.reliabilityscore),
       'trustworthinessscore': averageReview(user.totalReviews,
           ratingCal(temp['0'] + temp['2']), user.trustworthinessscore)
-    }, SetOptions(merge: true)).onError((error, stackTrace) => logger.e("ERROR FOR_BORROW_REQUEST_LENDER"));
+    }, SetOptions(merge: true)).onError(
+        (error, stackTrace) => logger.e("ERROR FOR_BORROW_REQUEST_LENDER"));
     logger.i("## COMPLETED FOR_BORROW_REQUEST_LENDER");
-
+  }
+  if (type == FeedbackType.FOR_LENDING_OFFER_BORROWER) {
+    var temp = results['ratings'];
+    logger.d('FOR_BORROW_REQUEST_BORROWER RESULTS:' + results.toString());
+    await CollectionRef.users
+        .doc(offerModel.lendingOfferDetailsModel.approvedUsers.first)
+        .set({
+      'totalReviews': FieldValue.increment(1),
+      'reliabilityscore': averageReview(user.totalReviews,
+          ratingCal(temp['0'] + temp['1']), user.reliabilityscore),
+      'trustworthinessscore': averageReview(user.totalReviews,
+          ratingCal(temp['0'] + temp['2']), user.trustworthinessscore)
+    }, SetOptions(merge: true));
+    logger.i("## COMPLETED FOR_BORROW_REQUEST_BORROWER");
+  }
+  if (type == FeedbackType.FOR_LENDING_OFFER_LENDER) {
+    var temp = results['ratings'];
+    logger.e('FOR_BORROW_REQUEST_LENDER RESULTS:' + results.toString());
+    await CollectionRef.users.doc(offerModel.email).set({
+      'totalReviews': FieldValue.increment(1),
+      'reliabilityscore': averageReview(user.totalReviews,
+          ratingCal(temp['0'] + temp['1']), user.reliabilityscore),
+      'trustworthinessscore': averageReview(user.totalReviews,
+          ratingCal(temp['0'] + temp['2']), user.trustworthinessscore)
+    }, SetOptions(merge: true)).onError(
+        (error, stackTrace) => logger.e("ERROR FOR_BORROW_REQUEST_LENDER"));
+    logger.i("## COMPLETED FOR_BORROW_REQUEST_LENDER");
   }
 }
 

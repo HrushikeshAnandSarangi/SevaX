@@ -1322,4 +1322,20 @@ class L {
   String get items_taken => "Item(s) taken";
   String get arrived => "Arrived";
   String get departed => "Departed";
+  String get items_collected_alert =>
+      "Items to be collected and returned on:  ";
+  String get items_collected_alert_two => "You have collected item(s) from";
+  String get please_return_by => "Please return by: ";
+  String get items_returned_to_lender =>
+      "You have returned the item(s) to the lender, ";
+  String get exchanged_completed => "Exchange completed";
+  String get your_departure_date_is => "Your departure date is:";
+  String get you_departed_on => "You departed on:";
+  String get arrival => "Arrival";
+  String get departure => "Departure";
+  String get notes => "Notes";
+  String get share_feedback_place =>
+      "You can leave a appreciation review for your host.";
+  String get share_feedback_item =>
+      "Please provide your valuable feedback about your exchange.";
 }

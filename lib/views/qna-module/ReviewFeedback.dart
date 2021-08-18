@@ -20,6 +20,8 @@ enum FeedbackType {
   FOR_BORROW_REQUEST_LENDER,
   FOR_BORROW_REQUEST_BORROWER,
   FOR_ONE_TO_MANY_REQUEST_ATTENDEE,
+  FOR_LENDING_OFFER_LENDER,
+  FOR_LENDING_OFFER_BORROWER,
 }
 
 class ReviewFeedback extends StatefulWidget {
@@ -136,6 +138,12 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
         return getFeedbackQuestionsForLender(languageCode);
 
       case FeedbackType.FOR_BORROW_REQUEST_BORROWER:
+        return getFeedbackQuestionsForBorrower(languageCode);
+
+      case FeedbackType.FOR_LENDING_OFFER_LENDER:
+        return getFeedbackQuestionsForLender(languageCode);
+
+      case FeedbackType.FOR_LENDING_OFFER_BORROWER:
         return getFeedbackQuestionsForBorrower(languageCode);
 
       case FeedbackType.FOR_ONE_TO_MANY_REQUEST_ATTENDEE:

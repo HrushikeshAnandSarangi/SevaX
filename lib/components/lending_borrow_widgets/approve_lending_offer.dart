@@ -12,6 +12,7 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/borrow_accpetor_model.dart';
 import 'package:sevaexchange/repositories/lending_offer_repo.dart';
 import 'package:sevaexchange/ui/screens/borrow_agreement/borrow_agreement_pdf.dart';
+import 'package:sevaexchange/ui/screens/offers/pages/lending_offer_participants.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/time_offer_participant.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
@@ -25,11 +26,11 @@ import '../../labels.dart';
 
 class ApproveLendingOffer extends StatefulWidget {
   final OfferModel offerModel;
-  BorrowAcceptorModel borrowAcceptorModel;
+  LendingOfferAcceptorModel lendingOfferAcceptorModel;
 
   ApproveLendingOffer({
     this.offerModel,
-    this.borrowAcceptorModel,
+    this.lendingOfferAcceptorModel,
   });
 
   @override
@@ -173,7 +174,7 @@ class _ApproveLendingOfferState extends State<ApproveLendingOffer> {
             ),
             onPressed: () async {
               LendingOffersRepo.updateOfferAcceptorAction(
-                borrowAcceptorModel: widget.borrowAcceptorModel,
+                lendingOfferAcceptorModel: widget.lendingOfferAcceptorModel,
                 action: OfferAcceptanceStatus.REJECTED,
                 model: widget.offerModel,
               ).then((value) => Navigator.of(context).pop());
@@ -202,7 +203,7 @@ class _ApproveLendingOfferState extends State<ApproveLendingOffer> {
                     await BorrowAgreementPdf().borrowAgreementPdf(
                   context,
                   null,
-                  widget.borrowAcceptorModel.acceptorName,
+                  widget.lendingOfferAcceptorModel.acceptorName,
                   widget.offerModel.lendingOfferDetailsModel
                       .lendingOfferAgreementName,
                   true,
@@ -232,14 +233,18 @@ class _ApproveLendingOfferState extends State<ApproveLendingOffer> {
 
                 await LendingOffersRepo.approveLendingOffer(
                         model: widget.offerModel,
-                        borrowAcceptorModel: widget.borrowAcceptorModel,
-                        lendingOfferApprovedAgreementLink: agreementLink ?? '')
+                        lendingOfferAcceptorModel:
+                            widget.lendingOfferAcceptorModel,
+                        lendingOfferApprovedAgreementLink: agreementLink ?? '',
+                        additionalInstructionsText: additionalInstructionsText)
                     .then((value) => Navigator.of(context).pop());
               } else {
                 await LendingOffersRepo.approveLendingOffer(
                         model: widget.offerModel,
-                        borrowAcceptorModel: widget.borrowAcceptorModel,
-                        lendingOfferApprovedAgreementLink: '')
+                        lendingOfferAcceptorModel:
+                            widget.lendingOfferAcceptorModel,
+                        lendingOfferApprovedAgreementLink: '',
+                        additionalInstructionsText: additionalInstructionsText)
                     .then((value) => Navigator.of(context).pop());
               }
             },
@@ -269,7 +274,7 @@ class _ApproveLendingOfferState extends State<ApproveLendingOffer> {
               backgroundColor: Colors.white,
               radius: 42,
               backgroundImage: CachedNetworkImageProvider(
-                widget.borrowAcceptorModel.acceptorphotoURL ??
+                widget.lendingOfferAcceptorModel.acceptorphotoURL ??
                     'https://www.pngitem.com/pimgs/m/404-4042710_circle-profile-picture-png-transparent-png.png',
               ),
             ),
@@ -277,7 +282,7 @@ class _ApproveLendingOfferState extends State<ApproveLendingOffer> {
             Container(
               child: Expanded(
                 child: Text(
-                  widget.borrowAcceptorModel.acceptorName ??
+                  widget.lendingOfferAcceptorModel.acceptorName ??
                       'Acceptor', //borrower name here from offer model
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                   softWrap: true,

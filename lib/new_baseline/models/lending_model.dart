@@ -91,6 +91,7 @@ enum LendingOfferStatus {
   CHECKED_OUT,
   ITEMS_COLLECTED,
   ITEMS_RETURNED,
+  REVIEWED,
 }
 
 extension ReadableLendingOfferStatus on LendingOfferStatus {
@@ -112,6 +113,8 @@ extension ReadableLendingOfferStatus on LendingOfferStatus {
         return 'ITEMS_COLLECTED';
       case LendingOfferStatus.ITEMS_RETURNED:
         return 'ITEMS_RETURNED';
+      case LendingOfferStatus.REVIEWED:
+        return 'REVIEWED';
 
       default:
         return 'REQUESTED';
@@ -136,6 +139,8 @@ extension ReadableLendingOfferStatus on LendingOfferStatus {
       case 'ITEMS_RETURNED':
         return LendingOfferStatus.REJECTED;
       case 'REJECTED':
+        return LendingOfferStatus.REVIEWED;
+      case 'REVIEWED':
 
       default:
         return LendingOfferStatus.ACCEPTED;

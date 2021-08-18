@@ -53,17 +53,12 @@ class OfferBloc extends BlocBase {
           await getCompletedMembers(associatedOfferId: offerModel.id);
 
       List<TimeOfferParticipantsModel> offer = [];
-      List<LendingOfferParticipantsModel> offer2 = []; //TEMP TO BE DELETED
       List<TimeOfferParticipantsModel> completedParticipants = [];
       snap.docs.forEach((DocumentSnapshot doc) {
-        TimeOfferParticipantsModel model =
-            TimeOfferParticipantsModel.fromJSON(doc.data());
-        LendingOfferParticipantsModel model2 =
-            LendingOfferParticipantsModel.fromJSON(
-                doc.data()); //TEMP TO BE DELETED
+        TimeOfferParticipantsModel model = TimeOfferParticipantsModel.fromJSON(
+            doc.data()); //TEMP TO BE DELETED
         model.id = doc.id;
         offer.add(model);
-        offer2.add(model2); //TEMP TO BE DELETED
 
         if (completedParticipantsFromTransactions
             .contains(model.participantDetails.sevauserid)) {

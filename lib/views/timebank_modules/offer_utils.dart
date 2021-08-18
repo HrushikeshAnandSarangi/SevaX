@@ -11,11 +11,14 @@ import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart'
 import 'package:sevaexchange/ui/screens/offers/pages/offer_details_router.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/custom_dialog.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
+import 'package:sevaexchange/ui/utils/helpers.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/svea_credits_manager.dart';
+import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 import '../../flavor_config.dart';
@@ -346,4 +349,47 @@ void updateOffer({
       ).toMap()
     },
   );
+}
+
+void handleFeedBackNotificationLendingOffer(
+    {BuildContext context,
+    OfferModel offerModel,
+    String notificationId,
+    String email,
+    FeedbackType feedbackType}) async {
+  Map results = await Navigator.of(context).push(
+    MaterialPageRoute(
+      builder: (context) => ReviewFeedback(
+        feedbackType:
+            feedbackType, //if new questions then have to change this and update
+      ),
+    ),
+  );
+
+  if (results != null && results.containsKey('selection')) {
+    CollectionRef.reviews.add(
+      {
+        "reviewer": SevaCore.of(context).loggedInUser.email,
+        "reviewed": feedbackType == FeedbackType.FOR_LENDING_OFFER_LENDER
+            ? offerModel.email
+            : offerModel.lendingOfferDetailsModel.approvedUsers.first,
+        "ratings": results['selection'],
+        "requestId": "testId",
+        "comments": results['didComment'] ? results['comment'] : "No comments",
+        'liveMode': !AppConfig.isTestCommunity,
+      },
+    );
+
+    await handleVolunterFeedbackForTrustWorthynessNRealiablityScore(
+        feedbackType, results, null, SevaCore.of(context).loggedInUser,
+        offerModel: offerModel);
+/*
+      await sendMessageOfferCreator(
+          loggedInUser: SevaCore.of(context).loggedInUser,
+          message: results['didComment'] ? results['comment'] : "No comments",
+          creatorId: requestModel.sevaUserId,
+          offerTitle: requestModel.title,
+          isFromOfferRequest: requestModel.isFromOfferRequest);*/
+    //NotificationsRepository.readUserNotification(notificationId, email);
+  }
 }

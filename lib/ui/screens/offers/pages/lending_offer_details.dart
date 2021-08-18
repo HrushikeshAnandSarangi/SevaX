@@ -8,22 +8,30 @@ import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/new_baseline/models/borrow_accpetor_model.dart';
 import 'package:sevaexchange/new_baseline/models/lending_item_model.dart';
+import 'package:sevaexchange/new_baseline/models/lending_model.dart';
 import 'package:sevaexchange/new_baseline/models/lending_place_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/repositories/lending_offer_repo.dart';
+import 'package:sevaexchange/repositories/notifications_repository.dart';
 import 'package:sevaexchange/ui/screens/borrow_agreement/borrow_agreement_pdf.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_page_base_bloc.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/lending_item_card_widget.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/lending_place_card_widget.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/lending_place_details_widget.dart';
+import 'package:sevaexchange/ui/screens/request/pages/borrow_request_participants.dart';
+import 'package:sevaexchange/ui/screens/request/widgets/cutom_chip.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/helpers/configuration_check.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/custom_list_tile.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
@@ -32,6 +40,7 @@ import 'package:sevaexchange/utils/utils.dart' as utils;
 import '../../../../labels.dart';
 import 'borrower_accept_lending_offer.dart';
 import 'individual_offer.dart';
+import 'lending_offer_participants.dart';
 
 class LendingOfferDetails extends StatefulWidget {
   final OfferModel offerModel;
@@ -259,7 +268,12 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                         SizedBox(
                           height: 10,
                         ),
-                        LendingOfferProgressWidget(),
+                        Offstage(
+                            offstage: !widget.offerModel
+                                .lendingOfferDetailsModel.approvedUsers
+                                .contains(
+                                    SevaCore.of(context).loggedInUser.email),
+                            child: LendingOfferProgressWidget()),
                         SizedBox(
                           height: 10,
                         ),
@@ -304,6 +318,7 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
     bool isCreator = widget.offerModel.sevaUserId == userId;
     canDeleteOffer =
         isCreator && offerAcceptors.length == 0 && approvedUsers.length == 0;
+
     if (lendingType == LendingType.PLACE) {
       return Container(
         decoration: BoxDecoration(color: Colors.white54, boxShadow: [
@@ -382,7 +397,7 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                   Offstage(offstage: !isCreator, child: editLendingOffer()),
                   Offstage(
                       offstage: isCreator,
-                      child: applyWidget(isAccepted: isAccepted)),
+                      child: ActionButton(isAccepted: isAccepted)),
                 ],
               ),
             ],
@@ -467,7 +482,7 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                   Offstage(offstage: !isCreator, child: editLendingOffer()),
                   Offstage(
                       offstage: isCreator,
-                      child: applyWidget(isAccepted: isAccepted)),
+                      child: ActionButton(isAccepted: isAccepted)),
                 ],
               ),
             ],
@@ -510,7 +525,7 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
     );
   }
 
-  Widget applyWidget({bool isAccepted}) {
+  Widget ActionButton({bool isAccepted}) {
     return Container(
       width: 110,
       height: 32,
@@ -589,23 +604,353 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
   }
 
   Widget LendingOfferProgressWidget() {
-    return Container(
-      padding: EdgeInsets.all(5),
-      decoration: BoxDecoration(color: Colors.white54, boxShadow: [
-        BoxShadow(
-          color: Colors.grey[300],
-        )
-      ]),
-      width: MediaQuery.of(context).size.width,
-      height: 240,
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text(S.of(context).request_approved_by_msg,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            )),
-      ]),
-    );
+    String title = 'Title';
+    String subTitle = '';
+    String additionalInstruction = '';
+    String dateText = '';
+    String dateSubText = '';
+    Widget reviewWidget = Container();
+
+    return FutureBuilder<LendingOfferAcceptorModel>(
+        future: LendingOffersRepo.getApprovedModel(
+            acceptorEmail: SevaCore.of(context).loggedInUser.email,
+            offerId: widget.offerModel.id),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return LoadingIndicator();
+          }
+          if (snapshot.data == null) {
+            return Container();
+          }
+          LendingOfferAcceptorModel lendingOfferAcceptorModel = snapshot.data;
+          if (lendingType == LendingType.PLACE) {
+            if (lendingOfferAcceptorModel.status ==
+                LendingOfferStatus.APPROVED) {
+              title = S.of(context).request_approved_by_msg +
+                  ' ' +
+                  widget.offerModel.fullName;
+              subTitle = ' ';
+              dateText = L.of(context).arrival +
+                  ':' +
+                  DateFormat('EEEEEE, MMMM dd yyyy',
+                          Locale(getLangTag()).toLanguageTag())
+                      .format(
+                    getDateTimeAccToUserTimezone(
+                        dateTime: DateTime.fromMillisecondsSinceEpoch(widget
+                            .offerModel.lendingOfferDetailsModel.startDate),
+                        timezoneAbb:
+                            SevaCore.of(context).loggedInUser.timezone),
+                  );
+              dateSubText = L.of(context).departure +
+                  ':' +
+                  DateFormat.MMMd(getLangTag()).add_jm().format(
+                        getDateTimeAccToUserTimezone(
+                          dateTime: DateTime.fromMillisecondsSinceEpoch(widget
+                              .offerModel.lendingOfferDetailsModel.endDate),
+                          timezoneAbb:
+                              SevaCore.of(context).loggedInUser.timezone,
+                        ),
+                      );
+              additionalInstruction =
+                  lendingOfferAcceptorModel.additionalInstructions != null
+                      ? lendingOfferAcceptorModel.additionalInstructions
+                      : '';
+            } else if (lendingOfferAcceptorModel.status ==
+                LendingOfferStatus.CHECKED_IN) {
+              title = L.of(context).your_departure_date_is;
+              subTitle = ' ';
+              dateText = DateFormat('EEEEEE, MMMM dd yyyy',
+                      Locale(getLangTag()).toLanguageTag())
+                  .format(
+                getDateTimeAccToUserTimezone(
+                    dateTime: DateTime.fromMillisecondsSinceEpoch(
+                        widget.offerModel.lendingOfferDetailsModel.endDate),
+                    timezoneAbb: SevaCore.of(context).loggedInUser.timezone),
+              );
+              dateSubText = DateFormat('hh:mm').format(
+                getDateTimeAccToUserTimezone(
+                  dateTime: DateTime.fromMillisecondsSinceEpoch(
+                      widget.offerModel.lendingOfferDetailsModel.endDate),
+                  timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
+                ),
+              );
+            } else if (lendingOfferAcceptorModel.status ==
+                LendingOfferStatus.CHECKED_OUT) {
+              title = L.of(context).you_departed_on;
+              subTitle = ' ';
+              dateText = DateFormat('EEEEEE, MMMM dd yyyy',
+                      Locale(getLangTag()).toLanguageTag())
+                  .format(
+                getDateTimeAccToUserTimezone(
+                    dateTime: DateTime.fromMillisecondsSinceEpoch(
+                        widget.offerModel.lendingOfferDetailsModel.endDate),
+                    timezoneAbb: SevaCore.of(context).loggedInUser.timezone),
+              );
+              additionalInstruction = L.of(context).share_feedback_place;
+              reviewWidget = Center(
+                child: CustomChip(
+                  label: 'Review',
+                  isSelected: false,
+                  onTap: () {
+                    handleFeedBackNotificationLendingOffer(
+                        offerModel: widget.offerModel,
+                        notificationId: null,
+                        context: context,
+                        email: SevaCore.of(context).loggedInUser.email,
+                        feedbackType: FeedbackType.FOR_LENDING_OFFER_BORROWER);
+                  },
+                ),
+              );
+            }
+          } else {
+            if (lendingOfferAcceptorModel.status ==
+                LendingOfferStatus.APPROVED) {
+              title = S.of(context).request_approved_by_msg +
+                  ' ' +
+                  widget.offerModel.fullName;
+              subTitle = L.of(context).items_collected_alert;
+              dateText = DateFormat(
+                      'EEEEEE MMMM dd', Locale(getLangTag()).toLanguageTag())
+                  .format(
+                getDateTimeAccToUserTimezone(
+                    dateTime: DateTime.fromMillisecondsSinceEpoch(
+                        widget.offerModel.lendingOfferDetailsModel.startDate),
+                    timezoneAbb: SevaCore.of(context).loggedInUser.timezone),
+              );
+              dateSubText = DateFormat.MMMd(getLangTag()).add_jm().format(
+                        getDateTimeAccToUserTimezone(
+                          dateTime: DateTime.fromMillisecondsSinceEpoch(
+                            widget
+                                .offerModel.lendingOfferDetailsModel.startDate,
+                          ),
+                          timezoneAbb:
+                              SevaCore.of(context).loggedInUser.timezone,
+                        ),
+                      ) +
+                  ' - ' +
+                  DateFormat.MMMd(getLangTag()).add_jm().format(
+                        getDateTimeAccToUserTimezone(
+                          dateTime: DateTime.fromMillisecondsSinceEpoch(widget
+                              .offerModel.lendingOfferDetailsModel.endDate),
+                          timezoneAbb:
+                              SevaCore.of(context).loggedInUser.timezone,
+                        ),
+                      );
+              additionalInstruction =
+                  lendingOfferAcceptorModel.additionalInstructions != null
+                      ? lendingOfferAcceptorModel.additionalInstructions
+                      : '';
+              reviewWidget = Center(
+                child: CustomChip(
+                  label: 'Review',
+                  isSelected: false,
+                  onTap: () {
+                    handleFeedBackNotificationLendingOffer(
+                        offerModel: widget.offerModel,
+                        notificationId: null,
+                        context: context,
+                        email: SevaCore.of(context).loggedInUser.email,
+                        feedbackType: FeedbackType.FOR_LENDING_OFFER_BORROWER);
+                  },
+                ),
+              );
+            } else if (lendingOfferAcceptorModel.status ==
+                LendingOfferStatus.ITEMS_COLLECTED) {
+              title = L.of(context).items_collected_alert_two +
+                  ' ' +
+                  widget.offerModel.fullName;
+              subTitle = L.of(context).please_return_by;
+              dateText = DateFormat(
+                      'EEEEEE MMMM dd', Locale(getLangTag()).toLanguageTag())
+                  .format(
+                getDateTimeAccToUserTimezone(
+                    dateTime: DateTime.fromMillisecondsSinceEpoch(
+                        widget.offerModel.lendingOfferDetailsModel.endDate),
+                    timezoneAbb: SevaCore.of(context).loggedInUser.timezone),
+              );
+              dateSubText = DateFormat.MMMd(getLangTag()).add_jm().format(
+                    getDateTimeAccToUserTimezone(
+                      dateTime: DateTime.fromMillisecondsSinceEpoch(
+                          widget.offerModel.lendingOfferDetailsModel.endDate),
+                      timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
+                    ),
+                  );
+            } else if (lendingOfferAcceptorModel.status ==
+                LendingOfferStatus.ITEMS_RETURNED) {
+              title = L.of(context).items_returned_to_lender +
+                  ' ' +
+                  widget.offerModel.fullName;
+              subTitle = L.of(context).exchanged_completed;
+              dateText = DateFormat(
+                      'EEEEEE MMMM dd', Locale(getLangTag()).toLanguageTag())
+                  .format(
+                getDateTimeAccToUserTimezone(
+                    dateTime: DateTime.fromMillisecondsSinceEpoch(
+                        widget.offerModel.lendingOfferDetailsModel.endDate),
+                    timezoneAbb: SevaCore.of(context).loggedInUser.timezone),
+              );
+              dateSubText = DateFormat.MMMd(getLangTag()).add_jm().format(
+                        getDateTimeAccToUserTimezone(
+                          dateTime: DateTime.fromMillisecondsSinceEpoch(
+                            widget
+                                .offerModel.lendingOfferDetailsModel.startDate,
+                          ),
+                          timezoneAbb:
+                              SevaCore.of(context).loggedInUser.timezone,
+                        ),
+                      ) +
+                  ' - ' +
+                  DateFormat.MMMd(getLangTag()).add_jm().format(
+                        getDateTimeAccToUserTimezone(
+                          dateTime: DateTime.fromMillisecondsSinceEpoch(widget
+                              .offerModel.lendingOfferDetailsModel.endDate),
+                          timezoneAbb:
+                              SevaCore.of(context).loggedInUser.timezone,
+                        ),
+                      );
+              additionalInstruction = L.of(context).share_feedback_place;
+              reviewWidget = Center(
+                child: CustomChip(
+                  label: 'Review',
+                  isSelected: false,
+                  onTap: () {
+                    handleFeedBackNotificationLendingOffer(
+                        offerModel: widget.offerModel,
+                        notificationId: null,
+                        context: context,
+                        email: SevaCore.of(context).loggedInUser.email,
+                        feedbackType: FeedbackType.FOR_LENDING_OFFER_BORROWER);
+                  },
+                ),
+              );
+            }
+          }
+
+          return Container(
+            padding: EdgeInsets.all(5),
+            decoration: BoxDecoration(color: Colors.white54, boxShadow: [
+              BoxShadow(
+                color: Colors.grey[300],
+              )
+            ]),
+            width: MediaQuery.of(context).size.width,
+            height: 240,
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                subTitle,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              CustomListTile(
+                leading: Stack(
+                  alignment: AlignmentDirectional.center,
+                  children: [
+                    Card(
+                      color: Colors.transparent,
+                      elevation: 3,
+                      child: Column(
+                        children: [
+                          Container(
+                            width: 58,
+                            height: 15,
+                            decoration: BoxDecoration(
+                                color: Theme.of(context).accentColor,
+                                border: Border.all(
+                                  color: Colors.transparent,
+                                ),
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(7),
+                                    topRight: Radius.circular(7))),
+                          ),
+                          Container(
+                            width: 58,
+                            height: 38,
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                border: Border.all(
+                                  color: Colors.white,
+                                ),
+                                borderRadius: BorderRadius.only(
+                                    bottomLeft: Radius.circular(7),
+                                    bottomRight: Radius.circular(7))),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 12.0),
+                      child: Text(
+                        DateFormat('dd', Locale(getLangTag()).toLanguageTag())
+                            .format(
+                          getDateTimeAccToUserTimezone(
+                              dateTime: DateTime.fromMillisecondsSinceEpoch(
+                                  widget.offerModel.lendingOfferDetailsModel
+                                      .startDate),
+                              timezoneAbb:
+                                  SevaCore.of(context).loggedInUser.timezone),
+                        ),
+                        style: TextStyle(fontSize: 24, color: Colors.grey[700]),
+                      ),
+                    ),
+                  ],
+                ),
+                title: Padding(
+                  padding: const EdgeInsets.only(top: 16.0, left: 8),
+                  child: Text(
+                    dateText,
+                    style: titleStyle,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                subtitle: Padding(
+                  padding: const EdgeInsets.only(left: 8),
+                  child: Text(
+                    dateSubText,
+                    style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.grey),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ),
+              Offstage(
+                offstage: additionalInstruction == null ||
+                    additionalInstruction == '',
+                child: Text(
+                  L.of(context).notes,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: HexColor('#606670'),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Text(
+                additionalInstruction,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: HexColor('#9B9B9B'),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              reviewWidget,
+            ]),
+          );
+        });
   }
 
   Widget get date {

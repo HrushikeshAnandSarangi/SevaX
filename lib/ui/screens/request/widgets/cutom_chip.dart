@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/flavor_config.dart';
 
 class CustomChip extends StatelessWidget {
   final bool isSelected;
@@ -32,7 +33,10 @@ class CustomChip extends StatelessWidget {
             : null,
         label: Text(
           label,
-          style: TextStyle(color: isSelected ? Colors.white : Colors.black),
+          style: TextStyle(
+              color: isSelected
+                  ? Colors.white
+                  : FlavorConfig.values.theme.primaryColor),
         ),
         side: BorderSide(
           color: isSelected ? Theme.of(context).primaryColor : Colors.grey[300],
