@@ -18,8 +18,10 @@ import 'package:sevaexchange/utils/helpers/configuration_check.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/exchange/category_widget.dart';
 import 'package:sevaexchange/views/exchange/create_request/project_selection.dart';
 import 'package:sevaexchange/views/exchange/request_utils.dart';
+import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
@@ -29,8 +31,6 @@ import 'package:sevaexchange/widgets/open_scope_checkbox_widget.dart';
 class BorrowRequest extends StatefulWidget {
   GeoFirePoint location;
   String selectedAddress;
-  Widget categoryWidget;
-  final Widget requestDescription;
   final bool isOfferRequest;
   final OfferModel offer;
   final RequestModel requestModel;
@@ -45,10 +45,8 @@ class BorrowRequest extends StatefulWidget {
   bool createEvent;
 
   BorrowRequest(
-      {this.requestDescription,
-      this.selectedAddress,
+      {this.selectedAddress,
       this.location,
-      this.categoryWidget,
       this.isOfferRequest,
       this.offer,
       this.requestModel,
@@ -71,6 +69,9 @@ class _BorrowRequestState extends State<BorrowRequest> {
   int roomOrTool = 0;
   bool isPublicCheckboxVisible = false;
   RequestUtils requestUtils = RequestUtils();
+  final _debouncer = Debouncer(milliseconds: 500);
+  List<CategoryModel> selectedCategoryModels = [];
+  String categoryMode;
 
   Widget addToProjectContainer() {
     if (requestUtils.isFromRequest(projectId: widget.projectId)) {
@@ -267,11 +268,67 @@ class _BorrowRequestState extends State<BorrowRequest> {
       ),
       RepeatWidget(),
       SizedBox(height: 15),
-      widget.requestDescription,
+      (widget.requestModel.requestType == RequestType.BORROW && roomOrTool == 1)
+          ? Text(
+              S.of(context).request_description,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Europa',
+                color: Colors.black,
+              ),
+            )
+          : Text(
+              "${S.of(context).request_description}",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Europa',
+                color: Colors.black,
+              ),
+            ),
+      TextFormField(
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        onChanged: (value) {
+          if (value != null && value.length > 5) {
+            _debouncer.run(() {
+              getCategoriesFromApi(value);
+            });
+          }
+          requestUtils.updateExitWithConfirmationValue(context, 9, value);
+        },
+        textInputAction: TextInputAction.next,
+        decoration: InputDecoration(
+          errorMaxLines: 2,
+          hintText: S.of(context).request_descrip_hint_text,
+          hintStyle: requestUtils.hintTextStyle,
+        ),
+        initialValue: widget.offer != null && widget.isOfferRequest
+            ? getOfferDescription(
+                offerDataModel: widget.offer,
+              )
+            : "",
+        keyboardType: TextInputType.multiline,
+        maxLines: 1,
+        // ignore: missing_return
+        validator: (value) {
+          if (value.isEmpty) {
+            return S.of(context).validation_error_general_text;
+          }
+          if (profanityDetector.isProfaneString(value)) {
+            return S.of(context).profanity_text_alert;
+          }
+          widget.requestModel.description = value;
+        },
+      ),
       SizedBox(height: 20),
       //Same hint for Room and Tools ?
       // Choose Category and Sub Category
-      widget.categoryWidget,
+      CategoryWidget(
+        requestModel: widget.requestModel,
+        selectedCategoryModels: selectedCategoryModels,
+        categoryMode: categoryMode,
+      ),
       SizedBox(height: 20),
       addToProjectContainer(),
       SizedBox(height: 15),

@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:http/http.dart';
 
 // import 'package:geolocator/geolocator.dart';
 // import 'package:location/location.dart';
@@ -2341,4 +2342,57 @@ Future<DocumentReference> sendNotificationToMemberOneToManyRequest(
   return CollectionRef.users.doc(userEmail).collection("notifications").doc(notification.id);
 }
 
+Future<List<CategoryModel>> getCategoriesFromApi(String query) async {
+  try {
+    var response = await post(
+      "https://proxy.sevaexchange.com/" + "http://ai.api.sevaxapp.com/request_categories",
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control": "Allow-Headers",
+        "x-requested-with": "x-requested-by"
+      },
+      body: jsonEncode({
+        "description": query,
+      }),
+    );
+    log('respinse ${response.body}');
+    log('respinse ${response.statusCode}');
 
+    if (response.statusCode == 200) {
+      Map<String, dynamic> bodyMap = json.decode(response.body);
+      List<String> categoriesList =
+          bodyMap.containsKey('string_vec') ? List.castFrom(bodyMap['string_vec']) : [];
+      if (categoriesList != null && categoriesList.length > 0) {
+      return getCategoryModels(categoriesList);
+      }
+    } else {
+      return null;
+    }
+  } catch (exception) {
+    log(exception.toString());
+    return null;
+  }
+}
+
+Future<List<CategoryModel>> getCategoryModels(List<String> categoriesList) async {
+  List<CategoryModel> modelList = [];
+  for (int i = 0; i < categoriesList.length; i += 1) {
+    CategoryModel categoryModel = await FirestoreManager.getCategoryForId(
+      categoryID: categoriesList[i],
+    );
+    modelList.add(categoryModel);
+  }
+  if (modelList != null && modelList.length > 0) {
+    return updateInformation(modelList);
+  }
+  return null;
+}
+
+List<CategoryModel> updateInformation(List<CategoryModel> category) {
+  List<CategoryModel> selectedCategoryModels = [];
+  if (category != null && category.length > 0) {
+    selectedCategoryModels.addAll(category);
+  }
+  return selectedCategoryModels;
+  // setState(() {});
+}

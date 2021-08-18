@@ -1,26 +1,32 @@
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/category_model.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/widgets/select_category.dart';
 
 class CategoryWidget extends StatefulWidget {
+  final RequestModel requestModel;
+  final VoidCallback onDone;
+  List<CategoryModel> selectedCategoryModels;
+  String categoryMode;
+
+
+  CategoryWidget({this.requestModel, this.onDone, this.selectedCategoryModels, this.categoryMode});
+
   @override
   _CategoryWidgetState createState() => _CategoryWidgetState();
 }
 
 class _CategoryWidgetState extends State<CategoryWidget> {
-  List<CategoryModel> selectedCategoryModels = [];
-  String categoryMode;
   List<String> selectedCategoryIds = [];
 
   List<Widget> _buildselectedSubCategories() {
     List<CategoryModel> subCategories = [];
-    subCategories = selectedCategoryModels;
+    subCategories = widget.selectedCategoryModels;
     log('lll l ${subCategories.length}');
     subCategories.forEach((item) {});
     final ids = subCategories.map((e) => e.typeId).toSet();
@@ -56,6 +62,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                         selectedCategoryIds.remove(item.typeId);
                         selectedSubCategories.remove(item.typeId);
                         subCategories.removeWhere((category) => category.typeId == item.typeId);
+                        widget.requestModel.categories = selectedCategoryIds;
                       });
                     },
                     child: Icon(Icons.cancel_rounded, color: Colors.grey[100], size: 28),
@@ -67,16 +74,9 @@ class _CategoryWidgetState extends State<CategoryWidget> {
         ),
       );
     });
+
     return selectedSubCategories;
   }
-
-  void updateInformation(List<CategoryModel> category) {
-    if (category != null && category.length > 0) {
-      selectedCategoryModels.addAll(category);
-    }
-    setState(() {});
-  }
-
 
   // Navigat to Category class and geting data from the class
   void moveToCategory() async {
@@ -84,24 +84,24 @@ class _CategoryWidgetState extends State<CategoryWidget> {
       context,
       MaterialPageRoute(
           fullscreenDialog: true,
-          builder: (context) => Category(
-                selectedSubCategoriesids: selectedCategoryIds,
-              )),
+          builder: (context) => Category(selectedSubCategoriesids: selectedCategoryIds)),
     );
     if (category != null) {
-      categoryMode = category[0];
-      updateInformation(category[1]);
+      widget.categoryMode = category[0];
+      widget.selectedCategoryModels = await updateInformation(category[1]);
+      setState(() {});
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    logger.d("LENGTH ${widget.selectedCategoryModels.length}");
     return InkWell(
       child: Column(
         children: [
           Row(
             children: [
-              categoryMode == null
+              widget.categoryMode == null
                   ? Text(
                       S.of(context).choose_category,
                       style: TextStyle(
@@ -112,7 +112,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                       ),
                     )
                   : Text(
-                      "${categoryMode}",
+                      "${widget.categoryMode}",
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -128,7 +128,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
             ],
           ),
           SizedBox(height: 20),
-          selectedCategoryModels != null && selectedCategoryModels.length > 0
+          widget.selectedCategoryModels != null && widget.selectedCategoryModels.length > 0
               ? Wrap(
                   alignment: WrapAlignment.start,
                   children: _buildselectedSubCategories(),

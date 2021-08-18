@@ -279,26 +279,20 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
                                         projectModelList: projectModelList,
                                         projectId: widget.projectId,
                                         selectedInstructorModel: selectedInstructorModel,
-                                        categoryWidget: categoryWidget(),
                                         timebankId: widget.timebankId,
                                         comingFrom: widget.comingFrom,
                                         onCreateEventChanged: (value) => createEvent = value,
-                                        onDescriptionChanged: (value) =>
-                                            getCategoriesFromApi(value),
                                       );
                                       break;
                                     case RequestType.CASH:
                                       return CashRequest(
                                         isOfferRequest: widget.isOfferRequest,
                                         offer: widget.offer,
-                                        requestDescription: RequestDescriptionData(
-                                            S.of(context).cash_request_data_hint_text),
                                         projectModelList: projectModelList,
                                         requestModel: requestModel,
                                         comingFrom: widget.comingFrom,
                                         timebankId: widget.timebankId,
                                         timebankModel: snapshot.data,
-                                        categoryWidget: categoryWidget(),
                                         createEvent: createEvent,
                                         onCreateEventChanged: (value) => createEvent = value,
                                         projectId: widget.projectId,
@@ -308,7 +302,6 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
                                     case RequestType.GOODS:
                                       return GoodsRequest(
                                         requestModel: requestModel,
-                                        categoryWidget: categoryWidget(),
                                         timebankModel: snapshot.data,
                                         timebankId: widget.timebankId,
                                         comingFrom: widget.comingFrom,
@@ -319,17 +312,12 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
                                         createEvent: createEvent,
                                         onCreateEventChanged: (value) => createEvent = value,
                                         projectModelList: projectModelList,
-                                        requestDescription: RequestDescriptionData(
-                                            S.of(context).goods_request_data_hint_text),
                                       );
                                       break;
                                     case RequestType.BORROW:
                                       return BorrowRequest(
-                                        requestDescription: RequestDescriptionData(
-                                            S.of(context).request_descrip_hint_text),
                                         selectedAddress: selectedAddress,
                                         location: location,
-                                        categoryWidget: categoryWidget(),
                                         requestModel: requestModel,
                                         offer: widget.offer,
                                         createEvent: createEvent,
@@ -359,10 +347,7 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
                                         selectedInstructorModel: selectedInstructorModel,
                                         timebankId: widget.timebankId,
                                         comingFrom: widget.comingFrom,
-                                        categoryWidget: categoryWidget(),
                                         onCreateEventChanged: (value) => createEvent = value,
-                                        onDescriptionChanged: (value) =>
-                                            getCategoriesFromApi(value),
                                       );
                                       break;
                                     case RequestType.LENDING_OFFER:
@@ -398,68 +383,6 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
                 }
               });
         });
-  }
-
-  Widget RequestDescriptionData(hintTextDesc) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
-      (requestModel.requestType == RequestType.BORROW && roomOrTool == 1)
-          ? Text(
-              S.of(context).request_description,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Europa',
-                color: Colors.black,
-              ),
-            )
-          : Text(
-              "${S.of(context).request_description}",
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Europa',
-                color: Colors.black,
-              ),
-            ),
-      TextFormField(
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        onChanged: (value) {
-          if (value != null && value.length > 5) {
-            _debouncer.run(() {
-              getCategoriesFromApi(value);
-            });
-          }
-          requestUtils.updateExitWithConfirmationValue(context, 9, value);
-        },
-        focusNode: focusNodes[0],
-        onFieldSubmitted: (v) {
-          FocusScope.of(context).requestFocus(focusNodes[1]);
-        },
-        textInputAction: TextInputAction.next,
-        decoration: InputDecoration(
-          errorMaxLines: 2,
-          hintText: hintTextDesc,
-          hintStyle: requestUtils.hintTextStyle,
-        ),
-        initialValue: widget.offer != null && widget.isOfferRequest
-            ? getOfferDescription(
-                offerDataModel: widget.offer,
-              )
-            : "",
-        keyboardType: TextInputType.multiline,
-        maxLines: 1,
-        // ignore: missing_return
-        validator: (value) {
-          if (value.isEmpty) {
-            return S.of(context).validation_error_general_text;
-          }
-          if (profanityDetector.isProfaneString(value)) {
-            return S.of(context).profanity_text_alert;
-          }
-          requestModel.description = value;
-        },
-      ),
-    ]);
   }
 
   Widget RequestTypeWidgetCommunityRequests() {
@@ -664,183 +587,6 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
             ],
           )
         : Container();
-  }
-
-// Choose Category and Sub Category function
-  // get data from Category class
-  List<CategoryModel> selectedCategoryModels = [];
-  String categoryMode;
-
-  void updateInformation(List<CategoryModel> category) {
-    if (category != null && category.length > 0) {
-      selectedCategoryModels.addAll(category);
-    }
-    setState(() {});
-  }
-
-  Future<void> getCategoriesFromApi(String query) async {
-    try {
-      var response = await http.post(
-        "https://proxy.sevaexchange.com/" + "http://ai.api.sevaxapp.com/request_categories",
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control": "Allow-Headers",
-          "x-requested-with": "x-requested-by"
-        },
-        body: jsonEncode({
-          "description": query,
-        }),
-      );
-      log('respinse ${response.body}');
-      log('respinse ${response.statusCode}');
-
-      if (response.statusCode == 200) {
-        Map<String, dynamic> bodyMap = json.decode(response.body);
-        List<String> categoriesList =
-            bodyMap.containsKey('string_vec') ? List.castFrom(bodyMap['string_vec']) : [];
-        if (categoriesList != null && categoriesList.length > 0) {
-          getCategoryModels(categoriesList);
-        }
-      } else {
-        return null;
-      }
-    } catch (exception) {
-      log(exception.toString());
-      return null;
-    }
-  }
-
-  Future<void> getCategoryModels(List<String> categoriesList) async {
-    List<CategoryModel> modelList = [];
-    for (int i = 0; i < categoriesList.length; i += 1) {
-      CategoryModel categoryModel = await FirestoreManager.getCategoryForId(
-        categoryID: categoriesList[i],
-      );
-      modelList.add(categoryModel);
-    }
-    if (modelList != null && modelList.length > 0) {
-      categoryMode = S.of(context).suggested_categories;
-
-      updateInformation(modelList);
-    }
-  }
-
-  // Navigat to Category class and geting data from the class
-  void moveToCategory() async {
-    var category = await Navigator.push(
-      context,
-      MaterialPageRoute(
-          fullscreenDialog: true,
-          builder: (context) => Category(
-                selectedSubCategoriesids: selectedCategoryIds,
-              )),
-    );
-    if (category != null) {
-      categoryMode = category[0];
-      updateInformation(category[1]);
-    }
-  }
-
-  //building list of selectedSubCategories
-  List<Widget> _buildselectedSubCategories() {
-    List<CategoryModel> subCategories = [];
-    subCategories = selectedCategoryModels;
-    log('lll l ${subCategories.length}');
-    subCategories.forEach((item) {});
-    final ids = subCategories.map((e) => e.typeId).toSet();
-    subCategories.retainWhere((x) => ids.remove(x.typeId));
-    log('lll after ${subCategories.length}');
-
-    List<Widget> selectedSubCategories = [];
-    selectedCategoryIds.clear();
-    subCategories.forEach((item) {
-      selectedCategoryIds.add(item.typeId);
-      selectedSubCategories.add(
-        Padding(
-          padding: const EdgeInsets.only(right: 7, bottom: 7),
-          child: Container(
-            height: 35,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(25),
-              color: Theme.of(context).primaryColor,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.only(top: 3.5, bottom: 5, left: 9, right: 9),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text("${item.getCategoryName(context).toString()}",
-                      style: TextStyle(color: Colors.white)),
-                  SizedBox(width: 3),
-                  InkWell(
-                    onTap: () {
-                      setState(() {
-                        selectedCategoryIds.remove(item.typeId);
-                        selectedSubCategories.remove(item.typeId);
-                        subCategories.removeWhere((category) => category.typeId == item.typeId);
-                      });
-                    },
-                    child: Icon(Icons.cancel_rounded, color: Colors.grey[100], size: 28),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      );
-    });
-    return selectedSubCategories;
-  }
-
-  Widget categoryWidget() {
-    return InkWell(
-      child: Column(
-        children: [
-          Row(
-            children: [
-              categoryMode == null
-                  ? Text(
-                      S.of(context).choose_category,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Europa',
-                        color: Colors.black,
-                      ),
-                    )
-                  : Text(
-                      "${categoryMode}",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Europa',
-                        color: Colors.black,
-                      ),
-                    ),
-              Spacer(),
-              Icon(
-                Icons.arrow_forward_ios_outlined,
-                size: 16,
-              ),
-            ],
-          ),
-          SizedBox(height: 20),
-          selectedCategoryModels != null && selectedCategoryModels.length > 0
-              ? Wrap(
-                  alignment: WrapAlignment.start,
-                  children: _buildselectedSubCategories(),
-                )
-              : Container(),
-        ],
-      ),
-      onTap: () => moveToCategory(),
-    );
-  }
-
-  bool isFromRequest({String projectId}) {
-    return projectId == null || projectId.isEmpty || projectId == "";
   }
 
   Widget requestSwitch({

@@ -18,6 +18,7 @@ import 'package:sevaexchange/utils/helpers/configuration_check.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/exchange/category_widget.dart';
 import 'package:sevaexchange/views/exchange/create_request/project_selection.dart';
 import 'package:sevaexchange/views/exchange/create_request/request_enums.dart';
 import 'package:sevaexchange/views/exchange/request_utils.dart';
@@ -34,7 +35,6 @@ class TimeRequest extends StatefulWidget {
   final RequestModel requestModel;
   final bool isOfferRequest;
   final OfferModel offer;
-  final Function onDescriptionChanged;
   final bool isAdmin;
   final String timebankId;
   final ComingFrom comingFrom;
@@ -43,7 +43,6 @@ class TimeRequest extends StatefulWidget {
   final Function onCreateEventChanged;
   GeoFirePoint location;
   String selectedAddress;
-  Widget categoryWidget;
   TimebankModel timebankModel;
   UserModel selectedInstructorModel;
   bool instructorAdded;
@@ -54,9 +53,7 @@ class TimeRequest extends StatefulWidget {
     this.isOfferRequest,
     this.offer,
     this.selectedAddress,
-    this.onDescriptionChanged,
     this.location,
-    this.categoryWidget,
     this.timebankModel,
     this.isAdmin,
     this.selectedInstructorModel,
@@ -81,6 +78,8 @@ class _TimeRequestState extends State<TimeRequest> {
   final searchOnChange = BehaviorSubject<String>();
   bool isPublicCheckboxVisible = false;
   RequestUtils requestUtils = RequestUtils();
+  List<CategoryModel> selectedCategoryModels = [];
+  String categoryMode;
 
   Widget addToProjectContainer() {
     if (requestUtils.isFromRequest(projectId: widget.projectId)) {
@@ -498,9 +497,10 @@ class _TimeRequestState extends State<TimeRequest> {
         autovalidateMode: AutovalidateMode.onUserInteraction,
         onChanged: (value) {
           if (value != null && value.length > 5) {
-            _debouncer.run(() {
-              // getCategoriesFromApi(value);
-              widget.onDescriptionChanged(value);
+            _debouncer.run(() async {
+              selectedCategoryModels = await getCategoriesFromApi(value);
+              categoryMode  = S.of(context).suggested_categories;
+              setState(() {});
             });
           }
           requestUtils.updateExitWithConfirmationValue(context, 9, value);
@@ -533,7 +533,11 @@ class _TimeRequestState extends State<TimeRequest> {
 
       SizedBox(height: 20),
       // Choose Category and Sub Category
-      widget.categoryWidget,
+      CategoryWidget(
+        requestModel: widget.requestModel,
+        selectedCategoryModels: selectedCategoryModels,
+        categoryMode: categoryMode,
+      ),
       SizedBox(height: 20),
       Text(
         S.of(context).provide_skills,
