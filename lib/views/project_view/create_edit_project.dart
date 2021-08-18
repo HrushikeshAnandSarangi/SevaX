@@ -864,10 +864,10 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                               .syncCalendar(
                             context: context,
                             builder: KloudlessWidgetBuilder()
-                                .fromContext<ProjectModel>(
+                                .fromContext<CreateMode, ProjectModel>(
                               context: context,
                               model: projectModel,
-                              stateId: projectModel.id,
+                              id: projectModel.id,
                             ),
                           );
 

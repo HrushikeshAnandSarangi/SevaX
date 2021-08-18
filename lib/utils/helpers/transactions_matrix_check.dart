@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/upgrade_plan-banner_details_model.dart';
 import 'package:sevaexchange/ui/screens/upgrade_plan_banners/pages/upgrade_plan_banner.dart';
 import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 class TransactionsMatrixCheck extends StatelessWidget {
   final Widget child;
   final String transaction_matrix_type;
   final BannerDetails upgradeDetails;
   final ComingFrom comingFrom;
+  final Function onNavigationStart;
 
   TransactionsMatrixCheck({
     Key key,
@@ -15,8 +17,7 @@ class TransactionsMatrixCheck extends StatelessWidget {
     this.transaction_matrix_type,
     @required this.upgradeDetails,
     this.comingFrom,
-    // this.paymentStatusMap,
-    // this.allowTransaction,
+    this.onNavigationStart,
   });
 
   //this widget checks wether this plan allows a particular transaction to be done or not
@@ -26,7 +27,8 @@ class TransactionsMatrixCheck extends StatelessWidget {
         ? child
         : GestureDetector(
             onTap: () {
-              Navigator.of(context).push(
+              Navigator.of(context)
+                  .push(
                 MaterialPageRoute(
                   fullscreenDialog: true,
                   builder: (context) => UpgradePlanBanner(
@@ -34,9 +36,17 @@ class TransactionsMatrixCheck extends StatelessWidget {
                     details: upgradeDetails,
                   ),
                 ),
-              );
+              )
+                  .then((value) {
+                onNavigationStart != null
+                    ? onNavigationStart()
+                    : logger.d("Skipping onNavigationStart ");
+              });
             },
-            child: AbsorbPointer(absorbing: true, child: child),
+            child: AbsorbPointer(
+              absorbing: true,
+              child: child,
+            ),
           );
   }
 

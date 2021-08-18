@@ -1,7 +1,11 @@
+import 'dart:convert';
 import 'dart:core';
 
 import 'package:flutter/cupertino.dart';
 import 'package:sevaexchange/components/calendar_events/models/calendar_response.dart';
+import 'package:sevaexchange/models/offer_model.dart';
+import 'package:sevaexchange/models/request_model.dart';
+import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/views/core.dart';
 
 class Mode {}
@@ -105,15 +109,15 @@ class KloudlessWidgetBuilder {
     this.initialEventDetails,
   });
 
-  KloudlessWidgetBuilder fromContext<T>({
+  KloudlessWidgetBuilder fromContext<M, T>({
     BuildContext context,
-    String stateId,
+    String id,
     T model,
   }) {
-    stateOfCalendarCallback = CalStateBuilder<T>(
-      stateId: stateId,
-      memberEmailAddress: SevaCore.of(context).loggedInUser.email,
-      environment: ENVIRONMENT.DEVELOPMENT,
+    stateOfCalendarCallback = CalStateBuilder<M, T>(
+      name: SevaCore.of(context).loggedInUser.fullname,
+      id: id,
+      memberEmail: SevaCore.of(context).loggedInUser.email,
       model: model,
     );
 
@@ -171,31 +175,67 @@ class CalanderBuilder {
   }
 }
 
-class CalStateBuilder<T> {
-  final String stateId;
-  final String memberEmailAddress;
-  final ENVIRONMENT environment;
+class CalStateBuilder<M, T> {
+  final String memberEmail;
+  final String id;
   final T model;
+  final String name;
 
   String stateType;
 
   CalStateBuilder({
-    @required this.stateId,
-    this.environment,
-    this.memberEmailAddress,
-    this.model,
+    @required this.id,
+    @required this.memberEmail,
+    @required this.model,
+    @required this.name,
   }) {
     stateType = T.toString();
   }
 
   Map<String, dynamic> toMap() => {
-        'stateId': this.stateId,
-        'environment': this.environment.readable,
-        'memberEmailAddress': this.memberEmailAddress,
-        'stateType': this.stateType,
+        'memberEmail': this.memberEmail,
+        "name": "name",
+        'type': this.stateType,
+        'id': this.id,
+        "mode": getModeFromType(M, T),
       };
+
+  String toJson() {
+    var json = jsonEncode(toMap());
+    return json;
+  }
 
   String get state {
     return this.toMap.toString();
+  }
+
+  String getModeFromType(
+    Type m,
+    Type t,
+  ) {
+    const MODE_CREATE_MODE_EVENT = "MODE.CREATE_MODE.EVENT";
+    const MODE_CREATE_MODE_REQUEST = "MODE.CREATE_MODE.REQUEST";
+    const MODE_CREATE_MODE_OFFER = "MODE.CREATE_MODE.OFFER";
+
+    const MODE_APPLY_MODE_REQUEST = "MODE.APPLY_MODE.REQUEST";
+    const MODE_APPLY_MODE_OFFER = "MODE.APPLY_MODE.OFFER";
+
+    const UNRESOLVED_MODE = "UNRESOLVED_MODE";
+
+    switch (T) {
+      case RequestModel:
+        return M == CreateMode
+            ? MODE_CREATE_MODE_REQUEST
+            : MODE_APPLY_MODE_REQUEST;
+
+      case OfferModel:
+        return M == CreateMode ? MODE_CREATE_MODE_OFFER : MODE_APPLY_MODE_OFFER;
+
+      case ProjectModel:
+        return MODE_CREATE_MODE_EVENT;
+
+      default:
+        return UNRESOLVED_MODE;
+    }
   }
 }

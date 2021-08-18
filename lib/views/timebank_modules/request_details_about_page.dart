@@ -2009,12 +2009,13 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
 
   void proccedWithCalander() async {
     await _acceptRequest();
+
     KloudlessWidgetManager<ApplyMode, RequestModel>().syncCalendar(
       context: context,
-      builder: KloudlessWidgetBuilder().fromContext<RequestModel>(
+      builder: KloudlessWidgetBuilder().fromContext<ApplyMode, RequestModel>(
         context: context,
         model: widget.requestItem,
-        stateId: widget.requestItem.id,
+        id: widget.requestItem.id,
       ),
     );
     Navigator.pop(context);

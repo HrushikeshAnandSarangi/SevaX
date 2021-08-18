@@ -85,7 +85,7 @@ class CalendarAPIRepo {
       "attendees": map,
     };
 
-    logger.d("_______" + json.encode(body));
+    // logger.d("_______" + json.encode(body));
 
     return await http.patch(
       url,
@@ -96,7 +96,7 @@ class CalendarAPIRepo {
         "Content-Type": "application/json"
       },
     ).then((value) {
-      logger.d("Response from update " + value.body.toString());
+      // logger.d("Response from update " + value.body.toString());
       return true;
     }).onError((error, stackTrace) {
       return Future.error(error);
@@ -131,7 +131,7 @@ class CalendarAPIRepo {
         ),
       )
           .then((value) {
-        logger.i("Completed Updation!!");
+        // logger.i("Completed Updation!!");
         return true;
       }).catchError((onError) {
         logger.i("Failed Updation due to " + onError);

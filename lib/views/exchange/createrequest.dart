@@ -3803,13 +3803,12 @@ class RequestCreateFormState extends State<RequestCreateForm>
       Navigator.pop(confirmationDialogContext);
     }
 
-
     KloudlessWidgetManager<CreateMode, RequestModel>().syncCalendar(
       context: context,
-      builder: KloudlessWidgetBuilder().fromContext<RequestModel>(
+      builder: KloudlessWidgetBuilder().fromContext<CreateMode, RequestModel>(
         context: context,
         model: requestModel,
-        stateId: requestModel.id,
+        id: requestModel.id,
       ),
     );
     if (widget.isOfferRequest == true && widget.userModel != null) {

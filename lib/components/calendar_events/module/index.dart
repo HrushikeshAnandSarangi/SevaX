@@ -8,6 +8,8 @@ import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
+import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -37,7 +39,8 @@ class KloudlessWidgetManager<M extends Mode, T> {
         return new AlertDialog(
           title: Text('Add your Calendar'),
           content: NewCalendarRegisteration(
-            builder,
+            dialogContext: _,
+            builder: builder,
           ),
         );
       },
@@ -60,149 +63,175 @@ class KloudlessWidgetManager<M extends Mode, T> {
                 Navigator.of(_).pop();
               },
             ),
-            ElevatedButton(
-              child: Text('Yes'),
-              onPressed: () async {
-                //Create an event againest the registered calendar of the member
-                CollectionReference collectionReferenece;
-                KloudlessCalendarEvent canendarEvent;
+            TransactionsMatrixCheck(
+              onNavigationStart: () {
                 Navigator.of(_).pop();
-                switch (T) {
-                  case ProjectModel:
-                    collectionReferenece = CollectionRef.projects;
-
-                    ProjectModel model = builder.stateOfCalendarCallback.model;
-                    //hit the create event API from calandar
-                    canendarEvent = KloudlessCalendarEvent(
-                      eventTitle: model.name,
-                      eventDescription: model.description,
-                      eventLocation: model.address ?? 'Location not added',
-                      eventStart:
-                          DateTime.fromMillisecondsSinceEpoch(model.startTime)
-                              .toIso8601String(),
-                      eventEnd: DateTime.fromMillisecondsSinceEpoch(
-                        model.endTime,
-                      ).toIso8601String(),
-                    );
-
-                    break;
-
-                  case OfferModel:
-                    collectionReferenece = CollectionRef.offers;
-
-                    OfferModel model = builder.stateOfCalendarCallback.model;
-                    canendarEvent = KloudlessCalendarEvent(
-                      eventTitle: model.groupOfferDataModel.classTitle,
-                      eventDescription:
-                          model.groupOfferDataModel.classDescription,
-                      eventLocation:
-                          model.selectedAdrress ?? 'Location not added',
-                      eventStart: DateTime.fromMillisecondsSinceEpoch(
-                              model.groupOfferDataModel.startDate)
-                          .toIso8601String(),
-                      eventEnd: DateTime.fromMillisecondsSinceEpoch(
-                              model.groupOfferDataModel.endDate)
-                          .toIso8601String(),
-                    );
-
-                    break;
-
-                  case RequestModel:
-                    collectionReferenece = CollectionRef.requests;
-
-                    RequestModel model = builder.stateOfCalendarCallback.model;
-                    canendarEvent = KloudlessCalendarEvent(
-                      eventTitle: model.title,
-                      eventDescription: model.description,
-                      eventLocation: model.address ?? 'Location not added',
-                      eventStart: DateTime.fromMillisecondsSinceEpoch(
-                              model.requestStart)
-                          .toIso8601String(),
-                      eventEnd:
-                          DateTime.fromMillisecondsSinceEpoch(model.requestEnd)
-                              .toIso8601String(),
-                    );
-                    break;
-
-                  default:
-                    throw Exception("Please specify the details of model");
-                }
-
-                //Check Mode of Opertion
-                switch (M) {
-                  case CreateMode:
-                    await CalendarAPIRepo.createEventInCalendar(
-                      calendarAccountId:
-                          builder.attendeeDetails.calendar.calendarAccId,
-                      calendarId: builder.attendeeDetails.calendar.calendarId,
-                      event: canendarEvent,
-                    ).then((eventId) {
-                      if (eventId != null) {
-                        logger.d("Event Successfully created");
-
-                        collectionReferenece
-                            .doc(builder.stateOfCalendarCallback.model.id)
-                            .update({
-                              "eventMetaData": EventMetaData(
-                                calendar: builder.attendeeDetails.calendar,
-                                eventId: eventId,
-                              ).toMap(),
-                            })
-                            .then((value) => logger.d("Value Completed!"))
-                            .catchError((onError) {
-                              logger.d("On Error : " + onError);
-                            });
-                      } else {
-                        logger.d("Failed to create event created");
-                      }
-                    }).catchError((e) {
-                      logger.d("ERROR : " + e.toString());
-                    });
-                    break;
-
-                  case ApplyMode:
-                    await CalendarAPIRepo.updateAttendiesInCalendarEvent(
-                      eventMetaData:
-                          builder.stateOfCalendarCallback.model.eventMetaData,
-                      event: canendarEvent,
-                      attendeDetails: builder.attendeeDetails,
-                    )
-                        .then((value) => logger.i(
-                              "updateAttendiesInCalendarEvent Completed without any errors",
-                            ))
-                        .catchError((onError) => logger.i(
-                            "updateAttendiesInCalendarEvent finished with an error! $onError"));
-                    break;
-                }
               },
+              upgradeDetails: AppConfig.upgradePlanBannerModel.calendar_sync,
+              transaction_matrix_type: "calendar_sync",
+              child: GestureDetector(
+                child: ElevatedButton(
+                  child: Text('Yes'),
+                  onPressed: () async {
+                    logger.d("Inside onPressed === onPressed");
+
+                    Navigator.of(_).pop();
+                    addEventToExistingCalendar(builder);
+                  },
+                ),
+                onTap: () async {},
+              ),
             ),
           ],
         );
       },
     );
   }
+
+  void addEventToExistingCalendar(KloudlessWidgetBuilder builder) async {
+    CollectionReference collectionReferenece;
+    KloudlessCalendarEvent canendarEvent;
+    switch (T) {
+      case ProjectModel:
+        collectionReferenece = CollectionRef.projects;
+
+        ProjectModel model = builder.stateOfCalendarCallback.model;
+        //hit the create event API from calandar
+        canendarEvent = KloudlessCalendarEvent(
+          eventTitle: model.name,
+          eventDescription: model.description,
+          eventLocation: model.address ?? 'Location not added',
+          eventStart: DateTime.fromMillisecondsSinceEpoch(model.startTime)
+              .toIso8601String(),
+          eventEnd: DateTime.fromMillisecondsSinceEpoch(
+            model.endTime,
+          ).toIso8601String(),
+        );
+
+        break;
+
+      case OfferModel:
+        collectionReferenece = CollectionRef.offers;
+
+        OfferModel model = builder.stateOfCalendarCallback.model;
+        canendarEvent = KloudlessCalendarEvent(
+          eventTitle: model.groupOfferDataModel.classTitle,
+          eventDescription: model.groupOfferDataModel.classDescription,
+          eventLocation: model.selectedAdrress ?? 'Location not added',
+          eventStart: DateTime.fromMillisecondsSinceEpoch(
+                  model.groupOfferDataModel.startDate)
+              .toIso8601String(),
+          eventEnd: DateTime.fromMillisecondsSinceEpoch(
+                  model.groupOfferDataModel.endDate)
+              .toIso8601String(),
+        );
+
+        break;
+
+      case RequestModel:
+        collectionReferenece = CollectionRef.requests;
+
+        RequestModel model = builder.stateOfCalendarCallback.model;
+        canendarEvent = KloudlessCalendarEvent(
+          eventTitle: model.title,
+          eventDescription: model.description,
+          eventLocation: model.address ?? 'Location not added',
+          eventStart: DateTime.fromMillisecondsSinceEpoch(model.requestStart)
+              .toIso8601String(),
+          eventEnd: DateTime.fromMillisecondsSinceEpoch(model.requestEnd)
+              .toIso8601String(),
+        );
+        break;
+
+      default:
+        throw Exception("Please specify the details of model");
+    }
+
+    //Check Mode of Opertion
+    switch (M) {
+      case CreateMode:
+        await CalendarAPIRepo.createEventInCalendar(
+          calendarAccountId: builder.attendeeDetails.calendar.calendarAccId,
+          calendarId: builder.attendeeDetails.calendar.calendarId,
+          event: canendarEvent,
+        ).then((eventId) {
+          if (eventId != null) {
+            logger.d("Event Successfully created");
+
+            collectionReferenece
+                .doc(builder.stateOfCalendarCallback.model.id)
+                .update({
+                  "eventMetaData": EventMetaData(
+                    calendar: builder.attendeeDetails.calendar,
+                    eventId: eventId,
+                  ).toMap(),
+                })
+                .then((value) => logger.d("Value Completed!"))
+                .catchError((onError) {
+                  logger.d("On Error : " + onError);
+                });
+          } else {
+            logger.d("Failed to create event created");
+          }
+        }).catchError((e) {
+          logger.d("ERROR : " + e.toString());
+        });
+        break;
+
+      case ApplyMode:
+        await CalendarAPIRepo.updateAttendiesInCalendarEvent(
+          eventMetaData: builder.stateOfCalendarCallback.model.eventMetaData,
+          event: canendarEvent,
+          attendeDetails: builder.attendeeDetails,
+        )
+            .then((value) => logger.i(
+                  "updateAttendiesInCalendarEvent Completed without any errors",
+                ))
+            .catchError((onError) => logger.i(
+                "updateAttendiesInCalendarEvent finished with an error! $onError"));
+        break;
+    }
+  }
 }
 
 class NewCalendarRegisteration extends StatelessWidget {
   final KloudlessWidgetBuilder builder;
-  NewCalendarRegisteration(this.builder);
+  final BuildContext dialogContext;
+
+  NewCalendarRegisteration({
+    this.builder,
+    this.dialogContext,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         ListTile(
-          title: Text('Google Calandar'),
+          title: TransactionsMatrixCheck(
+            onNavigationStart: () {
+              Navigator.of(dialogContext).pop();
+            },
+            upgradeDetails: AppConfig.upgradePlanBannerModel.calendar_sync,
+            transaction_matrix_type: "calendar_sync",
+            child: GestureDetector(
+              child: Text('Google Calandar'),
+              onTap: () async {
+                //
+              },
+            ),
+          ),
           onTap: () {
+            Navigator.of(dialogContext).pop();
             String authURL =
-                "${builder.authorizationUrl}?client_id=${builder.clienId}&response_type=code&scope=google_calendar&redirect_uri=${builder.redirectUrl}&state=${builder.stateOfCalendarCallback.toMap()}";
+                "${builder.authorizationUrl}?client_id=${builder.clienId}&response_type=code&scope=google_calendar&redirect_uri=${builder.redirectUrl}&state=${builder.stateOfCalendarCallback.toJson()}";
             //LAUNCH URL
             canLaunch(Uri.parse(authURL).toString()).then((value) {
               if (value) {
                 launch(Uri.parse(authURL).toString());
               }
             });
-            logger.d(authURL.toString());
+            logger.d(Uri.parse(authURL).toString());
           },
         ),
       ],

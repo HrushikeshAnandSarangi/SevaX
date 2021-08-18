@@ -53,10 +53,10 @@ class MyWidget extends StatelessWidget {
             redirectUrl:
                 "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth",
             clienId: "B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh",
-            stateOfCalendarCallback: CalStateBuilder<ProjectModel>(
-              environment: ENVIRONMENT.DEVELOPMENT,
-              memberEmailAddress: 'example@email.com',
-              stateId: 'someIdHere',
+            stateOfCalendarCallback: CalStateBuilder<CreateMode, ProjectModel>(
+              memberEmail: 'example@email.com',
+              id: 'someIdHere',
+              name: 'Sample Name',
               model: eventModel,
             ),
             attendeeDetails: AttendeDetails(
