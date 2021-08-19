@@ -156,11 +156,36 @@ class ToDo {
     ));
   }
 
+  static Stream<List<OfferModel>> getLendingOfferApprovedStream(
+      {String email}) async* {
+    log('pending started');
+
+    yield* CollectionRef.offers
+        .where('requestType', isEqualTo: 'LENDING_OFFER')
+        .where('lendingOfferDetailsModel.endDate',
+            isGreaterThan: DateTime.now().millisecondsSinceEpoch)
+        .where('lendingOfferDetailsModel.approvedUsers', arrayContains: email)
+        .snapshots()
+        .transform(
+            StreamTransformer<QuerySnapshot, List<OfferModel>>.fromHandlers(
+      handleData: (data, sink) {
+        List<OfferModel> lendingOffers = [];
+
+        data.docs.forEach((element) {
+          var offerModel = OfferModel.fromMap(element.data());
+          lendingOffers.add(offerModel);
+          log('pending ${lendingOffers.length}');
+        });
+        sink.add(lendingOffers);
+      },
+    ));
+  }
+
   static Stream<Object> getToDoList(
     loggedinMemberEmail,
     loggedInmemberId,
   ) {
-    return CombineLatestStream.combine6(
+    return CombineLatestStream.combine7(
         getTaskStreamForUserWithEmail(
           userEmail: loggedinMemberEmail,
           userId: loggedInmemberId,
@@ -176,6 +201,9 @@ class ToDo {
           userId: loggedInmemberId,
           userEmail: loggedinMemberEmail,
         ),
+        getLendingOfferApprovedStream(
+          email: loggedinMemberEmail,
+        ),
         (
           pendingClaims,
           acceptedOneToManyOffers,
@@ -183,6 +211,7 @@ class ToDo {
           acceptedOneToManyRequests,
           borrowRequestLenderReturnAcknowledgment,
           borrowRequestCreatorWaitingReturnConfirmation,
+          lendingOfferApprovedFlow,
         ) =>
             [
               pendingClaims,
@@ -191,6 +220,7 @@ class ToDo {
               acceptedOneToManyRequests,
               borrowRequestLenderReturnAcknowledgment,
               borrowRequestCreatorWaitingReturnConfirmation,
+              lendingOfferApprovedFlow,
             ]);
   }
 
@@ -467,6 +497,77 @@ class ToDo {
                 tag: L.of(context).check_out,
               ),
               taskTimestamp: model.requestStart,
+            ),
+          );
+        }
+      }
+    });
+
+    //for borrow request, request creator / Borrower needs to see in To do when needs to collect or check in
+    List<OfferModel> lendingOfferBorrowerRequestApproved = toDoSink[6];
+    lendingOfferBorrowerRequestApproved.forEach((model) async {
+      if (model.lendingOfferDetailsModel.lendingModel.lendingType ==
+          LendingType.ITEM) {
+        //FOR BORROW ITEMS
+        if (!model.lendingOfferDetailsModel.collectedItems) {
+          //items to be collected status
+          tasksList.add(
+            TasksCardWrapper(
+              taskCard: ToDoCard(
+                title: model.individualOfferDataModel.title,
+                subTitle: L.of(context).collect_items,
+                timeInMilliseconds: model.lendingOfferDetailsModel.startDate,
+                onTap: () async {},
+                tag: L.of(context).lending_offer_collect_items_tag,
+              ),
+              taskTimestamp: model.lendingOfferDetailsModel.startDate,
+            ),
+          );
+        } else if (model.lendingOfferDetailsModel
+                .collectedItems && //items to be returned status
+            !model.lendingOfferDetailsModel.returnedItems) {
+          tasksList.add(
+            TasksCardWrapper(
+              taskCard: ToDoCard(
+                title: model.individualOfferDataModel.title,
+                subTitle: L.of(context).return_items,
+                timeInMilliseconds: model.lendingOfferDetailsModel.endDate,
+                onTap: () async {},
+                tag: L.of(context).lending_offer_return_items_tag,
+              ),
+              taskTimestamp: model.lendingOfferDetailsModel.startDate,
+            ),
+          );
+        }
+        //FOR BORROW PLACE
+      } else {
+        if (!model.lendingOfferDetailsModel.checkedIn) {
+          //items to be collected status
+          tasksList.add(
+            TasksCardWrapper(
+              taskCard: ToDoCard(
+                title: model.individualOfferDataModel.title,
+                subTitle: L.of(context).check_in_pending,
+                timeInMilliseconds: model.lendingOfferDetailsModel.startDate,
+                onTap: () async {},
+                tag: L.of(context).lending_offer_check_in_tag,
+              ),
+              taskTimestamp: model.lendingOfferDetailsModel.startDate,
+            ),
+          );
+        } else if (model.lendingOfferDetailsModel
+                .checkedIn && //items to be returned status
+            !model.lendingOfferDetailsModel.checkedOut) {
+          tasksList.add(
+            TasksCardWrapper(
+              taskCard: ToDoCard(
+                title: model.individualOfferDataModel.title,
+                subTitle: L.of(context).check_out,
+                timeInMilliseconds: model.lendingOfferDetailsModel.endDate,
+                onTap: () async {},
+                tag: L.of(context).lending_offer_check_out_tag,
+              ),
+              taskTimestamp: model.lendingOfferDetailsModel.startDate,
             ),
           );
         }

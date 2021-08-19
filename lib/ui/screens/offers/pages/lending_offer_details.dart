@@ -689,7 +689,7 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
               additionalInstruction = L.of(context).share_feedback_place;
               reviewWidget = Center(
                 child: CustomChip(
-                  label: 'Review',
+                  label: S.of(context).review,
                   isSelected: false,
                   onTap: () {
                     handleFeedBackNotificationLendingOffer(
@@ -740,20 +740,6 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                   lendingOfferAcceptorModel.additionalInstructions != null
                       ? lendingOfferAcceptorModel.additionalInstructions
                       : '';
-              reviewWidget = Center(
-                child: CustomChip(
-                  label: 'Review',
-                  isSelected: false,
-                  onTap: () {
-                    handleFeedBackNotificationLendingOffer(
-                        offerModel: widget.offerModel,
-                        notificationId: null,
-                        context: context,
-                        email: SevaCore.of(context).loggedInUser.email,
-                        feedbackType: FeedbackType.FOR_LENDING_OFFER_BORROWER);
-                  },
-                ),
-              );
             } else if (lendingOfferAcceptorModel.status ==
                 LendingOfferStatus.ITEMS_COLLECTED) {
               title = L.of(context).items_collected_alert_two +
@@ -811,7 +797,7 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
               additionalInstruction = L.of(context).share_feedback_place;
               reviewWidget = Center(
                 child: CustomChip(
-                  label: 'Review',
+                  label: S.of(context).review,
                   isSelected: false,
                   onTap: () {
                     handleFeedBackNotificationLendingOffer(

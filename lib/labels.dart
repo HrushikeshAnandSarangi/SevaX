@@ -1338,4 +1338,9 @@ class L {
       "You can leave a appreciation review for your host.";
   String get share_feedback_item =>
       "Please provide your valuable feedback about your exchange.";
+
+  String get lending_offer_collect_items_tag => 'Lending Offer - Collect Items';
+  String get lending_offer_return_items_tag => 'Lending Offer - Return Items';
+  String get lending_offer_check_in_tag => 'Lending Offer - Arrival';
+  String get lending_offer_check_out_tag => 'Lending Offer - Departure';
 }
