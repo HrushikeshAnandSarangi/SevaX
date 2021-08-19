@@ -1334,6 +1334,7 @@ class L {
   String get your_departure_date_is => "Your departure date is:";
   String get you_departed_on => "You departed on:";
   String get arrival => "Arrival";
+  String get arrive => "Arrival";
   String get departure => "Departure";
   String get notes => "Notes";
   String get share_feedback_place =>

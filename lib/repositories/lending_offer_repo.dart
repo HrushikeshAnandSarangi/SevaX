@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/enums/lending_borrow_enums.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/offer_model.dart';
@@ -14,9 +15,14 @@ import 'package:sevaexchange/new_baseline/models/lending_place_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/lending_offer_participants.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/time_offer_participant.dart';
+import 'package:sevaexchange/ui/screens/offers/widgets/lending_offer_borrower_update.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
+import 'package:sevaexchange/widgets/custom_buttons.dart';
+
+import '../flavor_config.dart';
+import '../labels.dart';
 
 class LendingOffersRepo {
   static Future<List<AmenitiesModel>> getAllAmenities() async {
@@ -337,5 +343,76 @@ class LendingOffersRepo {
       });
     });
     return model;
+  }
+
+  static Future<void> updateLendingOfferStatus(
+      {@required OfferModel offerModel,
+      @required LendingOfferAcceptorModel lendingOfferAcceptorModel,
+      @required LendingOfferStatus lendingOfferStatus}) async {
+    NotificationType notificationType;
+    if (lendingOfferStatus == LendingOfferStatus.CHECKED_IN) {
+      notificationType =
+          NotificationType.NOTIFICATION_TO_LENDER_PLACE_CHECKED_IN;
+      offerModel.lendingOfferDetailsModel.checkedIn = true;
+    } else if (lendingOfferStatus == LendingOfferStatus.CHECKED_OUT) {
+      notificationType =
+          NotificationType.NOTIFICATION_TO_LENDER_PLACE_CHECKED_OUT;
+      offerModel.lendingOfferDetailsModel.checkedOut = true;
+      offerModel.lendingOfferDetailsModel.checkedIn = false;
+    } else if (lendingOfferStatus == LendingOfferStatus.ITEMS_COLLECTED) {
+      notificationType =
+          NotificationType.NOTIFICATION_TO_LENDER_ITEMS_COLLECTED;
+      offerModel.lendingOfferDetailsModel.collectedItems = true;
+    } else if (lendingOfferStatus == LendingOfferStatus.ITEMS_RETURNED) {
+      notificationType = NotificationType.NOTIFICATION_TO_LENDER_ITEMS_RETURNED;
+      offerModel.lendingOfferDetailsModel.returnedItems = true;
+      offerModel.lendingOfferDetailsModel.collectedItems = false;
+    }
+
+    NotificationsModel notification = NotificationsModel(
+        timebankId: offerModel.timebankId,
+        id: utils.Utils.getUuid(),
+        targetUserId: offerModel.sevaUserId,
+        senderUserId: lendingOfferAcceptorModel.acceptorId,
+        type: notificationType,
+        data: offerModel.toMap(),
+        communityId: offerModel.communityId,
+        isTimebankNotification: false,
+        isRead: false,
+        senderPhotoUrl: offerModel.photoUrlImage);
+
+    WriteBatch batch = CollectionRef.batch;
+    var offersRef = CollectionRef.offers.doc(offerModel.id);
+    var lenderNotificationRef =
+        CollectionRef.userNotification(lendingOfferAcceptorModel.acceptorEmail)
+            .doc(offerModel.email);
+    var offerAcceptorsReference =
+        CollectionRef.lendingOfferAcceptors(offerModel.id)
+            .doc(lendingOfferAcceptorModel.id);
+    batch.update(offersRef, offerModel.toMap());
+    batch.update(offerAcceptorsReference, {
+      "status": lendingOfferStatus.readable,
+    });
+    batch.set(
+      lenderNotificationRef,
+      notification.toMap(),
+      SetOptions(merge: true),
+    );
+    await batch.commit();
+  }
+
+  static void getDialogForBorrowerToUpdate(
+      {BuildContext context,
+      OfferModel offerModel,
+      LendingOfferAcceptorModel lendingOfferAcceptorModel}) async {
+    showDialog(
+      context: context,
+      builder: (BuildContext viewContext) {
+        return LendingOfferBorrowerUpdateWidget(
+          offerModel: offerModel,
+          lendingOfferAcceptorModel: lendingOfferAcceptorModel,
+        );
+      },
+    );
   }
 }

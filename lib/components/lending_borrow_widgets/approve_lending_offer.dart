@@ -87,10 +87,6 @@ class _ApproveLendingOfferState extends State<ApproveLendingOffer> {
                       LendingType.PLACE
                   ? L.of(context).date_to_check_in_out
                   : L.of(context).date_to_borrow_and_return,
-              startTime: DateTime.fromMillisecondsSinceEpoch(
-                  widget.offerModel.lendingOfferDetailsModel.startDate),
-              endTime: DateTime.fromMillisecondsSinceEpoch(
-                  widget.offerModel.lendingOfferDetailsModel.endDate),
             ),
             SizedBox(height: 15),
             Text(L.of(context).addditional_instructions + '*',
