@@ -232,6 +232,7 @@ class ToDo {
     @required ValueChanged<RequestModel> requestCallback,
     @required BuildContext context,
     @required ValueChanged<int> feedbackCallback,
+    @required String email,
   }) {
     List<TasksCardWrapper> tasksList = [];
     MessageBloc _messageBloc = MessageBloc();
@@ -509,9 +510,9 @@ class ToDo {
     //for borrow request, request creator / Borrower needs to see in To do when needs to collect or check in
     List<OfferModel> lendingOfferBorrowerRequestApproved = toDoSink[6];
     lendingOfferBorrowerRequestApproved.forEach((model) async {
-      // LendingOfferAcceptorModel lendingOfferAcceptorModel =
-      //     await LendingOffersRepo.getBorrowAcceptorModel(
-      //         offerId: model.id, acceptorEmail: user.email);
+      LendingOfferAcceptorModel lendingOfferAcceptorModel =
+          await LendingOffersRepo.getBorrowAcceptorModel(
+              offerId: model.id, acceptorEmail: email);
 
       if (model.lendingOfferDetailsModel.lendingModel.lendingType ==
           LendingType.ITEM) {
@@ -526,13 +527,17 @@ class ToDo {
                     L.of(context).collect_items + model.selectedAdrress != null
                         ? ' at ' + model.selectedAdrress
                         : '',
-                timeInMilliseconds: model.lendingOfferDetailsModel.startDate,
+                timeInMilliseconds: lendingOfferAcceptorModel.startDate,
                 onTap: () async {
-                  await LendingOffersRepo.getDialogForBorrowerToUpdate(offerModel: model,context: context,lendingOfferAcceptorModel: );
+                  await LendingOffersRepo.getDialogForBorrowerToUpdate(
+                      offerModel: model,
+                      context: context,
+                      lendingOfferAcceptorModel: lendingOfferAcceptorModel);
                 },
                 tag: L.of(context).lending_offer_collect_items_tag,
               ),
-              taskTimestamp: model.lendingOfferDetailsModel.startDate,
+              taskTimestamp: lendingOfferAcceptorModel.startDate ??
+                  DateTime.now().millisecondsSinceEpoch,
             ),
           );
         } else if (model.lendingOfferDetailsModel
@@ -546,14 +551,17 @@ class ToDo {
                     L.of(context).return_items + model.selectedAdrress != null
                         ? ' at ' + model.selectedAdrress
                         : '',
-                timeInMilliseconds: model.lendingOfferDetailsModel.endDate,
+                timeInMilliseconds: lendingOfferAcceptorModel.endDate,
                 onTap: () async {
-                  await LendingOffersRepo.getDialogForBorrowerToUpdate(offerModel: model,context: context,lendingOfferAcceptorModel: );
-
+                  await LendingOffersRepo.getDialogForBorrowerToUpdate(
+                      offerModel: model,
+                      context: context,
+                      lendingOfferAcceptorModel: lendingOfferAcceptorModel);
                 },
                 tag: L.of(context).lending_offer_return_items_tag,
               ),
-              taskTimestamp: model.lendingOfferDetailsModel.startDate,
+              taskTimestamp: lendingOfferAcceptorModel.startDate ??
+                  DateTime.now().millisecondsSinceEpoch,
             ),
           );
         }
@@ -568,14 +576,17 @@ class ToDo {
                 subTitle: L.of(context).arrive + model.selectedAdrress != null
                     ? ' at ' + model.selectedAdrress
                     : '',
-                timeInMilliseconds: model.lendingOfferDetailsModel.startDate,
+                timeInMilliseconds: lendingOfferAcceptorModel.startDate,
                 onTap: () async {
-                  await LendingOffersRepo.getDialogForBorrowerToUpdate(offerModel: model,context: context,lendingOfferAcceptorModel: );
-
+                  await LendingOffersRepo.getDialogForBorrowerToUpdate(
+                      offerModel: model,
+                      context: context,
+                      lendingOfferAcceptorModel: lendingOfferAcceptorModel);
                 },
                 tag: L.of(context).lending_offer_check_in_tag,
               ),
-              taskTimestamp: model.lendingOfferDetailsModel.startDate,
+              taskTimestamp: lendingOfferAcceptorModel.startDate ??
+                  DateTime.now().millisecondsSinceEpoch,
             ),
           );
         } else if (model.lendingOfferDetailsModel
@@ -589,14 +600,17 @@ class ToDo {
                     L.of(context).departure + model.selectedAdrress != null
                         ? ' at ' + model.selectedAdrress
                         : '',
-                timeInMilliseconds: model.lendingOfferDetailsModel.endDate,
+                timeInMilliseconds: lendingOfferAcceptorModel.endDate,
                 onTap: () async {
-                  await LendingOffersRepo.getDialogForBorrowerToUpdate(offerModel: model,context: context,lendingOfferAcceptorModel: );
-
+                  await LendingOffersRepo.getDialogForBorrowerToUpdate(
+                      offerModel: model,
+                      context: context,
+                      lendingOfferAcceptorModel: lendingOfferAcceptorModel);
                 },
                 tag: L.of(context).lending_offer_check_out_tag,
               ),
-              taskTimestamp: model.lendingOfferDetailsModel.startDate,
+              taskTimestamp: lendingOfferAcceptorModel.startDate ??
+                  DateTime.now().millisecondsSinceEpoch,
             ),
           );
         }

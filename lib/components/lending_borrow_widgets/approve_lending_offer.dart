@@ -193,16 +193,6 @@ class _ApproveLendingOfferState extends State<ApproveLendingOffer> {
             ),
             onPressed: () async {
               //To be implemented by lending offer team
-
-              if (widget.offerModel.lendingOfferDetailsModel.endDate <=
-                  widget.offerModel.lendingOfferDetailsModel.startDate) {
-                errorDialog(
-                  context: context,
-                  error: S.of(context).validation_error_end_date_greater,
-                );
-                return;
-              }
-
               if (additionalInstructionsText.isEmpty) {
                 errorDialog(
                   context: context,
@@ -210,62 +200,80 @@ class _ApproveLendingOfferState extends State<ApproveLendingOffer> {
                 );
                 return;
               }
-              //assigning dates to acceptor model
-              widget.lendingOfferAcceptorModel.startDate =
-                  OfferDurationWidgetState.starttimestamp;
-              widget.lendingOfferAcceptorModel.endDate =
-                  OfferDurationWidgetState.endtimestamp;
+              if (OfferDurationWidgetState.starttimestamp != 0 &&
+                  OfferDurationWidgetState.endtimestamp != 0) {
+                //assigning dates to acceptor model
+                widget.lendingOfferAcceptorModel.startDate =
+                    OfferDurationWidgetState.starttimestamp;
+                widget.lendingOfferAcceptorModel.endDate =
+                    OfferDurationWidgetState.endtimestamp;
+                if (widget.lendingOfferAcceptorModel.startDate <=
+                    widget.lendingOfferAcceptorModel.endDate) {
+                  errorDialog(
+                    context: context,
+                    error: S.of(context).validation_error_end_date_greater,
+                  );
+                  return;
+                }
+                if (widget.offerModel.lendingOfferDetailsModel
+                        .lendingOfferAgreementLink !=
+                    null) {
+                  String agreementLink =
+                      await BorrowAgreementPdf().borrowAgreementPdf(
+                    context,
+                    null,
+                    widget.lendingOfferAcceptorModel.acceptorName,
+                    widget.offerModel.lendingOfferDetailsModel
+                        .lendingOfferAgreementName,
+                    true,
+                    widget.offerModel.lendingOfferDetailsModel.startDate,
+                    widget.offerModel.lendingOfferDetailsModel.endDate,
+                    widget.offerModel.lendingOfferDetailsModel.lendingModel
+                                .lendingType ==
+                            LendingType.PLACE
+                        ? LendingType.PLACE.readable
+                        : LendingType.ITEM.readable,
+                    widget.offerModel.lendingOfferDetailsModel
+                            .agreementConfig['specificConditions'] ??
+                        '' + '\n ${additionalInstructionsText ?? ''}',
+                    widget.offerModel.lendingOfferDetailsModel
+                        .agreementConfig['isDamageLiability'],
+                    widget.offerModel.lendingOfferDetailsModel
+                        .agreementConfig['isUseDisclaimer'],
+                    widget.offerModel.lendingOfferDetailsModel
+                        .agreementConfig['isDeliveryReturn'],
+                    widget.offerModel.lendingOfferDetailsModel
+                        .agreementConfig['isMaintainRepair'],
+                    widget.offerModel.lendingOfferDetailsModel
+                        .agreementConfig['isRefundDepositNeeded'],
+                    widget.offerModel.lendingOfferDetailsModel
+                        .agreementConfig['isMaintainAndclean'],
+                  );
 
-              if (widget.offerModel.lendingOfferDetailsModel
-                      .lendingOfferAgreementLink !=
-                  null) {
-                String agreementLink =
-                    await BorrowAgreementPdf().borrowAgreementPdf(
-                  context,
-                  null,
-                  widget.lendingOfferAcceptorModel.acceptorName,
-                  widget.offerModel.lendingOfferDetailsModel
-                      .lendingOfferAgreementName,
-                  true,
-                  widget.offerModel.lendingOfferDetailsModel.startDate,
-                  widget.offerModel.lendingOfferDetailsModel.endDate,
-                  widget.offerModel.lendingOfferDetailsModel.lendingModel
-                              .lendingType ==
-                          LendingType.PLACE
-                      ? LendingType.PLACE.readable
-                      : LendingType.ITEM.readable,
-                  widget.offerModel.lendingOfferDetailsModel
-                          .agreementConfig['specificConditions'] ??
-                      '' + '\n ${additionalInstructionsText ?? ''}',
-                  widget.offerModel.lendingOfferDetailsModel
-                      .agreementConfig['isDamageLiability'],
-                  widget.offerModel.lendingOfferDetailsModel
-                      .agreementConfig['isUseDisclaimer'],
-                  widget.offerModel.lendingOfferDetailsModel
-                      .agreementConfig['isDeliveryReturn'],
-                  widget.offerModel.lendingOfferDetailsModel
-                      .agreementConfig['isMaintainRepair'],
-                  widget.offerModel.lendingOfferDetailsModel
-                      .agreementConfig['isRefundDepositNeeded'],
-                  widget.offerModel.lendingOfferDetailsModel
-                      .agreementConfig['isMaintainAndclean'],
-                );
-
-                await LendingOffersRepo.approveLendingOffer(
-                        model: widget.offerModel,
-                        lendingOfferAcceptorModel:
-                            widget.lendingOfferAcceptorModel,
-                        lendingOfferApprovedAgreementLink: agreementLink ?? '',
-                        additionalInstructionsText: additionalInstructionsText)
-                    .then((value) => Navigator.of(context).pop());
+                  await LendingOffersRepo.approveLendingOffer(
+                          model: widget.offerModel,
+                          lendingOfferAcceptorModel:
+                              widget.lendingOfferAcceptorModel,
+                          lendingOfferApprovedAgreementLink:
+                              agreementLink ?? '',
+                          additionalInstructionsText:
+                              additionalInstructionsText)
+                      .then((value) => Navigator.of(context).pop());
+                } else {
+                  await LendingOffersRepo.approveLendingOffer(
+                          model: widget.offerModel,
+                          lendingOfferAcceptorModel:
+                              widget.lendingOfferAcceptorModel,
+                          lendingOfferApprovedAgreementLink: '',
+                          additionalInstructionsText:
+                              additionalInstructionsText)
+                      .then((value) => Navigator.of(context).pop());
+                }
               } else {
-                await LendingOffersRepo.approveLendingOffer(
-                        model: widget.offerModel,
-                        lendingOfferAcceptorModel:
-                            widget.lendingOfferAcceptorModel,
-                        lendingOfferApprovedAgreementLink: '',
-                        additionalInstructionsText: additionalInstructionsText)
-                    .then((value) => Navigator.of(context).pop());
+                errorDialog(
+                  context: context,
+                  error: S.of(context).offer_start_end_date,
+                );
               }
             },
           ),

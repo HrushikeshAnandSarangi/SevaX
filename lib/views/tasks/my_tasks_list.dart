@@ -106,15 +106,15 @@ class MyTasksListState extends State<MyTaskList> {
         }
 
         toDoItems = ToDo.classifyToDos(
-          context: context,
-          toDoSink: snapshot.data,
-          requestCallback: (requestModel) {
-            requestModelNew = requestModel;
-          },
-          feedbackCallback: (int value) {
-            subjectBorrow.add(value);
-          },
-        );
+            context: context,
+            toDoSink: snapshot.data,
+            requestCallback: (requestModel) {
+              requestModelNew = requestModel;
+            },
+            feedbackCallback: (int value) {
+              subjectBorrow.add(value);
+            },
+            email: widget.email);
 
         if (toDoItems.length == 0)
           return Center(
