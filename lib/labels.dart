@@ -1304,6 +1304,8 @@ class L {
   String get borrow_request_return_items_tag => 'Borrow Request - Return Items';
   String get collect_items => 'Collect Items';
   String get return_items => 'Return Items';
+  String get collected_items => 'Collected Item(s)';
+  String get returned_items => 'Returned Item(s)';
   String get lent_to => 'Lent to: ';
   String get place_not_added => 'Place not added';
   String get items_not_added => 'Item(s) not added';

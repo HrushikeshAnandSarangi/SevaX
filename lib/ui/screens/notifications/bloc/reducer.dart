@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/components/lending_borrow_widgets/approve_lending_offer.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
@@ -15,6 +16,7 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/groupinvite_user_model.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
 import 'package:sevaexchange/new_baseline/models/soft_delete_request.dart';
+import 'package:sevaexchange/repositories/lending_offer_repo.dart';
 import 'package:sevaexchange/repositories/notifications_repository.dart';
 import 'package:sevaexchange/repositories/request_repository.dart';
 import 'package:sevaexchange/repositories/user_repository.dart';
@@ -22,6 +24,7 @@ import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_shimmer.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/request_accepted_widget.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/request_complete_widget.dart';
+import 'package:sevaexchange/ui/screens/offers/pages/lending_offer_participants.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/time_offer_participant.dart';
 import 'package:sevaexchange/ui/screens/request/pages/request_donation_dispute_page.dart';
 import 'package:sevaexchange/utils/app_config.dart';
@@ -959,8 +962,22 @@ class PersonalNotificationsReducerForOffer {
                 timestamp: notification.timestamp,
                 entityName: 'NAME',
                 isDissmissible: true,
-                onPressed: () {
-                  //To be implemented by lending offer team
+                onPressed: () async {
+                  //Implemented by lending offer team
+                  LendingOfferAcceptorModel lendingOfferAcceptorModel =
+                      await LendingOffersRepo.getBorrowAcceptorModel(
+                          offerId: model.id, acceptorEmail: user.email);
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      // fullscreenDialog: true,
+                      builder: (context) => ApproveLendingOffer(
+                        offerModel: model,
+                        lendingOfferAcceptorModel: lendingOfferAcceptorModel,
+                      ),
+                    ),
+                  );
                 },
                 photoUrl: notification.senderPhotoUrl ?? defaultUserImageURL,
                 title: '${model.individualOfferDataModel.title}',

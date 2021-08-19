@@ -20,12 +20,16 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/acceptor_model.dart';
 import 'package:sevaexchange/new_baseline/models/user_added_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
+import 'package:sevaexchange/repositories/lending_offer_repo.dart';
 import 'package:sevaexchange/repositories/notifications_repository.dart';
+import 'package:sevaexchange/repositories/user_repository.dart';
 import 'package:sevaexchange/ui/screens/notifications/bloc/notifications_bloc.dart';
 import 'package:sevaexchange/ui/screens/notifications/bloc/reducer.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card_oneToManyAccept.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card_oneToManySpeakerReclaims.dart';
+import 'package:sevaexchange/ui/screens/notifications/widgets/notification_shimmer.dart';
+import 'package:sevaexchange/ui/screens/offers/pages/lending_offer_participants.dart';
 import 'package:sevaexchange/ui/screens/request/pages/oneToManySpeakerTimeEntryComplete_page.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
@@ -1154,13 +1158,14 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                             .lender_acknowledged_request_completion,
                       );
                       break;
+
                     case NotificationType.MEMBER_ACCEPT_LENDING_OFFER:
                       return PersonalNotificationsReducerForOffer
                           .getNotificationForLendingOfferAccept(
                         notification: notification,
                       );
-
                       break;
+
                     case NotificationType
                         .NOTIFICATION_TO_BORROWER_REJECTED_LENDING_OFFER:
                       OfferModel model = OfferModel.fromMap(notification.data);
@@ -1182,6 +1187,182 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       );
                       break;
 
+                    case NotificationType
+                        .NOTIFICATION_TO_BORROWER_APPROVED_LENDING_OFFER:
+                      OfferModel model = OfferModel.fromMap(notification.data);
+                      return NotificationCard(
+                        timestamp: notification.timestamp,
+                        entityName: model.fullName,
+                        title: model.individualOfferDataModel.title,
+                        isDissmissible: true,
+                        onDismissed: () {
+                          NotificationsRepository.readUserNotification(
+                            notification.id,
+                            user.email,
+                          );
+                        },
+                        onPressed: null,
+                        photoUrl: model.photoUrlImage,
+                        subTitle:
+                            '${S.of(context).notifications_approved_by} ${model.fullName} ',
+                      );
+                      break;
+
+                    case NotificationType
+                        .NOTIFICATION_TO_LENDER_PLACE_CHECKED_IN:
+                      var model = OfferModel.fromMap(notification.data);
+                      return FutureBuilder<UserModel>(
+                          future: UserRepository.fetchUserById(
+                              notification.senderUserId),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasError) {
+                              return Container();
+                            }
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return NotificationShimmer();
+                            }
+                            UserModel user = snapshot.data;
+                            return user != null && user.fullname != null
+                                ? NotificationCard(
+                                    timestamp: notification.timestamp,
+                                    entityName: 'NAME',
+                                    isDissmissible: true,
+                                    onPressed: null,
+                                    photoUrl: notification.senderPhotoUrl ??
+                                        defaultUserImageURL,
+                                    title:
+                                        '${model.individualOfferDataModel.title}',
+                                    subTitle: "${user.fullname} " +
+                                        L.of(context).checked_in,
+                                    onDismissed: () {
+                                      NotificationsRepository
+                                          .readUserNotification(
+                                        notification.id,
+                                        notification.targetUserId,
+                                      );
+                                    },
+                                  )
+                                : Container();
+                          });
+                      break;
+
+                    case NotificationType
+                        .NOTIFICATION_TO_LENDER_PLACE_CHECKED_OUT:
+                      var model = OfferModel.fromMap(notification.data);
+                      return FutureBuilder<UserModel>(
+                          future: UserRepository.fetchUserById(
+                              notification.senderUserId),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasError) {
+                              return Container();
+                            }
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return NotificationShimmer();
+                            }
+                            UserModel user = snapshot.data;
+                            return user != null && user.fullname != null
+                                ? NotificationCard(
+                                    timestamp: notification.timestamp,
+                                    entityName: 'NAME',
+                                    isDissmissible: true,
+                                    onPressed: null,
+                                    photoUrl: notification.senderPhotoUrl ??
+                                        defaultUserImageURL,
+                                    title:
+                                        '${model.individualOfferDataModel.title}',
+                                    subTitle: "${user.fullname} " +
+                                        L.of(context).checked_out,
+                                    onDismissed: () {
+                                      NotificationsRepository
+                                          .readUserNotification(
+                                        notification.id,
+                                        notification.targetUserId,
+                                      );
+                                    },
+                                  )
+                                : Container();
+                          });
+                      break;
+
+                    case NotificationType
+                        .NOTIFICATION_TO_LENDER_ITEMS_COLLECTED:
+                      var model = OfferModel.fromMap(notification.data);
+                      return FutureBuilder<UserModel>(
+                          future: UserRepository.fetchUserById(
+                              notification.senderUserId),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasError) {
+                              return Container();
+                            }
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return NotificationShimmer();
+                            }
+                            UserModel user = snapshot.data;
+                            return user != null && user.fullname != null
+                                ? NotificationCard(
+                                    timestamp: notification.timestamp,
+                                    entityName: 'NAME',
+                                    isDissmissible: true,
+                                    onPressed: null,
+                                    photoUrl: notification.senderPhotoUrl ??
+                                        defaultUserImageURL,
+                                    title:
+                                        '${model.individualOfferDataModel.title}',
+                                    subTitle: "${user.fullname} " +
+                                        L.of(context).collected_items,
+                                    onDismissed: () {
+                                      NotificationsRepository
+                                          .readUserNotification(
+                                        notification.id,
+                                        notification.targetUserId,
+                                      );
+                                    },
+                                  )
+                                : Container();
+                          });
+                      break;
+
+                    case NotificationType.NOTIFICATION_TO_LENDER_ITEMS_RETURNED:
+                      var model = OfferModel.fromMap(notification.data);
+                      return FutureBuilder<UserModel>(
+                          future: UserRepository.fetchUserById(
+                              notification.senderUserId),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasError) {
+                              return Container();
+                            }
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return NotificationShimmer();
+                            }
+                            UserModel user = snapshot.data;
+                            return user != null && user.fullname != null
+                                ? NotificationCard(
+                                    timestamp: notification.timestamp,
+                                    entityName: 'NAME',
+                                    isDissmissible: true,
+                                    onPressed: null,
+                                    photoUrl: notification.senderPhotoUrl ??
+                                        defaultUserImageURL,
+                                    title:
+                                        '${model.individualOfferDataModel.title}',
+                                    subTitle: "${user.fullname} " +
+                                        L.of(context).returned_items,
+                                    onDismissed: () {
+                                      NotificationsRepository
+                                          .readUserNotification(
+                                        notification.id,
+                                        notification.targetUserId,
+                                      );
+                                    },
+                                  )
+                                : Container();
+                          });
+                      break;
+
                     case NotificationType.LendingOfferIdleFirstWarning:
                       OfferModel model = OfferModel.fromMap(notification.data);
                       offerModelNew = model;
@@ -1190,9 +1371,9 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         entityName: 'NAME',
                         isDissmissible: true,
                         onDismissed: () async {
-                          await FirestoreManager.readTimeBankNotification(
-                            notificationId: notification.id,
-                            timebankId: notification.timebankId,
+                          NotificationsRepository.readUserNotification(
+                            notification.id,
+                            user.email,
                           );
                         },
                         onPressed: () {},
@@ -1214,9 +1395,9 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         entityName: 'NAME',
                         isDissmissible: true,
                         onDismissed: () async {
-                          await FirestoreManager.readTimeBankNotification(
-                            notificationId: notification.id,
-                            timebankId: notification.timebankId,
+                          NotificationsRepository.readUserNotification(
+                            notification.id,
+                            user.email,
                           );
                         },
                         onPressed: () {},
@@ -1238,9 +1419,9 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         entityName: 'NAME',
                         isDissmissible: true,
                         onDismissed: () async {
-                          await FirestoreManager.readTimeBankNotification(
-                            notificationId: notification.id,
-                            timebankId: notification.timebankId,
+                          NotificationsRepository.readUserNotification(
+                            notification.id,
+                            user.email,
                           );
                         },
                         onPressed: () {},
@@ -1265,9 +1446,9 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         entityName: 'NAME',
                         isDissmissible: true,
                         onDismissed: () async {
-                          await FirestoreManager.readTimeBankNotification(
-                            notificationId: notification.id,
-                            timebankId: notification.timebankId,
+                          NotificationsRepository.readUserNotification(
+                            notification.id,
+                            user.email,
                           );
                         },
                         onPressed: () {},
@@ -1288,9 +1469,9 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         entityName: 'NAME',
                         isDissmissible: true,
                         onDismissed: () async {
-                          await FirestoreManager.readTimeBankNotification(
-                            notificationId: notification.id,
-                            timebankId: notification.timebankId,
+                          NotificationsRepository.readUserNotification(
+                            notification.id,
+                            user.email,
                           );
                         },
                         onPressed: () {},
@@ -1311,9 +1492,9 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         entityName: 'NAME',
                         isDissmissible: true,
                         onDismissed: () async {
-                          await FirestoreManager.readTimeBankNotification(
-                            notificationId: notification.id,
-                            timebankId: notification.timebankId,
+                          NotificationsRepository.readUserNotification(
+                            notification.id,
+                            user.email,
                           );
                         },
                         onPressed: () {},
