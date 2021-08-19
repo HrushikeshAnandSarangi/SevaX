@@ -14,6 +14,7 @@ import 'package:sevaexchange/repositories/lending_offer_repo.dart';
 import 'package:sevaexchange/ui/screens/borrow_agreement/borrow_agreement_pdf.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/lending_offer_participants.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/time_offer_participant.dart';
+import 'package:sevaexchange/ui/screens/offers/widgets/custom_dialog.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
@@ -192,6 +193,29 @@ class _ApproveLendingOfferState extends State<ApproveLendingOffer> {
             ),
             onPressed: () async {
               //To be implemented by lending offer team
+
+              if (widget.offerModel.lendingOfferDetailsModel.endDate <=
+                  widget.offerModel.lendingOfferDetailsModel.startDate) {
+                errorDialog(
+                  context: context,
+                  error: S.of(context).validation_error_end_date_greater,
+                );
+                return;
+              }
+
+              if (additionalInstructionsText.isEmpty) {
+                errorDialog(
+                  context: context,
+                  error: L.of(context).addditional_instructions_error_text,
+                );
+                return;
+              }
+              //assigning dates to acceptor model
+              widget.lendingOfferAcceptorModel.startDate =
+                  OfferDurationWidgetState.starttimestamp;
+              widget.lendingOfferAcceptorModel.endDate =
+                  OfferDurationWidgetState.endtimestamp;
+
               if (widget.offerModel.lendingOfferDetailsModel
                       .lendingOfferAgreementLink !=
                   null) {

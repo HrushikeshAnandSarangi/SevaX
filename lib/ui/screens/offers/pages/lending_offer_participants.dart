@@ -415,6 +415,7 @@ class LendingOfferAcceptorModel {
   bool isBorrowerGaveReview;
   int startDate;
   int endDate;
+
   LendingOfferAcceptorModel({
     this.id,
     this.acceptorEmail,
