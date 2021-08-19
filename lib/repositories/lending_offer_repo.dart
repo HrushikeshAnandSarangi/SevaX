@@ -336,4 +336,7 @@ class LendingOffersRepo {
     });
     return model;
   }
+
+  static void getDialogForBorrower(
+      {String offerId, String acceptorEmail}) async {}
 }

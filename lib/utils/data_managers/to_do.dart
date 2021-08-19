@@ -14,6 +14,7 @@ import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/message_bloc.dart';
 import 'package:sevaexchange/ui/screens/notifications/bloc/notifications_bloc.dart';
 import 'package:sevaexchange/ui/screens/notifications/pages/combined_notification_page.dart';
+import 'package:sevaexchange/ui/screens/offers/pages/offer_details.dart';
 import 'package:sevaexchange/ui/screens/request/pages/oneToManySpeakerTimeEntryComplete_page.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
@@ -515,7 +516,10 @@ class ToDo {
             TasksCardWrapper(
               taskCard: ToDoCard(
                 title: model.individualOfferDataModel.title,
-                subTitle: L.of(context).collect_items,
+                subTitle:
+                    L.of(context).collect_items + model.selectedAdrress != null
+                        ? ' at ' + model.selectedAdrress
+                        : '',
                 timeInMilliseconds: model.lendingOfferDetailsModel.startDate,
                 onTap: () async {},
                 tag: L.of(context).lending_offer_collect_items_tag,
@@ -530,7 +534,10 @@ class ToDo {
             TasksCardWrapper(
               taskCard: ToDoCard(
                 title: model.individualOfferDataModel.title,
-                subTitle: L.of(context).return_items,
+                subTitle:
+                    L.of(context).return_items + model.selectedAdrress != null
+                        ? ' at ' + model.selectedAdrress
+                        : '',
                 timeInMilliseconds: model.lendingOfferDetailsModel.endDate,
                 onTap: () async {},
                 tag: L.of(context).lending_offer_return_items_tag,
@@ -547,7 +554,9 @@ class ToDo {
             TasksCardWrapper(
               taskCard: ToDoCard(
                 title: model.individualOfferDataModel.title,
-                subTitle: L.of(context).check_in_pending,
+                subTitle: L.of(context).arrive + model.selectedAdrress != null
+                    ? ' at ' + model.selectedAdrress
+                    : '',
                 timeInMilliseconds: model.lendingOfferDetailsModel.startDate,
                 onTap: () async {},
                 tag: L.of(context).lending_offer_check_in_tag,
@@ -562,7 +571,10 @@ class ToDo {
             TasksCardWrapper(
               taskCard: ToDoCard(
                 title: model.individualOfferDataModel.title,
-                subTitle: L.of(context).check_out,
+                subTitle:
+                    L.of(context).departure + model.selectedAdrress != null
+                        ? ' at ' + model.selectedAdrress
+                        : '',
                 timeInMilliseconds: model.lendingOfferDetailsModel.endDate,
                 onTap: () async {},
                 tag: L.of(context).lending_offer_check_out_tag,
