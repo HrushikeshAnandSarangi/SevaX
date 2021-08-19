@@ -1338,10 +1338,21 @@ class L {
       "You can leave a appreciation review for your host.";
   String get share_feedback_item =>
       "Please provide your valuable feedback about your exchange.";
+
+//Borrow/Lending idle notifications Labels below
   String get idle_borrow_request_first_warning =>
-      "*** days have elapsed without any interest. please re-evaluate the request or withdraw.";
+      "*** weeks have passed without any interest. please re-evaluate this request or withdraw.";
   String get idle_borrow_request_second_warning =>
-      "*** days have elapsed without any interest. Please note that the request will be deleted if there is still no acitivty after 14 more days";
+      "*** weeks have passed without any interest. Please note that this request will be deleted if there is still no acitivty after 14 more days";
   String get idle_borrow_request_third_warning_deleted =>
       "This request has now been deleted due to inactivity for the past 6 weeks.";
+
+  String get idle_lending_offer_first_warning =>
+      "*** weeks have passed without any interest. please re-evaluate this offer or withdraw.";
+  String get idle_lending_offer_second_warning =>
+      "*** weeks have passed without any interest. Please note that this offer will be deleted if there is still no acitivty after 14 more days";
+  String get idle_lending_offer_third_warning_deleted =>
+      "This offer has now been deleted due to inactivity for the past 6 weeks.";
+  String get idle_for_4_weeks => " has been idle for 4 weeks";
+  String get idle_for_2_weeks => " has been idle for 2 weeks";
 }
