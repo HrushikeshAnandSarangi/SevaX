@@ -8,6 +8,8 @@ import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/views/core.dart';
 
+import '../../../flavor_config.dart';
+
 class Mode {}
 
 class CreateMode extends Mode {}
@@ -100,14 +102,15 @@ class KloudlessWidgetBuilder {
 
   KloudlessWidgetBuilder({
     this.clienId = "B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh",
-    this.redirectUrl =
-        "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth",
     this.authorizationUrl = "https://api.kloudless.com/v1/oauth",
     this.onPressed,
     this.stateOfCalendarCallback,
     this.attendeeDetails,
     this.initialEventDetails,
-  });
+  }) {
+    this.redirectUrl =
+        FlavorConfig.values.cloudFunctionBaseURL + "/callbackurlforoauth";
+  }
 
   KloudlessWidgetBuilder fromContext<M, T>({
     BuildContext context,
@@ -198,6 +201,7 @@ class CalStateBuilder<M, T> {
         'type': this.stateType,
         'id': this.id,
         "mode": getModeFromType(M, T),
+        "fromMobile": true,
       };
 
   String toJson() {

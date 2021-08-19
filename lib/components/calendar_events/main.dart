@@ -50,8 +50,6 @@ class MyWidget extends StatelessWidget {
         KloudlessWidgetManager<CreateMode, ProjectModel>().syncCalendar(
           context: context,
           builder: KloudlessWidgetBuilder(
-            redirectUrl:
-                "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth",
             clienId: "B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh",
             stateOfCalendarCallback: CalStateBuilder<CreateMode, ProjectModel>(
               memberEmail: 'example@email.com',

@@ -604,6 +604,11 @@ class RequestModel extends DataModel {
   }
 
   RequestModel.fromMapElasticSearch(Map<String, dynamic> map) {
+    if (map.containsKey('eventMetaData')) {
+      this.eventMetaData = EventMetaData.fromMap(
+        Map<String, dynamic>.from(map["eventMetaData"]),
+      );
+    }
     if (map.containsKey('donationInstructionLink')) {
       this.donationInstructionLink = map["donationInstructionLink"];
     }

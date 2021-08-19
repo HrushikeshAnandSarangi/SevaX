@@ -109,13 +109,10 @@ class CalendarAPIRepo {
     KloudlessCalendarEvent event,
   }) async {
     //Event doesn't have an associated link
-    if (eventMetaData.eventId == null || eventMetaData.eventId.isEmpty) {
-      return await createEventInCalendar(
-        calendarAccountId: attendeDetails.calendar.calendarAccId,
-        calendarId: attendeDetails.calendar.calendarId,
-        event: event,
-      ).then((value) => value != null);
-    } else {
+    if (eventMetaData.eventId != null &&
+        !(eventMetaData.eventId.isEmpty) &&
+        eventMetaData.calendar.caledarScope ==
+            attendeDetails.calendar.caledarScope) {
       //Get applicants
       return await getEventDetailsFromId(
         calendarAccountId: eventMetaData.calendar.calendarAccId,
@@ -137,6 +134,12 @@ class CalendarAPIRepo {
         logger.i("Failed Updation due to " + onError);
         return false;
       });
+    } else {
+      return await createEventInCalendar(
+        calendarAccountId: attendeDetails.calendar.calendarAccId,
+        calendarId: attendeDetails.calendar.calendarId,
+        event: event,
+      ).then((value) => value != null);
     }
   }
 }

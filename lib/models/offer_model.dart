@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:sevaexchange/components/calendar_events/models/kloudless_models.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/cash_model.dart';
@@ -235,6 +236,8 @@ class IndividualOfferDataModel extends DataModel {
 }
 
 class OfferModel extends DataModel {
+  EventMetaData eventMetaData;
+
   bool acceptedOffer = false;
   String associatedRequest;
   String communityId;
@@ -306,6 +309,7 @@ class OfferModel extends DataModel {
     this.photoUrlImage,
     this.liveMode,
     this.communityName,
+    this.eventMetaData,
   }) {
     this.root_timebank_id = FlavorConfig.values.timebankId;
   }
@@ -457,9 +461,21 @@ class OfferModel extends DataModel {
     if (map.containsKey('photoUrlImage')) {
       this.photoUrlImage = map['photoUrlImage'];
     }
+
+    if (map.containsKey('eventMetaData')) {
+      this.eventMetaData = EventMetaData.fromMap(
+        Map<String, dynamic>.from(map["eventMetaData"]),
+      );
+    }
   }
 
   OfferModel.fromMap(Map<dynamic, dynamic> map) {
+    if (map.containsKey('eventMetaData')) {
+      this.eventMetaData = EventMetaData.fromMap(
+        Map<String, dynamic>.from(map["eventMetaData"]),
+      );
+    }
+
     if (map.containsKey('participantDetails')) {
       this.participantDetails = Map.castFrom(map['participantDetails']);
     }

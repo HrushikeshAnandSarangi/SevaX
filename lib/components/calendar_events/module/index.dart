@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/components/calendar_events/models/calendar_response.dart';
 import 'package:sevaexchange/components/calendar_events/models/kloudless_models.dart';
 import 'package:sevaexchange/components/calendar_events/repo/calendar_repo.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/models/data_model.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
@@ -13,7 +15,7 @@ import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class KloudlessWidgetManager<M extends Mode, T> {
+class KloudlessWidgetManager<M extends Mode, T extends DataModel> {
   syncCalendar({
     KloudlessWidgetBuilder builder,
     @required BuildContext context,
@@ -37,10 +39,10 @@ class KloudlessWidgetManager<M extends Mode, T> {
       context: context,
       builder: (_) {
         return new AlertDialog(
-          title: Text('Add your Calendar'),
+          title: Text('Add your calendar'),
           content: NewCalendarRegisteration(
-            dialogContext: _,
             builder: builder,
+            dialogContext: _,
           ),
         );
       },
@@ -73,8 +75,6 @@ class KloudlessWidgetManager<M extends Mode, T> {
                 child: ElevatedButton(
                   child: Text('Yes'),
                   onPressed: () async {
-                    logger.d("Inside onPressed === onPressed");
-
                     Navigator.of(_).pop();
                     addEventToExistingCalendar(builder);
                   },
@@ -180,7 +180,8 @@ class KloudlessWidgetManager<M extends Mode, T> {
 
       case ApplyMode:
         await CalendarAPIRepo.updateAttendiesInCalendarEvent(
-          eventMetaData: builder.stateOfCalendarCallback.model.eventMetaData,
+          eventMetaData: builder.stateOfCalendarCallback.model.eventMetaData
+              as EventMetaData,
           event: canendarEvent,
           attendeDetails: builder.attendeeDetails,
         )
@@ -205,26 +206,80 @@ class NewCalendarRegisteration extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ListTile(
-          title: TransactionsMatrixCheck(
+    return Container(
+      height: 220,
+      child: Column(
+        children: [
+          CalendarListAdapter(
+            builder: builder,
+            url: "lib/assets/images/googlecal.png",
             onNavigationStart: () {
               Navigator.of(dialogContext).pop();
             },
-            upgradeDetails: AppConfig.upgradePlanBannerModel.calendar_sync,
-            transaction_matrix_type: "calendar_sync",
-            child: GestureDetector(
-              child: Text('Google Calandar'),
-              onTap: () async {
-                //
-              },
-            ),
+            title: "Google Calendar",
+            typeId: 'google_calendar',
           ),
-          onTap: () {
-            Navigator.of(dialogContext).pop();
+          CalendarListAdapter(
+            builder: builder,
+            url: "lib/assets/images/outlookcal.png",
+            onNavigationStart: () {
+              Navigator.of(dialogContext).pop();
+            },
+            title: "Outlook Calendar",
+            typeId: 'outlook_calendar',
+          ),
+          CalendarListAdapter(
+            builder: builder,
+            url: "lib/assets/images/ical.png",
+            onNavigationStart: () {
+              Navigator.of(dialogContext).pop();
+            },
+            title: "iCalendar",
+            typeId: 'icloud_calendar',
+          ),
+          InkWell(
+            child: Container(
+              margin: const EdgeInsets.only(left: 0, top: 10),
+              child: Text('Skip for now'),
+            ),
+            onTap: () {
+              Navigator.of(dialogContext).pop();
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class CalendarListAdapter extends StatelessWidget {
+  final String title;
+  final Function onNavigationStart;
+  final String typeId;
+  final KloudlessWidgetBuilder builder;
+  final String url;
+
+  CalendarListAdapter({
+    this.onNavigationStart,
+    this.typeId,
+    this.title,
+    this.builder,
+    this.url,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: Image.asset(url),
+      title: TransactionsMatrixCheck(
+        onNavigationStart: onNavigationStart,
+        upgradeDetails: AppConfig.upgradePlanBannerModel.calendar_sync,
+        transaction_matrix_type: "calendar_sync",
+        child: GestureDetector(
+          child: Text(title),
+          onTap: () async {
             String authURL =
-                "${builder.authorizationUrl}?client_id=${builder.clienId}&response_type=code&scope=google_calendar&redirect_uri=${builder.redirectUrl}&state=${builder.stateOfCalendarCallback.toJson()}";
+                "${builder.authorizationUrl}?client_id=${builder.clienId}&response_type=code&scope=${typeId}&redirect_uri=${builder.redirectUrl}&state=${builder.stateOfCalendarCallback.toJson()}";
             //LAUNCH URL
             canLaunch(Uri.parse(authURL).toString()).then((value) {
               if (value) {
@@ -234,7 +289,7 @@ class NewCalendarRegisteration extends StatelessWidget {
             logger.d(Uri.parse(authURL).toString());
           },
         ),
-      ],
+      ),
     );
   }
 }
