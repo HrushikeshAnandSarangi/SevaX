@@ -112,8 +112,9 @@ class BorrowAgreementPdf {
           SizedBox(height: 10),
           Header(
               level: 2,
-              text: documentName +
-                  ' |  For: ${placeOrItem == 'PLACE' ? L.of(contextMain).place : L.of(contextMain).items}'),
+              text: documentName ??
+                  'Agreement Name Not available' +
+                      ' |  For: ${placeOrItem == 'PLACE' ? L.of(contextMain).place : L.of(contextMain).items}'),
 
           SizedBox(height: 7),
 
@@ -302,7 +303,7 @@ class BorrowAgreementPdf {
             ? SevaCore.of(contextMain).loggedInUser.sevaUserID
             : requestModel.id,
         file,
-        documentName);
+        documentName ?? 'Agreement Name Not available');
 
     progressDialog.hide();
 
@@ -345,7 +346,8 @@ Future<String> uploadDocument(
   String timestampString = timestamp.toString();
 
   String name =
-      requestId.toString() + '_' + timestampString + '_' + documentName;
+      requestId.toString() + '_' + timestampString + '_' + documentName ??
+          'Agreement Name Not available';
 
   Reference ref =
       FirebaseStorage.instance.ref().child('agreement_docs').child(name);
