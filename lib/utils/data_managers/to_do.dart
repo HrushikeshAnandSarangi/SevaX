@@ -11,6 +11,7 @@ import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/new_baseline/models/borrow_accpetor_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
+import 'package:sevaexchange/repositories/lending_offer_repo.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/message_bloc.dart';
 import 'package:sevaexchange/ui/screens/notifications/bloc/notifications_bloc.dart';
 import 'package:sevaexchange/ui/screens/notifications/pages/combined_notification_page.dart';
@@ -521,7 +522,9 @@ class ToDo {
                         ? ' at ' + model.selectedAdrress
                         : '',
                 timeInMilliseconds: model.lendingOfferDetailsModel.startDate,
-                onTap: () async {},
+                onTap: () async {
+                  await LendingOffersRepo.getDialogForBorrowerToUpdate(offerModel: model,context: context,lendingOfferAcceptorModel: );
+                },
                 tag: L.of(context).lending_offer_collect_items_tag,
               ),
               taskTimestamp: model.lendingOfferDetailsModel.startDate,
@@ -539,7 +542,10 @@ class ToDo {
                         ? ' at ' + model.selectedAdrress
                         : '',
                 timeInMilliseconds: model.lendingOfferDetailsModel.endDate,
-                onTap: () async {},
+                onTap: () async {
+                  await LendingOffersRepo.getDialogForBorrowerToUpdate(offerModel: model,context: context,lendingOfferAcceptorModel: );
+
+                },
                 tag: L.of(context).lending_offer_return_items_tag,
               ),
               taskTimestamp: model.lendingOfferDetailsModel.startDate,
@@ -558,7 +564,10 @@ class ToDo {
                     ? ' at ' + model.selectedAdrress
                     : '',
                 timeInMilliseconds: model.lendingOfferDetailsModel.startDate,
-                onTap: () async {},
+                onTap: () async {
+                  await LendingOffersRepo.getDialogForBorrowerToUpdate(offerModel: model,context: context,lendingOfferAcceptorModel: );
+
+                },
                 tag: L.of(context).lending_offer_check_in_tag,
               ),
               taskTimestamp: model.lendingOfferDetailsModel.startDate,
@@ -576,7 +585,10 @@ class ToDo {
                         ? ' at ' + model.selectedAdrress
                         : '',
                 timeInMilliseconds: model.lendingOfferDetailsModel.endDate,
-                onTap: () async {},
+                onTap: () async {
+                  await LendingOffersRepo.getDialogForBorrowerToUpdate(offerModel: model,context: context,lendingOfferAcceptorModel: );
+
+                },
                 tag: L.of(context).lending_offer_check_out_tag,
               ),
               taskTimestamp: model.lendingOfferDetailsModel.startDate,

@@ -1201,10 +1201,19 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                             user.email,
                           );
                         },
-                        onPressed: null,
+                        onPressed: () async {
+                          LendingOfferAcceptorModel lendingOfferAcceptorModel =
+                              await LendingOffersRepo.getBorrowAcceptorModel(
+                                  offerId: model.id, acceptorEmail: user.email);
+                          await LendingOffersRepo.getDialogForBorrowerToUpdate(
+                              offerModel: model,
+                              context: context,
+                              lendingOfferAcceptorModel:
+                                  lendingOfferAcceptorModel);
+                        },
                         photoUrl: model.photoUrlImage,
                         subTitle:
-                            '${S.of(context).notifications_approved_by} ${model.fullName} ',
+                            '${S.of(context).notifications_approved_by} ${model.fullName}. ${S.of(context).tap_to_view_details}',
                       );
                       break;
 
