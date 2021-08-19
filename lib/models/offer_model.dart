@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/components/calendar_events/models/kloudless_models.dart';
@@ -470,10 +472,18 @@ class OfferModel extends DataModel {
   }
 
   OfferModel.fromMap(Map<dynamic, dynamic> map) {
+    log("OfferModel.fromMap=========================");
+
     if (map.containsKey('eventMetaData')) {
+      log('Parsing eventMetaData =========≠');
       this.eventMetaData = EventMetaData.fromMap(
         Map<String, dynamic>.from(map["eventMetaData"]),
       );
+      log('Parsed eventMetaData =========≠ ' +
+          this.eventMetaData.eventId.toString());
+    } else {
+      log('No Data found eventMetaData =========≠ ' +
+          this.eventMetaData.toString());
     }
 
     if (map.containsKey('participantDetails')) {

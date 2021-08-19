@@ -109,11 +109,14 @@ class CalendarAPIRepo {
     KloudlessCalendarEvent event,
   }) async {
     //Event doesn't have an associated link
-    if (eventMetaData.eventId != null &&
+
+    if (eventMetaData != null &&
+        eventMetaData.eventId != null &&
         !(eventMetaData.eventId.isEmpty) &&
         eventMetaData.calendar.caledarScope ==
             attendeDetails.calendar.caledarScope) {
       //Get applicants
+
       return await getEventDetailsFromId(
         calendarAccountId: eventMetaData.calendar.calendarAccId,
         calendarId: eventMetaData.calendar.calendarId,

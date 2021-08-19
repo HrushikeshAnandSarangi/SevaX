@@ -6,7 +6,7 @@ import 'package:sevaexchange/components/calendar_events/models/kloudless_models.
 import 'package:sevaexchange/components/calendar_events/repo/calendar_repo.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/data_model.dart';
-import 'package:sevaexchange/models/offer_model.dart';
+import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
@@ -157,7 +157,6 @@ class KloudlessWidgetManager<M extends Mode, T extends DataModel> {
         ).then((eventId) {
           if (eventId != null) {
             logger.d("Event Successfully created");
-
             collectionReferenece
                 .doc(builder.stateOfCalendarCallback.model.id)
                 .update({
