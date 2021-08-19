@@ -219,7 +219,15 @@ enum NotificationType {
   NOTIFICATION_TO_LENDER_PLACE_CHECKED_IN,
   NOTIFICATION_TO_LENDER_PLACE_CHECKED_OUT,
   NOTIFICATION_TO_LENDER_ITEMS_COLLECTED,
-  NOTIFICATION_TO_LENDER_ITEMS_RETURNED
+  NOTIFICATION_TO_LENDER_ITEMS_RETURNED,
+
+  // Idle / No activity Notifications reminders for Borrow Requests and Lending Offers
+  BorrowRequestIdleFirstWarning,
+  BorrowRequestIdleSecondWarning,
+  BorrowRequestIdleSoftDeleted,
+  LendingOfferIdleFirstWarning,
+  LendingOfferIdleSecondWarning,
+  LendingOfferIdleSoftDeleted,
 }
 
 //Check the method
@@ -354,6 +362,16 @@ Map<String, NotificationType> typeMapper = {
       NotificationType.NOTIFICATION_TO_LENDER_ITEMS_COLLECTED,
   "NOTIFICATION_TO_LENDER_ITEMS_RETURNED":
       NotificationType.NOTIFICATION_TO_LENDER_ITEMS_RETURNED,
+
+  "BorrowRequestIdleFirstWarning":
+      NotificationType.BorrowRequestIdleFirstWarning,
+  "BorrowRequestIdleSecondWarning":
+      NotificationType.BorrowRequestIdleSecondWarning,
+  "BorrowRequestIdleSoftDeleted": NotificationType.BorrowRequestIdleSoftDeleted,
+  "LendingOfferIdleFirstWarning": NotificationType.LendingOfferIdleFirstWarning,
+  "LendingOfferIdleSecondWarning":
+      NotificationType.LendingOfferIdleSecondWarning,
+  "LendingOfferIdleSoftDeleted": NotificationType.LendingOfferIdleSoftDeleted,
 };
 
 ClearNotificationModel clearNotificationModelFromJson(String str) =>

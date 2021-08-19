@@ -63,6 +63,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
     with AutomaticKeepAliveClientMixin {
   final subjectBorrow = ReplaySubject<int>();
   RequestModel requestModelNew;
+  OfferModel offerModelNew;
 
   @override
   void initState() {
@@ -1180,6 +1181,155 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                             '${S.of(context).notifications_request_rejected_by} ${model.fullName} ',
                       );
                       break;
+
+                    case NotificationType.LendingOfferIdleFirstWarning:
+                      OfferModel model = OfferModel.fromMap(notification.data);
+                      offerModelNew = model;
+                      return NotificationCard(
+                        timestamp: notification.timestamp,
+                        entityName: 'NAME',
+                        isDissmissible: true,
+                        onDismissed: () async {
+                          await FirestoreManager.readTimeBankNotification(
+                            notificationId: notification.id,
+                            timebankId: notification.timebankId,
+                          );
+                        },
+                        onPressed: () {},
+                        photoUrl: model.photoUrlImage,
+                        title: model.individualOfferDataModel.title +
+                            L.of(context).idle_for_2_weeks,
+                        subTitle: L
+                            .of(context)
+                            .idle_lending_offer_first_warning
+                            .replaceAll('***', '2'),
+                      );
+                      break;
+
+                    case NotificationType.LendingOfferIdleSecondWarning:
+                      OfferModel model = OfferModel.fromMap(notification.data);
+                      offerModelNew = model;
+                      return NotificationCard(
+                        timestamp: notification.timestamp,
+                        entityName: 'NAME',
+                        isDissmissible: true,
+                        onDismissed: () async {
+                          await FirestoreManager.readTimeBankNotification(
+                            notificationId: notification.id,
+                            timebankId: notification.timebankId,
+                          );
+                        },
+                        onPressed: () {},
+                        photoUrl: model.photoUrlImage,
+                        title: model.individualOfferDataModel.title +
+                            L.of(context).idle_for_4_weeks,
+                        subTitle: L
+                            .of(context)
+                            .idle_lending_offer_second_warning
+                            .replaceAll('***', '4'),
+                      );
+                      break;
+
+                    case NotificationType.LendingOfferIdleSoftDeleted:
+                      OfferModel model = OfferModel.fromMap(notification.data);
+                      offerModelNew = model;
+                      return NotificationCard(
+                        timestamp: notification.timestamp,
+                        entityName: 'NAME',
+                        isDissmissible: true,
+                        onDismissed: () async {
+                          await FirestoreManager.readTimeBankNotification(
+                            notificationId: notification.id,
+                            timebankId: notification.timebankId,
+                          );
+                        },
+                        onPressed: () {},
+                        photoUrl: model.photoUrlImage,
+                        title: model.individualOfferDataModel.title +
+                            ' ' +
+                            S
+                                .of(context)
+                                .notifications_was_deleted
+                                .replaceAll('!', ''),
+                        subTitle: L
+                            .of(context)
+                            .idle_lending_offer_third_warning_deleted,
+                      );
+                      break;
+
+                    case NotificationType.BorrowRequestIdleFirstWarning:
+                      var model = RequestModel.fromMap(notification.data);
+                      requestModelNew = model;
+                      return NotificationCard(
+                        timestamp: notification.timestamp,
+                        entityName: 'NAME',
+                        isDissmissible: true,
+                        onDismissed: () async {
+                          await FirestoreManager.readTimeBankNotification(
+                            notificationId: notification.id,
+                            timebankId: notification.timebankId,
+                          );
+                        },
+                        onPressed: () {},
+                        photoUrl: model.photoUrl,
+                        title: model.title + L.of(context).idle_for_2_weeks,
+                        subTitle: L
+                            .of(context)
+                            .idle_borrow_request_first_warning
+                            .replaceAll('***', '2'),
+                      );
+                      break;
+
+                    case NotificationType.BorrowRequestIdleSecondWarning:
+                      var model = RequestModel.fromMap(notification.data);
+                      requestModelNew = model;
+                      return NotificationCard(
+                        timestamp: notification.timestamp,
+                        entityName: 'NAME',
+                        isDissmissible: true,
+                        onDismissed: () async {
+                          await FirestoreManager.readTimeBankNotification(
+                            notificationId: notification.id,
+                            timebankId: notification.timebankId,
+                          );
+                        },
+                        onPressed: () {},
+                        photoUrl: model.photoUrl,
+                        title: model.title + L.of(context).idle_for_4_weeks,
+                        subTitle: L
+                            .of(context)
+                            .idle_borrow_request_second_warning
+                            .replaceAll('***', '4'),
+                      );
+                      break;
+
+                    case NotificationType.BorrowRequestIdleSoftDeleted:
+                      var model = RequestModel.fromMap(notification.data);
+                      requestModelNew = model;
+                      return NotificationCard(
+                        timestamp: notification.timestamp,
+                        entityName: 'NAME',
+                        isDissmissible: true,
+                        onDismissed: () async {
+                          await FirestoreManager.readTimeBankNotification(
+                            notificationId: notification.id,
+                            timebankId: notification.timebankId,
+                          );
+                        },
+                        onPressed: () {},
+                        photoUrl: model.photoUrl,
+                        title: model.title +
+                            ' ' +
+                            S
+                                .of(context)
+                                .notifications_was_deleted
+                                .replaceAll('!', ''),
+                        subTitle: L
+                            .of(context)
+                            .idle_borrow_request_third_warning_deleted,
+                      );
+                      break;
+
                     default:
                       log("Unhandled user notification type ${notification.type} ${notification.id}");
                       // FirebaseCrashlytics.instance.log(
