@@ -214,6 +214,7 @@ class NewCalendarRegisteration extends StatelessWidget {
             builder: builder,
             url: "lib/assets/images/googlecal.png",
             onNavigationStart: () {
+              logger.d("Navigator.of(dialogContext).pop()");
               Navigator.of(dialogContext).pop();
             },
             title: "Google Calendar",
@@ -223,6 +224,7 @@ class NewCalendarRegisteration extends StatelessWidget {
             builder: builder,
             url: "lib/assets/images/outlookcal.png",
             onNavigationStart: () {
+              logger.d("Navigator.of(dialogContext).pop()");
               Navigator.of(dialogContext).pop();
             },
             title: "Outlook Calendar",
@@ -232,6 +234,7 @@ class NewCalendarRegisteration extends StatelessWidget {
             builder: builder,
             url: "lib/assets/images/ical.png",
             onNavigationStart: () {
+              logger.d("Navigator.of(dialogContext).pop()");
               Navigator.of(dialogContext).pop();
             },
             title: "iCalendar",
@@ -278,6 +281,11 @@ class CalendarListAdapter extends StatelessWidget {
         child: GestureDetector(
           child: Text(title),
           onTap: () async {
+            try {
+              onNavigationStart();
+            } catch (e) {
+              logger.d("Failed to launch");
+            }
             String authURL =
                 "${builder.authorizationUrl}?client_id=${builder.clienId}&response_type=code&scope=${typeId}&redirect_uri=${builder.redirectUrl}&state=${builder.stateOfCalendarCallback.toJson()}";
             //LAUNCH URL

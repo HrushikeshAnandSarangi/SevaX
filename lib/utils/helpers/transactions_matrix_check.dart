@@ -27,8 +27,13 @@ class TransactionsMatrixCheck extends StatelessWidget {
         ? child
         : GestureDetector(
             onTap: () {
-              Navigator.of(context)
-                  .push(
+              try {
+                onNavigationStart();
+              } catch (e) {
+                logger.d("Failed to launch");
+              }
+
+              Navigator.of(context).push(
                 MaterialPageRoute(
                   fullscreenDialog: true,
                   builder: (context) => UpgradePlanBanner(
@@ -36,12 +41,7 @@ class TransactionsMatrixCheck extends StatelessWidget {
                     details: upgradeDetails,
                   ),
                 ),
-              )
-                  .then((value) {
-                onNavigationStart != null
-                    ? onNavigationStart()
-                    : logger.d("Skipping onNavigationStart ");
-              });
+              );
             },
             child: AbsorbPointer(
               absorbing: true,
