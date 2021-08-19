@@ -1,0 +1,206 @@
+import 'package:flutter/material.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/models/enums/lending_borrow_enums.dart';
+import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/new_baseline/models/lending_model.dart';
+import 'package:sevaexchange/repositories/lending_offer_repo.dart';
+import 'package:sevaexchange/ui/screens/offers/pages/lending_offer_participants.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
+
+import '../../../../flavor_config.dart';
+import '../../../../labels.dart';
+
+class LendingOfferBorrowerUpdateWidget extends StatefulWidget {
+  final OfferModel offerModel;
+  final LendingOfferAcceptorModel lendingOfferAcceptorModel;
+  LendingOfferBorrowerUpdateWidget(
+      {this.offerModel, this.lendingOfferAcceptorModel});
+
+  @override
+  _LendingOfferBorrowerUpdateWidgetState createState() =>
+      _LendingOfferBorrowerUpdateWidgetState();
+}
+
+class _LendingOfferBorrowerUpdateWidgetState
+    extends State<LendingOfferBorrowerUpdateWidget> {
+  _LendingOfferBorrowerUpdateWidgetState();
+
+  BuildContext progressContext;
+  LendingOfferStatus lendingOfferStatus;
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(25.0))),
+      content: Form(
+        //key: _formKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            _getCloseButton(context),
+            Padding(
+              padding: EdgeInsets.all(4.0),
+              child: Text(
+                widget.offerModel.individualOfferDataModel.title ??
+                    S.of(context).anonymous,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text(
+                widget.offerModel.individualOfferDataModel ??
+                    S.of(context).description_not_updated,
+                maxLines: 5,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text(
+                widget.offerModel.selectedAdrress ?? '',
+                maxLines: 5,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+              ),
+            ),
+            Text(
+                "${S.of(context).start} : ${widget.lendingOfferAcceptorModel.startDate}",
+                style: TextStyle(
+                  fontStyle: FontStyle.italic,
+                ),
+                textAlign: TextAlign.center),
+            Text(
+                "${S.of(context).end} : ${widget.lendingOfferAcceptorModel.endDate}",
+                style: TextStyle(
+                  fontStyle: FontStyle.italic,
+                ),
+                textAlign: TextAlign.center),
+            Padding(
+              padding: EdgeInsets.all(5.0),
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  width: double.infinity,
+                  child: CustomElevatedButton(
+                    color: FlavorConfig.values.theme.primaryColor,
+                    child: Text(
+                      getButtonLabel(),
+                      style:
+                          TextStyle(color: Colors.white, fontFamily: 'Europa'),
+                    ),
+                    onPressed: () async {
+                      showProgressDialog(context, S.of(context).updating);
+                      await LendingOffersRepo.updateLendingOfferStatus(
+                          lendingOfferAcceptorModel:
+                              widget.lendingOfferAcceptorModel,
+                          lendingOfferStatus: lendingOfferStatus,
+                          offerModel: widget.offerModel);
+
+                      if (progressContext != null) {
+                        Navigator.of(progressContext).pop();
+                      }
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(4.0),
+                ),
+                Container(
+                  width: double.infinity,
+                  child: CustomElevatedButton(
+                    color: Theme.of(context).accentColor,
+                    child: Text(
+                      S.of(context).cancel,
+                      style:
+                          TextStyle(color: Colors.white, fontFamily: 'Europa'),
+                    ),
+                    onPressed: () async {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ),
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  String getButtonLabel() {
+    if (widget.lendingOfferAcceptorModel.status ==
+            LendingOfferStatus.APPROVED &&
+        widget.offerModel.lendingOfferDetailsModel.lendingModel.lendingType ==
+            LendingType.PLACE) {
+      lendingOfferStatus = LendingOfferStatus.CHECKED_IN;
+      return L.of(context).check_in;
+    } else if (widget.lendingOfferAcceptorModel.status ==
+            LendingOfferStatus.APPROVED &&
+        widget.offerModel.lendingOfferDetailsModel.lendingModel.lendingType ==
+            LendingType.ITEM) {
+      lendingOfferStatus = LendingOfferStatus.ITEMS_COLLECTED;
+
+      return L.of(context).collect_items;
+    } else if (widget.lendingOfferAcceptorModel.status ==
+        LendingOfferStatus.CHECKED_IN) {
+      lendingOfferStatus = LendingOfferStatus.CHECKED_OUT;
+
+      return L.of(context).check_out;
+    } else if (widget.lendingOfferAcceptorModel.status ==
+        LendingOfferStatus.ITEMS_COLLECTED) {
+      lendingOfferStatus = LendingOfferStatus.ITEMS_RETURNED;
+
+      return L.of(context).return_items;
+    }
+  }
+
+  void showProgressDialog(BuildContext context, String message) {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (createDialogContext) {
+          progressContext = createDialogContext;
+          return AlertDialog(
+            title: Text(message),
+            content: LinearProgressIndicator(),
+          );
+        });
+  }
+
+  Widget _getCloseButton(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+      child: Container(
+        alignment: FractionalOffset.topRight,
+        child: Container(
+          width: 20,
+          height: 20,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(
+                'lib/assets/images/close.png',
+              ),
+            ),
+          ),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
