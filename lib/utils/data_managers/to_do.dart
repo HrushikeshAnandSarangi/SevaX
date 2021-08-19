@@ -11,9 +11,11 @@ import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/new_baseline/models/borrow_accpetor_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
+import 'package:sevaexchange/repositories/lending_offer_repo.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/message_bloc.dart';
 import 'package:sevaexchange/ui/screens/notifications/bloc/notifications_bloc.dart';
 import 'package:sevaexchange/ui/screens/notifications/pages/combined_notification_page.dart';
+import 'package:sevaexchange/ui/screens/offers/pages/lending_offer_participants.dart';
 import 'package:sevaexchange/ui/screens/request/pages/oneToManySpeakerTimeEntryComplete_page.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
@@ -506,6 +508,10 @@ class ToDo {
     //for borrow request, request creator / Borrower needs to see in To do when needs to collect or check in
     List<OfferModel> lendingOfferBorrowerRequestApproved = toDoSink[6];
     lendingOfferBorrowerRequestApproved.forEach((model) async {
+      // LendingOfferAcceptorModel lendingOfferAcceptorModel =
+      //     await LendingOffersRepo.getBorrowAcceptorModel(
+      //         offerId: model.id, acceptorEmail: user.email);
+
       if (model.lendingOfferDetailsModel.lendingModel.lendingType ==
           LendingType.ITEM) {
         //FOR BORROW ITEMS

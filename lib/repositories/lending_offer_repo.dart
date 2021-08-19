@@ -312,7 +312,9 @@ class LendingOffersRepo {
     batch.update(offerAcceptorsReference, {
       "status": LendingOfferStatus.APPROVED.readable,
       "isApproved": true,
-      'additionalInstructions': additionalInstructionsText ?? ''
+      'additionalInstructions': additionalInstructionsText ?? '',
+      'startDate': lendingOfferAcceptorModel.startDate,
+      'endDate': lendingOfferAcceptorModel.endDate,
     });
     batch.set(
       acceptorNotificationRef,

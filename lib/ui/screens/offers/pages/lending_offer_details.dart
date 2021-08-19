@@ -636,8 +636,8 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                           Locale(getLangTag()).toLanguageTag())
                       .format(
                     getDateTimeAccToUserTimezone(
-                        dateTime: DateTime.fromMillisecondsSinceEpoch(widget
-                            .offerModel.lendingOfferDetailsModel.startDate),
+                        dateTime: DateTime.fromMillisecondsSinceEpoch(
+                            lendingOfferAcceptorModel.startDate),
                         timezoneAbb:
                             SevaCore.of(context).loggedInUser.timezone),
                   );
@@ -645,8 +645,8 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                   ':' +
                   DateFormat.MMMd(getLangTag()).add_jm().format(
                         getDateTimeAccToUserTimezone(
-                          dateTime: DateTime.fromMillisecondsSinceEpoch(widget
-                              .offerModel.lendingOfferDetailsModel.endDate),
+                          dateTime: DateTime.fromMillisecondsSinceEpoch(
+                              lendingOfferAcceptorModel.endDate),
                           timezoneAbb:
                               SevaCore.of(context).loggedInUser.timezone,
                         ),
@@ -664,13 +664,13 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                   .format(
                 getDateTimeAccToUserTimezone(
                     dateTime: DateTime.fromMillisecondsSinceEpoch(
-                        widget.offerModel.lendingOfferDetailsModel.endDate),
+                        lendingOfferAcceptorModel.endDate),
                     timezoneAbb: SevaCore.of(context).loggedInUser.timezone),
               );
               dateSubText = DateFormat('hh:mm').format(
                 getDateTimeAccToUserTimezone(
                   dateTime: DateTime.fromMillisecondsSinceEpoch(
-                      widget.offerModel.lendingOfferDetailsModel.endDate),
+                      lendingOfferAcceptorModel.endDate),
                   timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
                 ),
               );
@@ -683,7 +683,7 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                   .format(
                 getDateTimeAccToUserTimezone(
                     dateTime: DateTime.fromMillisecondsSinceEpoch(
-                        widget.offerModel.lendingOfferDetailsModel.endDate),
+                        lendingOfferAcceptorModel.endDate),
                     timezoneAbb: SevaCore.of(context).loggedInUser.timezone),
               );
               additionalInstruction = L.of(context).share_feedback_place;
@@ -714,14 +714,13 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                   .format(
                 getDateTimeAccToUserTimezone(
                     dateTime: DateTime.fromMillisecondsSinceEpoch(
-                        widget.offerModel.lendingOfferDetailsModel.startDate),
+                        lendingOfferAcceptorModel.startDate),
                     timezoneAbb: SevaCore.of(context).loggedInUser.timezone),
               );
               dateSubText = DateFormat.MMMd(getLangTag()).add_jm().format(
                         getDateTimeAccToUserTimezone(
                           dateTime: DateTime.fromMillisecondsSinceEpoch(
-                            widget
-                                .offerModel.lendingOfferDetailsModel.startDate,
+                            lendingOfferAcceptorModel.startDate,
                           ),
                           timezoneAbb:
                               SevaCore.of(context).loggedInUser.timezone,
@@ -730,8 +729,8 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                   ' - ' +
                   DateFormat.MMMd(getLangTag()).add_jm().format(
                         getDateTimeAccToUserTimezone(
-                          dateTime: DateTime.fromMillisecondsSinceEpoch(widget
-                              .offerModel.lendingOfferDetailsModel.endDate),
+                          dateTime: DateTime.fromMillisecondsSinceEpoch(
+                              lendingOfferAcceptorModel.endDate),
                           timezoneAbb:
                               SevaCore.of(context).loggedInUser.timezone,
                         ),
@@ -751,13 +750,13 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                   .format(
                 getDateTimeAccToUserTimezone(
                     dateTime: DateTime.fromMillisecondsSinceEpoch(
-                        widget.offerModel.lendingOfferDetailsModel.endDate),
+                        lendingOfferAcceptorModel.endDate),
                     timezoneAbb: SevaCore.of(context).loggedInUser.timezone),
               );
               dateSubText = DateFormat.MMMd(getLangTag()).add_jm().format(
                     getDateTimeAccToUserTimezone(
                       dateTime: DateTime.fromMillisecondsSinceEpoch(
-                          widget.offerModel.lendingOfferDetailsModel.endDate),
+                          lendingOfferAcceptorModel.endDate),
                       timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
                     ),
                   );
@@ -772,14 +771,13 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                   .format(
                 getDateTimeAccToUserTimezone(
                     dateTime: DateTime.fromMillisecondsSinceEpoch(
-                        widget.offerModel.lendingOfferDetailsModel.endDate),
+                        lendingOfferAcceptorModel.endDate),
                     timezoneAbb: SevaCore.of(context).loggedInUser.timezone),
               );
               dateSubText = DateFormat.MMMd(getLangTag()).add_jm().format(
                         getDateTimeAccToUserTimezone(
                           dateTime: DateTime.fromMillisecondsSinceEpoch(
-                            widget
-                                .offerModel.lendingOfferDetailsModel.startDate,
+                            lendingOfferAcceptorModel.startDate,
                           ),
                           timezoneAbb:
                               SevaCore.of(context).loggedInUser.timezone,
@@ -788,8 +786,8 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                   ' - ' +
                   DateFormat.MMMd(getLangTag()).add_jm().format(
                         getDateTimeAccToUserTimezone(
-                          dateTime: DateTime.fromMillisecondsSinceEpoch(widget
-                              .offerModel.lendingOfferDetailsModel.endDate),
+                          dateTime: DateTime.fromMillisecondsSinceEpoch(
+                              lendingOfferAcceptorModel.endDate),
                           timezoneAbb:
                               SevaCore.of(context).loggedInUser.timezone,
                         ),
@@ -881,8 +879,7 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                             .format(
                           getDateTimeAccToUserTimezone(
                               dateTime: DateTime.fromMillisecondsSinceEpoch(
-                                  widget.offerModel.lendingOfferDetailsModel
-                                      .startDate),
+                                  lendingOfferAcceptorModel.startDate),
                               timezoneAbb:
                                   SevaCore.of(context).loggedInUser.timezone),
                         ),

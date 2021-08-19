@@ -413,6 +413,8 @@ class LendingOfferAcceptorModel {
   String additionalInstructions;
   bool isLenderGaveReview;
   bool isBorrowerGaveReview;
+  int startDate;
+  int endDate;
 
   LendingOfferAcceptorModel({
     this.id,
@@ -433,6 +435,8 @@ class LendingOfferAcceptorModel {
     this.additionalInstructions,
     this.isLenderGaveReview,
     this.isBorrowerGaveReview,
+    this.startDate,
+    this.endDate,
   });
 
   factory LendingOfferAcceptorModel.fromMap(Map<String, dynamic> json) =>
@@ -474,6 +478,8 @@ class LendingOfferAcceptorModel {
         isBorrowerGaveReview: json["isBorrowerGaveReview"] == null
             ? false
             : json["isBorrowerGaveReview"],
+        startDate: json["startDate"] == null ? null : json["startDate"],
+        endDate: json["endDate"] == null ? null : json["endDate"],
       );
 
   Map<String, dynamic> toMap() => {
@@ -501,5 +507,7 @@ class LendingOfferAcceptorModel {
             isBorrowerGaveReview == null ? false : isBorrowerGaveReview,
         "isLenderGaveReview":
             isLenderGaveReview == null ? false : isLenderGaveReview,
+        "startDate": startDate == null ? null : startDate,
+        "endDate": endDate == null ? null : endDate,
       };
 }
