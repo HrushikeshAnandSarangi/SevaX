@@ -1338,4 +1338,10 @@ class L {
       "You can leave a appreciation review for your host.";
   String get share_feedback_item =>
       "Please provide your valuable feedback about your exchange.";
+  String get idle_borrow_request_first_warning =>
+      "*** days have elapsed without any interest. please re-evaluate the request or withdraw.";
+  String get idle_borrow_request_second_warning =>
+      "*** days have elapsed without any interest. Please note that the request will be deleted if there is still no acitivty after 14 more days";
+  String get idle_borrow_request_third_warning_deleted =>
+      "This request has now been deleted due to inactivity for the past 6 weeks.";
 }

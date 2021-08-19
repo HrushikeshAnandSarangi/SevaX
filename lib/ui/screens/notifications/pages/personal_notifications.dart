@@ -1180,6 +1180,28 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                             '${S.of(context).notifications_request_rejected_by} ${model.fullName} ',
                       );
                       break;
+
+                    case NotificationType.BorrowRequestIdleFirstWarning:
+                      var model = RequestModel.fromMap(notification.data);
+                      requestModelNew = model;
+                      return NotificationCard(
+                        timestamp: notification.timestamp,
+                        entityName: 'NAME',
+                        isDissmissible: true,
+                        onDismissed: () async {
+                          await FirestoreManager.readTimeBankNotification(
+                            notificationId: notification.id,
+                            timebankId: notification.timebankId,
+                          );
+                        },
+                        onPressed: () {},
+                        photoUrl: model.photoUrl,
+                        title: 'Request idle for 14 days',
+                        subTitle:
+                            L.of(context).idle_borrow_request_first_warning,
+                      );
+                      break;
+
                     default:
                       log("Unhandled user notification type ${notification.type} ${notification.id}");
                       // FirebaseCrashlytics.instance.log(
