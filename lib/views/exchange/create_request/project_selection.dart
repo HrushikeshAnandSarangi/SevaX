@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
+import 'package:sevaexchange/views/exchange/create_request/request_enums.dart';
 import 'package:sevaexchange/widgets/multi_select/flutter_multiselect.dart';
 
 // ignore: must_be_immutable
 class ProjectSelection extends StatefulWidget {
+  final RequestFormType createType;
   final bool admin;
   final List<ProjectModel> projectModelList;
   final ProjectModel selectedProject;
@@ -16,18 +18,21 @@ class ProjectSelection extends StatefulWidget {
   UserModel userModel;
   bool createEvent;
   VoidCallback setcreateEventState;
+  Function(String projectId) updateProjectIdCallback;
 
-  ProjectSelection(
-      {Key key,
-      this.requestModel,
-      this.admin,
-      this.projectModelList,
-      this.selectedProject,
-      this.timebankModel,
-      this.userModel,
-      this.createEvent,
-      this.setcreateEventState})
-      : super(key: key);
+  ProjectSelection({
+    Key key,
+    this.requestModel,
+    this.admin,
+    this.projectModelList,
+    this.selectedProject,
+    this.timebankModel,
+    this.userModel,
+    this.createEvent,
+    this.setcreateEventState,
+    this.updateProjectIdCallback,
+    this.createType,
+  }) : super(key: key);
 
   @override
   ProjectSelectionState createState() => ProjectSelectionState();
@@ -53,7 +58,7 @@ class ProjectSelectionState extends State<ProjectSelection> {
       timebankModel: widget.timebankModel,
       userModel: widget.userModel,
       autovalidate: true,
-      initialValue: ['None'],
+      initialValue: [widget.selectedProject != null ? widget.selectedProject.id : 'None'],
       titleText: Row(
         children: [
           Text(S.of(context).assign_to_project),
@@ -66,7 +71,8 @@ class ProjectSelectionState extends State<ProjectSelection> {
             size: 30.0,
           ),
           SizedBox(width: 4),
-          widget.requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST
+          (widget.createType == RequestFormType.CREATE &&
+                  widget.requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST)
               ? GestureDetector(
                   onTap: () {
                     setState(() {
@@ -105,9 +111,13 @@ class ProjectSelectionState extends State<ProjectSelection> {
       titleTextColor: Colors.black,
       change: (value) {
         if (value != null && value[0] != 'None') {
-          widget.requestModel.projectId = value[0];
+          widget.createType == RequestFormType.CREATE
+              ? widget.requestModel.projectId = value[0]
+              : widget.updateProjectIdCallback(value[0]);
         } else {
-          widget.requestModel.projectId = '';
+          widget.createType == RequestFormType.CREATE
+              ? widget.requestModel.projectId = ''
+              : widget.updateProjectIdCallback('None');
         }
       },
       selectIcon: Icons.arrow_drop_down_circle,

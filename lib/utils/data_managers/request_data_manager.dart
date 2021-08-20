@@ -38,6 +38,7 @@ import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/exchange/create_request/request_enums.dart';
 import 'package:sevaexchange/views/exchange/mail_content_template.dart';
 import 'package:usage/uuid/uuid.dart';
 
@@ -49,7 +50,7 @@ Location location = Location();
 Geoflutterfire geo = Geoflutterfire();
 BuildContext dialogContext;
 
-Future<void> createRequest({@required RequestModel requestModel}) async {
+Future<void> createRequestOffer({@required RequestModel requestModel}) async {
   return await CollectionRef.requests.doc(requestModel.id).set(requestModel.toMap());
 }
 
@@ -116,7 +117,7 @@ Future<List<String>> createRecurringEvents({
 
   batch.set(CollectionRef.requests.doc(requestModel.id), requestModel.toMap());
 
-  if (requestModel.end.endType == "on") {
+  if (requestModel.end.endType == 'On') {
     //end type is on
     int occurenceCount = 2;
     var numTemp = 0;
@@ -251,6 +252,8 @@ Future<void> updateRecurrenceRequestsFrontEnd(
   String uuidvar = "";
   RequestModel eventData, parentEvent;
 
+  logger.i("INSIDE updateRecurrenceRequestsFrontEnd");
+
   List<RequestModel> upcomingEventsArr = [], prevEventsArr = [];
   var futures = <Future>[];
 //  double balanceVar = await getMemberBalance(updatedRequestModel.sevaUserId);
@@ -258,11 +261,14 @@ Future<void> updateRecurrenceRequestsFrontEnd(
     communityId: communityId,
     userSevaId: updatedRequestModel.sevaUserId,
   );
+
+  logger.i("INSIDE 1");
   double negativeThresholdTimebank =
       await SevaCreditLimitManager.getNegativeThresholdForCommunity(communityId);
   Set<String> usersIds = Set();
   DateTime eventStartDate = DateTime.fromMillisecondsSinceEpoch(updatedRequestModel.requestStart),
       eventEndDate = DateTime.fromMillisecondsSinceEpoch(updatedRequestModel.requestEnd);
+  logger.i("INSIDE 2");
 
   QuerySnapshot snapEvents = await CollectionRef.requests
       .where("parent_request_id", isEqualTo: updatedRequestModel.parent_request_id)
@@ -273,6 +279,7 @@ Future<void> updateRecurrenceRequestsFrontEnd(
     projectDoc = await CollectionRef.projects.doc(updatedRequestModel.projectId).get();
     projectData = ProjectModel.fromMap(projectDoc.data());
   }
+  logger.i("INSIDE 3");
 
   snapEvents.docs.forEach((eventDoc) {
     eventData = RequestModel.fromMap(eventDoc.data());
@@ -286,11 +293,13 @@ Future<void> updateRecurrenceRequestsFrontEnd(
       prevEventsArr.add(eventData);
     }
   });
+  logger.i("INSIDE 4");
+
   // s1 ---------- create set of events with updated data
 
   List<Map<String, dynamic>> temparr = [];
 
-  if (updatedRequestModel.end.endType == "on") {
+  if (updatedRequestModel.end.endType == "On") {
     //end type is on
     int occurenceCount = updatedRequestModel.occurenceCount + 1;
     var numTemp = 0;
@@ -326,7 +335,8 @@ Future<void> updateRecurrenceRequestsFrontEnd(
         break;
       }
     }
-  } else {
+  }
+  else {
     //end type is after
     var numTemp = 0;
     int occurenceCount = updatedRequestModel.occurenceCount + 1;
@@ -361,6 +371,9 @@ Future<void> updateRecurrenceRequestsFrontEnd(
       }
     }
   }
+
+  logger.i("INSIDE 5");
+
 
   temparr.forEach((tempobj) {
     batch.set(CollectionRef.requests.doc(tempobj['id']), tempobj);
@@ -438,6 +451,8 @@ Future<void> updateRecurrenceRequestsFrontEnd(
     batch.update(CollectionRef.projects.doc(projectData.id), projectData.toMap());
   }
   await batch.commit();
+  logger.i("END 4");
+
 }
 
 Stream<List<RequestModel>> getRequestStreamCreatedByUser({
@@ -2245,7 +2260,7 @@ Future<List<String>> writeToDB(
 
   List<String> resultVar = [];
   if (!requestModel.isRecurring) {
-    await FirestoreManager.createRequest(requestModel: requestModel);
+    await FirestoreManager.createRequestOffer(requestModel: requestModel);
     //create invitation if its from offer only for cash and goods
     try {
       // ignore: deprecated_member_use_from_same_package
@@ -2319,8 +2334,19 @@ Future<DocumentReference> sendNotificationToMemberOneToManyRequest(
     String sevaUserId,
     String timebankId,
     String userEmail,
+    @required RequestFormType formType,
     @required BuildContext context,
+    DocumentReference speakerNotificationDocRefOld,
     RequestModel requestModel}) async {
+  //delete the previous speaker's notification document, since new speaker is invited here
+  if (formType == RequestFormType.EDIT) {
+    try {
+      speakerNotificationDocRefOld.delete();
+    } catch (error) {
+      logger.e('did not find notification doc to delete');
+    }
+  }
+
   NotificationsModel notification = NotificationsModel(
       id: utils.Utils.getUuid(),
       timebankId: FlavorConfig.values.timebankId,
@@ -2363,7 +2389,7 @@ Future<List<CategoryModel>> getCategoriesFromApi(String query) async {
       List<String> categoriesList =
           bodyMap.containsKey('string_vec') ? List.castFrom(bodyMap['string_vec']) : [];
       if (categoriesList != null && categoriesList.length > 0) {
-      return getCategoryModels(categoriesList);
+        return getCategoryModels(categoriesList);
       }
     } else {
       return null;
@@ -2395,4 +2421,55 @@ List<CategoryModel> updateInformation(List<CategoryModel> category) {
   }
   return selectedCategoryModels;
   // setState(() {});
+}
+
+linearProgressForCreatingRequest(context) {
+  showDialog(
+      barrierDismissible: false,
+      context: context,
+      useRootNavigator: true,
+      builder: (createDialogContext) {
+        dialogContext = createDialogContext;
+        return AlertDialog(
+          title: Text(S.of(context).creating_request),
+          content: LinearProgressIndicator(),
+        );
+      });
+}
+
+//if another speaker is invited then we need to remove the previous speaker from the invited list
+//re update the invited speaker
+Future reUpdateInvitedSpeakerForRequest(
+    {String requestID,
+    String sevaUserIdPrevious,
+    String emailPrevious,
+    String sevaUserIdNew,
+    String emailNew}) async {
+  var batch = CollectionRef.batch;
+
+  //remove previous speaker as invited member
+  // batch.update(
+  //     CollectionRef.requests.doc(requestID), {
+  //   'invitedUsers': FieldValue.arrayRemove([sevaUserIdPrevious]),
+  // });
+  batch.update(
+    CollectionRef.users.doc(emailPrevious),
+    {
+      'invitedRequests': FieldValue.arrayRemove([requestID])
+    },
+  );
+
+  //Add new speaker as invited member
+  // batch.update(
+  //     CollectionRef.requests.doc(requestID), {
+  //   'invitedUsers': FieldValue.arrayUnion([sevaUserIdNew]),
+  // });
+  batch.update(
+    CollectionRef.users.doc(emailNew),
+    {
+      'invitedRequests': FieldValue.arrayUnion([requestID])
+    },
+  );
+
+  await batch.commit();
 }

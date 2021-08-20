@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -7,18 +6,16 @@ import 'package:connectivity/connectivity.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
-import 'package:http/http.dart' as http;
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
+import 'package:sevaexchange/components/repeat_availability/edit_repeat_widget.dart';
 import 'package:sevaexchange/components/repeat_availability/repeat_widget.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/basic_user_details.dart';
 import 'package:sevaexchange/models/cash_model.dart';
-import 'package:sevaexchange/models/category_model.dart';
 import 'package:sevaexchange/models/enums/help_context_enums.dart';
 import 'package:sevaexchange/models/enums/plan_ids.dart';
 import 'package:sevaexchange/models/models.dart';
@@ -27,8 +24,8 @@ import 'package:sevaexchange/new_baseline/models/acceptor_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/ui/screens/calendar/add_to_calander.dart';
-import 'package:sevaexchange/ui/utils/debouncer.dart';
 import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/configuration_check.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
@@ -37,15 +34,13 @@ import 'package:sevaexchange/utils/svea_credits_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/exchange/borrow_request.dart';
 import 'package:sevaexchange/views/exchange/cash_request.dart';
-import 'package:sevaexchange/views/exchange/create_request/project_selection.dart';
+import 'package:sevaexchange/views/exchange/create_request/request_enums.dart';
 import 'package:sevaexchange/views/exchange/goods_request.dart';
 import 'package:sevaexchange/views/exchange/request_utils.dart';
 import 'package:sevaexchange/views/exchange/time_request.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
-import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
-import 'package:sevaexchange/widgets/select_category.dart';
 
 import '../../core.dart';
 
@@ -58,6 +53,8 @@ class RequestCreateForm extends StatefulWidget {
   final ProjectModel projectModel;
   final String projectId;
   final ComingFrom comingFrom;
+  final RequestModel requestModel;
+  final RequestFormType formType;
 
   RequestCreateForm({
     this.isOfferRequest = false,
@@ -68,6 +65,8 @@ class RequestCreateForm extends StatefulWidget {
     @required this.loggedInUser,
     this.projectId,
     this.projectModel,
+    this.requestModel,
+    this.formType,
   });
 
   @override
@@ -82,7 +81,6 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
   final volunteersTextFocus = FocusNode();
   ProjectModel selectedProjectModel = null;
   RequestModel requestModel;
-  End end = End();
   var focusNodes = List.generate(18, (_) => FocusNode());
   List<String> eventsIdsArr = [];
   List<String> selectedCategoryIds = [];
@@ -91,7 +89,6 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
   String hoursMessage;
   String selectedAddress;
   int sharedValue = 0;
-  final _debouncer = Debouncer(milliseconds: 500);
   String _selectedTimebankId;
   var validItems = [];
   bool isAdmin = false;
@@ -100,6 +97,18 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
       new SelectedSpeakerTimeDetails(speakingTime: 0.0, prepTime: 0);
   DocumentReference speakerNotificationDocRef;
   RequestUtils requestUtils = RequestUtils();
+
+  String initialRequestTitle = '';
+  String initialRequestDescription = '';
+  var startDate;
+  var endDate;
+  int tempCredits = 0;
+  int tempNoOfVolunteers = 0;
+  String tempProjectId = '';
+  // BasicUserDetails selectedInstructorModelTemp;
+  int oldHours = 0;
+  int oldTotalRecurrences = 0;
+  bool isPublicCheckboxVisible = false;
 
   //Below variable for One to Many Requests
   bool createEvent = false;
@@ -119,7 +128,12 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
     WidgetsBinding.instance.addObserver(this);
     _selectedTimebankId = widget.timebankId;
     getProjectsByFuture = FirestoreManager.getAllProjectListFuture(timebankid: widget.timebankId);
-    _initializeRequestModel();
+
+    //create or edit initialization
+    widget.formType == RequestFormType.CREATE
+        ? _initializeRequestModel()
+        : _initializeEditRequestModel();
+
     getTimebankAdminStatus = getTimebankDetailsbyFuture(
       timebankId: _selectedTimebankId,
     );
@@ -164,6 +178,46 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
       requestModel.goodsDonationDetails.requiredGoods =
           widget.offer.goodsDonationDetails.requiredGoods;
     }
+
+    tempProjectId = requestModel.projectId;
+
+  }
+
+  _initializeEditRequestModel() {
+    requestModel = RequestModel.fromMap(widget.requestModel.toMap());
+
+    // selectedInstructorModelTemp = widget.requestModel.selectedInstructor;
+    requestModel.timebankId = _selectedTimebankId;
+    this.location = requestModel.location;
+
+    logger.d(requestModel.location.toString() + "From Database =====================");
+    this.selectedAddress = requestModel.address;
+    this.oldHours = requestModel.numberOfHours;
+    if (requestModel.categories != null && requestModel.categories.length > 0) {
+      getCategoryModels(
+        widget.requestModel.categories,
+      );
+    }
+    getTimebankAdminStatus = getTimebankDetailsbyFuture(timebankId: _selectedTimebankId);
+    getProjectsByFuture = FirestoreManager.getAllProjectListFuture(timebankid: widget.timebankId);
+
+    //will be true because a One to many request when editing should have an instructor
+    if (requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
+      instructorAdded = true;
+    }
+
+    startDate = getUpdatedDateTimeAccToUserTimezone(
+        timezoneAbb: widget.loggedInUser.timezone,
+        dateTime: DateTime.fromMillisecondsSinceEpoch(widget.requestModel.requestStart));
+    endDate = getUpdatedDateTimeAccToUserTimezone(
+        timezoneAbb: widget.loggedInUser.timezone,
+        dateTime: DateTime.fromMillisecondsSinceEpoch(widget.requestModel.requestEnd));
+
+    logger.d("REQUEST CREATE WIDGET HASHCODE ${widget.requestModel.hashCode}");
+    logger.d("REQUEST CREATE NEW HASHCODE ${requestModel.hashCode}");
+
+    log('Instructor Data:  ' + widget.requestModel.selectedInstructor.toString());
+    log('Instructor Data:  ' + widget.requestModel.approvedUsers.toString());
   }
 
   @override
@@ -187,6 +241,13 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
 
   @override
   void didChangeDependencies() {
+    if (widget.formType == RequestFormType.EDIT) {
+      requestModel.email = widget.requestModel.email;
+      requestModel.fullName = widget.requestModel.fullName;
+      requestModel.photoUrl = widget.requestModel.photoUrl;
+      requestModel.sevaUserId = widget.requestModel.sevaUserId;
+    }
+
     if (widget.loggedInUser?.sevaUserID != null)
       FirestoreManager.getUserForIdStream(sevaUserId: widget.loggedInUser.sevaUserID)
           .listen((userModel) {});
@@ -194,17 +255,21 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
   }
 
   Widget headerContainer(snapshot) {
-    if (snapshot.hasError) return Text(snapshot.error.toString());
-    if (snapshot.connectionState == ConnectionState.waiting) {
-      return Container();
-    }
-    timebankModel = snapshot.data;
-    if (isAccessAvailable(snapshot.data, SevaCore.of(context).loggedInUser.sevaUserID)) {
-      return requestSwitch(
-        timebankModel: timebankModel,
-      );
+    if (widget.formType == RequestFormType.CREATE) {
+      if (snapshot.hasError) return Text(snapshot.error.toString());
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return Container();
+      }
+      timebankModel = snapshot.data;
+      if (isAccessAvailable(snapshot.data, SevaCore.of(context).loggedInUser.sevaUserID)) {
+        return requestSwitch(
+          timebankModel: timebankModel,
+        );
+      } else {
+        this.requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
+        return Container();
+      }
     } else {
-      this.requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
       return Container();
     }
   }
@@ -212,6 +277,11 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
   @override
   Widget build(BuildContext context) {
     logger.e('CREATE EVENT STATUS: ' + createEvent.toString());
+  //TODO put the assigning in await before build check category
+/*
+
+*/
+
     hoursMessage = S.of(context).set_duration;
     UserModel loggedInUser = SevaCore.of(context).loggedInUser;
     this.requestModel.email = loggedInUser.email;
@@ -267,6 +337,7 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
                                   switch (requestModel.requestType) {
                                     case RequestType.TIME:
                                       return TimeRequest(
+                                        formType: widget.formType,
                                         requestModel: requestModel,
                                         offer: widget.offer,
                                         isOfferRequest: widget.isOfferRequest,
@@ -333,6 +404,7 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
                                       break;
                                     case RequestType.ONE_TO_MANY_REQUEST:
                                       return TimeRequest(
+                                        formType: widget.formType,
                                         requestModel: requestModel,
                                         offer: widget.offer,
                                         isOfferRequest: widget.isOfferRequest,
@@ -365,9 +437,13 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
                                 child: Center(
                                   child: Container(
                                     child: CustomElevatedButton(
-                                      onPressed: createRequest,
+                                      onPressed: widget.formType == RequestFormType.EDIT
+                                          ? editRequest
+                                          : createRequest,
                                       child: Text(
-                                        S.of(context).create_request.padLeft(10).padRight(10),
+                                        widget.formType == RequestFormType.EDIT
+                                            ? S.of(context).update_request.padLeft(10).padRight(10)
+                                            : S.of(context).create_request.padLeft(10).padRight(10),
                                         style: Theme.of(context).primaryTextTheme.button,
                                       ),
                                     ),
@@ -386,7 +462,8 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
   }
 
   Widget RequestTypeWidgetCommunityRequests() {
-    return requestModel.requestMode == RequestMode.TIMEBANK_REQUEST
+    return (widget.formType == RequestFormType.CREATE &&
+            requestModel.requestMode == RequestMode.TIMEBANK_REQUEST)
         ? Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -525,7 +602,8 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
   }
 
   Widget RequestTypeWidgetPersonalRequests() {
-    return requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+    return (widget.formType == RequestFormType.CREATE &&
+            requestModel.requestMode == RequestMode.PERSONAL_REQUEST)
         ? Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -616,7 +694,6 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
           borderColor: Colors.grey,
           padding: EdgeInsets.only(left: 5.0, right: 5.0),
           groupValue: sharedValue,
-
           onValueChanged: (int val) {
             if (val != sharedValue) {
               setState(() {
@@ -624,21 +701,15 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
                   requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
                 } else {
                   requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
-
-                  // requestModel.requestType = RequestType.TIME;
-                  //making false and clearing map because TIME and ONE_TO_MANY_REQUEST use same widget
                   setState(() {
                     instructorAdded = false;
                     requestModel.selectedInstructor = null;
                   });
-                  //requestModel.requestType = RequestType.TIME;
-
                 }
                 sharedValue = val;
               });
             }
           },
-          //groupValue: sharedValue,
         ),
       );
     } else {
@@ -647,14 +718,13 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
           requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
         } else {
           requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
-          // requestModel.requestType = RequestType.TIME;
         }
       }
       return Container();
     }
   }
 
-  BuildContext dialogContext;
+  // BuildContext dialogContext;
 
   void createRequest() async {
     // verify f the start and end date time is not same
@@ -687,16 +757,19 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
       requestModel.isRecurring = false;
     }
 
+    //recurring for creat events
     if (requestModel.isRecurring) {
       requestModel.recurringDays = RepeatWidgetState.getRecurringdays();
       requestModel.occurenceCount = 1;
-      end.endType = RepeatWidgetState.endType == 0 ? S.of(context).on : S.of(context).after;
-      end.on = end.endType == S.of(context).on
+      requestModel.end.endType = RepeatWidgetState.endType == 0 ? S.of(context).on : S.of(context).after;
+      requestModel.end.on = requestModel.end.endType == S.of(context).on
           ? RepeatWidgetState.selectedDate.millisecondsSinceEpoch
           : null;
-      end.after = (end.endType == S.of(context).after ? int.parse(RepeatWidgetState.after) : null);
-      requestModel.end = end;
+      requestModel.end.after = (requestModel.end.endType == S.of(context).after ? int.parse(RepeatWidgetState.after) : null);
     }
+
+    logger.d("END DATA  ${requestModel.end.after}");
+    logger.d("END TYPE  ${requestModel.end.endType}");
 
     if (_formKey.currentState.validate()) {
       FocusScope.of(context).unfocus();
@@ -917,7 +990,8 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
                 sevaUserId: selectedInstructorModel.sevaUserID,
                 userEmail: selectedInstructorModel.email,
                 context: context,
-                requestModel: requestModel);
+                requestModel: requestModel,
+                formType: widget.formType);
           } else {
             // send sevax global notification for user who is not part of the community for this request
             speakerNotificationDocRef = await sendNotificationToMemberOneToManyRequest(
@@ -926,7 +1000,8 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
                 sevaUserId: selectedInstructorModel.sevaUserID,
                 userEmail: selectedInstructorModel.email,
                 context: context,
-                requestModel: requestModel);
+                requestModel: requestModel,
+                formType: widget.formType);
 
             //Sending only if instructor is not part of the community of the request
             await sendMailToInstructor(
@@ -952,7 +1027,7 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
               speakerNotificationDocRef);
         }
       } else {
-        requestUtils.linearProgressForCreatingRequest(context);
+        linearProgressForCreatingRequest(context);
 
         await requestUtils.createProjectOneToManyRequest(
             context: context,
@@ -977,7 +1052,8 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
                 sevaUserId: selectedInstructorModel.sevaUserID,
                 userEmail: selectedInstructorModel.email,
                 context: context,
-                requestModel: requestModel);
+                requestModel: requestModel,
+                formType: widget.formType);
           } else {
             // send sevax global notification for user who is not part of the community for this request
             speakerNotificationDocRef = await sendNotificationToMemberOneToManyRequest(
@@ -986,7 +1062,8 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
                 sevaUserId: selectedInstructorModel.sevaUserID,
                 userEmail: selectedInstructorModel.email,
                 context: context,
-                requestModel: requestModel);
+                requestModel: requestModel,
+                formType: widget.formType);
 
             //Sending only if instructor is not part of the community of the request
             await sendMailToInstructor(
@@ -1017,9 +1094,9 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
               selectedInstructorModel.email,
               speakerNotificationDocRef);
         }
-        Navigator.of(context, rootNavigator: true).pop();
+        // Navigator.of(context, rootNavigator: true).pop();
+        if (dialogContext != null) Navigator.pop(dialogContext);
 
-        // Navigator.pop(dialogContext);
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -1039,7 +1116,7 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
   }
 
   void continueCreateRequest({BuildContext confirmationDialogContext}) async {
-    requestUtils.linearProgressForCreatingRequest(context);
+    linearProgressForCreatingRequest(context);
 
     List<String> resVar = await writeToDB(
         context: context,
@@ -1048,7 +1125,8 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
         offer: widget.offer);
     eventsIdsArr = resVar;
     await _updateProjectModel();
-    Navigator.pop(dialogContext);
+    // Navigator.of(context, rootNavigator: true).pop();
+    if (dialogContext != null) Navigator.pop(dialogContext);
 
     if (confirmationDialogContext != null) {
       Navigator.pop(confirmationDialogContext);
@@ -1067,5 +1145,465 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
       projectModel.pendingRequests.add(requestModel.id);
       await FirestoreManager.updateProject(projectModel: projectModel);
     }
+  }
+
+  //=====================================================
+
+  void editRequest() async {
+    logger.e('Project ID:  ' + tempProjectId.toString());
+    // verify f the start and end date time is not same
+
+    var connResult = await Connectivity().checkConnectivity();
+    if (connResult == ConnectivityResult.none) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(S.of(context).check_internet),
+          action: SnackBarAction(
+            label: S.of(context).dismiss,
+            onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
+          ),
+        ),
+      );
+      return;
+    }
+
+    if (_formKey.currentState.validate()) {
+      if (requestModel.public) {
+        requestModel.timebanksPosted = [
+          requestModel.timebankId,
+          FlavorConfig.values.timebankId
+        ];
+      } else {
+        requestModel.timebanksPosted = [requestModel.timebankId];
+      }
+
+      if (requestModel.requestType == RequestType.GOODS &&
+          (requestModel.goodsDonationDetails.requiredGoods == null ||
+              requestModel.goodsDonationDetails.requiredGoods.isEmpty)) {
+        requestUtils.showDialogForTitle(dialogTitle: S.of(context).goods_validation);
+        return;
+      }
+      if (requestModel.requestType == RequestType.BORROW &&
+          roomOrTool == 1 && //because was throwing dialog when creating for place
+          (requestModel.borrowModel.requiredItems == null ||
+              requestModel.borrowModel.requiredItems.isEmpty)) {
+        requestUtils.showDialogForTitle(dialogTitle: L.of(context).items_validation);
+        return;
+      }
+      if (requestModel.isRecurring == true || requestModel.autoGenerated == true) {
+        //TODO handle error here for editing reccuring request
+        // EditRepeatWidgetState.recurringDays = EditRepeatWidgetState.getRecurringdays();
+      }
+
+      if (requestModel.requestMode == RequestMode.PERSONAL_REQUEST) {
+        var onBalanceCheckResult;
+        if (requestModel.isRecurring == true || requestModel.autoGenerated == true) {
+          int recurrences = requestModel.end.endType == "after"
+              ? (requestModel.end.after - requestModel.occurenceCount).abs()
+              : calculateRecurrencesOnMode(requestModel);
+          onBalanceCheckResult = await SevaCreditLimitManager.hasSufficientCredits(
+            email: SevaCore.of(context).loggedInUser.email,
+            userId: SevaCore.of(context).loggedInUser.sevaUserID,
+            credits: requestModel.isRecurring
+                ? requestModel.numberOfHours.toDouble() * recurrences
+                : requestModel.numberOfHours.toDouble(),
+            communityId: requestModel.communityId,
+          );
+        } else {
+          onBalanceCheckResult = await SevaCreditLimitManager.hasSufficientCredits(
+            email: SevaCore.of(context).loggedInUser.email,
+            userId: SevaCore.of(context).loggedInUser.sevaUserID,
+            credits: requestModel.isRecurring
+                ? requestModel.numberOfHours.toDouble() * 0
+                : requestModel.numberOfHours.toDouble(),
+            communityId: requestModel.communityId,
+          );
+        }
+
+        if (!onBalanceCheckResult.hasSuffiientCredits) {
+          requestUtils.showInsufficientBalance(onBalanceCheckResult.credits, context);
+          return;
+        }
+      }
+
+      logger.i("=============||||||===============");
+
+      if (OfferDurationWidgetState.starttimestamp == OfferDurationWidgetState.endtimestamp) {
+        requestUtils.showDialogForTitle(
+            dialogTitle: S.of(context).validation_error_same_start_date_end_date);
+        return;
+      }
+
+      if (OfferDurationWidgetState.starttimestamp == 0 ||
+          OfferDurationWidgetState.endtimestamp == 0) {
+        requestUtils.showDialogForTitle(dialogTitle: S.of(context).validation_error_no_date);
+        return;
+      }
+
+      if (OfferDurationWidgetState.starttimestamp > OfferDurationWidgetState.endtimestamp) {
+        requestUtils.showDialogForTitle(
+            dialogTitle: S.of(context).validation_error_end_date_greater);
+        return;
+      }
+
+      // if (widget.requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
+      //   List<String> approvedUsers = [];
+      //   approvedUsers.add(widget.requestModel.selectedInstructor.email);
+      //   widget.requestModel.approvedUsers = approvedUsers;
+      // }
+
+      if (requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST &&
+          (selectedInstructorModel == {} ||
+              selectedInstructorModel == null ||
+              instructorAdded == false)) {
+        requestUtils.showDialogForTitle(dialogTitle: S.of(context).select_a_speaker);
+        return;
+      }
+
+      //Calculate session duration of one to many request using request start and request end time
+      if (requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
+        if (OfferDurationWidgetState.starttimestamp != null &&
+            OfferDurationWidgetState.endtimestamp != null) {
+          DateTime startDateNew =
+              DateTime.fromMillisecondsSinceEpoch(OfferDurationWidgetState.starttimestamp);
+          DateTime endDateNew =
+              DateTime.fromMillisecondsSinceEpoch(OfferDurationWidgetState.endtimestamp);
+
+          Duration sessionDuration = endDateNew.difference(startDateNew);
+          double sixty = 60;
+
+          logger.e('----------> Speaking Minutes: ' + sessionDuration.inMinutes.toString());
+
+          selectedSpeakerTimeDetails.speakingTime =
+              double.parse((sessionDuration.inMinutes / sixty).toStringAsPrecision(3));
+
+          //prep time will be entered by speaker when he/she is completing the request
+          // selectedSpeakerTimeDetails.prepTime = 0;
+
+          requestModel.selectedSpeakerTimeDetails = selectedSpeakerTimeDetails;
+
+          setState(() {});
+        }
+      }
+
+      //comparing the recurring days List
+
+      //TODO should there be comparison since repeat is not editable
+      /*Function eq = const ListEquality().equals;
+      bool recurrinDaysListsMatch =
+          eq(requestModel.recurringDays, EditRepeatWidgetState.recurringDays);
+      log('Days Match:  ' + recurrinDaysListsMatch.toString());
+      String tempSelectedEndType =
+          EditRepeatWidgetState.endType == 0 ? S.of(context).on : S.of(context).after;
+*/
+      if (requestModel.isRecurring == true || requestModel.autoGenerated == true) {
+     /*   if (widget.requestModel.title != initialRequestTitle ||
+            startDate.millisecondsSinceEpoch != OfferDurationWidgetState.starttimestamp ||
+            endDate.millisecondsSinceEpoch != OfferDurationWidgetState.endtimestamp ||
+            widget.requestModel.description != initialRequestDescription ||
+            tempCredits != widget.requestModel.maxCredits ||
+            tempNoOfVolunteers != widget.requestModel.numberOfApprovals ||
+            location != widget.requestModel.location ||
+            widget.requestModel.projectId != tempProjectId ||
+            !widget.requestModel.acceptors.contains(selectedInstructorModel?.email)) {*/
+          //setState(() {
+       /*   widget.requestModel.title = initialRequestTitle;
+          widget.requestModel.description = initialRequestDescription;
+          widget.requestModel.location = location;
+          widget.requestModel.projectId = tempProjectId;
+          widget.requestModel.address = selectedAddress;
+          widget.requestModel.categories = selectedCategoryIds.toList();
+
+          widget.requestModel.numberOfApprovals = tempNoOfVolunteers;
+          widget.requestModel.maxCredits = tempCredits;*/
+          //});
+
+        startDate.millisecondsSinceEpoch != OfferDurationWidgetState.starttimestamp
+            ? requestModel.requestStart = OfferDurationWidgetState.starttimestamp
+            : null;
+
+        endDate.millisecondsSinceEpoch != OfferDurationWidgetState.endtimestamp
+            ? requestModel.requestEnd = OfferDurationWidgetState.endtimestamp
+            : null;
+
+          if (selectedInstructorModel != null &&
+              selectedInstructorModel.sevaUserID != widget.requestModel.sevaUserId &&
+              !widget.requestModel.acceptors.contains(selectedInstructorModel.email) &&
+              widget.requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST ) {
+            //below is to update the invited speaker to inivted members list when speaker is changed
+            await reUpdateInvitedSpeakerForRequest(
+              requestID: requestModel.id,
+              sevaUserIdPrevious: widget.requestModel.selectedInstructor.sevaUserID,
+              emailPrevious: widget.requestModel.selectedInstructor.email,
+              sevaUserIdNew: selectedInstructorModel.sevaUserID,
+              emailNew: selectedInstructorModel.email,
+            );
+
+            List<String> acceptorsList = [];
+            Set<String> invitedUsersList = Set.from(widget.requestModel.invitedUsers);
+            //remove old speaker from invitedUsers and add new speaker to invited users
+            invitedUsersList.remove(widget.requestModel.selectedInstructor.sevaUserID);
+            invitedUsersList.add(selectedInstructorModel.sevaUserID);
+            //assign updated list to request model invited users
+            requestModel.invitedUsers = invitedUsersList.toList();
+
+            acceptorsList.add(selectedInstructorModel.email);
+            requestModel.acceptors = acceptorsList;
+            requestModel.requestCreatorName = SevaCore.of(context).loggedInUser.fullname;
+            log('ADDED ACCEPTOR');
+
+            if (selectedInstructorModel.communities.contains(requestModel.communityId)) {
+              speakerNotificationDocRef = await sendNotificationToMemberOneToManyRequest(
+                  context: context,
+                  requestModel: requestModel,
+                  communityId: requestModel.communityId,
+                  timebankId: requestModel.timebankId,
+                  sevaUserId: selectedInstructorModel.sevaUserID,
+                  userEmail: selectedInstructorModel.email,
+                  speakerNotificationDocRefOld: widget.requestModel.speakerInviteNotificationDocRef,
+                  formType: widget.formType);
+            } else {
+              speakerNotificationDocRef = await sendNotificationToMemberOneToManyRequest(
+                  context: context,
+                  requestModel: requestModel,
+                  communityId: FlavorConfig.values.timebankId,
+                  timebankId: FlavorConfig.values.timebankId,
+                  sevaUserId: selectedInstructorModel.sevaUserID,
+                  userEmail: selectedInstructorModel.email,
+                  speakerNotificationDocRefOld: widget.requestModel.speakerInviteNotificationDocRef,
+                  formType: widget.formType);
+              // send sevax global notification for user who is not part of the community for this request
+              await sendMailToInstructor(
+                  senderEmail: 'noreply@sevaexchange.com',
+                  //requestModel.email,
+                  receiverEmail: selectedInstructorModel.email,
+                  communityName: requestModel.fullName,
+                  requestName: requestModel.title,
+                  requestCreatorName: SevaCore.of(context).loggedInUser.fullname,
+                  receiverName: selectedInstructorModel.fullname,
+                  startDate: requestModel.requestStart,
+                  endDate: requestModel.requestEnd);
+            }
+          }
+
+          // requestModel.isRecurring = EditRepeatWidgetState.isRecurring;
+          // requestModel.end.after = int.parse(EditRepeatWidgetState.after);
+          // requestModel.end.endType = tempSelectedEndType;
+          // requestModel.recurringDays = EditRepeatWidgetState.recurringDays;
+          // requestModel.end.on = EditRepeatWidgetState.selectedDate.millisecondsSinceEpoch;
+
+          return showDialog(
+            barrierDismissible: false,
+            context: context,
+            builder: (BuildContext viewContext) {
+              return WillPopScope(
+                onWillPop: () {},
+                child: AlertDialog(
+                  title: Text("This is a repeating request."),
+                  actions: [
+                    CustomTextButton(
+                      child: Text(
+                        "Edit this request only.",
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.red,
+                        ),
+                      ),
+                      onPressed: () async {
+                        Navigator.pop(viewContext);
+                        linearProgressForCreatingRequest(context);
+                        await updateRequest(requestModel: requestModel);
+                        Navigator.pop(dialogContext);
+                        Navigator.pop(context);
+                      },
+                    ),
+                    CustomTextButton(
+                      child: Text(
+                        "Edit subsequent requests.",
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.red,
+                        ),
+                      ),
+                      onPressed: () async {
+                        Navigator.pop(viewContext);
+                        linearProgressForCreatingRequest(context);
+                        await updateRequest(requestModel: requestModel);
+                        await updateRecurrenceRequestsFrontEnd(
+                          updatedRequestModel: requestModel,
+                          communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+                          timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
+                        );
+                        logger.i("OUTSIDE BEFORE POP");
+
+                        Navigator.pop(dialogContext);
+                        logger.i("OUTSIDE AFTER POP");
+
+                        Navigator.pop(context);
+                      },
+                    ),
+                    CustomTextButton(
+                      child: Text(
+                        S.of(context).cancel,
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.red,
+                        ),
+                      ),
+                      onPressed: () async {
+                        Navigator.pop(viewContext);
+                      },
+                    ),
+                  ],
+                ),
+              );
+            },
+          );
+        // }
+
+        logger.i("=============////////===============");
+
+      /*  if (tempSelectedEndType != widget.requestModel.end.endType ||
+            widget.requestModel.end.after != int.parse(EditRepeatWidgetState.after) ||
+            widget.requestModel.end.on !=
+                EditRepeatWidgetState.selectedDate.millisecondsSinceEpoch ||
+            recurrinDaysListsMatch == false) {
+          //setState(() {
+          widget.requestModel.title = initialRequestTitle;
+          widget.requestModel.description = initialRequestDescription;
+          widget.requestModel.isRecurring = EditRepeatWidgetState.isRecurring;
+          widget.requestModel.end.after = int.parse(EditRepeatWidgetState.after);
+          widget.requestModel.end.endType = tempSelectedEndType;
+          widget.requestModel.recurringDays = EditRepeatWidgetState.recurringDays;
+          widget.requestModel.end.on = EditRepeatWidgetState.selectedDate.millisecondsSinceEpoch;
+          //});
+
+          logger.i("=============IF===============");
+
+          linearProgressForCreatingRequest(context);
+          await updateRequest(requestModel: widget.requestModel);
+          await updateRecurrenceRequestsFrontEnd(
+            updatedRequestModel: widget.requestModel,
+            communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+            timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
+          );
+
+          Navigator.pop(dialogContext);
+          Navigator.pop(context);
+        } else {
+          Navigator.of(context).pop();
+        }*/
+      } else if (requestModel.isRecurring == false &&
+          requestModel.autoGenerated == false) {
+        // if (widget.requestModel.title != initialRequestTitle ||
+        //     startDate.millisecondsSinceEpoch !=
+        //         OfferDurationWidgetState.starttimestamp ||
+        //     endDate.millisecondsSinceEpoch !=
+        //         OfferDurationWidgetState.endtimestamp ||
+        //     widget.requestModel.description != initialRequestDescription ||
+        //     tempCredits != widget.requestModel.maxCredits ||
+        //     tempNoOfVolunteers != widget.requestModel.numberOfApprovals ||
+        //     location != widget.requestModel.location) {
+        log('HERE 1');
+
+        if (selectedInstructorModel != null &&
+            selectedInstructorModel.sevaUserID != widget.requestModel.sevaUserId &&
+            !widget.requestModel.acceptors.contains(selectedInstructorModel.email) &&
+            widget.requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
+          //below is to update the invited speaker to inivted members list when speaker is changed
+          await reUpdateInvitedSpeakerForRequest(
+            requestID: requestModel.id,
+            sevaUserIdPrevious: widget.requestModel.selectedInstructor.sevaUserID,
+            emailPrevious: widget.requestModel.selectedInstructor.email,
+            sevaUserIdNew: selectedInstructorModel.sevaUserID,
+            emailNew: selectedInstructorModel.email,
+          );
+
+          List<String> acceptorsList = [];
+          Set<String> invitedUsersList = Set.from(widget.requestModel.invitedUsers);
+          //remove old speaker from invitedUsers and add new speaker to invited users
+          invitedUsersList.remove(widget.requestModel.selectedInstructor.sevaUserID);
+          invitedUsersList.add(selectedInstructorModel.sevaUserID);
+          //assign updated list to request model invited users
+          requestModel.invitedUsers = invitedUsersList.toList();
+
+          acceptorsList.add(selectedInstructorModel.email);
+          requestModel.acceptors = acceptorsList;
+          requestModel.requestCreatorName = SevaCore.of(context).loggedInUser.fullname;
+          log('ADDED ACCEPTOR');
+
+
+          if (selectedInstructorModel.communities.contains(widget.requestModel.communityId)) {
+            speakerNotificationDocRef = await sendNotificationToMemberOneToManyRequest(
+                context: context,
+                formType: widget.formType,
+                requestModel: requestModel,
+                communityId: requestModel.communityId,
+                timebankId: requestModel.timebankId,
+                sevaUserId: selectedInstructorModel.sevaUserID,
+                userEmail: selectedInstructorModel.email,
+                speakerNotificationDocRefOld: widget.requestModel.speakerInviteNotificationDocRef);
+          } else {
+            // send sevax global notification for user who is not part of the community for this request
+            speakerNotificationDocRef = await sendNotificationToMemberOneToManyRequest(
+                context: context,
+                formType: widget.formType,
+                requestModel: requestModel,
+                communityId: FlavorConfig.values.timebankId,
+                timebankId: FlavorConfig.values.timebankId,
+                sevaUserId: selectedInstructorModel.sevaUserID,
+                userEmail: selectedInstructorModel.email,
+                speakerNotificationDocRefOld: widget.requestModel.speakerInviteNotificationDocRef);
+            await sendMailToInstructor(
+                senderEmail: 'noreply@sevaexchange.com',
+                receiverEmail: selectedInstructorModel.email,
+                communityName: requestModel.fullName,
+                requestName: requestModel.title,
+                requestCreatorName: SevaCore.of(context).loggedInUser.fullname,
+                receiverName: selectedInstructorModel.fullname,
+                startDate: requestModel.requestStart,
+                endDate: requestModel.requestEnd);
+          }
+        }
+
+        //update current speaker notification document reference
+        requestModel.speakerInviteNotificationDocRef = speakerNotificationDocRef;
+
+        startDate.millisecondsSinceEpoch != OfferDurationWidgetState.starttimestamp
+            ? requestModel.requestStart = OfferDurationWidgetState.starttimestamp
+            : null;
+        endDate.millisecondsSinceEpoch != OfferDurationWidgetState.endtimestamp
+            ? requestModel.requestEnd = OfferDurationWidgetState.endtimestamp
+            : null;
+
+        linearProgressForCreatingRequest(context);
+        await updateRequest(requestModel: requestModel);
+
+        Navigator.pop(dialogContext);
+        Navigator.pop(context);
+      } else {
+        Navigator.of(context).pop();
+      }
+      //}
+    }
+  }
+
+  int calculateRecurrencesOnMode(RequestModel requestModel) {
+    DateTime eventStartDate = DateTime.fromMillisecondsSinceEpoch(requestModel.requestStart);
+    int recurrenceCount = 0;
+    bool lastRound = false;
+    while (lastRound == false) {
+      eventStartDate = DateTime(eventStartDate.year, eventStartDate.month, eventStartDate.day + 1,
+          eventStartDate.hour, eventStartDate.minute, eventStartDate.second);
+      if (eventStartDate.millisecondsSinceEpoch <= requestModel.end.on && recurrenceCount < 11) {
+        if (requestModel.recurringDays.contains(eventStartDate.weekday % 7)) {
+          recurrenceCount++;
+        }
+      } else {
+        lastRound = true;
+      }
+    }
+    log("on mode recurrence count isss $recurrenceCount");
+    return recurrenceCount;
   }
 }

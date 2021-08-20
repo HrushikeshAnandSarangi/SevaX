@@ -95,7 +95,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
 
   @override
   Widget build(BuildContext context) {
-    logger.d("LENGTH ${widget.selectedCategoryModels.length}");
+    // logger.d("LENGTH ${widget.selectedCategoryModels.length}");
     return InkWell(
       child: Column(
         children: [

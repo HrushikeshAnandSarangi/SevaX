@@ -14,8 +14,10 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/ui/screens/request/widgets/skills_for_requests_widget.dart';
 import 'package:sevaexchange/ui/utils/debouncer.dart';
 import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/helpers/configuration_check.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/category_widget.dart';
@@ -41,30 +43,31 @@ class TimeRequest extends StatefulWidget {
   final List<ProjectModel> projectModelList;
   final String projectId;
   final Function onCreateEventChanged;
-  GeoFirePoint location;
-  String selectedAddress;
-  TimebankModel timebankModel;
+  final RequestFormType formType;
+  final TimebankModel timebankModel;
   UserModel selectedInstructorModel;
+  String selectedAddress;
   bool instructorAdded;
   bool createEvent;
+  GeoFirePoint location;
 
-  TimeRequest({
-    this.requestModel,
-    this.isOfferRequest,
-    this.offer,
-    this.selectedAddress,
-    this.location,
-    this.timebankModel,
-    this.isAdmin,
-    this.selectedInstructorModel,
-    this.timebankId,
-    this.comingFrom,
-    this.projectModelList,
-    this.projectId,
-    this.onCreateEventChanged,
-    this.instructorAdded,
-    this.createEvent,
-  });
+  TimeRequest(
+      {this.requestModel,
+      this.isOfferRequest,
+      this.offer,
+      this.selectedAddress,
+      this.location,
+      this.timebankModel,
+      this.isAdmin,
+      this.selectedInstructorModel,
+      this.timebankId,
+      this.comingFrom,
+      this.projectModelList,
+      this.projectId,
+      this.onCreateEventChanged,
+      this.instructorAdded,
+      this.createEvent,
+      this.formType});
 
   @override
   _TimeRequestState createState() => _TimeRequestState();
@@ -96,17 +99,24 @@ class _TimeRequestState extends State<TimeRequest> {
                     children: [
                       Flexible(
                         child: ProjectSelection(
+                          createEvent: widget.formType == RequestFormType.CREATE
+                              ? widget.createEvent
+                              : false,
+                          requestModel: widget.requestModel,
+                          projectModelList: widget.projectModelList,
+                          selectedProject: (widget.requestModel.projectId != null &&
+                                  widget.requestModel.projectId.isNotEmpty)
+                              ? widget.projectModelList.firstWhere(
+                                  (element) => element.id == widget.requestModel.projectId,
+                                  orElse: () => null)
+                              : null,
+                          admin: isAccessAvailable(
+                              widget.timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
                           setcreateEventState: () {
                             widget.createEvent = !widget.createEvent;
                             setState(() {});
                             widget.onCreateEventChanged(widget.createEvent);
                           },
-                          createEvent: widget.createEvent,
-                          requestModel: widget.requestModel,
-                          projectModelList: widget.projectModelList,
-                          selectedProject: null,
-                          admin: isAccessAvailable(
-                              widget.timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
                         ),
                       ),
                     ],
@@ -149,6 +159,18 @@ class _TimeRequestState extends State<TimeRequest> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    if (widget.formType == RequestFormType.EDIT) {
+      getCategoryModels(widget.requestModel.categories).then((value) {
+        selectedCategoryModels = value;
+        setState(() {});
+      });
+    }
+    logger.d(" selectedCategoryModels ${selectedCategoryModels.length}");
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
       Text(
@@ -172,11 +194,9 @@ class _TimeRequestState extends State<TimeRequest> {
         ),
         textInputAction: TextInputAction.next,
         keyboardType: TextInputType.text,
-        initialValue: widget.offer != null && widget.isOfferRequest
-            ? getOfferTitle(
-                offerDataModel: widget.offer,
-              )
-            : "",
+        initialValue: widget.formType == RequestFormType.CREATE
+            ? requestUtils.getInitialTitle(widget.offer, widget.isOfferRequest)
+            : widget.requestModel.title,
         textCapitalization: TextCapitalization.sentences,
         validator: (value) {
           if (value.isEmpty) {
@@ -319,9 +339,6 @@ class _TimeRequestState extends State<TimeRequest> {
                       floatingLabelBehavior: FloatingLabelBehavior.never,
                     ),
                   ),
-
-                  //SizedBox(height: 5),
-
                   Container(
                       child: Column(children: [
                     StreamBuilder<List<UserModel>>(
@@ -478,10 +495,18 @@ class _TimeRequestState extends State<TimeRequest> {
       SizedBox(height: 30),
       OfferDurationWidget(
         title: "${S.of(context).request_duration} *",
+        startTime: widget.formType == RequestFormType.EDIT
+            ? getUpdatedDateTimeAccToUserTimezone(
+                timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
+                dateTime: DateTime.fromMillisecondsSinceEpoch(widget.requestModel.requestStart))
+            : null,
+        endTime: widget.formType == RequestFormType.EDIT
+            ? getUpdatedDateTimeAccToUserTimezone(
+                timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
+                dateTime: DateTime.fromMillisecondsSinceEpoch(widget.requestModel.requestEnd))
+            : null,
       ),
-
-      RepeatWidget(),
-
+      HideWidget(hide: widget.formType == RequestFormType.EDIT, child: RepeatWidget()),
       SizedBox(height: 20),
 
       Text(
@@ -499,7 +524,7 @@ class _TimeRequestState extends State<TimeRequest> {
           if (value != null && value.length > 5) {
             _debouncer.run(() async {
               selectedCategoryModels = await getCategoriesFromApi(value);
-              categoryMode  = S.of(context).suggested_categories;
+              categoryMode = S.of(context).suggested_categories;
               setState(() {});
             });
           }
@@ -513,11 +538,9 @@ class _TimeRequestState extends State<TimeRequest> {
               : S.of(context).request_description_hint,
           hintStyle: requestUtils.hintTextStyle,
         ),
-        initialValue: widget.offer != null && widget.isOfferRequest
-            ? getOfferDescription(
-                offerDataModel: widget.offer,
-              )
-            : "",
+        initialValue: widget.formType == RequestFormType.CREATE
+            ? requestUtils.getInitialDescription(widget.offer, widget.isOfferRequest)
+            : widget.requestModel.description,
         keyboardType: TextInputType.multiline,
         maxLines: 1,
         validator: (value) {
@@ -539,24 +562,30 @@ class _TimeRequestState extends State<TimeRequest> {
         categoryMode: categoryMode,
       ),
       SizedBox(height: 20),
-      Text(
-        S.of(context).provide_skills,
-        style: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-          fontFamily: 'Europa',
-          color: Colors.black,
+      HideWidget(
+        hide: widget.formType == RequestFormType.EDIT,
+        child: Text(
+          S.of(context).provide_skills,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Europa',
+            color: Colors.black,
+          ),
         ),
       ),
-      SkillsForRequests(
-        languageCode: SevaCore.of(context).loggedInUser.language ?? 'en',
-        selectedSkills: _selectedSkillsMap,
-        onSelectedSkillsMap: (skillMap) {
-          if (skillMap.values != null && skillMap.values.length > 0) {
-            _selectedSkillsMap = skillMap;
-            // setState(() {});
-          }
-        },
+      HideWidget(
+        hide: widget.formType == RequestFormType.EDIT,
+        child: SkillsForRequests(
+          languageCode: SevaCore.of(context).loggedInUser.language ?? 'en',
+          selectedSkills: _selectedSkillsMap,
+          onSelectedSkillsMap: (skillMap) {
+            if (skillMap.values != null && skillMap.values.length > 0) {
+              _selectedSkillsMap = skillMap;
+              // setState(() {});
+            }
+          },
+        ),
       ),
       SizedBox(height: 20),
       addToProjectContainer(),
@@ -589,6 +618,9 @@ class _TimeRequestState extends State<TimeRequest> {
                 hintStyle: requestUtils.hintTextStyle,
                 // labelText: 'No. of volunteers',
               ),
+              initialValue: widget.formType == RequestFormType.EDIT
+                  ? widget.requestModel.maxCredits.toString()
+                  : '',
               textInputAction: TextInputAction.next,
               keyboardType: TextInputType.number,
               validator: (value) {
@@ -634,6 +666,9 @@ class _TimeRequestState extends State<TimeRequest> {
               ),
             ),
       TextFormField(
+        initialValue: widget.formType == RequestFormType.EDIT
+            ? widget.requestModel.numberOfApprovals.toString()
+            : '',
         onChanged: (v) {
           requestUtils.updateExitWithConfirmationValue(context, 11, v);
           if (v.isNotEmpty && int.parse(v) >= 0) {
@@ -673,6 +708,7 @@ class _TimeRequestState extends State<TimeRequest> {
         onLinksCreated: (List<String> imageUrls) {
           widget.requestModel.imageUrls = imageUrls;
         },
+        selectedList: widget.requestModel.imageUrls ?? [],
       ),
       Center(
         child: LocationPickerWidget(

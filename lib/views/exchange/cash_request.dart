@@ -68,10 +68,7 @@ class _CashRequestState extends State<CashRequest> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            (widget.requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST &&
-                    widget.createEvent)
-                ? Container()
-                : Row(
+            Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Flexible(

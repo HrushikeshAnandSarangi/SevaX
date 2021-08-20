@@ -18,7 +18,6 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
   final profanityDetector = ProfanityDetector();
   RequestUtils requestUtils = RequestUtils();
 
-
   @override
   Widget build(BuildContext context) {
     return RequestPaymentDescriptionData(widget.requestModel);
@@ -88,7 +87,7 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
             requestModel.cashModel.paymentType = value;
             setState(() => {});
           },
-        ),
+        ) ,
         _optionRadioButton<RequestPaymentType>(
           title: S.of(context).other(1),
           value: RequestPaymentType.OTHER,
@@ -127,6 +126,7 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
       ),
       TextFormField(
         autovalidateMode: AutovalidateMode.onUserInteraction,
+        initialValue: requestModel.cashModel.achdetails.bank_name,
         onChanged: (value) {
           requestUtils.updateExitWithConfirmationValue(context, 3, value);
         },
@@ -156,6 +156,7 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
       ),
       TextFormField(
         autovalidateMode: AutovalidateMode.onUserInteraction,
+        initialValue: requestModel.cashModel.achdetails.bank_address,
         onChanged: (value) {
           requestUtils.updateExitWithConfirmationValue(context, 4, value);
         },
@@ -186,6 +187,7 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
       TextFormField(
         maxLength: 30,
         autovalidateMode: AutovalidateMode.onUserInteraction,
+        initialValue: requestModel.cashModel.achdetails.routing_number,
         onChanged: (value) {
           requestUtils.updateExitWithConfirmationValue(context, 5, value);
         },
@@ -215,6 +217,7 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
       ),
       TextFormField(
         maxLength: 30,
+        initialValue: requestModel.cashModel.achdetails.account_number,
         autovalidateMode: AutovalidateMode.onUserInteraction,
         onChanged: (value) {
           requestUtils.updateExitWithConfirmationValue(context, 6, value);
@@ -295,6 +298,7 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
           hintText: 'Ex: Paypal ID (phone or email)',
           hintStyle: requestUtils.hintTextStyle,
         ),
+        initialValue: requestModel.cashModel?.paypalId ?? '',
         keyboardType: TextInputType.emailAddress,
         maxLines: 1,
         onSaved: (value) {
@@ -456,6 +460,7 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
       ),
     ]);
   }
+
   Widget _optionRadioButton<T>({
     String title,
     T value,
@@ -474,5 +479,4 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
       ),
     );
   }
-
 }

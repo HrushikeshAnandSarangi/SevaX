@@ -7,6 +7,7 @@ import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/helpers/projects_helper.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
 
@@ -15,19 +16,7 @@ class RequestUtils {
     ExitWithConfirmation.of(context).fieldValues[index] = value;
   }
 
-   linearProgressForCreatingRequest(context) {
-       showDialog(
-        barrierDismissible: false,
-        context: context,
-        useRootNavigator: true,
-        builder: (_) {
-          // dialogContext = createDialogContext;
-          return AlertDialog(
-            title: Text(S.of(context).creating_request),
-            content: LinearProgressIndicator(),
-          );
-        });
-  }
+
 
   Future createProjectOneToManyRequest({context, projectModel, requestModel, createEvent}) async {
     //Create new Event/Project for ONE TO MANY Request
@@ -150,9 +139,15 @@ class RequestUtils {
     fontFamily: 'Europa',
   );
 
-
   bool isFromRequest({String projectId}) {
     return projectId == null || projectId.isEmpty || projectId == "";
   }
 
+  getInitialTitle(offer, isOfferRequest) {
+    return offer != null && isOfferRequest ? getOfferTitle(offerDataModel: offer) : "";
+  }
+
+  getInitialDescription(offer, isOfferRequest) {
+    return offer != null && isOfferRequest ? getOfferDescription(offerDataModel: offer) : "";
+  }
 }

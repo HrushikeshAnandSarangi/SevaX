@@ -4,3 +4,5 @@ enum BorrowRequestType {
   ITEM,
   PLACE,
 }
+
+enum RequestFormType { EDIT, CREATE }
