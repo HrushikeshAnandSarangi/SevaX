@@ -99,25 +99,30 @@ class _TimeRequestState extends State<TimeRequest> {
                     children: [
                       Flexible(
                         child: ProjectSelection(
-                          createEvent: widget.formType == RequestFormType.CREATE
-                              ? widget.createEvent
-                              : false,
-                          requestModel: widget.requestModel,
-                          projectModelList: widget.projectModelList,
-                          selectedProject: (widget.requestModel.projectId != null &&
-                                  widget.requestModel.projectId.isNotEmpty)
-                              ? widget.projectModelList.firstWhere(
-                                  (element) => element.id == widget.requestModel.projectId,
-                                  orElse: () => null)
-                              : null,
-                          admin: isAccessAvailable(
-                              widget.timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
-                          setcreateEventState: () {
-                            widget.createEvent = !widget.createEvent;
-                            setState(() {});
-                            widget.onCreateEventChanged(widget.createEvent);
-                          },
-                        ),
+                            requestModel: widget.requestModel,
+                            projectModelList: widget.projectModelList,
+                            createEvent: widget.formType == RequestFormType.CREATE
+                                ? widget.createEvent
+                                : false,
+                            selectedProject: (widget.requestModel.projectId != null &&
+                                    widget.requestModel.projectId.isNotEmpty)
+                                ? widget.projectModelList.firstWhere(
+                                    (element) => element.id == widget.requestModel.projectId,
+                                    orElse: () => null)
+                                : null,
+                            admin: isAccessAvailable(
+                                widget.timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
+                            setcreateEventState: () {
+                              widget.createEvent = !widget.createEvent;
+                              logger.d("SELECTED PROJECT ${widget.requestModel.projectId}");
+                              setState(() {});
+                              widget.onCreateEventChanged(widget.createEvent);
+                            },
+                            updateProjectIdCallback: (String projectid) {
+                              //widget.requestModel.projectId = projectid;
+                              widget.requestModel.projectId = projectid;
+                              setState(() {});
+                            }),
                       ),
                     ],
                   ),
@@ -164,7 +169,7 @@ class _TimeRequestState extends State<TimeRequest> {
     if (widget.formType == RequestFormType.EDIT) {
       getCategoryModels(widget.requestModel.categories).then((value) {
         selectedCategoryModels = value;
-        setState(() {});
+        // setState(() {});
       });
     }
     logger.d(" selectedCategoryModels ${selectedCategoryModels.length}");

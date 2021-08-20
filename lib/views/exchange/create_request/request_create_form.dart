@@ -131,7 +131,7 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
 
     //create or edit initialization
     widget.formType == RequestFormType.CREATE
-        ? _initializeRequestModel()
+        ? _initializeCreateRequestModel()
         : _initializeEditRequestModel();
 
     getTimebankAdminStatus = getTimebankDetailsbyFuture(
@@ -157,7 +157,7 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
     });
   }
 
-  _initializeRequestModel() {
+  _initializeCreateRequestModel() {
     requestModel = RequestModel(
         requestType: RequestType.TIME,
         cashModel: CashModel(paymentType: RequestPaymentType.ZELLEPAY, achdetails: new ACHModel()),
@@ -768,8 +768,8 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
       requestModel.end.after = (requestModel.end.endType == S.of(context).after ? int.parse(RepeatWidgetState.after) : null);
     }
 
-    logger.d("END DATA  ${requestModel.end.after}");
-    logger.d("END TYPE  ${requestModel.end.endType}");
+    // logger.d("END DATA  ${requestModel.end.after}");
+    // logger.d("END TYPE  ${requestModel.end.endType}");
 
     if (_formKey.currentState.validate()) {
       FocusScope.of(context).unfocus();
@@ -1112,7 +1112,11 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
         );
         // await _settingModalBottomSheet(context);
       }
-    }
+
+    logger.d("PROJET ID ${requestModel?.projectId}");
+
+
+  }
   }
 
   void continueCreateRequest({BuildContext confirmationDialogContext}) async {
