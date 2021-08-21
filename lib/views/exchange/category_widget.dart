@@ -23,7 +23,6 @@ class CategoryWidget extends StatefulWidget {
 
 class _CategoryWidgetState extends State<CategoryWidget> {
   List<String> selectedCategoryIds = [];
-
   List<Widget> _buildselectedSubCategories() {
     List<CategoryModel> subCategories = [];
     subCategories = widget.selectedCategoryModels;
@@ -74,7 +73,6 @@ class _CategoryWidgetState extends State<CategoryWidget> {
         ),
       );
     });
-
     return selectedSubCategories;
   }
 
@@ -89,6 +87,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
     if (category != null) {
       widget.categoryMode = category[0];
       widget.selectedCategoryModels = await updateInformation(category[1]);
+      widget.requestModel.categories =selectedCategoryIds ;
       setState(() {});
     }
   }
