@@ -169,10 +169,10 @@ class _TimeRequestState extends State<TimeRequest> {
     if (widget.formType == RequestFormType.EDIT) {
       getCategoryModels(widget.requestModel.categories).then((value) {
         selectedCategoryModels = value;
-        // setState(() {});
+        setState(() {});
       });
     }
-    logger.d(" selectedCategoryModels ${selectedCategoryModels.length}");
+    // logger.d("TIME REQUEST selectedCategoryModels ${selectedCategoryModels.length}");
   }
 
   @override

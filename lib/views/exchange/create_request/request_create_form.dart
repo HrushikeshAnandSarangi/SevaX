@@ -932,7 +932,7 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
       requestModel.acceptors = [];
       requestModel.invitedUsers = [];
       requestModel.recommendedMemberIdsForRequest = [];
-      requestModel.categories = selectedCategoryIds;
+      // requestModel.categories = selectedCategoryIds;
       requestModel.address = selectedAddress;
       requestModel.location = location;
       requestModel.root_timebank_id = FlavorConfig.values.timebankId;
@@ -1113,7 +1113,7 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
         // await _settingModalBottomSheet(context);
       }
 
-    logger.d("PROJET ID ${requestModel?.projectId}");
+    // logger.d("PROJET ID ${requestModel?.projectId}");
 
 
   }
