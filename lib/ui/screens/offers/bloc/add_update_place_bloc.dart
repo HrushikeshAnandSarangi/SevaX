@@ -20,6 +20,7 @@ class AddUpdatePlaceBloc extends BlocBase {
   final _no_of_bathRooms = BehaviorSubject<String>();
   final _commonSpaces = BehaviorSubject<String>();
   final _house_rules = BehaviorSubject<String>();
+  final _estimated_value = BehaviorSubject<String>();
   final _house_images = BehaviorSubject<List<String>>();
   final profanityDetector = ProfanityDetector();
   final _amenities = BehaviorSubject<Map<String, dynamic>>();
@@ -35,6 +36,7 @@ class AddUpdatePlaceBloc extends BlocBase {
   Stream<String> get bathRooms => _no_of_bathRooms.stream;
   Stream<String> get commonSpaces => _commonSpaces.stream;
   Stream<String> get houseRules => _house_rules.stream;
+  Stream<String> get estimatedValue => _estimated_value.stream;
   Stream<List<String>> get houseImages => _house_images.stream;
   Stream<Map<String, dynamic>> get amenitiesDetails => _amenities.stream;
   Stream<String> get message => _message.stream;
@@ -45,6 +47,8 @@ class AddUpdatePlaceBloc extends BlocBase {
   Function(String value) get onBathRoomsChanged => _no_of_bathRooms.sink.add;
   Function(String value) get onCommonSpacesChanged => _commonSpaces.sink.add;
   Function(String value) get onHouseRulesChanged => _house_rules.sink.add;
+  Function(String value) get onEstimatedValueChanged =>
+      _estimated_value.sink.add;
   Function(List<String> value) get onHouseImageAdded => _house_images.sink.add;
   Function(Map<String, dynamic>) get amenitiesChanged => _amenities.sink.add;
 
@@ -84,6 +88,7 @@ class AddUpdatePlaceBloc extends BlocBase {
                 noOfBathRooms: int.parse(_no_of_bathRooms.value),
                 commonSpace: _commonSpaces.value,
                 houseRules: _house_rules.value,
+                estimatedValue: int.parse(_estimated_value.value),
                 houseImages: _house_images.value.toList(),
                 amenities: _amenities.value));
         LendingOffersRepo.addNewLendingPlace(model: lendingModel).then((_) {
@@ -113,6 +118,8 @@ class AddUpdatePlaceBloc extends BlocBase {
             int.parse(_no_of_bathRooms.value);
         lendingModel.lendingPlaceModel.commonSpace = _commonSpaces.value;
         lendingModel.lendingPlaceModel.houseRules = _house_rules.value;
+        lendingModel.lendingPlaceModel.estimatedValue =
+            int.parse(_estimated_value.value);
 
         LendingOffersRepo.updateNewLendingPlace(model: lendingModel).then((_) {
           _model.add(lendingModel);
@@ -160,7 +167,10 @@ class AddUpdatePlaceBloc extends BlocBase {
       _amenities.addError(AddPlaceValidationErrors.amenities_error);
       flag = true;
     }
-
+    if (_estimated_value.value == null || _estimated_value.value == 0) {
+      _estimated_value.addError(AddPlaceValidationErrors.estimated_value_error);
+      flag = true;
+    }
     // if (_location.value == null) {
     //   _location.addError(ValidationErrors.genericError);
     //   flag = true;
@@ -174,6 +184,7 @@ class AddUpdatePlaceBloc extends BlocBase {
     _placeName.close();
     _no_of_guests.close();
     _house_rules.close();
+    _estimated_value.close();
     _no_of_rooms.close();
     _no_of_bathRooms.close();
     _commonSpaces.close();
@@ -187,6 +198,7 @@ class AddPlaceValidationErrors {
   static const String no_guests_error = '_no_guests_error';
   static const String no_rooms_error = '_no_rooms_error';
   static const String house_rules_error = '_house_rules_error';
+  static const String estimated_value_error = '_estimated_value_error';
   static const String commonSpaces_error = '_commonSpaces_error';
   static const String bath_rooms_error = '_bath_rooms_error';
   static const String amenities_error = "amenities_error";
@@ -211,6 +223,9 @@ String getAddPlaceValidationError(BuildContext context, String errorCode) {
       break;
     case AddPlaceValidationErrors.no_rooms_error:
       return error.validation_error_no_of_rooms;
+      break;
+    case AddPlaceValidationErrors.estimated_value_error:
+      return error.validation_error_no_estimated_value_room;
       break;
     case AddPlaceValidationErrors.commonSpaces_error:
       return error.validation_error_common_spaces;
