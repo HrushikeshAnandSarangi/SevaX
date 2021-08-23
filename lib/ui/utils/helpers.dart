@@ -122,7 +122,6 @@ handleVolunterFeedbackForTrustWorthynessNRealiablityScore(
   }
   if (type == FeedbackType.FOR_LENDING_OFFER_BORROWER) {
     var temp = results['ratings'];
-    logger.d('FOR_BORROW_REQUEST_BORROWER RESULTS:' + results.toString());
     await CollectionRef.users
         .doc(offerModel.lendingOfferDetailsModel.approvedUsers.first)
         .set({
@@ -132,11 +131,9 @@ handleVolunterFeedbackForTrustWorthynessNRealiablityScore(
       'trustworthinessscore': averageReview(user.totalReviews,
           ratingCal(temp['0'] + temp['2']), user.trustworthinessscore)
     }, SetOptions(merge: true));
-    logger.i("## COMPLETED FOR_BORROW_REQUEST_BORROWER");
   }
   if (type == FeedbackType.FOR_LENDING_OFFER_LENDER) {
     var temp = results['ratings'];
-    logger.e('FOR_BORROW_REQUEST_LENDER RESULTS:' + results.toString());
     await CollectionRef.users.doc(offerModel.email).set({
       'totalReviews': FieldValue.increment(1),
       'reliabilityscore': averageReview(user.totalReviews,
@@ -145,7 +142,6 @@ handleVolunterFeedbackForTrustWorthynessNRealiablityScore(
           ratingCal(temp['0'] + temp['2']), user.trustworthinessscore)
     }, SetOptions(merge: true)).onError(
         (error, stackTrace) => logger.e("ERROR FOR_BORROW_REQUEST_LENDER"));
-    logger.i("## COMPLETED FOR_BORROW_REQUEST_LENDER");
   }
 }
 

@@ -385,8 +385,7 @@ class LendingOffersRepo {
     WriteBatch batch = CollectionRef.batch;
     var offersRef = CollectionRef.offers.doc(offerModel.id);
     var lenderNotificationRef =
-        CollectionRef.userNotification(lendingOfferAcceptorModel.acceptorEmail)
-            .doc(offerModel.email);
+        CollectionRef.userNotification(offerModel.email).doc(notification.id);
     var offerAcceptorsReference =
         CollectionRef.lendingOfferAcceptors(offerModel.id)
             .doc(lendingOfferAcceptorModel.id);
