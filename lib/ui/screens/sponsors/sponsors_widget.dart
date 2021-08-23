@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
@@ -50,7 +53,8 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
   String userId = '';
   SponsorDataModel removedSponsors;
   SponsorDataModel addedSponsors;
-
+  StreamController<SponsorDataModel> imageDatacontroller =
+      StreamController.broadcast();
   @override
   Widget build(BuildContext context) {
     userId = SevaCore.of(context).loggedInUser.sevaUserID;
@@ -137,7 +141,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                             onTap: () {
                               indexPosition = index;
                               Navigator.of(dialogContext).pop();
-                              showEnterNameDialog(context);
+                              editNameDialog(context);
                             },
                             title: Text(S.of(context).edit),
                             trailing: Icon(Icons.edit),
@@ -386,7 +390,324 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
     );
   }
 
-  Future showEnterNameDialog(
+  Future showEnterNameDialog(BuildContext context) async {
+    final profanityDetector = ProfanityDetector();
+    GlobalKey<FormState> _formKey = GlobalKey();
+    String name;
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext viewContext) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          title: SizedBox(
+            height: 216,
+            width: MediaQuery.of(context).size.width - 60,
+            child: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 5, bottom: 20),
+                  // width: 75,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(50),
+                    child: Container(
+                      width: 50,
+                      height: 50,
+                      child: InkWell(
+                        onTap: () {
+                          try {
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext dialogContext) {
+                                  return ImagePickerDialogMobile(
+                                    imagePickerType: ImagePickerType.SPONSOR,
+                                    onLinkCreated: (link) {
+                                      // try {
+                                      SponsorDataModel sponsorModel =
+                                          SponsorDataModel(
+                                        name: '',
+                                        createdAt: DateTime.now()
+                                            .millisecondsSinceEpoch,
+                                        createdBy: userId,
+                                        logo: link,
+                                      );
+                                      imageDatacontroller.add(sponsorModel);
+                                      //   if (indexPosition == null) {
+                                      //     if (widget.sponsors == null) {
+                                      //       List<SponsorDataModel> x = [];
+                                      //       x.add(sponsorModel);
+                                      //       widget.sponsors = x;
+                                      //       addedSponsors = sponsorModel;
+                                      //     } else {
+                                      //       widget.sponsors.add(sponsorModel);
+                                      //       addedSponsors = sponsorModel;
+                                      //     }
+                                      //   } else {
+                                      //     widget.sponsors[indexPosition] =
+                                      //         sponsorModel;
+                                      //     addedSponsors =
+                                      //         widget.sponsors[indexPosition];
+                                      //   }
+                                      //   widget.onSponsorsAdded(
+                                      //       widget.sponsors, addedSponsors);
+                                      //   indexPosition = null;
+                                      // } catch (e) {
+                                      //   widget.onError(e);
+                                      //   rethrow;
+                                      // }
+                                    },
+                                  );
+                                });
+                          } catch (e) {
+                            widget.onError(e);
+                            rethrow;
+                          }
+                        },
+                        child: StreamBuilder<SponsorDataModel>(
+                          stream: imageDatacontroller.stream,
+                          builder: (context, snapshot) {
+                            return Image.network(
+                              snapshot != null &&
+                                      snapshot.data != null &&
+                                      snapshot.data.logo != ''
+                                  ? snapshot.data.logo
+                                  : defaultUserImageURL,
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width / 2 - 3,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            'Sponsor Details',
+                            style: TextStyle(fontSize: 18.0),
+                          ),
+                          Spacer(),
+                          IconButton(
+                            iconSize: 15,
+                            icon: Icon(Icons.cancel,
+                                size: 15, color: Colors.grey[400]),
+                            onPressed: () => Navigator.of(viewContext).pop(),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 25),
+                      Container(
+                        height: 60,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade100,
+                          borderRadius: BorderRadius.circular(6),
+                          border:
+                              Border.all(color: Colors.grey.shade200, width: 1),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 5, vertical: 5),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                S.of(context).name,
+                                style: TextStyle(
+                                  fontFamily: 'Europa',
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 3,
+                              ),
+                              Form(
+                                key: _formKey,
+                                child: SizedBox(
+                                  height: 30,
+                                  child: Align(
+                                    alignment: Alignment.topCenter,
+                                    child: TextFormField(
+                                      style: TextStyle(
+                                        color: Colors.grey[400],
+                                        fontSize: 12,
+                                        fontFamily: 'Europa',
+                                      ),
+                                      decoration: InputDecoration
+                                          // .collapsed(
+                                          //   border: InputBorder.none,
+                                          //   hintText: 'Andreson Smith',
+                                          //   hintStyle: TextStyle(
+                                          //     fontFamily: 'Europa',
+                                          //     fontSize: 12,
+                                          //     color: Colors.grey[400],
+                                          //   ),
+                                          // ),
+                                          (
+                                        contentPadding:
+                                            EdgeInsets.only(bottom: 8),
+                                        border: InputBorder.none,
+                                        enabledBorder: InputBorder.none,
+                                        focusedBorder: InputBorder.none,
+                                        disabledBorder: InputBorder.none,
+                                        focusedErrorBorder: InputBorder.none,
+                                        errorBorder: InputBorder.none,
+                                        hintText: 'Andreson Smith',
+                                        hintStyle: TextStyle(
+                                          fontFamily: 'Europa',
+                                          fontSize: 12,
+                                          color: Colors.grey[400],
+                                        ),
+                                      ),
+                                      keyboardType: TextInputType.text,
+                                      textCapitalization:
+                                          TextCapitalization.sentences,
+                                      initialValue: indexPosition != null
+                                          ? widget.sponsors[indexPosition].name
+                                          : '',
+                                      inputFormatters: [
+                                        LengthLimitingTextInputFormatter(50),
+                                      ],
+                                      validator: (value) {
+                                        if (value.isEmpty) {
+                                          return S
+                                              .of(context)
+                                              .validation_error_full_name;
+                                        } else if (profanityDetector
+                                            .isProfaneString(value)) {
+                                          return S
+                                              .of(context)
+                                              .profanity_text_alert;
+                                        } else {
+                                          return null;
+                                        }
+                                      },
+                                      onSaved: (value) => name = value,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 35),
+                      StreamBuilder<Object>(
+                          stream: imageDatacontroller.stream,
+                          builder: (context, snapshot) {
+                            return CustomTextButton(
+                              shape: StadiumBorder(),
+                              padding: EdgeInsets.fromLTRB(40, 10, 40, 10),
+                              color: Theme.of(context).primaryColor,
+                              // textColor: FlavorConfig.values.buttonTextColor,
+                              child: Text(
+                                'Add Sponser',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontFamily: 'Europa',
+                                  color: Colors.white,
+                                ),
+                              ),
+                              onPressed: () async {
+                                try {
+                                  if (_formKey.currentState.validate()) {
+                                    _formKey.currentState.save();
+                                    if (indexPosition == null) {
+                                      try {
+                                        SponsorDataModel model = snapshot.data;
+                                        if (model != null) {
+                                          SponsorDataModel sponsorModel =
+                                              SponsorDataModel(
+                                            name: name,
+                                            createdAt: DateTime.now()
+                                                .millisecondsSinceEpoch,
+                                            createdBy: userId,
+                                            logo: model.logo,
+                                          );
+                                          if (indexPosition == null) {
+                                            if (widget.sponsors == null) {
+                                              List<SponsorDataModel> x = [];
+                                              x.add(sponsorModel);
+                                              widget.sponsors = x;
+                                              addedSponsors = sponsorModel;
+                                            } else {
+                                              widget.sponsors.add(sponsorModel);
+                                              addedSponsors = sponsorModel;
+                                            }
+                                          } else {
+                                            widget.sponsors[indexPosition] =
+                                                sponsorModel;
+                                            addedSponsors =
+                                                widget.sponsors[indexPosition];
+                                          }
+
+                                          widget.onSponsorsAdded(
+                                              widget.sponsors, addedSponsors);
+                                          indexPosition = null;
+                                          imageDatacontroller.add(null);
+                                        } else {
+                                          SponsorDataModel sponsorModel =
+                                              SponsorDataModel(
+                                            name: name,
+                                            createdAt: DateTime.now()
+                                                .millisecondsSinceEpoch,
+                                            createdBy: userId,
+                                            logo: '',
+                                          );
+                                          if (indexPosition == null) {
+                                            if (widget.sponsors == null) {
+                                              List<SponsorDataModel> x = [];
+                                              x.add(sponsorModel);
+                                              widget.sponsors = x;
+                                              addedSponsors = sponsorModel;
+                                            } else {
+                                              widget.sponsors.add(sponsorModel);
+                                              addedSponsors = sponsorModel;
+                                            }
+                                          } else {
+                                            widget.sponsors[indexPosition] =
+                                                sponsorModel;
+                                            addedSponsors =
+                                                widget.sponsors[indexPosition];
+                                          }
+                                          widget.onSponsorsAdded(
+                                              widget.sponsors, addedSponsors);
+                                          indexPosition = null;
+                                          imageDatacontroller.add(null);
+                                        }
+                                        Navigator.of(viewContext).pop();
+                                      } catch (e) {
+                                        widget.onError(e);
+                                        rethrow;
+                                      }
+                                    }
+                                  }
+                                } catch (e) {
+                                  widget.onError(e);
+                                  rethrow;
+                                }
+                              },
+                            );
+                          }),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future editNameDialog(
     BuildContext context,
   ) async {
     final profanityDetector = ProfanityDetector();
@@ -395,6 +716,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
     return showDialog(
       context: context,
       barrierDismissible: false,
+      useRootNavigator: true,
       builder: (BuildContext viewContext) {
         return AlertDialog(
           shape: RoundedRectangleBorder(
@@ -465,9 +787,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                     color: Theme.of(context).primaryColor,
                     textColor: Colors.white,
                     child: Text(
-                      indexPosition == null
-                          ? S.of(context).next
-                          : S.of(context).save,
+                      S.of(context).save,
                       style: TextStyle(
                         fontSize: dialogButtonSize,
                         fontFamily: 'Europa',
@@ -478,22 +798,50 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                       try {
                         if (_formKey.currentState.validate()) {
                           _formKey.currentState.save();
-                          if (indexPosition == null) {
-                            Navigator.of(viewContext).pop();
-                            await addImageAlert(
-                              name: name,
-                              context: context,
-                            );
-                            name = null;
-                          } else {
-                            widget.sponsors[indexPosition].name = name;
-                            indexPosition = null;
-                            name = null;
-                            addedSponsors = widget.sponsors[indexPosition];
-                            widget.onSponsorsAdded(
-                                widget.sponsors, addedSponsors);
-                            Navigator.of(viewContext).pop();
-                          }
+                          // if (indexPosition == null) {
+                          //   try {
+                          //     SponsorDataModel sponsorModel = SponsorDataModel(
+                          //         name: name,
+                          //         createdAt:
+                          //             DateTime.now().millisecondsSinceEpoch,
+                          //         createdBy: SevaCore.of(context)
+                          //             .loggedInUser
+                          //             .sevaUserID,
+                          //         logo: null);
+                          //     if (indexPosition == null) {
+                          //       if (widget.sponsors == null) {
+                          //         List<SponsorDataModel> x = [];
+                          //         x.add(sponsorModel);
+                          //         widget.sponsors = x;
+                          //         addedSponsors = sponsorModel;
+                          //         // sponsors.add(sponsorModel);
+                          //       } else {
+                          //         widget.sponsors.add(sponsorModel);
+                          //         addedSponsors = sponsorModel;
+                          //       }
+                          //     } else {
+                          //       widget.sponsors[indexPosition] = sponsorModel;
+                          //       addedSponsors = widget.sponsors[indexPosition];
+                          //     }
+                          //     indexPosition = null;
+                          //     widget.onSponsorsAdded(
+                          //         widget.sponsors, addedSponsors);
+                          //     // Navigator.of(viewContext).pop();
+                          //   } catch (e) {
+                          //     widget.onError(e);
+                          //     rethrow;
+                          //   }
+                          //   name = null;
+                          // } else {
+                          widget.sponsors[indexPosition].name = name;
+                          addedSponsors = widget.sponsors[indexPosition];
+                          widget.onSponsorsAdded(
+                              widget.sponsors, addedSponsors);
+                          indexPosition = null;
+                          name = null;
+                          // Navigator.of(viewContext).pop();
+                          // }
+                          Navigator.of(context, rootNavigator: true).pop();
                         }
                       } catch (e) {
                         widget.onError(e);
