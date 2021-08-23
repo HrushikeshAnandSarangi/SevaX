@@ -47,12 +47,14 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
   FocusNode _bathrooms = FocusNode();
   FocusNode _commonSPace = FocusNode();
   FocusNode _houseRules = FocusNode();
+  FocusNode _estimatedValue = FocusNode();
   TextEditingController _placeNameController = TextEditingController();
   TextEditingController _guestsController = TextEditingController();
   TextEditingController _roomsController = TextEditingController();
   TextEditingController _bathroomsController = TextEditingController();
   TextEditingController _commonSpaceController = TextEditingController();
   TextEditingController _houseRulesController = TextEditingController();
+  TextEditingController _estimatedValueController = TextEditingController();
 
   @override
   void initState() {
@@ -88,6 +90,11 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
           widget.lendingModel.lendingPlaceModel.houseRules.toString();
       _bloc.onHouseRulesChanged(
           widget.lendingModel.lendingPlaceModel.houseRules.toString());
+
+      _estimatedValueController.text =
+          widget.lendingModel.lendingPlaceModel.estimatedValue.toString();
+      _bloc.onEstimatedValueChanged(
+          widget.lendingModel.lendingPlaceModel.estimatedValue.toString());
     } else {
       if (widget.enteredTitle != null) {
         _placeNameController.text = widget.enteredTitle;
@@ -444,6 +451,32 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                           );
                         },
                       ),
+
+                      //ADD ESTIMATED VALUE FIELD HERE
+                      StreamBuilder<String>(
+                        stream: _bloc.houseRules,
+                        builder: (context, snapshot) {
+                          return CustomTextField(
+                            controller: _estimatedValueController,
+                            currentNode: _estimatedValue,
+                            value: snapshot.data,
+                            heading: "${L.of(context).house_rules}",
+                            onChanged: (String value) {
+                              _bloc.onEstimatedValueChanged(value);
+                              // title = value;
+                            },
+                            hint: 'Ex: 10',
+                            maxLength: 1,
+                            formatters: [
+                              FilteringTextInputFormatter.allow(
+                                  Regex.numericRegex)
+                            ],
+                            error: getAddPlaceValidationError(
+                                context, snapshot.error),
+                          );
+                        },
+                      ),
+
                       SizedBox(height: 20),
                       Center(
                         child: Container(
@@ -530,6 +563,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
     _placeNameController.dispose();
     _guestsController.dispose();
     _roomsController.dispose();
+    _estimatedValueController.dispose();
     _bloc.dispose();
     _placeName.dispose();
     _guests.dispose();
@@ -537,6 +571,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
     _bathrooms.dispose();
     _commonSPace.dispose();
     _houseRules.dispose();
+    _estimatedValue.dispose();
     super.dispose();
   }
 }

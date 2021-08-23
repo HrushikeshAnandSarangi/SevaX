@@ -13,6 +13,7 @@ class LendingPlaceModel {
     this.noOfBathRooms,
     this.commonSpace,
     this.houseRules,
+    this.estimatedValue,
     this.houseImages,
     this.amenities,
   });
@@ -22,6 +23,7 @@ class LendingPlaceModel {
   int noOfBathRooms;
   String commonSpace;
   String houseRules;
+  int estimatedValue;
   List<String> houseImages;
   Map<String, dynamic> amenities;
 
@@ -45,8 +47,13 @@ class LendingPlaceModel {
               ? null
               : json["common_space"],
           houseRules: json["house_rules"] == null ? null : json["house_rules"],
+          estimatedValue: json["estimatedValue"] ==
+                  null
+              ? null
+              : json["estimatedValue"],
           houseImages:
-              json["house_images"] ==
+              json[
+                          "house_images"] ==
                       null
                   ? null
                   : List<String>.from(json["house_images"].map((x) => x)),
@@ -61,6 +68,7 @@ class LendingPlaceModel {
         "no_of_bathRooms": noOfBathRooms == null ? null : noOfBathRooms,
         "common_space": commonSpace == null ? null : commonSpace,
         "house_rules": houseRules == null ? null : houseRules,
+        "estimatedValue": estimatedValue == null ? null : estimatedValue,
         "house_images": houseImages == null
             ? null
             : List<dynamic>.from(houseImages.map((x) => x)),

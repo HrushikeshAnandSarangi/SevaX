@@ -404,6 +404,7 @@ class L {
 
   String get selected_value => "Selected value :";
 
+
   String get upgrade_plan_msg1 => "Sorry Couldn't fetch data";
 
   String get upgrade_plan_disable_msg1 =>
@@ -672,6 +673,9 @@ class L {
 
   String get validation_error_no_of_rooms =>
       "Please enter no of rooms available";
+
+  String get validation_error_no_estimated_value_room =>
+      "Please enter an estimated value for the place";
 
   String get validation_error_no_of_bathrooms =>
       "Please enter no of bath rooms available";
