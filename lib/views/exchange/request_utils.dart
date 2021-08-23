@@ -16,8 +16,6 @@ class RequestUtils {
     ExitWithConfirmation.of(context).fieldValues[index] = value;
   }
 
-
-
   Future createProjectOneToManyRequest({context, projectModel, requestModel, createEvent}) async {
     //Create new Event/Project for ONE TO MANY Request
     if (projectModel == null &&
@@ -149,5 +147,9 @@ class RequestUtils {
 
   getInitialDescription(offer, isOfferRequest) {
     return offer != null && isOfferRequest ? getOfferDescription(offerDataModel: offer) : "";
+  }
+
+  getInitialAmount(offer, isOfferRequest) {
+    return offer != null && isOfferRequest ? getCashDonationAmount(offerDataModel: offer) : "";
   }
 }

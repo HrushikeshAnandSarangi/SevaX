@@ -9,12 +9,14 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/ui/utils/debouncer.dart';
 import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/helpers/configuration_check.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/category_widget.dart';
 import 'package:sevaexchange/views/exchange/create_request/project_selection.dart';
+import 'package:sevaexchange/views/exchange/create_request/request_enums.dart';
 import 'package:sevaexchange/views/exchange/request_utils.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/widgets/add_images_for_request.dart';
@@ -34,6 +36,7 @@ class GoodsRequest extends StatefulWidget {
   bool createEvent;
   bool instructorAdded;
   final Function onCreateEventChanged;
+  final RequestFormType formType;
 
   GoodsRequest(
       {this.requestModel,
@@ -46,7 +49,8 @@ class GoodsRequest extends StatefulWidget {
       this.onCreateEventChanged,
       this.createEvent,
       this.instructorAdded,
-      this.projectModelList});
+      this.projectModelList,
+      @required this.formType});
 
   @override
   _GoodsRequestState createState() => _GoodsRequestState();
@@ -75,18 +79,29 @@ class _GoodsRequestState extends State<GoodsRequest> {
                     children: [
                       Flexible(
                         child: ProjectSelection(
-                          setcreateEventState: () {
-                            widget.createEvent = !widget.createEvent;
-                            setState(() {});
-                            widget.onCreateEventChanged(widget.createEvent);
-                          },
-                          createEvent: widget.createEvent,
-                          requestModel: widget.requestModel,
-                          projectModelList: widget.projectModelList,
-                          selectedProject: null,
-                          admin: isAccessAvailable(
-                              widget.timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
-                        ),
+                            setcreateEventState: () {
+                              widget.createEvent = !widget.createEvent;
+                              setState(() {});
+                              widget.onCreateEventChanged(widget.createEvent);
+                            },
+                            selectedProject: (widget.requestModel.projectId != null &&
+                                    widget.requestModel.projectId.isNotEmpty)
+                                ? widget.projectModelList.firstWhere(
+                                    (element) => element.id == widget.requestModel.projectId,
+                                    orElse: () => null)
+                                : null,
+                            createEvent: widget.formType == RequestFormType.CREATE
+                                ? widget.createEvent
+                                : false,
+                            requestModel: widget.requestModel,
+                            projectModelList: widget.projectModelList,
+                            admin: isAccessAvailable(
+                                widget.timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
+                            updateProjectIdCallback: (String projectid) {
+                              //widget.requestModel.projectId = projectid;
+                              widget.requestModel.projectId = projectid;
+                              setState(() {});
+                            }),
                       ),
                     ],
                   ),
@@ -128,6 +143,17 @@ class _GoodsRequestState extends State<GoodsRequest> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    if (widget.formType == RequestFormType.EDIT) {
+      getCategoryModels(widget.requestModel.categories).then((value) {
+        selectedCategoryModels = value;
+        setState(() {});
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
       Text(
@@ -151,9 +177,9 @@ class _GoodsRequestState extends State<GoodsRequest> {
         ),
         textInputAction: TextInputAction.next,
         keyboardType: TextInputType.text,
-        initialValue: widget.offer != null && widget.isOfferRequest
-            ? getOfferTitle(offerDataModel: widget.offer)
-            : "",
+        initialValue: widget.formType == RequestFormType.CREATE
+            ? requestUtils.getInitialTitle(widget.offer, widget.isOfferRequest)
+            : widget.requestModel.title,
         textCapitalization: TextCapitalization.sentences,
         validator: (value) {
           if (value.isEmpty) {
@@ -172,6 +198,16 @@ class _GoodsRequestState extends State<GoodsRequest> {
       SizedBox(height: 30),
       OfferDurationWidget(
         title: "${S.of(context).request_duration} *",
+        startTime: widget.formType == RequestFormType.EDIT
+            ? getUpdatedDateTimeAccToUserTimezone(
+                timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
+                dateTime: DateTime.fromMillisecondsSinceEpoch(widget.requestModel.requestStart))
+            : null,
+        endTime: widget.formType == RequestFormType.EDIT
+            ? getUpdatedDateTimeAccToUserTimezone(
+                timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
+                dateTime: DateTime.fromMillisecondsSinceEpoch(widget.requestModel.requestEnd))
+            : null,
       ),
       SizedBox(height: 20),
       Text(
@@ -201,11 +237,9 @@ class _GoodsRequestState extends State<GoodsRequest> {
           hintText: S.of(context).goods_request_data_hint_text,
           hintStyle: requestUtils.hintTextStyle,
         ),
-        initialValue: widget.offer != null && widget.isOfferRequest
-            ? getOfferDescription(
-                offerDataModel: widget.offer,
-              )
-            : "",
+        initialValue: widget.formType == RequestFormType.CREATE
+            ? requestUtils.getInitialDescription(widget.offer, widget.isOfferRequest)
+            : widget.requestModel.description,
         keyboardType: TextInputType.multiline,
         maxLines: 1,
         // ignore: missing_return
@@ -230,6 +264,7 @@ class _GoodsRequestState extends State<GoodsRequest> {
         onLinksCreated: (List<String> imageUrls) {
           widget.requestModel.imageUrls = imageUrls;
         },
+        selectedList: widget.requestModel.imageUrls ?? [],
       ),
       SizedBox(height: 20),
       addToProjectContainer(),
@@ -268,6 +303,7 @@ class _GoodsRequestState extends State<GoodsRequest> {
       ),
       TextFormField(
         autovalidateMode: AutovalidateMode.onUserInteraction,
+        initialValue: widget.requestModel.goodsDonationDetails?.address ?? '',
         onChanged: (value) {
           requestUtils.updateExitWithConfirmationValue(context, 2, value);
         },

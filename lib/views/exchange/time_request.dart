@@ -46,17 +46,14 @@ class TimeRequest extends StatefulWidget {
   final RequestFormType formType;
   final TimebankModel timebankModel;
   UserModel selectedInstructorModel;
-  String selectedAddress;
   bool instructorAdded;
   bool createEvent;
-  GeoFirePoint location;
+
 
   TimeRequest(
       {this.requestModel,
       this.isOfferRequest,
       this.offer,
-      this.selectedAddress,
-      this.location,
       this.timebankModel,
       this.isAdmin,
       this.selectedInstructorModel,
@@ -119,7 +116,6 @@ class _TimeRequestState extends State<TimeRequest> {
                               widget.onCreateEventChanged(widget.createEvent);
                             },
                             updateProjectIdCallback: (String projectid) {
-                              //widget.requestModel.projectId = projectid;
                               widget.requestModel.projectId = projectid;
                               setState(() {});
                             }),
@@ -717,13 +713,13 @@ class _TimeRequestState extends State<TimeRequest> {
       ),
       Center(
         child: LocationPickerWidget(
-          selectedAddress: widget.selectedAddress,
-          location: widget.location,
+          selectedAddress: widget.requestModel.address,
+          location: widget.requestModel.location,
           onChanged: (LocationDataModel dataModel) {
             log("received data model");
             setState(() {
-              widget.location = dataModel.geoPoint;
-              widget.selectedAddress = dataModel.location;
+              widget.requestModel.location = dataModel.geoPoint;
+              widget.requestModel.address = dataModel.location;
             });
           },
         ),

@@ -9,17 +9,20 @@ import 'package:sevaexchange/components/repeat_availability/repeat_widget.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/labels.dart';
+import 'package:sevaexchange/models/enums/lending_borrow_enums.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/ui/screens/request/pages/select_borrow_item.dart';
 import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/helpers/configuration_check.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/category_widget.dart';
 import 'package:sevaexchange/views/exchange/create_request/project_selection.dart';
+import 'package:sevaexchange/views/exchange/create_request/request_enums.dart';
 import 'package:sevaexchange/views/exchange/request_utils.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
@@ -29,8 +32,6 @@ import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/widgets/open_scope_checkbox_widget.dart';
 
 class BorrowRequest extends StatefulWidget {
-  GeoFirePoint location;
-  String selectedAddress;
   final bool isOfferRequest;
   final OfferModel offer;
   final RequestModel requestModel;
@@ -43,11 +44,10 @@ class BorrowRequest extends StatefulWidget {
   final Function onDescriptionChanged;
   bool instructorAdded;
   bool createEvent;
+  final RequestFormType formType;
 
   BorrowRequest(
-      {this.selectedAddress,
-      this.location,
-      this.isOfferRequest,
+      {this.isOfferRequest,
       this.offer,
       this.requestModel,
       this.timebankModel,
@@ -58,7 +58,8 @@ class BorrowRequest extends StatefulWidget {
       this.projectId,
       this.onDescriptionChanged,
       this.createEvent,
-      this.instructorAdded});
+      this.instructorAdded,
+      @required this.formType});
 
   @override
   _BorrowRequestState createState() => _BorrowRequestState();
@@ -88,18 +89,28 @@ class _BorrowRequestState extends State<BorrowRequest> {
                     children: [
                       Flexible(
                         child: ProjectSelection(
-                          setcreateEventState: () {
-                            widget.createEvent = !widget.createEvent;
-                            setState(() {});
-                            widget.onCreateEventChanged(widget.createEvent);
-                          },
-                          createEvent: widget.createEvent,
-                          requestModel: widget.requestModel,
-                          projectModelList: widget.projectModelList,
-                          selectedProject: null,
-                          admin: isAccessAvailable(
-                              widget.timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
-                        ),
+                            setcreateEventState: () {
+                              widget.createEvent = !widget.createEvent;
+                              setState(() {});
+                              widget.onCreateEventChanged(widget.createEvent);
+                            },
+                            createEvent: widget.formType == RequestFormType.CREATE
+                                ? widget.createEvent
+                                : false,
+                            selectedProject: (widget.requestModel.projectId != null &&
+                                    widget.requestModel.projectId.isNotEmpty)
+                                ? widget.projectModelList.firstWhere(
+                                    (element) => element.id == widget.requestModel.projectId,
+                                    orElse: () => null)
+                                : null,
+                            requestModel: widget.requestModel,
+                            projectModelList: widget.projectModelList,
+                            admin: isAccessAvailable(
+                                widget.timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
+                            updateProjectIdCallback: (String projectid) {
+                              widget.requestModel.projectId = projectid;
+                              setState(() {});
+                            }),
                       ),
                     ],
                   ),
@@ -141,6 +152,23 @@ class _BorrowRequestState extends State<BorrowRequest> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    if (widget.formType == RequestFormType.EDIT) {
+      if (widget.requestModel.roomOrTool == LendingType.ITEM.readable) {
+        roomOrTool = 1;
+      } else {
+        roomOrTool = 0;
+      }
+
+      getCategoryModels(widget.requestModel.categories).then((value) {
+        selectedCategoryModels = value;
+        setState(() {});
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
       Text(
@@ -164,11 +192,9 @@ class _BorrowRequestState extends State<BorrowRequest> {
         ),
         textInputAction: TextInputAction.next,
         keyboardType: TextInputType.text,
-        initialValue: widget.offer != null && widget.isOfferRequest
-            ? getOfferTitle(
-                offerDataModel: widget.offer,
-              )
-            : "",
+        initialValue: widget.formType == RequestFormType.CREATE
+            ? requestUtils.getInitialTitle(widget.offer, widget.isOfferRequest)
+            : widget.requestModel.title,
         textCapitalization: TextCapitalization.sentences,
         validator: (value) {
           if (value.isEmpty) {
@@ -185,59 +211,67 @@ class _BorrowRequestState extends State<BorrowRequest> {
         },
       ),
       SizedBox(height: 15),
-
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 12),
-          Text(
-            S.of(context).borrow,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Europa',
-              color: Colors.black,
+          HideWidget(
+            hide: widget.formType == RequestFormType.EDIT,
+            child: Container(
+              margin: EdgeInsets.symmetric(vertical: 12),
+              child: Text(
+                S.of(context).borrow,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Europa',
+                  color: Colors.black,
+                ),
+              ),
             ),
           ),
-          SizedBox(height: 10),
-          CupertinoSegmentedControl<int>(
-            unselectedColor: Colors.grey[200],
-            selectedColor: Theme.of(context).primaryColor,
-            children: {
-              0: Padding(
-                padding: EdgeInsets.only(left: 14, right: 14),
-                child: Text(
-                  L.of(context).place,
-                  style: TextStyle(fontSize: 12.0),
-                ),
-              ),
-              1: Padding(
-                padding: EdgeInsets.only(left: 14, right: 14),
-                child: Text(
-                  L.of(context).items,
-                  style: TextStyle(fontSize: 12.0),
-                ),
-              ),
-            },
-            borderColor: Colors.grey,
-            padding: EdgeInsets.only(left: 0.0, right: 0.0),
-            groupValue: roomOrTool,
-            onValueChanged: (int val) {
-              if (val != roomOrTool) {
-                setState(() {
-                  if (val == 0) {
-                    roomOrTool = 0;
-                  } else {
-                    roomOrTool = 1;
+          HideWidget(
+            hide: widget.formType == RequestFormType.EDIT,
+            child: Container(
+              margin: EdgeInsets.only(top: 10, bottom: 20),
+              child: CupertinoSegmentedControl<int>(
+                unselectedColor: Colors.grey[200],
+                selectedColor: Theme.of(context).primaryColor,
+                children: {
+                  0: Padding(
+                    padding: EdgeInsets.only(left: 14, right: 14),
+                    child: Text(
+                      L.of(context).place,
+                      style: TextStyle(fontSize: 12.0),
+                    ),
+                  ),
+                  1: Padding(
+                    padding: EdgeInsets.only(left: 14, right: 14),
+                    child: Text(
+                      L.of(context).items,
+                      style: TextStyle(fontSize: 12.0),
+                    ),
+                  ),
+                },
+                borderColor: Colors.grey,
+                padding: EdgeInsets.only(left: 0.0, right: 0.0),
+                groupValue: roomOrTool,
+                onValueChanged: (int val) {
+                  if (val != roomOrTool) {
+                    setState(() {
+                      if (val == 0) {
+                        widget.requestModel.roomOrTool = LendingType.PLACE.readable;
+                      } else {
+                        widget.requestModel.roomOrTool = LendingType.ITEM.readable;
+                      }
+                      roomOrTool = val;
+                    });
+                    log('Room or Tool: ' + roomOrTool.toString());
                   }
-                  roomOrTool = val;
-                });
-                log('Room or Tool: ' + roomOrTool.toString());
-              }
-            },
-            //groupValue: sharedValue,
+                },
+                //groupValue: sharedValue,
+              ),
+            ),
           ),
-          SizedBox(height: 20),
           HideWidget(
             hide: roomOrTool == 0,
             child: Text(
@@ -265,8 +299,18 @@ class _BorrowRequestState extends State<BorrowRequest> {
       SizedBox(height: 30),
       OfferDurationWidget(
         title: "${S.of(context).request_duration} *",
+        startTime: widget.formType == RequestFormType.EDIT
+            ? getUpdatedDateTimeAccToUserTimezone(
+                timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
+                dateTime: DateTime.fromMillisecondsSinceEpoch(widget.requestModel.requestStart))
+            : null,
+        endTime: widget.formType == RequestFormType.EDIT
+            ? getUpdatedDateTimeAccToUserTimezone(
+                timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
+                dateTime: DateTime.fromMillisecondsSinceEpoch(widget.requestModel.requestEnd))
+            : null,
       ),
-      RepeatWidget(),
+      HideWidget(hide: widget.formType == RequestFormType.EDIT, child: RepeatWidget()),
       SizedBox(height: 15),
       (widget.requestModel.requestType == RequestType.BORROW && roomOrTool == 1)
           ? Text(
@@ -291,8 +335,9 @@ class _BorrowRequestState extends State<BorrowRequest> {
         autovalidateMode: AutovalidateMode.onUserInteraction,
         onChanged: (value) {
           if (value != null && value.length > 5) {
-            _debouncer.run(() {
-              getCategoriesFromApi(value);
+            _debouncer.run(() async {
+              selectedCategoryModels = await getCategoriesFromApi(value);
+              categoryMode = S.of(context).suggested_categories;
             });
           }
           requestUtils.updateExitWithConfirmationValue(context, 9, value);
@@ -303,11 +348,9 @@ class _BorrowRequestState extends State<BorrowRequest> {
           hintText: S.of(context).request_descrip_hint_text,
           hintStyle: requestUtils.hintTextStyle,
         ),
-        initialValue: widget.offer != null && widget.isOfferRequest
-            ? getOfferDescription(
-                offerDataModel: widget.offer,
-              )
-            : "",
+        initialValue: widget.formType == RequestFormType.CREATE
+            ? requestUtils.getInitialDescription(widget.offer, widget.isOfferRequest)
+            : widget.requestModel.description,
         keyboardType: TextInputType.multiline,
         maxLines: 1,
         // ignore: missing_return
@@ -322,8 +365,6 @@ class _BorrowRequestState extends State<BorrowRequest> {
         },
       ),
       SizedBox(height: 20),
-      //Same hint for Room and Tools ?
-      // Choose Category and Sub Category
       CategoryWidget(
         requestModel: widget.requestModel,
         selectedCategoryModels: selectedCategoryModels,
@@ -342,7 +383,6 @@ class _BorrowRequestState extends State<BorrowRequest> {
         ),
       ),
       SizedBox(height: 10),
-
       Text(
         L.of(context).provide_address,
         style: TextStyle(
@@ -353,16 +393,15 @@ class _BorrowRequestState extends State<BorrowRequest> {
         ),
       ),
       SizedBox(height: 10),
-
       Center(
         child: LocationPickerWidget(
-          selectedAddress: widget.selectedAddress,
-          location: widget.location,
+          selectedAddress: widget.requestModel.address,
+          location: widget.requestModel.location,
           onChanged: (LocationDataModel dataModel) {
             log("received data model");
             setState(() {
-              widget.location = dataModel.geoPoint;
-              widget.selectedAddress = dataModel.location;
+              widget.requestModel.location = dataModel.geoPoint;
+              widget.requestModel.address = dataModel.location;
             });
           },
         ),

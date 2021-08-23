@@ -20,10 +20,6 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
 
   @override
   Widget build(BuildContext context) {
-    return RequestPaymentDescriptionData(widget.requestModel);
-  }
-
-  Widget RequestPaymentDescriptionData(RequestModel requestModel) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -46,73 +42,77 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
         _optionRadioButton<RequestPaymentType>(
           title: S.of(context).request_paymenttype_ach,
           value: RequestPaymentType.ACH,
-          groupvalue: requestModel.cashModel.paymentType,
+          groupvalue: widget.requestModel.cashModel.paymentType,
           onChanged: (value) {
-            requestModel.cashModel.paymentType = value;
+            widget.requestModel.cashModel.paymentType = value;
             setState(() => {});
           },
         ),
         _optionRadioButton<RequestPaymentType>(
           title: S.of(context).request_paymenttype_paypal,
           value: RequestPaymentType.PAYPAL,
-          groupvalue: requestModel.cashModel.paymentType,
+          groupvalue: widget.requestModel.cashModel.paymentType,
           onChanged: (value) {
-            requestModel.cashModel.paymentType = value;
+            widget.requestModel.cashModel.paymentType = value;
             setState(() => {});
           },
         ),
         _optionRadioButton<RequestPaymentType>(
           title: 'Swift',
           value: RequestPaymentType.SWIFT,
-          groupvalue: requestModel.cashModel.paymentType,
+          groupvalue: widget.requestModel.cashModel.paymentType,
           onChanged: (value) {
-            requestModel.cashModel.paymentType = value;
+            widget.requestModel.cashModel.paymentType = value;
             setState(() => {});
           },
         ),
         _optionRadioButton<RequestPaymentType>(
           title: 'Venmo',
           value: RequestPaymentType.VENMO,
-          groupvalue: requestModel.cashModel.paymentType,
+          groupvalue: widget.requestModel.cashModel.paymentType,
           onChanged: (value) {
-            requestModel.cashModel.paymentType = value;
+            widget.requestModel.cashModel.paymentType = value;
             setState(() => {});
           },
         ),
         _optionRadioButton<RequestPaymentType>(
           title: S.of(context).request_paymenttype_zellepay,
           value: RequestPaymentType.ZELLEPAY,
-          groupvalue: requestModel.cashModel.paymentType,
+          groupvalue: widget.requestModel.cashModel.paymentType,
           onChanged: (value) {
-            requestModel.cashModel.paymentType = value;
-            setState(() => {});
-          },
-        ) ,
-        _optionRadioButton<RequestPaymentType>(
-          title: S.of(context).other(1),
-          value: RequestPaymentType.OTHER,
-          groupvalue: requestModel.cashModel.paymentType,
-          onChanged: (value) {
-            requestModel.cashModel.paymentType = value;
+            widget.requestModel.cashModel.paymentType = value;
             setState(() => {});
           },
         ),
-        requestModel.cashModel.paymentType == RequestPaymentType.ACH
-            ? RequestPaymentACH(requestModel)
-            : requestModel.cashModel.paymentType == RequestPaymentType.PAYPAL
-                ? RequestPaymentPaypal(requestModel)
-                : requestModel.cashModel.paymentType == RequestPaymentType.VENMO
-                    ? RequestPaymentVenmo(requestModel)
-                    : requestModel.cashModel.paymentType == RequestPaymentType.SWIFT
-                        ? RequestPaymentSwift()
-                        : requestModel.cashModel.paymentType == RequestPaymentType.OTHER
-                            ? OtherDetailsWidget()
-                            : RequestPaymentZellePay(),
+        _optionRadioButton<RequestPaymentType>(
+          title: S.of(context).other(1),
+          value: RequestPaymentType.OTHER,
+          groupvalue: widget.requestModel.cashModel.paymentType,
+          onChanged: (value) {
+            widget.requestModel.cashModel.paymentType = value;
+            setState(() => {});
+          },
+        ),
+        widget.requestModel.cashModel.paymentType == RequestPaymentType.ACH
+            ? RequestPaymentACH()
+            : widget.requestModel.cashModel.paymentType == RequestPaymentType.PAYPAL
+            ? RequestPaymentPaypal()
+            : widget.requestModel.cashModel.paymentType == RequestPaymentType.VENMO
+            ? RequestPaymentVenmo()
+            : widget.requestModel.cashModel.paymentType == RequestPaymentType.SWIFT
+            ? RequestPaymentSwift()
+            : widget.requestModel.cashModel.paymentType == RequestPaymentType.OTHER
+            ? OtherDetailsWidget()
+            : RequestPaymentZellePay(),
       ],
     );
   }
 
-  Widget RequestPaymentACH(RequestModel requestModel) {
+  Widget RequestPaymentDescriptionData(RequestModel requestModel) {
+
+  }
+
+  Widget RequestPaymentACH() {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
       SizedBox(height: 20),
       Text(
@@ -126,7 +126,7 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
       ),
       TextFormField(
         autovalidateMode: AutovalidateMode.onUserInteraction,
-        initialValue: requestModel.cashModel.achdetails.bank_name,
+        initialValue: widget.requestModel.cashModel?.achdetails?.bank_name ?? '',
         onChanged: (value) {
           requestUtils.updateExitWithConfirmationValue(context, 3, value);
         },
@@ -137,7 +137,7 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
           if (value.isEmpty) {
             return S.of(context).validation_error_general_text;
           } else if (!value.isEmpty) {
-            requestModel.cashModel.achdetails.bank_name = value;
+            widget.requestModel.cashModel.achdetails.bank_name = value;
           } else {
             return S.of(context).enter_valid_bank_name;
           }
@@ -156,7 +156,7 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
       ),
       TextFormField(
         autovalidateMode: AutovalidateMode.onUserInteraction,
-        initialValue: requestModel.cashModel.achdetails.bank_address,
+        initialValue: widget.requestModel.cashModel?.achdetails?.bank_address ?? '',
         onChanged: (value) {
           requestUtils.updateExitWithConfirmationValue(context, 4, value);
         },
@@ -167,7 +167,7 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
           if (value.isEmpty) {
             return S.of(context).validation_error_general_text;
           } else if (!value.isEmpty) {
-            requestModel.cashModel.achdetails.bank_address = value;
+            widget.requestModel.cashModel.achdetails.bank_address = value;
           } else {
             return S.of(context).enter_valid_bank_address;
           }
@@ -187,7 +187,7 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
       TextFormField(
         maxLength: 30,
         autovalidateMode: AutovalidateMode.onUserInteraction,
-        initialValue: requestModel.cashModel.achdetails.routing_number,
+        initialValue: widget.requestModel.cashModel?.achdetails?.routing_number ?? '',
         onChanged: (value) {
           requestUtils.updateExitWithConfirmationValue(context, 5, value);
         },
@@ -198,7 +198,7 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
           if (value.isEmpty) {
             return S.of(context).validation_error_general_text;
           } else if (!value.isEmpty) {
-            requestModel.cashModel.achdetails.routing_number = value;
+            widget.requestModel.cashModel.achdetails.routing_number = value;
           } else {
             return S.of(context).enter_valid_routing_number;
           }
@@ -217,7 +217,7 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
       ),
       TextFormField(
         maxLength: 30,
-        initialValue: requestModel.cashModel.achdetails.account_number,
+        initialValue: widget.requestModel.cashModel?.achdetails?.account_number ?? '',
         autovalidateMode: AutovalidateMode.onUserInteraction,
         onChanged: (value) {
           requestUtils.updateExitWithConfirmationValue(context, 6, value);
@@ -229,7 +229,7 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
           if (value.isEmpty) {
             return S.of(context).validation_error_general_text;
           } else if (!value.isEmpty) {
-            requestModel.cashModel.achdetails.account_number = value;
+            widget.requestModel.cashModel.achdetails.account_number = value;
           } else {
             return S.of(context).enter_valid_account_number;
           }
@@ -243,6 +243,7 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
       TextFormField(
         autovalidateMode: AutovalidateMode.onUserInteraction,
+        initialValue: widget.requestModel.cashModel?.zelleId ?? '',
         onChanged: (value) {
           requestUtils.updateExitWithConfirmationValue(context, 7, value);
         },
@@ -252,11 +253,6 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
           hintText: S.of(context).request_payment_descriptionZelle_inputhint,
           hintStyle: requestUtils.hintTextStyle,
         ),
-        // initialValue: widget.offer != null && widget.isOfferRequest
-        //     ? getOfferDescription(
-        //         offerDataModel: widget.offer,
-        //       )
-        //     : "",
         keyboardType: TextInputType.multiline,
         maxLines: 1,
         onSaved: (value) {
@@ -285,7 +281,7 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
     }
   }
 
-  Widget RequestPaymentPaypal(RequestModel requestModel) {
+  Widget RequestPaymentPaypal() {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
       TextFormField(
         autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -298,18 +294,18 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
           hintText: 'Ex: Paypal ID (phone or email)',
           hintStyle: requestUtils.hintTextStyle,
         ),
-        initialValue: requestModel.cashModel?.paypalId ?? '',
+        initialValue: widget.requestModel.cashModel?.paypalId ?? '',
         keyboardType: TextInputType.emailAddress,
         maxLines: 1,
         onSaved: (value) {
-          requestModel.cashModel.paypalId = value;
+          widget.requestModel.cashModel.paypalId = value;
         },
         validator: (value) {
           RegExp regExp = RegExp(mobilePattern);
           if (value.isEmpty) {
             return S.of(context).validation_error_general_text;
           } else if (emailPattern.hasMatch(value) || regExp.hasMatch(value)) {
-            requestModel.cashModel.paypalId = value;
+            widget.requestModel.cashModel.paypalId = value;
             return null;
           } else {
             return S.of(context).enter_valid_link;
@@ -319,10 +315,11 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
     ]);
   }
 
-  Widget RequestPaymentVenmo(RequestModel requestModel) {
+  Widget RequestPaymentVenmo() {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
       TextFormField(
         autovalidateMode: AutovalidateMode.onUserInteraction,
+        initialValue: widget.requestModel.cashModel?.venmoId ?? '',
         onChanged: (value) {},
         textInputAction: TextInputAction.next,
         decoration: InputDecoration(
@@ -333,13 +330,13 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
         keyboardType: TextInputType.emailAddress,
         maxLines: 1,
         onSaved: (value) {
-          requestModel.cashModel.venmoId = value;
+          widget.requestModel.cashModel.venmoId = value;
         },
         validator: (value) {
           if (value == null || value.isEmpty) {
             return S.of(context).validation_error_general_text;
           } else {
-            requestModel.cashModel.venmoId = value;
+            widget.requestModel.cashModel.venmoId = value;
             return null;
           }
         },
@@ -351,6 +348,7 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
       TextFormField(
         autovalidateMode: AutovalidateMode.onUserInteraction,
+        initialValue: widget.requestModel.cashModel?.swiftId ?? '',
         onChanged: (value) {
           requestUtils.updateExitWithConfirmationValue(context, 7, value);
         },
@@ -360,11 +358,6 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
           hintText: 'Ex: Swift ID',
           hintStyle: requestUtils.hintTextStyle,
         ),
-        // initialValue: widget.offer != null && widget.isOfferRequest
-        //     ? getOfferDescription(
-        //         offerDataModel: widget.offer,
-        //       )
-        //     : "",
         keyboardType: TextInputType.multiline,
         maxLines: 1,
         maxLength: 11,
@@ -397,6 +390,7 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
       ),
       TextFormField(
         autovalidateMode: AutovalidateMode.onUserInteraction,
+        initialValue: widget.requestModel.cashModel?.others ?? '',
         onChanged: (value) {},
         textInputAction: TextInputAction.next,
         decoration: InputDecoration(
@@ -434,6 +428,7 @@ class _PaymentDescriptionState extends State<PaymentDescription> {
       ),
       TextFormField(
         autovalidateMode: AutovalidateMode.onUserInteraction,
+        initialValue: widget.requestModel.cashModel?.other_details ?? '',
         textInputAction: TextInputAction.next,
         keyboardType: TextInputType.multiline,
         minLines: 5,
