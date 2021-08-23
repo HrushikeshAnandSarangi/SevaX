@@ -2889,17 +2889,44 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                             width: 400,
                             // height: 450,
                             child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 LendingPlaceDetailsWidget(
                                   lendingModel: model,
                                 ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                model.lendingPlaceModel.contactInformation !=
+                                        null
+                                    ? Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            L.of(context).contact_information,
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Text(
+                                            model.lendingPlaceModel
+                                                    .contactInformation ??
+                                                '',
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                color: Colors.grey),
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                        ],
+                                      )
+                                    : Container(),
                               ],
                             ),
                           );
                         }),
-                SizedBox(
-                  height: 10,
-                ),
                 GestureDetector(
                   child: Text(
                       borrowAcceptorModel.borrowAgreementLink == null ||

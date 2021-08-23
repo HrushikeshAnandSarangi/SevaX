@@ -16,6 +16,7 @@ import 'package:sevaexchange/models/enums/lending_borrow_enums.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/new_baseline/models/borrow_agreement_template_model.dart';
+import 'package:sevaexchange/new_baseline/models/lending_model.dart';
 import 'package:sevaexchange/ui/screens/borrow_agreement/borrow_agreement_pdf.dart';
 import 'package:sevaexchange/ui/utils/debouncer.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
@@ -38,7 +39,7 @@ class AgreementForm extends StatefulWidget {
   final RequestModel requestModel;
   final bool isOffer;
   final String placeOrItem;
-  final OfferModel offerModel;
+  final LendingModel lendingModel;
   final String timebankId;
   final String communityId;
   final int startTime;
@@ -53,7 +54,7 @@ class AgreementForm extends StatefulWidget {
     this.timebankId, // @required this.timebankId,
     this.communityId, // @required this.communityId,
     @required this.onPdfCreated,
-    this.offerModel,
+    this.lendingModel,
     this.startTime,
     this.endTime,
   });
@@ -819,11 +820,12 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                   if (agreementDocumentType ==
                       AgreementDocumentType.TEMPLATE.readable) {
                     //update on voidcallback the final model details (check also if user has edited anything from template prefilled data)
-
+                    logger.e("MODEL 2:  " + widget.lendingModel.toString());
                     agreementLink =
                         await BorrowAgreementPdf().borrowAgreementPdf(
                       context,
                       widget.requestModel,
+                      widget.lendingModel,
                       '',
                       documentName,
                       widget.isOffer,
@@ -922,6 +924,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                           await BorrowAgreementPdf().borrowAgreementPdf(
                         context,
                         widget.requestModel,
+                        widget.lendingModel,
                         '',
                         documentName,
                         widget.isOffer,

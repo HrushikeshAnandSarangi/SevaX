@@ -222,6 +222,7 @@ class _ApproveLendingOfferState extends State<ApproveLendingOffer> {
                       await BorrowAgreementPdf().borrowAgreementPdf(
                     context,
                     null,
+                    widget.offerModel.lendingOfferDetailsModel.lendingModel,
                     widget.lendingOfferAcceptorModel.acceptorName,
                     widget.offerModel.lendingOfferDetailsModel
                         .lendingOfferAgreementName,

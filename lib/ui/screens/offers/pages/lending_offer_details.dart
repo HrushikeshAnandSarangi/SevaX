@@ -275,7 +275,40 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                               SizedBox(
                                 height: 10,
                               ),
-                              InkWell(
+                              Text(
+                          L.of(context).estimated_value.replaceAll('*', ''),
+                          style: titleStyle,
+                        ),
+                        SizedBox(
+                          height: 2,
+                        ),
+                        Row(
+                          children: [
+                            Icon(Icons.attach_money, color: Colors.grey),
+                            Text(
+                              lendingType == LendingType.ITEM
+                                  ? widget
+                                      .offerModel
+                                      .lendingOfferDetailsModel
+                                      .lendingModel
+                                      .lendingItemModel
+                                      .estimatedValue
+                                      .toString()
+                                  : widget
+                                      .offerModel
+                                      .lendingOfferDetailsModel
+                                      .lendingModel
+                                      .lendingPlaceModel
+                                      .estimatedValue
+                                      .toString(),
+                              style:
+                                  TextStyle(fontSize: 16, color: Colors.black),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),InkWell(
                                 child: Text(
                                   offerModel.lendingOfferDetailsModel
                                                   .lendingOfferAgreementLink ==
@@ -1147,10 +1180,24 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
               children: [
                 Text(offerModel.fullName,
                     style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 21,
-                        color: HexColor('#49485D')),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 21,
+                      color: HexColor('#49485D'),
+                    ),
                     overflow: TextOverflow.ellipsis),
+                SizedBox(height: 2),
+                widget.offerModel.lendingOfferDetailsModel.lendingModel
+                            .lendingPlaceModel.contactInformation !=
+                        null
+                    ? Text(
+                        widget.offerModel.lendingOfferDetailsModel.lendingModel
+                            .lendingPlaceModel.contactInformation,
+                        style: TextStyle(
+                          fontSize: 17,
+                          color: Colors.grey,
+                        ),
+                        overflow: TextOverflow.ellipsis)
+                    : Container(),
                 SizedBox(height: 7),
               ],
             ),

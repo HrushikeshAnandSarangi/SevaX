@@ -84,6 +84,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
   TextEditingController _availabilityController = TextEditingController();
   TextEditingController _minimumCreditsController = TextEditingController();
   LendingPlaceModel lendingPlaceModel;
+  LendingModel selectedLendingModel;
 
   //one_to_many
   TextEditingController _one_to_many_titleController = TextEditingController();
@@ -1589,6 +1590,9 @@ class _IndividualOfferState extends State<IndividualOffer> {
         SelectLendingPlaceItem(
           onSelected: (LendingModel model) {
             _bloc.onLendingModelAdded(model);
+            setState(() {
+              selectedLendingModel = model;
+            });
           },
           lendingType: _bloc.lendingOfferType == 0
               ? LendingType.PLACE
@@ -1781,6 +1785,18 @@ class _IndividualOfferState extends State<IndividualOffer> {
                 ),
                 onPressed: () async {
                   FocusScope.of(context).unfocus();
+                  if (selectedLendingModel == null) {
+                    _bloc.lendingOfferType == 0
+                        ? errorDialog(
+                            context: context,
+                            error: L.of(context).select_a_place_lending,
+                          )
+                        : errorDialog(
+                            context: context,
+                            error: L.of(context).select_item_for_lending,
+                          );
+                    return;
+                  }
                   if (OfferDurationWidgetState.starttimestamp != 0 &&
                       OfferDurationWidgetState.endtimestamp != 0) {
                     _bloc.startTime = OfferDurationWidgetState.starttimestamp;
@@ -1792,6 +1808,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                       );
                       return;
                     }
+                    logger.e("MODEL 1:  " + selectedLendingModel.toString());
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -1800,6 +1817,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                           endTime: _bloc.endTime,
                           startTime: _bloc.startTime,
                           requestModel: null,
+                          lendingModel: selectedLendingModel,
                           isOffer: true,
                           placeOrItem: _bloc.lendingOfferType == 0
                               ? LendingType.PLACE.readable

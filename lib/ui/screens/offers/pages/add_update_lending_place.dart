@@ -48,6 +48,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
   FocusNode _commonSPace = FocusNode();
   FocusNode _houseRules = FocusNode();
   FocusNode _estimatedValue = FocusNode();
+  FocusNode _contactInformation = FocusNode();
   TextEditingController _placeNameController = TextEditingController();
   TextEditingController _guestsController = TextEditingController();
   TextEditingController _roomsController = TextEditingController();
@@ -55,6 +56,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
   TextEditingController _commonSpaceController = TextEditingController();
   TextEditingController _houseRulesController = TextEditingController();
   TextEditingController _estimatedValueController = TextEditingController();
+  TextEditingController _contactInformationController = TextEditingController();
 
   @override
   void initState() {
@@ -95,6 +97,11 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
           widget.lendingModel.lendingPlaceModel.estimatedValue.toString();
       _bloc.onEstimatedValueChanged(
           widget.lendingModel.lendingPlaceModel.estimatedValue.toString());
+
+      _contactInformationController.text =
+          widget.lendingModel.lendingPlaceModel.contactInformation.toString();
+      _bloc.onContactInformationChanged(
+          widget.lendingModel.lendingPlaceModel.contactInformation.toString());
     } else {
       if (widget.enteredTitle != null) {
         _placeNameController.text = widget.enteredTitle;
@@ -451,22 +458,25 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                           );
                         },
                       ),
-
-                      //ADD ESTIMATED VALUE FIELD HERE
+                      SizedBox(height: 20),
+                      //ESTIMATED VALUE FIELD HERE
                       StreamBuilder<String>(
-                        stream: _bloc.houseRules,
+                        stream: _bloc.estimatedValue,
                         builder: (context, snapshot) {
                           return CustomTextField(
+                            decoration: InputDecoration(
+                                prefixIcon: Icon(Icons.attach_money),
+                                hintText:
+                                    S.of(context).request_min_donation_hint),
                             controller: _estimatedValueController,
                             currentNode: _estimatedValue,
                             value: snapshot.data,
-                            heading: "${L.of(context).house_rules}",
+                            heading: "${L.of(context).estimated_value}",
                             onChanged: (String value) {
                               _bloc.onEstimatedValueChanged(value);
                               // title = value;
                             },
-                            hint: 'Ex: 10',
-                            maxLength: 1,
+                            // hint: S.of(context).request_min_donation_hint,
                             formatters: [
                               FilteringTextInputFormatter.allow(
                                   Regex.numericRegex)
@@ -476,7 +486,31 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                           );
                         },
                       ),
-
+                      SizedBox(height: 20),
+                      //CONTACT INFORMATION FIELD HERE
+                      StreamBuilder<String>(
+                        stream: _bloc.contactInformation,
+                        builder: (context, snapshot) {
+                          return CustomTextField(
+                            hint: S.of(context).email +
+                                ' / ' +
+                                S.of(context).phone_number,
+                            controller: _contactInformationController,
+                            currentNode: _contactInformation,
+                            value: snapshot.data,
+                            heading: "${L.of(context).contact_information}",
+                            onChanged: (String value) {
+                              _bloc.onContactInformationChanged(value);
+                            },
+                            formatters: [
+                              FilteringTextInputFormatter.allow(
+                                  Regex.numericRegex)
+                            ],
+                            error: getAddPlaceValidationError(
+                                context, snapshot.error),
+                          );
+                        },
+                      ),
                       SizedBox(height: 20),
                       Center(
                         child: Container(
@@ -564,6 +598,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
     _guestsController.dispose();
     _roomsController.dispose();
     _estimatedValueController.dispose();
+    _contactInformationController.dispose();
     _bloc.dispose();
     _placeName.dispose();
     _guests.dispose();
@@ -572,6 +607,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
     _commonSPace.dispose();
     _houseRules.dispose();
     _estimatedValue.dispose();
+    _contactInformation.dispose();
     super.dispose();
   }
 }

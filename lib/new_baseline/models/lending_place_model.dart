@@ -6,17 +6,17 @@ import 'package:meta/meta.dart';
 import 'dart:convert';
 
 class LendingPlaceModel {
-  LendingPlaceModel({
-    this.placeName,
-    this.noOfGuests,
-    this.noOfRooms,
-    this.noOfBathRooms,
-    this.commonSpace,
-    this.houseRules,
-    this.estimatedValue,
-    this.houseImages,
-    this.amenities,
-  });
+  LendingPlaceModel(
+      {this.placeName,
+      this.noOfGuests,
+      this.noOfRooms,
+      this.noOfBathRooms,
+      this.commonSpace,
+      this.houseRules,
+      this.estimatedValue,
+      this.houseImages,
+      this.amenities,
+      this.contactInformation});
   String placeName;
   int noOfGuests;
   int noOfRooms;
@@ -26,6 +26,7 @@ class LendingPlaceModel {
   int estimatedValue;
   List<String> houseImages;
   Map<String, dynamic> amenities;
+  String contactInformation;
 
   factory LendingPlaceModel.fromJson(String str) =>
       LendingPlaceModel.fromMap(json.decode(str));
@@ -34,32 +35,25 @@ class LendingPlaceModel {
 
   factory LendingPlaceModel.fromMap(Map<String, dynamic> json) =>
       LendingPlaceModel(
-          placeName: json["placeName"] == null ? null : json["placeName"],
-          noOfGuests: json["no_of_guests"] == null
-              ? null
-              : json["no_of_guests"],
-          noOfRooms: json["no_of_rooms"] == null ? null : json["no_of_rooms"],
-          noOfBathRooms: json["no_of_bathRooms"] == null
-              ? null
-              : json["no_of_bathRooms"],
-          commonSpace: json["common_space"] ==
-                  null
-              ? null
-              : json["common_space"],
-          houseRules: json["house_rules"] == null ? null : json["house_rules"],
-          estimatedValue: json["estimatedValue"] ==
-                  null
-              ? null
-              : json["estimatedValue"],
-          houseImages:
-              json[
-                          "house_images"] ==
-                      null
-                  ? null
-                  : List<String>.from(json["house_images"].map((x) => x)),
-          amenities: json["amenities"] == null
-              ? {}
-              : Map<String, dynamic>.from(json["amenities"] ?? {}) ?? {});
+        placeName: json["placeName"] == null ? null : json["placeName"],
+        noOfGuests: json["no_of_guests"] == null ? null : json["no_of_guests"],
+        noOfRooms: json["no_of_rooms"] == null ? null : json["no_of_rooms"],
+        noOfBathRooms:
+            json["no_of_bathRooms"] == null ? null : json["no_of_bathRooms"],
+        commonSpace: json["common_space"] == null ? null : json["common_space"],
+        houseRules: json["house_rules"] == null ? null : json["house_rules"],
+        estimatedValue:
+            json["estimatedValue"] == null ? null : json["estimatedValue"],
+        houseImages: json["house_images"] == null
+            ? null
+            : List<String>.from(json["house_images"].map((x) => x)),
+        amenities: json["amenities"] == null
+            ? {}
+            : Map<String, dynamic>.from(json["amenities"] ?? {}) ?? {},
+        contactInformation: json["contactInformation"] == null
+            ? null
+            : json["contactInformation"],
+      );
 
   Map<String, dynamic> toMap() => {
         "placeName": placeName == null ? null : placeName,
@@ -73,5 +67,7 @@ class LendingPlaceModel {
             ? null
             : List<dynamic>.from(houseImages.map((x) => x)),
         "amenities": amenities == null ? null : amenities,
+        "contactInformation":
+            contactInformation == null ? null : contactInformation,
       };
 }

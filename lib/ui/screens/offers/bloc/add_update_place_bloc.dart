@@ -21,6 +21,7 @@ class AddUpdatePlaceBloc extends BlocBase {
   final _commonSpaces = BehaviorSubject<String>();
   final _house_rules = BehaviorSubject<String>();
   final _estimated_value = BehaviorSubject<String>();
+  final _contactInformation = BehaviorSubject<String>();
   final _house_images = BehaviorSubject<List<String>>();
   final profanityDetector = ProfanityDetector();
   final _amenities = BehaviorSubject<Map<String, dynamic>>();
@@ -37,6 +38,7 @@ class AddUpdatePlaceBloc extends BlocBase {
   Stream<String> get commonSpaces => _commonSpaces.stream;
   Stream<String> get houseRules => _house_rules.stream;
   Stream<String> get estimatedValue => _estimated_value.stream;
+  Stream<String> get contactInformation => _contactInformation.stream;
   Stream<List<String>> get houseImages => _house_images.stream;
   Stream<Map<String, dynamic>> get amenitiesDetails => _amenities.stream;
   Stream<String> get message => _message.stream;
@@ -49,6 +51,8 @@ class AddUpdatePlaceBloc extends BlocBase {
   Function(String value) get onHouseRulesChanged => _house_rules.sink.add;
   Function(String value) get onEstimatedValueChanged =>
       _estimated_value.sink.add;
+  Function(String value) get onContactInformationChanged =>
+      _contactInformation.sink.add;
   Function(List<String> value) get onHouseImageAdded => _house_images.sink.add;
   Function(Map<String, dynamic>) get amenitiesChanged => _amenities.sink.add;
 
@@ -89,6 +93,7 @@ class AddUpdatePlaceBloc extends BlocBase {
                 commonSpace: _commonSpaces.value,
                 houseRules: _house_rules.value,
                 estimatedValue: int.parse(_estimated_value.value),
+                contactInformation: _contactInformation.value,
                 houseImages: _house_images.value.toList(),
                 amenities: _amenities.value));
         LendingOffersRepo.addNewLendingPlace(model: lendingModel).then((_) {
@@ -120,6 +125,8 @@ class AddUpdatePlaceBloc extends BlocBase {
         lendingModel.lendingPlaceModel.houseRules = _house_rules.value;
         lendingModel.lendingPlaceModel.estimatedValue =
             int.parse(_estimated_value.value);
+        lendingModel.lendingPlaceModel.contactInformation =
+            _contactInformation.value;
 
         LendingOffersRepo.updateNewLendingPlace(model: lendingModel).then((_) {
           _model.add(lendingModel);
@@ -166,8 +173,7 @@ class AddUpdatePlaceBloc extends BlocBase {
     } else if (_amenities.value == null || _amenities.value.length == 0) {
       _amenities.addError(AddPlaceValidationErrors.amenities_error);
       flag = true;
-    }
-    if (_estimated_value.value == null || _estimated_value.value == 0) {
+    } else if (_estimated_value.value == null || _estimated_value.value == 0) {
       _estimated_value.addError(AddPlaceValidationErrors.estimated_value_error);
       flag = true;
     }
@@ -185,6 +191,7 @@ class AddUpdatePlaceBloc extends BlocBase {
     _no_of_guests.close();
     _house_rules.close();
     _estimated_value.close();
+    _contactInformation.close();
     _no_of_rooms.close();
     _no_of_bathRooms.close();
     _commonSpaces.close();
