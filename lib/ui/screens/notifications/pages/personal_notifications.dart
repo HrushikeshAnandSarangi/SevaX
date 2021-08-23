@@ -46,6 +46,7 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 import 'package:sevaexchange/views/requests/approveBorrowRequest.dart';
 import 'package:sevaexchange/views/tasks/my_tasks_list.dart';
+import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
@@ -1247,9 +1248,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                     onDismissed: () {
                                       NotificationsRepository
                                           .readUserNotification(
-                                        notification.id,
-                                        notification.targetUserId,
-                                      );
+                                              notification.id, user.email);
                                     },
                                   )
                                 : Container();
@@ -1276,19 +1275,37 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                     timestamp: notification.timestamp,
                                     entityName: 'NAME',
                                     isDissmissible: true,
-                                    onPressed: null,
+                                    onPressed: () async {
+                                      LendingOfferAcceptorModel
+                                          lendingOfferAcceptorModel =
+                                          await LendingOffersRepo
+                                              .getBorrowAcceptorModel(
+                                                  offerId: model.id,
+                                                  acceptorEmail: user.email);
+                                      handleFeedBackNotificationLendingOffer(
+                                          offerModel: model,
+                                          notificationId: notification.id,
+                                          context: context,
+                                          email: SevaCore.of(context)
+                                              .loggedInUser
+                                              .email,
+                                          feedbackType: FeedbackType
+                                              .FOR_LENDING_OFFER_LENDER,
+                                          lendingOfferAcceptorModel:
+                                              lendingOfferAcceptorModel);
+                                    },
                                     photoUrl: notification.senderPhotoUrl ??
                                         defaultUserImageURL,
                                     title:
                                         '${model.individualOfferDataModel.title}',
                                     subTitle: "${user.fullname} " +
-                                        L.of(context).checked_out,
+                                        L.of(context).checked_out +
+                                        ' ' +
+                                        L.of(context).tab_to_leave_feedback,
                                     onDismissed: () {
                                       NotificationsRepository
                                           .readUserNotification(
-                                        notification.id,
-                                        notification.targetUserId,
-                                      );
+                                              notification.id, user.email);
                                     },
                                   )
                                 : Container();
@@ -1325,9 +1342,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                     onDismissed: () {
                                       NotificationsRepository
                                           .readUserNotification(
-                                        notification.id,
-                                        notification.targetUserId,
-                                      );
+                                              notification.id, user.email);
                                     },
                                   )
                                 : Container();
@@ -1353,19 +1368,37 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                     timestamp: notification.timestamp,
                                     entityName: 'NAME',
                                     isDissmissible: true,
-                                    onPressed: null,
+                                    onPressed: () async {
+                                      LendingOfferAcceptorModel
+                                          lendingOfferAcceptorModel =
+                                          await LendingOffersRepo
+                                              .getBorrowAcceptorModel(
+                                                  offerId: model.id,
+                                                  acceptorEmail: user.email);
+                                      handleFeedBackNotificationLendingOffer(
+                                          offerModel: model,
+                                          notificationId: notification.id,
+                                          context: context,
+                                          email: SevaCore.of(context)
+                                              .loggedInUser
+                                              .email,
+                                          feedbackType: FeedbackType
+                                              .FOR_LENDING_OFFER_LENDER,
+                                          lendingOfferAcceptorModel:
+                                              lendingOfferAcceptorModel);
+                                    },
                                     photoUrl: notification.senderPhotoUrl ??
                                         defaultUserImageURL,
                                     title:
                                         '${model.individualOfferDataModel.title}',
                                     subTitle: "${user.fullname} " +
-                                        L.of(context).returned_items,
+                                        L.of(context).returned_items +
+                                        ' ' +
+                                        L.of(context).tab_to_leave_feedback,
                                     onDismissed: () {
                                       NotificationsRepository
                                           .readUserNotification(
-                                        notification.id,
-                                        notification.targetUserId,
-                                      );
+                                              notification.id, user.email);
                                     },
                                   )
                                 : Container();

@@ -227,7 +227,7 @@ class LendingOfferParticipants extends StatelessWidget {
                     notificationId: null,
                     context: context,
                     email: SevaCore.of(context).loggedInUser.email,
-                    feedbackType: FeedbackType.FOR_LENDING_OFFER_BORROWER,
+                    feedbackType: FeedbackType.FOR_LENDING_OFFER_LENDER,
                     lendingOfferAcceptorModel: lendingOfferAcceptorModel);
               }
             },
@@ -272,7 +272,7 @@ class LendingOfferParticipants extends StatelessWidget {
                     notificationId: null,
                     context: context,
                     email: SevaCore.of(context).loggedInUser.email,
-                    feedbackType: FeedbackType.FOR_LENDING_OFFER_BORROWER,
+                    feedbackType: FeedbackType.FOR_LENDING_OFFER_LENDER,
                     lendingOfferAcceptorModel: lendingOfferAcceptorModel);
               }
             },

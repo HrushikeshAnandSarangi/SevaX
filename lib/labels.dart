@@ -404,7 +404,6 @@ class L {
 
   String get selected_value => "Selected value :";
 
-
   String get upgrade_plan_msg1 => "Sorry Couldn't fetch data";
 
   String get upgrade_plan_disable_msg1 =>
@@ -1368,8 +1367,13 @@ class L {
   String get lending_offer_check_in_tag => 'Lending Offer - Arrival';
   String get lending_offer_check_out_tag => 'Lending Offer - Departure';
   String get change_departure_date => 'Change departure date?';
+  String get tab_to_leave_feedback => 'Tap to leave a feedback.';
   String get lending_offer_return_items_hint =>
       'Click here once you have returned item(s).';
   String get lending_offer_return_place_hint =>
       'Click here once you checked out of place';
+  String get borrower_returned_items_feedback =>
+      'The Borrower returned items. Tap to leave a feedback.';
+  String get borrower_departed_provide_feedback =>
+      'The Borrower checked out from place. Tap to leave a feedback.';
 }

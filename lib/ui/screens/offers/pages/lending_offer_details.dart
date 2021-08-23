@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -61,6 +63,8 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
   String lendingOfferStatusTitle = '';
   String lendingOfferButtonActionTitle = '';
   LendingType lendingType;
+  OfferModel offerModel;
+  bool isApproved = false;
   @override
   void initState() {
     // TODO: implement initState
@@ -82,248 +86,300 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Container(
-                      color: Colors.teal,
-                      child: ImagesPreview(
-                          urls: widget.offerModel.lendingOfferDetailsModel
-                                      .lendingModel.lendingType ==
-                                  LendingType.PLACE
-                              ? widget.offerModel.lendingOfferDetailsModel
-                                  .lendingModel.lendingPlaceModel.houseImages
-                              : widget.offerModel.lendingOfferDetailsModel
-                                  .lendingModel.lendingItemModel.itemImages),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 20, 16, 0),
+      child: StreamBuilder<OfferModel>(
+          stream:
+              LendingOffersRepo.getOfferStream(offerId: widget.offerModel.id),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return LoadingIndicator();
+            }
+            if (snapshot.data == null) {
+              offerModel = widget.offerModel;
+            }
+            offerModel = snapshot.data;
+            var approvedUsers =
+                offerModel.lendingOfferDetailsModel.approvedUsers ?? [];
+            isApproved =
+                approvedUsers.contains(SevaCore.of(context).loggedInUser.email);
+            if (isApproved) {
+              getApprovedStatusLabel();
+            }
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Text(
-                          lendingType == LendingType.ITEM
-                              ? lendingItemModel.itemName
-                              : lendingPlaceModel.placeName,
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            fontFamily: 'Europa',
-                            color: Colors.black,
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: Container(
+                            color: Colors.teal,
+                            child: ImagesPreview(
+                                urls: offerModel.lendingOfferDetailsModel
+                                            .lendingModel.lendingType ==
+                                        LendingType.PLACE
+                                    ? offerModel
+                                        .lendingOfferDetailsModel
+                                        .lendingModel
+                                        .lendingPlaceModel
+                                        .houseImages
+                                    : offerModel
+                                        .lendingOfferDetailsModel
+                                        .lendingModel
+                                        .lendingItemModel
+                                        .itemImages),
                           ),
                         ),
-                        lendingType == LendingType.PLACE
-                            ? Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  title('${lendingPlaceModel.noOfGuests}'
-                                      ' ${L.of(context).guests} '),
-                                  title('${lendingPlaceModel.noOfRooms}'
-                                      ' ${L.of(context).bed_rooms} .'),
-                                  title('${lendingPlaceModel.noOfBathRooms}'
-                                      ' ${L.of(context).bath_rooms} '),
-                                ],
-                              )
-                            : Container(),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        CustomListTile(
-                          leading: Stack(
-                            alignment: AlignmentDirectional.center,
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(16, 20, 16, 0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Card(
-                                color: Colors.transparent,
-                                elevation: 3,
-                                child: Column(
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                lendingType == LendingType.ITEM
+                                    ? lendingItemModel.itemName
+                                    : lendingPlaceModel.placeName,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  fontFamily: 'Europa',
+                                  color: Colors.black,
+                                ),
+                              ),
+                              lendingType == LendingType.PLACE
+                                  ? Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        title('${lendingPlaceModel.noOfGuests}'
+                                            ' ${L.of(context).guests} '),
+                                        title('${lendingPlaceModel.noOfRooms}'
+                                            ' ${L.of(context).bed_rooms} .'),
+                                        title(
+                                            '${lendingPlaceModel.noOfBathRooms}'
+                                            ' ${L.of(context).bath_rooms} '),
+                                      ],
+                                    )
+                                  : Container(),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              CustomListTile(
+                                leading: Stack(
+                                  alignment: AlignmentDirectional.center,
                                   children: [
-                                    Container(
-                                      width: 58,
-                                      height: 15,
-                                      decoration: BoxDecoration(
-                                          color: Theme.of(context).accentColor,
-                                          border: Border.all(
-                                            color: Colors.transparent,
+                                    Card(
+                                      color: Colors.transparent,
+                                      elevation: 3,
+                                      child: Column(
+                                        children: [
+                                          Container(
+                                            width: 58,
+                                            height: 15,
+                                            decoration: BoxDecoration(
+                                                color: Theme.of(context)
+                                                    .accentColor,
+                                                border: Border.all(
+                                                  color: Colors.transparent,
+                                                ),
+                                                borderRadius: BorderRadius.only(
+                                                    topLeft: Radius.circular(7),
+                                                    topRight:
+                                                        Radius.circular(7))),
                                           ),
-                                          borderRadius: BorderRadius.only(
-                                              topLeft: Radius.circular(7),
-                                              topRight: Radius.circular(7))),
+                                          Container(
+                                            width: 58,
+                                            height: 38,
+                                            decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                border: Border.all(
+                                                  color: Colors.white,
+                                                ),
+                                                borderRadius: BorderRadius.only(
+                                                    bottomLeft:
+                                                        Radius.circular(7),
+                                                    bottomRight:
+                                                        Radius.circular(7))),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                    Container(
-                                      width: 58,
-                                      height: 38,
-                                      decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          border: Border.all(
-                                            color: Colors.white,
-                                          ),
-                                          borderRadius: BorderRadius.only(
-                                              bottomLeft: Radius.circular(7),
-                                              bottomRight: Radius.circular(7))),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 12.0),
+                                      child: Text(
+                                        DateFormat(
+                                                'dd',
+                                                Locale(getLangTag())
+                                                    .toLanguageTag())
+                                            .format(
+                                          getDateTimeAccToUserTimezone(
+                                              dateTime: DateTime
+                                                  .fromMillisecondsSinceEpoch(
+                                                      widget
+                                                          .offerModel
+                                                          .lendingOfferDetailsModel
+                                                          .startDate),
+                                              timezoneAbb: SevaCore.of(context)
+                                                  .loggedInUser
+                                                  .timezone),
+                                        ),
+                                        style: TextStyle(
+                                            fontSize: 24,
+                                            color: Colors.grey[700]),
+                                      ),
                                     ),
                                   ],
                                 ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 12.0),
-                                child: Text(
-                                  DateFormat('dd',
-                                          Locale(getLangTag()).toLanguageTag())
-                                      .format(
-                                    getDateTimeAccToUserTimezone(
-                                        dateTime:
-                                            DateTime.fromMillisecondsSinceEpoch(
-                                                widget
-                                                    .offerModel
-                                                    .lendingOfferDetailsModel
-                                                    .startDate),
-                                        timezoneAbb: SevaCore.of(context)
-                                            .loggedInUser
-                                            .timezone),
-                                  ),
-                                  style: TextStyle(
-                                      fontSize: 24, color: Colors.grey[700]),
+                                title: Padding(
+                                  padding:
+                                      const EdgeInsets.only(top: 16.0, left: 8),
+                                  child: date,
                                 ),
+                                subtitle: Padding(
+                                  padding: const EdgeInsets.only(left: 8),
+                                  child: dateDetailsComponentLendingOffer,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              lendingType == LendingType.ITEM
+                                  ? LendingItemCardWidget(
+                                      hidden: true,
+                                      lendingItemModel: lendingItemModel,
+                                    )
+                                  : AmenitiesAndHouseRules(
+                                      lendingModel: offerModel
+                                          .lendingOfferDetailsModel
+                                          .lendingModel,
+                                    ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                S.of(context).description,
+                                style: titleStyle,
+                              ),
+                              Text(
+                                offerModel
+                                        .individualOfferDataModel.description ??
+                                    " ",
+                                style:
+                                    TextStyle(fontSize: 16, color: Colors.grey),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              InkWell(
+                                child: Text(
+                                  offerModel.lendingOfferDetailsModel
+                                                  .lendingOfferAgreementLink ==
+                                              null ||
+                                          offerModel.lendingOfferDetailsModel
+                                                  .lendingOfferAgreementLink ==
+                                              ''
+                                      ? L
+                                          .of(context)
+                                          .offer_agreement_not_available
+                                      : L
+                                          .of(context)
+                                          .click_to_view_offer_agreement,
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      color: Theme.of(context).primaryColor,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                onTap: () async {
+                                  if (offerModel.lendingOfferDetailsModel
+                                              .lendingOfferAgreementLink ==
+                                          null ||
+                                      offerModel.lendingOfferDetailsModel
+                                              .lendingOfferAgreementLink ==
+                                          '') {
+                                    return null;
+                                  } else {
+                                    if ((offerModel.email ==
+                                                SevaCore.of(context)
+                                                    .loggedInUser
+                                                    .email &&
+                                            offerModel.lendingOfferDetailsModel
+                                                    .approvedUsers.length >
+                                                0) ||
+                                        offerModel.lendingOfferDetailsModel
+                                            .approvedUsers
+                                            .contains(SevaCore.of(context)
+                                                .loggedInUser
+                                                .email)) {
+                                      await openPdfViewer(
+                                          offerModel.lendingOfferDetailsModel
+                                              .lendingOfferApprovedAgreementLink,
+                                          offerModel.lendingOfferDetailsModel
+                                                  .lendingOfferAgreementName ??
+                                              'Lending Offer Agreement',
+                                          context);
+                                    } else {
+                                      await openPdfViewer(
+                                          offerModel.lendingOfferDetailsModel
+                                              .lendingOfferAgreementLink,
+                                          offerModel.lendingOfferDetailsModel
+                                                  .lendingOfferAgreementName ??
+                                              'Lending Offer Agreement',
+                                          context);
+                                    }
+                                  }
+                                },
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Offstage(
+                                  offstage: !isApproved,
+                                  child: LendingOfferProgressWidget()),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              addressComponentBorrowRequestForApproved(
+                                  offerModel.selectedAdrress ?? '', context),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              lendingOfferCreatorWidget,
+                              SizedBox(
+                                height: 10,
                               ),
                             ],
                           ),
-                          title: Padding(
-                            padding: const EdgeInsets.only(top: 16.0, left: 8),
-                            child: date,
-                          ),
-                          subtitle: Padding(
-                            padding: const EdgeInsets.only(left: 8),
-                            child: dateDetailsComponentLendingOffer,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        lendingType == LendingType.ITEM
-                            ? LendingItemCardWidget(
-                                hidden: true,
-                                lendingItemModel: lendingItemModel,
-                              )
-                            : AmenitiesAndHouseRules(
-                                lendingModel: widget.offerModel
-                                    .lendingOfferDetailsModel.lendingModel,
-                              ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Text(
-                          S.of(context).description,
-                          style: titleStyle,
-                        ),
-                        Text(
-                          widget.offerModel.individualOfferDataModel
-                                  .description ??
-                              " ",
-                          style: TextStyle(fontSize: 16, color: Colors.grey),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        InkWell(
-                          child: Text(
-                            widget.offerModel.lendingOfferDetailsModel
-                                            .lendingOfferAgreementLink ==
-                                        null ||
-                                    widget.offerModel.lendingOfferDetailsModel
-                                            .lendingOfferAgreementLink ==
-                                        ''
-                                ? L.of(context).offer_agreement_not_available
-                                : L.of(context).click_to_view_offer_agreement,
-                            style: TextStyle(
-                                fontSize: 16,
-                                color: Theme.of(context).primaryColor,
-                                fontWeight: FontWeight.w600),
-                          ),
-                          onTap: () async {
-                            if (widget.offerModel.lendingOfferDetailsModel
-                                        .lendingOfferAgreementLink ==
-                                    null ||
-                                widget.offerModel.lendingOfferDetailsModel
-                                        .lendingOfferAgreementLink ==
-                                    '') {
-                              return null;
-                            } else {
-                              await openPdfViewer(
-                                  widget.offerModel.lendingOfferDetailsModel
-                                      .lendingOfferAgreementLink,
-                                  widget.offerModel.lendingOfferDetailsModel
-                                          .lendingOfferAgreementName ??
-                                      'Lending Offer Agreement Document',
-                                  context);
-                            }
-                          },
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Offstage(
-                            offstage: !widget.offerModel
-                                .lendingOfferDetailsModel.approvedUsers
-                                .contains(
-                                    SevaCore.of(context).loggedInUser.email),
-                            child: LendingOfferProgressWidget()),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        addressComponentBorrowRequestForApproved(
-                            widget.offerModel.selectedAdrress ?? '', context),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        lendingOfferCreatorWidget,
-                        SizedBox(
-                          height: 10,
-                        ),
+                        )
                       ],
                     ),
-                  )
-                ],
-              ),
-            ),
-          ),
-          getBottomBar(
-            context,
-            SevaCore.of(context).loggedInUser.email,
-            SevaCore.of(context).loggedInUser.sevaUserID,
-          )
-        ],
-      ),
+                  ),
+                ),
+                getBottomBar(
+                  context,
+                  SevaCore.of(context).loggedInUser.email,
+                  SevaCore.of(context).loggedInUser.sevaUserID,
+                )
+              ],
+            );
+          }),
     );
   }
 
   bool canDeleteOffer = false;
 
   Widget getBottomBar(BuildContext context, String email, String userId) {
-    bool isAccepted =
-        getOfferParticipants(offerDataModel: widget.offerModel).contains(
+    bool isAccepted = getOfferParticipants(offerDataModel: offerModel).contains(
       email,
     );
-    var approvedUsers =
-        widget.offerModel.lendingOfferDetailsModel.approvedUsers ?? [];
+    var approvedUsers = offerModel.lendingOfferDetailsModel.approvedUsers ?? [];
     var offerAcceptors =
-        widget.offerModel.lendingOfferDetailsModel.offerAcceptors ?? [];
-    bool isApproved = approvedUsers.contains(email);
-    if (isApproved) {
-      getApprovedStatusLabel();
-      setState(() {});
-    }
-    bool isCreator = widget.offerModel.sevaUserId == userId;
+        offerModel.lendingOfferDetailsModel.offerAcceptors ?? [];
+    bool isCreator = offerModel.sevaUserId == userId;
     canDeleteOffer =
         isCreator && offerAcceptors.length == 0 && approvedUsers.length == 0;
 
@@ -402,7 +458,7 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                                 : '',
                             // communityCreatorId: timebankModel != null ,
                             context: context,
-                            contentCreatorId: widget.offerModel.sevaUserId,
+                            contentCreatorId: offerModel.sevaUserId,
                             timebankCreatorId: widget.timebankModel.creatorId,
                           )
                       ? deleteActionButton(isAccepted, context)
@@ -412,7 +468,8 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                   ),
                   Offstage(offstage: !isCreator, child: editLendingOffer()),
                   Offstage(
-                      offstage: isCreator,
+                      offstage: isCreator ||
+                          lendingOfferStatus == LendingOfferStatus.CHECKED_OUT,
                       child: ActionButton(
                           isAccepted: isAccepted, isApproved: isApproved)),
                 ],
@@ -496,7 +553,7 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                                 : '',
                             // communityCreatorId: timebankModel != null ,
                             context: context,
-                            contentCreatorId: widget.offerModel.sevaUserId,
+                            contentCreatorId: offerModel.sevaUserId,
                             timebankCreatorId: widget.timebankModel.creatorId,
                           )
                       ? deleteActionButton(isAccepted, context)
@@ -506,7 +563,9 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                   ),
                   Offstage(offstage: !isCreator, child: editLendingOffer()),
                   Offstage(
-                      offstage: isCreator,
+                      offstage: isCreator ||
+                          lendingOfferStatus ==
+                              LendingOfferStatus.ITEMS_RETURNED,
                       child: ActionButton(
                           isAccepted: isAccepted, isApproved: isApproved)),
                 ],
@@ -521,14 +580,14 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
   void getApprovedStatusLabel() {
     if (lendingOfferAcceptorModel != null) {
       if (lendingOfferAcceptorModel.status == LendingOfferStatus.APPROVED &&
-          widget.offerModel.lendingOfferDetailsModel.lendingModel.lendingType ==
+          offerModel.lendingOfferDetailsModel.lendingModel.lendingType ==
               LendingType.PLACE) {
         lendingOfferStatus = LendingOfferStatus.CHECKED_IN;
         lendingOfferStatusTitle = S.of(context).request_approved;
         lendingOfferButtonActionTitle = L.of(context).check_in;
       } else if (lendingOfferAcceptorModel.status ==
               LendingOfferStatus.APPROVED &&
-          widget.offerModel.lendingOfferDetailsModel.lendingModel.lendingType ==
+          offerModel.lendingOfferDetailsModel.lendingModel.lendingType ==
               LendingType.ITEM) {
         lendingOfferStatus = LendingOfferStatus.ITEMS_COLLECTED;
         lendingOfferStatusTitle = S.of(context).request_approved;
@@ -546,6 +605,12 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
         lendingOfferStatusTitle = L.of(context).lending_offer_return_items_hint;
 
         lendingOfferButtonActionTitle = L.of(context).return_items;
+      } else if (lendingOfferAcceptorModel.status ==
+          LendingOfferStatus.CHECKED_OUT) {
+        lendingOfferStatus = LendingOfferStatus.CHECKED_OUT;
+        lendingOfferStatusTitle = L.of(context).checked_out;
+
+        lendingOfferButtonActionTitle = L.of(context).checked_out;
       }
     }
   }
@@ -570,8 +635,8 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
               builder: (context) => IndividualOffer(
-                offerModel: widget.offerModel,
-                timebankId: widget.offerModel.timebankId,
+                offerModel: offerModel,
+                timebankId: offerModel.timebankId,
                 loggedInMemberUserId:
                     SevaCore.of(context).loggedInUser.sevaUserID,
                 timebankModel: widget.timebankModel,
@@ -584,12 +649,14 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
   }
 
   Widget ActionButton({bool isAccepted, bool isApproved}) {
+    log('isACeepted $isAccepted');
+    log('isAprroved $isApproved');
     return Container(
       width: 110,
       height: 32,
       child: ConfigurationCheck(
         actionType: ConfigurationCheckExtension.getOfferAcceptanceKey(
-          widget.offerModel,
+          offerModel,
         ),
         role: memberType(
             widget.timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
@@ -632,38 +699,40 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
           onPressed: () async {
             TimebankModel timebankModel;
             if (Provider.of<HomePageBaseBloc>(context, listen: false)
-                    .timebankModel(widget.offerModel.timebankId) ==
+                    .timebankModel(offerModel.timebankId) ==
                 null) {
               timebankModel = await utils.getTimeBankForId(
-                  timebankId: widget.offerModel.timebankId);
+                  timebankId: offerModel.timebankId);
             } else {
               timebankModel =
                   Provider.of<HomePageBaseBloc>(context, listen: false)
-                      .timebankModel(widget.offerModel.timebankId);
+                      .timebankModel(offerModel.timebankId);
             }
             if (isApproved) {
               await LendingOffersRepo.updateLendingOfferStatus(
                       lendingOfferAcceptorModel: lendingOfferAcceptorModel,
-                      offerModel: widget.offerModel,
+                      offerModel: offerModel,
                       lendingOfferStatus: lendingOfferStatus)
                   .then((value) {
                 Navigator.of(context).pop();
               });
             } else if (!isAccepted) {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => BorrowerAcceptLendingOffer(
-                    offerModel: widget.offerModel,
-                    timeBankId: widget.offerModel.timebankId,
-                    notificationId: null,
-                  ),
-                ),
-              );
+              Navigator.of(context)
+                  .push(
+                    MaterialPageRoute(
+                      builder: (context) => BorrowerAcceptLendingOffer(
+                        offerModel: offerModel,
+                        timeBankId: offerModel.timebankId,
+                        notificationId: null,
+                      ),
+                    ),
+                  )
+                  .then((value) => Navigator.of(context).pop());
 
               //TO DO accept and send notification to lending offer creator and create acceptor model and push it to subcollections
             } else {
               await LendingOffersRepo.removeAcceptorLending(
-                model: widget.offerModel,
+                model: offerModel,
                 acceptorEmail: SevaCore.of(context).loggedInUser.email,
               ).then((_) => Navigator.of(context).pop());
             }
@@ -681,10 +750,10 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
     String dateSubText = '';
     Widget reviewWidget = Container();
 
-    return FutureBuilder<LendingOfferAcceptorModel>(
-        future: LendingOffersRepo.getApprovedModel(
+    return StreamBuilder<LendingOfferAcceptorModel>(
+        stream: LendingOffersRepo.getApprovedModelStream(
             acceptorEmail: SevaCore.of(context).loggedInUser.email,
-            offerId: widget.offerModel.id),
+            offerId: offerModel.id),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return LoadingIndicator();
@@ -698,7 +767,7 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                 LendingOfferStatus.APPROVED) {
               title = S.of(context).request_approved_by_msg +
                   ' ' +
-                  widget.offerModel.fullName;
+                  offerModel.fullName;
               subTitle = ' ';
               dateText = L.of(context).arrival +
                   ':' +
@@ -757,28 +826,30 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                     timezoneAbb: SevaCore.of(context).loggedInUser.timezone),
               );
               additionalInstruction = L.of(context).share_feedback_place;
-              reviewWidget = Center(
-                child: CustomChip(
-                  label: S.of(context).review,
-                  isSelected: false,
-                  onTap: () {
-                    handleFeedBackNotificationLendingOffer(
-                        offerModel: widget.offerModel,
-                        notificationId: null,
-                        context: context,
-                        email: SevaCore.of(context).loggedInUser.email,
-                        feedbackType: FeedbackType.FOR_LENDING_OFFER_LENDER,
-                        lendingOfferAcceptorModel: lendingOfferAcceptorModel);
-                  },
-                ),
-              );
+              if (!lendingOfferAcceptorModel.isBorrowerGaveReview) {
+                reviewWidget = Center(
+                  child: CustomChip(
+                    label: S.of(context).review,
+                    isSelected: false,
+                    onTap: () {
+                      handleFeedBackNotificationLendingOffer(
+                          offerModel: offerModel,
+                          notificationId: null,
+                          context: context,
+                          email: SevaCore.of(context).loggedInUser.email,
+                          feedbackType: FeedbackType.FOR_LENDING_OFFER_BORROWER,
+                          lendingOfferAcceptorModel: lendingOfferAcceptorModel);
+                    },
+                  ),
+                );
+              }
             }
           } else {
             if (lendingOfferAcceptorModel.status ==
                 LendingOfferStatus.APPROVED) {
               title = S.of(context).request_approved_by_msg +
                   ' ' +
-                  widget.offerModel.fullName;
+                  offerModel.fullName;
               subTitle = L.of(context).items_collected_alert;
               dateText = DateFormat(
                       'EEEEEE MMMM dd', Locale(getLangTag()).toLanguageTag())
@@ -814,7 +885,7 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                 LendingOfferStatus.ITEMS_COLLECTED) {
               title = L.of(context).items_collected_alert_two +
                   ' ' +
-                  widget.offerModel.fullName;
+                  offerModel.fullName;
               subTitle = L.of(context).please_return_by;
               dateText = DateFormat(
                       'EEEEEE MMMM dd', Locale(getLangTag()).toLanguageTag())
@@ -835,7 +906,7 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                 LendingOfferStatus.ITEMS_RETURNED) {
               title = L.of(context).items_returned_to_lender +
                   ' ' +
-                  widget.offerModel.fullName;
+                  offerModel.fullName;
               subTitle = L.of(context).exchanged_completed;
               dateText = DateFormat(
                       'EEEEEE MMMM dd', Locale(getLangTag()).toLanguageTag())
@@ -864,21 +935,23 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                         ),
                       );
               additionalInstruction = L.of(context).share_feedback_place;
-              reviewWidget = Center(
-                child: CustomChip(
-                  label: S.of(context).review,
-                  isSelected: false,
-                  onTap: () {
-                    handleFeedBackNotificationLendingOffer(
-                        offerModel: widget.offerModel,
-                        notificationId: null,
-                        context: context,
-                        email: SevaCore.of(context).loggedInUser.email,
-                        feedbackType: FeedbackType.FOR_LENDING_OFFER_LENDER,
-                        lendingOfferAcceptorModel: lendingOfferAcceptorModel);
-                  },
-                ),
-              );
+              if (!lendingOfferAcceptorModel.isBorrowerGaveReview) {
+                reviewWidget = Center(
+                  child: CustomChip(
+                    label: S.of(context).review,
+                    isSelected: false,
+                    onTap: () {
+                      handleFeedBackNotificationLendingOffer(
+                          offerModel: offerModel,
+                          notificationId: null,
+                          context: context,
+                          email: SevaCore.of(context).loggedInUser.email,
+                          feedbackType: FeedbackType.FOR_LENDING_OFFER_BORROWER,
+                          lendingOfferAcceptorModel: lendingOfferAcceptorModel);
+                    },
+                  ),
+                );
+              }
             }
           }
 
@@ -1014,7 +1087,7 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
           .format(
         getDateTimeAccToUserTimezone(
             dateTime: DateTime.fromMillisecondsSinceEpoch(
-                widget.offerModel.lendingOfferDetailsModel.startDate),
+                offerModel.lendingOfferDetailsModel.startDate),
             timezoneAbb: SevaCore.of(context).loggedInUser.timezone),
       ),
       style: titleStyle,
@@ -1028,7 +1101,7 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
       DateFormat.MMMd(getLangTag()).add_jm().format(
                 getDateTimeAccToUserTimezone(
                   dateTime: DateTime.fromMillisecondsSinceEpoch(
-                    widget.offerModel.lendingOfferDetailsModel.startDate,
+                    offerModel.lendingOfferDetailsModel.startDate,
                   ),
                   timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
                 ),
@@ -1037,7 +1110,7 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
           DateFormat.MMMd(getLangTag()).add_jm().format(
                 getDateTimeAccToUserTimezone(
                   dateTime: DateTime.fromMillisecondsSinceEpoch(
-                      widget.offerModel.lendingOfferDetailsModel.endDate),
+                      offerModel.lendingOfferDetailsModel.endDate),
                   timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
                 ),
               ),
@@ -1063,7 +1136,7 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
           children: [
             CircleAvatar(
               backgroundImage: NetworkImage(
-                widget.offerModel.photoUrlImage ?? defaultUserImageURL,
+                offerModel.photoUrlImage ?? defaultUserImageURL,
               ),
               backgroundColor: Colors.white,
               radius: MediaQuery.of(context).size.width / 11.5,
@@ -1072,7 +1145,7 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(widget.offerModel.fullName,
+                Text(offerModel.fullName,
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 21,
@@ -1115,7 +1188,7 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
           ],
         ),
         onPressed: () async {
-          deleteOffer(context: context, offerId: widget.offerModel.id);
+          deleteOffer(context: context, offerId: offerModel.id);
         },
       ),
     );

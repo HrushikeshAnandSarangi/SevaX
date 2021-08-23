@@ -276,6 +276,30 @@ class LendingOffersRepo {
     return model;
   }
 
+  static Stream<OfferModel> getOfferStream({
+    @required String offerId,
+  }) async* {
+    var data = CollectionRef.offers.doc(offerId).snapshots();
+
+    yield* data.transform(
+      StreamTransformer<DocumentSnapshot, OfferModel>.fromHandlers(
+        handleData: (snapshot, offerSink) {
+          OfferModel model = OfferModel.fromMap(snapshot.data());
+          model.id = snapshot.id;
+          offerSink.add(model);
+        },
+      ),
+    );
+  }
+
+  static Future<LendingOfferAcceptorModel> updateLendingParticipantModel(
+      {LendingOfferAcceptorModel model, String offerId}) async {
+    await CollectionRef.lendingOfferAcceptors(offerId)
+        .doc(model.id)
+        .update(model.toMap());
+    return model;
+  }
+
   static Future<void> approveLendingOffer(
       {@required OfferModel model,
       @required LendingOfferAcceptorModel lendingOfferAcceptorModel,
@@ -344,6 +368,29 @@ class LendingOffersRepo {
       });
     });
     return model;
+  }
+
+  static Stream<LendingOfferAcceptorModel> getApprovedModelStream(
+      {String offerId, String acceptorEmail}) async* {
+    var data = await CollectionRef.lendingOfferAcceptors(offerId)
+        .where('acceptorEmail', isEqualTo: acceptorEmail)
+        .where('status', isNotEqualTo: LendingOfferStatus.REJECTED.readable)
+        .snapshots();
+
+    yield* data.transform(
+      StreamTransformer<QuerySnapshot, LendingOfferAcceptorModel>.fromHandlers(
+        handleData: (snapshot, requestSink) {
+          snapshot.docs.forEach((document) {
+            LendingOfferAcceptorModel model =
+                LendingOfferAcceptorModel.fromMap(document.data());
+            model.id = document.id;
+            if (model.status != LendingOfferStatus.ACCEPTED) {
+              requestSink.add(model);
+            }
+          });
+        },
+      ),
+    );
   }
 
   static Future<void> updateLendingOfferStatus(

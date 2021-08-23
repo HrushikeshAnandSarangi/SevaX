@@ -8,6 +8,8 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/acceptor_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
+import 'package:sevaexchange/repositories/lending_offer_repo.dart';
+import 'package:sevaexchange/repositories/notifications_repository.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/lending_offer_participants.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/offer_details_router.dart';
@@ -378,10 +380,10 @@ void handleFeedBackNotificationLendingOffer({
       {
         "reviewer": SevaCore.of(context).loggedInUser.email,
         "reviewed": feedbackType == FeedbackType.FOR_LENDING_OFFER_LENDER
-            ? offerModel.email
-            : offerModel.lendingOfferDetailsModel.approvedUsers.first,
+            ? offerModel.lendingOfferDetailsModel.approvedUsers.first
+            : offerModel.email,
         "ratings": results['selection'],
-        "requestId": "testId",
+        "requestId": offerModel.id,
         "comments": results['didComment'] ? results['comment'] : "No comments",
         'liveMode': !AppConfig.isTestCommunity,
       },
@@ -390,8 +392,18 @@ void handleFeedBackNotificationLendingOffer({
     await handleVolunterFeedbackForTrustWorthynessNRealiablityScore(
         feedbackType, results, null, SevaCore.of(context).loggedInUser,
         offerModel: offerModel);
-    var loggedInUser = SevaCore.of(context).loggedInUser;
     if (feedbackType == FeedbackType.FOR_LENDING_OFFER_LENDER) {
+      lendingOfferAcceptorModel.isLenderGaveReview = true;
+      await LendingOffersRepo.updateLendingParticipantModel(
+          offerId: offerModel.id, model: lendingOfferAcceptorModel);
+    } else {
+      lendingOfferAcceptorModel.isBorrowerGaveReview = true;
+      await LendingOffersRepo.updateLendingParticipantModel(
+          offerId: offerModel.id, model: lendingOfferAcceptorModel);
+    }
+
+    var loggedInUser = SevaCore.of(context).loggedInUser;
+    if (feedbackType == FeedbackType.FOR_LENDING_OFFER_BORROWER) {
       ParticipantInfo receiver = ParticipantInfo(
         id: offerModel.sevaUserId,
         photoUrl: offerModel.photoUrlImage,
@@ -449,7 +461,9 @@ void handleFeedBackNotificationLendingOffer({
           timebankId: '',
           communityId: loggedInUser.currentCommunity,
           sender: sender);
-      //NotificationsRepository.readUserNotification(notificationId, email);
+    }
+    if (notificationId != null) {
+      NotificationsRepository.readUserNotification(notificationId, email);
     }
   }
 }
