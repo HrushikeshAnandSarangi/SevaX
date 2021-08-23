@@ -404,7 +404,6 @@ class L {
 
   String get selected_value => "Selected value :";
 
-
   String get upgrade_plan_msg1 => "Sorry Couldn't fetch data";
 
   String get upgrade_plan_disable_msg1 =>
@@ -642,6 +641,10 @@ class L {
 
   String get name_of_place => "Name of your place";
 
+  String get name_place => "Name of Place";
+
+  String get name_item => "Name of Item";
+
   String get name_of_place_hint => "Apartment sunshine 3";
 
   String get amenities => "Amenities";
@@ -657,6 +660,8 @@ class L {
   String get common_spaces => "Common Spaces";
 
   String get house_rules => "House Rules";
+
+  String get estimated_value => "Estimated value*";
 
   String get add_place => "Add Place";
 
@@ -676,6 +681,9 @@ class L {
 
   String get validation_error_no_estimated_value_room =>
       "Please enter an estimated value for the place";
+
+  String get validation_error_no_estimated_value_item =>
+      "Please enter an estimated value for the item";
 
   String get validation_error_no_of_bathrooms =>
       "Please enter no of bath rooms available";
@@ -1177,6 +1185,9 @@ class L {
   String get select_a_item_lending =>
       "Select list of related items for Borrow*";
 
+  String get select_item_for_lending =>
+      "Select item for lending*";
+
   String get items_validation =>
       "You have not selected any Items. Please select one or more before creating the Borrow request.";
 
@@ -1267,6 +1278,8 @@ class L {
 
   String get terms_of_service => 'Terms of Service: ';
 
+  String get please_note => 'Please Note:';
+
   String get borrow_lender_dispute =>
       'In the real world and online, communities and community members sometimes disagree. If you have a dispute with another Community member, we hope that you will be able to work it out amicably." ';
 
@@ -1281,6 +1294,9 @@ class L {
 
   String get agreement_final_acknowledgement =>
       'It is hereby acknowledged that while SevaExchange is furnishing this agreement and securely managing in their digital vault, SevaExchange is only providing this as a convenience to the two parties in this agreement. SevaExchange is indemnified from any loss or damage that occurs as a result of this transaction. Neither party will hold SevaExchange accountable and agree to completely absolve SevaExchange should there be any litigation arising from this transaction.';
+
+  String get agreement_prior_to_signing_disclaimer =>
+      "The borrower should inspect the item or property being taken to ensure the description and operability of the borrowed item or property is represented properly in the agreement and request modifications as necessary prior to executing the agreement. Any adjustments to the defined provisions need to be made prior to signing the agreement. Any actions taken to resolve the issues outside the agreement will be the responsibility of the lender and/or borrower; example is Small Claims Court. SevaExchange will have no responsibility in the negotiation, management or collection related to the violations of the agreement.";
 
   String get lender => 'Lender';
 

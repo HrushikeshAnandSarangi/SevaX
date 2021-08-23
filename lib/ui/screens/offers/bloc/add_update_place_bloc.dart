@@ -166,8 +166,7 @@ class AddUpdatePlaceBloc extends BlocBase {
     } else if (_amenities.value == null || _amenities.value.length == 0) {
       _amenities.addError(AddPlaceValidationErrors.amenities_error);
       flag = true;
-    }
-    if (_estimated_value.value == null || _estimated_value.value == 0) {
+    } else if (_estimated_value.value == null || _estimated_value.value == 0) {
       _estimated_value.addError(AddPlaceValidationErrors.estimated_value_error);
       flag = true;
     }

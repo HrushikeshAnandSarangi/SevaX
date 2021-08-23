@@ -15,6 +15,7 @@ import '../../../../labels.dart';
 
 class AddUpdateItemBloc extends BlocBase {
   final _itemName = BehaviorSubject<String>();
+  final _estimated_value = BehaviorSubject<String>();
   final _item_images = BehaviorSubject<List<String>>();
   final profanityDetector = ProfanityDetector();
   final _message = BehaviorSubject<String>();
@@ -22,12 +23,14 @@ class AddUpdateItemBloc extends BlocBase {
   final _model = BehaviorSubject<LendingModel>();
 
   Stream<Status> get status => _status.stream;
-
   Stream<String> get itemName => _itemName.stream;
+  Stream<String> get estimatedValue => _estimated_value.stream;
   Stream<List<String>> get itemImages => _item_images.stream;
   Stream<String> get message => _message.stream;
 
   Function(String value) get onPlaceNameChanged => _itemName.sink.add;
+  Function(String value) get onEstimatedValueChanged =>
+      _estimated_value.sink.add;
   Function(List<String> value) get onItemImageAdded => _item_images.sink.add;
 
   void loadData(LendingItemModel lendingPlaceModel) {
@@ -48,6 +51,7 @@ class AddUpdateItemBloc extends BlocBase {
         id: Utils.getUuid(),
         lendingItemModel: LendingItemModel(
           itemName: _itemName.value,
+          estimatedValue: int.parse(_estimated_value.value),
           itemImages: _item_images.value.toList(),
         ),
         creatorId: creator.sevaUserID,
@@ -66,6 +70,8 @@ class AddUpdateItemBloc extends BlocBase {
     LendingModel lendingModel = model;
     if (!errorCheck()) {
       lendingModel.lendingItemModel.itemName = _itemName.value;
+      lendingModel.lendingItemModel.estimatedValue =
+          int.parse(_estimated_value.value);
       lendingModel.lendingItemModel.itemImages = _item_images.value.toList();
 
       LendingOffersRepo.updateNewLendingItem(model: lendingModel).then((_) {
@@ -88,6 +94,9 @@ class AddUpdateItemBloc extends BlocBase {
     } else if (profanityDetector.isProfaneString(_itemName.value)) {
       _itemName.addError(AddItemValidationErrors.profanityError);
       flag = true;
+    } else if (_estimated_value.value == null || _estimated_value.value == 0) {
+      _estimated_value.addError(AddItemValidationErrors.estimated_value_error);
+      flag = true;
     }
 
     return flag;
@@ -96,6 +105,7 @@ class AddUpdateItemBloc extends BlocBase {
   @override
   void dispose() {
     _itemName.close();
+    _estimated_value.close();
     _item_images.close();
     _model.close();
     _message.close();
@@ -105,6 +115,7 @@ class AddUpdateItemBloc extends BlocBase {
 
 class AddItemValidationErrors {
   static const String itemNameError = 'itemName_error';
+  static const String estimated_value_error = '_estimated_value_error';
   static const String profanityError = "profanity_error";
   static const String underscore_error = "_underscore_error";
 }
@@ -115,6 +126,9 @@ String getAddItemValidationError(BuildContext context, String errorCode) {
   switch (errorCode) {
     case AddItemValidationErrors.itemNameError:
       return error.validation_error_item_name;
+      break;
+    case AddItemValidationErrors.estimated_value_error:
+      return error.validation_error_no_estimated_value_item;
       break;
     case AddItemValidationErrors.profanityError:
       return error.profanity_text_alert;

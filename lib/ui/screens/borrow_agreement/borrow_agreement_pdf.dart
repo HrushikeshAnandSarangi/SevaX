@@ -13,8 +13,11 @@ import 'package:pdf/widgets.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:sevaexchange/components/pdf_screen.dart';
 import 'package:sevaexchange/labels.dart';
+import 'package:sevaexchange/models/enums/lending_borrow_enums.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
+import 'package:sevaexchange/new_baseline/models/lending_model.dart';
+import 'package:sevaexchange/new_baseline/models/lending_offer_details_model.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
@@ -27,8 +30,8 @@ class BorrowAgreementPdf {
   Future<String> borrowAgreementPdf(
       material.BuildContext contextMain,
       RequestModel requestModel,
+      LendingModel lendingModel,
       String borrower,
-      //Add place model / item model from lending offers (to get details of place/item conditions ex: no of occupants, house rules, etc.. )
       String documentName,
       bool isOffer,
       int startTime,
@@ -37,10 +40,10 @@ class BorrowAgreementPdf {
       String specificConditions,
       bool isDamageLiability,
       bool isUseDisclaimer,
-      bool isDeliveryReturn, //for borrow/lend item
-      bool isMaintainRepair, //for borrow/lend item
-      bool isRefundDepositNeeded, //for borrow/lend place
-      bool isMaintainAndclean //for borrow/lend place
+      bool isDeliveryReturn, //for borrow/lend ITEM
+      bool isMaintainRepair, //for borrow/lend ITEM
+      bool isRefundDepositNeeded, //for borrow/lend PLACE
+      bool isMaintainAndclean //for borrow/lend PLACE
       ) async {
     progressDialog = ProgressDialog(
       contextMain,
@@ -237,6 +240,79 @@ class BorrowAgreementPdf {
           ]),
 
           SizedBox(height: 35),
+
+          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(L.of(contextMain).please_note, style: TextStyle(fontSize: 16)),
+            //additional texts here
+            SizedBox(height: 15),
+            Text(L.of(contextMain).agreement_prior_to_signing_disclaimer,
+                style: TextStyle(fontSize: 14)),
+          ]),
+
+          SizedBox(height: 35),
+
+          //Lending Offer Estimated Value of Item(s)/Place
+          lendingModel != null
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          (lendingModel.lendingType == LendingType.PLACE
+                                  ? L.of(contextMain).name_place
+                                  : L.of(contextMain).name_place) +
+                              ': ',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        SizedBox(width: 5),
+                        Text(
+                          lendingModel.lendingType == LendingType.PLACE
+                              ? "\$" +
+                                  lendingModel.lendingPlaceModel.placeName
+                                      .toString()
+                              : "\$" +
+                                  lendingModel.lendingItemModel.itemName
+                                      .toString(),
+                          style: TextStyle(fontSize: 15),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                            L
+                                    .of(contextMain)
+                                    .estimated_value
+                                    .replaceAll('*', '') +
+                                ': ',
+                            style: TextStyle(fontSize: 16)),
+                        SizedBox(width: 5),
+                        Text(
+                            lendingModel.lendingType == LendingType.PLACE
+                                ? lendingModel.lendingPlaceModel.estimatedValue
+                                    .toString()
+                                : lendingModel.lendingItemModel.estimatedValue
+                                    .toString(),
+                            style: TextStyle(fontSize: 15)),
+                      ],
+                    ),
+                  ],
+                )
+              : Container(),
+
+          //______________________________>
+
+          //Borrow Request Estimated Value of Item(s)/Place
+          // TO BE IMPLEMENTED
+          //fetch the value from items added when lender approves in lender approval page
+
+          //______________________________>
+
+          SizedBox(height: 25),
 
           //Date and Name of both Borrower and Lender below (signature proxy)
           Row(crossAxisAlignment: CrossAxisAlignment.start, children: [

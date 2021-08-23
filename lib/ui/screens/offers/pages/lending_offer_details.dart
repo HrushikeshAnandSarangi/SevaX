@@ -235,6 +235,40 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                         SizedBox(
                           height: 10,
                         ),
+                        Text(
+                          L.of(context).estimated_value.replaceAll('*', ''),
+                          style: titleStyle,
+                        ),
+                        SizedBox(
+                          height: 2,
+                        ),
+                        Row(
+                          children: [
+                            Icon(Icons.attach_money, color: Colors.grey),
+                            Text(
+                              lendingType == LendingType.ITEM
+                                  ? widget
+                                      .offerModel
+                                      .lendingOfferDetailsModel
+                                      .lendingModel
+                                      .lendingItemModel
+                                      .estimatedValue
+                                      .toString()
+                                  : widget
+                                      .offerModel
+                                      .lendingOfferDetailsModel
+                                      .lendingModel
+                                      .lendingPlaceModel
+                                      .estimatedValue
+                                      .toString(),
+                              style:
+                                  TextStyle(fontSize: 16, color: Colors.black),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
                         InkWell(
                           child: Text(
                             widget.offerModel.lendingOfferDetailsModel

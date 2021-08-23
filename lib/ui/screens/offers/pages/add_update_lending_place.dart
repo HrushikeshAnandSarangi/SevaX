@@ -451,22 +451,25 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                           );
                         },
                       ),
-
-                      //ADD ESTIMATED VALUE FIELD HERE
+                      SizedBox(height: 20),
+                      //ESTIMATED VALUE FIELD HERE
                       StreamBuilder<String>(
-                        stream: _bloc.houseRules,
+                        stream: _bloc.estimatedValue,
                         builder: (context, snapshot) {
                           return CustomTextField(
+                            decoration: InputDecoration(
+                                prefixIcon: Icon(Icons.attach_money),
+                                hintText:
+                                    S.of(context).request_min_donation_hint),
                             controller: _estimatedValueController,
                             currentNode: _estimatedValue,
                             value: snapshot.data,
-                            heading: "${L.of(context).house_rules}",
+                            heading: "${L.of(context).estimated_value}",
                             onChanged: (String value) {
                               _bloc.onEstimatedValueChanged(value);
                               // title = value;
                             },
-                            hint: 'Ex: 10',
-                            maxLength: 1,
+                            // hint: S.of(context).request_min_donation_hint,
                             formatters: [
                               FilteringTextInputFormatter.allow(
                                   Regex.numericRegex)
@@ -476,7 +479,6 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                           );
                         },
                       ),
-
                       SizedBox(height: 20),
                       Center(
                         child: Container(
