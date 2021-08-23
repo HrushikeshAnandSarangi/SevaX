@@ -16,6 +16,7 @@ class LendingOfferDetailsModel {
     this.checkedIn,
     this.checkedOut,
     this.agreementConfig,
+    this.lendingOfferTypeMode,
   });
   int startDate;
   int endDate;
@@ -30,6 +31,7 @@ class LendingOfferDetailsModel {
   bool returnedItems;
   bool checkedIn;
   bool checkedOut;
+  String lendingOfferTypeMode;
   Map<String, dynamic> agreementConfig = {};
   factory LendingOfferDetailsModel.fromMap(Map<String, dynamic> json) =>
       LendingOfferDetailsModel(
@@ -67,6 +69,9 @@ class LendingOfferDetailsModel {
             json["checkedIn"] == null ? false : json["checkedIn"] ?? false,
         checkedOut:
             json["checkedOut"] == null ? false : json["checkedOut"] ?? false,
+        lendingOfferTypeMode: json["lendingOfferTypeMode"] == null
+            ? null
+            : json["lendingOfferTypeMode"],
         agreementConfig: json["agreementConfig"] == null
             ? {}
             : Map<String, dynamic>.from(json["agreementConfig"]) ?? {},
@@ -99,6 +104,8 @@ class LendingOfferDetailsModel {
         "returnedItems": returnedItems == null ? false : returnedItems,
         "checkedIn": checkedIn == null ? false : checkedIn,
         "checkedOut": checkedOut == null ? false : checkedOut,
+        "lendingOfferTypeMode":
+            lendingOfferTypeMode == null ? null : lendingOfferTypeMode,
         "agreementConfig": agreementConfig == null ? null : agreementConfig,
       };
 }
