@@ -117,7 +117,7 @@ extension ReadableLendingOfferStatus on LendingOfferStatus {
         return 'REVIEWED';
 
       default:
-        return 'REQUESTED';
+        return 'ACCEPTED';
     }
   }
 
@@ -129,18 +129,18 @@ extension ReadableLendingOfferStatus on LendingOfferStatus {
       case 'APPROVED':
         return LendingOfferStatus.APPROVED;
 
-        return LendingOfferStatus.CHECKED_IN;
       case 'CHECKED_IN':
-        return LendingOfferStatus.CHECKED_OUT;
+        return LendingOfferStatus.CHECKED_IN;
       case 'CHECKED_OUT':
-        return LendingOfferStatus.ITEMS_COLLECTED;
+        return LendingOfferStatus.CHECKED_OUT;
       case 'ITEMS_COLLECTED':
-        return LendingOfferStatus.ITEMS_RETURNED;
+        return LendingOfferStatus.ITEMS_COLLECTED;
       case 'ITEMS_RETURNED':
-        return LendingOfferStatus.REJECTED;
+        return LendingOfferStatus.ITEMS_RETURNED;
       case 'REJECTED':
-        return LendingOfferStatus.REVIEWED;
+        return LendingOfferStatus.REJECTED;
       case 'REVIEWED':
+        return LendingOfferStatus.REVIEWED;
 
       default:
         return LendingOfferStatus.ACCEPTED;
