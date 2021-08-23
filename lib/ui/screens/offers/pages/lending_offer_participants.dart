@@ -221,15 +221,20 @@ class LendingOfferParticipants extends StatelessWidget {
           CustomElevatedButton(
             color: HexColor('#FAFAFA'),
             onPressed: () {
-              handleFeedBackNotificationLendingOffer(
-                  offerModel: offerModel,
-                  notificationId: null,
-                  context: context,
-                  email: SevaCore.of(context).loggedInUser.email,
-                  feedbackType: FeedbackType.FOR_LENDING_OFFER_LENDER);
+              if (!lendingOfferAcceptorModel.isLenderGaveReview) {
+                handleFeedBackNotificationLendingOffer(
+                    offerModel: offerModel,
+                    notificationId: null,
+                    context: context,
+                    email: SevaCore.of(context).loggedInUser.email,
+                    feedbackType: FeedbackType.FOR_LENDING_OFFER_BORROWER,
+                    lendingOfferAcceptorModel: lendingOfferAcceptorModel);
+              }
             },
             child: Text(
-              S.of(context).review,
+              !lendingOfferAcceptorModel.isLenderGaveReview
+                  ? S.of(context).review
+                  : L.of(context).returned_items,
               style: TextStyle(color: Colors.black),
             ),
           )
@@ -238,9 +243,7 @@ class LendingOfferParticipants extends StatelessWidget {
         return [
           CustomElevatedButton(
             color: HexColor('#FAFAFA'),
-            onPressed: () {
-              //To be implemented by lending offer team
-            },
+            onPressed: () {},
             child: Text(
               L.of(context).items_taken,
               style: TextStyle(color: Colors.black),
@@ -251,9 +254,7 @@ class LendingOfferParticipants extends StatelessWidget {
         return [
           CustomElevatedButton(
             color: HexColor('#FAFAFA'),
-            onPressed: () {
-              //To be implemented by lending offer team
-            },
+            onPressed: () {},
             child: Text(
               L.of(context).arrived,
               style: TextStyle(color: Colors.black),
@@ -265,10 +266,20 @@ class LendingOfferParticipants extends StatelessWidget {
           CustomElevatedButton(
             color: HexColor('#FAFAFA'),
             onPressed: () {
-              //To be implemented by lending offer team
+              if (!lendingOfferAcceptorModel.isLenderGaveReview) {
+                handleFeedBackNotificationLendingOffer(
+                    offerModel: offerModel,
+                    notificationId: null,
+                    context: context,
+                    email: SevaCore.of(context).loggedInUser.email,
+                    feedbackType: FeedbackType.FOR_LENDING_OFFER_BORROWER,
+                    lendingOfferAcceptorModel: lendingOfferAcceptorModel);
+              }
             },
             child: Text(
-              L.of(context).departed,
+              !lendingOfferAcceptorModel.isLenderGaveReview
+                  ? S.of(context).review
+                  : L.of(context).departed,
               style: TextStyle(color: Colors.black),
             ),
           )

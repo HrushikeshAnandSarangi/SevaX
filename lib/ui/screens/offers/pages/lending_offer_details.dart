@@ -767,7 +767,8 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                         notificationId: null,
                         context: context,
                         email: SevaCore.of(context).loggedInUser.email,
-                        feedbackType: FeedbackType.FOR_LENDING_OFFER_BORROWER);
+                        feedbackType: FeedbackType.FOR_LENDING_OFFER_LENDER,
+                        lendingOfferAcceptorModel: lendingOfferAcceptorModel);
                   },
                 ),
               );
@@ -873,7 +874,8 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                         notificationId: null,
                         context: context,
                         email: SevaCore.of(context).loggedInUser.email,
-                        feedbackType: FeedbackType.FOR_LENDING_OFFER_BORROWER);
+                        feedbackType: FeedbackType.FOR_LENDING_OFFER_LENDER,
+                        lendingOfferAcceptorModel: lendingOfferAcceptorModel);
                   },
                 ),
               );

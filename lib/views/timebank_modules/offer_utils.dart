@@ -3,26 +3,31 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/acceptor_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
+import 'package:sevaexchange/ui/screens/offers/pages/lending_offer_participants.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/offer_details_router.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/custom_dialog.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
+import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/svea_credits_manager.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 import '../../flavor_config.dart';
 import '../core.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 
 String getCashDonationAmount({OfferModel offerDataModel}) {
   String TAGET_NOT_DEFINED = '';
@@ -351,12 +356,14 @@ void updateOffer({
   );
 }
 
-void handleFeedBackNotificationLendingOffer(
-    {BuildContext context,
-    OfferModel offerModel,
-    String notificationId,
-    String email,
-    FeedbackType feedbackType}) async {
+void handleFeedBackNotificationLendingOffer({
+  BuildContext context,
+  OfferModel offerModel,
+  String notificationId,
+  String email,
+  FeedbackType feedbackType,
+  LendingOfferAcceptorModel lendingOfferAcceptorModel,
+}) async {
   Map results = await Navigator.of(context).push(
     MaterialPageRoute(
       builder: (context) => ReviewFeedback(
@@ -383,13 +390,66 @@ void handleFeedBackNotificationLendingOffer(
     await handleVolunterFeedbackForTrustWorthynessNRealiablityScore(
         feedbackType, results, null, SevaCore.of(context).loggedInUser,
         offerModel: offerModel);
-/*
-      await sendMessageOfferCreator(
-          loggedInUser: SevaCore.of(context).loggedInUser,
-          message: results['didComment'] ? results['comment'] : "No comments",
-          creatorId: requestModel.sevaUserId,
-          offerTitle: requestModel.title,
-          isFromOfferRequest: requestModel.isFromOfferRequest);*/
-    //NotificationsRepository.readUserNotification(notificationId, email);
+    var loggedInUser = SevaCore.of(context).loggedInUser;
+    if (feedbackType == FeedbackType.FOR_LENDING_OFFER_LENDER) {
+      ParticipantInfo receiver = ParticipantInfo(
+        id: offerModel.sevaUserId,
+        photoUrl: offerModel.photoUrlImage,
+        name: offerModel.fullName,
+        type: ChatType.TYPE_PERSONAL,
+      );
+
+      ParticipantInfo sender = ParticipantInfo(
+        id: loggedInUser.sevaUserID,
+        photoUrl: loggedInUser.photoURL,
+        name: loggedInUser.fullname,
+        type: ChatType.TYPE_PERSONAL,
+      );
+      await sendBackgroundMessage(
+          messageContent: getReviewMessage(
+            reviewMessage:
+                results['didComment'] ? results['comment'] : "No comments",
+            userName: loggedInUser.fullname,
+            context: context,
+            requestTitle: offerModel.individualOfferDataModel.title,
+            isForCreator: true,
+            isOfferReview: true,
+          ),
+          reciever: receiver,
+          isTimebankMessage: false,
+          timebankId: '',
+          communityId: loggedInUser.currentCommunity,
+          sender: sender);
+    } else {
+      ParticipantInfo receiver = ParticipantInfo(
+        id: lendingOfferAcceptorModel.acceptorId,
+        photoUrl: lendingOfferAcceptorModel.acceptorphotoURL,
+        name: lendingOfferAcceptorModel.acceptorName,
+        type: ChatType.TYPE_PERSONAL,
+      );
+
+      ParticipantInfo sender = ParticipantInfo(
+        id: loggedInUser.sevaUserID,
+        photoUrl: loggedInUser.photoURL,
+        name: loggedInUser.fullname,
+        type: ChatType.TYPE_PERSONAL,
+      );
+      await sendBackgroundMessage(
+          messageContent: getReviewMessage(
+            reviewMessage:
+                results['didComment'] ? results['comment'] : "No comments",
+            userName: loggedInUser.fullname,
+            context: context,
+            requestTitle: offerModel.individualOfferDataModel.title,
+            isForCreator: false,
+            isOfferReview: true,
+          ),
+          reciever: receiver,
+          isTimebankMessage: false,
+          timebankId: '',
+          communityId: loggedInUser.currentCommunity,
+          sender: sender);
+      //NotificationsRepository.readUserNotification(notificationId, email);
+    }
   }
 }

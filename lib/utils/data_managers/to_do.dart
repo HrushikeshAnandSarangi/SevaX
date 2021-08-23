@@ -508,8 +508,6 @@ class ToDo {
     //for borrow request, request creator / Borrower needs to see in To do when needs to collect or check in
     List<OfferModel> lendingOfferBorrowerRequestApproved = toDoSink[6];
     lendingOfferBorrowerRequestApproved.forEach((model) async {
-      log('inside for loop ');
-
       LendingOfferAcceptorModel lendingOfferAcceptorModel =
           await LendingOffersRepo.getBorrowAcceptorModel(
               offerId: model.id, acceptorEmail: email);
