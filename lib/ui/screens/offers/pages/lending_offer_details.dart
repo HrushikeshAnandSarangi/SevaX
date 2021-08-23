@@ -56,6 +56,10 @@ class LendingOfferDetails extends StatefulWidget {
 class _LendingOfferDetailsState extends State<LendingOfferDetails> {
   LendingPlaceModel lendingPlaceModel;
   LendingItemModel lendingItemModel;
+  LendingOfferAcceptorModel lendingOfferAcceptorModel;
+  LendingOfferStatus lendingOfferStatus;
+  String lendingOfferStatusTitle = '';
+  String lendingOfferButtonActionTitle = '';
   LendingType lendingType;
   @override
   void initState() {
@@ -315,6 +319,9 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
     var offerAcceptors =
         widget.offerModel.lendingOfferDetailsModel.offerAcceptors ?? [];
     bool isApproved = approvedUsers.contains(email);
+    if (isApproved) {
+      getApprovedStatusLabel();
+    }
     bool isCreator = widget.offerModel.sevaUserId == userId;
     canDeleteOffer =
         isCreator && offerAcceptors.length == 0 && approvedUsers.length == 0;
@@ -344,19 +351,27 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                                 fontWeight: FontWeight.bold,
                               ),
                             )
-                          : TextSpan(
-                              text: isCreator
-                                  ? S.of(context).you_created_offer
-                                  : isAccepted
-                                      ? L.of(context).withdraw_lending_offer
-                                      : S
-                                          .of(context)
-                                          .would_like_to_accept_offer,
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
+                          : isApproved
+                              ? Text(
+                                  lendingOfferStatusTitle,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                )
+                              : TextSpan(
+                                  text: isCreator
+                                      ? S.of(context).you_created_offer
+                                      : isAccepted
+                                          ? L.of(context).withdraw_lending_offer
+                                          : S
+                                              .of(context)
+                                              .would_like_to_accept_offer,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                     ],
                   ),
                 ),
@@ -397,7 +412,8 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                   Offstage(offstage: !isCreator, child: editLendingOffer()),
                   Offstage(
                       offstage: isCreator,
-                      child: ActionButton(isAccepted: isAccepted)),
+                      child: ActionButton(
+                          isAccepted: isAccepted, isApproved: isApproved)),
                 ],
               ),
             ],
@@ -482,13 +498,47 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                   Offstage(offstage: !isCreator, child: editLendingOffer()),
                   Offstage(
                       offstage: isCreator,
-                      child: ActionButton(isAccepted: isAccepted)),
+                      child: ActionButton(
+                          isAccepted: isAccepted, isApproved: isApproved)),
                 ],
               ),
             ],
           ),
         ),
       );
+    }
+  }
+
+  void getApprovedStatusLabel() {
+    if (lendingOfferAcceptorModel != null) {
+      if (lendingOfferAcceptorModel.status == LendingOfferStatus.APPROVED &&
+          widget.offerModel.lendingOfferDetailsModel.lendingModel.lendingType ==
+              LendingType.PLACE) {
+        lendingOfferStatus = LendingOfferStatus.CHECKED_IN;
+        lendingOfferStatusTitle = S.of(context).request_approved;
+        lendingOfferButtonActionTitle = L.of(context).check_in;
+      } else if (lendingOfferAcceptorModel.status ==
+              LendingOfferStatus.APPROVED &&
+          widget.offerModel.lendingOfferDetailsModel.lendingModel.lendingType ==
+              LendingType.ITEM) {
+        lendingOfferStatus = LendingOfferStatus.ITEMS_COLLECTED;
+        lendingOfferStatusTitle = S.of(context).request_approved;
+
+        lendingOfferButtonActionTitle = L.of(context).collect_items;
+      } else if (lendingOfferAcceptorModel.status ==
+          LendingOfferStatus.CHECKED_IN) {
+        lendingOfferStatus = LendingOfferStatus.CHECKED_OUT;
+
+        lendingOfferStatusTitle = L.of(context).lending_offer_return_place_hint;
+        lendingOfferButtonActionTitle = L.of(context).check_out;
+      } else if (lendingOfferAcceptorModel.status ==
+          LendingOfferStatus.ITEMS_COLLECTED) {
+        lendingOfferStatus = LendingOfferStatus.ITEMS_RETURNED;
+        lendingOfferStatusTitle = L.of(context).lending_offer_return_items_hint;
+
+        lendingOfferButtonActionTitle = L.of(context).return_items;
+      }
+      setState(() {});
     }
   }
 
@@ -525,7 +575,7 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
     );
   }
 
-  Widget ActionButton({bool isAccepted}) {
+  Widget ActionButton({bool isAccepted, bool isApproved}) {
     return Container(
       width: 110,
       height: 32,
@@ -557,7 +607,11 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
               ),
               Spacer(),
               Text(
-                isAccepted ? S.of(context).withdraw : S.of(context).yes,
+                isApproved
+                    ? lendingOfferButtonActionTitle
+                    : isAccepted
+                        ? S.of(context).withdraw
+                        : S.of(context).yes,
                 style: TextStyle(
                   color: Colors.white,
                 ),
@@ -579,7 +633,12 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                   Provider.of<HomePageBaseBloc>(context, listen: false)
                       .timebankModel(widget.offerModel.timebankId);
             }
-            if (!isAccepted) {
+            if (isApproved) {
+              LendingOffersRepo.updateLendingOfferStatus(
+                  lendingOfferAcceptorModel: lendingOfferAcceptorModel,
+                  offerModel: widget.offerModel,
+                  lendingOfferStatus: lendingOfferStatus);
+            } else if (!isAccepted) {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => BorrowerAcceptLendingOffer(
@@ -622,7 +681,7 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
           if (snapshot.data == null) {
             return Container();
           }
-          LendingOfferAcceptorModel lendingOfferAcceptorModel = snapshot.data;
+          lendingOfferAcceptorModel = snapshot.data;
           if (lendingType == LendingType.PLACE) {
             if (lendingOfferAcceptorModel.status ==
                 LendingOfferStatus.APPROVED) {

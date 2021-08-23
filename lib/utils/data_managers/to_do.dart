@@ -161,8 +161,6 @@ class ToDo {
 
   static Stream<List<OfferModel>> getLendingOfferApprovedStream(
       {String email}) async* {
-    log('pending started');
-
     yield* CollectionRef.offers
         .where('requestType', isEqualTo: 'LENDING_OFFER')
         .where('lendingOfferDetailsModel.endDate',
@@ -510,10 +508,12 @@ class ToDo {
     //for borrow request, request creator / Borrower needs to see in To do when needs to collect or check in
     List<OfferModel> lendingOfferBorrowerRequestApproved = toDoSink[6];
     lendingOfferBorrowerRequestApproved.forEach((model) async {
+      log('inside for loop ');
+
       LendingOfferAcceptorModel lendingOfferAcceptorModel =
           await LendingOffersRepo.getBorrowAcceptorModel(
               offerId: model.id, acceptorEmail: email);
-
+      log('model ${lendingOfferAcceptorModel.status}');
       if (model.lendingOfferDetailsModel.lendingModel.lendingType ==
           LendingType.ITEM) {
         //FOR BORROW ITEMS

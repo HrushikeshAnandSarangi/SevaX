@@ -1556,11 +1556,6 @@ class _IndividualOfferState extends State<IndividualOffer> {
                   onValueChanged: (int val) {
                     if (val != _bloc.lendingOfferType) {
                       setState(() {
-                        if (val == 0) {
-                          _bloc.lendingOfferType = 0;
-                        } else {
-                          _bloc.lendingOfferType = 1;
-                        }
                         _bloc.lendingOfferType = val;
                       });
                     }

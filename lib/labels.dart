@@ -1363,4 +1363,9 @@ class L {
   String get lending_offer_return_items_tag => 'Lending Offer - Return Items';
   String get lending_offer_check_in_tag => 'Lending Offer - Arrival';
   String get lending_offer_check_out_tag => 'Lending Offer - Departure';
+  String get change_departure_date => 'Change departure date?';
+  String get lending_offer_return_items_hint =>
+      'Click here once you have returned item(s).';
+  String get lending_offer_return_place_hint =>
+      'Click here once you checked out of place';
 }
