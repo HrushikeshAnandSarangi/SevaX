@@ -120,7 +120,7 @@ handleVolunterFeedbackForTrustWorthynessNRealiablityScore(
         (error, stackTrace) => logger.e("ERROR FOR_BORROW_REQUEST_LENDER"));
     logger.i("## COMPLETED FOR_BORROW_REQUEST_LENDER");
   }
-  if (type == FeedbackType.FOR_LENDING_OFFER_LENDER) {
+  if (type == FeedbackType.FEEDBACK_FOR_BORROWER_FROM_LENDER) {
     var temp = results['ratings'];
     await CollectionRef.users
         .doc(offerModel.lendingOfferDetailsModel.approvedUsers.first)
@@ -132,7 +132,7 @@ handleVolunterFeedbackForTrustWorthynessNRealiablityScore(
           ratingCal(temp['0'] + temp['2']), user.trustworthinessscore)
     }, SetOptions(merge: true));
   }
-  if (type == FeedbackType.FOR_LENDING_OFFER_BORROWER) {
+  if (type == FeedbackType.FEEDBACK_FOR_LENDER_FROM_BORROWER) {
     var temp = results['ratings'];
     await CollectionRef.users.doc(offerModel.email).set({
       'totalReviews': FieldValue.increment(1),

@@ -379,9 +379,10 @@ void handleFeedBackNotificationLendingOffer({
     CollectionRef.reviews.add(
       {
         "reviewer": SevaCore.of(context).loggedInUser.email,
-        "reviewed": feedbackType == FeedbackType.FOR_LENDING_OFFER_LENDER
-            ? offerModel.lendingOfferDetailsModel.approvedUsers.first
-            : offerModel.email,
+        "reviewed":
+            feedbackType == FeedbackType.FEEDBACK_FOR_BORROWER_FROM_LENDER
+                ? offerModel.lendingOfferDetailsModel.approvedUsers.first
+                : offerModel.email,
         "ratings": results['selection'],
         "requestId": offerModel.id,
         "comments": results['didComment'] ? results['comment'] : "No comments",
@@ -392,7 +393,7 @@ void handleFeedBackNotificationLendingOffer({
     await handleVolunterFeedbackForTrustWorthynessNRealiablityScore(
         feedbackType, results, null, SevaCore.of(context).loggedInUser,
         offerModel: offerModel);
-    if (feedbackType == FeedbackType.FOR_LENDING_OFFER_LENDER) {
+    if (feedbackType == FeedbackType.FEEDBACK_FOR_BORROWER_FROM_LENDER) {
       lendingOfferAcceptorModel.isLenderGaveReview = true;
       await LendingOffersRepo.updateLendingParticipantModel(
           offerId: offerModel.id, model: lendingOfferAcceptorModel);
@@ -403,7 +404,7 @@ void handleFeedBackNotificationLendingOffer({
     }
 
     var loggedInUser = SevaCore.of(context).loggedInUser;
-    if (feedbackType == FeedbackType.FOR_LENDING_OFFER_BORROWER) {
+    if (feedbackType == FeedbackType.FEEDBACK_FOR_LENDER_FROM_BORROWER) {
       ParticipantInfo receiver = ParticipantInfo(
         id: offerModel.sevaUserId,
         photoUrl: offerModel.photoUrlImage,

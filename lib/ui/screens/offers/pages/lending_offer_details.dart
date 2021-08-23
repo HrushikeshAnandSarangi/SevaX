@@ -276,39 +276,43 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                                 height: 10,
                               ),
                               Text(
-                          L.of(context).estimated_value.replaceAll('*', ''),
-                          style: titleStyle,
-                        ),
-                        SizedBox(
-                          height: 2,
-                        ),
-                        Row(
-                          children: [
-                            Icon(Icons.attach_money, color: Colors.grey),
-                            Text(
-                              lendingType == LendingType.ITEM
-                                  ? widget
-                                      .offerModel
-                                      .lendingOfferDetailsModel
-                                      .lendingModel
-                                      .lendingItemModel
-                                      .estimatedValue
-                                      .toString()
-                                  : widget
-                                      .offerModel
-                                      .lendingOfferDetailsModel
-                                      .lendingModel
-                                      .lendingPlaceModel
-                                      .estimatedValue
-                                      .toString(),
-                              style:
-                                  TextStyle(fontSize: 16, color: Colors.black),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),InkWell(
+                                L
+                                    .of(context)
+                                    .estimated_value
+                                    .replaceAll('*', ''),
+                                style: titleStyle,
+                              ),
+                              SizedBox(
+                                height: 2,
+                              ),
+                              Row(
+                                children: [
+                                  Icon(Icons.attach_money, color: Colors.grey),
+                                  Text(
+                                    lendingType == LendingType.ITEM
+                                        ? widget
+                                            .offerModel
+                                            .lendingOfferDetailsModel
+                                            .lendingModel
+                                            .lendingItemModel
+                                            .estimatedValue
+                                            .toString()
+                                        : widget
+                                            .offerModel
+                                            .lendingOfferDetailsModel
+                                            .lendingModel
+                                            .lendingPlaceModel
+                                            .estimatedValue
+                                            .toString(),
+                                    style: TextStyle(
+                                        fontSize: 16, color: Colors.black),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              InkWell(
                                 child: Text(
                                   offerModel.lendingOfferDetailsModel
                                                   .lendingOfferAgreementLink ==
@@ -870,7 +874,8 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                           notificationId: null,
                           context: context,
                           email: SevaCore.of(context).loggedInUser.email,
-                          feedbackType: FeedbackType.FOR_LENDING_OFFER_BORROWER,
+                          feedbackType:
+                              FeedbackType.FEEDBACK_FOR_LENDER_FROM_BORROWER,
                           lendingOfferAcceptorModel: lendingOfferAcceptorModel);
                     },
                   ),
@@ -979,7 +984,8 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                           notificationId: null,
                           context: context,
                           email: SevaCore.of(context).loggedInUser.email,
-                          feedbackType: FeedbackType.FOR_LENDING_OFFER_BORROWER,
+                          feedbackType:
+                              FeedbackType.FEEDBACK_FOR_LENDER_FROM_BORROWER,
                           lendingOfferAcceptorModel: lendingOfferAcceptorModel);
                     },
                   ),

@@ -1290,7 +1290,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                               .loggedInUser
                                               .email,
                                           feedbackType: FeedbackType
-                                              .FOR_LENDING_OFFER_LENDER,
+                                              .FEEDBACK_FOR_BORROWER_FROM_LENDER,
                                           lendingOfferAcceptorModel:
                                               lendingOfferAcceptorModel);
                                     },
@@ -1383,7 +1383,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                               .loggedInUser
                                               .email,
                                           feedbackType: FeedbackType
-                                              .FOR_LENDING_OFFER_LENDER,
+                                              .FEEDBACK_FOR_BORROWER_FROM_LENDER,
                                           lendingOfferAcceptorModel:
                                               lendingOfferAcceptorModel);
                                     },
