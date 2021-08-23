@@ -2077,7 +2077,10 @@ class RequestEditFormState extends State<RequestEditForm> {
         decoration: InputDecoration(
           hintText: S.of(context).request_min_donation_hint,
           hintStyle: hintTextStyle,
+          // labelText: 'No. of volunteers',
           prefixIcon: Icon(Icons.attach_money),
+
+          // labelText: 'No. of volunteers',
         ),
         inputFormatters: [
           FilteringTextInputFormatter.allow(

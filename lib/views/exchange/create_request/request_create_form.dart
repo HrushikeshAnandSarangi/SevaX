@@ -131,13 +131,15 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
         ? _initializeCreateRequestModel()
         : _initializeEditRequestModel();
 
-    getTimebankAdminStatus = getTimebankDetailsbyFuture(
-      timebankId: _selectedTimebankId,
-    );
+    getTimebankAdminStatus = getTimebankDetailsbyFuture(timebankId: _selectedTimebankId);
     fetchRemoteConfig();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       selectedInstructorModel = SevaCore.of(context).loggedInUser;
+      UserModel loggedInUser = SevaCore.of(context).loggedInUser;
+      this.requestModel.email = loggedInUser.email;
+      this.requestModel.sevaUserId = loggedInUser.sevaUserID;
+      this.requestModel.communityId = loggedInUser.currentCommunity;
 
       FirestoreManager.getAllTimebankIdStream(
         timebankId: widget.timebankId,
@@ -272,16 +274,6 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
   @override
   Widget build(BuildContext context) {
     logger.e('CREATE EVENT STATUS: ' + createEvent.toString());
-    //TODO put the assigning in await before build check category
-/*
-
-*/
-
-    hoursMessage = S.of(context).set_duration;
-    UserModel loggedInUser = SevaCore.of(context).loggedInUser;
-    this.requestModel.email = loggedInUser.email;
-    this.requestModel.sevaUserId = loggedInUser.sevaUserID;
-    this.requestModel.communityId = loggedInUser.currentCommunity;
     log("=========>>>>>>>  FROM CREATE STATE ${this.requestModel.communityId} ");
 
     log('REQUEST TYPE:  ' + requestModel.requestType.toString());
@@ -1023,7 +1015,7 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
               speakerNotificationDocRef);
         }
       } else {
-        linearProgressForCreatingRequest(context);
+        linearProgressForCreatingRequest(context, S.of(context).creating_request);
 
         await requestUtils.createProjectOneToManyRequest(
             context: context,
@@ -1115,7 +1107,7 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
   }
 
   void continueCreateRequest({BuildContext confirmationDialogContext}) async {
-    linearProgressForCreatingRequest(context);
+    linearProgressForCreatingRequest(context, S.of(context).creating_request);
 
     List<String> resVar = await writeToDB(
         context: context,
@@ -1408,7 +1400,7 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
                     ),
                     onPressed: () async {
                       Navigator.pop(viewContext);
-                      linearProgressForCreatingRequest(context);
+                      linearProgressForCreatingRequest(context, S.of(context).updating_request);
                       await updateRequest(requestModel: requestModel);
                       Navigator.pop(dialogContext);
                       Navigator.pop(context);
@@ -1424,7 +1416,7 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
                     ),
                     onPressed: () async {
                       Navigator.pop(viewContext);
-                      linearProgressForCreatingRequest(context);
+                      linearProgressForCreatingRequest(context, S.of(context).updating_request);
                       await updateRequest(requestModel: requestModel);
                       await updateRecurrenceRequestsFrontEnd(
                         updatedRequestModel: requestModel,
@@ -1571,7 +1563,7 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
             ? requestModel.requestEnd = OfferDurationWidgetState.endtimestamp
             : null;
 
-        linearProgressForCreatingRequest(context);
+        linearProgressForCreatingRequest(context, S.of(context).updating_request);
         await updateRequest(requestModel: requestModel);
 
         Navigator.pop(dialogContext);

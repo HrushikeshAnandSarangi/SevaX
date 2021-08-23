@@ -330,7 +330,9 @@ class _CashRequestState extends State<CashRequest> {
             setState(() {});
           }
         },
-        initialValue: widget.requestModel.cashModel.minAmount.toString(),
+        initialValue: widget.formType == RequestFormType.CREATE
+            ? ''
+            : widget.requestModel.cashModel.minAmount.toString(),
         decoration: InputDecoration(
           hintText: S.of(context).request_min_donation_hint,
           hintStyle: requestUtils.hintTextStyle,

@@ -2423,7 +2423,7 @@ List<CategoryModel> updateInformation(List<CategoryModel> category) {
   // setState(() {});
 }
 
-linearProgressForCreatingRequest(context) {
+linearProgressForCreatingRequest(context, title) {
   showDialog(
       barrierDismissible: false,
       context: context,
@@ -2431,7 +2431,7 @@ linearProgressForCreatingRequest(context) {
       builder: (createDialogContext) {
         dialogContext = createDialogContext;
         return AlertDialog(
-          title: Text(S.of(context).creating_request),
+          title: Text(title),
           content: LinearProgressIndicator(),
         );
       });
@@ -2470,6 +2470,5 @@ Future reUpdateInvitedSpeakerForRequest(
       'invitedRequests': FieldValue.arrayUnion([requestID])
     },
   );
-
   await batch.commit();
 }
