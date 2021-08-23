@@ -663,6 +663,8 @@ class L {
 
   String get estimated_value => "Estimated value*";
 
+  String get contact_information => "Contact Information";
+
   String get add_place => "Add Place";
 
   String get lending_offer => "Lending Offer";
@@ -1185,8 +1187,7 @@ class L {
   String get select_a_item_lending =>
       "Select list of related items for Borrow*";
 
-  String get select_item_for_lending =>
-      "Select item for lending*";
+  String get select_item_for_lending => "Select item for lending*";
 
   String get items_validation =>
       "You have not selected any Items. Please select one or more before creating the Borrow request.";
