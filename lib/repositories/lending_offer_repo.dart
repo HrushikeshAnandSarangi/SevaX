@@ -18,6 +18,7 @@ import 'package:sevaexchange/ui/screens/offers/pages/time_offer_participant.dart
 import 'package:sevaexchange/ui/screens/offers/widgets/lending_offer_borrower_update.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/extensions.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 
@@ -69,7 +70,7 @@ class LendingOffersRepo {
 
   static Future<List<LendingModel>> getAllLendingItemModels(
       {@required String creatorId}) async {
-    log('items repo ${creatorId}');
+    logger.e('items repo ${creatorId}');
 
     List<LendingModel> modelList = [];
     await CollectionRef.lendingItems

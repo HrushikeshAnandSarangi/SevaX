@@ -22,6 +22,7 @@ class IndividualOfferBloc extends BlocBase with Validators {
   bool offerCreatedBool = false;
   var timeOfferType = 0;
   var lendingOfferType = 0;
+  var lendingOfferTypeMode = 0;
   int startTime;
   int endTime;
   List<String> offerIds = [];
@@ -266,6 +267,11 @@ class IndividualOfferBloc extends BlocBase with Validators {
     }
     if (offerModel.lendingOfferDetailsModel != null) {
       _lendingModel.add(offerModel.lendingOfferDetailsModel.lendingModel);
+      lendingOfferTypeMode =
+          offerModel.lendingOfferDetailsModel.lendingOfferTypeMode == 'SPOT_ON'
+              ? 0
+              : 1;
+      ;
     }
     _location.add(
       CustomLocation(
@@ -357,7 +363,7 @@ class IndividualOfferBloc extends BlocBase with Validators {
         individualOfferDataModel.minimumCredits = 0;
 
         individualOfferDataModel.timeOfferType =
-            timeOfferType == 0 ? 'SPOT_ON' : 'ONE_TIME';
+            lendingOfferType == 0 ? 'SPOT_ON' : 'ONE_TIME';
 
         OfferModel offerModel = OfferModel(
             id: id,
@@ -383,6 +389,8 @@ class IndividualOfferBloc extends BlocBase with Validators {
               ..lendingOfferAgreementName = lendingOfferAgreementName
               ..startDate = startTime
               ..endDate = endTime
+              ..lendingOfferTypeMode =
+                  lendingOfferTypeMode == 0 ? 'SPOT_ON' : 'ONE_TIME'
               ..agreementConfig = agreementConfig ?? {},
             individualOfferDataModel: IndividualOfferDataModel()
               ..title = _title.value
@@ -432,12 +440,16 @@ class IndividualOfferBloc extends BlocBase with Validators {
           ..lendingOfferAgreementName = lendingOfferAgreementName
           ..startDate = startTime
           ..endDate = endTime
+          ..lendingOfferTypeMode =
+              lendingOfferTypeMode == 0 ? 'SPOT_ON' : 'ONE_TIME'
           ..agreementConfig = agreementConfig ?? {};
         offer.timebanksPosted = _makeVirtual.value
             ? [offer.timebankId, FlavorConfig.values.timebankId]
             : [offer.timebankId];
         offer.individualOfferDataModel.title = _title.value;
         offer.individualOfferDataModel.description = _offerDescription.value;
+        offer.individualOfferDataModel.timeOfferType =
+            lendingOfferTypeMode == 0 ? 'SPOT_ON' : 'ONE_TIME';
         updateOfferWithRequest(offer: offer).then((_) {
           _status.add(Status.COMPLETE);
         }).catchError((e) => _status.add(Status.ERROR));

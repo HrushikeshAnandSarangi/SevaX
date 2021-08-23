@@ -127,6 +127,11 @@ class _IndividualOfferState extends State<IndividualOffer> {
                   LendingType.PLACE
               ? 0
               : 1;
+          _bloc.lendingOfferTypeMode =
+              widget.offerModel.lendingOfferDetailsModel.lendingOfferTypeMode ==
+                      'SPOT_ON'
+                  ? 0
+                  : 1;
           if (widget.offerModel.lendingOfferDetailsModel
                   .lendingOfferAgreementLink !=
               null) {
@@ -1684,16 +1689,45 @@ class _IndividualOfferState extends State<IndividualOffer> {
           },
         ),
         SizedBox(height: 12),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              S.of(context).agreement,
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+            ),
+            SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.68,
+                  child: Text(
+                    S.of(context).request_agreement_form_component_text,
+                    style: TextStyle(fontSize: 14),
+                    softWrap: true,
+                  ),
+                ),
+                Image(
+                  width: 50,
+                  image: AssetImage(
+                      'lib/assets/images/request_offer_agreement_icon.png'),
+                ),
+              ],
+            ),
+          ],
+        ),
+        SizedBox(height: 12),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(documentName != null ? S.of(context).view : ' '),
-                GestureDetector(
+                InkWell(
                     child: Container(
                       alignment: Alignment.topLeft,
                       width: MediaQuery.of(context).size.width * 0.55,
@@ -1801,7 +1835,48 @@ class _IndividualOfferState extends State<IndividualOffer> {
             ),
           ],
         ),
-        SizedBox(height: 10),
+        SizedBox(height: 22),
+        Container(
+          alignment: Alignment.bottomLeft,
+          child: CupertinoSegmentedControl<int>(
+            unselectedColor: Colors.grey[200],
+            selectedColor: Theme.of(context).primaryColor,
+            children: {
+              0: Padding(
+                padding: EdgeInsets.only(left: 14, right: 14),
+                child: Text(
+                  S.of(context).option_one, //Label to be created
+                  style: TextStyle(fontSize: 12.0),
+                ),
+              ),
+              1: Padding(
+                padding: EdgeInsets.only(left: 14, right: 14),
+                child: Text(
+                  S.of(context).option_two, //Label to be created
+                  style: TextStyle(fontSize: 12.0),
+                ),
+              ),
+            },
+
+            borderColor: Colors.grey,
+            padding: EdgeInsets.only(left: 0.0, right: 0.0),
+            groupValue: _bloc.lendingOfferTypeMode,
+            onValueChanged: (int val) {
+              if (val != _bloc.lendingOfferTypeMode) {
+                setState(() {
+                  if (val == 0) {
+                    _bloc.lendingOfferTypeMode = 0;
+                  } else {
+                    _bloc.lendingOfferTypeMode = 1;
+                  }
+                  _bloc.lendingOfferTypeMode = val;
+                });
+              }
+            },
+            //groupValue: sharedValue,
+          ),
+        ),
+        SizedBox(height: 18),
         Text(
           L.of(context).address,
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
