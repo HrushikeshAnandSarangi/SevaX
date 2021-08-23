@@ -321,6 +321,7 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
     bool isApproved = approvedUsers.contains(email);
     if (isApproved) {
       getApprovedStatusLabel();
+      setState(() {});
     }
     bool isCreator = widget.offerModel.sevaUserId == userId;
     canDeleteOffer =
@@ -352,8 +353,8 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                               ),
                             )
                           : isApproved
-                              ? Text(
-                                  lendingOfferStatusTitle,
+                              ? TextSpan(
+                                  text: lendingOfferStatusTitle,
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -445,19 +446,27 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                                 fontWeight: FontWeight.bold,
                               ),
                             )
-                          : TextSpan(
-                              text: isCreator
-                                  ? S.of(context).you_created_offer
-                                  : isAccepted
-                                      ? L.of(context).withdraw_lending_offer
-                                      : S
-                                          .of(context)
-                                          .would_like_to_accept_offer,
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
+                          : isApproved
+                              ? TextSpan(
+                                  text: lendingOfferStatusTitle,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                )
+                              : TextSpan(
+                                  text: isCreator
+                                      ? S.of(context).you_created_offer
+                                      : isAccepted
+                                          ? L.of(context).withdraw_lending_offer
+                                          : S
+                                              .of(context)
+                                              .would_like_to_accept_offer,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                     ],
                   ),
                 ),
@@ -538,7 +547,6 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
 
         lendingOfferButtonActionTitle = L.of(context).return_items;
       }
-      setState(() {});
     }
   }
 
@@ -634,10 +642,13 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                       .timebankModel(widget.offerModel.timebankId);
             }
             if (isApproved) {
-              LendingOffersRepo.updateLendingOfferStatus(
-                  lendingOfferAcceptorModel: lendingOfferAcceptorModel,
-                  offerModel: widget.offerModel,
-                  lendingOfferStatus: lendingOfferStatus);
+              await LendingOffersRepo.updateLendingOfferStatus(
+                      lendingOfferAcceptorModel: lendingOfferAcceptorModel,
+                      offerModel: widget.offerModel,
+                      lendingOfferStatus: lendingOfferStatus)
+                  .then((value) {
+                Navigator.of(context).pop();
+              });
             } else if (!isAccepted) {
               Navigator.of(context).push(
                 MaterialPageRoute(
