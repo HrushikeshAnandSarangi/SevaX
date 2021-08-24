@@ -1391,7 +1391,9 @@ class L {
   String get lending_offer_return_place_hint =>
       'Click here once you checked out of place';
   String get borrower_returned_items_feedback =>
-      'The Borrower returned items. Tap to leave a feedback.';
+      'You returned items. Tap to leave a feedback.';
   String get borrower_departed_provide_feedback =>
-      'The Borrower checked out from place. Tap to leave a feedback.';
+      'You checked out from place. Tap to leave a feedback.';
+  String get check_out_alert => 'Are you sure you want to check out?';
+  String get return_items_alert => 'Are you sure you want to return items?';
 }

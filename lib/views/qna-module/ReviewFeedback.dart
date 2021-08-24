@@ -352,6 +352,8 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
     if (widget.feedbackType == FeedbackType.FOR_REQUEST_VOLUNTEER ||
         widget.feedbackType == FeedbackType.FOR_BORROW_REQUEST_BORROWER ||
         widget.feedbackType == FeedbackType.FOR_BORROW_REQUEST_LENDER ||
+        widget.feedbackType == FeedbackType.FEEDBACK_FOR_BORROWER_FROM_LENDER ||
+        widget.feedbackType == FeedbackType.FEEDBACK_FOR_LENDER_FROM_BORROWER ||
         widget.feedbackType == FeedbackType.FOR_ONE_TO_MANY_REQUEST_ATTENDEE) {
       widgettype = StarRating();
     } else {

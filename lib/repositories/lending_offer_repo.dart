@@ -405,6 +405,10 @@ class LendingOffersRepo {
     } else if (lendingOfferStatus == LendingOfferStatus.CHECKED_OUT) {
       notificationType =
           NotificationType.NOTIFICATION_TO_LENDER_PLACE_CHECKED_OUT;
+      if (offerModel.lendingOfferDetailsModel.lendingOfferTypeMode ==
+          'ONE_TIME') {
+        offerModel.acceptedOffer = true;
+      }
       offerModel.lendingOfferDetailsModel.checkedOut = true;
       offerModel.lendingOfferDetailsModel.checkedIn = false;
     } else if (lendingOfferStatus == LendingOfferStatus.ITEMS_COLLECTED) {
@@ -413,6 +417,10 @@ class LendingOffersRepo {
       offerModel.lendingOfferDetailsModel.collectedItems = true;
     } else if (lendingOfferStatus == LendingOfferStatus.ITEMS_RETURNED) {
       notificationType = NotificationType.NOTIFICATION_TO_LENDER_ITEMS_RETURNED;
+      if (offerModel.lendingOfferDetailsModel.lendingOfferTypeMode ==
+          'ONE_TIME') {
+        offerModel.acceptedOffer = true;
+      }
       offerModel.lendingOfferDetailsModel.returnedItems = true;
       offerModel.lendingOfferDetailsModel.collectedItems = false;
     }
@@ -445,6 +453,27 @@ class LendingOffersRepo {
       notification.toMap(),
       SetOptions(merge: true),
     );
+    if (lendingOfferStatus == LendingOfferStatus.ITEMS_RETURNED ||
+        lendingOfferStatus == LendingOfferStatus.CHECKED_OUT) {
+      NotificationsModel feedbackNotification = NotificationsModel(
+          timebankId: offerModel.timebankId,
+          id: utils.Utils.getUuid(),
+          targetUserId: lendingOfferAcceptorModel.acceptorId,
+          senderUserId: offerModel.sevaUserId,
+          type: NotificationType.NOTIFICATION_TO_BORROWER_FOR_LENDING_FEEDBACK,
+          data: offerModel.toMap(),
+          communityId: lendingOfferAcceptorModel.communityId,
+          isTimebankNotification: false,
+          isRead: false,
+          senderPhotoUrl: offerModel.photoUrlImage);
+      batch.set(
+        CollectionRef.userNotification(lendingOfferAcceptorModel.acceptorEmail)
+            .doc(feedbackNotification.id),
+        feedbackNotification.toMap(),
+        SetOptions(merge: true),
+      );
+    }
+
     await batch.commit();
   }
 

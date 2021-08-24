@@ -68,18 +68,6 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
   @override
   void initState() {
     // TODO: implement initState
-    if (widget.offerModel.lendingOfferDetailsModel.lendingModel.lendingType ==
-        LendingType.PLACE) {
-      lendingPlaceModel = widget
-          .offerModel.lendingOfferDetailsModel.lendingModel.lendingPlaceModel;
-      lendingType = LendingType.PLACE;
-    } else {
-      lendingItemModel = widget
-          .offerModel.lendingOfferDetailsModel.lendingModel.lendingItemModel;
-
-      lendingType = LendingType.ITEM;
-    }
-    setState(() {});
     super.initState();
   }
 
@@ -97,13 +85,21 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
               offerModel = widget.offerModel;
             }
             offerModel = snapshot.data;
+            if (offerModel.lendingOfferDetailsModel.lendingModel.lendingType ==
+                LendingType.PLACE) {
+              lendingPlaceModel = offerModel
+                  .lendingOfferDetailsModel.lendingModel.lendingPlaceModel;
+              lendingType = LendingType.PLACE;
+            } else {
+              lendingItemModel = offerModel
+                  .lendingOfferDetailsModel.lendingModel.lendingItemModel;
+
+              lendingType = LendingType.ITEM;
+            }
             var approvedUsers =
                 offerModel.lendingOfferDetailsModel.approvedUsers ?? [];
             isApproved =
                 approvedUsers.contains(SevaCore.of(context).loggedInUser.email);
-            if (isApproved) {
-              getApprovedStatusLabel();
-            }
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -447,7 +443,7 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                             )
                           : isApproved
                               ? TextSpan(
-                                  text: lendingOfferStatusTitle,
+                                  text: getStatusLabel(),
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -478,21 +474,18 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                 children: [
                   canDeleteOffer ||
                           utils.isDeletable(
-                            communityCreatorId: widget.timebankModel != null
-                                ? isPrimaryTimebank(
-                                    parentTimebankId:
-                                        widget.timebankModel.parentTimebankId,
-                                  )
-                                    ? widget.timebankModel.creatorId
-                                    : (widget.timebankModel.managedCreatorIds !=
-                                                null &&
-                                            widget.timebankModel
-                                                    .managedCreatorIds.length >
-                                                0)
-                                        ? widget
-                                            .timebankModel.managedCreatorIds[0]
-                                        : ''
-                                : '',
+                            communityCreatorId: isPrimaryTimebank(
+                              parentTimebankId:
+                                  widget.timebankModel.parentTimebankId,
+                            )
+                                ? widget.timebankModel.creatorId
+                                : (widget.timebankModel.managedCreatorIds !=
+                                            null &&
+                                        widget.timebankModel.managedCreatorIds
+                                                .length >
+                                            0)
+                                    ? widget.timebankModel.managedCreatorIds[0]
+                                    : '',
                             // communityCreatorId: timebankModel != null ,
                             context: context,
                             contentCreatorId: offerModel.sevaUserId,
@@ -542,7 +535,7 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                             )
                           : isApproved
                               ? TextSpan(
-                                  text: lendingOfferStatusTitle,
+                                  text: getStatusLabel(),
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -614,41 +607,54 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
     }
   }
 
-  void getApprovedStatusLabel() {
-    if (lendingOfferAcceptorModel != null) {
-      if (lendingOfferAcceptorModel.status == LendingOfferStatus.APPROVED &&
-          offerModel.lendingOfferDetailsModel.lendingModel.lendingType ==
-              LendingType.PLACE) {
-        lendingOfferStatus = LendingOfferStatus.CHECKED_IN;
-        lendingOfferStatusTitle = S.of(context).request_approved;
-        lendingOfferButtonActionTitle = L.of(context).check_in;
-      } else if (lendingOfferAcceptorModel.status ==
-              LendingOfferStatus.APPROVED &&
-          offerModel.lendingOfferDetailsModel.lendingModel.lendingType ==
-              LendingType.ITEM) {
-        lendingOfferStatus = LendingOfferStatus.ITEMS_COLLECTED;
-        lendingOfferStatusTitle = S.of(context).request_approved;
+  String getButtonActionLabel() {
+    if (offerModel.lendingOfferDetailsModel.lendingModel.lendingType ==
+            LendingType.PLACE &&
+        !offerModel.lendingOfferDetailsModel.checkedIn &&
+        !offerModel.lendingOfferDetailsModel.checkedOut) {
+      lendingOfferStatus = LendingOfferStatus.CHECKED_IN;
+      return L.of(context).check_in;
+    } else if (offerModel.lendingOfferDetailsModel.lendingModel.lendingType ==
+            LendingType.ITEM &&
+        !offerModel.lendingOfferDetailsModel.collectedItems &&
+        !offerModel.lendingOfferDetailsModel.returnedItems) {
+      return L.of(context).collect_items;
+    } else if (offerModel.lendingOfferDetailsModel.checkedIn) {
+      return L.of(context).check_out;
+    } else if (offerModel.lendingOfferDetailsModel.collectedItems) {
+      return L.of(context).return_items;
+    } else if (offerModel.lendingOfferDetailsModel.returnedItems) {
+      return L.of(context).returned_items;
+    } else if (offerModel.lendingOfferDetailsModel.checkedOut) {
+      return L.of(context).checked_out;
+    }
+  }
 
-        lendingOfferButtonActionTitle = L.of(context).collect_items;
-      } else if (lendingOfferAcceptorModel.status ==
-          LendingOfferStatus.CHECKED_IN) {
-        lendingOfferStatus = LendingOfferStatus.CHECKED_OUT;
+  String getStatusLabel() {
+    if (offerModel.lendingOfferDetailsModel.lendingModel.lendingType ==
+            LendingType.PLACE &&
+        !offerModel.lendingOfferDetailsModel.checkedIn &&
+        !offerModel.lendingOfferDetailsModel.checkedOut) {
+      lendingOfferStatus = LendingOfferStatus.CHECKED_IN;
+      return S.of(context).request_approved;
+    } else if (offerModel.lendingOfferDetailsModel.lendingModel.lendingType ==
+            LendingType.ITEM &&
+        !offerModel.lendingOfferDetailsModel.collectedItems &&
+        !offerModel.lendingOfferDetailsModel.returnedItems) {
+      return S.of(context).request_approved;
+    } else if (offerModel.lendingOfferDetailsModel.checkedIn) {
+      lendingOfferStatus = LendingOfferStatus.CHECKED_OUT;
 
-        lendingOfferStatusTitle = L.of(context).lending_offer_return_place_hint;
-        lendingOfferButtonActionTitle = L.of(context).check_out;
-      } else if (lendingOfferAcceptorModel.status ==
-          LendingOfferStatus.ITEMS_COLLECTED) {
-        lendingOfferStatus = LendingOfferStatus.ITEMS_RETURNED;
-        lendingOfferStatusTitle = L.of(context).lending_offer_return_items_hint;
-
-        lendingOfferButtonActionTitle = L.of(context).return_items;
-      } else if (lendingOfferAcceptorModel.status ==
-          LendingOfferStatus.CHECKED_OUT) {
-        lendingOfferStatus = LendingOfferStatus.CHECKED_OUT;
-        lendingOfferStatusTitle = L.of(context).checked_out;
-
-        lendingOfferButtonActionTitle = L.of(context).checked_out;
-      }
+      return L.of(context).lending_offer_return_place_hint;
+    } else if (offerModel.lendingOfferDetailsModel.collectedItems) {
+      lendingOfferStatus = LendingOfferStatus.ITEMS_RETURNED;
+      return L.of(context).lending_offer_return_items_hint;
+    } else if (offerModel.lendingOfferDetailsModel.returnedItems) {
+      lendingOfferStatus = LendingOfferStatus.ITEMS_RETURNED;
+      return L.of(context).returned_items;
+    } else if (offerModel.lendingOfferDetailsModel.checkedOut) {
+      lendingOfferStatus = LendingOfferStatus.CHECKED_OUT;
+      return L.of(context).checked_out;
     }
   }
 
@@ -720,7 +726,7 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
               Spacer(),
               Text(
                 isApproved
-                    ? lendingOfferButtonActionTitle
+                    ? getButtonActionLabel()
                     : isAccepted
                         ? S.of(context).withdraw
                         : S.of(context).yes,
@@ -746,13 +752,90 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                       .timebankModel(offerModel.timebankId);
             }
             if (isApproved) {
-              await LendingOffersRepo.updateLendingOfferStatus(
-                      lendingOfferAcceptorModel: lendingOfferAcceptorModel,
-                      offerModel: offerModel,
-                      lendingOfferStatus: lendingOfferStatus)
-                  .then((value) {
-                Navigator.of(context).pop();
-              });
+              if (lendingOfferStatus == LendingOfferStatus.CHECKED_OUT ||
+                  lendingOfferStatus == LendingOfferStatus.ITEMS_RETURNED) {
+                showDialog<bool>(
+                  context: context,
+                  builder: (BuildContext _context) {
+                    // return object of type Dialog
+                    return AlertDialog(
+                      title: Text(
+                          lendingOfferStatus == LendingOfferStatus.CHECKED_OUT
+                              ? L.of(context).check_out
+                              : L.of(context).return_items),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Text(
+                            lendingOfferStatus == LendingOfferStatus.CHECKED_OUT
+                                ? L.of(context).check_out_alert
+                                : L.of(context).return_items_alert,
+                          ),
+                          SizedBox(height: 10),
+                          Row(
+                            children: <Widget>[
+                              Spacer(),
+                              CustomTextButton(
+                                padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                                shape: StadiumBorder(),
+                                color: HexColor("#d2d2d2"),
+                                child: Text(
+                                  S.of(context).cancel,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: 'Europa',
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                onPressed: () {
+                                  Navigator.of(_context).pop();
+                                },
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              CustomTextButton(
+                                shape: StadiumBorder(),
+                                padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                                color: Theme.of(context).accentColor,
+                                child: Text(
+                                  S.of(context).yes,
+                                  style: TextStyle(
+                                    fontFamily: 'Europa',
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                onPressed: () async {
+                                  Navigator.of(_context).pop();
+                                  await LendingOffersRepo
+                                          .updateLendingOfferStatus(
+                                              lendingOfferAcceptorModel:
+                                                  lendingOfferAcceptorModel,
+                                              offerModel: offerModel,
+                                              lendingOfferStatus:
+                                                  lendingOfferStatus)
+                                      .then((value) {
+                                    Navigator.of(context).pop();
+                                  });
+                                },
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    );
+                  },
+                );
+              } else {
+                await LendingOffersRepo.updateLendingOfferStatus(
+                        lendingOfferAcceptorModel: lendingOfferAcceptorModel,
+                        offerModel: offerModel,
+                        lendingOfferStatus: lendingOfferStatus)
+                    .then((value) {
+                  Navigator.of(context).pop();
+                });
+              }
             } else if (!isAccepted) {
               Navigator.of(context)
                   .push(
@@ -862,8 +945,9 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                         lendingOfferAcceptorModel.endDate),
                     timezoneAbb: SevaCore.of(context).loggedInUser.timezone),
               );
-              additionalInstruction = L.of(context).share_feedback_place;
               if (!lendingOfferAcceptorModel.isBorrowerGaveReview) {
+                additionalInstruction = L.of(context).share_feedback_place;
+
                 reviewWidget = Center(
                   child: CustomChip(
                     label: S.of(context).review,
@@ -972,8 +1056,9 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                               SevaCore.of(context).loggedInUser.timezone,
                         ),
                       );
-              additionalInstruction = L.of(context).share_feedback_place;
               if (!lendingOfferAcceptorModel.isBorrowerGaveReview) {
+                additionalInstruction = L.of(context).share_feedback_place;
+
                 reviewWidget = Center(
                   child: CustomChip(
                     label: S.of(context).review,

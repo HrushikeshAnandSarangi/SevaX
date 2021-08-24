@@ -1404,7 +1404,39 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                 : Container();
                           });
                       break;
+                    case NotificationType
+                        .NOTIFICATION_TO_BORROWER_FOR_LENDING_FEEDBACK:
+                      var model = OfferModel.fromMap(notification.data);
+                      return NotificationCard(
+                        timestamp: notification.timestamp,
+                        entityName: 'NAME',
+                        isDissmissible: true,
+                        onPressed: () async {
+                          LendingOfferAcceptorModel lendingOfferAcceptorModel =
+                              await LendingOffersRepo.getBorrowAcceptorModel(
+                                  offerId: model.id, acceptorEmail: user.email);
+                          handleFeedBackNotificationLendingOffer(
+                              offerModel: model,
+                              notificationId: notification.id,
+                              context: context,
+                              email: SevaCore.of(context).loggedInUser.email,
+                              feedbackType: FeedbackType
+                                  .FEEDBACK_FOR_LENDER_FROM_BORROWER,
+                              lendingOfferAcceptorModel:
+                                  lendingOfferAcceptorModel);
+                        },
+                        photoUrl:
+                            notification.senderPhotoUrl ?? defaultUserImageURL,
+                        title: '${model.individualOfferDataModel.title}',
+                        subTitle:
+                            "${model.lendingOfferDetailsModel.lendingModel.lendingType == LendingType.PLACE ? L.of(context).borrower_departed_provide_feedback : L.of(context).borrower_returned_items_feedback}",
+                        onDismissed: () {
+                          NotificationsRepository.readUserNotification(
+                              notification.id, user.email);
+                        },
+                      );
 
+                      break;
                     case NotificationType.LendingOfferIdleFirstWarning:
                       OfferModel model = OfferModel.fromMap(notification.data);
                       offerModelNew = model;
