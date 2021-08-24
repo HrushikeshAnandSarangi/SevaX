@@ -202,15 +202,19 @@ class SearchManager {
   }
 
   //searcch borrow agreement template
-  static Stream<List<AgreementTemplateModel>> searchAgreementTemplate({
-    @required queryString,
-  }) async* {
+  static Stream<List<AgreementTemplateModel>> searchAgreementTemplate(
+      {@required queryString,
+      @required placeOrItem,
+      @required creatorId}) async* {
     String url =
         '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/agreement_templates/_doc/_search';
     dynamic body = json.encode({
       "query": {
         "bool": {
           "must": [
+            {
+              "term": {"creatorId.keyword": creatorId}
+            },
             {
               "multi_match": {
                 "query": queryString,
@@ -232,7 +236,7 @@ class SearchManager {
       Map<String, dynamic> sourceMap = map['_source'];
       var template = AgreementTemplateModel.fromMap(sourceMap);
 
-      if (template.softDelete == false) {
+      if (template.softDelete == false && template.placeOrItem == placeOrItem) {
         templatesList.add(template);
       }
     });

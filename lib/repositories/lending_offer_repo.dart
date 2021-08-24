@@ -304,7 +304,8 @@ class LendingOffersRepo {
       {@required OfferModel model,
       @required LendingOfferAcceptorModel lendingOfferAcceptorModel,
       @required String lendingOfferApprovedAgreementLink,
-      String additionalInstructionsText}) async {
+      String additionalInstructionsText,
+      String agreementId}) async {
     model.lendingOfferDetailsModel.offerAcceptors
         .remove(lendingOfferAcceptorModel.acceptorEmail);
     model.lendingOfferDetailsModel.approvedUsers
@@ -346,6 +347,8 @@ class LendingOffersRepo {
       'additionalInstructions': additionalInstructionsText ?? '',
       'startDate': lendingOfferAcceptorModel.startDate,
       'endDate': lendingOfferAcceptorModel.endDate,
+      'approvedAgreementId': agreementId.isNotEmpty ? agreementId : '',
+      'borrowAgreementLink': lendingOfferApprovedAgreementLink,
     });
     batch.set(
       acceptorNotificationRef,

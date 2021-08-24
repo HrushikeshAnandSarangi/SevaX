@@ -13,6 +13,7 @@ class BorrowAcceptorModel {
     this.acceptorName,
     this.acceptorMobile,
     this.borrowAgreementLink,
+    this.agreementId,
     this.selectedAddress,
     this.isApproved,
     this.borrowedItemsIds,
@@ -30,6 +31,7 @@ class BorrowAcceptorModel {
   String acceptorName;
   String acceptorMobile;
   String borrowAgreementLink;
+  String agreementId;
   String selectedAddress;
   bool isApproved;
   List<String> borrowedItemsIds;
@@ -58,6 +60,7 @@ class BorrowAcceptorModel {
         borrowAgreementLink: json["borrowAgreementLink"] == null
             ? null
             : json["borrowAgreementLink"],
+        agreementId: json["agreementId"] == null ? null : json["agreementId"],
         selectedAddress:
             json["selectedAddress"] == null ? null : json["selectedAddress"],
         isApproved: json["isApproved"] == null ? null : json["isApproved"],
@@ -85,6 +88,7 @@ class BorrowAcceptorModel {
         "acceptorMobile": acceptorMobile == null ? null : acceptorMobile,
         "borrowAgreementLink":
             borrowAgreementLink == null ? null : borrowAgreementLink,
+        "agreementId": agreementId == null ? null : agreementId,
         "selectedAddress": selectedAddress == null ? null : selectedAddress,
         "isApproved": isApproved == null ? null : isApproved,
         "borrowedItemsIds": borrowedItemsIds == null

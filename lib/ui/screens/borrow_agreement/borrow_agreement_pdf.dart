@@ -31,6 +31,7 @@ class BorrowAgreementPdf {
       material.BuildContext contextMain,
       RequestModel requestModel,
       LendingModel lendingModel,
+      List<LendingModel> lendingModelListBorrowRequest,
       String borrower,
       String documentName,
       bool isOffer,
@@ -43,8 +44,8 @@ class BorrowAgreementPdf {
       bool isDeliveryReturn, //for borrow/lend ITEM
       bool isMaintainRepair, //for borrow/lend ITEM
       bool isRefundDepositNeeded, //for borrow/lend PLACE
-      bool isMaintainAndclean //for borrow/lend PLACE
-      ) async {
+      bool isMaintainAndclean, //for borrow/lend PLACE
+      String agreementId) async {
     progressDialog = ProgressDialog(
       contextMain,
       type: ProgressDialogType.Normal,
@@ -158,6 +159,16 @@ class BorrowAgreementPdf {
 
           SizedBox(height: 10),
 
+          Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(L.of(contextMain).agreement_id,
+                style: TextStyle(fontSize: 16)),
+            SizedBox(width: 8),
+            Text(
+              agreementId ?? 'Not available',
+              style: TextStyle(fontSize: 14),
+            ),
+          ]),
+
           Divider(thickness: 1, color: PdfColors.grey),
 
           SizedBox(height: 20),
@@ -252,7 +263,7 @@ class BorrowAgreementPdf {
           SizedBox(height: 35),
 
           //Lending Offer Estimated Value of Item(s)/Place
-          lendingModel != null
+          (lendingModel != null && isOffer)
               ? Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -262,7 +273,7 @@ class BorrowAgreementPdf {
                         Text(
                           (lendingModel.lendingType == LendingType.PLACE
                                   ? L.of(contextMain).name_place
-                                  : L.of(contextMain).name_place) +
+                                  : L.of(contextMain).name_item) +
                               ': ',
                           style: TextStyle(fontSize: 16),
                         ),
@@ -307,8 +318,89 @@ class BorrowAgreementPdf {
           //______________________________>
 
           //Borrow Request Estimated Value of Item(s)/Place
-          // TO BE IMPLEMENTED
-          //fetch the value from items added when lender approves in lender approval page
+          (!isOffer && placeOrItem == LendingType.PLACE.readable)
+              ? //FOR PLACE AGREEMENT | BORROW REQUEST
+              Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          L.of(contextMain).name_place + ': ',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        SizedBox(width: 5),
+                        Text(
+                          lendingModel.lendingPlaceModel.placeName.toString(),
+                          style: TextStyle(fontSize: 15),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                            L
+                                    .of(contextMain)
+                                    .estimated_value
+                                    .replaceAll('*', '') +
+                                ': ',
+                            style: TextStyle(fontSize: 16)),
+                        SizedBox(width: 5),
+                        Text(
+                            lendingModel.lendingPlaceModel.estimatedValue
+                                .toString(),
+                            style: TextStyle(fontSize: 15)),
+                      ],
+                    ),
+                  ],
+                )
+              :
+              //FOR ITEM AGREEMENT | BORROW REQUEST
+              (lendingModelListBorrowRequest != null &&
+                      !isOffer &&
+                      placeOrItem == LendingType.ITEM.readable)
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          L.of(contextMain).estimated_value_items,
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        SizedBox(height: 10),
+                        ListView(
+                          // physics: NeverScrollableScrollPhysics(),
+                          // shrinkWrap: true,
+                          children: List.generate(
+                            lendingModelListBorrowRequest.length,
+                            (index) => Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  lendingModelListBorrowRequest[index]
+                                          .lendingItemModel
+                                          .itemName +
+                                      ': ',
+                                  style: TextStyle(fontSize: 15),
+                                ),
+                                SizedBox(width: 2),
+                                Text(
+                                  "\$" +
+                                      lendingModelListBorrowRequest[index]
+                                          .lendingItemModel
+                                          .estimatedValue
+                                          .toString(),
+                                  style: TextStyle(fontSize: 15),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  : Container(),
 
           //______________________________>
 

@@ -502,10 +502,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             onChanged: (String value) {
                               _bloc.onContactInformationChanged(value);
                             },
-                            formatters: [
-                              FilteringTextInputFormatter.allow(
-                                  Regex.numericRegex)
-                            ],
+                            keyboardType: TextInputType.text,
                             error: getAddPlaceValidationError(
                                 context, snapshot.error),
                           );

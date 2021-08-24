@@ -7,6 +7,7 @@ class LendingOfferDetailsModel {
     this.lendingModel,
     this.lendingOfferAgreementLink,
     this.lendingOfferApprovedAgreementLink,
+    this.agreementId,
     this.lendingOfferAgreementName,
     this.offerAcceptors,
     this.offerInvites,
@@ -23,6 +24,7 @@ class LendingOfferDetailsModel {
   LendingModel lendingModel;
   String lendingOfferAgreementLink;
   String lendingOfferApprovedAgreementLink;
+  String agreementId;
   String lendingOfferAgreementName;
   List<String> offerAcceptors = [];
   List<String> offerInvites = [];
@@ -44,6 +46,7 @@ class LendingOfferDetailsModel {
             json["lendingOfferApprovedAgreementLink"] == null
                 ? null
                 : json["lendingOfferApprovedAgreementLink"],
+        agreementId: json["agreementId"] == null ? null : json["agreementId"],
         lendingOfferAgreementName: json["lendingOfferAgreementName"] == null
             ? null
             : json["lendingOfferAgreementName"],
@@ -87,6 +90,7 @@ class LendingOfferDetailsModel {
             lendingOfferApprovedAgreementLink == null
                 ? null
                 : lendingOfferApprovedAgreementLink,
+        "agreementId": agreementId == null ? null : agreementId,
         "lendingOfferAgreementName": lendingOfferAgreementName == null
             ? null
             : lendingOfferAgreementName,

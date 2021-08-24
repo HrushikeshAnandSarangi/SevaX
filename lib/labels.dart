@@ -663,6 +663,8 @@ class L {
 
   String get estimated_value => "Estimated value*";
 
+  String get estimated_value_items => "Estimated value of Item(s)";
+
   String get contact_information => "Contact Information";
 
   String get add_place => "Add Place";
@@ -1254,6 +1256,8 @@ class L {
   String get lending_offer_agreement => 'Lending Offer Agreement';
 
   String get lease_duration => 'Lease Duration: ';
+
+  String get agreement_id => 'Agreement ID: ';
 
   String get agreement_details => 'Agreement Details: ';
 

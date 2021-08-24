@@ -40,12 +40,13 @@ class AgreementForm extends StatefulWidget {
   final bool isOffer;
   final String placeOrItem;
   final LendingModel lendingModel;
+  final List<LendingModel> lendingModelListBorrowRequest;
   final String timebankId;
   final String communityId;
   final int startTime;
   final int endTime;
   final void Function(String borrowAgreementLinkFinal, String documentName,
-      Map<String, dynamic> agreementConfig) onPdfCreated;
+      Map<String, dynamic> agreementConfig, String agreementId) onPdfCreated;
 
   AgreementForm({
     this.requestModel,
@@ -55,6 +56,7 @@ class AgreementForm extends StatefulWidget {
     this.communityId, // @required this.communityId,
     @required this.onPdfCreated,
     this.lendingModel,
+    this.lendingModelListBorrowRequest,
     this.startTime,
     this.endTime,
   });
@@ -90,6 +92,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
   String specificConditions = '';
   String otherDetails = '';
   String agreementLink = '';
+  String agreementId = '';
   Map<String, dynamic> agreementConfig = {};
   // String otherDetails = '';
 
@@ -811,10 +814,13 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                 style: TextStyle(color: Colors.white, fontSize: 16),
               ),
               onPressed: () async {
+                //generate 8 digit alphanumeric code for AgreementId
+                agreementId = createCryptoRandomString();
                 if (agreementDocumentType ==
                     AgreementDocumentType.NO_AGREEMENT.readable) {
                   //update text on voidcallback funtion for previous page that no agreement was selected
-                  widget.onPdfCreated(agreementLink, documentName, {});
+                  widget.onPdfCreated(
+                      agreementLink, documentName, {}, agreementId);
                   Navigator.of(context).pop();
                 } else {
                   if (agreementDocumentType ==
@@ -826,6 +832,9 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                       context,
                       widget.requestModel,
                       widget.lendingModel,
+                      widget.lendingModelListBorrowRequest.length != null
+                          ? widget.lendingModelListBorrowRequest
+                          : null,
                       '',
                       documentName,
                       widget.isOffer,
@@ -839,6 +848,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                       isMaintainRepair,
                       isRefundDepositNeeded,
                       isMaintainAndclean,
+                      agreementId,
                     );
                     agreementConfig = {
                       'specificConditions': specificConditions,
@@ -849,8 +859,8 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                       'isRefundDepositNeeded': isRefundDepositNeeded,
                       'isMaintainAndclean': isMaintainAndclean,
                     };
-                    widget.onPdfCreated(
-                        agreementLink, documentName, agreementConfig);
+                    widget.onPdfCreated(agreementLink, documentName,
+                        agreementConfig, agreementId);
 
                     Navigator.of(context).pop();
                     log('PREVIOUS TEMPLATE DONE');
@@ -925,6 +935,9 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                         context,
                         widget.requestModel,
                         widget.lendingModel,
+                        widget.lendingModelListBorrowRequest != null
+                            ? widget.lendingModelListBorrowRequest
+                            : null,
                         '',
                         documentName,
                         widget.isOffer,
@@ -938,6 +951,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                         isMaintainRepair,
                         isRefundDepositNeeded,
                         isMaintainAndclean,
+                        agreementId,
                       );
 
                       logger.e('COMES Here 1.5 PDF Link:  ' +
@@ -951,8 +965,8 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                         'isRefundDepositNeeded': isRefundDepositNeeded,
                         'isMaintainAndclean': isMaintainAndclean,
                       };
-                      widget.onPdfCreated(
-                          agreementLink, documentName, agreementConfig);
+                      widget.onPdfCreated(agreementLink, documentName,
+                          agreementConfig, agreementId);
 
                       Navigator.of(context).pop();
                       log('NEW TEMPLATE CREATED');
@@ -1152,7 +1166,9 @@ class _OfferAgreementFormState extends State<AgreementForm> {
     } else {
       return StreamBuilder<List<AgreementTemplateModel>>(
         stream: SearchManager.searchAgreementTemplate(
-            queryString: searchTextController.text),
+            queryString: searchTextController.text,
+            placeOrItem: widget.placeOrItem,
+            creatorId: SevaCore.of(context).loggedInUser.sevaUserID),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             Text(snapshot.error.toString());
