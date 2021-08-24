@@ -1158,7 +1158,9 @@ class _OfferAgreementFormState extends State<AgreementForm> {
     } else {
       return StreamBuilder<List<AgreementTemplateModel>>(
         stream: SearchManager.searchAgreementTemplate(
-            queryString: searchTextController.text),
+            queryString: searchTextController.text,
+            placeOrItem: widget.placeOrItem,
+            creatorId: SevaCore.of(context).loggedInUser.sevaUserID),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             Text(snapshot.error.toString());
