@@ -511,7 +511,6 @@ class ToDo {
       LendingOfferAcceptorModel lendingOfferAcceptorModel =
           await LendingOffersRepo.getBorrowAcceptorModel(
               offerId: model.id, acceptorEmail: email);
-      log('model ${lendingOfferAcceptorModel.status}');
       if (model.lendingOfferDetailsModel.lendingModel.lendingType ==
           LendingType.ITEM) {
         //FOR BORROW ITEMS

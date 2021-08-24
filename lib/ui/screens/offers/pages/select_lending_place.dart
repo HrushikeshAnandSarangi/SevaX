@@ -42,29 +42,34 @@ class _SelectLendingPlaceItemState extends State<SelectLendingPlaceItem> {
 
   @override
   void initState() {
-    Future.delayed(Duration.zero, () {
-      if (widget.lendingType == LendingType.ITEM) {
-        future = LendingOffersRepo.getAllLendingItemModels(
-            creatorId: SevaCore.of(context).loggedInUser.sevaUserID);
-        setState(() {});
-      } else {
-        future = LendingOffersRepo.getAllLendingPlaces(
-            creatorId: SevaCore.of(context).loggedInUser.sevaUserID);
-        setState(() {});
-      }
-    });
+    // Future.delayed(Duration.zero, () {
+    //   if (widget.lendingType == LendingType.ITEM) {
+    //     future = LendingOffersRepo.getAllLendingItemModels(
+    //         creatorId: SevaCore.of(context).loggedInUser.sevaUserID);
+    //     setState(() {});
+    //   } else {
+    //     future = LendingOffersRepo.getAllLendingPlaces(
+    //         creatorId: SevaCore.of(context).loggedInUser.sevaUserID);
+    //     setState(() {});
+    //   }
+    // });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    log('type ${widget.lendingType}');
     return Column(
       children: [
         FutureBuilder(
-            future: future,
+            future: widget.lendingType == LendingType.ITEM
+                ? LendingOffersRepo.getAllLendingItemModels(
+                    creatorId: SevaCore.of(context).loggedInUser.sevaUserID)
+                : LendingOffersRepo.getAllLendingPlaces(
+                    creatorId: SevaCore.of(context).loggedInUser.sevaUserID),
             builder: (context, snapshot) {
               if (snapshot.data == null) {
-                return LoadingIndicator();
+                return Container();
               }
               return TypeAheadField<LendingModel>(
                 suggestionsBoxDecoration: SuggestionsBoxDecoration(
@@ -130,12 +135,13 @@ class _SelectLendingPlaceItemState extends State<SelectLendingPlaceItem> {
                 suggestionsCallback: (String pattern) async {
                   var dataCopy = List<LendingModel>.from(snapshot.data);
                   if (widget.lendingType == LendingType.ITEM) {
-                    dataCopy.retainWhere((s) => s.lendingItemModel.itemName.toLowerCase().contains(
-                          pattern.toLowerCase(),
-                        ));
+                    dataCopy.retainWhere((s) =>
+                        s.lendingItemModel.itemName.toLowerCase().contains(
+                              pattern.toLowerCase(),
+                            ));
                   } else {
-                    dataCopy
-                        .retainWhere((s) => s.lendingPlaceModel.placeName.toLowerCase().contains(
+                    dataCopy.retainWhere((s) =>
+                        s.lendingPlaceModel.placeName.toLowerCase().contains(
                               pattern.toLowerCase(),
                             ));
                   }
@@ -172,7 +178,7 @@ class _SelectLendingPlaceItemState extends State<SelectLendingPlaceItem> {
                     },
                   ),
                 ).then((_) {
-                  future = LendingOffersRepo.getAllLendingItemModels(
+                  future = LendingOffersRepo.getAllLendingModels(
                       creatorId: SevaCore.of(context).loggedInUser.sevaUserID);
                   setState(() {});
                 });
@@ -190,7 +196,7 @@ class _SelectLendingPlaceItemState extends State<SelectLendingPlaceItem> {
                     },
                   ),
                 ).then((_) {
-                  future = LendingOffersRepo.getAllLendingPlaces(
+                  future = LendingOffersRepo.getAllLendingModels(
                       creatorId: SevaCore.of(context).loggedInUser.sevaUserID);
                   setState(() {});
                 });

@@ -89,6 +89,22 @@ class LendingOffersRepo {
     return modelList;
   }
 
+  static Future<List<LendingModel>> getAllLendingModels(
+      {@required String creatorId}) async {
+    List<LendingModel> modelList = [];
+    await CollectionRef.lendingItems
+        .where('creatorId', isEqualTo: creatorId)
+        .get()
+        .then((data) {
+      data.docs.forEach((document) {
+        LendingModel model = LendingModel.fromMap(document.data());
+        modelList.add(model);
+      });
+    });
+
+    return modelList;
+  }
+
   static Future<List<LendingModel>> getApprovedLendingModels(
       {List<String> lendingModelsIds}) async {
     List<LendingModel> modelList = [];
