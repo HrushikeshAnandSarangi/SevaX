@@ -473,7 +473,7 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
               SizedBox(
                 width: 5,
               ),
-              Column(
+              Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   canDeleteOffer ||
@@ -654,7 +654,7 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
 
   Widget editLendingOffer() {
     return Container(
-      width: 120,
+      width: 110,
       height: 32,
       child: CustomTextButton(
         shape: RoundedRectangleBorder(
