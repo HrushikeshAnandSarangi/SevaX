@@ -13,6 +13,7 @@ import 'package:sevaexchange/ui/screens/offers/pages/add_update_lending_item.dar
 import 'package:sevaexchange/ui/screens/offers/pages/add_update_lending_place.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/agreementForm.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/select_lending_place.dart';
+import 'package:sevaexchange/ui/screens/offers/widgets/custom_dialog.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/lending_item_card_widget.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/lending_place_card_widget.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
@@ -562,11 +563,35 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
                   ],
                 ),
                 onPressed: () {
+                  if (selectedLendingPlaceModel == null &&
+                      widget.requestModel.roomOrTool ==
+                          LendingType.PLACE.readable) {
+                    errorDialog(
+                      context: context,
+                      error: L.of(context).select_a_place_lending,
+                    );
+                    return;
+                  }
+                  if (selectedItemModels.isEmpty &&
+                      widget.requestModel.roomOrTool ==
+                          LendingType.ITEM.readable) {
+                    errorDialog(
+                      context: context,
+                      error: L.of(context).select_item_for_lending,
+                    );
+                    return;
+                  }
+
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       fullscreenDialog: true,
                       builder: (context) => AgreementForm(
+                        lendingModel: selectedLendingPlaceModel,
+                        lendingModelListBorrowRequest:
+                            selectedItemModels.length > 0
+                                ? selectedItemModels
+                                : null,
                         requestModel: widget.requestModel,
                         isOffer: false,
                         placeOrItem: widget.requestModel.roomOrTool,

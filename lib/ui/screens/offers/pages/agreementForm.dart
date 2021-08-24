@@ -40,6 +40,7 @@ class AgreementForm extends StatefulWidget {
   final bool isOffer;
   final String placeOrItem;
   final LendingModel lendingModel;
+  final List<LendingModel> lendingModelListBorrowRequest;
   final String timebankId;
   final String communityId;
   final int startTime;
@@ -55,6 +56,7 @@ class AgreementForm extends StatefulWidget {
     this.communityId, // @required this.communityId,
     @required this.onPdfCreated,
     this.lendingModel,
+    this.lendingModelListBorrowRequest,
     this.startTime,
     this.endTime,
   });
@@ -830,6 +832,9 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                       context,
                       widget.requestModel,
                       widget.lendingModel,
+                      widget.lendingModelListBorrowRequest.length != null
+                          ? widget.lendingModelListBorrowRequest
+                          : null,
                       '',
                       documentName,
                       widget.isOffer,
@@ -930,6 +935,9 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                         context,
                         widget.requestModel,
                         widget.lendingModel,
+                        widget.lendingModelListBorrowRequest != null
+                            ? widget.lendingModelListBorrowRequest
+                            : null,
                         '',
                         documentName,
                         widget.isOffer,

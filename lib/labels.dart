@@ -663,6 +663,8 @@ class L {
 
   String get estimated_value => "Estimated value*";
 
+  String get estimated_value_items => "Estimated value of Item(s)";
+
   String get contact_information => "Contact Information";
 
   String get add_place => "Add Place";

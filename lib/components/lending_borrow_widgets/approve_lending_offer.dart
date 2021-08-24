@@ -221,35 +221,39 @@ class _ApproveLendingOfferState extends State<ApproveLendingOffer> {
                         .lendingOfferAgreementLink !=
                     null) {
                   agreementId = createCryptoRandomString();
-                  String agreementLink = await BorrowAgreementPdf().borrowAgreementPdf(
-                      context,
-                      null,
-                      widget.offerModel.lendingOfferDetailsModel.lendingModel,
-                      widget.lendingOfferAcceptorModel.acceptorName,
-                      widget.offerModel.lendingOfferDetailsModel
-                          .lendingOfferAgreementName,
-                      true,
-                      widget.offerModel.lendingOfferDetailsModel.startDate,
-                      widget.offerModel.lendingOfferDetailsModel.endDate,
-                      widget.offerModel.lendingOfferDetailsModel.lendingModel.lendingType == LendingType.PLACE
-                          ? LendingType.PLACE.readable
-                          : LendingType.ITEM.readable,
-                      widget.offerModel.lendingOfferDetailsModel
-                              .agreementConfig['specificConditions'] ??
-                          '' + '\n ${additionalInstructionsText ?? ''}',
-                      widget.offerModel.lendingOfferDetailsModel
-                          .agreementConfig['isDamageLiability'],
-                      widget.offerModel.lendingOfferDetailsModel
-                          .agreementConfig['isUseDisclaimer'],
-                      widget.offerModel.lendingOfferDetailsModel
-                          .agreementConfig['isDeliveryReturn'],
-                      widget.offerModel.lendingOfferDetailsModel
-                          .agreementConfig['isMaintainRepair'],
-                      widget.offerModel.lendingOfferDetailsModel
-                          .agreementConfig['isRefundDepositNeeded'],
-                      widget.offerModel.lendingOfferDetailsModel
-                          .agreementConfig['isMaintainAndclean'],
-                      agreementId);
+                  String agreementLink = await BorrowAgreementPdf()
+                      .borrowAgreementPdf(
+                          context,
+                          null, //request model
+                          widget
+                              .offerModel.lendingOfferDetailsModel.lendingModel,
+                          null, // borrow request items list
+                          widget.lendingOfferAcceptorModel.acceptorName,
+                          widget.offerModel.lendingOfferDetailsModel
+                              .lendingOfferAgreementName,
+                          true,
+                          widget.offerModel.lendingOfferDetailsModel.startDate,
+                          widget.offerModel.lendingOfferDetailsModel.endDate,
+                          widget.offerModel.lendingOfferDetailsModel.lendingModel.lendingType ==
+                                  LendingType.PLACE
+                              ? LendingType.PLACE.readable
+                              : LendingType.ITEM.readable,
+                          widget.offerModel.lendingOfferDetailsModel
+                                  .agreementConfig['specificConditions'] ??
+                              '' + '\n ${additionalInstructionsText ?? ''}',
+                          widget.offerModel.lendingOfferDetailsModel
+                              .agreementConfig['isDamageLiability'],
+                          widget.offerModel.lendingOfferDetailsModel
+                              .agreementConfig['isUseDisclaimer'],
+                          widget.offerModel.lendingOfferDetailsModel
+                              .agreementConfig['isDeliveryReturn'],
+                          widget.offerModel.lendingOfferDetailsModel
+                              .agreementConfig['isMaintainRepair'],
+                          widget.offerModel.lendingOfferDetailsModel
+                              .agreementConfig['isRefundDepositNeeded'],
+                          widget.offerModel.lendingOfferDetailsModel
+                              .agreementConfig['isMaintainAndclean'],
+                          agreementId);
 
                   await LendingOffersRepo.approveLendingOffer(
                           model: widget.offerModel,
