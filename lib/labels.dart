@@ -1255,6 +1255,8 @@ class L {
 
   String get lease_duration => 'Lease Duration: ';
 
+  String get agreement_id => 'Agreement ID: ';
+
   String get agreement_details => 'Agreement Details: ';
 
   String get lenders_specific_conditions => "Lender's Specific Conditions: ";

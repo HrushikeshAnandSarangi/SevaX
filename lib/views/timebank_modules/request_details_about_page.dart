@@ -1259,8 +1259,10 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           widget.requestItem.acceptors.length == 0;
 
       if (widget.requestItem.approvedUsers.length >= 1) {
-        textLabel = widget.requestItem.sevaUserId ==
-                SevaCore.of(context).loggedInUser.sevaUserID
+        textLabel = (widget.requestItem.sevaUserId ==
+                    SevaCore.of(context).loggedInUser.sevaUserID ||
+                widget.requestItem.approvedUsers
+                    .contains(SevaCore.of(context).loggedInUser.email))
             ? S.of(context).request_approved
             : S.of(context).request_has_been_assigned_to_a_member;
       } else if (widget.requestItem.roomOrTool == 'PLACE') {
@@ -1753,11 +1755,10 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                                                   SevaCore.of(context)
                                                       .loggedInUser
                                                       .sevaUserID ||
-                                              SevaCore.of(context)
+                                              widget.requestItem.approvedUsers
+                                                  .contains(SevaCore.of(context)
                                                       .loggedInUser
-                                                      .email ==
-                                                  widget.requestItem
-                                                      .approvedUsers[0])
+                                                      .email))
                                           ? S.of(context).request_approved
                                           : S
                                               .of(context)
@@ -1987,7 +1988,13 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                                     widget.requestItem.acceptors.contains(
                                         SevaCore.of(context).loggedInUser.email)
                                 ? S.of(context).accepted_this_request
-                                : S.of(context).particpate_in_request_question,
+                                : widget.requestItem.approvedUsers.length > 0
+                                    ? S
+                                        .of(context)
+                                        .request_has_been_assigned_to_a_member
+                                    : S
+                                        .of(context)
+                                        .particpate_in_request_question,
                             style: TextStyle(
                               fontSize: 16,
                               fontFamily: 'Europa',

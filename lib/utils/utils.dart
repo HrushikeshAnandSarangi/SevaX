@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
@@ -262,8 +263,6 @@ Future<bool> deleteFireBaseImage({String imageUrl}) async {
   });
 }
 
-
-
 String getStartDateFormat(DateTime date) {
   var suffix = "th";
   var digit = date.day % 10;
@@ -271,4 +270,9 @@ String getStartDateFormat(DateTime date) {
     suffix = ["st", "nd", "rd"][digit - 1];
   }
   return new DateFormat("EEEE MMM d'$suffix',  h:mm a").format(date);
+}
+
+String createCryptoRandomString([int length = 10]) {
+  String randomCode = Uuid().generateV4().substring(0, 8);
+  return randomCode;
 }

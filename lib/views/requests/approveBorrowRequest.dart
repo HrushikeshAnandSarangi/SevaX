@@ -18,6 +18,7 @@ import 'package:sevaexchange/ui/screens/offers/widgets/lending_place_card_widget
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/requestOfferAgreementForm.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
@@ -51,6 +52,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
   String selectedAddress = '';
 
   String borrowAgreementLinkFinal = '';
+  String agreementIdFinal = '';
   String documentName = '';
   LendingModel selectedLendingPlaceModel;
   List<LendingModel> selectedItemModels = [];
@@ -380,6 +382,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
                               SevaCore.of(context).loggedInUser.sevaUserID,
                           timestamp: DateTime.now().millisecondsSinceEpoch,
                           borrowAgreementLink: borrowAgreementLinkFinal,
+                          agreementId: agreementIdFinal,
                           // borrowedItemsIds: selectedModelsId.toList(),
                           borrowedPlaceId: selectedLendingPlaceModel.id,
                           isApproved: false,
@@ -388,6 +391,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
                     );
                   } else {
                     logger.e('COMES HERE 26');
+
                     await storeAcceptorDataBorrowRequest(
                       model: widget.requestModel,
                       borrowAcceptorModel: BorrowAcceptorModel(
@@ -401,6 +405,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
                             SevaCore.of(context).loggedInUser.sevaUserID,
                         timestamp: DateTime.now().millisecondsSinceEpoch,
                         borrowAgreementLink: borrowAgreementLinkFinal,
+                        agreementId: agreementIdFinal,
                         isApproved: false,
                         borrowedItemsIds: List<String>.from(
                             selectedItemModels.map((e) => e.id)).toList(),
@@ -569,12 +574,13 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
                         timebankId: widget.requestModel.timebankId,
                         startTime: widget.requestModel.requestStart,
                         endTime: widget.requestModel.requestEnd,
-                        onPdfCreated:
-                            (pdfLink, documentNameFinal, agreementConfig) {
+                        onPdfCreated: (pdfLink, documentNameFinal,
+                            agreementConfig, agreementId) {
                           logger.e('COMES BACK FROM ON PDF CREATED:  ' +
                               pdfLink.toString());
                           borrowAgreementLinkFinal = pdfLink;
                           documentName = documentNameFinal;
+                          agreementIdFinal = agreementId;
                           // when request is created check if above value is stored in document
                           setState(() => {});
                         },

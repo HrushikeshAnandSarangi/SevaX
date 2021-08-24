@@ -344,6 +344,7 @@ class IndividualOfferBloc extends BlocBase with Validators {
       String timebankId,
       String communityName,
       String lendingAgreementLink,
+      String agreementId,
       String lendingOfferAgreementName,
       Map<String, dynamic> agreementConfig}) {
     //   print(errorCheck());
@@ -386,6 +387,7 @@ class IndividualOfferBloc extends BlocBase with Validators {
             lendingOfferDetailsModel: LendingOfferDetailsModel()
               ..lendingModel = _lendingModel.value
               ..lendingOfferAgreementLink = lendingAgreementLink
+              ..agreementId = agreementId
               ..lendingOfferAgreementName = lendingOfferAgreementName
               ..startDate = startTime
               ..endDate = endTime
@@ -423,6 +425,7 @@ class IndividualOfferBloc extends BlocBase with Validators {
   void updateLendingOffer(
       {OfferModel offerModel,
       String lendingOfferAgreementLink,
+      String agreementId,
       String lendingOfferAgreementName,
       Map<String, dynamic> agreementConfig}) {
     OfferModel offer = offerModel;
@@ -437,6 +440,7 @@ class IndividualOfferBloc extends BlocBase with Validators {
         offer.lendingOfferDetailsModel = LendingOfferDetailsModel()
           ..lendingModel = _lendingModel.value
           ..lendingOfferAgreementLink = lendingOfferAgreementLink
+          ..agreementId = agreementId
           ..lendingOfferAgreementName = lendingOfferAgreementName
           ..startDate = startTime
           ..endDate = endTime

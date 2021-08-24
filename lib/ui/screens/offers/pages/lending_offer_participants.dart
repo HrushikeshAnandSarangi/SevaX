@@ -428,6 +428,7 @@ class LendingOfferAcceptorModel {
   bool isBorrowerGaveReview;
   int startDate;
   int endDate;
+  String approvedAgreementId;
 
   LendingOfferAcceptorModel({
     this.id,

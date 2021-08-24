@@ -35,6 +35,7 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/configuration_check.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
@@ -73,6 +74,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
   String selectedAddress;
   CustomLocation customLocation;
   String borrowAgreementLinkFinal = '';
+  String agreementIdFinal = '';
   String documentName;
   Map<String, dynamic> agreementConfig;
   // String title = '';
@@ -1108,6 +1110,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                           );
                                           return;
                                         }
+
                                         if (widget.offerModel == null) {
                                           await _bloc.createLendingOffer(
                                               user: SevaCore.of(context)
@@ -1117,6 +1120,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                                   communityModel.name ?? '',
                                               lendingAgreementLink:
                                                   borrowAgreementLinkFinal,
+                                              agreementId: agreementIdFinal,
                                               lendingOfferAgreementName:
                                                   documentName,
                                               agreementConfig: agreementConfig);
@@ -1127,6 +1131,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                                   documentName ?? '',
                                               lendingOfferAgreementLink:
                                                   borrowAgreementLinkFinal,
+                                              agreementId: agreementIdFinal,
                                               agreementConfig: agreementConfig);
                                         }
                                       } else {
@@ -1785,7 +1790,8 @@ class _IndividualOfferState extends State<IndividualOffer> {
                 ),
                 onPressed: () async {
                   FocusScope.of(context).unfocus();
-                  if (selectedLendingModel == null) {
+                  if (selectedLendingModel == null &&
+                      widget.offerModel == null) {
                     _bloc.lendingOfferType == 0
                         ? errorDialog(
                             context: context,
@@ -1826,11 +1832,12 @@ class _IndividualOfferState extends State<IndividualOffer> {
                               .loggedInUser
                               .currentCommunity,
                           timebankId: widget.timebankId,
-                          onPdfCreated:
-                              (pdfLink, documentNameFinal, agreementConfigg) {
+                          onPdfCreated: (pdfLink, documentNameFinal,
+                              agreementConfig, agreementId) {
                             borrowAgreementLinkFinal = pdfLink;
                             documentName = documentNameFinal;
-                            agreementConfig = agreementConfigg;
+                            agreementConfig = agreementConfig;
+                            agreementIdFinal = agreementId;
                             // when request is created check if above value is stored in document
                             setState(() => {});
                           },

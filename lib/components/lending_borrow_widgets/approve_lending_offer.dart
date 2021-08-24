@@ -18,6 +18,7 @@ import 'package:sevaexchange/ui/screens/offers/widgets/custom_dialog.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/requestOfferAgreementForm.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
@@ -41,6 +42,7 @@ class ApproveLendingOffer extends StatefulWidget {
 class _ApproveLendingOfferState extends State<ApproveLendingOffer> {
   GeoFirePoint location;
   String additionalInstructionsText = '';
+  String agreementId = '';
 
   final _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _key = GlobalKey();
@@ -218,38 +220,36 @@ class _ApproveLendingOfferState extends State<ApproveLendingOffer> {
                 if (widget.offerModel.lendingOfferDetailsModel
                         .lendingOfferAgreementLink !=
                     null) {
-                  String agreementLink =
-                      await BorrowAgreementPdf().borrowAgreementPdf(
-                    context,
-                    null,
-                    widget.offerModel.lendingOfferDetailsModel.lendingModel,
-                    widget.lendingOfferAcceptorModel.acceptorName,
-                    widget.offerModel.lendingOfferDetailsModel
-                        .lendingOfferAgreementName,
-                    true,
-                    widget.offerModel.lendingOfferDetailsModel.startDate,
-                    widget.offerModel.lendingOfferDetailsModel.endDate,
-                    widget.offerModel.lendingOfferDetailsModel.lendingModel
-                                .lendingType ==
-                            LendingType.PLACE
-                        ? LendingType.PLACE.readable
-                        : LendingType.ITEM.readable,
-                    widget.offerModel.lendingOfferDetailsModel
-                            .agreementConfig['specificConditions'] ??
-                        '' + '\n ${additionalInstructionsText ?? ''}',
-                    widget.offerModel.lendingOfferDetailsModel
-                        .agreementConfig['isDamageLiability'],
-                    widget.offerModel.lendingOfferDetailsModel
-                        .agreementConfig['isUseDisclaimer'],
-                    widget.offerModel.lendingOfferDetailsModel
-                        .agreementConfig['isDeliveryReturn'],
-                    widget.offerModel.lendingOfferDetailsModel
-                        .agreementConfig['isMaintainRepair'],
-                    widget.offerModel.lendingOfferDetailsModel
-                        .agreementConfig['isRefundDepositNeeded'],
-                    widget.offerModel.lendingOfferDetailsModel
-                        .agreementConfig['isMaintainAndclean'],
-                  );
+                  agreementId = createCryptoRandomString();
+                  String agreementLink = await BorrowAgreementPdf().borrowAgreementPdf(
+                      context,
+                      null,
+                      widget.offerModel.lendingOfferDetailsModel.lendingModel,
+                      widget.lendingOfferAcceptorModel.acceptorName,
+                      widget.offerModel.lendingOfferDetailsModel
+                          .lendingOfferAgreementName,
+                      true,
+                      widget.offerModel.lendingOfferDetailsModel.startDate,
+                      widget.offerModel.lendingOfferDetailsModel.endDate,
+                      widget.offerModel.lendingOfferDetailsModel.lendingModel.lendingType == LendingType.PLACE
+                          ? LendingType.PLACE.readable
+                          : LendingType.ITEM.readable,
+                      widget.offerModel.lendingOfferDetailsModel
+                              .agreementConfig['specificConditions'] ??
+                          '' + '\n ${additionalInstructionsText ?? ''}',
+                      widget.offerModel.lendingOfferDetailsModel
+                          .agreementConfig['isDamageLiability'],
+                      widget.offerModel.lendingOfferDetailsModel
+                          .agreementConfig['isUseDisclaimer'],
+                      widget.offerModel.lendingOfferDetailsModel
+                          .agreementConfig['isDeliveryReturn'],
+                      widget.offerModel.lendingOfferDetailsModel
+                          .agreementConfig['isMaintainRepair'],
+                      widget.offerModel.lendingOfferDetailsModel
+                          .agreementConfig['isRefundDepositNeeded'],
+                      widget.offerModel.lendingOfferDetailsModel
+                          .agreementConfig['isMaintainAndclean'],
+                      agreementId);
 
                   await LendingOffersRepo.approveLendingOffer(
                           model: widget.offerModel,
@@ -258,7 +258,8 @@ class _ApproveLendingOfferState extends State<ApproveLendingOffer> {
                           lendingOfferApprovedAgreementLink:
                               agreementLink ?? '',
                           additionalInstructionsText:
-                              additionalInstructionsText)
+                              additionalInstructionsText,
+                          agreementId: agreementId ?? '')
                       .then((value) => Navigator.of(context).pop());
                 } else {
                   await LendingOffersRepo.approveLendingOffer(

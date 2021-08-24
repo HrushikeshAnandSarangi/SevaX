@@ -43,8 +43,8 @@ class BorrowAgreementPdf {
       bool isDeliveryReturn, //for borrow/lend ITEM
       bool isMaintainRepair, //for borrow/lend ITEM
       bool isRefundDepositNeeded, //for borrow/lend PLACE
-      bool isMaintainAndclean //for borrow/lend PLACE
-      ) async {
+      bool isMaintainAndclean, //for borrow/lend PLACE
+      String agreementId) async {
     progressDialog = ProgressDialog(
       contextMain,
       type: ProgressDialogType.Normal,
@@ -157,6 +157,16 @@ class BorrowAgreementPdf {
           ]),
 
           SizedBox(height: 10),
+
+          Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(L.of(contextMain).agreement_id,
+                style: TextStyle(fontSize: 16)),
+            SizedBox(width: 8),
+            Text(
+              agreementId ?? 'Not available',
+              style: TextStyle(fontSize: 14),
+            ),
+          ]),
 
           Divider(thickness: 1, color: PdfColors.grey),
 
