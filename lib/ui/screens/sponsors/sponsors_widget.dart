@@ -316,7 +316,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                                 onTap: () {
                                   indexPosition = index;
                                   Navigator.of(dialogContext).pop();
-                                  showEnterNameDialog(context);
+                                  editNameDialog(context);
                                 },
                                 title: Text(S.of(context).edit_name),
                                 trailing: Icon(Icons.edit),
@@ -472,7 +472,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                                       snapshot.data != null &&
                                       snapshot.data.logo != ''
                                   ? snapshot.data.logo
-                                  : defaultUserImageURL,
+                                  : defaultCameraImageURL,
                             );
                           },
                         ),
