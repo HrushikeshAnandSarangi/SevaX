@@ -540,6 +540,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                                     context: context,
                                     message:
                                         L.of(context).please_add_amenities);
+                                return;
                               }
 
                               if (imagesList == null ||

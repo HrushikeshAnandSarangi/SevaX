@@ -173,7 +173,10 @@ class AddUpdatePlaceBloc extends BlocBase {
     } else if (_amenities.value == null || _amenities.value.length == 0) {
       _amenities.addError(AddPlaceValidationErrors.amenities_error);
       flag = true;
-    } else if (_estimated_value.value == null || _estimated_value.value == 0) {
+    }
+    if (_estimated_value.value == null ||
+        _estimated_value.value == 0 ||
+        _estimated_value == '') {
       _estimated_value.addError(AddPlaceValidationErrors.estimated_value_error);
       flag = true;
     }
