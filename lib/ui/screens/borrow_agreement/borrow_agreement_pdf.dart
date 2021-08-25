@@ -280,12 +280,10 @@ class BorrowAgreementPdf {
                         SizedBox(width: 5),
                         Text(
                           lendingModel.lendingType == LendingType.PLACE
-                              ? "\$" +
-                                  lendingModel.lendingPlaceModel.placeName
-                                      .toString()
-                              : "\$" +
-                                  lendingModel.lendingItemModel.itemName
-                                      .toString(),
+                              ? lendingModel.lendingPlaceModel.placeName
+                                  .toString()
+                              : lendingModel.lendingItemModel.itemName
+                                  .toString(),
                           style: TextStyle(fontSize: 15),
                         ),
                       ],
@@ -304,10 +302,13 @@ class BorrowAgreementPdf {
                         SizedBox(width: 5),
                         Text(
                             lendingModel.lendingType == LendingType.PLACE
-                                ? lendingModel.lendingPlaceModel.estimatedValue
-                                    .toString()
-                                : lendingModel.lendingItemModel.estimatedValue
-                                    .toString(),
+                                ? "\$" +
+                                    lendingModel
+                                        .lendingPlaceModel.estimatedValue
+                                        .toString()
+                                : "\$" +
+                                    lendingModel.lendingItemModel.estimatedValue
+                                        .toString(),
                             style: TextStyle(fontSize: 15)),
                       ],
                     ),
@@ -350,8 +351,9 @@ class BorrowAgreementPdf {
                             style: TextStyle(fontSize: 16)),
                         SizedBox(width: 5),
                         Text(
-                            lendingModel.lendingPlaceModel.estimatedValue
-                                .toString(),
+                            "\$" +
+                                lendingModel.lendingPlaceModel.estimatedValue
+                                    .toString(),
                             style: TextStyle(fontSize: 15)),
                       ],
                     ),

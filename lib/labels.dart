@@ -1217,7 +1217,7 @@ class L {
 
   String get name_of_item => "Name of your item";
 
-  String get name_of_item_hint => "Lawn Mover";
+  String get name_of_item_hint => "Ex: Lawn Mover";
 
   String get add_item => "Add Item";
 
@@ -1400,4 +1400,5 @@ class L {
       'You checked out from place. Tap to leave a feedback.';
   String get check_out_alert => 'Are you sure you want to check out?';
   String get return_items_alert => 'Are you sure you want to return items?';
+  String get add_new => "Add new";
 }

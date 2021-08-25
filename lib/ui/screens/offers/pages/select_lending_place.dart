@@ -32,7 +32,7 @@ class SelectLendingPlaceItem extends StatefulWidget {
 }
 
 class _SelectLendingPlaceItemState extends State<SelectLendingPlaceItem> {
-  LendingModel selectedModel = LendingModel();
+  // LendingModel selectedModel = LendingModel();
 
   // List<CommunityCategoryModel> availableCategories = [];
   SuggestionsBoxController controller = SuggestionsBoxController();

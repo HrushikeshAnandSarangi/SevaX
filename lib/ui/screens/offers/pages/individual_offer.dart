@@ -18,6 +18,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/lending_model.dart';
 import 'package:sevaexchange/new_baseline/models/lending_place_model.dart';
+import 'package:sevaexchange/repositories/lending_offer_repo.dart';
 import 'package:sevaexchange/ui/screens/borrow_agreement/borrow_agreement_pdf.dart';
 import 'package:sevaexchange/ui/screens/calendar/add_to_calander.dart';
 import 'package:sevaexchange/ui/screens/offers/bloc/individual_offer_bloc.dart';
@@ -1578,16 +1579,77 @@ class _IndividualOfferState extends State<IndividualOffer> {
           ),
         ),
         SizedBox(height: 20),
-        Text(
-          _bloc.lendingOfferType == 0
-              ? L.of(context).select_a_place_lending
-              : L.of(context).select_a_item_lending,
-          style: TextStyle(
-            fontSize: 16,
-            //fontWeight: FontWeight.bold,
-            fontFamily: 'Europa',
-            color: Colors.black,
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              _bloc.lendingOfferType == 0
+                  ? L.of(context).select_a_place_lending
+                  : L.of(context).select_item_for_lending,
+              style: TextStyle(
+                fontSize: 16,
+                //fontWeight: FontWeight.bold,
+                fontFamily: 'Europa',
+                color: Colors.black,
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  L.of(context).add_new,
+                  style: TextStyle(
+                    fontSize: 14,
+                    //fontWeight: FontWeight.bold,
+                    fontFamily: 'Europa',
+                    color: Colors.black,
+                  ),
+                ),
+                SizedBox(width: 3),
+                InkWell(
+                  onTap: () {
+                    if (_bloc.lendingOfferType == 1) {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return AddUpdateLendingItem(
+                              lendingModel: null,
+                              enteredTitle: '',
+                              onItemCreateUpdate: (LendingModel model) {
+                                _bloc.onLendingModelAdded(model);
+                                setState(() {
+                                  selectedLendingModel = model;
+                                });
+                              },
+                            );
+                          },
+                        ),
+                      );
+                    } else {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return AddUpdateLendingPlace(
+                              lendingModel: null,
+                              enteredTitle: '',
+                              onPlaceCreateUpdate: (LendingModel model) {
+                                _bloc.onLendingModelAdded(model);
+                                setState(() {
+                                  selectedLendingModel = model;
+                                });
+                              },
+                            );
+                          },
+                        ),
+                      );
+                    }
+                  },
+                  child: Icon(Icons.add_circle_rounded,
+                      size: 25, color: Colors.grey[600]),
+                ),
+              ],
+            ),
+          ],
         ),
         SizedBox(
           height: 10,
@@ -1620,6 +1682,9 @@ class _IndividualOfferState extends State<IndividualOffer> {
                   lendingItemModel: snapshot.data.lendingItemModel,
                   onDelete: () {
                     _bloc.onLendingModelAdded(null);
+                    setState(() {
+                      selectedLendingModel = null;
+                    });
                   },
                   onEdit: () {
                     Navigator.of(context).push(
@@ -1641,6 +1706,9 @@ class _IndividualOfferState extends State<IndividualOffer> {
                   lendingPlaceModel: snapshot.data.lendingPlaceModel,
                   onDelete: () {
                     _bloc.onLendingModelAdded(null);
+                    setState(() {
+                      selectedLendingModel = null;
+                    });
                   },
                   onEdit: () {
                     Navigator.of(context).push(
