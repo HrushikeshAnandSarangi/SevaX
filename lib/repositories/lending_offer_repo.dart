@@ -499,13 +499,15 @@ class LendingOffersRepo {
   static void getDialogForBorrowerToUpdate(
       {BuildContext context,
       OfferModel offerModel,
-      LendingOfferAcceptorModel lendingOfferAcceptorModel}) async {
+      LendingOfferAcceptorModel lendingOfferAcceptorModel,
+      String timezone}) async {
     showDialog(
       context: context,
       builder: (BuildContext viewContext) {
         return LendingOfferBorrowerUpdateWidget(
           offerModel: offerModel,
           lendingOfferAcceptorModel: lendingOfferAcceptorModel,
+          timezone: timezone,
         );
       },
     );

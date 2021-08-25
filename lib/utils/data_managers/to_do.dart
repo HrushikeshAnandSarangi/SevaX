@@ -29,6 +29,7 @@ import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/tasks/my_tasks_list.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
 
@@ -435,9 +436,6 @@ class ToDo {
     //for borrow request, request creator / Borrower needs to see in To do when needs to collect or check in
     List<RequestModel> borrowRequestCreatorAwaitingConfirmation = toDoSink[5];
     borrowRequestCreatorAwaitingConfirmation.forEach((model) async {
-      // BorrowAcceptorModel borrowAcceptorModel =
-      //     await FirestoreManager.getBorrowRequestAcceptorModel(
-      //         requestId: model.id, acceptorEmail: model.approvedUsers.first);
       if (model.roomOrTool == LendingType.ITEM.readable) {
         //FOR BORROW ITEMS
         if (!model.borrowModel.itemsCollected) {
@@ -505,118 +503,13 @@ class ToDo {
       }
     });
 
-    //for borrow request, request creator / Borrower needs to see in To do when needs to collect or check in
-    List<OfferModel> lendingOfferBorrowerRequestApproved = toDoSink[6];
-    lendingOfferBorrowerRequestApproved.forEach((model) async {
-      LendingOfferAcceptorModel lendingOfferAcceptorModel =
-          await LendingOffersRepo.getBorrowAcceptorModel(
-              offerId: model.id, acceptorEmail: email);
-      if (model.lendingOfferDetailsModel.lendingModel.lendingType ==
-          LendingType.ITEM) {
-        //FOR BORROW ITEMS
-        if (!model.lendingOfferDetailsModel.collectedItems) {
-          //items to be collected status
-          tasksList.add(
-            TasksCardWrapper(
-              taskCard: ToDoCard(
-                title: model.individualOfferDataModel.title,
-                subTitle:
-                    L.of(context).collect_items + model.selectedAdrress != null
-                        ? ' at ' + model.selectedAdrress
-                        : '',
-                timeInMilliseconds: lendingOfferAcceptorModel.startDate,
-                onTap: () async {
-                  await LendingOffersRepo.getDialogForBorrowerToUpdate(
-                      offerModel: model,
-                      context: context,
-                      lendingOfferAcceptorModel: lendingOfferAcceptorModel);
-                },
-                tag: L.of(context).lending_offer_collect_items_tag,
-              ),
-              taskTimestamp: lendingOfferAcceptorModel.startDate ??
-                  DateTime.now().millisecondsSinceEpoch,
-            ),
-          );
-        } else if (model.lendingOfferDetailsModel
-                .collectedItems && //items to be returned status
-            !model.lendingOfferDetailsModel.returnedItems) {
-          tasksList.add(
-            TasksCardWrapper(
-              taskCard: ToDoCard(
-                title: model.individualOfferDataModel.title,
-                subTitle:
-                    L.of(context).return_items + model.selectedAdrress != null
-                        ? ' at ' + model.selectedAdrress
-                        : '',
-                timeInMilliseconds: lendingOfferAcceptorModel.endDate,
-                onTap: () async {
-                  await LendingOffersRepo.getDialogForBorrowerToUpdate(
-                      offerModel: model,
-                      context: context,
-                      lendingOfferAcceptorModel: lendingOfferAcceptorModel);
-                },
-                tag: L.of(context).lending_offer_return_items_tag,
-              ),
-              taskTimestamp: lendingOfferAcceptorModel.startDate ??
-                  DateTime.now().millisecondsSinceEpoch,
-            ),
-          );
-        }
-        //FOR BORROW PLACE
-      } else {
-        if (!model.lendingOfferDetailsModel.checkedIn) {
-          //items to be collected status
-          tasksList.add(
-            TasksCardWrapper(
-              taskCard: ToDoCard(
-                title: model.individualOfferDataModel.title,
-                subTitle: L.of(context).arrive + model.selectedAdrress != null
-                    ? ' at ' + model.selectedAdrress
-                    : '',
-                timeInMilliseconds: lendingOfferAcceptorModel.startDate,
-                onTap: () async {
-                  await LendingOffersRepo.getDialogForBorrowerToUpdate(
-                      offerModel: model,
-                      context: context,
-                      lendingOfferAcceptorModel: lendingOfferAcceptorModel);
-                },
-                tag: L.of(context).lending_offer_check_in_tag,
-              ),
-              taskTimestamp: lendingOfferAcceptorModel.startDate ??
-                  DateTime.now().millisecondsSinceEpoch,
-            ),
-          );
-        } else if (model.lendingOfferDetailsModel
-                .checkedIn && //items to be returned status
-            !model.lendingOfferDetailsModel.checkedOut) {
-          tasksList.add(
-            TasksCardWrapper(
-              taskCard: ToDoCard(
-                title: model.individualOfferDataModel.title,
-                subTitle:
-                    L.of(context).departure + model.selectedAdrress != null
-                        ? ' at ' + model.selectedAdrress
-                        : '',
-                timeInMilliseconds: lendingOfferAcceptorModel.endDate,
-                onTap: () async {
-                  await LendingOffersRepo.getDialogForBorrowerToUpdate(
-                      offerModel: model,
-                      context: context,
-                      lendingOfferAcceptorModel: lendingOfferAcceptorModel);
-                },
-                tag: L.of(context).lending_offer_check_out_tag,
-              ),
-              taskTimestamp: lendingOfferAcceptorModel.startDate ??
-                  DateTime.now().millisecondsSinceEpoch,
-            ),
-          );
-        }
-      }
-    });
-
     tasksList.sort((a, b) => b.taskTimestamp.compareTo(a.taskTimestamp));
+    logger.e('Tasks Length Last: ' + tasksList.length.toString());
+
     return tasksList;
   }
+
+ 
 
   static Future oneToManySpeakerCompletesRequest(
       BuildContext context, RequestModel requestModel) async {

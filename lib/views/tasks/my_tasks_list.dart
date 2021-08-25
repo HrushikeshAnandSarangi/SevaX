@@ -8,10 +8,13 @@ import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/components/rich_text_view/rich_text_view.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/chat_model.dart';
+import 'package:sevaexchange/models/enums/lending_borrow_enums.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
+import 'package:sevaexchange/repositories/lending_offer_repo.dart';
 import 'package:sevaexchange/ui/screens/request/pages/oneToManySpeakerTimeEntryComplete_page.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
@@ -96,42 +99,187 @@ class MyTasksListState extends State<MyTaskList> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<dynamic>(
-      stream: myTasksStream,
-      builder: (streamContext, snapshot) {
-        if (!snapshot.hasData) {
-          return Padding(
-            padding: EdgeInsets.all(8.0),
-            child: LoadingIndicator(),
-          );
+        stream: myTasksStream,
+        builder: (streamContext, snapshot) {
+          if (!snapshot.hasData) {
+            return Padding(
+              padding: EdgeInsets.all(8.0),
+              child: LoadingIndicator(),
+            );
+          }
+
+          toDoItems = ToDo.classifyToDos(
+              context: context,
+              toDoSink: snapshot.data,
+              requestCallback: (requestModel) {
+                requestModelNew = requestModel;
+              },
+              feedbackCallback: (int value) {
+                subjectBorrow.add(value);
+              },
+              email: widget.email);
+
+          return FutureBuilder<List<TasksCardWrapper>>(
+              future: addToTasksLendingApproved(
+                  context: context,
+                  toDoSink: snapshot.data,
+                  requestCallback: (requestModel) {
+                    requestModelNew = requestModel;
+                  },
+                  feedbackCallback: (int value) {
+                    subjectBorrow.add(value);
+                  },
+                  email: widget.email),
+              builder: (context, snapshot) {
+                List<TasksCardWrapper> items = snapshot.data;
+                toDoItems.addAll(items);
+
+                if (toDoItems.length == 0)
+                  return Center(
+                    child: Text(
+                      'No To Do\'s',
+                    ),
+                  );
+
+                return ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: toDoItems.length,
+                  itemBuilder: (listContext, index) {
+                    return toDoItems[index];
+                  },
+                );
+              });
+        });
+  }
+
+  Future<List<TasksCardWrapper>> addToTasksLendingApproved({
+    @required List<dynamic> toDoSink,
+    @required ValueChanged<RequestModel> requestCallback,
+    @required BuildContext context,
+    @required ValueChanged<int> feedbackCallback,
+    @required String email,
+  }) {
+    List<TasksCardWrapper> tasksList = [];
+    //for borrow request, request creator / Borrower needs to see in To do when needs to collect or check in
+    List<OfferModel> lendingOfferBorrowerRequestApproved = toDoSink[6];
+    logger.e('APPROVED OFFERS LENGTH:  ' +
+        lendingOfferBorrowerRequestApproved.length.toString());
+
+    lendingOfferBorrowerRequestApproved.forEach((model) async {
+      LendingOffersRepo.getBorrowAcceptorModel(
+              offerId: model.id, acceptorEmail: email)
+          .then((lendingOfferAcceptorModel) {
+        logger.e('ACCEPTOR MODEL: ' +
+            lendingOfferAcceptorModel.startDate.toString());
+
+        if (model.lendingOfferDetailsModel.lendingModel.lendingType ==
+            LendingType.ITEM) {
+          //FOR BORROW ITEMS
+          if (!model.lendingOfferDetailsModel.collectedItems) {
+            //items to be collected status
+            tasksList.add(
+              TasksCardWrapper(
+                taskCard: ToDoCard(
+                  title: model.individualOfferDataModel.title,
+                  subTitle:
+                      L.of(context).collect_items + model.selectedAdrress !=
+                              null
+                          ? ' at ' + model.selectedAdrress
+                          : '',
+                  timeInMilliseconds: lendingOfferAcceptorModel.startDate,
+                  onTap: () async {
+                    await LendingOffersRepo.getDialogForBorrowerToUpdate(
+                        offerModel: model,
+                        context: context,
+                        lendingOfferAcceptorModel: lendingOfferAcceptorModel);
+                  },
+                  tag: L.of(context).lending_offer_collect_items_tag,
+                ),
+                taskTimestamp: lendingOfferAcceptorModel.startDate ??
+                    DateTime.now().millisecondsSinceEpoch,
+              ),
+            );
+          } else if (model.lendingOfferDetailsModel
+                  .collectedItems && //items to be returned status
+              !model.lendingOfferDetailsModel.returnedItems) {
+            tasksList.add(
+              TasksCardWrapper(
+                taskCard: ToDoCard(
+                  title: model.individualOfferDataModel.title,
+                  subTitle:
+                      L.of(context).return_items + model.selectedAdrress != null
+                          ? ' at ' + model.selectedAdrress
+                          : '',
+                  timeInMilliseconds: lendingOfferAcceptorModel.endDate,
+                  onTap: () async {
+                    await LendingOffersRepo.getDialogForBorrowerToUpdate(
+                        offerModel: model,
+                        context: context,
+                        lendingOfferAcceptorModel: lendingOfferAcceptorModel);
+                  },
+                  tag: L.of(context).lending_offer_return_items_tag,
+                ),
+                taskTimestamp: lendingOfferAcceptorModel.startDate ??
+                    DateTime.now().millisecondsSinceEpoch,
+              ),
+            );
+          }
+          //FOR BORROW PLACE
+        } else {
+          if (!model.lendingOfferDetailsModel.checkedIn) {
+            //items to be collected status
+            logger.e('Tasks Length 0.1: ' + tasksList.length.toString());
+            tasksList.add(
+              TasksCardWrapper(
+                taskCard: ToDoCard(
+                  title: model.individualOfferDataModel.title,
+                  subTitle: L.of(context).arrive + model.selectedAdrress != null
+                      ? ' at ' + model.selectedAdrress
+                      : '',
+                  timeInMilliseconds: lendingOfferAcceptorModel.startDate,
+                  onTap: () async {
+                    await LendingOffersRepo.getDialogForBorrowerToUpdate(
+                        offerModel: model,
+                        context: context,
+                        lendingOfferAcceptorModel: lendingOfferAcceptorModel);
+                  },
+                  tag: L.of(context).lending_offer_check_in_tag,
+                ),
+                taskTimestamp: lendingOfferAcceptorModel.startDate ??
+                    DateTime.now().millisecondsSinceEpoch,
+              ),
+            );
+
+            logger.e('Tasks Length 0.2: ' + tasksList.length.toString());
+          } else if (model.lendingOfferDetailsModel
+                  .checkedIn && //items to be returned status
+              !model.lendingOfferDetailsModel.checkedOut) {
+            tasksList.add(
+              TasksCardWrapper(
+                taskCard: ToDoCard(
+                  title: model.individualOfferDataModel.title,
+                  subTitle:
+                      L.of(context).departure + model.selectedAdrress != null
+                          ? ' at ' + model.selectedAdrress
+                          : '',
+                  timeInMilliseconds: lendingOfferAcceptorModel.endDate,
+                  onTap: () async {
+                    await LendingOffersRepo.getDialogForBorrowerToUpdate(
+                        offerModel: model,
+                        context: context,
+                        lendingOfferAcceptorModel: lendingOfferAcceptorModel);
+                  },
+                  tag: L.of(context).lending_offer_check_out_tag,
+                ),
+                taskTimestamp: lendingOfferAcceptorModel.startDate ??
+                    DateTime.now().millisecondsSinceEpoch,
+              ),
+            );
+          }
         }
-
-        toDoItems = ToDo.classifyToDos(
-            context: context,
-            toDoSink: snapshot.data,
-            requestCallback: (requestModel) {
-              requestModelNew = requestModel;
-            },
-            feedbackCallback: (int value) {
-              subjectBorrow.add(value);
-            },
-            email: widget.email);
-
-        if (toDoItems.length == 0)
-          return Center(
-            child: Text(
-              'No To Do\'s',
-            ),
-          );
-
-        return ListView.builder(
-          physics: NeverScrollableScrollPhysics(),
-          itemCount: toDoItems.length,
-          itemBuilder: (listContext, index) {
-            return toDoItems[index];
-          },
-        );
-      },
-    );
+      });
+    });
+    return Future.value(tasksList);
   }
 
   void checkForReviewBorrowRequests() async {

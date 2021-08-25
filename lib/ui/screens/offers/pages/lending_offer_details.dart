@@ -695,7 +695,7 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
     log('isACeepted $isAccepted');
     log('isAprroved $isApproved');
     return Container(
-      width: 110,
+      width: 135,
       height: 32,
       child: ConfigurationCheck(
         actionType: ConfigurationCheckExtension.getOfferAcceptanceKey(
@@ -709,6 +709,7 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
           ),
           color: Color.fromRGBO(44, 64, 140, 0.7),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               SizedBox(width: 1),
               Container(
@@ -723,7 +724,7 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                   color: Colors.white,
                 ),
               ),
-              Spacer(),
+              SizedBox(width: 10),
               Text(
                 isApproved
                     ? getButtonActionLabel()
@@ -734,9 +735,9 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                   color: Colors.white,
                 ),
               ),
-              Spacer(
-                flex: 2,
-              ),
+              // Spacer(
+              //   flex: 2,
+              // ),
             ],
           ),
           onPressed: () async {

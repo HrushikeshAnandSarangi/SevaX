@@ -645,7 +645,7 @@ class L {
 
   String get name_item => "Name of Item";
 
-  String get name_of_place_hint => "Apartment sunshine 3";
+  String get name_of_place_hint => "Ex: Apartment sunshine 3";
 
   String get amenities => "Amenities";
 
