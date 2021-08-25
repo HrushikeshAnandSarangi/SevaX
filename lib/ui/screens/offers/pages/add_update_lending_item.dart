@@ -51,7 +51,7 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
       _estimatedValueController.text =
           widget.lendingModel.lendingItemModel.estimatedValue.toString();
       _bloc.onEstimatedValueChanged(
-          widget.lendingModel.lendingItemModel.estimatedValue.toString());
+          widget.lendingModel.lendingItemModel.estimatedValue);
     } else {
       if (widget.enteredTitle != null) {
         _itemNameController.text = widget.enteredTitle;
@@ -158,20 +158,22 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                       ),
                       SizedBox(height: 20),
                       //ESTIMATED VALUE FIELD HERE
-                      StreamBuilder<String>(
+                      StreamBuilder<int>(
                         stream: _bloc.estimatedValue,
                         builder: (context, snapshot) {
                           return CustomTextField(
                             decoration: InputDecoration(
                                 prefixIcon: Icon(Icons.attach_money),
+                                errorText: getAddItemValidationError(
+                                    context, snapshot.error),
                                 hintText:
                                     S.of(context).request_min_donation_hint),
                             controller: _estimatedValueController,
                             currentNode: _estimatedValue,
-                            value: snapshot.data,
+                            value: snapshot.data.toString(),
                             heading: "${L.of(context).estimated_value}",
                             onChanged: (String value) {
-                              _bloc.onEstimatedValueChanged(value);
+                              _bloc.onEstimatedValueChanged(int.parse(value));
                               // title = value;
                             },
                             formatters: [
