@@ -467,7 +467,9 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             decoration: InputDecoration(
                                 prefixIcon: Icon(Icons.attach_money),
                                 hintText:
-                                    S.of(context).request_min_donation_hint),
+                                    S.of(context).request_min_donation_hint,
+                                errorText: getAddPlaceValidationError(
+                                    context, snapshot.error)),
                             controller: _estimatedValueController,
                             currentNode: _estimatedValue,
                             value: snapshot.data,

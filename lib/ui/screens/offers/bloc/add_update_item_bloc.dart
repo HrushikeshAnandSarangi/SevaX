@@ -15,7 +15,7 @@ import '../../../../labels.dart';
 
 class AddUpdateItemBloc extends BlocBase {
   final _itemName = BehaviorSubject<String>();
-  final _estimated_value = BehaviorSubject<String>();
+  final _estimated_value = BehaviorSubject<int>();
   final _item_images = BehaviorSubject<List<String>>();
   final profanityDetector = ProfanityDetector();
   final _message = BehaviorSubject<String>();
@@ -24,13 +24,12 @@ class AddUpdateItemBloc extends BlocBase {
 
   Stream<Status> get status => _status.stream;
   Stream<String> get itemName => _itemName.stream;
-  Stream<String> get estimatedValue => _estimated_value.stream;
+  Stream<int> get estimatedValue => _estimated_value.stream;
   Stream<List<String>> get itemImages => _item_images.stream;
   Stream<String> get message => _message.stream;
 
   Function(String value) get onPlaceNameChanged => _itemName.sink.add;
-  Function(String value) get onEstimatedValueChanged =>
-      _estimated_value.sink.add;
+  Function(int value) get onEstimatedValueChanged => _estimated_value.sink.add;
   Function(List<String> value) get onItemImageAdded => _item_images.sink.add;
 
   void loadData(LendingItemModel lendingPlaceModel) {
@@ -51,7 +50,7 @@ class AddUpdateItemBloc extends BlocBase {
         id: Utils.getUuid(),
         lendingItemModel: LendingItemModel(
           itemName: _itemName.value,
-          estimatedValue: int.parse(_estimated_value.value),
+          estimatedValue: _estimated_value.value,
           itemImages: _item_images.value.toList(),
         ),
         creatorId: creator.sevaUserID,
@@ -70,8 +69,7 @@ class AddUpdateItemBloc extends BlocBase {
     LendingModel lendingModel = model;
     if (!errorCheck()) {
       lendingModel.lendingItemModel.itemName = _itemName.value;
-      lendingModel.lendingItemModel.estimatedValue =
-          int.parse(_estimated_value.value);
+      lendingModel.lendingItemModel.estimatedValue = _estimated_value.value;
       lendingModel.lendingItemModel.itemImages = _item_images.value.toList();
 
       LendingOffersRepo.updateNewLendingItem(model: lendingModel).then((_) {
@@ -115,9 +113,9 @@ class AddUpdateItemBloc extends BlocBase {
 
 class AddItemValidationErrors {
   static const String itemNameError = 'itemName_error';
-  static const String estimated_value_error = '_estimated_value_error';
+  static const String estimated_value_error = 'estimated_value_error';
   static const String profanityError = "profanity_error";
-  static const String underscore_error = "_underscore_error";
+  static const String underscore_error = "underscore_error";
 }
 
 String getAddItemValidationError(BuildContext context, String errorCode) {

@@ -38,21 +38,19 @@ class _SelectLendingPlaceItemState extends State<SelectLendingPlaceItem> {
   SuggestionsBoxController controller = SuggestionsBoxController();
   TextEditingController _textEditingController = TextEditingController();
   FocusNode suggestionFocusNode = FocusNode();
-  Future<List<LendingModel>> future;
+  Future<List<LendingModel>> itemsFuture;
+  Future<List<LendingModel>> placesFuture;
+  bool isDataLoaded = false;
 
   @override
   void initState() {
-    // Future.delayed(Duration.zero, () {
-    //   if (widget.lendingType == LendingType.ITEM) {
-    //     future = LendingOffersRepo.getAllLendingItemModels(
-    //         creatorId: SevaCore.of(context).loggedInUser.sevaUserID);
-    //     setState(() {});
-    //   } else {
-    //     future = LendingOffersRepo.getAllLendingPlaces(
-    //         creatorId: SevaCore.of(context).loggedInUser.sevaUserID);
-    //     setState(() {});
-    //   }
-    // });
+    Future.delayed(Duration.zero, () {
+      itemsFuture = LendingOffersRepo.getAllLendingItemModels(
+          creatorId: SevaCore.of(context).loggedInUser.sevaUserID);
+      placesFuture = LendingOffersRepo.getAllLendingPlaces(
+          creatorId: SevaCore.of(context).loggedInUser.sevaUserID);
+      // setState(() {});
+    });
     super.initState();
   }
 
@@ -63,13 +61,15 @@ class _SelectLendingPlaceItemState extends State<SelectLendingPlaceItem> {
       children: [
         FutureBuilder(
             future: widget.lendingType == LendingType.ITEM
-                ? LendingOffersRepo.getAllLendingItemModels(
-                    creatorId: SevaCore.of(context).loggedInUser.sevaUserID)
-                : LendingOffersRepo.getAllLendingPlaces(
-                    creatorId: SevaCore.of(context).loggedInUser.sevaUserID),
+                ? itemsFuture
+                : placesFuture,
             builder: (context, snapshot) {
-              if (snapshot.data == null) {
-                return Container();
+              if (!isDataLoaded) {
+                isDataLoaded = true;
+
+                WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                  setState(() {});
+                });
               }
               return TypeAheadField<LendingModel>(
                 suggestionsBoxDecoration: SuggestionsBoxDecoration(
@@ -178,7 +178,7 @@ class _SelectLendingPlaceItemState extends State<SelectLendingPlaceItem> {
                     },
                   ),
                 ).then((_) {
-                  future = LendingOffersRepo.getAllLendingModels(
+                  itemsFuture = LendingOffersRepo.getAllLendingItemModels(
                       creatorId: SevaCore.of(context).loggedInUser.sevaUserID);
                   setState(() {});
                 });
@@ -196,7 +196,7 @@ class _SelectLendingPlaceItemState extends State<SelectLendingPlaceItem> {
                     },
                   ),
                 ).then((_) {
-                  future = LendingOffersRepo.getAllLendingModels(
+                  placesFuture = LendingOffersRepo.getAllLendingPlaces(
                       creatorId: SevaCore.of(context).loggedInUser.sevaUserID);
                   setState(() {});
                 });

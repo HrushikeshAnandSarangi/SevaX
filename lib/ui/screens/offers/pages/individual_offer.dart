@@ -1833,10 +1833,10 @@ class _IndividualOfferState extends State<IndividualOffer> {
                               .currentCommunity,
                           timebankId: widget.timebankId,
                           onPdfCreated: (pdfLink, documentNameFinal,
-                              agreementConfig, agreementId) {
+                              agreementConfig2, agreementId) {
                             borrowAgreementLinkFinal = pdfLink;
                             documentName = documentNameFinal;
-                            agreementConfig = agreementConfig;
+                            agreementConfig = agreementConfig2;
                             agreementIdFinal = agreementId;
                             // when request is created check if above value is stored in document
                             setState(() => {});
