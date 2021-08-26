@@ -1207,12 +1207,11 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                               await LendingOffersRepo.getBorrowAcceptorModel(
                                   offerId: model.id, acceptorEmail: user.email);
                           await LendingOffersRepo.getDialogForBorrowerToUpdate(
-                              offerModel: model,
-                              context: context,
-                              lendingOfferAcceptorModel:
-                                  lendingOfferAcceptorModel,
-                              timezone:
-                                  SevaCore.of(context).loggedInUser.timezone);
+                            offerModel: model,
+                            context: context,
+                            lendingOfferAcceptorModel:
+                                lendingOfferAcceptorModel,
+                          );
                         },
                         photoUrl: model.photoUrlImage,
                         subTitle:

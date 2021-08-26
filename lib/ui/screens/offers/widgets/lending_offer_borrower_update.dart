@@ -17,9 +17,10 @@ import '../../../../labels.dart';
 class LendingOfferBorrowerUpdateWidget extends StatefulWidget {
   final OfferModel offerModel;
   final LendingOfferAcceptorModel lendingOfferAcceptorModel;
-  final String timezone;
-  LendingOfferBorrowerUpdateWidget(
-      {this.offerModel, this.lendingOfferAcceptorModel, this.timezone});
+  LendingOfferBorrowerUpdateWidget({
+    this.offerModel,
+    this.lendingOfferAcceptorModel,
+  });
 
   @override
   _LendingOfferBorrowerUpdateWidgetState createState() =>
@@ -83,7 +84,8 @@ class _LendingOfferBorrowerUpdateWidgetState
                       getDateTimeAccToUserTimezone(
                           dateTime: DateTime.fromMillisecondsSinceEpoch(
                               widget.lendingOfferAcceptorModel.startDate),
-                          timezoneAbb: widget.timezone),
+                          timezoneAbb:
+                              SevaCore.of(context).loggedInUser.timezone),
                     ),
                 style: TextStyle(
                   fontStyle: FontStyle.italic,
@@ -98,7 +100,8 @@ class _LendingOfferBorrowerUpdateWidgetState
                       getDateTimeAccToUserTimezone(
                           dateTime: DateTime.fromMillisecondsSinceEpoch(
                               widget.lendingOfferAcceptorModel.endDate),
-                          timezoneAbb: widget.timezone),
+                          timezoneAbb:
+                              SevaCore.of(context).loggedInUser.timezone),
                     ),
                 style: TextStyle(
                   fontStyle: FontStyle.italic,
