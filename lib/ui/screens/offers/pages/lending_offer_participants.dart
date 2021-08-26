@@ -352,7 +352,7 @@ class LendingOfferParticipants extends StatelessWidget {
               ),
             ),
             onPressed: () {
-              LendingOffersRepo.updateOfferAcceptorAction(
+              LendingOffersRepo.updateOfferAcceptorActionRejected(
                 lendingOfferAcceptorModel: lendingOfferAcceptorModel,
                 action: OfferAcceptanceStatus.REJECTED,
                 model: offerModel,

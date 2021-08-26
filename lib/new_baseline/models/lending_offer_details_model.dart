@@ -14,6 +14,7 @@ class LendingOfferDetailsModel {
     this.offerAcceptors,
     this.offerInvites,
     this.approvedUsers,
+    this.completedUsers,
     this.collectedItems,
     this.returnedItems,
     this.checkedIn,
@@ -33,6 +34,7 @@ class LendingOfferDetailsModel {
   List<String> offerAcceptors = [];
   List<String> offerInvites = [];
   List<String> approvedUsers = [];
+  List<String> completedUsers = [];
   bool collectedItems;
   bool returnedItems;
   bool checkedIn;
@@ -71,6 +73,9 @@ class LendingOfferDetailsModel {
         approvedUsers: json["approvedUsers"] == null
             ? []
             : List<String>.from(json["approvedUsers"].map((x) => x)),
+        completedUsers: json["completedUsers"] == null
+            ? []
+            : List<String>.from(json["completedUsers"].map((x) => x)),
         collectedItems: json["collectedItems"] == null
             ? false
             : json["collectedItems"] ?? false,
@@ -116,6 +121,9 @@ class LendingOfferDetailsModel {
         "approvedUsers": approvedUsers == null
             ? []
             : List<dynamic>.from(approvedUsers.map((x) => x)),
+        "completedUsers": completedUsers == null
+            ? []
+            : List<dynamic>.from(completedUsers.map((x) => x)),
         "collectedItems": collectedItems == null ? false : collectedItems,
         "returnedItems": returnedItems == null ? false : returnedItems,
         "checkedIn": checkedIn == null ? false : checkedIn,

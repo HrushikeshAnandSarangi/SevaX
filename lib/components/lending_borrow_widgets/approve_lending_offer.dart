@@ -172,7 +172,7 @@ class _ApproveLendingOfferState extends State<ApproveLendingOffer> {
               style: TextStyle(color: Colors.black, fontFamily: 'Europa'),
             ),
             onPressed: () async {
-              LendingOffersRepo.updateOfferAcceptorAction(
+              LendingOffersRepo.updateOfferAcceptorActionRejected(
                 lendingOfferAcceptorModel: widget.lendingOfferAcceptorModel,
                 action: OfferAcceptanceStatus.REJECTED,
                 model: widget.offerModel,

@@ -502,11 +502,11 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                   ),
                   Offstage(offstage: !isCreator, child: editLendingOffer()),
                   Offstage(
-                    offstage: isCreator ||
-                        offerModel.lendingOfferDetailsModel.checkedOut,
-                    child: ActionButton(
-                        isAccepted: isAccepted, isApproved: isApproved),
-                  ),
+                      offstage: isCreator ||
+                          offerModel.lendingOfferDetailsModel.completedUsers
+                              .contains(email),
+                      child: ActionButton(
+                          isAccepted: isAccepted, isApproved: isApproved)),
                 ],
               ),
             ],
@@ -599,7 +599,8 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                   Offstage(offstage: !isCreator, child: editLendingOffer()),
                   Offstage(
                       offstage: isCreator ||
-                          offerModel.lendingOfferDetailsModel.returnedItems,
+                          offerModel.lendingOfferDetailsModel.completedUsers
+                              .contains(email),
                       child: ActionButton(
                           isAccepted: isAccepted, isApproved: isApproved)),
                 ],
