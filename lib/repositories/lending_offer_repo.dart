@@ -161,7 +161,7 @@ class LendingOffersRepo {
         senderUserId: lendingOfferAcceptorModel.acceptorId,
         type: NotificationType.MEMBER_ACCEPT_LENDING_OFFER,
         data: model.toMap(),
-        communityId: model.communityId,
+        communityId: lendingOfferAcceptorModel.communityId,
         isTimebankNotification: false,
         isRead: false,
         senderPhotoUrl: lendingOfferAcceptorModel.acceptorphotoURL);
@@ -328,6 +328,7 @@ class LendingOffersRepo {
         .add(lendingOfferAcceptorModel.acceptorEmail);
     model.lendingOfferDetailsModel.lendingOfferApprovedAgreementLink =
         lendingOfferApprovedAgreementLink ?? '';
+
     if (model.lendingOfferDetailsModel.lendingModel.lendingType ==
         LendingType.PLACE) {
       model.lendingOfferDetailsModel.checkedOut = false;
@@ -387,7 +388,16 @@ class LendingOffersRepo {
         .get()
         .then((data) {
       data.docs.forEach((document) {
-        model = LendingOfferAcceptorModel.fromMap(document.data());
+        model.id = document.id;
+        if (document.data()['status'] == LendingOfferStatus.ACCEPTED.readable ||
+            document.data()['status'] ==
+                LendingOfferStatus.CHECKED_OUT.readable ||
+            document.data()['status'] ==
+                LendingOfferStatus.ITEMS_RETURNED.readable) {
+          //dont add
+        } else {
+          model = LendingOfferAcceptorModel.fromMap(document.data());
+        }
       });
     });
     return model;
@@ -407,7 +417,11 @@ class LendingOffersRepo {
             LendingOfferAcceptorModel model =
                 LendingOfferAcceptorModel.fromMap(document.data());
             model.id = document.id;
-            if (model.status != LendingOfferStatus.ACCEPTED) {
+            if (model.status == LendingOfferStatus.ACCEPTED ||
+                model.status == LendingOfferStatus.CHECKED_OUT ||
+                model.status == LendingOfferStatus.ITEMS_RETURNED) {
+              //dont add
+            } else {
               requestSink.add(model);
             }
           });
@@ -508,18 +522,17 @@ class LendingOffersRepo {
     await batch.commit();
   }
 
-  static void getDialogForBorrowerToUpdate(
-      {BuildContext context,
-      OfferModel offerModel,
-      LendingOfferAcceptorModel lendingOfferAcceptorModel,
-      String timezone}) async {
+  static void getDialogForBorrowerToUpdate({
+    BuildContext context,
+    OfferModel offerModel,
+    LendingOfferAcceptorModel lendingOfferAcceptorModel,
+  }) async {
     showDialog(
       context: context,
       builder: (BuildContext viewContext) {
         return LendingOfferBorrowerUpdateWidget(
           offerModel: offerModel,
           lendingOfferAcceptorModel: lendingOfferAcceptorModel,
-          timezone: timezone,
         );
       },
     );

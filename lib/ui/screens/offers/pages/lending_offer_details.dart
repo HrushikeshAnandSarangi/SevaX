@@ -65,6 +65,7 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
   LendingType lendingType;
   OfferModel offerModel;
   bool isApproved = false;
+  bool isCompletedUser = false;
   @override
   void initState() {
     // TODO: implement initState
@@ -98,8 +99,12 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
             }
             var approvedUsers =
                 offerModel.lendingOfferDetailsModel.approvedUsers ?? [];
+            var completedUsers =
+                offerModel.lendingOfferDetailsModel.approvedUsers ?? [];
             isApproved =
                 approvedUsers.contains(SevaCore.of(context).loggedInUser.email);
+            isCompletedUser = completedUsers
+                .contains(SevaCore.of(context).loggedInUser.email);
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -617,7 +622,6 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
             LendingType.PLACE &&
         !offerModel.lendingOfferDetailsModel.checkedIn &&
         !offerModel.lendingOfferDetailsModel.checkedOut) {
-      lendingOfferStatus = LendingOfferStatus.CHECKED_IN;
       return L.of(context).check_in;
     } else if (offerModel.lendingOfferDetailsModel.lendingModel.lendingType ==
             LendingType.ITEM &&
@@ -630,7 +634,7 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
       return L.of(context).return_items;
     } else if (offerModel.lendingOfferDetailsModel.returnedItems) {
       return L.of(context).returned_items;
-    } else if (offerModel.lendingOfferDetailsModel.checkedOut) {
+    } else {
       return L.of(context).checked_out;
     }
   }
@@ -646,6 +650,8 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
             LendingType.ITEM &&
         !offerModel.lendingOfferDetailsModel.collectedItems &&
         !offerModel.lendingOfferDetailsModel.returnedItems) {
+      lendingOfferStatus = LendingOfferStatus.ITEMS_COLLECTED;
+
       return S.of(context).request_approved;
     } else if (offerModel.lendingOfferDetailsModel.checkedIn) {
       lendingOfferStatus = LendingOfferStatus.CHECKED_OUT;
@@ -1285,9 +1291,10 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                     ),
                     overflow: TextOverflow.ellipsis),
                 SizedBox(height: 2),
-                widget.offerModel.lendingOfferDetailsModel.lendingModel
-                            .lendingPlaceModel.contactInformation !=
-                        null
+                lendingType == LendingType.PLACE &&
+                        widget.offerModel.lendingOfferDetailsModel.lendingModel
+                                .lendingPlaceModel.contactInformation !=
+                            null
                     ? Text(
                         widget.offerModel.lendingOfferDetailsModel.lendingModel
                             .lendingPlaceModel.contactInformation,
