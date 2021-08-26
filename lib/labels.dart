@@ -1404,4 +1404,8 @@ class L {
   String get check_out_alert => 'Are you sure you want to check out?';
   String get return_items_alert => 'Are you sure you want to return items?';
   String get add_new => "Add new";
+  String get end_date_after_offer_end_date_place =>
+      "The check out date is after the offer end date. Please edit your offer end date or select a date before offer end date to approve this request.";
+  String get end_date_after_offer_end_date_item =>
+      "The return date is after the offer end date. Please edit your offer end date or select a date before offer end date to approve this request.";
 }

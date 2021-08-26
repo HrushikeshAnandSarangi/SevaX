@@ -209,6 +209,7 @@ class _ApproveLendingOfferState extends State<ApproveLendingOffer> {
                     OfferDurationWidgetState.starttimestamp;
                 widget.lendingOfferAcceptorModel.endDate =
                     OfferDurationWidgetState.endtimestamp;
+
                 if (widget.lendingOfferAcceptorModel.endDate <=
                     widget.lendingOfferAcceptorModel.startDate) {
                   errorDialog(
@@ -217,6 +218,25 @@ class _ApproveLendingOfferState extends State<ApproveLendingOffer> {
                   );
                   return;
                 }
+
+                if (widget.lendingOfferAcceptorModel.endDate >=
+                    widget.offerModel.lendingOfferDetailsModel.endDate) {
+                  widget.offerModel.lendingOfferDetailsModel.lendingModel
+                              .lendingType ==
+                          LendingType.PLACE
+                      ? errorDialog(
+                          context: context,
+                          error:
+                              L.of(context).end_date_after_offer_end_date_place,
+                        )
+                      : errorDialog(
+                          context: context,
+                          error:
+                              L.of(context).end_date_after_offer_end_date_item,
+                        );
+                  return;
+                }
+
                 if (widget.offerModel.lendingOfferDetailsModel
                         .lendingOfferAgreementLink !=
                     null) {
