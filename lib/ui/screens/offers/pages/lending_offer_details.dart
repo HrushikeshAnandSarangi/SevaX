@@ -656,7 +656,6 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
         !offerModel.lendingOfferDetailsModel.returnedItems) {
       lendingOfferStatus = LendingOfferStatus.ITEMS_COLLECTED;
 
-      lendingOfferStatus = LendingOfferStatus.ITEMS_COLLECTED;
       return S.of(context).request_approved;
     } else if (offerModel.lendingOfferDetailsModel.checkedIn) {
       lendingOfferStatus = LendingOfferStatus.CHECKED_OUT;
