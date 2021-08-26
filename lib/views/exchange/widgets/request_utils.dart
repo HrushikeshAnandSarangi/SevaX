@@ -2,7 +2,9 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/models/cash_model.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/models/payment_detail_model.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/helpers/projects_helper.dart';
 import 'package:sevaexchange/utils/utils.dart';
@@ -151,5 +153,60 @@ class RequestUtils {
 
   getInitialAmount(offer, isOfferRequest) {
     return offer != null && isOfferRequest ? getCashDonationAmount(offerDataModel: offer) : "";
+  }
+
+  String mobilePattern = r'^[0-9]+$';
+  RegExp emailPattern =
+      RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+
+  String validateEmailAndPhone(String value, context) {
+    RegExp regExp = RegExp(mobilePattern);
+    if (value.isEmpty) {
+      return S.of(context).validation_error_general_text;
+    } else if (emailPattern.hasMatch(value) || regExp.hasMatch(value)) {
+      return null;
+    } else {
+      return S.of(context).enter_valid_link;
+    }
+  }
+
+  initializePaymentModel({CashModel cashModel}) {
+    PaymentDetailModel paymentDetailModel = PaymentDetailModel();
+    switch (cashModel.paymentType) {
+      case RequestPaymentType.ACH:
+        paymentDetailModel.paymentMode = PaymentMode.ACH;
+        paymentDetailModel.paymentEventType = ACHPayment(
+            bank_name: cashModel.achdetails.bank_name,
+            bank_address: cashModel.achdetails.bank_address,
+            account_number: cashModel.achdetails.account_number,
+            routing_number: cashModel.achdetails.routing_number);
+        break;
+      case RequestPaymentType.ZELLEPAY:
+        paymentDetailModel.paymentMode = PaymentMode.ZELLEPAY;
+        paymentDetailModel.paymentEventType = ZellePayment(
+          zelleId: cashModel.zelleId,
+        );
+        break;
+      case RequestPaymentType.PAYPAL:
+        paymentDetailModel.paymentMode = PaymentMode.PAYPAL;
+        paymentDetailModel.paymentEventType = PayPalPayment(
+          paypalId: cashModel.paypalId,
+        );
+        break;
+      case RequestPaymentType.VENMO:
+        paymentDetailModel.paymentMode = PaymentMode.VENMO;
+        paymentDetailModel.paymentEventType = VenmoPayment(venmoId: cashModel.venmoId);
+        break;
+      case RequestPaymentType.SWIFT:
+        paymentDetailModel.paymentMode = PaymentMode.SWIFT;
+        paymentDetailModel.paymentEventType = SwiftPayment(swiftId: cashModel.swiftId);
+        break;
+      case RequestPaymentType.OTHER:
+        paymentDetailModel.paymentMode = PaymentMode.OTHER;
+        paymentDetailModel.paymentEventType =
+            OtherPayment(others: cashModel.others, other_details: cashModel.other_details);
+        break;
+    }
+    return paymentDetailModel;
   }
 }

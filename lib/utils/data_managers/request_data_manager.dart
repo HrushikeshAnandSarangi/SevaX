@@ -38,8 +38,8 @@ import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/exchange/create_request/request_enums.dart';
-import 'package:sevaexchange/views/exchange/mail_content_template.dart';
+import 'package:sevaexchange/views/exchange/widgets/request_enums.dart';
+import 'package:sevaexchange/views/exchange/widgets/mail_content_template.dart';
 import 'package:usage/uuid/uuid.dart';
 
 import '../app_config.dart';

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -7,17 +8,20 @@ import 'package:sevaexchange/components/duration_picker/offer_duration_widget.da
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/models/payment_detail_model.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/helpers/configuration_check.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/exchange/category_widget.dart';
-import 'package:sevaexchange/views/exchange/create_request/payment_description.dart';
-import 'package:sevaexchange/views/exchange/create_request/project_selection.dart';
-import 'package:sevaexchange/views/exchange/create_request/request_enums.dart';
-import 'package:sevaexchange/views/exchange/request_utils.dart';
+import 'package:sevaexchange/views/exchange/payment_detail/capture_payment_detail_widget.dart';
+import 'package:sevaexchange/views/exchange/widgets/category_widget.dart';
+import 'package:sevaexchange/views/exchange/widgets/payment_description.dart';
+import 'package:sevaexchange/views/exchange/widgets/project_selection.dart';
+import 'package:sevaexchange/views/exchange/widgets/request_enums.dart';
+import 'package:sevaexchange/views/exchange/widgets/request_utils.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/widgets/add_images_for_request.dart';
@@ -65,6 +69,7 @@ class _CashRequestState extends State<CashRequest> {
   final _debouncer = Debouncer(milliseconds: 500);
   List<CategoryModel> selectedCategoryModels = [];
   String categoryMode;
+  PaymentDetailModel paymentDetailModel;
 
   Widget addToProjectContainer() {
     if (requestUtils.isFromRequest(projectId: widget.projectId)) {
@@ -143,6 +148,7 @@ class _CashRequestState extends State<CashRequest> {
   @override
   void initState() {
     super.initState();
+    paymentDetailModel = requestUtils.initializePaymentModel(cashModel: widget.requestModel.cashModel);
     if (widget.formType == RequestFormType.EDIT) {
       getCategoryModels(widget.requestModel.categories).then((value) {
         selectedCategoryModels = value;
@@ -365,7 +371,57 @@ class _CashRequestState extends State<CashRequest> {
       SizedBox(height: 20),
       addToProjectContainer(),
       SizedBox(height: 20),
-      PaymentDescription(requestModel: widget.requestModel),
+      // PaymentDescription(requestModel: widget.requestModel),
+      CapturePaymentDetailWidget(
+        onTap: () {
+          if (FocusScope.of(context).hasFocus) FocusScope.of(context).unfocus();
+        },
+        capturePaymentFrom: CapturePaymentFrom.CREATE_REQUEST,
+        paymentDetailModel: paymentDetailModel,
+        onPaymentEventChanged: (event) {
+          if (event is ZellePayment) {
+            widget.requestModel.cashModel.zelleId = event.zelleId;
+          } else if (event is ACHPayment) {
+            widget.requestModel.cashModel.achdetails.bank_name = event.bank_name;
+            widget.requestModel.cashModel.achdetails.bank_address = event.bank_address;
+            widget.requestModel.cashModel.achdetails.account_number = event.account_number;
+            widget.requestModel.cashModel.achdetails.routing_number = event.routing_number;
+          } else if (event is PayPalPayment) {
+            widget.requestModel.cashModel.paypalId = event.paypalId;
+          } else if (event is VenmoPayment) {
+            widget.requestModel.cashModel.venmoId = event.venmoId;
+          } else if (event is SwiftPayment) {
+            widget.requestModel.cashModel.swiftId = event.swiftId;
+          } else if (event is OtherPayment) {
+            widget.requestModel.cashModel.others = event.others;
+            widget.requestModel.cashModel.other_details = event.other_details;
+          }
+          logger.d("DATA MODEL CHANGED ${jsonEncode(widget.requestModel.cashModel.toMap())}");
+        },
+        onDropDownChanged: (value) {
+          switch (value) {
+            case PaymentMode.ACH:
+              widget.requestModel.cashModel.paymentType = RequestPaymentType.ACH;
+              break;
+            case PaymentMode.ZELLEPAY:
+              widget.requestModel.cashModel.paymentType = RequestPaymentType.ZELLEPAY;
+              break;
+            case PaymentMode.PAYPAL:
+              widget.requestModel.cashModel.paymentType = RequestPaymentType.PAYPAL;
+              break;
+            case PaymentMode.VENMO:
+              widget.requestModel.cashModel.paymentType = RequestPaymentType.VENMO;
+              break;
+            case PaymentMode.SWIFT:
+              widget.requestModel.cashModel.paymentType = RequestPaymentType.SWIFT;
+              break;
+            case PaymentMode.OTHER:
+              widget.requestModel.cashModel.paymentType = RequestPaymentType.OTHER;
+              break;
+          }
+          // requestModel.cashModel.paymentType = value;
+        },
+      ),
       HideWidget(
         hide: AppConfig.isTestCommunity,
         child: Padding(

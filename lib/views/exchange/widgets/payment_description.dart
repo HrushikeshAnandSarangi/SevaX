@@ -3,7 +3,7 @@ import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/models.dart';
-import 'package:sevaexchange/views/exchange/request_utils.dart';
+import 'package:sevaexchange/views/exchange/widgets/request_utils.dart';
 
 class PaymentDescription extends StatefulWidget {
   final RequestModel requestModel;

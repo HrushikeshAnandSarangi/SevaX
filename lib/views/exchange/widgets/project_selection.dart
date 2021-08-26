@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
-import 'package:sevaexchange/views/exchange/create_request/request_enums.dart';
+import 'package:sevaexchange/views/exchange/widgets/request_enums.dart';
 import 'package:sevaexchange/widgets/multi_select/flutter_multiselect.dart';
 
 // ignore: must_be_immutable

@@ -84,7 +84,7 @@ class CashModel {
                                 ? RequestPaymentType.OTHER
                                 : RequestPaymentType.PAYPAL,
         amountRaised:
-            json["amountRaised"] == null ? null : json["amountRaised"],
+            json["amountRaised"] == null ? null : int.parse(json["amountRaised"].round().toString()),
         donors: json["donors"] == null
             ? []
             : List<String>.from(json["donors"].map((x) => x)),
