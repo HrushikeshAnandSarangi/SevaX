@@ -1250,7 +1250,10 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                     onDismissed: () {
                                       NotificationsRepository
                                           .readUserNotification(
-                                              notification.id, user.email);
+                                              notification.id,
+                                              SevaCore.of(context)
+                                                  .loggedInUser
+                                                  .email);
                                     },
                                   )
                                 : Container();
@@ -1307,7 +1310,10 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                     onDismissed: () {
                                       NotificationsRepository
                                           .readUserNotification(
-                                              notification.id, user.email);
+                                              notification.id,
+                                              SevaCore.of(context)
+                                                  .loggedInUser
+                                                  .email);
                                     },
                                   )
                                 : Container();
@@ -1344,7 +1350,10 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                     onDismissed: () {
                                       NotificationsRepository
                                           .readUserNotification(
-                                              notification.id, user.email);
+                                              notification.id,
+                                              SevaCore.of(context)
+                                                  .loggedInUser
+                                                  .email);
                                     },
                                   )
                                 : Container();
@@ -1400,7 +1409,10 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                     onDismissed: () {
                                       NotificationsRepository
                                           .readUserNotification(
-                                              notification.id, user.email);
+                                              notification.id,
+                                              SevaCore.of(context)
+                                                  .loggedInUser
+                                                  .email);
                                     },
                                   )
                                 : Container();
