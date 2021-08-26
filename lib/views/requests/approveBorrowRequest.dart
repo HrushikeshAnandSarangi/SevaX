@@ -107,9 +107,49 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
               style: TextStyle(fontSize: 14, color: Colors.grey),
             ),
             SizedBox(height: 10),
-            Text(
-              L.of(context).provide_place_for_lending,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  L.of(context).select_a_place_lending,
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                InkWell(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return AddUpdateLendingPlace(
+                            lendingModel: null,
+                            enteredTitle: '',
+                            onPlaceCreateUpdate: (LendingModel model) {
+                              selectedLendingPlaceModel = model;
+                              setState(() {});
+                            },
+                          );
+                        },
+                      ),
+                    );
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        L.of(context).add_new,
+                        style: TextStyle(
+                          fontSize: 14,
+                          //fontWeight: FontWeight.bold,
+                          fontFamily: 'Europa',
+                          color: Colors.black,
+                        ),
+                      ),
+                      SizedBox(width: 3),
+                      Icon(Icons.add_circle_rounded,
+                          size: 25, color: Colors.grey[600]),
+                    ],
+                  ),
+                ),
+              ],
             ),
             SizedBox(height: 10),
             SelectLendingPlaceItem(
@@ -177,6 +217,52 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
               style: TextStyle(fontSize: 14, color: Colors.grey),
             ),
             SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  L.of(context).select_item_for_lending,
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                InkWell(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return AddUpdateLendingItem(
+                            lendingModel: null,
+                            enteredTitle: '',
+                            onItemCreateUpdate: (LendingModel model) {
+                              // if (!selectedItemModels.contains(model)) {
+                              selectedItemModels.add(model);
+                              // }
+                              setState(() {});
+                            },
+                          );
+                        },
+                      ),
+                    );
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        L.of(context).add_new,
+                        style: TextStyle(
+                          fontSize: 14,
+                          //fontWeight: FontWeight.bold,
+                          fontFamily: 'Europa',
+                          color: Colors.black,
+                        ),
+                      ),
+                      SizedBox(width: 3),
+                      Icon(Icons.add_circle_rounded,
+                          size: 25, color: Colors.grey[600]),
+                    ],
+                  ),
+                ),
+              ],
+            ),
             SelectLendingPlaceItem(
               onSelected: (LendingModel model) {
                 if (!selectedItemModels.contains(model)) {
