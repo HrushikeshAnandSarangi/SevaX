@@ -65,11 +65,33 @@ class PendingTasks {
     ));
   }
 
+  static Stream<List<OfferModel>> getLendingOfferAcceptedStream(
+      {String email}) async* {
+    yield* CollectionRef.offers
+        .where('requestType', isEqualTo: 'LENDING_OFFER')
+        .where('lendingOfferDetailsModel.endDate',
+            isGreaterThan: DateTime.now().millisecondsSinceEpoch)
+        .where('lendingOfferDetailsModel.offerAcceptors', arrayContains: email)
+        .snapshots()
+        .transform(
+            StreamTransformer<QuerySnapshot, List<OfferModel>>.fromHandlers(
+      handleData: (data, sink) {
+        List<OfferModel> lendingOffers = [];
+
+        data.docs.forEach((element) {
+          var offerModel = OfferModel.fromMap(element.data());
+          lendingOffers.add(offerModel);
+        });
+        sink.add(lendingOffers);
+      },
+    ));
+  }
+
   static Stream<Object> getPendingTasks({
     loggedinMemberEmail,
     loggedInmemberId,
   }) {
-    return CombineLatestStream.combine4(
+    return CombineLatestStream.combine5(
       FirestoreManager.getNotAcceptedRequestStream(
         userEmail: loggedinMemberEmail,
         userId: loggedInmemberId,
@@ -83,11 +105,13 @@ class PendingTasks {
         loggedInMemberId: loggedInmemberId,
         loggedInUserEmail: loggedinMemberEmail,
       ),
+      getLendingOfferAcceptedStream(email: loggedinMemberEmail),
       (
         pendingClaims,
         acceptedIndividualOffers,
         getSpeakerClaimedCompletionRequestStream,
         pendingCreditRequests,
+        pendingLendingOffers,
         // oneToManyOffersCreated,
       ) =>
           [
@@ -95,6 +119,7 @@ class PendingTasks {
         acceptedIndividualOffers,
         getSpeakerClaimedCompletionRequestStream,
         pendingCreditRequests,
+        pendingLendingOffers,
         // oneToManyOffersCreated,
       ],
     );
@@ -196,6 +221,19 @@ class PendingTasks {
       );
     });
 
+    //Lending offer pending offer
+    List<OfferModel> pendingLendingOffers = pendingSink[4];
+    pendingLendingOffers.forEach((element) {
+      tasksList.add(TasksCardWrapper(
+        taskCard: ToDoCard(
+          onTap: null,
+          title: element.individualOfferDataModel.title,
+          subTitle: element.individualOfferDataModel.description,
+          tag: L.of(context).lending_offer,
+          timeInMilliseconds: element.lendingOfferDetailsModel.startDate,
+        ),
+      ));
+    });
     tasksList.sort((a, b) => b.taskTimestamp.compareTo(a.taskTimestamp));
     return tasksList;
   }

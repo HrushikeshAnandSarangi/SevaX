@@ -1408,4 +1408,5 @@ class L {
       "The check out date is after the offer end date. Please edit your offer end date or select a date before offer end date to approve this request.";
   String get end_date_after_offer_end_date_item =>
       "The return date is after the offer end date. Please edit your offer end date or select a date before offer end date to approve this request.";
+  String get completed_lending_offer => "Completed Lending Offer";
 }
