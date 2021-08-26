@@ -236,7 +236,7 @@ class LendingOffersRepo {
     );
   }
 
-  static Future<void> updateOfferAcceptorAction(
+  static Future<void> updateOfferAcceptorActionRejected(
       {OfferAcceptanceStatus action,
       @required OfferModel model,
       @required LendingOfferAcceptorModel lendingOfferAcceptorModel}) async {
@@ -328,12 +328,12 @@ class LendingOffersRepo {
         .add(lendingOfferAcceptorModel.acceptorEmail);
     model.lendingOfferDetailsModel.lendingOfferApprovedAgreementLink =
         lendingOfferApprovedAgreementLink ?? '';
-    // if (model.lendingOfferDetailsModel.lendingModel.lendingType ==
-    //     LendingType.PLACE) {
-    //   model.lendingOfferDetailsModel.checkedIn = true;
-    // } else {
-    //   model.lendingOfferDetailsModel.collectedItems = true;
-    // }
+    if (model.lendingOfferDetailsModel.lendingModel.lendingType ==
+        LendingType.PLACE) {
+      model.lendingOfferDetailsModel.checkedOut = false;
+    } else {
+      model.lendingOfferDetailsModel.returnedItems = false;
+    }
     NotificationsModel notification = NotificationsModel(
         timebankId: model.timebankId,
         id: utils.Utils.getUuid(),
@@ -430,6 +430,10 @@ class LendingOffersRepo {
       }
       offerModel.lendingOfferDetailsModel.checkedOut = true;
       offerModel.lendingOfferDetailsModel.checkedIn = false;
+      offerModel.lendingOfferDetailsModel.approvedUsers
+          .remove(lendingOfferAcceptorModel.acceptorEmail);
+      offerModel.lendingOfferDetailsModel.completedUsers
+          .add(lendingOfferAcceptorModel.acceptorEmail);
     } else if (lendingOfferStatus == LendingOfferStatus.ITEMS_COLLECTED) {
       notificationType =
           NotificationType.NOTIFICATION_TO_LENDER_ITEMS_COLLECTED;
@@ -442,6 +446,10 @@ class LendingOffersRepo {
       }
       offerModel.lendingOfferDetailsModel.returnedItems = true;
       offerModel.lendingOfferDetailsModel.collectedItems = false;
+      offerModel.lendingOfferDetailsModel.approvedUsers
+          .remove(lendingOfferAcceptorModel.acceptorEmail);
+      offerModel.lendingOfferDetailsModel.completedUsers
+          .add(lendingOfferAcceptorModel.acceptorEmail);
     }
 
     NotificationsModel notification = NotificationsModel(
