@@ -2,6 +2,8 @@ import 'package:sevaexchange/new_baseline/models/lending_model.dart';
 
 class LendingOfferDetailsModel {
   LendingOfferDetailsModel({
+    this.approvedStartDate,
+    this.approvedEndDate,
     this.startDate,
     this.endDate,
     this.lendingModel,
@@ -19,6 +21,8 @@ class LendingOfferDetailsModel {
     this.agreementConfig,
     this.lendingOfferTypeMode,
   });
+  int approvedStartDate;
+  int approvedEndDate;
   int startDate;
   int endDate;
   LendingModel lendingModel;
@@ -37,6 +41,11 @@ class LendingOfferDetailsModel {
   Map<String, dynamic> agreementConfig = {};
   factory LendingOfferDetailsModel.fromMap(Map<String, dynamic> json) =>
       LendingOfferDetailsModel(
+        approvedStartDate: json["approvedStartDate"] == null
+            ? null
+            : json["approvedStartDate"],
+        approvedEndDate:
+            json["approvedEndDate"] == null ? null : json["approvedEndDate"],
         startDate: json["startDate"] == null ? null : json["startDate"],
         endDate: json["endDate"] == null ? null : json["endDate"],
         lendingOfferAgreementLink: json["lendingOfferAgreementLink"] == null
@@ -81,6 +90,9 @@ class LendingOfferDetailsModel {
       );
 
   Map<String, dynamic> toMap() => {
+        "approvedStartDate":
+            approvedStartDate == null ? null : approvedStartDate,
+        "approvedEndDate": approvedEndDate == null ? null : approvedEndDate,
         "startDate": startDate == null ? null : startDate,
         "endDate": endDate == null ? null : endDate,
         "lendingOfferAgreementLink": lendingOfferAgreementLink == null

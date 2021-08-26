@@ -328,6 +328,10 @@ class LendingOffersRepo {
         .add(lendingOfferAcceptorModel.acceptorEmail);
     model.lendingOfferDetailsModel.lendingOfferApprovedAgreementLink =
         lendingOfferApprovedAgreementLink ?? '';
+    model.lendingOfferDetailsModel.approvedStartDate =
+        lendingOfferAcceptorModel.startDate;
+    model.lendingOfferDetailsModel.approvedEndDate =
+        lendingOfferAcceptorModel.endDate;
     // if (model.lendingOfferDetailsModel.lendingModel.lendingType ==
     //     LendingType.PLACE) {
     //   model.lendingOfferDetailsModel.checkedIn = true;

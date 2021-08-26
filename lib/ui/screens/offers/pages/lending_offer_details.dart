@@ -427,42 +427,46 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Container(
-                margin: EdgeInsets.only(right: 5),
-                child: RichText(
-                  text: TextSpan(
-                    style: TextStyle(color: Colors.black),
-                    children: [
-                      canDeleteOffer
-                          ? TextSpan(
-                              text: '${S.of(context).you_created_offer}',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            )
-                          : isApproved
-                              ? TextSpan(
-                                  text: getStatusLabel(),
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                )
-                              : TextSpan(
-                                  text: isCreator
-                                      ? S.of(context).you_created_offer
-                                      : isAccepted
-                                          ? L.of(context).withdraw_lending_offer
-                                          : S
-                                              .of(context)
-                                              .would_like_to_accept_offer,
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+              Expanded(
+                child: Container(
+                  margin: EdgeInsets.only(right: 5),
+                  child: RichText(
+                    text: TextSpan(
+                      style: TextStyle(color: Colors.black),
+                      children: [
+                        canDeleteOffer
+                            ? TextSpan(
+                                text: '${S.of(context).you_created_offer}',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                    ],
+                              )
+                            : isApproved
+                                ? TextSpan(
+                                    text: getStatusLabel(),
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  )
+                                : TextSpan(
+                                    text: isCreator
+                                        ? S.of(context).you_created_offer
+                                        : isAccepted
+                                            ? L
+                                                .of(context)
+                                                .withdraw_lending_offer
+                                            : S
+                                                .of(context)
+                                                .would_like_to_accept_offer,
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -498,10 +502,11 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                   ),
                   Offstage(offstage: !isCreator, child: editLendingOffer()),
                   Offstage(
-                      offstage: isCreator ||
-                          lendingOfferStatus == LendingOfferStatus.CHECKED_OUT,
-                      child: ActionButton(
-                          isAccepted: isAccepted, isApproved: isApproved)),
+                    offstage: isCreator ||
+                        offerModel.lendingOfferDetailsModel.checkedOut,
+                    child: ActionButton(
+                        isAccepted: isAccepted, isApproved: isApproved),
+                  ),
                 ],
               ),
             ],
@@ -594,8 +599,7 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                   Offstage(offstage: !isCreator, child: editLendingOffer()),
                   Offstage(
                       offstage: isCreator ||
-                          lendingOfferStatus ==
-                              LendingOfferStatus.ITEMS_RETURNED,
+                          offerModel.lendingOfferDetailsModel.returnedItems,
                       child: ActionButton(
                           isAccepted: isAccepted, isApproved: isApproved)),
                 ],
@@ -695,7 +699,7 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
     log('isACeepted $isAccepted');
     log('isAprroved $isApproved');
     return Container(
-      width: 135,
+      // width: 130,
       height: 32,
       child: ConfigurationCheck(
         actionType: ConfigurationCheckExtension.getOfferAcceptanceKey(
@@ -713,7 +717,7 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
             children: <Widget>[
               SizedBox(width: 1),
               Container(
-                width: 25,
+                width: 22,
                 height: 25,
                 decoration: BoxDecoration(
                   color: Color.fromRGBO(44, 64, 140, 1),
@@ -724,7 +728,7 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                   color: Colors.white,
                 ),
               ),
-              SizedBox(width: 10),
+              SizedBox(width: 6),
               Text(
                 isApproved
                     ? getButtonActionLabel()
@@ -891,7 +895,7 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                   offerModel.fullName;
               subTitle = ' ';
               dateText = L.of(context).arrival +
-                  ':' +
+                  ': ' +
                   DateFormat('EEEEEE, MMMM dd yyyy',
                           Locale(getLangTag()).toLanguageTag())
                       .format(
@@ -902,7 +906,7 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                             SevaCore.of(context).loggedInUser.timezone),
                   );
               dateSubText = L.of(context).departure +
-                  ':' +
+                  ': ' +
                   DateFormat.MMMd(getLangTag()).add_jm().format(
                         getDateTimeAccToUserTimezone(
                           dateTime: DateTime.fromMillisecondsSinceEpoch(
@@ -1200,7 +1204,9 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              reviewWidget,
+              lendingOfferAcceptorModel.isBorrowerGaveReview
+                  ? Container()
+                  : reviewWidget,
             ]),
           );
         });

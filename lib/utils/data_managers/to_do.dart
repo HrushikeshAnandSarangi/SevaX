@@ -503,13 +503,136 @@ class ToDo {
       }
     });
 
+    //for borrow request, request creator / Borrower needs to see in To do when needs to collect or check in
+    List<OfferModel> lendingOfferBorrowerRequestApproved = toDoSink[6];
+    lendingOfferBorrowerRequestApproved.forEach((model) async {
+      logger.e('LENGTH OF APPROVED: ' +
+          lendingOfferBorrowerRequestApproved.length.toString());
+
+      if (model.lendingOfferDetailsModel.lendingModel.lendingType ==
+          LendingType.ITEM) {
+        //FOR BORROW ITEMS
+        if (!model.lendingOfferDetailsModel.collectedItems) {
+          //items to be collected status
+          tasksList.add(
+            TasksCardWrapper(
+              taskCard: ToDoCard(
+                title: model.individualOfferDataModel.title,
+                subTitle:
+                    L.of(context).collect_items + model.selectedAdrress != null
+                        ? ' at ' + model.selectedAdrress
+                        : '',
+                timeInMilliseconds:
+                    model.lendingOfferDetailsModel.approvedStartDate,
+                onTap: () async {
+                  LendingOfferAcceptorModel lendingOfferAcceptorModel =
+                      await LendingOffersRepo.getBorrowAcceptorModel(
+                          offerId: model.id, acceptorEmail: email);
+                  await LendingOffersRepo.getDialogForBorrowerToUpdate(
+                      offerModel: model,
+                      context: context,
+                      lendingOfferAcceptorModel: lendingOfferAcceptorModel);
+                },
+                tag: L.of(context).lending_offer_collect_items_tag,
+              ),
+              taskTimestamp: model.lendingOfferDetailsModel.approvedStartDate ??
+                  DateTime.now().millisecondsSinceEpoch,
+            ),
+          );
+        } else if (model.lendingOfferDetailsModel
+                .collectedItems && //items to be returned status
+            !model.lendingOfferDetailsModel.returnedItems) {
+          tasksList.add(
+            TasksCardWrapper(
+              taskCard: ToDoCard(
+                title: model.individualOfferDataModel.title,
+                subTitle:
+                    L.of(context).return_items + model.selectedAdrress != null
+                        ? ' at ' + model.selectedAdrress
+                        : '',
+                timeInMilliseconds:
+                    model.lendingOfferDetailsModel.approvedEndDate,
+                onTap: () async {
+                  LendingOfferAcceptorModel lendingOfferAcceptorModel =
+                      await LendingOffersRepo.getBorrowAcceptorModel(
+                          offerId: model.id, acceptorEmail: email);
+                  await LendingOffersRepo.getDialogForBorrowerToUpdate(
+                      offerModel: model,
+                      context: context,
+                      lendingOfferAcceptorModel: lendingOfferAcceptorModel);
+                },
+                tag: L.of(context).lending_offer_return_items_tag,
+              ),
+              taskTimestamp: model.lendingOfferDetailsModel.approvedStartDate ??
+                  DateTime.now().millisecondsSinceEpoch,
+            ),
+          );
+        }
+        //FOR BORROW PLACE
+      } else {
+        if (!model.lendingOfferDetailsModel.checkedIn) {
+          //items to be collected status
+          tasksList.add(
+            TasksCardWrapper(
+              taskCard: ToDoCard(
+                title: model.individualOfferDataModel.title,
+                subTitle: L.of(context).arrive + model.selectedAdrress != null
+                    ? ' at ' + model.selectedAdrress
+                    : '',
+                timeInMilliseconds:
+                    model.lendingOfferDetailsModel.approvedStartDate,
+                onTap: () async {
+                  LendingOfferAcceptorModel lendingOfferAcceptorModel =
+                      await LendingOffersRepo.getBorrowAcceptorModel(
+                          offerId: model.id, acceptorEmail: email);
+                  await LendingOffersRepo.getDialogForBorrowerToUpdate(
+                      offerModel: model,
+                      context: context,
+                      lendingOfferAcceptorModel: lendingOfferAcceptorModel);
+                },
+                tag: L.of(context).lending_offer_check_in_tag,
+              ),
+              taskTimestamp: model.lendingOfferDetailsModel.approvedStartDate ??
+                  DateTime.now().millisecondsSinceEpoch,
+            ),
+          );
+        } else if (model.lendingOfferDetailsModel
+                .checkedIn && //items to be returned status
+            !model.lendingOfferDetailsModel.checkedOut) {
+          tasksList.add(
+            TasksCardWrapper(
+              taskCard: ToDoCard(
+                title: model.individualOfferDataModel.title,
+                subTitle:
+                    L.of(context).departure + model.selectedAdrress != null
+                        ? ' at ' + model.selectedAdrress
+                        : '',
+                timeInMilliseconds:
+                    model.lendingOfferDetailsModel.approvedEndDate,
+                onTap: () async {
+                  LendingOfferAcceptorModel lendingOfferAcceptorModel =
+                      await LendingOffersRepo.getBorrowAcceptorModel(
+                          offerId: model.id, acceptorEmail: email);
+                  await LendingOffersRepo.getDialogForBorrowerToUpdate(
+                      offerModel: model,
+                      context: context,
+                      lendingOfferAcceptorModel: lendingOfferAcceptorModel);
+                },
+                tag: L.of(context).lending_offer_check_out_tag,
+              ),
+              taskTimestamp: model.lendingOfferDetailsModel.approvedStartDate ??
+                  DateTime.now().millisecondsSinceEpoch,
+            ),
+          );
+        }
+      }
+    });
+
     tasksList.sort((a, b) => b.taskTimestamp.compareTo(a.taskTimestamp));
     logger.e('Tasks Length Last: ' + tasksList.length.toString());
 
     return tasksList;
   }
-
- 
 
   static Future oneToManySpeakerCompletesRequest(
       BuildContext context, RequestModel requestModel) async {
