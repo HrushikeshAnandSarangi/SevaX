@@ -142,6 +142,8 @@ class _IndividualOfferState extends State<IndividualOffer> {
             borrowAgreementLinkFinal = widget.offerModel
                     .lendingOfferDetailsModel.lendingOfferAgreementLink ??
                 '';
+            agreementIdFinal =
+                widget.offerModel.lendingOfferDetailsModel.agreementId ?? '';
             documentName = widget.offerModel.lendingOfferDetailsModel
                     .lendingOfferAgreementName ??
                 '';
@@ -1593,61 +1595,61 @@ class _IndividualOfferState extends State<IndividualOffer> {
                 color: Colors.black,
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  L.of(context).add_new,
-                  style: TextStyle(
-                    fontSize: 14,
-                    //fontWeight: FontWeight.bold,
-                    fontFamily: 'Europa',
-                    color: Colors.black,
+            InkWell(
+              onTap: () {
+                if (_bloc.lendingOfferType == 1) {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return AddUpdateLendingItem(
+                          lendingModel: null,
+                          enteredTitle: '',
+                          onItemCreateUpdate: (LendingModel model) {
+                            _bloc.onLendingModelAdded(model);
+                            setState(() {
+                              selectedLendingModel = model;
+                            });
+                          },
+                        );
+                      },
+                    ),
+                  );
+                } else {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return AddUpdateLendingPlace(
+                          lendingModel: null,
+                          enteredTitle: '',
+                          onPlaceCreateUpdate: (LendingModel model) {
+                            _bloc.onLendingModelAdded(model);
+                            setState(() {
+                              selectedLendingModel = model;
+                            });
+                          },
+                        );
+                      },
+                    ),
+                  );
+                }
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    L.of(context).add_new,
+                    style: TextStyle(
+                      fontSize: 14,
+                      //fontWeight: FontWeight.bold,
+                      fontFamily: 'Europa',
+                      color: Colors.black,
+                    ),
                   ),
-                ),
-                SizedBox(width: 3),
-                InkWell(
-                  onTap: () {
-                    if (_bloc.lendingOfferType == 1) {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return AddUpdateLendingItem(
-                              lendingModel: null,
-                              enteredTitle: '',
-                              onItemCreateUpdate: (LendingModel model) {
-                                _bloc.onLendingModelAdded(model);
-                                setState(() {
-                                  selectedLendingModel = model;
-                                });
-                              },
-                            );
-                          },
-                        ),
-                      );
-                    } else {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return AddUpdateLendingPlace(
-                              lendingModel: null,
-                              enteredTitle: '',
-                              onPlaceCreateUpdate: (LendingModel model) {
-                                _bloc.onLendingModelAdded(model);
-                                setState(() {
-                                  selectedLendingModel = model;
-                                });
-                              },
-                            );
-                          },
-                        ),
-                      );
-                    }
-                  },
-                  child: Icon(Icons.add_circle_rounded,
+                  SizedBox(width: 3),
+                  Icon(Icons.add_circle_rounded,
                       size: 25, color: Colors.grey[600]),
-                ),
-              ],
+                ],
+              ),
             ),
           ],
         ),

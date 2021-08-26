@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/enums/lending_borrow_enums.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/lending_model.dart';
 import 'package:sevaexchange/repositories/lending_offer_repo.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/lending_offer_participants.dart';
+import 'package:sevaexchange/ui/utils/date_formatter.dart';
+import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
+import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 import '../../../../flavor_config.dart';
@@ -13,8 +17,9 @@ import '../../../../labels.dart';
 class LendingOfferBorrowerUpdateWidget extends StatefulWidget {
   final OfferModel offerModel;
   final LendingOfferAcceptorModel lendingOfferAcceptorModel;
+  final String timezone;
   LendingOfferBorrowerUpdateWidget(
-      {this.offerModel, this.lendingOfferAcceptorModel});
+      {this.offerModel, this.lendingOfferAcceptorModel, this.timezone});
 
   @override
   _LendingOfferBorrowerUpdateWidgetState createState() =>
@@ -53,7 +58,7 @@ class _LendingOfferBorrowerUpdateWidgetState
             Padding(
               padding: EdgeInsets.all(8.0),
               child: Text(
-                widget.offerModel.individualOfferDataModel ??
+                widget.offerModel.individualOfferDataModel.description ??
                     S.of(context).description_not_updated,
                 maxLines: 5,
                 overflow: TextOverflow.ellipsis,
@@ -70,13 +75,31 @@ class _LendingOfferBorrowerUpdateWidgetState
               ),
             ),
             Text(
-                "${S.of(context).start} : ${widget.lendingOfferAcceptorModel.startDate}",
+                S.of(context).start +
+                    ': ' +
+                    DateFormat('MMMM dd, yyyy - h:mm a',
+                            Locale(getLangTag()).toLanguageTag())
+                        .format(
+                      getDateTimeAccToUserTimezone(
+                          dateTime: DateTime.fromMillisecondsSinceEpoch(
+                              widget.lendingOfferAcceptorModel.startDate),
+                          timezoneAbb: widget.timezone),
+                    ),
                 style: TextStyle(
                   fontStyle: FontStyle.italic,
                 ),
                 textAlign: TextAlign.center),
             Text(
-                "${S.of(context).end} : ${widget.lendingOfferAcceptorModel.endDate}",
+                S.of(context).end +
+                    ': ' +
+                    DateFormat('MMMM dd, yyyy - h:mm a',
+                            Locale(getLangTag()).toLanguageTag())
+                        .format(
+                      getDateTimeAccToUserTimezone(
+                          dateTime: DateTime.fromMillisecondsSinceEpoch(
+                              widget.lendingOfferAcceptorModel.endDate),
+                          timezoneAbb: widget.timezone),
+                    ),
                 style: TextStyle(
                   fontStyle: FontStyle.italic,
                 ),

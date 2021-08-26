@@ -614,8 +614,11 @@ class L {
 
   String get lending => "Lending";
 
-  String get cannot_approve_multiple_borrowers =>
+  String get cannot_approve_multiple_borrowers_item =>
       "You cannot approve multiple borrowers at once. Currently the items are with  **name. Once returned you can approve this request.";
+
+  String get cannot_approve_multiple_borrowers_place =>
+      "You cannot approve multiple borrowers at once. Currently  **name is checked in. Once  **name has checked out you can approve this request.";
 
   String get borrower_responsibilities => "Borrower Responsibilities";
 
@@ -645,7 +648,7 @@ class L {
 
   String get name_item => "Name of Item";
 
-  String get name_of_place_hint => "Apartment sunshine 3";
+  String get name_of_place_hint => "Ex: Apartment sunshine 3";
 
   String get amenities => "Amenities";
 
@@ -1391,9 +1394,9 @@ class L {
   String get change_departure_date => 'Change departure date?';
   String get tab_to_leave_feedback => 'Tap to leave a feedback.';
   String get lending_offer_return_items_hint =>
-      'Click here once you have returned item(s).';
+      'Click here if you have returned the item(s).';
   String get lending_offer_return_place_hint =>
-      'Click here once you checked out of place';
+      'Click here if you have checked out of the place';
   String get borrower_returned_items_feedback =>
       'You returned items. Tap to leave a feedback.';
   String get borrower_departed_provide_feedback =>

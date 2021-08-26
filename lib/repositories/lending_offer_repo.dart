@@ -334,6 +334,10 @@ class LendingOffersRepo {
     } else {
       model.lendingOfferDetailsModel.returnedItems = false;
     }
+    model.lendingOfferDetailsModel.approvedStartDate =
+        lendingOfferAcceptorModel.startDate;
+    model.lendingOfferDetailsModel.approvedEndDate =
+        lendingOfferAcceptorModel.endDate;
     NotificationsModel notification = NotificationsModel(
         timebankId: model.timebankId,
         id: utils.Utils.getUuid(),
@@ -507,13 +511,15 @@ class LendingOffersRepo {
   static void getDialogForBorrowerToUpdate(
       {BuildContext context,
       OfferModel offerModel,
-      LendingOfferAcceptorModel lendingOfferAcceptorModel}) async {
+      LendingOfferAcceptorModel lendingOfferAcceptorModel,
+      String timezone}) async {
     showDialog(
       context: context,
       builder: (BuildContext viewContext) {
         return LendingOfferBorrowerUpdateWidget(
           offerModel: offerModel,
           lendingOfferAcceptorModel: lendingOfferAcceptorModel,
+          timezone: timezone,
         );
       },
     );

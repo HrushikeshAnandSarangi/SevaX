@@ -1210,7 +1210,9 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                               offerModel: model,
                               context: context,
                               lendingOfferAcceptorModel:
-                                  lendingOfferAcceptorModel);
+                                  lendingOfferAcceptorModel,
+                              timezone:
+                                  SevaCore.of(context).loggedInUser.timezone);
                         },
                         photoUrl: model.photoUrlImage,
                         subTitle:

@@ -139,7 +139,7 @@ class LendingOfferParticipants extends StatelessWidget {
   }
 
   Future<dynamic> cannotApproveMultipleDialog(
-      BuildContext context, String name) {
+      BuildContext context, String name, LendingType lendingType) {
     return showDialog(
         context: context,
         builder: (dialogContext) {
@@ -160,10 +160,15 @@ class LendingOfferParticipants extends StatelessWidget {
                       ),
                     ],
                   ),
-                  Text(L
-                      .of(context)
-                      .cannot_approve_multiple_borrowers
-                      .replaceAll(" **name", name)),
+                  Text(lendingType == LendingType.PLACE
+                      ? L
+                          .of(context)
+                          .cannot_approve_multiple_borrowers_place
+                          .replaceAll(" **name", name)
+                      : L
+                          .of(context)
+                          .cannot_approve_multiple_borrowers_item
+                          .replaceAll(" **name", name)),
                 ],
               ),
             ), //replace with active/current borrower name
@@ -314,7 +319,10 @@ class LendingOfferParticipants extends StatelessWidget {
 
               if (isCurrentlyLent) {
                 await cannotApproveMultipleDialog(
-                    context, lendingOfferAcceptorModel.acceptorName ?? '');
+                    context,
+                    lendingOfferAcceptorModel.acceptorName ?? '',
+                    offerModel
+                        .lendingOfferDetailsModel.lendingModel.lendingType);
               } else {
                 Navigator.push(
                   context,

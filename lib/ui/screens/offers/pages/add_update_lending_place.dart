@@ -99,9 +99,9 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
           widget.lendingModel.lendingPlaceModel.estimatedValue.toString());
 
       _contactInformationController.text =
-          widget.lendingModel.lendingPlaceModel.contactInformation.toString();
+          widget.lendingModel.lendingPlaceModel.contactInformation;
       _bloc.onContactInformationChanged(
-          widget.lendingModel.lendingPlaceModel.contactInformation.toString());
+          widget.lendingModel.lendingPlaceModel.contactInformation);
     } else {
       if (widget.enteredTitle != null) {
         _placeNameController.text = widget.enteredTitle;

@@ -29,6 +29,7 @@ import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/tasks/my_tasks_list.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
 
@@ -435,9 +436,6 @@ class ToDo {
     //for borrow request, request creator / Borrower needs to see in To do when needs to collect or check in
     List<RequestModel> borrowRequestCreatorAwaitingConfirmation = toDoSink[5];
     borrowRequestCreatorAwaitingConfirmation.forEach((model) async {
-      // BorrowAcceptorModel borrowAcceptorModel =
-      //     await FirestoreManager.getBorrowRequestAcceptorModel(
-      //         requestId: model.id, acceptorEmail: model.approvedUsers.first);
       if (model.roomOrTool == LendingType.ITEM.readable) {
         //FOR BORROW ITEMS
         if (!model.borrowModel.itemsCollected) {
@@ -508,9 +506,9 @@ class ToDo {
     //for borrow request, request creator / Borrower needs to see in To do when needs to collect or check in
     List<OfferModel> lendingOfferBorrowerRequestApproved = toDoSink[6];
     lendingOfferBorrowerRequestApproved.forEach((model) async {
-      LendingOfferAcceptorModel lendingOfferAcceptorModel =
-          await LendingOffersRepo.getBorrowAcceptorModel(
-              offerId: model.id, acceptorEmail: email);
+      logger.e('LENGTH OF APPROVED: ' +
+          lendingOfferBorrowerRequestApproved.length.toString());
+
       if (model.lendingOfferDetailsModel.lendingModel.lendingType ==
           LendingType.ITEM) {
         //FOR BORROW ITEMS
@@ -524,8 +522,12 @@ class ToDo {
                     L.of(context).collect_items + model.selectedAdrress != null
                         ? ' at ' + model.selectedAdrress
                         : '',
-                timeInMilliseconds: lendingOfferAcceptorModel.startDate,
+                timeInMilliseconds:
+                    model.lendingOfferDetailsModel.approvedStartDate,
                 onTap: () async {
+                  LendingOfferAcceptorModel lendingOfferAcceptorModel =
+                      await LendingOffersRepo.getBorrowAcceptorModel(
+                          offerId: model.id, acceptorEmail: email);
                   await LendingOffersRepo.getDialogForBorrowerToUpdate(
                       offerModel: model,
                       context: context,
@@ -533,7 +535,7 @@ class ToDo {
                 },
                 tag: L.of(context).lending_offer_collect_items_tag,
               ),
-              taskTimestamp: lendingOfferAcceptorModel.startDate ??
+              taskTimestamp: model.lendingOfferDetailsModel.approvedStartDate ??
                   DateTime.now().millisecondsSinceEpoch,
             ),
           );
@@ -548,8 +550,12 @@ class ToDo {
                     L.of(context).return_items + model.selectedAdrress != null
                         ? ' at ' + model.selectedAdrress
                         : '',
-                timeInMilliseconds: lendingOfferAcceptorModel.endDate,
+                timeInMilliseconds:
+                    model.lendingOfferDetailsModel.approvedEndDate,
                 onTap: () async {
+                  LendingOfferAcceptorModel lendingOfferAcceptorModel =
+                      await LendingOffersRepo.getBorrowAcceptorModel(
+                          offerId: model.id, acceptorEmail: email);
                   await LendingOffersRepo.getDialogForBorrowerToUpdate(
                       offerModel: model,
                       context: context,
@@ -557,7 +563,7 @@ class ToDo {
                 },
                 tag: L.of(context).lending_offer_return_items_tag,
               ),
-              taskTimestamp: lendingOfferAcceptorModel.startDate ??
+              taskTimestamp: model.lendingOfferDetailsModel.approvedStartDate ??
                   DateTime.now().millisecondsSinceEpoch,
             ),
           );
@@ -573,8 +579,12 @@ class ToDo {
                 subTitle: L.of(context).arrive + model.selectedAdrress != null
                     ? ' at ' + model.selectedAdrress
                     : '',
-                timeInMilliseconds: lendingOfferAcceptorModel.startDate,
+                timeInMilliseconds:
+                    model.lendingOfferDetailsModel.approvedStartDate,
                 onTap: () async {
+                  LendingOfferAcceptorModel lendingOfferAcceptorModel =
+                      await LendingOffersRepo.getBorrowAcceptorModel(
+                          offerId: model.id, acceptorEmail: email);
                   await LendingOffersRepo.getDialogForBorrowerToUpdate(
                       offerModel: model,
                       context: context,
@@ -582,7 +592,7 @@ class ToDo {
                 },
                 tag: L.of(context).lending_offer_check_in_tag,
               ),
-              taskTimestamp: lendingOfferAcceptorModel.startDate ??
+              taskTimestamp: model.lendingOfferDetailsModel.approvedStartDate ??
                   DateTime.now().millisecondsSinceEpoch,
             ),
           );
@@ -597,8 +607,12 @@ class ToDo {
                     L.of(context).departure + model.selectedAdrress != null
                         ? ' at ' + model.selectedAdrress
                         : '',
-                timeInMilliseconds: lendingOfferAcceptorModel.endDate,
+                timeInMilliseconds:
+                    model.lendingOfferDetailsModel.approvedEndDate,
                 onTap: () async {
+                  LendingOfferAcceptorModel lendingOfferAcceptorModel =
+                      await LendingOffersRepo.getBorrowAcceptorModel(
+                          offerId: model.id, acceptorEmail: email);
                   await LendingOffersRepo.getDialogForBorrowerToUpdate(
                       offerModel: model,
                       context: context,
@@ -606,7 +620,7 @@ class ToDo {
                 },
                 tag: L.of(context).lending_offer_check_out_tag,
               ),
-              taskTimestamp: lendingOfferAcceptorModel.startDate ??
+              taskTimestamp: model.lendingOfferDetailsModel.approvedStartDate ??
                   DateTime.now().millisecondsSinceEpoch,
             ),
           );
@@ -615,6 +629,8 @@ class ToDo {
     });
 
     tasksList.sort((a, b) => b.taskTimestamp.compareTo(a.taskTimestamp));
+    logger.e('Tasks Length Last: ' + tasksList.length.toString());
+
     return tasksList;
   }
 
