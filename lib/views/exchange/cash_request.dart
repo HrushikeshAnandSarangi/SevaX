@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
+import 'package:sevaexchange/constants/dropdown_currency_constants.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/models/currency_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/payment_detail_model.dart';
 import 'package:sevaexchange/utils/app_config.dart';
@@ -18,13 +20,12 @@ import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/payment_detail/capture_payment_detail_widget.dart';
 import 'package:sevaexchange/views/exchange/widgets/category_widget.dart';
-import 'package:sevaexchange/views/exchange/widgets/payment_description.dart';
 import 'package:sevaexchange/views/exchange/widgets/project_selection.dart';
 import 'package:sevaexchange/views/exchange/widgets/request_enums.dart';
 import 'package:sevaexchange/views/exchange/widgets/request_utils.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
-import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/widgets/add_images_for_request.dart';
+import 'package:sevaexchange/widgets/custom_drop_down.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
 import 'package:sevaexchange/widgets/open_scope_checkbox_widget.dart';
@@ -70,6 +71,13 @@ class _CashRequestState extends State<CashRequest> {
   List<CategoryModel> selectedCategoryModels = [];
   String categoryMode;
   PaymentDetailModel paymentDetailModel;
+  final LayerLink _layerLink = LayerLink();
+  List<CurrencyModel> currencyList = CurrencyModel().getCurrency();
+  int indexSelected = -1;
+  bool isDropdownOpened = false;
+  bool isNeedCloseDropDown = false;
+  String currencyCode = 'USD';
+  String defaultFlagUrl = kDefaultFlagImageUrl;
 
   Widget addToProjectContainer() {
     if (requestUtils.isFromRequest(projectId: widget.projectId)) {
@@ -148,12 +156,20 @@ class _CashRequestState extends State<CashRequest> {
   @override
   void initState() {
     super.initState();
-    paymentDetailModel = requestUtils.initializePaymentModel(cashModel: widget.requestModel.cashModel);
+    paymentDetailModel =
+        requestUtils.initializePaymentModel(cashModel: widget.requestModel.cashModel);
+
     if (widget.formType == RequestFormType.EDIT) {
+      currencyCode = widget.requestModel.cashModel.requestCurrencyType;
+      defaultFlagUrl =widget.requestModel.cashModel.requestCurrencyFlag;
       getCategoryModels(widget.requestModel.categories).then((value) {
         selectedCategoryModels = value;
         setState(() {});
       });
+    } else if (widget.formType == RequestFormType.CREATE){
+      widget.requestModel.cashModel.requestCurrencyType = currencyCode ;
+      widget.requestModel.cashModel.requestCurrencyFlag = defaultFlagUrl;
+
     }
   }
 
@@ -281,6 +297,129 @@ class _CashRequestState extends State<CashRequest> {
         ),
       ),
       TextFormField(
+        decoration: InputDecoration(
+          hintText: 'Ex: $currencyCode 100',
+          hintStyle: requestUtils.hintTextStyle,
+          prefixIcon: Container(
+            width: 90,
+            child: CompositedTransformTarget(
+              link: _layerLink,
+              child: CustomDropdownView(
+                layerLink: _layerLink,
+                isNeedCloseDropdown: isNeedCloseDropDown,
+                elevationShadow: 20,
+                decorationDropdown: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                defaultWidget: Container(
+                  height: 50,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  // padding: EdgeInsets.symmetric(horizontal: 15),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        indexSelected != -1
+                            ? "${currencyList[indexSelected].code}"
+                            : currencyCode,
+                        style: kDropDownChildCurrencyCode,
+                      ),
+                      SizedBox(width: 8),
+                      Container(
+                        height: kFlagImageContainerHeight,
+                        width: kFlagImageContainerWidth,
+                        child: Image.network(
+                          defaultFlagUrl,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      SizedBox(width: 8),
+                      isDropdownOpened
+                          ? Icon(
+                        Icons.keyboard_arrow_up,
+                        color: Color(0xFF737579),
+                      )
+                          : kDropDownArrowIcon,
+                    ],
+                  ),
+                ),
+                onTapDropdown: (bool _isDropdownOpened) async {
+                  await Future.delayed(Duration.zero);
+                  setState(() {
+                    isDropdownOpened = _isDropdownOpened;
+                    if (_isDropdownOpened == false) isNeedCloseDropDown = false;
+                  });
+                },
+                listWidgetItem: List.generate(currencyList.length, (index) {
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        indexSelected = index;
+                        isNeedCloseDropDown = true;
+                        currencyCode = currencyList[indexSelected].code;
+                        defaultFlagUrl = currencyList[indexSelected].imagePath;
+                        widget.requestModel.cashModel.requestCurrencyType = currencyCode;
+                        widget.requestModel.cashModel.requestCurrencyFlag = defaultFlagUrl;
+                      });
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.vertical(
+                          top: index == 0 ? Radius.circular(4) : Radius.zero,
+                          bottom:
+                          index == currencyList.length - 1 ? Radius.circular(4) : Radius.zero,
+                        ),
+                        color: indexSelected == index ? Color(0xFFE8EFFF) : Colors.white,
+                      ),
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      child: Container(
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                              children: [
+                                Container(
+                                  height: 12,
+                                  width: 16,
+                                  child: Image.network(
+                                    "${currencyList[index].imagePath}",
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 8,
+                                ),
+                                Text(
+                                  "${currencyList[index].code}",
+                                  style: kDropDownChildCurrencyCode,
+                                ),
+                                SizedBox(
+                                  width: 8,
+                                ),
+                                Text(
+                                  "${currencyList[index].name}",
+                                  style: kDropDownChildCurrencyName,
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 9,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                }),
+              ),
+            ),
+          ),
+        ),
+        inputFormatters: [FilteringTextInputFormatter.allow((RegExp("[0-9]")))],
         initialValue: widget.formType == RequestFormType.CREATE
             ? requestUtils.getInitialAmount(widget.offer, widget.isOfferRequest)
             : widget.requestModel.cashModel.targetAmount.toString(),
@@ -291,18 +430,6 @@ class _CashRequestState extends State<CashRequest> {
             setState(() {});
           }
         },
-        decoration: InputDecoration(
-          hintText: S.of(context).request_target_donation_hint,
-          hintStyle: requestUtils.hintTextStyle,
-          prefixIcon: Icon(Icons.attach_money),
-
-          // labelText: 'No. of volunteers',
-        ),
-        inputFormatters: [
-          FilteringTextInputFormatter.allow(
-            (RegExp("[0-9]")),
-          ),
-        ],
         keyboardType: TextInputType.number,
         validator: (value) {
           if (value.isEmpty) {
@@ -329,6 +456,37 @@ class _CashRequestState extends State<CashRequest> {
         ),
       ),
       TextFormField(
+        decoration: InputDecoration(
+          hintText: 'Ex: $currencyCode 10',
+          hintStyle: requestUtils.hintTextStyle,
+          // labelText: 'No. of volunteers',
+          prefixIcon: Padding(
+            padding: const EdgeInsets.only(bottom: 1, right: 5),
+            child: Container(
+              width: 60,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(currencyCode, style: TextStyle(fontSize: 16)),
+                  SizedBox(width: 5),
+                  Container(
+                    height: kFlagImageContainerHeight,
+                    width: kFlagImageContainerWidth,
+                    child: Image.network(defaultFlagUrl, fit: BoxFit.cover),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ),
+        inputFormatters: [
+          FilteringTextInputFormatter.allow(
+            (RegExp("[0-9]")),
+          ),
+        ],
+        initialValue: widget.formType == RequestFormType.CREATE
+            ? ''
+            : widget.requestModel.cashModel.minAmount.toString(),
         onChanged: (v) {
           requestUtils.updateExitWithConfirmationValue(context, 13, v);
           if (v.isNotEmpty && int.parse(v) >= 0) {
@@ -336,20 +494,6 @@ class _CashRequestState extends State<CashRequest> {
             setState(() {});
           }
         },
-        initialValue: widget.formType == RequestFormType.CREATE
-            ? ''
-            : widget.requestModel.cashModel.minAmount.toString(),
-        decoration: InputDecoration(
-          hintText: S.of(context).request_min_donation_hint,
-          hintStyle: requestUtils.hintTextStyle,
-          // labelText: 'No. of volunteers',
-          prefixIcon: Icon(Icons.attach_money),
-        ),
-        inputFormatters: [
-          FilteringTextInputFormatter.allow(
-            (RegExp("[0-9]")),
-          ),
-        ],
         keyboardType: TextInputType.number,
         validator: (value) {
           if (value.isEmpty) {

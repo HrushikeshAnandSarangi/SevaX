@@ -75,8 +75,7 @@ class RequestDetailsAboutPage extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _RequestDetailsAboutPageState createState() =>
-      _RequestDetailsAboutPageState();
+  _RequestDetailsAboutPageState createState() => _RequestDetailsAboutPageState();
 }
 
 enum UserMode {
@@ -140,8 +139,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
             communityCreatorId:
                 // BlocProvider.of<HomeDashBoardBloc>(context)
                 //     .selectedCommunityModel.created_by
-                isPrimaryTimebank(
-                        parentTimebankId: widget.timebankModel.parentTimebankId)
+                isPrimaryTimebank(parentTimebankId: widget.timebankModel.parentTimebankId)
                     ? widget.timebankModel.creatorId
                     : widget.timebankModel.managedCreatorIds.length > 0
                         ? widget.timebankModel.managedCreatorIds.first
@@ -175,8 +173,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               // BlocProvider.of<HomeDashBoardBloc>(context)
               //     .selectedCommunityModel
               //     .created_by
-              isPrimaryTimebank(
-                      parentTimebankId: widget.timebankModel.parentTimebankId)
+              isPrimaryTimebank(parentTimebankId: widget.timebankModel.parentTimebankId)
                   ? widget.timebankModel.creatorId
                   : widget.timebankModel.managedCreatorIds.first,
           timebankCreatorId: widget.timebankModel.creatorId,
@@ -211,8 +208,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       title: Text(
         // S.of(context).request_details,
         S.of(context).request_details,
-        style:
-            TextStyle(fontFamily: "Europa", fontSize: 20, color: Colors.black),
+        style: TextStyle(fontFamily: "Europa", fontSize: 20, color: Colors.black),
       ),
     );
   }
@@ -246,17 +242,14 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
         futures.add(getUserDetails(memberEmail: memberEmail));
       });
 
-      isApproved = widget.requestItem.approvedUsers
-          .contains(SevaCore.of(context).loggedInUser.email);
+      isApproved =
+          widget.requestItem.approvedUsers.contains(SevaCore.of(context).loggedInUser.email);
 
       log('is approved?  ' + isApproved.toString());
 
-      isApplied = widget.requestItem.acceptors
-              .contains(SevaCore.of(context).loggedInUser.email) ||
-          widget.requestItem.approvedUsers
-              .contains(SevaCore.of(context).loggedInUser.email) ||
-          widget.requestItem.invitedUsers
-              .contains(SevaCore.of(context).loggedInUser.sevaUserID) ||
+      isApplied = widget.requestItem.acceptors.contains(SevaCore.of(context).loggedInUser.email) ||
+          widget.requestItem.approvedUsers.contains(SevaCore.of(context).loggedInUser.email) ||
+          widget.requestItem.invitedUsers.contains(SevaCore.of(context).loggedInUser.sevaUserID) ||
           false;
     } else {
       isApplied = false;
@@ -273,8 +266,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 shrinkWrap: true,
                 children: <Widget>[
-                  (widget.requestItem.imageUrls == null ||
-                          widget.requestItem.imageUrls.length < 1)
+                  (widget.requestItem.imageUrls == null || widget.requestItem.imageUrls.length < 1)
                       ? Container()
                       : requestImages,
                   SizedBox(height: 20),
@@ -285,8 +277,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                       : Container(),
                   SizedBox(height: 5),
                   widget.requestItem.requestType == RequestType.BORROW &&
-                          widget.requestItem.roomOrTool ==
-                              LendingType.ITEM.readable &&
+                          widget.requestItem.roomOrTool == LendingType.ITEM.readable &&
                           widget.requestItem.borrowModel.requiredItems != null
                       ? borrowItemsWidget
                       : Container(),
@@ -298,9 +289,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   widget.requestItem.requestType == RequestType.BORROW
                       ? timestampComponentBorrowRequest
                       : Container(),
-                  widget.requestItem.requestType == RequestType.BORROW
-                      ? Container()
-                      : createdAt,
+                  widget.requestItem.requestType == RequestType.BORROW ? Container() : createdAt,
                   widget.requestItem.requestType == RequestType.BORROW
                       ? Container()
                       : addressComponent,
@@ -318,10 +307,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                               widget.requestItem.sevaUserId)
                       ? requestedByBorrowRequestComponent
                       : Container(),
-                  (widget.requestItem.requestType ==
-                              RequestType.ONE_TO_MANY_REQUEST &&
-                          widget.requestItem.oneToManyRequestAttenders.length >=
-                              1 &&
+                  (widget.requestItem.requestType == RequestType.ONE_TO_MANY_REQUEST &&
+                          widget.requestItem.oneToManyRequestAttenders.length >= 1 &&
                           (userMode == UserMode.TIMEBANK_CREATOR ||
                               userMode == UserMode.REQUEST_CREATOR ||
                               userMode == UserMode.TIMEBANK_ADMIN))
@@ -356,18 +343,13 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                                             reverse: true,
                                             shrinkWrap: true,
                                             scrollDirection: Axis.horizontal,
-                                            itemCount:
-                                                snapshot.data.docs.length,
+                                            itemCount: snapshot.data.docs.length,
                                             itemBuilder: (context, index) {
                                               return Padding(
-                                                padding:
-                                                    const EdgeInsets.all(4.0),
+                                                padding: const EdgeInsets.all(4.0),
                                                 child: CircleAvatar(
-                                                    backgroundImage:
-                                                        NetworkImage(snapshot
-                                                                    .data
-                                                                    .docs[index]
-                                                                ['photoURL'] ??
+                                                    backgroundImage: NetworkImage(
+                                                        snapshot.data.docs[index]['photoURL'] ??
                                                             defaultUserImageURL),
                                                     minRadius: 23.0),
                                               );
@@ -382,8 +364,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                           ),
                         )
                       : Container(),
-                  (widget.requestItem.requestType ==
-                              RequestType.ONE_TO_MANY_REQUEST &&
+                  (widget.requestItem.requestType == RequestType.ONE_TO_MANY_REQUEST &&
                           widget.requestItem.selectedInstructor != null &&
                           (userMode == UserMode.TIMEBANK_CREATOR ||
                               userMode == UserMode.REQUEST_CREATOR ||
@@ -393,56 +374,39 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(S.of(context).speaker,
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w600)),
+                                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                               SizedBox(height: 10),
                               Row(
                                 children: [
                                   CircleAvatar(
-                                      backgroundImage: NetworkImage(widget
-                                              .requestItem
-                                              .selectedInstructor
-                                              .photoURL ??
-                                          defaultUserImageURL),
+                                      backgroundImage: NetworkImage(
+                                          widget.requestItem.selectedInstructor.photoURL ??
+                                              defaultUserImageURL),
                                       minRadius: 34.0),
                                   SizedBox(width: 25),
                                   Expanded(
                                     child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Text(
-                                            widget.requestItem
-                                                .selectedInstructor.fullname,
+                                        Text(widget.requestItem.selectedInstructor.fullname,
                                             style: TextStyle(
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.w500)),
+                                                fontSize: 20, fontWeight: FontWeight.w500)),
                                         SizedBox(height: 7),
-                                        widget
-                                                    .requestItem
-                                                    .selectedSpeakerTimeDetails
+                                        widget.requestItem.selectedSpeakerTimeDetails
                                                     .speakingTime ==
                                                 null
-                                            ? Text(
-                                                S.of(context).hours_not_updated,
+                                            ? Text(S.of(context).hours_not_updated,
                                                 style: TextStyle(
                                                     fontSize: 18,
                                                     fontWeight: FontWeight.w500,
                                                     color: Colors.grey))
                                             : Text(
-                                                S
-                                                        .of(context)
-                                                        .duration_of_session +
-                                                    widget
-                                                        .requestItem
-                                                        .selectedSpeakerTimeDetails
+                                                S.of(context).duration_of_session +
+                                                    widget.requestItem.selectedSpeakerTimeDetails
                                                         .speakingTime
                                                         .toString() +
                                                     ' ' +
-                                                    (widget
-                                                                .requestItem
-                                                                .selectedSpeakerTimeDetails
+                                                    (widget.requestItem.selectedSpeakerTimeDetails
                                                                 .speakingTime >
                                                             1.0
                                                         ? S.of(context).hours
@@ -478,10 +442,9 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   SizedBox(height: 20),
                   (widget.requestItem.requestType == RequestType.BORROW &&
                           widget.requestItem.approvedUsers.length > 0 &&
-                          (widget.requestItem.email ==
-                                  SevaCore.of(context).loggedInUser.email ||
-                              widget.requestItem.approvedUsers.contains(
-                                  SevaCore.of(context).loggedInUser.email)))
+                          (widget.requestItem.email == SevaCore.of(context).loggedInUser.email ||
+                              widget.requestItem.approvedUsers
+                                  .contains(SevaCore.of(context).loggedInUser.email)))
                       ? approvedBorrowRequestViewAgreementComponent
                       : Container(),
                   SizedBox(height: 10),
@@ -490,8 +453,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
             ),
             getBottomFrame,
             HideWidget(
-              hide: widget.requestItem.sevaUserId !=
-                      SevaCore.of(context).loggedInUser.sevaUserID ||
+              hide: widget.requestItem.sevaUserId != SevaCore.of(context).loggedInUser.sevaUserID ||
                   widget.requestItem.accepted == true,
               child: InkWell(
                 onTap: () async {
@@ -571,9 +533,9 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
 
   Widget get getBottomFrame {
     return Container(
-      decoration: BoxDecoration(color: Colors.white54, boxShadow: [
-        BoxShadow(color: Colors.grey[300], offset: Offset(2.0, 2.0))
-      ]),
+      decoration: BoxDecoration(
+          color: Colors.white54,
+          boxShadow: [BoxShadow(color: Colors.grey[300], offset: Offset(2.0, 2.0))]),
       child: Padding(
         padding: const EdgeInsets.only(top: 20.0, left: 20, bottom: 20),
         child: getBottomFrameForUserMode,
@@ -584,29 +546,19 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   Widget get getBottomFrameForUserMode {
     switch (widget.requestItem.requestType) {
       case RequestType.CASH:
-        return widget.requestItem.accepted
-            ? requestClosed
-            : getBottomFrameForCashRequest;
+        return widget.requestItem.accepted ? requestClosed : getBottomFrameForCashRequest;
 
       case RequestType.GOODS:
-        return widget.requestItem.accepted
-            ? requestClosed
-            : getBottomFrameForGoodRequest;
+        return widget.requestItem.accepted ? requestClosed : getBottomFrameForGoodRequest;
 
       case RequestType.BORROW:
-        return widget.requestItem.accepted
-            ? requestClosed
-            : getBottomFrameForBorrowRequest;
+        return widget.requestItem.accepted ? requestClosed : getBottomFrameForBorrowRequest;
 
       case RequestType.TIME:
-        return widget.requestItem.accepted
-            ? requestClosed
-            : getBottomFrameForTimeRequest;
+        return widget.requestItem.accepted ? requestClosed : getBottomFrameForTimeRequest;
 
       case RequestType.ONE_TO_MANY_REQUEST:
-        return widget.requestItem.accepted
-            ? requestClosed
-            : getBottomFrameForOneToManyRequest;
+        return widget.requestItem.accepted ? requestClosed : getBottomFrameForOneToManyRequest;
 
       default:
         return getBottomFrameForTimeRequest;
@@ -616,11 +568,9 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   Widget get getBottomFrameForOneToManyRequest {
     if (UserMode == UserMode.TIMEBANK_CREATOR) {
       return getBottombarForTimebankCreator;
-    } else if (widget.requestItem.sevaUserId ==
-        SevaCore.of(context).loggedInUser.sevaUserID) {
+    } else if (widget.requestItem.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID) {
       return getBottombarForCreator;
-    } else if (widget.requestItem.acceptors
-        .contains(SevaCore.of(context).loggedInUser.email)) {
+    } else if (widget.requestItem.acceptors.contains(SevaCore.of(context).loggedInUser.email)) {
       return getOneToManySpeakerWidget;
     } else {
       return getBottombarAttenders;
@@ -644,10 +594,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   }
 
   Widget get getOneToManySpeakerWidget {
-    if (widget.requestItem.acceptors
-            .contains(SevaCore.of(context).loggedInUser.email) &&
-        widget.requestItem.approvedUsers
-            .contains(SevaCore.of(context).loggedInUser.email)) {
+    if (widget.requestItem.acceptors.contains(SevaCore.of(context).loggedInUser.email) &&
+        widget.requestItem.approvedUsers.contains(SevaCore.of(context).loggedInUser.email)) {
       return Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
@@ -657,12 +605,11 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                 style: TextStyle(color: Colors.black),
                 children: [
                   TextSpan(
-                    text: (widget.requestItem.acceptors.contains(
-                                SevaCore.of(context).loggedInUser.email) &&
+                    text: (widget.requestItem.acceptors
+                                .contains(SevaCore.of(context).loggedInUser.email) &&
                             widget.requestItem.isSpeakerCompleted)
                         ? S.of(context).requested_for_completion
-                        : S.of(context).you_are_the_speaker +
-                            widget.requestItem.title,
+                        : S.of(context).you_are_the_speaker + widget.requestItem.title,
                     style: TextStyle(
                       fontSize: 16,
                       fontFamily: 'Europa',
@@ -677,9 +624,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           //     ? Container()
           //     : speakerWithdrawOneToManyRequest,
 
-          widget.requestItem.isSpeakerCompleted
-              ? Container()
-              : speakerCompleteOneToManyRequest,
+          widget.requestItem.isSpeakerCompleted ? Container() : speakerCompleteOneToManyRequest,
           SizedBox(width: 7),
         ],
       );
@@ -695,10 +640,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   TextSpan(
                     text: widget.requestItem.acceptors
                             .contains(SevaCore.of(context).loggedInUser.email)
-                        ? S.of(context).you_are_the_speaker +
-                            widget.requestItem.title
-                        : S.of(context).you_are_the_speaker +
-                            widget.requestItem.title,
+                        ? S.of(context).you_are_the_speaker + widget.requestItem.title
+                        : S.of(context).you_are_the_speaker + widget.requestItem.title,
                     style: TextStyle(
                       fontSize: 16,
                       fontFamily: 'Europa',
@@ -749,8 +692,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               context: context,
               builder: (BuildContext viewContext) {
                 return AlertDialog(
-                  title:
-                      Text(S.of(context).oneToManyRequestSpeakerAcceptRequest),
+                  title: Text(S.of(context).oneToManyRequestSpeakerAcceptRequest),
                   actions: <Widget>[
                     CustomTextButton(
                       color: Theme.of(context).primaryColor,
@@ -759,8 +701,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                         style: TextStyle(fontSize: 16, color: Colors.white),
                       ),
                       onPressed: () async {
-                        await oneToManySpeakerInviteAccepted(
-                            widget.requestItem, context);
+                        await oneToManySpeakerInviteAccepted(widget.requestItem, context);
 
                         Navigator.of(viewContext).pop();
                         Navigator.of(context).pop();
@@ -840,8 +781,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                       ),
                       onPressed: () async {
                         Navigator.of(viewContext).pop();
-                        await oneToManySpeakerInviteRejected(
-                                widget.requestItem, context)
+                        await oneToManySpeakerInviteRejected(widget.requestItem, context)
                             .then((e) => Navigator.of(context).pop());
                         // await onDismissed();
                       },
@@ -894,8 +834,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               context: context,
               builder: (BuildContext viewContext) {
                 return AlertDialog(
-                  title:
-                      Text(S.of(context).oneToManyRequestSpeakerWithdrawDialog),
+                  title: Text(S.of(context).oneToManyRequestSpeakerWithdrawDialog),
                   actions: <Widget>[
                     CustomTextButton(
                       color: Theme.of(context).primaryColor,
@@ -905,8 +844,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                       ),
                       onPressed: () async {
                         Navigator.of(viewContext).pop();
-                        await oneToManySpeakerInviteRejected(
-                            widget.requestItem, context);
+                        await oneToManySpeakerInviteRejected(widget.requestItem, context);
                         // await onDismissed();
                       },
                     ),
@@ -961,8 +899,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   userModel: SevaCore.of(context).loggedInUser,
                   requestModel: widget.requestItem,
                   onFinish: () async {
-                    await oneToManySpeakerRequestCompleted(
-                        widget.requestItem, context);
+                    await oneToManySpeakerRequestCompleted(widget.requestItem, context);
                     Navigator.of(context).pop();
                   },
                   isFromtasks: false,
@@ -1012,8 +949,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   Widget get getBottomFrameForGoodRequest {
     if (userMode == UserMode.TIMEBANK_CREATOR) {
       return getBottombarForTimebankCreator;
-    } else if (widget.requestItem.sevaUserId ==
-        SevaCore.of(context).loggedInUser.sevaUserID) {
+    } else if (widget.requestItem.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID) {
       return getBottombarForCreator;
     } else {
       switch (goodsStatus) {
@@ -1031,8 +967,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   Widget get getBottomFrameForCashRequest {
     if (userMode == UserMode.TIMEBANK_CREATOR) {
       return getBottombarForTimebankCreator;
-    } else if (widget.requestItem.sevaUserId ==
-        SevaCore.of(context).loggedInUser.sevaUserID) {
+    } else if (widget.requestItem.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID) {
       return getBottombarForCreator;
     } else {
       switch (cashStatus) {
@@ -1231,71 +1166,59 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           widget.requestItem.approvedUsers.length == 0 &&
           widget.requestItem.invitedUsers.length == 0;
 
-      textLabel = widget.requestItem.sevaUserId ==
-              SevaCore.of(context).loggedInUser.sevaUserID
+      textLabel = widget.requestItem.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID
           ? S.of(context).creator_of_request_message
           : isApplied
               ? S.of(context).accepted_this_request
               : S.of(context).particpate_in_request_question;
 
-      actionWidget = widget.requestItem.sevaUserId ==
-              SevaCore.of(context).loggedInUser.sevaUserID
+      actionWidget = widget.requestItem.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID
           ? Container()
           : timeRequestActionWidgetForParticipant;
     } else if (widget.requestItem.requestType == RequestType.GOODS) {
       canDelete = widget.requestItem.goodsDonationDetails.donors == null ||
           widget.requestItem.goodsDonationDetails.donors.length < 1;
-      textLabel = widget.requestItem.sevaUserId ==
-              SevaCore.of(context).loggedInUser.sevaUserID
+      textLabel = widget.requestItem.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID
           ? S.of(context).creator_of_request_message
           : S.of(context).would_like_to_donate;
 
-      actionWidget = widget.requestItem.sevaUserId ==
-              SevaCore.of(context).loggedInUser.sevaUserID
+      actionWidget = widget.requestItem.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID
           ? Container()
           : goodsRequestActionButtonForParticipant;
     } else if (widget.requestItem.requestType == RequestType.BORROW) {
-      canDelete = widget.requestItem.participantDetails != null &&
-          widget.requestItem.acceptors.length == 0;
+      canDelete =
+          widget.requestItem.participantDetails != null && widget.requestItem.acceptors.length == 0;
 
       if (widget.requestItem.approvedUsers.length >= 1) {
-        textLabel = widget.requestItem.sevaUserId ==
-                SevaCore.of(context).loggedInUser.sevaUserID
+        textLabel = widget.requestItem.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID
             ? S.of(context).request_approved
             : S.of(context).request_has_been_assigned_to_a_member;
       } else if (widget.requestItem.roomOrTool == 'PLACE') {
-        textLabel = widget.requestItem.sevaUserId ==
-                SevaCore.of(context).loggedInUser.sevaUserID
+        textLabel = widget.requestItem.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID
             ? S.of(context).creator_of_request_message
             : S.of(context).borrow_request_for_place;
       } else {
-        textLabel = widget.requestItem.sevaUserId ==
-                SevaCore.of(context).loggedInUser.sevaUserID
+        textLabel = widget.requestItem.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID
             ? S.of(context).creator_of_request_message
             : S.of(context).borrow_request_for_item;
       }
 
-      actionWidget = widget.requestItem.sevaUserId ==
-              SevaCore.of(context).loggedInUser.sevaUserID
+      actionWidget = widget.requestItem.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID
           ? Container()
           : (widget.requestItem.approvedUsers.length >= 1
               ? Container()
               : timeRequestActionWidgetForParticipant);
-    } else if (widget.requestItem.requestType ==
-        RequestType.ONE_TO_MANY_REQUEST) {
+    } else if (widget.requestItem.requestType == RequestType.ONE_TO_MANY_REQUEST) {
       canDelete = widget.requestItem.acceptors.length == 0 &&
           widget.requestItem.approvedUsers.length == 0 &&
           widget.requestItem.invitedUsers.length == 0;
 
-      if (widget.requestItem.sevaUserId ==
-          SevaCore.of(context).loggedInUser.sevaUserID) {
+      if (widget.requestItem.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID) {
         actionWidget = Container();
-      } else if (widget.requestItem.acceptors
-          .contains(SevaCore.of(context).loggedInUser.email)) {
+      } else if (widget.requestItem.acceptors.contains(SevaCore.of(context).loggedInUser.email)) {
         actionWidget = acceptOneToManySpeakerRequest;
         actionWidgetTwo = rejectOneToManySpeakerRequest;
-      } else if (widget.requestItem.acceptors
-          .contains(SevaCore.of(context).loggedInUser.email)) {
+      } else if (widget.requestItem.acceptors.contains(SevaCore.of(context).loggedInUser.email)) {
         actionWidget = Container();
       } else {
         actionWidget = oneToManyRequestActionWidgetForParticipant;
@@ -1303,12 +1226,10 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     } else {
       canDelete = widget.requestItem.cashModel.amountRaised == 0 ||
           widget.requestItem.cashModel.amountRaised == null;
-      textLabel = widget.requestItem.sevaUserId ==
-              SevaCore.of(context).loggedInUser.sevaUserID
+      textLabel = widget.requestItem.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID
           ? S.of(context).creator_of_request_message
           : S.of(context).would_like_to_donate;
-      actionWidget = widget.requestItem.sevaUserId ==
-              SevaCore.of(context).loggedInUser.sevaUserID
+      actionWidget = widget.requestItem.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID
           ? Container()
           : cashRequestActionForPartcipant;
     }
@@ -1387,8 +1308,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
         widget.requestItem.isSpeakerCompleted) {
       return getBottombarForCreatorSpeakerCompleted;
     } else {
-      return (widget.requestItem.acceptors
-              .contains(SevaCore.of(context).loggedInUser.email))
+      return (widget.requestItem.acceptors.contains(SevaCore.of(context).loggedInUser.email))
           ? Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -1445,8 +1365,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                               userModel: SevaCore.of(context).loggedInUser,
                               requestModel: widget.requestItem,
                               onFinish: () async {
-                                await oneToManySpeakerRequestCompleted(
-                                    widget.requestItem, context);
+                                await oneToManySpeakerRequestCompleted(widget.requestItem, context);
                                 Navigator.of(context).pop();
                               },
                               isFromtasks: false,
@@ -1536,8 +1455,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                       ? S.of(context).accepted_this_request
                       : widget.requestItem.isSpeakerCompleted == true
                           ? S.of(context).this_request_has_now_ended
-                          : widget.requestItem.oneToManyRequestAttenders
-                                      .length >=
+                          : widget.requestItem.oneToManyRequestAttenders.length >=
                                   widget.requestItem.numberOfApprovals
                               ? S.of(context).maximumNoOfParticipants
                               : S.of(context).particpate_in_request_question,
@@ -1612,8 +1530,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               ],
             ),
             onPressed: () async {
-              await oneToManyCreatorRequestCompletionRejected(
-                  widget.requestItem, context);
+              await oneToManyCreatorRequestCompletionRejected(widget.requestItem, context);
 
               showDialog(
                   context: context,
@@ -1744,34 +1661,19 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                               style: TextStyle(color: Colors.black),
                               children: [
                                 TextSpan(
-                                  text: (widget.requestItem.approvedUsers
-                                                  .length >=
-                                              1 &&
-                                          widget.requestItem.requestType ==
-                                              RequestType.BORROW)
+                                  text: (widget.requestItem.approvedUsers.length >= 1 &&
+                                          widget.requestItem.requestType == RequestType.BORROW)
                                       ? ((widget.requestItem.sevaUserId ==
-                                                  SevaCore.of(context)
-                                                      .loggedInUser
-                                                      .sevaUserID ||
-                                              SevaCore.of(context)
-                                                      .loggedInUser
-                                                      .email ==
-                                                  widget.requestItem
-                                                      .approvedUsers[0])
+                                                  SevaCore.of(context).loggedInUser.sevaUserID ||
+                                              SevaCore.of(context).loggedInUser.email ==
+                                                  widget.requestItem.approvedUsers[0])
                                           ? S.of(context).request_approved
-                                          : S
-                                              .of(context)
-                                              .request_has_been_assigned_to_a_member)
+                                          : S.of(context).request_has_been_assigned_to_a_member)
                                       : isApplied
                                           ? L.of(context).applied_for_request
-                                          : (widget.requestItem.roomOrTool ==
-                                                  'PLACE'
-                                              ? S
-                                                  .of(context)
-                                                  .borrow_request_for_place
-                                              : S
-                                                  .of(context)
-                                                  .borrow_request_for_item),
+                                          : (widget.requestItem.roomOrTool == 'PLACE'
+                                              ? S.of(context).borrow_request_for_place
+                                              : S.of(context).borrow_request_for_item),
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontFamily: 'Europa',
@@ -1791,14 +1693,11 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                                 SizedBox(width: 1),
                                 Spacer(),
                                 Text(
-                                  widget.requestItem.roomOrTool ==
-                                          LendingType.PLACE.readable
-                                      ? widget.requestItem.borrowModel
-                                              .isCheckedIn
+                                  widget.requestItem.roomOrTool == LendingType.PLACE.readable
+                                      ? widget.requestItem.borrowModel.isCheckedIn
                                           ? L.of(context).check_out
                                           : L.of(context).check_in
-                                      : widget.requestItem.borrowModel
-                                              .itemsCollected
+                                      : widget.requestItem.borrowModel.itemsCollected
                                           ? L.of(context).items_returned
                                           : S.of(context).items_collected,
                                   textAlign: TextAlign.center,
@@ -1812,30 +1711,20 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                               ],
                             ),
                             onPressed: () async {
-                              if (widget.requestItem.roomOrTool ==
-                                  LendingType.ITEM.readable) {
-                                if (!widget
-                                    .requestItem.borrowModel.itemsCollected) {
+                              if (widget.requestItem.roomOrTool == LendingType.ITEM.readable) {
+                                if (!widget.requestItem.borrowModel.itemsCollected) {
                                   logger.e('ITEMS GIVEN TO BORROWER');
-                                  widget.requestItem.borrowModel
-                                      .itemsCollected = true;
-                                  await updateRequest(
-                                      requestModel: widget.requestItem);
+                                  widget.requestItem.borrowModel.itemsCollected = true;
+                                  await updateRequest(requestModel: widget.requestItem);
                                   Navigator.pop(context);
-                                } else if (widget.requestItem.borrowModel
-                                            .itemsCollected ==
-                                        true &&
-                                    !widget.requestItem.borrowModel
-                                        .itemsReturned) {
-                                  logger.e(
-                                      'ITEMS RECEIVED BACK - COMES TO COMPLETE REQUEST');
+                                } else if (widget.requestItem.borrowModel.itemsCollected == true &&
+                                    !widget.requestItem.borrowModel.itemsReturned) {
+                                  logger.e('ITEMS RECEIVED BACK - COMES TO COMPLETE REQUEST');
 
                                   showDialog(
                                     context: context,
                                     builder: (_context) => AlertDialog(
-                                      title: Text(S
-                                          .of(context)
-                                          .item_received_alert_dialouge),
+                                      title: Text(S.of(context).item_received_alert_dialouge),
                                       actions: [
                                         CustomTextButton(
                                           onPressed: () {
@@ -1844,37 +1733,29 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                                           child: Text(
                                             S.of(context).not_yet,
                                             style: TextStyle(
-                                                fontSize: 17,
-                                                color: Theme.of(context)
-                                                    .accentColor),
+                                                fontSize: 17, color: Theme.of(context).accentColor),
                                           ),
                                         ),
                                         CustomTextButton(
                                           onPressed: () async {
-                                            widget.requestItem.borrowModel
-                                                    .itemsReturned =
+                                            widget.requestItem.borrowModel.itemsReturned =
                                                 true; //confirmed items are returned
                                             widget.requestItem.acceptors = [];
                                             widget.requestItem.accepted =
                                                 true; //so that we can know that this request has completed
                                             widget.requestItem.isNotified =
                                                 true; //resets to false otherwise
-                                            var notificationId =
-                                                await getNotificationId(
-                                              SevaCore.of(context)
-                                                  .loggedInUser, //redundant because function does not use user model
+                                            var notificationId = await getNotificationId(
+                                              SevaCore.of(context).loggedInUser,
+                                              //redundant because function does not use user model
                                               widget.requestItem,
                                             ).then((notificationId) async {
                                               await lenderReceivedBackCheck(
-                                                  notificationId:
-                                                      notificationId,
-                                                  requestModelUpdated:
-                                                      widget.requestItem,
+                                                  notificationId: notificationId,
+                                                  requestModelUpdated: widget.requestItem,
                                                   context: context);
 
-                                              await updateRequest(
-                                                  requestModel:
-                                                      widget.requestItem);
+                                              await updateRequest(requestModel: widget.requestItem);
 
                                               Navigator.of(_context).pop();
 
@@ -1893,24 +1774,16 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                                   return;
                                 }
                               } else {
-                                if (!widget
-                                    .requestItem.borrowModel.isCheckedIn) {
-                                  widget.requestItem.borrowModel.isCheckedIn =
-                                      true;
-                                  await updateRequest(
-                                      requestModel: widget.requestItem);
+                                if (!widget.requestItem.borrowModel.isCheckedIn) {
+                                  widget.requestItem.borrowModel.isCheckedIn = true;
+                                  await updateRequest(requestModel: widget.requestItem);
                                   Navigator.pop(context);
-                                } else if (widget.requestItem.borrowModel
-                                            .isCheckedIn ==
-                                        true &&
-                                    !widget
-                                        .requestItem.borrowModel.isCheckedOut) {
+                                } else if (widget.requestItem.borrowModel.isCheckedIn == true &&
+                                    !widget.requestItem.borrowModel.isCheckedOut) {
                                   showDialog(
                                     context: context,
                                     builder: (_context) => AlertDialog(
-                                      title: Text(S
-                                          .of(context)
-                                          .item_received_alert_dialouge),
+                                      title: Text(S.of(context).item_received_alert_dialouge),
                                       actions: [
                                         CustomTextButton(
                                           onPressed: () {
@@ -1919,15 +1792,12 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                                           child: Text(
                                             S.of(context).not_yet,
                                             style: TextStyle(
-                                                fontSize: 17,
-                                                color: Theme.of(context)
-                                                    .accentColor),
+                                                fontSize: 17, color: Theme.of(context).accentColor),
                                           ),
                                         ),
                                         CustomTextButton(
                                           onPressed: () async {
-                                            widget.requestItem.borrowModel
-                                                    .isCheckedOut =
+                                            widget.requestItem.borrowModel.isCheckedOut =
                                                 true; //confirmed items are returned
                                             widget.requestItem.acceptors = [];
                                             widget.requestItem.accepted =
@@ -1936,20 +1806,16 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                                                 true; //resets to false otherwise
 
                                             await getNotificationId(
-                                              SevaCore.of(context)
-                                                  .loggedInUser, //redundant because function does not use user model
+                                              SevaCore.of(context).loggedInUser,
+                                              //redundant because function does not use user model
                                               widget.requestItem,
                                             ).then((notificationId) async {
                                               await lenderReceivedBackCheck(
-                                                  notificationId:
-                                                      notificationId,
-                                                  requestModelUpdated:
-                                                      widget.requestItem,
+                                                  notificationId: notificationId,
+                                                  requestModelUpdated: widget.requestItem,
                                                   context: context);
 
-                                              await updateRequest(
-                                                  requestModel:
-                                                      widget.requestItem);
+                                              await updateRequest(requestModel: widget.requestItem);
 
                                               Navigator.of(_context).pop();
 
@@ -1980,12 +1846,10 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                         style: TextStyle(color: Colors.black),
                         children: [
                           TextSpan(
-                            text: widget.requestItem.approvedUsers.contains(
-                                        SevaCore.of(context)
-                                            .loggedInUser
-                                            .email) ||
-                                    widget.requestItem.acceptors.contains(
-                                        SevaCore.of(context).loggedInUser.email)
+                            text: widget.requestItem.approvedUsers
+                                        .contains(SevaCore.of(context).loggedInUser.email) ||
+                                    widget.requestItem.acceptors
+                                        .contains(SevaCore.of(context).loggedInUser.email)
                                 ? S.of(context).accepted_this_request
                                 : S.of(context).particpate_in_request_question,
                             style: TextStyle(
@@ -2049,8 +1913,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       height: 32,
       child: ConfigurationCheck(
         actionType: 'accept_requests',
-        role: memberType(
-            widget.timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
+        role: memberType(widget.timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
         child: CustomTextButton(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
@@ -2102,11 +1965,9 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       if (widget.requestItem.oneToManyRequestAttenders
           .contains(SevaCore.of(context).loggedInUser.email)) {
         //REMOVING ATTENDEE
-        widget.requestItem.participantDetails
-            .remove(SevaCore.of(context).loggedInUser.email);
+        widget.requestItem.participantDetails.remove(SevaCore.of(context).loggedInUser.email);
 
-        Set<String> attenders =
-            Set.from(widget.requestItem.oneToManyRequestAttenders);
+        Set<String> attenders = Set.from(widget.requestItem.oneToManyRequestAttenders);
         attenders.remove(SevaCore.of(context).loggedInUser.email);
 
         widget.requestItem.oneToManyRequestAttenders = attenders.toList();
@@ -2117,8 +1978,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               .doc(SevaCore.of(context).loggedInUser.email),
         );
 
-        batch.update(CollectionRef.requests.doc(widget.requestItem.id),
-            widget.requestItem.toMap());
+        batch.update(CollectionRef.requests.doc(widget.requestItem.id), widget.requestItem.toMap());
         await batch.commit();
         Navigator.pop(context);
       } else {
@@ -2133,20 +1993,17 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           communityId: SevaCore.of(context).loggedInUser.currentCommunity,
           memberPhotoUrl: SevaCore.of(context).loggedInUser.photoURL,
         );
-        widget.requestItem
-                .participantDetails[SevaCore.of(context).loggedInUser.email] =
+        widget.requestItem.participantDetails[SevaCore.of(context).loggedInUser.email] =
             acceptorModel.toMap();
 
-        Set<String> attenders =
-            Set.from(widget.requestItem.oneToManyRequestAttenders);
+        Set<String> attenders = Set.from(widget.requestItem.oneToManyRequestAttenders);
         attenders.add(SevaCore.of(context).loggedInUser.email);
 
         widget.requestItem.oneToManyRequestAttenders = attenders.toList();
         BasicUserDetails attendeeObject = BasicUserDetails(
           fullname: SevaCore.of(context).loggedInUser.fullname,
           email: SevaCore.of(context).loggedInUser.email,
-          photoURL:
-              SevaCore.of(context).loggedInUser.photoURL ?? defaultUserImageURL,
+          photoURL: SevaCore.of(context).loggedInUser.photoURL ?? defaultUserImageURL,
           sevaUserID: SevaCore.of(context).loggedInUser.sevaUserID,
         );
         batch.set(
@@ -2156,8 +2013,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                 .doc(SevaCore.of(context).loggedInUser.email),
             attendeeObject.toMap());
 
-        batch.update(CollectionRef.requests.doc(widget.requestItem.id),
-            widget.requestItem.toMap());
+        batch.update(CollectionRef.requests.doc(widget.requestItem.id), widget.requestItem.toMap());
         await batch.commit();
 
         Navigator.pop(context);
@@ -2165,8 +2021,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     } else if (isApplied) {
       _withdrawRequest();
     } else {
-      if (widget.requestItem.projectId != null &&
-          widget.requestItem.projectId.isNotEmpty) {
+      if (widget.requestItem.projectId != null && widget.requestItem.projectId.isNotEmpty) {
         await ProjectMessagingRoomHelper.createAdvisoryForJoiningMessagingRoom(
           context: context,
           requestId: widget.requestItem.id,
@@ -2184,8 +2039,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   }
 
   void borrowApplyAction() async {
-    if (widget.requestItem.acceptors
-        .contains(SevaCore.of(context).loggedInUser.email)) {
+    if (widget.requestItem.acceptors.contains(SevaCore.of(context).loggedInUser.email)) {
       _withdrawRequest();
     } else {
       Navigator.of(context).push(
@@ -2229,12 +2083,10 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
             },
             addToCalender: () async {
               await _acceptRequest();
-              Set<String> acceptorList =
-                  Set.from(widget.requestItem.allowedCalenderUsers);
+              Set<String> acceptorList = Set.from(widget.requestItem.allowedCalenderUsers);
               acceptorList.add(SevaCore.of(context).loggedInUser.email);
               widget.requestItem.allowedCalenderUsers = acceptorList.toList();
-              await FirestoreManager.updateRequest(
-                  requestModel: widget.requestItem);
+              await FirestoreManager.updateRequest(requestModel: widget.requestItem);
               Navigator.pop(_context);
               Navigator.pop(context);
             },
@@ -2267,10 +2119,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
 
   void _acceptRequest() async {
     CommunityModel communityModel;
-    await CollectionRef.communities
-        .doc(widget.timebankModel.communityId)
-        .get()
-        .then((value) {
+    await CollectionRef.communities.doc(widget.timebankModel.communityId).get().then((value) {
       communityModel = CommunityModel(value.data());
       setState(() {});
     });
@@ -2288,8 +2137,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       memberEmail: SevaCore.of(context).loggedInUser.email,
       timebankId: widget.timebankModel.id,
     );
-    widget.requestItem
-            .participantDetails[SevaCore.of(context).loggedInUser.email] =
+    widget.requestItem.participantDetails[SevaCore.of(context).loggedInUser.email] =
         acceptorModel.toMap();
 
     acceptRequest(
@@ -2306,34 +2154,29 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     bool alreadyCompleted = false;
     if (widget.requestItem.transactions != null) {
       for (int i = 0; i < widget.requestItem.transactions.length; i++) {
-        if (widget.requestItem.transactions[i].to ==
-            SevaCore.of(context).loggedInUser.sevaUserID) {
+        if (widget.requestItem.transactions[i].to == SevaCore.of(context).loggedInUser.sevaUserID) {
           alreadyCompleted = true;
           break;
         }
       }
     }
     if (!alreadyCompleted) {
-      bool isAlreadyApproved = widget.requestItem.approvedUsers
-          .contains(SevaCore.of(context).loggedInUser.email);
+      bool isAlreadyApproved =
+          widget.requestItem.approvedUsers.contains(SevaCore.of(context).loggedInUser.email);
       var assosciatedEmail = SevaCore.of(context).loggedInUser.email;
       Set<String> acceptorList = Set.from(widget.requestItem.acceptors);
       acceptorList.remove(assosciatedEmail);
-      widget.requestItem.participantDetails
-          .remove(SevaCore.of(context).loggedInUser.email);
+      widget.requestItem.participantDetails.remove(SevaCore.of(context).loggedInUser.email);
 
       widget.requestItem.acceptors = acceptorList.toList();
       if (widget.requestItem.allowedCalenderUsers.contains(assosciatedEmail)) {
-        Set<String> allowedCalenderUsersList =
-            Set.from(widget.requestItem.allowedCalenderUsers);
+        Set<String> allowedCalenderUsersList = Set.from(widget.requestItem.allowedCalenderUsers);
         allowedCalenderUsersList.remove(assosciatedEmail);
-        widget.requestItem.allowedCalenderUsers =
-            allowedCalenderUsersList.toList();
+        widget.requestItem.allowedCalenderUsers = allowedCalenderUsersList.toList();
       }
       if (widget.requestItem.approvedUsers.contains(assosciatedEmail)) {
         Set<String> approvedUsers = Set.from(widget.requestItem.approvedUsers);
-        Set<String> calenderUsers =
-            Set.from(widget.requestItem.allowedCalenderUsers);
+        Set<String> calenderUsers = Set.from(widget.requestItem.allowedCalenderUsers);
         approvedUsers.remove(SevaCore.of(context).loggedInUser.email);
         if (calenderUsers.contains(SevaCore.of(context).loggedInUser.email)) {
           calenderUsers.remove(SevaCore.of(context).loggedInUser.email);
@@ -2342,8 +2185,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
         widget.requestItem.approvedUsers = approvedUsers.toList();
       }
 
-      if (widget.requestItem.projectId != null &&
-          widget.requestItem.projectId.isNotEmpty)
+      if (widget.requestItem.projectId != null && widget.requestItem.projectId.isNotEmpty)
         ProjectMessagingRoomHelper.removeMemberFromProjectCommuication(
           projectId: widget.requestItem.projectId,
           timebankId: widget.requestItem.timebankId,
@@ -2459,11 +2301,9 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
 
   Widget get date {
     return Text(
-      DateFormat('EEEEEEE, MMMM dd', Locale(getLangTag()).toLanguageTag())
-          .format(
+      DateFormat('EEEEEEE, MMMM dd', Locale(getLangTag()).toLanguageTag()).format(
         getDateTimeAccToUserTimezone(
-            dateTime: DateTime.fromMillisecondsSinceEpoch(
-                widget.requestItem.requestStart),
+            dateTime: DateTime.fromMillisecondsSinceEpoch(widget.requestItem.requestStart),
             timezoneAbb: SevaCore.of(context).loggedInUser.timezone),
       ),
       style: titleStyle,
@@ -2491,8 +2331,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           ' - ' +
           DateFormat.MMMd(getLangTag()).add_jm().format(
                 getDateTimeAccToUserTimezone(
-                  dateTime: DateTime.fromMillisecondsSinceEpoch(
-                      widget.requestItem.requestEnd),
+                  dateTime: DateTime.fromMillisecondsSinceEpoch(widget.requestItem.requestEnd),
                   timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
                 ),
                 // ),
@@ -2528,8 +2367,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           ' - ' +
           DateFormat.MMMd(getLangTag()).add_jm().format(
                 getDateTimeAccToUserTimezone(
-                  dateTime: DateTime.fromMillisecondsSinceEpoch(
-                      widget.requestItem.requestEnd),
+                  dateTime: DateTime.fromMillisecondsSinceEpoch(widget.requestItem.requestEnd),
                   timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
                 ),
                 // ),
@@ -2540,8 +2378,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                 //     timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
                 //   ),
               ),
-      style: TextStyle(
-          fontSize: 13, fontWeight: FontWeight.w600, color: Colors.grey),
+      style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.grey),
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
     );
@@ -2578,8 +2415,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                         color: Colors.transparent,
                       ),
                       borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(7),
-                          topRight: Radius.circular(7))),
+                          topLeft: Radius.circular(7), topRight: Radius.circular(7))),
                 ),
                 Container(
                   width: 58,
@@ -2590,8 +2426,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                         color: Colors.white,
                       ),
                       borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(7),
-                          bottomRight: Radius.circular(7))),
+                          bottomLeft: Radius.circular(7), bottomRight: Radius.circular(7))),
                 ),
               ],
             ),
@@ -2601,8 +2436,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
             child: Text(
               DateFormat('dd', Locale(getLangTag()).toLanguageTag()).format(
                 getDateTimeAccToUserTimezone(
-                    dateTime: DateTime.fromMillisecondsSinceEpoch(
-                        widget.requestItem.requestStart),
+                    dateTime: DateTime.fromMillisecondsSinceEpoch(widget.requestItem.requestStart),
                     timezoneAbb: SevaCore.of(context).loggedInUser.timezone),
               ),
               style: TextStyle(fontSize: 24, color: Colors.grey[700]),
@@ -2628,9 +2462,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   Widget get createdAt {
     return Text(
       timeAgo
-          .format(
-              DateTime.fromMillisecondsSinceEpoch(
-                  widget.requestItem.postTimestamp),
+          .format(DateTime.fromMillisecondsSinceEpoch(widget.requestItem.postTimestamp),
               locale: Locale(getLangTag()).toLanguageTag())
           .replaceAll('hours ago', 'h'),
       style: TextStyle(
@@ -2653,9 +2485,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               style: titleStyle,
               maxLines: 1,
             ),
-            subtitle: widget.requestItem.address != null
-                ? Text(widget.requestItem.address)
-                : Text(''),
+            subtitle:
+                widget.requestItem.address != null ? Text(widget.requestItem.address) : Text(''),
           )
         : Container();
   }
@@ -2671,10 +2502,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       List locationSubitleList = widget.requestItem.address.split(',');
       locationSubitleList.removeAt(0);
 
-      locationSubitleFinal = locationSubitleList
-          .toString()
-          .replaceAll('[', '')
-          .replaceAll(']', '');
+      locationSubitleFinal = locationSubitleList.toString().replaceAll('[', '').replaceAll(']', '');
 
       return widget.requestItem.address != null
           ? CustomListTile(
@@ -2689,14 +2517,12 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               ),
               subtitle: widget.requestItem.address != null
                   ? Text(locationSubitleFinal.trim(),
-                      style: TextStyle(
-                          color: Colors.grey, fontWeight: FontWeight.w600))
+                      style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w600))
                   : Text(''),
             )
           : Container();
     } else {
-      return Text(S.of(context).location_not_provided,
-          style: TextStyle(color: Colors.grey));
+      return Text(S.of(context).location_not_provided, style: TextStyle(color: Colors.grey));
     }
   }
 
@@ -2704,8 +2530,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     return Container(
       height: 39,
       width: 90,
-      child: widget.requestItem.sevaUserId ==
-                  SevaCore.of(context).loggedInUser.sevaUserID &&
+      child: widget.requestItem.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID &&
               widget.requestItem.accepted == false
           ? CustomTextButton(
               shape: RoundedRectangleBorder(
@@ -2721,8 +2546,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => EditRequest(
-                      timebankId:
-                          SevaCore.of(context).loggedInUser.currentTimebank,
+                      timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
                       requestModel: widget.requestItem,
                     ),
                   ),
@@ -2763,8 +2587,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   }
 
   Widget get descriptionForBorrowRequest {
-    return Text(widget.requestItem.description,
-        style: TextStyle(fontSize: 16, color: Colors.grey));
+    return Text(widget.requestItem.description, style: TextStyle(fontSize: 16, color: Colors.grey));
   }
 
   Widget get detailsForOneToManyRequest {
@@ -2777,8 +2600,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   Widget get approvedBorrowRequestViewAgreementComponent {
     return FutureBuilder<BorrowAcceptorModel>(
         future: FirestoreManager.getBorrowRequestAcceptorModel(
-            requestId: widget.requestItem.id,
-            acceptorEmail: widget.requestItem.approvedUsers[0]),
+            requestId: widget.requestItem.id, acceptorEmail: widget.requestItem.approvedUsers[0]),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return LoadingIndicator();
@@ -2797,49 +2619,36 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                widget.requestItem.email ==
-                        SevaCore.of(context).loggedInUser.email
+                widget.requestItem.email == SevaCore.of(context).loggedInUser.email
                     ? Container()
                     : Expanded(
                         child: Text(
-                          (widget.requestItem.roomOrTool ==
-                                      LendingType.ITEM.readable
+                          (widget.requestItem.roomOrTool == LendingType.ITEM.readable
                                   ? L.of(context).offering_items_to
                                   : L.of(context).offering_place_to) +
                               widget.requestItem.creatorName,
                           style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w600),
+                              fontSize: 14, color: Colors.black, fontWeight: FontWeight.w600),
                         ),
                       ),
                 Text(
                   (widget.requestItem.roomOrTool == LendingType.ITEM.readable
                           ? L.of(context).collect_and_return_items
                           : L.of(context).length_of_stay) +
-                      DateFormat('dd MMM,\nhh:mm a',
-                              Locale(getLangTag()).toLanguageTag())
-                          .format(
+                      DateFormat('dd MMM,\nhh:mm a', Locale(getLangTag()).toLanguageTag()).format(
                         getDateTimeAccToUserTimezone(
                             dateTime: DateTime.fromMillisecondsSinceEpoch(
                                 widget.requestItem.requestStart),
-                            timezoneAbb:
-                                SevaCore.of(context).loggedInUser.timezone),
+                            timezoneAbb: SevaCore.of(context).loggedInUser.timezone),
                       ) +
                       ' to ' +
-                      DateFormat('dd MMM,\nhh:mm a',
-                              Locale(getLangTag()).toLanguageTag())
-                          .format(
+                      DateFormat('dd MMM,\nhh:mm a', Locale(getLangTag()).toLanguageTag()).format(
                         getDateTimeAccToUserTimezone(
-                            dateTime: DateTime.fromMillisecondsSinceEpoch(
-                                widget.requestItem.requestEnd),
-                            timezoneAbb:
-                                SevaCore.of(context).loggedInUser.timezone),
+                            dateTime:
+                                DateTime.fromMillisecondsSinceEpoch(widget.requestItem.requestEnd),
+                            timezoneAbb: SevaCore.of(context).loggedInUser.timezone),
                       ),
-                  style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey,
-                      fontWeight: FontWeight.w600),
+                  style: TextStyle(fontSize: 14, color: Colors.grey, fontWeight: FontWeight.w600),
                 ),
                 SizedBox(
                   height: 10,
@@ -2847,11 +2656,9 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                 widget.requestItem.roomOrTool == LendingType.ITEM.readable
                     ? FutureBuilder<List<LendingModel>>(
                         future: LendingOffersRepo.getApprovedLendingModels(
-                            lendingModelsIds:
-                                borrowAcceptorModel.borrowedItemsIds),
+                            lendingModelsIds: borrowAcceptorModel.borrowedItemsIds),
                         builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
                             return LoadingIndicator();
                           }
                           if (snapshot.data == null) {
@@ -2867,8 +2674,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                                   padding: const EdgeInsets.only(bottom: 8.0),
                                   child: LendingItemCardWidget(
                                     hidden: true,
-                                    lendingItemModel:
-                                        modelList[index].lendingItemModel,
+                                    lendingItemModel: modelList[index].lendingItemModel,
                                   ),
                                 );
                               });
@@ -2877,8 +2683,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                         future: LendingOffersRepo.getLendingModel(
                             lendingId: borrowAcceptorModel.borrowedPlaceId),
                         builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
                             return LoadingIndicator();
                           }
                           if (snapshot.data == null) {
@@ -2915,10 +2720,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                         borrowAcceptorModel.borrowAgreementLink == '') {
                       return null;
                     } else {
-                      await openPdfViewer(
-                          borrowAcceptorModel.borrowAgreementLink,
-                          'Request Agreement Document',
-                          context);
+                      await openPdfViewer(borrowAcceptorModel.borrowAgreementLink,
+                          'Request Agreement Document', context);
                     }
                   },
                 ),
@@ -2961,16 +2764,13 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           ),
         ),
         Text(
-          "${S.of(context).account_no} : " +
-              widget.requestItem.cashModel.achdetails.account_number,
+          "${S.of(context).account_no} : " + widget.requestItem.cashModel.achdetails.account_number,
         ),
         Text(
-          "${S.of(context).bank_address} : " +
-              widget.requestItem.cashModel.achdetails.bank_address,
+          "${S.of(context).bank_address} : " + widget.requestItem.cashModel.achdetails.bank_address,
         ),
         Text(
-          "${S.of(context).bank_name} : " +
-              widget.requestItem.cashModel.achdetails.bank_name,
+          "${S.of(context).bank_name} : " + widget.requestItem.cashModel.achdetails.bank_name,
         ),
         Text(
           "${S.of(context).routing_number} : " +
@@ -3067,8 +2867,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
 
   Widget get totalGoodsReceived {
     return FutureBuilder<int>(
-        future: FirestoreManager.getRequestRaisedGoods(
-            requestId: widget.requestItem.id),
+        future: FirestoreManager.getRequestRaisedGoods(requestId: widget.requestItem.id),
         builder: (context, snapshot) {
           return CustomListTile(
             title: Text(
@@ -3291,8 +3090,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   Future<void> deleteRequest() async {
     await CollectionRef.requests.doc(widget.requestItem.id).delete();
 
-    if (widget.requestItem.projectId != null &&
-        widget.requestItem.projectId.isNotEmpty) {
+    if (widget.requestItem.projectId != null && widget.requestItem.projectId.isNotEmpty) {
       try {
         CollectionRef.projects.doc(widget.requestItem.projectId).update({
           'pendingRequests': FieldValue.arrayRemove([widget.requestItem.id])
@@ -3332,32 +3130,27 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       TransactionsMatrixCheck(
-                        upgradeDetails:
-                            AppConfig.upgradePlanBannerModel.calendar_sync,
+                        upgradeDetails: AppConfig.upgradePlanBannerModel.calendar_sync,
                         transaction_matrix_type: "calender_sync",
                         comingFrom: ComingFrom.Requests,
                         child: GestureDetector(
                             child: CircleAvatar(
                               backgroundColor: Colors.white,
                               radius: 40,
-                              child: Image.asset(
-                                  "lib/assets/images/googlecal.png"),
+                              child: Image.asset("lib/assets/images/googlecal.png"),
                             ),
                             onTap: () async {
                               String redirectUrl =
                                   "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
                               String authorizationUrl =
                                   "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=google_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
-                              Set<String> acceptorList = Set.from(
-                                  widget.requestItem.allowedCalenderUsers);
-                              acceptorList
-                                  .add(SevaCore.of(context).loggedInUser.email);
-                              widget.requestItem.allowedCalenderUsers =
-                                  acceptorList.toList();
+                              Set<String> acceptorList =
+                                  Set.from(widget.requestItem.allowedCalenderUsers);
+                              acceptorList.add(SevaCore.of(context).loggedInUser.email);
+                              widget.requestItem.allowedCalenderUsers = acceptorList.toList();
                               await FirestoreManager.updateRequest(
                                   requestModel: widget.requestItem);
-                              if (await canLaunch(
-                                  authorizationUrl.toString())) {
+                              if (await canLaunch(authorizationUrl.toString())) {
                                 await launch(authorizationUrl.toString());
                               }
                               Navigator.of(bc).pop();
@@ -3366,15 +3159,13 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                       ),
                       TransactionsMatrixCheck(
                         comingFrom: ComingFrom.Requests,
-                        upgradeDetails:
-                            AppConfig.upgradePlanBannerModel.calendar_sync,
+                        upgradeDetails: AppConfig.upgradePlanBannerModel.calendar_sync,
                         transaction_matrix_type: "calender_sync",
                         child: GestureDetector(
                             child: CircleAvatar(
                               backgroundColor: Colors.white,
                               radius: 40,
-                              child: Image.asset(
-                                  "lib/assets/images/outlookcal.png"),
+                              child: Image.asset("lib/assets/images/outlookcal.png"),
                             ),
                             onTap: () async {
                               String redirectUrl =
@@ -3382,17 +3173,14 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                               String authorizationUrl =
                                   "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=outlook_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
 
-                              Set<String> acceptorList = Set.from(
-                                  widget.requestItem.allowedCalenderUsers);
-                              acceptorList
-                                  .add(SevaCore.of(context).loggedInUser.email);
-                              widget.requestItem.allowedCalenderUsers =
-                                  acceptorList.toList();
+                              Set<String> acceptorList =
+                                  Set.from(widget.requestItem.allowedCalenderUsers);
+                              acceptorList.add(SevaCore.of(context).loggedInUser.email);
+                              widget.requestItem.allowedCalenderUsers = acceptorList.toList();
                               await FirestoreManager.updateRequest(
                                   requestModel: widget.requestItem);
 
-                              if (await canLaunch(
-                                  authorizationUrl.toString())) {
+                              if (await canLaunch(authorizationUrl.toString())) {
                                 await launch(authorizationUrl.toString());
                               }
                               Navigator.of(bc).pop();
@@ -3401,8 +3189,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                       ),
                       TransactionsMatrixCheck(
                         comingFrom: ComingFrom.Requests,
-                        upgradeDetails:
-                            AppConfig.upgradePlanBannerModel.calendar_sync,
+                        upgradeDetails: AppConfig.upgradePlanBannerModel.calendar_sync,
                         transaction_matrix_type: "calender_sync",
                         child: GestureDetector(
                             child: CircleAvatar(
@@ -3415,16 +3202,13 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                                   "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
                               String authorizationUrl =
                                   "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=icloud_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
-                              Set<String> acceptorList = Set.from(
-                                  widget.requestItem.allowedCalenderUsers);
-                              acceptorList
-                                  .add(SevaCore.of(context).loggedInUser.email);
-                              widget.requestItem.allowedCalenderUsers =
-                                  acceptorList.toList();
+                              Set<String> acceptorList =
+                                  Set.from(widget.requestItem.allowedCalenderUsers);
+                              acceptorList.add(SevaCore.of(context).loggedInUser.email);
+                              widget.requestItem.allowedCalenderUsers = acceptorList.toList();
                               await FirestoreManager.updateRequest(
                                   requestModel: widget.requestItem);
-                              if (await canLaunch(
-                                  authorizationUrl.toString())) {
+                              if (await canLaunch(authorizationUrl.toString())) {
                                 await launch(authorizationUrl.toString());
                               }
                               Navigator.of(bc).pop();
@@ -3440,8 +3224,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                     CustomTextButton(
                         child: Text(
                           S.of(context).skip_for_now,
-                          style: TextStyle(
-                              color: FlavorConfig.values.theme.primaryColor),
+                          style: TextStyle(color: FlavorConfig.values.theme.primaryColor),
                         ),
                         onPressed: () async {
                           Navigator.of(bc).pop();
@@ -3478,8 +3261,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   }
 
   Widget get cashDonationDetails {
-    var currentPercentage = widget.requestItem.cashModel.amountRaised /
-        widget.requestItem.cashModel.targetAmount;
+    var currentPercentage =
+        widget.requestItem.cashModel.amountRaised / widget.requestItem.cashModel.targetAmount;
     return Column(
       children: [
         CustomListTile(
@@ -3491,7 +3274,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          subtitle: Text('\$${widget.requestItem.cashModel.amountRaised}'),
+          subtitle: Text(
+              '${widget.requestItem.cashModel.requestCurrencyType} ${widget.requestItem.cashModel.amountRaised}'),
           leading: Image.asset(
             widget.requestItem.requestType == RequestType.CASH
                 ? SevaAssetIcon.donateCash
@@ -3517,8 +3301,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   borderRadius: BorderRadius.all(Radius.circular(10)),
                   child: LinearProgressIndicator(
                     backgroundColor: Colors.grey[200],
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                        Theme.of(context).primaryColor),
+                    valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
                     minHeight: 25,
                     value: (widget.requestItem.cashModel.amountRaised /
                         widget.requestItem.cashModel.targetAmount),
@@ -3569,9 +3352,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           label: Text(
             requestType == LendingType.ITEM.readable
                 ? L.of(context).borrow_request_title + ' ' + L.of(context).items
-                : L.of(context).borrow_request_title +
-                    ' ' +
-                    L.of(context).place,
+                : L.of(context).borrow_request_title + ' ' + L.of(context).place,
             style: TextStyle(color: Colors.black),
           ),
           backgroundColor: Colors.grey[200],

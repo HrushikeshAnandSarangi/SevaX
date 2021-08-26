@@ -28,7 +28,7 @@ class DonationParticipantCard extends StatelessWidget {
     this.timestamp,
     this.goods,
     this.amount,
-    this.currency = '\$',
+    this.currency,
     this.child,
     this.comments,
     this.status,
@@ -100,7 +100,7 @@ class DonationParticipantCard extends StatelessWidget {
           child ??
               Text(
                 isCashDonation
-                    ? '$currency$amount'
+                    ? '$currency $amount'
                     : '${goods.length} ${S.of(context).items}',
                 style: TextStyle(
                   color: Colors.black,

@@ -1,6 +1,7 @@
 import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
+import 'package:sevaexchange/constants/dropdown_currency_constants.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/cash_model.dart';
 import 'package:sevaexchange/models/models.dart';
@@ -40,6 +41,9 @@ class IndividualOfferBloc extends BlocBase with Validators {
   final _status = BehaviorSubject<Status>.seeded(Status.IDLE);
   final _isVisible = BehaviorSubject<bool>.seeded(false);
   final _lendingModel = BehaviorSubject<LendingModel>();
+  final _offeredCurrencyType = BehaviorSubject<String>();
+  final _offerCurrencyFlag = BehaviorSubject<String>();
+  final _offerDonatedCurrencyType = BehaviorSubject<String>();
 
   // final _isPublicVisible = BehaviorSubject<bool>.seeded(false);
   final _donationAmount = BehaviorSubject<int>();
@@ -79,6 +83,10 @@ class IndividualOfferBloc extends BlocBase with Validators {
   Function(bool) get isVisibleChanged => _isVisible.sink.add;
   Function(LendingModel model) get onLendingModelAdded =>
       _lendingModel.sink.add;
+  Function(String) get offeredCurrencyType => _offeredCurrencyType.sink.add;
+  Function(String) get offerDonatedCurrencyType =>
+      _offerDonatedCurrencyType.sink.add;
+  Function(String) get offerCurrencyflag => _offerCurrencyFlag.sink.add;
 
   void onOfferMadeVirtual(bool value) {
     if (value != null) {
@@ -122,7 +130,9 @@ class IndividualOfferBloc extends BlocBase with Validators {
   Stream<bool> get isPublicVisible =>
       CombineLatestStream.combine2(makeVirtual, isVisible, (a, b) => a && b);
   Stream<LendingModel> get lendingModelStream => _lendingModel.stream;
-
+  Stream<String> get offeredCurrency => _offeredCurrencyType.stream;
+  Stream<String> get donatedOfferCurrency => _offerDonatedCurrencyType.stream;
+  Stream<String> get offerFlag => _offerCurrencyFlag.stream;
   ///[Function] to create offer
   void createOrUpdateOffer(
       {UserModel user, String timebankId, String communityName}) {
@@ -186,6 +196,12 @@ class IndividualOfferBloc extends BlocBase with Validators {
               amountRaised: 0,
               minAmount: 0,
               targetAmount: _donationAmount.value,
+              offerCurrencyType:
+                  _offeredCurrencyType.value ?? kDefaultCurrencyType,
+              offerCurrencyFlag:
+                  _offerCurrencyFlag.value ?? kDefaultFlagImageUrl,
+              offerDonatedCurrencyType:
+                  _offerDonatedCurrencyType.value ?? kDefaultCurrencyType,
             ),
             goodsDonationDetails: _goodsDonationDetails.value,
             timebanksPosted: _makePublic.value ?? false
@@ -251,6 +267,9 @@ class IndividualOfferBloc extends BlocBase with Validators {
     _makeVirtual.add(offerModel.virtual);
     _goodsDonationDetails.add(offerModel.goodsDonationDetails);
     _donationAmount.add(offerModel.cashModel.targetAmount);
+     _offeredCurrencyType
+          .add(offerModel?.cashModel?.offerCurrencyType ?? 'USD');
+
     if (offerModel.individualOfferDataModel != null) {
       _minimumCredits
           .add(offerModel.individualOfferDataModel.minimumCredits.toString());

@@ -2,6 +2,7 @@ import 'dart:developer';
 
 // import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/donation_approve_model.dart';
@@ -12,6 +13,8 @@ import 'package:sevaexchange/ui/screens/request/bloc/donation_accepted_bloc.dart
 import 'package:sevaexchange/ui/screens/request/pages/request_donation_dispute_page.dart';
 import 'package:sevaexchange/ui/screens/request/widgets/donation_participant_card.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
+import 'package:sevaexchange/utils/soft_delete_manager.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/donations/approve_donation_dialog.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
@@ -21,17 +24,19 @@ class DonationParticipantPage extends StatelessWidget {
   final RequestModel requestModel;
   final OfferModel offermodel;
 
-  const DonationParticipantPage({Key key, this.requestModel, this.offermodel})
-      : super(key: key);
+  const DonationParticipantPage({Key key, this.requestModel, this.offermodel}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final _bloc = BlocProvider.of<DonationAcceptedBloc>(context);
     final _offerbloc = BlocProvider.of<DonationAcceptedOfferBloc>(context);
+    double convertedAmount;
+    double convertedOfferAmount;
+
     return StreamBuilder(
       stream: requestModel != null ? _bloc.donations : _offerbloc.donations,
       builder: (BuildContext _, AsyncSnapshot<List<DonationModel>> snapshot) {
-        if (snapshot.data == null ||
-            snapshot.connectionState == ConnectionState.waiting) {
+        if (snapshot.data == null || snapshot.connectionState == ConnectionState.waiting) {
           return LoadingIndicator();
         }
         if (snapshot.hasError) {
@@ -54,19 +59,18 @@ class DonationParticipantPage extends StatelessWidget {
             // );
             log('${model.lastModifiedBy == model.donatedTo}  ${model.lastModifiedBy}  ${model.donatedTo}');
             return DonationParticipantCard(
+              currency: model.requestIdType == 'offer'
+                  ? model.cashDetails.cashDetails.offerCurrencyType
+                  : model.cashDetails.cashDetails.requestCurrencyType,
               type: requestModel != null ? 'request' : 'offer',
-              name: requestModel != null
-                  ? model.donorDetails.name
-                  : model.receiverDetails.name,
+              name: requestModel != null ? model.donorDetails.name : model.receiverDetails.name,
               isCashDonation: model.donationType == RequestType.CASH,
               goods: model.donationStatus == DonationStatus.REQUESTED
                   ? (model.goodsDetails?.requiredGoods != null
-                      ? List<String>.from(
-                          model.goodsDetails.requiredGoods.values)
+                      ? List<String>.from(model.goodsDetails.requiredGoods.values)
                       : [])
                   : (model.goodsDetails?.donatedGoods != null
-                      ? List<String>.from(
-                          model.goodsDetails.donatedGoods.values)
+                      ? List<String>.from(model.goodsDetails.donatedGoods.values)
                       : []),
               status: model.donationStatus,
               photoUrl: requestModel != null
@@ -90,13 +94,35 @@ class DonationParticipantPage extends StatelessWidget {
                                 color: Colors.black,
                               ),
                             ),
-                            onPressed: () {
+                            onPressed: () async {
+                              if (model.donationType == RequestType.CASH) {
+                                progressDialog = ProgressDialog(context,
+                                    customBody: Container(
+                                      height: 100,
+                                      width: 100,
+                                      child: LoadingIndicator(),
+                                    ));
+                                if (model.cashDetails.cashDetails.offerDonatedCurrencyType !=
+                                    model.cashDetails.cashDetails.offerCurrencyType)
+                                  progressDialog.show();
+                                progressDialog.hide();
+
+                                convertedOfferAmount = await currencyConversion(
+                                    fromCurrency:
+                                        model.cashDetails.cashDetails.offerDonatedCurrencyType,
+                                    toCurrency: model.cashDetails.cashDetails.offerCurrencyType,
+                                    amount: model.cashDetails.cashDetails.amountRaised);
+                                progressDialog.hide();
+                                // progressDialog.hide();
+                              }
+
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      RequestDonationDisputePage(
+                                  builder: (context) => RequestDonationDisputePage(
                                     model: model,
                                     notificationId: model.notificationId,
+                                    convertedAmountRaised: convertedOfferAmount,
+                                    currency: offermodel.cashModel.offerCurrencyType,
                                   ),
                                 ),
                               );
@@ -122,12 +148,17 @@ class DonationParticipantPage extends StatelessWidget {
                                     onPressed: () {
                                       Navigator.of(context).push(
                                         MaterialPageRoute(
-                                          builder: (context) =>
-                                              RequestDonationDisputePage(
-                                            model: model,
-                                            notificationId:
-                                                model.notificationId,
-                                          ),
+                                          builder: (context) => RequestDonationDisputePage(
+                                              model: model,
+                                              notificationId: model.notificationId,
+                                              convertedAmountRaised: model.requestIdType == 'offer'
+                                                  ? convertedAmount
+                                                  : null,
+                                              convertedAmount: model.cashDetails.pledgedAmount,
+                                              currency: model.requestIdType == 'offer'
+                                                  ? model.cashDetails.cashDetails.offerCurrencyType
+                                                  : model
+                                                      .cashDetails.cashDetails.requestCurrencyType),
                                         ),
                                       );
                                     },
@@ -144,8 +175,7 @@ class DonationParticipantPage extends StatelessWidget {
     );
   }
 
-  DonationButtonActionModel buttonActionModel(
-      BuildContext context, DonationModel model) {
+  DonationButtonActionModel buttonActionModel(BuildContext context, DonationModel model) {
     switch (model.donationStatus) {
       case DonationStatus.ACKNOWLEDGED:
         return DonationButtonActionModel(
@@ -211,8 +241,7 @@ class DonationParticipantPage extends StatelessWidget {
             requestId: requestModel.id,
             requestTitle: requestModel != null && requestModel.title != ''
                 ? requestModel.title
-                : (offermodel != null &&
-                        offermodel.individualOfferDataModel != null)
+                : (offermodel != null && offermodel.individualOfferDataModel != null)
                     ? offermodel.individualOfferDataModel.title
                     : '',
           ),

@@ -573,10 +573,11 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
               case NotificationType.ACKNOWLEDGE_DONOR_DONATION:
                 DonationModel donationModel =
                     DonationModel.fromMap(notification.data);
-                var amount;
+                double amount;
                 if (donationModel.requestIdType == 'offer' &&
                     donationModel.donationStatus == DonationStatus.REQUESTED) {
-                  amount = donationModel.cashDetails.cashDetails.amountRaised;
+                  amount = donationModel.cashDetails.cashDetails.amountRaised
+                      .toDouble();
                 } else if (donationModel.requestIdType == 'offer' &&
                     donationModel.donationStatus == DonationStatus.PLEDGED) {
                   donationModel.notificationId = notification.id;
@@ -599,6 +600,9 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                       MaterialPageRoute(
                         builder: (context) {
                           return RequestDonationDisputePage(
+                            convertedAmount: amount,
+                            currency: donationModel
+                                .cashDetails.cashDetails.requestCurrencyType,
                             model: donationModel,
                             notificationId: notification.id,
                           );
@@ -608,7 +612,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   },
                   photoUrl: donationModel.donorDetails.photoUrl,
                   subTitle:
-                      "${donationModel.donorDetails.name}  ${S.of(context).pledged_to_donate} ${donationModel.donationType == RequestType.CASH ? "\$${amount}" : "goods/supplies"}, ${S.of(context).tap_to_view_details}",
+                      "${donationModel.donorDetails.name}  ${S.of(context).pledged_to_donate} ${donationModel.donationType == RequestType.CASH ? "${donationModel.cashDetails.cashDetails.requestCurrencyType} ${amount}" : "goods/supplies"}, ${S.of(context).tap_to_view_details}",
                   title: S.of(context).donations_received,
                 );
                 break;

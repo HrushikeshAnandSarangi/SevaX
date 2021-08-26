@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:frankfurter/frankfurter.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
@@ -272,4 +273,24 @@ String getStartDateFormat(DateTime date) {
     suffix = ["st", "nd", "rd"][digit - 1];
   }
   return new DateFormat("EEEE MMM d'$suffix',  h:mm a").format(date);
+}
+
+
+Future<double> currencyConversion(
+    {String fromCurrency, String toCurrency, double amount}) async {
+  final frankfurter = Frankfurter();
+
+  // final latest = await frankfurter.latest(from: Currency('INR'));
+
+  if (fromCurrency == toCurrency) {
+    return amount.toDouble();
+  }
+  final rate = await frankfurter.getRate(
+    from: Currency(fromCurrency),
+    to: Currency(toCurrency),
+  );
+  double convertedCurrency = rate.rate * amount;
+  double convertedCurrencyTwoDecimalPoint =
+      ((convertedCurrency * pow(10, 2)).round()) / pow(10, 2);
+  return convertedCurrencyTwoDecimalPoint;
 }

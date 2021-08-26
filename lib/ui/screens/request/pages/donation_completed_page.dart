@@ -16,16 +16,20 @@ class DonationCompletedPage extends StatelessWidget {
   final OfferModel offermodel;
 
   const DonationCompletedPage({Key key, this.requestModel, this.offermodel}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final _bloc = BlocProvider.of<DonationAcceptedBloc>(context);
     final _blocOffer = BlocProvider.of<DonationAcceptedOfferBloc>(context);
     return StreamBuilder(
-      stream: requestModel != null ? _bloc.donations: _blocOffer.donations,
+      stream: requestModel != null ? _bloc.donations : _blocOffer.donations,
       builder: (BuildContext _, AsyncSnapshot<List<DonationModel>> snapshot) {
-        var type = requestModel != null? requestModel.requestType : offermodel != null? offermodel.type : '';
-        if (snapshot.data == null ||
-            snapshot.connectionState == ConnectionState.waiting) {
+        var type = requestModel != null
+            ? requestModel.requestType
+            : offermodel != null
+                ? offermodel.type
+                : '';
+        if (snapshot.data == null || snapshot.connectionState == ConnectionState.waiting) {
           return LoadingIndicator();
         }
         if (snapshot.hasError) {
@@ -33,12 +37,17 @@ class DonationCompletedPage extends StatelessWidget {
         }
 
         List<DonationModel> donations = [];
-        int totalQuantity = 0;
-
+        double totalQuantity = 0;
+        String currency;
         snapshot.data.forEach((donation) {
           if (donation.donationStatus == DonationStatus.ACKNOWLEDGED) {
             if (type == RequestType.CASH) {
-              totalQuantity += donation.cashDetails.pledgedAmount;
+              totalQuantity += donation.requestIdType == 'offer'
+                  ? donation.cashDetails.pledgedAmount
+                  : donation.cashDetails.pledgedAmount;
+              currency = donation.requestIdType == 'offer'
+                  ? donation.cashDetails.cashDetails.offerCurrencyType
+                  : donation.cashDetails.cashDetails.requestCurrencyType;
             } else {
               totalQuantity += donation.goodsDetails.donatedGoods.length;
             }
@@ -56,10 +65,10 @@ class DonationCompletedPage extends StatelessWidget {
           child: Column(
             children: [
               _DonationProgressWidget(
-                type: requestModel != null ? 'request': 'offer',
+                currency: currency,
+                type: requestModel != null ? 'request' : 'offer',
                 isCashDonation: type == RequestType.CASH,
-                quantity:
-                    totalQuantity.toString(), //update to support goods quantity
+                quantity: totalQuantity.toStringAsFixed(2), //update to support goods quantity
               ),
               // AmountRaisedProgressIndicator(
               //   totalQuantity: totalQuantity,
@@ -73,9 +82,12 @@ class DonationCompletedPage extends StatelessWidget {
                 itemCount: donations.length,
                 itemBuilder: (_, index) {
                   DonationModel model = donations[index];
-                  log('goods --->' +
-                      model.goodsDetails.donatedGoods.toString());
+                  log('goods --->' + model.goodsDetails.donatedGoods.toString());
                   return DonationParticipantCard(
+                    amount: model.cashDetails.pledgedAmount.toString(),
+                    currency: model.requestIdType == 'offer'
+                        ? model.cashDetails.cashDetails.offerCurrencyType
+                        : model.cashDetails.cashDetails.requestCurrencyType,
                     name: model.donorDetails.name,
                     isCashDonation: model.donationType == RequestType.CASH,
                     goods: model.goodsDetails?.donatedGoods != null
@@ -84,7 +96,6 @@ class DonationCompletedPage extends StatelessWidget {
                           )
                         : [],
                     photoUrl: model.donorDetails.photoUrl,
-                    amount: model.cashDetails.pledgedAmount.toString(),
                     timestamp: model.timestamp,
                     comments: model.goodsDetails.comments,
                   );
@@ -105,11 +116,14 @@ class _DonationProgressWidget extends StatelessWidget {
   final bool isCashDonation;
   final String quantity;
   final String type;
+  final String currency;
+
   const _DonationProgressWidget({
     Key key,
     this.type,
     this.isCashDonation,
     this.quantity,
+    this.currency,
   }) : super(key: key);
 
   @override
@@ -118,7 +132,7 @@ class _DonationProgressWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '${S.of(context).total} ${isCashDonation ? '${S.of(context).donations}' :  S.of(context).goods} ${ this.type == 'request' ? S.of(context).received : S.of(context).offered}',
+          '${S.of(context).total} ${isCashDonation ? '${S.of(context).donations}' : S.of(context).goods} ${this.type == 'request' ? S.of(context).received : S.of(context).offered}',
           style: TextStyle(
             fontSize: 18,
             color: Colors.grey,
@@ -128,16 +142,14 @@ class _DonationProgressWidget extends StatelessWidget {
         Row(
           children: [
             Image.asset(
-              isCashDonation
-                  ? SevaAssetIcon.donateCash
-                  : SevaAssetIcon.donateGood,
+              isCashDonation ? SevaAssetIcon.donateCash : SevaAssetIcon.donateGood,
               width: 35,
               height: 35,
             ),
             SizedBox(width: 12),
             isCashDonation
                 ? Text(
-                    '\$$quantity',
+                    '${currency} $quantity',
                     style: TextStyle(
                       fontSize: 36,
                       fontWeight: FontWeight.bold,
