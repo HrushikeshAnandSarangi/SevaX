@@ -25,7 +25,7 @@ bool isPrimaryTimebank({@required String parentTimebankId}) {
 
 handleVolunterFeedbackForTrustWorthynessNRealiablityScore(
     FeedbackType type, results, RequestModel model, UserModel user,
-    {OfferModel offerModel}) async {
+    {OfferModel offerModel, String borrowerEmail}) async {
   /* Here are the questions that should be asked (replacing the current ones)
     How likely are you to recommend this person / service to a friend, on a scale between 0-10 where 0 = Not at all Likely and 10 = Extremely Likely
 
@@ -122,9 +122,7 @@ handleVolunterFeedbackForTrustWorthynessNRealiablityScore(
   }
   if (type == FeedbackType.FEEDBACK_FOR_BORROWER_FROM_LENDER) {
     var temp = results['ratings'];
-    await CollectionRef.users
-        .doc(offerModel.lendingOfferDetailsModel.approvedUsers.first)
-        .set({
+    await CollectionRef.users.doc(borrowerEmail).set({
       'totalReviews': FieldValue.increment(1),
       'reliabilityscore': averageReview(user.totalReviews,
           ratingCal(temp['0'] + temp['1']), user.reliabilityscore),

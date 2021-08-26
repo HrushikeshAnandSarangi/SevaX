@@ -378,10 +378,10 @@ void handleFeedBackNotificationLendingOffer({
   if (results != null && results.containsKey('selection')) {
     CollectionRef.reviews.add(
       {
-        "reviewer": SevaCore.of(context).loggedInUser.email,
+        "reviewer": email,
         "reviewed":
             feedbackType == FeedbackType.FEEDBACK_FOR_BORROWER_FROM_LENDER
-                ? offerModel.lendingOfferDetailsModel.approvedUsers.first
+                ? lendingOfferAcceptorModel.acceptorEmail
                 : offerModel.email,
         "ratings": results['selection'],
         "requestId": offerModel.id,
@@ -392,7 +392,8 @@ void handleFeedBackNotificationLendingOffer({
 
     await handleVolunterFeedbackForTrustWorthynessNRealiablityScore(
         feedbackType, results, null, SevaCore.of(context).loggedInUser,
-        offerModel: offerModel);
+        offerModel: offerModel,
+        borrowerEmail: lendingOfferAcceptorModel.acceptorEmail);
     if (feedbackType == FeedbackType.FEEDBACK_FOR_BORROWER_FROM_LENDER) {
       lendingOfferAcceptorModel.isLenderGaveReview = true;
       await LendingOffersRepo.updateLendingParticipantModel(

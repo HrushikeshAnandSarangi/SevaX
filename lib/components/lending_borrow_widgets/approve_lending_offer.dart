@@ -252,14 +252,14 @@ class _ApproveLendingOfferState extends State<ApproveLendingOffer> {
                           widget.offerModel.lendingOfferDetailsModel
                               .lendingOfferAgreementName,
                           true,
-                          widget.offerModel.lendingOfferDetailsModel.startDate,
-                          widget.offerModel.lendingOfferDetailsModel.endDate,
-                          widget.offerModel.lendingOfferDetailsModel.lendingModel.lendingType ==
-                                  LendingType.PLACE
+                          widget.offerModel.lendingOfferDetailsModel
+                              .approvedStartDate,
+                          widget.offerModel.lendingOfferDetailsModel
+                              .approvedEndDate,
+                          widget.offerModel.lendingOfferDetailsModel.lendingModel.lendingType == LendingType.PLACE
                               ? LendingType.PLACE.readable
                               : LendingType.ITEM.readable,
-                          widget.offerModel.lendingOfferDetailsModel
-                                  .agreementConfig['specificConditions'] ??
+                          widget.offerModel.lendingOfferDetailsModel.agreementConfig['specificConditions'] ??
                               '' + '\n ${additionalInstructionsText ?? ''}',
                           widget.offerModel.lendingOfferDetailsModel
                               .agreementConfig['isDamageLiability'],
@@ -271,8 +271,7 @@ class _ApproveLendingOfferState extends State<ApproveLendingOffer> {
                               .agreementConfig['isMaintainRepair'],
                           widget.offerModel.lendingOfferDetailsModel
                               .agreementConfig['isRefundDepositNeeded'],
-                          widget.offerModel.lendingOfferDetailsModel
-                              .agreementConfig['isMaintainAndclean'],
+                          widget.offerModel.lendingOfferDetailsModel.agreementConfig['isMaintainAndclean'],
                           agreementId);
 
                   await LendingOffersRepo.approveLendingOffer(
