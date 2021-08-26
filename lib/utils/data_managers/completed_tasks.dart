@@ -113,11 +113,33 @@ class CompletedTasks {
     ));
   }
 
+  static Stream<List<OfferModel>> getLendingOfferCompletedStream(
+      {String email}) async* {
+    yield* CollectionRef.offers
+        .where('requestType', isEqualTo: 'LENDING_OFFER')
+        .where('lendingOfferDetailsModel.completedUsers', arrayContains: email)
+        .snapshots()
+        .transform(
+            StreamTransformer<QuerySnapshot, List<OfferModel>>.fromHandlers(
+      handleData: (data, sink) {
+        List<OfferModel> lendingOffers = [];
+
+        data.docs.forEach((element) {
+          var offerModel = OfferModel.fromMap(element.data());
+          lendingOffers.add(offerModel);
+          logger.e(
+              ' COMPLETED lending 2:  ===> ' + lendingOffers.length.toString());
+        });
+        sink.add(lendingOffers);
+      },
+    ));
+  }
+
   static Stream<Object> getCompletedTasks({
     loggedinMemberEmail,
     loggedInmemberId,
   }) {
-    return CombineLatestStream.combine5(
+    return CombineLatestStream.combine6(
         FirestoreManager.getCompletedRequestStream(
           userEmail: loggedinMemberEmail,
           userId: loggedInmemberId,
@@ -128,14 +150,20 @@ class CompletedTasks {
             loggedInMemberEmail: loggedinMemberEmail),
         getCompletedOneToManyRequestsForSpeaker(
             loggedInMemberEmail: loggedinMemberEmail),
-        (pendingClaims, acceptedOneToManyOffers, oneToManyOffersCreated,
-                signedUpOneToManyRequests, completedSpeakerOneToManyRequests) =>
+        getLendingOfferCompletedStream(email: loggedinMemberEmail),
+        (pendingClaims,
+                acceptedOneToManyOffers,
+                oneToManyOffersCreated,
+                signedUpOneToManyRequests,
+                completedSpeakerOneToManyRequests,
+                completedLendingOffers) =>
             [
               pendingClaims,
               acceptedOneToManyOffers,
               oneToManyOffersCreated,
               signedUpOneToManyRequests,
               completedSpeakerOneToManyRequests,
+              completedLendingOffers,
             ]);
   }
 
@@ -260,7 +288,20 @@ class CompletedTasks {
         ),
       );
     });
-    tasksList.sort((a, b) => b.taskTimestamp.compareTo(a.taskTimestamp));
+    //Lending offer completed list
+    List<OfferModel> completedLendingOffers = completedSink[5];
+    completedLendingOffers.forEach((element) {
+      tasksList.add(TasksCardWrapper(
+        taskCard: ToDoCard(
+          onTap: null,
+          title: element.individualOfferDataModel.title,
+          subTitle: element.individualOfferDataModel.description,
+          tag: L.of(context).completed_lending_offer,
+          timeInMilliseconds: element.lendingOfferDetailsModel.startDate,
+        ),
+      ));
+    });
+    // tasksList.sort((a, b) => b.taskTimestamp.compareTo(a.taskTimestamp));
     return tasksList;
   }
 
