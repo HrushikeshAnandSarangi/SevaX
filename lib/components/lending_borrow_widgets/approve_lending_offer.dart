@@ -209,6 +209,7 @@ class _ApproveLendingOfferState extends State<ApproveLendingOffer> {
                     OfferDurationWidgetState.starttimestamp;
                 widget.lendingOfferAcceptorModel.endDate =
                     OfferDurationWidgetState.endtimestamp;
+
                 if (widget.lendingOfferAcceptorModel.endDate <=
                     widget.lendingOfferAcceptorModel.startDate) {
                   errorDialog(
@@ -217,6 +218,25 @@ class _ApproveLendingOfferState extends State<ApproveLendingOffer> {
                   );
                   return;
                 }
+
+                if (widget.lendingOfferAcceptorModel.endDate >=
+                    widget.offerModel.lendingOfferDetailsModel.endDate) {
+                  widget.offerModel.lendingOfferDetailsModel.lendingModel
+                              .lendingType ==
+                          LendingType.PLACE
+                      ? errorDialog(
+                          context: context,
+                          error:
+                              L.of(context).end_date_after_offer_end_date_place,
+                        )
+                      : errorDialog(
+                          context: context,
+                          error:
+                              L.of(context).end_date_after_offer_end_date_item,
+                        );
+                  return;
+                }
+
                 if (widget.offerModel.lendingOfferDetailsModel
                         .lendingOfferAgreementLink !=
                     null) {
@@ -232,14 +252,14 @@ class _ApproveLendingOfferState extends State<ApproveLendingOffer> {
                           widget.offerModel.lendingOfferDetailsModel
                               .lendingOfferAgreementName,
                           true,
-                          widget.offerModel.lendingOfferDetailsModel.startDate,
-                          widget.offerModel.lendingOfferDetailsModel.endDate,
-                          widget.offerModel.lendingOfferDetailsModel.lendingModel.lendingType ==
-                                  LendingType.PLACE
+                          widget.offerModel.lendingOfferDetailsModel
+                              .approvedStartDate,
+                          widget.offerModel.lendingOfferDetailsModel
+                              .approvedEndDate,
+                          widget.offerModel.lendingOfferDetailsModel.lendingModel.lendingType == LendingType.PLACE
                               ? LendingType.PLACE.readable
                               : LendingType.ITEM.readable,
-                          widget.offerModel.lendingOfferDetailsModel
-                                  .agreementConfig['specificConditions'] ??
+                          widget.offerModel.lendingOfferDetailsModel.agreementConfig['specificConditions'] ??
                               '' + '\n ${additionalInstructionsText ?? ''}',
                           widget.offerModel.lendingOfferDetailsModel
                               .agreementConfig['isDamageLiability'],
@@ -251,8 +271,7 @@ class _ApproveLendingOfferState extends State<ApproveLendingOffer> {
                               .agreementConfig['isMaintainRepair'],
                           widget.offerModel.lendingOfferDetailsModel
                               .agreementConfig['isRefundDepositNeeded'],
-                          widget.offerModel.lendingOfferDetailsModel
-                              .agreementConfig['isMaintainAndclean'],
+                          widget.offerModel.lendingOfferDetailsModel.agreementConfig['isMaintainAndclean'],
                           agreementId);
 
                   await LendingOffersRepo.approveLendingOffer(

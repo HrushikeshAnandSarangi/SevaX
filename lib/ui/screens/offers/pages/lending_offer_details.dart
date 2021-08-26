@@ -529,49 +529,53 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Container(
-                margin: EdgeInsets.only(right: 5),
-                child: RichText(
-                  text: TextSpan(
-                    style: TextStyle(color: Colors.black),
-                    children: [
-                      canDeleteOffer
-                          ? TextSpan(
-                              text: '${S.of(context).you_created_offer}',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            )
-                          : isApproved
-                              ? TextSpan(
-                                  text: getStatusLabel(),
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                )
-                              : TextSpan(
-                                  text: isCreator
-                                      ? S.of(context).you_created_offer
-                                      : isAccepted
-                                          ? L.of(context).withdraw_lending_offer
-                                          : S
-                                              .of(context)
-                                              .would_like_to_accept_offer,
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+              Expanded(
+                child: Container(
+                  margin: EdgeInsets.only(right: 5),
+                  child: RichText(
+                    text: TextSpan(
+                      style: TextStyle(color: Colors.black),
+                      children: [
+                        canDeleteOffer
+                            ? TextSpan(
+                                text: '${S.of(context).you_created_offer}',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                    ],
+                              )
+                            : isApproved
+                                ? TextSpan(
+                                    text: getStatusLabel(),
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  )
+                                : TextSpan(
+                                    text: isCreator
+                                        ? S.of(context).you_created_offer
+                                        : isAccepted
+                                            ? L
+                                                .of(context)
+                                                .withdraw_lending_offer
+                                            : S
+                                                .of(context)
+                                                .would_like_to_accept_offer,
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                      ],
+                    ),
                   ),
                 ),
               ),
               SizedBox(
                 width: 5,
               ),
-              Column(
+              Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   canDeleteOffer ||
@@ -652,6 +656,7 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
         !offerModel.lendingOfferDetailsModel.returnedItems) {
       lendingOfferStatus = LendingOfferStatus.ITEMS_COLLECTED;
 
+      lendingOfferStatus = LendingOfferStatus.ITEMS_COLLECTED;
       return S.of(context).request_approved;
     } else if (offerModel.lendingOfferDetailsModel.checkedIn) {
       lendingOfferStatus = LendingOfferStatus.CHECKED_OUT;
@@ -1293,8 +1298,8 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                 SizedBox(height: 2),
                 lendingType == LendingType.PLACE &&
                         widget.offerModel.lendingOfferDetailsModel.lendingModel
-                                .lendingPlaceModel.contactInformation !=
-                            null
+                                .lendingType ==
+                            LendingType.PLACE
                     ? Text(
                         widget.offerModel.lendingOfferDetailsModel.lendingModel
                             .lendingPlaceModel.contactInformation,

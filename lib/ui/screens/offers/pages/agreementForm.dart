@@ -832,7 +832,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                       context,
                       widget.requestModel,
                       widget.lendingModel,
-                      widget.lendingModelListBorrowRequest.length != null
+                      widget.lendingModelListBorrowRequest != null
                           ? widget.lendingModelListBorrowRequest
                           : null,
                       '',
