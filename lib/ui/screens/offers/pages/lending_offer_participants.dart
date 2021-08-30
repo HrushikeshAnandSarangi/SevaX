@@ -74,6 +74,7 @@ class LendingOfferParticipants extends StatelessWidget {
                     children: [
                       LendingParticipantCard(
                         name: acceptorModel.acceptorName,
+                        acceptTime: acceptorModel.timestamp,
                         imageUrl: acceptorModel.acceptorphotoURL ??
                             'https://www.pngitem.com/pimgs/m/404-4042710_circle-profile-picture-png-transparent-png.png',
                         onImageTap: () {

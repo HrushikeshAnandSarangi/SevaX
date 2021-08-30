@@ -1,10 +1,14 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/network_image.dart';
 import 'package:sevaexchange/ui/utils/avatar.dart';
+import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
+import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class LendingParticipantCard extends StatelessWidget {
@@ -12,6 +16,7 @@ class LendingParticipantCard extends StatelessWidget {
   final double radius;
   final String imageUrl;
   final String name;
+  final int acceptTime;
   final double rating;
   final Function onMessageTapped;
   final Function onTap;
@@ -24,12 +29,13 @@ class LendingParticipantCard extends StatelessWidget {
       this.radius = 8,
       this.imageUrl,
       this.name,
+      this.acceptTime,
       this.onMessageTapped,
       this.onTap,
       this.rating,
       this.onImageTap,
       this.buttonsContainer = const SizedBox()})
-      : assert(name != null),
+      : assert(name != null, acceptTime != null),
         super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -76,7 +82,21 @@ class LendingParticipantCard extends StatelessWidget {
                     ),
                     SizedBox(height: 4),
                     Text(
-                      'Aug 17', //add date on which potential borrower requested
+                      acceptTime != null
+                          ? DateFormat(
+                                  'MMMM dd, yyyy @ h:mm a',
+                                  Locale(AppConfig.prefs
+                                          .getString('language_code'))
+                                      .toLanguageTag())
+                              .format(
+                              getDateTimeAccToUserTimezone(
+                                dateTime: DateTime.fromMillisecondsSinceEpoch(
+                                    acceptTime),
+                                timezoneAbb:
+                                    SevaCore.of(context).loggedInUser.timezone,
+                              ),
+                            )
+                          : S.of(context).error_loading_data,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
