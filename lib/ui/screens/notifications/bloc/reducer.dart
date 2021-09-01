@@ -1060,12 +1060,16 @@ class PersonalNotificationsRedcerForDonations {
   }
 
   static Widget getWidgetForSuccessfullDonation(
-      {Function onDismissed, int timestampVal, BuildContext context}) {
+      {Function onDismissed,
+      Function onTap,
+      int timestampVal,
+      BuildContext context}) {
     return NotificationCard(
       entityName: S.of(context).donation_completed,
       title: S.of(context).donation_completed,
       subTitle: S.of(context).donation_completed_desc,
       onDismissed: onDismissed,
+      onPressed: onTap,
       timestamp: timestampVal,
     );
   }

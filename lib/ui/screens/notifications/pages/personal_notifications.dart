@@ -10,12 +10,14 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/basic_user_details.dart';
 import 'package:sevaexchange/models/chat_model.dart';
+import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/manual_time_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/one_to_many_notification_data_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/user_added_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/repositories/notifications_repository.dart';
@@ -25,6 +27,7 @@ import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card_oneToManyAccept.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card_oneToManySpeakerReclaims.dart';
 import 'package:sevaexchange/ui/screens/request/pages/oneToManySpeakerTimeEntryComplete_page.dart';
+import 'package:sevaexchange/ui/screens/transaction_details/dialog/transaction_details_dialog.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/ui/utils/notification_message.dart';
@@ -233,9 +236,45 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       );
                     case NotificationType.CASH_DONATION_COMPLETED_SUCCESSFULLY:
                     case NotificationType.GOODS_DONATION_COMPLETED_SUCCESSFULLY:
+                      DonationModel donationModel =
+                          DonationModel.fromMap(notification.data);
+
                       return PersonalNotificationsRedcerForDonations
                           .getWidgetForSuccessfullDonation(
                         onDismissed: onDismissed,
+                        onTap: () async {
+                          RequestModel requestModel;
+                          TimebankModel timebankModel;
+                          CommunityModel communityModel;
+                          requestModel =
+                              await FirestoreManager.getRequestFutureById(
+                                  requestId: donationModel.requestId);
+                          timebankModel =
+                              await FirestoreManager.getTimeBankForId(
+                                  timebankId: donationModel.timebankId);
+                          logger.e('TIMEBANK MODEL MONEY DIALOG: ' +
+                              timebankModel.name.toString());
+                          communityModel = await FirestoreManager
+                              .getCommunityDetailsByCommunityId(
+                                  communityId: donationModel.communityId);
+
+                          showDialog(
+                            context: context,
+                            builder: (context) => Dialog(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              insetPadding: EdgeInsets.zero,
+                              child: TransactionDetailsDialog(
+                                transactionModel: null,
+                                donationModel: donationModel,
+                                timebankModel: timebankModel,
+                                requestModel: requestModel,
+                                communityModel: communityModel,
+                              ),
+                            ),
+                          );
+                        },
                         context: context,
                         timestampVal: notification.timestamp,
                       );

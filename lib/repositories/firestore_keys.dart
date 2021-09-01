@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class _CollectionNames {
   final String notifications = 'notifications';
+  final String timeline = 'timeline';
   final String requests = 'requests';
   final String feeds = 'news';
   final String projects = 'projects';
@@ -141,6 +142,9 @@ class CollectionRef {
       .collection(_collectionNames.users)
       .doc(email)
       .collection(_collectionNames.notifications);
+
+  static Query timelineGroup =
+      _firestore.collectionGroup(_collectionNames.timeline);
 
   static WriteBatch get batch => _firestore.batch();
 }

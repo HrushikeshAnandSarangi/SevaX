@@ -336,4 +336,36 @@ class L {
 
   //4th aug
   String get request_payment_description => "Payment Method*";
+
+  //Transaction Details Labels - Requests
+  String get error_loading_status => "error loading status";
+  String get download_pdf => "Download PDF";
+
+  String get time_applied_request_tag => "applied for request";
+  String get time_withdrawn_request_tag => "withdrew from request";
+  String get time_request_approved_tag => "request was approved";
+  String get time_request_rejected_tag => "request was rejected";
+  String get time_claim_credits_tag => "claimed credits";
+  String get time_claim_accepted_tag => "claim accepted";
+  String get time_claim_declined_tag => "claim declined";
+
+  String get goods_pledged_by_donor_tag => "goods pledged by donor";
+  String get goods_acknowledged_donation_tag => "goods donation acknowledged";
+  String get goods_donation_modified_by_creator_tag =>
+      "goods donation modified by creator";
+  String get goods_donation_modified_by_donor_tag =>
+      "goods donation modified by donor";
+  String get goods_donation_creator_rejected_tag => "goods donation rejected";
+
+  String get money_acknowledged_donation_tag => "money donation acknowledged";
+  String get money_donation_modified_by_creator_tag =>
+      "money donation modified by creator";
+  String get money_donation_modified_by_donor_tag =>
+      "money donation modified by donor";
+  String get money_donation_creator_rejected_tag => "money donation rejected";
+
+  String get account_balance => "Account Balance\n";
+
+  String get item_s => "item(s)";
+  String get sent => "Sent";
 }
