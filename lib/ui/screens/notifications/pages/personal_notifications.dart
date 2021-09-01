@@ -260,7 +260,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
 
                           showDialog(
                             context: context,
-                            builder: (context) => Dialog(
+                            builder: (contextDialog) => Dialog(
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(16),
                               ),
@@ -271,6 +271,11 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                 timebankModel: timebankModel,
                                 requestModel: requestModel,
                                 communityModel: communityModel,
+                                loggedInUserId: SevaCore.of(context)
+                                    .loggedInUser
+                                    .sevaUserID,
+                                loggedInEmail:
+                                    SevaCore.of(context).loggedInUser.email,
                               ),
                             ),
                           );

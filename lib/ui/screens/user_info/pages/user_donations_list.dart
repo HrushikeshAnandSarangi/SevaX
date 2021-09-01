@@ -4,10 +4,13 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/ui/screens/request/pages/goods_display_page.dart';
+import 'package:sevaexchange/ui/screens/transaction_details/dialog/transaction_details_dialog.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
@@ -59,21 +62,21 @@ class _GoodsAndAmountDonationsState extends State<GoodsAndAmountDonationsList> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext mainContext) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          '${S.of(context).donations}',
+          '${S.of(mainContext).donations}',
           style: TextStyle(fontSize: 18),
         ),
       ),
       body: donationsList.length == 0
           ? Center(
-              child: Text(S.of(context).no_donation_yet),
+              child: Text(S.of(mainContext).no_donation_yet),
             )
           : FutureBuilder<Object>(
               future: FirestoreManager.getUserForId(
-                  sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
+                  sevaUserId: SevaCore.of(mainContext).loggedInUser.sevaUserID),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   return Text(
@@ -96,7 +99,8 @@ class _GoodsAndAmountDonationsState extends State<GoodsAndAmountDonationsList> {
                             model: model,
                             isGoods: widget.isGoods,
                             usertimezone: usertimezone,
-                            viewtype: widget.type),
+                            viewtype: widget.type,
+                            mainContext: mainContext),
                       ),
                     );
                   },
@@ -112,9 +116,15 @@ class DonationListItem extends StatelessWidget {
   final viewtype;
   final usertimezone;
   final bool isGoods;
+  final BuildContext mainContext;
 
   const DonationListItem(
-      {Key key, this.model, this.usertimezone, this.viewtype, this.isGoods})
+      {Key key,
+      this.model,
+      this.usertimezone,
+      this.viewtype,
+      this.isGoods,
+      this.mainContext})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -130,27 +140,88 @@ class DonationListItem extends StatelessWidget {
             return Text('');
           }
           return ListTile(
-              onTap: () {
-                isGoods
-                    ? Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => GoodsDisplayPage(
-                            label: S.of(context).donations_received,
-                            name: model.donorDetails.name,
-                            photoUrl: model.donorDetails.photoUrl,
-                            goods: model.goodsDetails?.donatedGoods != null
-                                ? List<String>.from(
-                                    model.goodsDetails.donatedGoods.values,
-                                  )
-                                : [],
-                            message: model.goodsDetails.comments ??
-                                S.of(context).donated +
-                                    ' ' +
-                                    S.of(context).goods.toLowerCase(),
+              onTap: () async {
+                RequestModel requestModel;
+                TimebankModel timebankModel;
+                CommunityModel communityModel;
+                requestModel = await FirestoreManager.getRequestFutureById(
+                    requestId: model.requestId);
+                timebankModel = await FirestoreManager.getTimeBankForId(
+                    timebankId: model.timebankId);
+                logger.e('TIMEBANK MODEL MONEY DIALOG: ' +
+                    timebankModel.name.toString());
+                communityModel =
+                    await FirestoreManager.getCommunityDetailsByCommunityId(
+                        communityId: model.communityId);
+
+                Future.delayed(Duration(milliseconds: 500), () {
+                  isGoods
+                      ? showDialog(
+                          context: context,
+                          builder: (context) => Dialog(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            insetPadding: EdgeInsets.zero,
+                            child: TransactionDetailsDialog(
+                              transactionModel: null,
+                              donationModel: model,
+                              timebankModel: timebankModel,
+                              requestModel: requestModel,
+                              communityModel: communityModel,
+                              loggedInUserId: SevaCore.of(mainContext)
+                                  .loggedInUser
+                                  .sevaUserID,
+                              loggedInEmail:
+                                  SevaCore.of(mainContext).loggedInUser.email,
+                            ),
                           ),
-                        ),
-                      )
-                    : null;
+                        )
+                      // Navigator.of(context).push(
+                      //     MaterialPageRoute(
+                      //       builder: (context) => GoodsDisplayPage(
+                      //         label: S.of(context).donations_received,
+                      //         name: model.donorDetails.name ?? '',
+                      //         photoUrl: model.donorDetails.photoUrl,
+                      //         goods:
+                      //             model.goodsDetails?.donatedGoods != null
+                      //                 ? List<String>.from(
+                      //                     model.goodsDetails.donatedGoods
+                      //                         .values,
+                      //                   )
+                      //                 : [],
+                      //         message: model.goodsDetails.comments ??
+                      //             S.of(context).donated +
+                      //                 ' ' +
+                      //                 S.of(context).goods.toLowerCase(),
+                      //       ),
+                      //     ),
+                      //   )
+                      //(previous code above)
+
+                      : showDialog(
+                          context: context,
+                          builder: (context) => Dialog(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            insetPadding: EdgeInsets.zero,
+                            child: TransactionDetailsDialog(
+                              transactionModel: null,
+                              donationModel: model,
+                              timebankModel: timebankModel,
+                              requestModel: requestModel,
+                              communityModel: communityModel,
+                              loggedInUserId: SevaCore.of(mainContext)
+                                  .loggedInUser
+                                  .sevaUserID,
+                              loggedInEmail:
+                                  SevaCore.of(mainContext).loggedInUser.email,
+                            ),
+                          ),
+                        );
+                  //null  (previous code)
+                });
               },
               leading: DonationImageItem(
                 model: model,

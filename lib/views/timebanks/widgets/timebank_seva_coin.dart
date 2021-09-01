@@ -73,6 +73,9 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
                                       return TransactionDetailsView(
                                         id: SevaCore.of(context)
                                             .loggedInUser
+                                            .currentTimebank,
+                                        userId: SevaCore.of(context)
+                                            .loggedInUser
                                             .sevaUserID,
                                       );
                                     },

@@ -191,9 +191,9 @@ class _ProfilePageState extends State<ProfilePage> {
                               MaterialPageRoute(
                                 builder: (context) {
                                   return TransactionDetailsView(
-                                    id: SevaCore.of(context)
-                                        .loggedInUser
-                                        .sevaUserID,
+                                    id: user.sevaUserID,
+                                    userId: user.sevaUserID,
+                                    userEmail: user.email,
                                   );
                                 },
                               ),

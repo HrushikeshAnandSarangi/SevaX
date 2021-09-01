@@ -1,8 +1,10 @@
-//import 'dart:io';
-import 'dart:html' as html;
+import 'dart:developer';
+import 'dart:io';
+import 'package:flutter/material.dart' as material;
 
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
 import 'package:provider/provider.dart';
@@ -12,8 +14,10 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/transaction_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
+import 'package:sevaexchange/ui/screens/invoice/pages/invoice_screen.dart';
 import 'package:sevaexchange/ui/screens/members/bloc/members_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart';
+import 'package:sevaexchange/utils/helpers/local_file_downloader.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/ui/screens/members/bloc/members_bloc.dart'
     as memberBloc;
@@ -34,21 +38,21 @@ class TransactionsPdf {
     }
 
     DateTime date = DateTime.now();
-    final font = await rootBundle.load("fonts/OpenSans-Regular.ttf");
-    final ttf = Font.ttf(font);
-    final fontBold = await rootBundle.load("fonts/OpenSans-Bold.ttf");
-    final ttfBold = Font.ttf(fontBold);
-    final fontItalic = await rootBundle.load("fonts/OpenSans-Italic.ttf");
-    final ttfItalic = Font.ttf(fontItalic);
-    final fontBoldItalic =
-        await rootBundle.load("fonts/OpenSans-BoldItalic.ttf");
-    final ttfBoldItalic = Font.ttf(fontBoldItalic);
-    final ThemeData theme = ThemeData.withFont(
-      base: ttf,
-      bold: ttfBold,
-      italic: ttfItalic,
-      boldItalic: ttfBoldItalic,
-    );
+    // final font = await rootBundle.load("fonts/OpenSans-Regular.ttf");
+    // final ttf = Font.ttf(font);
+    // final fontBold = await rootBundle.load("fonts/OpenSans-Bold.ttf");
+    // final ttfBold = Font.ttf(fontBold);
+    // final fontItalic = await rootBundle.load("fonts/OpenSans-Italic.ttf");
+    // final ttfItalic = Font.ttf(fontItalic);
+    // final fontBoldItalic =
+    //     await rootBundle.load("fonts/OpenSans-BoldItalic.ttf");
+    // final ttfBoldItalic = Font.ttf(fontBoldItalic);
+    // final ThemeData theme = ThemeData.withFont(
+    //   base: ttf,
+    //   bold: ttfBold,
+    //   italic: ttfItalic,
+    //   boldItalic: ttfBoldItalic,
+    // );
 
     double totalAmount;
     String receiptIDCash;
@@ -60,8 +64,8 @@ class TransactionsPdf {
     UserModel toTransactionUserModel;
     //fetching from and to model
     if (donationModel == null) {
-      receiptID = transactionModel.communityId.substring(
-          transactionModel.communityId.length - 8);
+      receiptID = transactionModel.communityId
+          .substring(transactionModel.communityId.length - 8);
       if (transactionModel.from.contains('-')) {
         transactionTimebankModel =
             await getTimeBankForId(timebankId: transactionModel.from);
@@ -83,11 +87,9 @@ class TransactionsPdf {
     } else if (donationModel != null &&
         donationModel.donationType == RequestType.CASH) {
       totalAmount = donationModel.cashDetails.pledgedAmount.toDouble();
-      receiptIDCash = donationModel.id
-          .substring( donationModel.id.length - 8);
+      receiptIDCash = donationModel.id.substring(donationModel.id.length - 8);
     } else {
-      receiptIDGoods = donationModel.id
-          .substring( donationModel.id.length - 8);
+      receiptIDGoods = donationModel.id.substring(donationModel.id.length - 8);
       Map<String, String> goodsList = donationModel.goodsDetails.donatedGoods;
 
       goodsList.forEach((key, value) {
@@ -124,7 +126,7 @@ class TransactionsPdf {
     void cashPdf() {
       return pdf.addPage(
         MultiPage(
-          theme: theme,
+          // theme: theme,
           pageFormat: PdfPageFormat.letter
               .copyWith(marginBottom: 1.5 * PdfPageFormat.cm),
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -309,7 +311,7 @@ class TransactionsPdf {
     void goodsPdf() {
       pdf.addPage(
         MultiPage(
-          theme: theme,
+          // theme: theme,
           pageFormat: PdfPageFormat.letter
               .copyWith(marginBottom: 1.5 * PdfPageFormat.cm),
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -481,7 +483,7 @@ class TransactionsPdf {
     void defaultPdf(contextNew) {
       pdf.addPage(
         MultiPage(
-          theme: theme,
+          // theme: theme,
           pageFormat: PdfPageFormat.letter
               .copyWith(marginBottom: 1.5 * PdfPageFormat.cm),
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -679,22 +681,46 @@ class TransactionsPdf {
       logger.e("default case " + donationModel.toString());
       defaultPdf(context);
     }
-    //save PDF
 
-    final bytes = await pdf.save();
-    final blob = html.Blob([bytes], 'application/pdf');
-    final url = html.Url.createObjectUrlFromBlob(blob);
-    final anchor = html.document.createElement('a') as html.AnchorElement
-      ..href = url
-      ..style.display = 'none'
-      ..download = 'transactions_${DateFormat('MMMM_y').format(date)}.pdf';
-    html.document.body.children.add(anchor);
+    final String dir = (await getApplicationDocumentsDirectory()).path;
+//    final String dir = (await getExternalStorageDirectory()).path;
+    final String path = '$dir/invoice.pdf';
+//    final String path = 'C://invoice.pdf';
 
-    // download
-    anchor.click();
+    // LocalFileDownloader()
+    //     .download('report', path)
+    //     .then(
+    //       (_) => log('file downloaded'),
+    //     )
+    //     .catchError((e) => log(e));
 
-    // cleanup
-    html.document.body.children.remove(anchor);
-    html.Url.revokeObjectUrl(url);
+    log("path to pdf file is " + path);
+    final File file = File(path);
+    await file.writeAsBytes(await pdf.save());
+    material.Navigator.of(context).push(
+      material.MaterialPageRoute(
+        builder: (_) => InvoiceScreen(
+          path: path,
+          pdfType: "invoice",
+        ),
+      ),
+    );
+
+//BELOW FROM WEB MIGRATION ------------------------------------->
+    // final bytes = await pdf.save();
+    // final blob = html.Blob([bytes], 'application/pdf');
+    // final url = html.Url.createObjectUrlFromBlob(blob);
+    // final anchor = html.document.createElement('a') as html.AnchorElement
+    //   ..href = url
+    //   ..style.display = 'none'
+    //   ..download = 'transactions_${DateFormat('MMMM_y').format(date)}.pdf';
+    // html.document.body.children.add(anchor);
+
+    // // download
+    // anchor.click();
+
+    // // cleanup
+    // html.document.body.children.remove(anchor);
+    // html.Url.revokeObjectUrl(url);
   }
 }

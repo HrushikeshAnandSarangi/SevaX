@@ -23,10 +23,14 @@ import '../../../../labels.dart';
 //         .getTimebankModelFromCurrentCommunity(widget.timebankId);
 class TransactionDetailsView extends StatefulWidget {
   final String id;
+  final String userId;
+  final String userEmail;
 
   TransactionDetailsView({
     Key key,
     this.id,
+    this.userId,
+    this.userEmail,
   }) : super(key: key);
 
   @override
@@ -89,6 +93,8 @@ class _TransactionDetailsViewState extends State<TransactionDetailsView> {
           timebankModel: timebankModel,
           requestModel: requestModel,
           communityModel: communityModel,
+          loggedInUserId: widget.userId,
+          loggedInEmail: widget.userEmail,
         ),
       ),
     );
@@ -98,7 +104,7 @@ class _TransactionDetailsViewState extends State<TransactionDetailsView> {
   void initState() {
     _bloc.init(
       widget.id,
-      SevaCore.of(context).loggedInUser.sevaUserID,
+      widget.userId,
     );
 
     super.initState();
@@ -107,167 +113,138 @@ class _TransactionDetailsViewState extends State<TransactionDetailsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[350],
       appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        leadingWidth: 130,
-        titleSpacing: -40.0,
         title: Text(
           S.of(context).review_earnings,
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: Colors.black87,
-          ),
+          style: TextStyle(fontSize: 18),
         ),
-        backgroundColor: Colors.grey[350],
         elevation: 0.0,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(40.0),
-        child: StreamBuilder<List<TransactionModel>>(
-            stream: _bloc.transactionDetailsStream,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting ||
-                  snapshot.data == null) {
-                return LoadingIndicator();
-              }
-              TransactionDataRow _data =
-                  TransactionDataRow(onRowTap, snapshot.data, context);
-              loadTotalBalance(snapshot.data);
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: PaginatedDataTable(
-                        // onRowsPerPageChanged: (int value) {},
-                        // onPageChanged: (_) {},
-                        // availableRowsPerPage: [
-                        //   10,
-                        //   20,
-                        //   30,
-                        //   40,
-                        //   50,
-                        //   60,
-                        //   70,
-                        //   80,
-                        //   90,
-                        //   200
-                        // ],
+      body: StreamBuilder<List<TransactionModel>>(
+          stream: _bloc.transactionDetailsStream,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting ||
+                snapshot.data == null) {
+              return LoadingIndicator();
+            }
 
-                        showCheckboxColumn: false,
-                        header: Row(
-                          children: [
-                            Text(
-                              'Transactions',
-                              style: TextStyle(
-                                  fontSize: 24, fontWeight: FontWeight.bold),
-                            ),
-                            Spacer(),
-                            RichText(
-                              text: TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text: L.of(context).account_balance,
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Color(0xFF9B9B9B),
-                                    ),
-                                  ),
-                                  TextSpan(
-                                    text: '\$ $totalBalance',
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(width: 8),
-                          ],
+            loadTotalBalance(snapshot.data);
+
+            final TextStyle tableCellStyle = TextStyle(
+              fontSize: 14,
+            );
+
+            return SingleChildScrollView(
+              physics: ScrollPhysics(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(15),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Transactions',
+                          style: TextStyle(
+                              fontSize: 24, fontWeight: FontWeight.bold),
                         ),
-                        source: _data,
-                        rowsPerPage: 9,
-                        columns: [
-                          DataColumn(
-                              label: Text('Name', style: headerCellStyle)),
-                          DataColumn(
-                              label: Text('Status', style: headerCellStyle)),
-                          DataColumn(
-                              label: Text('Date', style: headerCellStyle)),
-                          DataColumn(
-                              label: Text('Status', style: headerCellStyle)),
-                        ],
-                      ),
+                        SizedBox(height: 7),
+                        RichText(
+                          text: TextSpan(
+                            children: [
+                              TextSpan(
+                                text: L.of(context).account_balance,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Color(0xFF9B9B9B),
+                                ),
+                              ),
+                              TextSpan(
+                                text: '\$ $totalBalance',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(width: 8),
+                      ],
                     ),
                   ),
+                  Column(
+                    children: [
+                      ListView.separated(
+                        shrinkWrap: true,
+                        itemCount: snapshot.data.length,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemBuilder: (BuildContext context, int index) =>
+                            InkWell(
+                          onTap: () => onRowTap(snapshot.data[index]),
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 12.0, right: 12.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    CircleAvatar(
+                                      backgroundImage: NetworkImage(
+                                        SevaCore.of(context)
+                                                .loggedInUser
+                                                .photoURL ??
+                                            defaultUserImageURL, //need to add condition if from or to
+                                      ),
+                                    ),
+                                    SizedBox(width: 8),
+                                    Text(
+                                        SevaCore.of(context)
+                                            .loggedInUser
+                                            .fullname,
+                                        style: tableCellStyle),
+                                    SizedBox(width: 15),
+                                    Expanded(
+                                      flex: 3,
+                                      child: Text(snapshot.data[index].type,
+                                          style: tableCellStyle),
+                                    ),
+                                    SizedBox(width: 12),
+                                    Expanded(
+                                      flex: 2,
+                                      child: Text(
+                                          DateFormat('MMMM dd').format(
+                                            DateTime.fromMillisecondsSinceEpoch(
+                                                snapshot.data[index].timestamp),
+                                          ),
+                                          style: tableCellStyle),
+                                    ),
+                                    SizedBox(width: 12),
+                                    Expanded(
+                                      child: Text(
+                                          snapshot.data[index].credits
+                                              .toString(),
+                                          style: tableCellStyle),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        separatorBuilder: (context, index) {
+                          return Divider();
+                        },
+                      ),
+                    ],
+                  ),
                 ],
-              );
-            }),
-      ),
-    );
-  }
-}
-
-class TransactionDataRow extends DataTableSource {
-  final List<TransactionModel> data;
-  final BuildContext context;
-  TransactionDataRow(this.onRowTap, this.data, this.context);
-
-  final ValueChanged<TransactionModel> onRowTap;
-
-  final TextStyle tableCellStyle = TextStyle(
-    fontSize: 18,
-  );
-
-  // Generate some made-up data
-
-  bool get isRowCountApproximate => false;
-  int get rowCount => data.length;
-  int get selectedRowCount => 0;
-  DataRow getRow(int index) {
-    return DataRow(
-      cells: [
-        DataCell(
-          Row(
-            children: [
-              CircleAvatar(
-                backgroundImage: NetworkImage(
-                  SevaCore.of(context).loggedInUser.photoURL ??
-                      defaultUserImageURL, //need to add condition if from or to
-                ),
               ),
-              SizedBox(width: 8),
-              Text(SevaCore.of(context).loggedInUser.fullname,
-                  style: tableCellStyle),
-            ],
-          ),
-          onTap: () => onRowTap(data[index]),
-        ),
-        DataCell(
-          Text(data[index].type, style: tableCellStyle),
-          onTap: () => onRowTap(data[index]),
-        ),
-        DataCell(
-          Text(
-              DateFormat('MMMM dd').format(
-                  DateTime.fromMillisecondsSinceEpoch(data[index].timestamp)),
-              style: tableCellStyle),
-          onTap: () => onRowTap(data[index]),
-        ),
-        DataCell(
-          Text('\$${data[index].credits}', style: tableCellStyle),
-          onTap: () => onRowTap(data[index]),
-        ),
-      ],
+            );
+          }),
     );
   }
 }

@@ -21,6 +21,8 @@ class TransactionDetailsDialog extends StatefulWidget {
   final TimebankModel timebankModel;
   final RequestModel requestModel;
   final CommunityModel communityModel;
+  final String loggedInEmail;
+  final String loggedInUserId;
   const TransactionDetailsDialog({
     Key key,
     this.transactionModel,
@@ -28,6 +30,8 @@ class TransactionDetailsDialog extends StatefulWidget {
     this.timebankModel,
     this.requestModel,
     this.communityModel,
+    @required this.loggedInEmail,
+    @required this.loggedInUserId,
   }) : super(key: key);
 
   @override
@@ -41,21 +45,21 @@ class _TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
   void initState() {
     super.initState();
 
+    logger.e('USER ID: ' + widget.loggedInUserId.toString());
+
     timelineStream = FirestoreManager.getRequestTimelineDocs(
         transactionTypeId: widget.transactionModel != null
             ? widget.transactionModel.typeid
             : widget.donationModel.requestId,
-        sevaUserID: SevaCore.of(context)
-            .loggedInUser
-            .sevaUserID); //change to timebank id or userid
+        sevaUserID: widget.loggedInUserId); //change to timebank id or userid
   }
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Container(
-        width: 700,
-        height: 380,
+        width: 380,
+        height: 450,
         child: Card(
           margin: EdgeInsets.zero,
           shape: RoundedRectangleBorder(
@@ -102,7 +106,7 @@ class _TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                           : Expanded(
                               child: Padding(
                                 padding:
-                                    const EdgeInsets.fromLTRB(70, 24, 24, 42),
+                                    const EdgeInsets.fromLTRB(30, 20, 20, 30),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -134,18 +138,14 @@ class _TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                                               widget.transactionModel != null
                                                   ? (widget.transactionModel
                                                               .to ==
-                                                          SevaCore.of(context)
-                                                              .loggedInUser
-                                                              .sevaUserID
+                                                          widget.loggedInUserId
                                                       ? S.of(context).received
                                                       : L.of(context).sent)
                                                   : (widget
                                                               .donationModel
                                                               .receiverDetails
                                                               .email ==
-                                                          SevaCore.of(context)
-                                                              .loggedInUser
-                                                              .email
+                                                          widget.loggedInEmail
                                                       ? S.of(context).received
                                                       : L.of(context).sent),
                                               style: TextStyle(
@@ -210,35 +210,38 @@ class _TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                                           ],
                                         ),
                                         SizedBox(width: 20),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              'Date',
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                color: Color(0xFF9B9B9B),
-                                                fontWeight: FontWeight.bold,
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                S.of(context).date,
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  color: Color(0xFF9B9B9B),
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                               ),
-                                            ),
-                                            Text(
-                                              DateFormat('MMMM dd @ h:mm a')
-                                                  .format(
-                                                DateTime.fromMillisecondsSinceEpoch(
-                                                    widget.donationModel != null
-                                                        ? widget.donationModel
-                                                            .timestamp
-                                                        : widget
-                                                            .transactionModel
-                                                            .timestamp),
+                                              Text(
+                                                DateFormat('MMMM dd @ h:mm a')
+                                                    .format(
+                                                  DateTime.fromMillisecondsSinceEpoch(
+                                                      widget.donationModel !=
+                                                              null
+                                                          ? widget.donationModel
+                                                              .timestamp
+                                                          : widget
+                                                              .transactionModel
+                                                              .timestamp),
+                                                ),
+                                                style: TextStyle(
+                                                  color: Color(0xFF4A4A4A),
+                                                  fontSize: 16,
+                                                ),
                                               ),
-                                              style: TextStyle(
-                                                color: Color(0xFF4A4A4A),
-                                                fontSize: 16,
-                                              ),
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -348,9 +351,9 @@ class TitleRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      padding: const EdgeInsets.symmetric(vertical: 6.0),
       child: SizedBox(
-        height: 20,
+        // height: 20,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -363,20 +366,23 @@ class TitleRow extends StatelessWidget {
               ),
             ),
             SizedBox(width: 8),
-            Text(
-              DateFormat('MMMM dd @ h:mm a ').format(
-                      DateTime.fromMillisecondsSinceEpoch(
-                          timelineDoc.timestamp)) +
-                  '- ' +
-                  getTimelineLabel(
-                          // requestType,
-                          timelineDoc.type,
-                          context)
-                      .toString(), //call handler function here to return string
-              style: TextStyle(
-                color: Color(0xFF9B9B9B).withOpacity(0.9),
-                fontSize: 16,
-                fontWeight: FontWeight.w400,
+            Expanded(
+              child: Text(
+                DateFormat('MMMM dd @ h:mm a ').format(
+                        DateTime.fromMillisecondsSinceEpoch(
+                            timelineDoc.timestamp)) +
+                    '- ' +
+                    getTimelineLabel(
+                            // requestType,
+                            timelineDoc.type,
+                            context)
+                        .toString(), //call handler function here to return string
+                style: TextStyle(
+                  color: Color(0xFF9B9B9B).withOpacity(0.9),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                ),
+                softWrap: true,
               ),
             ),
           ],
