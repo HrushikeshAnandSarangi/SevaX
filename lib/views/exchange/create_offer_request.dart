@@ -220,7 +220,7 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
           0: Text(
             timebankModel.parentTimebankId == FlavorConfig.values.timebankId
                 ? S.of(context).timebank_request(1)
-                :S.of(context).seva +
+                : S.of(context).seva +
                     timebankModel.name +
                     " ${S.of(context).group} " +
                     S.of(context).request,
@@ -353,7 +353,7 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
       logger.i('========= send notifiction');
       linearProgressForCreatingRequest();
 
-      await FirestoreManager.createRequestOffer(requestModel: requestModel);
+      await FirestoreManager.createRequest(requestModel: requestModel);
       //create invitation if its from offer only for cash and goods
       try {
         await sendNotification(
@@ -487,7 +487,7 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
 
   Future<List<String>> _writeToDB() async {
     List<String> resultVar = [];
-    await FirestoreManager.createRequestOffer(requestModel: requestModel);
+    await FirestoreManager.createRequest(requestModel: requestModel);
     //create invitation if its from offer only for cash and goods
     try {
       await sendNotification(

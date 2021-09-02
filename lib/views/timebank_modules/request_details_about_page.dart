@@ -2389,8 +2389,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                 children: [
                   Text(
                     widget.requestItem.fullName,
-                    style:
-                        TextStyle(fontWeight: FontWeight.w500, fontSize: 19),
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 19),
                   ),
                   SizedBox(height: 7),
                   createdAt,

@@ -60,6 +60,7 @@ import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
+import 'package:sevaexchange/views/exchange/widgets/request_enums.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
 import 'package:sevaexchange/views/requests/onetomany_request_instructor_card.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';

@@ -52,7 +52,7 @@ Location location = Location();
 Geoflutterfire geo = Geoflutterfire();
 BuildContext dialogContext;
 
-Future<void> createRequestOffer({@required RequestModel requestModel}) async {
+Future<void> createRequest({@required RequestModel requestModel}) async {
   return await CollectionRef.requests
       .doc(requestModel.id)
       .set(requestModel.toMap());
@@ -2445,7 +2445,7 @@ Future<List<String>> writeToDB(
 
   List<String> resultVar = [];
   if (!requestModel.isRecurring) {
-    await FirestoreManager.createRequestOffer(requestModel: requestModel);
+    await FirestoreManager.createRequest(requestModel: requestModel);
     //create invitation if its from offer only for cash and goods
     try {
       // ignore: deprecated_member_use_from_same_package
