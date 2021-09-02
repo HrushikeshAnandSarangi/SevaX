@@ -23,12 +23,11 @@ extension ProjectModelLabel on ProjectMode {
   }
 }
 
-class ProjectModelList{
+class ProjectModelList {
   final List<ProjectModel> events;
   final List<ProjectModel> completedEvents;
 
   ProjectModelList(this.events, this.completedEvents);
-
 }
 
 class ProjectModel extends DataModel {
