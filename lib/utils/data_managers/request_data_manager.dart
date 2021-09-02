@@ -2350,8 +2350,6 @@ Stream<List<BorrowAcceptorModel>> getBorrowRequestAcceptorsModelStream({
   );
 }
 
-
-
 Stream<List<TransacationsTimelineModel>> getRequestTimelineDocs(
     {String transactionTypeId, String sevaUserID}) async* {
   logger.e('User ID CHECKKK: ' + sevaUserID);
