@@ -68,13 +68,17 @@ class _TransactionDetailsViewState extends State<TransactionDetailsView> {
       try {
         requestModel = await FirestoreManager.getRequestFutureById(
             requestId: transaction.typeid);
+      } catch (e) {
+        log('error fetching request model: ' + e.toString());
+      }
+      try {
         timebankModel = await FirestoreManager.getTimeBankForId(
             timebankId: transaction.timebankid);
         communityModel =
             await FirestoreManager.getCommunityDetailsByCommunityId(
                 communityId: transaction.communityId);
       } catch (e) {
-        log('error fetching request model: ' + e.toString());
+        log('error fetching timebank and/or community model: ' + e.toString());
       }
     }
 
@@ -161,7 +165,7 @@ class _TransactionDetailsViewState extends State<TransactionDetailsView> {
                                 ),
                               ),
                               TextSpan(
-                                text: '\$ $totalBalance',
+                                text: '\$ ${totalBalance.toStringAsFixed(2)}',
                                 style: TextStyle(
                                   fontSize: 20,
                                   color: Colors.black,

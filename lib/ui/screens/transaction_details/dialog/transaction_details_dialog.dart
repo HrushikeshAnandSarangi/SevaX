@@ -112,13 +112,16 @@ class _TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                                   children: [
                                     Row(
                                       children: [
-                                        Text(
-                                          widget.timebankModel
-                                              .name, //if it is a public request/offer we need to show other community
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold,
-                                            color: Color(0xFF4A4A4A),
+                                        Expanded(
+                                          flex: 9,
+                                          child: Text(
+                                            widget.timebankModel
+                                                .name, //if it is a public request/offer we need to show other community
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                              color: Color(0xFF4A4A4A),
+                                            ),
                                           ),
                                         ),
                                         const Spacer(),
@@ -199,9 +202,13 @@ class _TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                                                               .cashDetails
                                                               .pledgedAmount
                                                               .toString())
-                                                  : widget
-                                                      .transactionModel.credits
-                                                      .toString()),
+                                                  : widget.transactionModel
+                                                          .credits
+                                                          .toString() +
+                                                      ' ' +
+                                                      S
+                                                          .of(context)
+                                                          .seva_credits),
                                               style: TextStyle(
                                                 color: Color(0xFF4A4A4A),
                                                 fontSize: 16,
@@ -294,9 +301,6 @@ class _TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                                       children: [
                                         ElevatedButton(
                                           onPressed: () {
-                                            logger.e('requestmodel ' +
-                                                widget.requestModel.requestType
-                                                    .toString());
                                             TransactionsPdf().transactionsPdf(
                                               context,
                                               widget.transactionModel,

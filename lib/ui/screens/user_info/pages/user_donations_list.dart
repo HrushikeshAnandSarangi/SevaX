@@ -144,15 +144,25 @@ class DonationListItem extends StatelessWidget {
                 RequestModel requestModel;
                 TimebankModel timebankModel;
                 CommunityModel communityModel;
-                requestModel = await FirestoreManager.getRequestFutureById(
-                    requestId: model.requestId);
-                timebankModel = await FirestoreManager.getTimeBankForId(
-                    timebankId: model.timebankId);
-                logger.e('TIMEBANK MODEL MONEY DIALOG: ' +
-                    timebankModel.name.toString());
-                communityModel =
-                    await FirestoreManager.getCommunityDetailsByCommunityId(
-                        communityId: model.communityId);
+                try {
+                  requestModel = await FirestoreManager.getRequestFutureById(
+                      requestId: model.requestId);
+                } catch (error) {
+                  logger.e('ERROR FETCHING MODELS FOR TRANSACTIONS: ' +
+                      error.toString());
+                }
+                try {
+                  timebankModel = await FirestoreManager.getTimeBankForId(
+                      timebankId: model.timebankId);
+                  logger.e('TIMEBANK MODEL MONEY DIALOG: ' +
+                      timebankModel.name.toString());
+                  communityModel =
+                      await FirestoreManager.getCommunityDetailsByCommunityId(
+                          communityId: model.communityId);
+                } catch (e) {
+                  logger.e('error fetching timebank and/or community model: ' +
+                      e.toString());
+                }
 
                 Future.delayed(Duration(milliseconds: 500), () {
                   isGoods

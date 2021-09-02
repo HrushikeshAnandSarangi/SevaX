@@ -292,6 +292,8 @@ class RequestModel extends DataModel {
   RequestModel.fromMap(Map<dynamic, dynamic> map) {
     if (map.containsKey('donationInstructionLink')) {
       this.donationInstructionLink = map["donationInstructionLink"];
+    } else {
+      this.donationInstructionLink = '';
     }
     if (map.containsKey('recommendedMemberIdsForRequest')) {
       List<String> recommendedMembeIds =

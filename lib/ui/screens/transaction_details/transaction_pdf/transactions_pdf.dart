@@ -9,6 +9,7 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
@@ -25,7 +26,7 @@ import 'package:sevaexchange/utils/utils.dart';
 
 class TransactionsPdf {
   Future<void> transactionsPdf(
-    context,
+    mainContext,
     TransactionModel transactionModel,
     DonationModel donationModel,
     RequestModel requestModel,
@@ -64,14 +65,14 @@ class TransactionsPdf {
     UserModel toTransactionUserModel;
     //fetching from and to model
     if (donationModel == null) {
-      receiptID = transactionModel.communityId
-          .substring(transactionModel.communityId.length - 8);
+      receiptID =
+          transactionModel.typeid.substring(transactionModel.typeid.length - 8);
       if (transactionModel.from.contains('-')) {
         transactionTimebankModel =
             await getTimeBankForId(timebankId: transactionModel.from);
       } else {
         fromTransactionUserModel = await Provider.of<MembersBloc>(
-          context,
+          mainContext,
           listen: false,
         ).getUserModel(userId: transactionModel.from);
       }
@@ -80,7 +81,7 @@ class TransactionsPdf {
             await getTimeBankForId(timebankId: transactionModel.to);
       } else {
         toTransactionUserModel = await Provider.of<MembersBloc>(
-          context,
+          mainContext,
           listen: false,
         ).getUserModel(userId: transactionModel.to);
       }
@@ -545,16 +546,32 @@ class TransactionsPdf {
                           TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                     ),
                     Text(transactionModel.from.contains('-')
-                        ? transactionTimebankModel.name
-                        : fromTransactionUserModel.fullname),
+                        ? (transactionTimebankModel != null
+                            ? transactionTimebankModel.name ?? ''
+                            : '')
+                        : (fromTransactionUserModel != null
+                            ? fromTransactionUserModel.fullname ?? ''
+                            : '')),
                     Text(transactionModel.to.contains('-')
-                        ? transactionTimebankModel.address ?? ''
-                        : fromTransactionUserModel.locationName ?? ''),
+                        ? (transactionTimebankModel != null
+                            ? transactionTimebankModel.address ?? ''
+                            : '')
+                        : (fromTransactionUserModel != null
+                            ? (fromTransactionUserModel != null
+                                ? fromTransactionUserModel.locationName ?? ''
+                                : '')
+                            : '')),
                     Text(transactionModel.to.contains('-')
-                        ? transactionTimebankModel.emailId ?? ''
-                        : fromTransactionUserModel.email ?? ''),
+                        ? (transactionTimebankModel != null
+                            ? transactionTimebankModel.emailId ?? ''
+                            : '')
+                        : (fromTransactionUserModel != null
+                            ? fromTransactionUserModel.email ?? ''
+                            : '')),
                     Text(transactionModel.to.contains('-')
-                        ? transactionTimebankModel.phoneNumber ?? ''
+                        ? (transactionTimebankModel != null
+                            ? transactionTimebankModel.phoneNumber ?? ''
+                            : '')
                         : ''),
                   ],
                 ),
@@ -588,21 +605,35 @@ class TransactionsPdf {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          " To:",
+                          "To:",
                           style: TextStyle(
                               fontSize: 12, fontWeight: FontWeight.bold),
                         ),
                         Text(transactionModel.to.contains('-')
-                            ? transactionTimebankModel.name
-                            : toTransactionUserModel.fullname),
+                            ? (transactionTimebankModel != null
+                                ? transactionTimebankModel.name ?? ''
+                                : '')
+                            : (toTransactionUserModel != null
+                                ? toTransactionUserModel.fullname ?? ''
+                                : '')),
                         Text(transactionModel.to.contains('-')
-                            ? transactionTimebankModel.address ?? ''
-                            : toTransactionUserModel.locationName ?? ''),
+                            ? (transactionTimebankModel != null
+                                ? transactionTimebankModel.address ?? ''
+                                : '')
+                            : (fromTransactionUserModel != null
+                                ? fromTransactionUserModel.locationName ?? ''
+                                : '')),
                         Text(transactionModel.to.contains('-')
-                            ? transactionTimebankModel.emailId ?? ''
-                            : toTransactionUserModel.email ?? ''),
+                            ? (transactionTimebankModel != null
+                                ? transactionTimebankModel.emailId ?? ''
+                                : '')
+                            : (toTransactionUserModel != null
+                                ? toTransactionUserModel.email ?? ''
+                                : '')),
                         Text(transactionModel.to.contains('-')
-                            ? transactionTimebankModel.phoneNumber ?? ''
+                            ? (transactionTimebankModel != null
+                                ? transactionTimebankModel.phoneNumber ?? ''
+                                : '')
                             : ''),
                       ]),
                   Spacer(),
@@ -635,7 +666,7 @@ class TransactionsPdf {
                 1,
                 (index) => Column(children: [
                   Row(children: [
-                    Text(requestModel.title),
+                    Text(requestModel != null ? requestModel.title ?? '' : ''),
                     Spacer(),
                     Text(transactionModel.credits.toStringAsFixed(2)),
                   ]),
@@ -679,7 +710,7 @@ class TransactionsPdf {
       }
     } else {
       logger.e("default case " + donationModel.toString());
-      defaultPdf(context);
+      defaultPdf(mainContext);
     }
 
     final String dir = (await getApplicationDocumentsDirectory()).path;
@@ -697,7 +728,7 @@ class TransactionsPdf {
     log("path to pdf file is " + path);
     final File file = File(path);
     await file.writeAsBytes(await pdf.save());
-    material.Navigator.of(context).push(
+    material.Navigator.of(mainContext).push(
       material.MaterialPageRoute(
         builder: (_) => InvoiceScreen(
           path: path,
