@@ -1441,4 +1441,7 @@ class L {
 
   String get item_s => "item(s)";
   String get sent => "Sent";
+
+  //6th Aug
+  String get completed_events => "Completed Events";
 }

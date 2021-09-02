@@ -21,6 +21,14 @@ extension ProjectModelLabel on ProjectMode {
   }
 }
 
+class ProjectModelList{
+  final List<ProjectModel> events;
+  final List<ProjectModel> completedEvents;
+
+  ProjectModelList(this.events, this.completedEvents);
+
+}
+
 class ProjectModel extends DataModel {
   static const String NO_MESSAGING_ROOM_CREATED = 'NOT_YET_CREATED';
   String id;

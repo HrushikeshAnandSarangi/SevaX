@@ -20,6 +20,7 @@ import 'package:sevaexchange/utils/search_via_zipcode.dart';
 
 class ElasticSearchApi {
   static final _url = FlavorConfig.values.elasticSearchBaseURL;
+
   static Future<List<Map<String, dynamic>>> _makeElasticSearchPostRequest(
       String url, dynamic body) async {
     http.Response response = await http
@@ -333,8 +334,7 @@ class ElasticSearchApi {
           await SearchCommunityViaZIPCode.getCommunitiesViaZIPCode(queryString);
 
       communityListTemp.forEach((item) {
-        logger
-            .i("-----------First Community Name  " + communityListTemp[0].name);
+        logger.i("-----------First Community Name  " + communityListTemp[0].name);
         communityData[item.id] = item;
       });
     } on NoNearByCommunitesFoundException catch (e) {
@@ -406,8 +406,7 @@ class ElasticSearchApi {
     List<CommunityModel> communityList = communityData.values.toList();
     communityList.sort((a, b) => a.name.compareTo(b.name));
 
-    logger.i(
-        "Length of FINAL COMMUNITY LIST:  " + communityList.length.toString());
+    logger.i("Length of FINAL COMMUNITY LIST:  " + communityList.length.toString());
 
     return communityList;
   }
@@ -565,12 +564,10 @@ class ElasticSearchApi {
 
   //get all categories
 
-  static Future<List<CategoryModel>> getAllCategories(
-      BuildContext context) async {
+  static Future<List<CategoryModel>> getAllCategories(BuildContext context) async {
     var key = S.of(context).localeName;
 
-    String endPoint =
-        '//elasticsearch/request_categories/_doc/_search?size=200';
+    String endPoint = '//elasticsearch/request_categories/_doc/_search?size=200';
 
     dynamic body = json.encode({
       "query": {"match_all": {}},
@@ -603,10 +600,8 @@ class ElasticSearchApi {
   }
 
   // get all community categories
-  static Future<List<CommunityCategoryModel>>
-      getAllCommunityCategories() async {
-    String endPoint =
-        '//elasticsearch/community_categories/_doc/_search?size=200';
+  static Future<List<CommunityCategoryModel>> getAllCommunityCategories() async {
+    String endPoint = '//elasticsearch/community_categories/_doc/_search?size=200';
 
     dynamic body = json.encode({
       "query": {"match_all": {}},
@@ -676,7 +671,7 @@ class ElasticSearchApi {
   }
 
   static Future<List<ProjectModel>> getPublicProjects(
-      {DistanceFilterData distanceFilterData, String sevaUserID}) async {
+      {DistanceFilterData distanceFilterData, String sevaUserID, bool showCompletedEvent}) async {
     logger.e('USER ID CHECK 6');
     String endPoint = '//elasticsearch/sevaxprojects/_doc/_search?size=1000';
     dynamic body = json.encode({
@@ -709,49 +704,55 @@ class ElasticSearchApi {
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
       ProjectModel model = ProjectModel.fromMap(sourceMap);
+      bool compareDates = false;
       if (distanceFilterData?.isInRadius(model.location) ?? true) {
         DateTime endDate = DateTime.fromMillisecondsSinceEpoch(model.endTime);
 
         logger.e('USER ID CHECK 2:  ' + sevaUserID);
 
         //explore events listing page
-        if (endDate.isBefore(DateTime.now())) {
-          if ((sevaUserID != '' || sevaUserID != '') &&
-              (model.creatorId == sevaUserID ||
-                  model.members.contains(sevaUserID) ||
-                  model.associatedmembers.containsKey(sevaUserID))) {
-            if (AppConfig.isTestCommunity != null &&
-                AppConfig.isTestCommunity) {
+        if (showCompletedEvent) {
+          if (endDate.isAfter(DateTime.now().subtract(Duration(days: 365))) &&
+              endDate.isBefore(DateTime.now())) {
+            if (AppConfig.isTestCommunity != null && AppConfig.isTestCommunity) {
               if (!model.liveMode) models.add(model);
             } else {
               models.add(model);
             }
           }
         } else {
-          if (AppConfig.isTestCommunity != null && AppConfig.isTestCommunity) {
-            if (!model.liveMode) models.add(model);
+          if (endDate.isBefore(DateTime.now())) {
+            if ((sevaUserID != null || sevaUserID != '') &&
+                (model.creatorId == sevaUserID ||
+                    model.members.contains(sevaUserID) ||
+                    model.associatedmembers.containsKey(sevaUserID))) {
+              if (AppConfig.isTestCommunity != null && AppConfig.isTestCommunity) {
+                if (!model.liveMode) models.add(model);
+              } else {
+                models.add(model);
+              }
+            }
           } else {
-            models.add(model);
+            if (AppConfig.isTestCommunity != null && AppConfig.isTestCommunity) {
+              if (!model.liveMode) models.add(model);
+            } else {
+              models.add(model);
+            }
           }
         }
       }
     });
-    models.sort((a, b) => a.name.compareTo(b.name));
     return models;
   }
 
-  static Future<List<CommunityModel>> getCommunitiesByCategory(
-      String communityCategoryId) async {
+  static Future<List<CommunityModel>> getCommunitiesByCategory(String communityCategoryId) async {
     String endPoint = '//elasticsearch/sevaxcommunities/_doc/_search';
     dynamic body = json.encode({
       "query": {
         "bool": {
           "must": [
             {
-              "query_string": {
-                "default_field": "communityCategories",
-                "query": communityCategoryId
-              }
+              "query_string": {"default_field": "communityCategories", "query": communityCategoryId}
             },
             {
               "term": {"private": false}
@@ -788,8 +789,7 @@ class ElasticSearchApi {
           "must": [
             {
               "term": {
-                "testCommunity": AppConfig.isTestCommunity != null &&
-                    AppConfig.isTestCommunity
+                "testCommunity": AppConfig.isTestCommunity != null && AppConfig.isTestCommunity
               }
             },
             {
