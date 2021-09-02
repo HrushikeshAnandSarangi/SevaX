@@ -1,5 +1,9 @@
 // import 'package:flutter/material.dart';
 
+import 'dart:convert';
+
+import 'package:sevaexchange/utils/app_config.dart';
+
 final String newsCreateTitle = "Add News Post";
 final String feedTitle = "News Feed";
 final String defaultUserImageURL =
@@ -17,3 +21,8 @@ final String defaultProjectImageURL =
 
 final String defaultGroupImageURL =
     "https://firebasestorage.googleapis.com/v0/b/sevaxproject4sevax.appspot.com/o/timebanklogos%2Fgroup_default.jpg?alt=media&token=206f56eb-d575-4ae8-ac55-34aef5f3958a";
+
+List<dynamic> currencyItems =
+jsonDecode(AppConfig.remoteConfig.getString("currency_code_name_flag"));
+
+

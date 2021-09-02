@@ -1,4 +1,13 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+import 'package:intl/intl.dart';
+
+getMailContentTemplate(
+    {String receiverName,
+    String requestCreatorName,
+    String requestName,
+    String communityName,
+    int startDate}) {
+  return StringBuffer(
+          """<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
     <html xmlns="http://www.w3.org/1999/xhtml">
 
     <head>
@@ -156,7 +165,7 @@
                                                                                 <tbody>
                                                                                     <tr>
                                                                                 <td valign="top " style="font-family:Helvetica;word-break:break-word;color:rgb(255,255,255);font-size:12px;line-height:18px;text-align:center !important;padding:0px 18px 9px">
-                                                                                    <em>Copyright © 2021 Seva Exchange, All rights reserved.</em><br><br><strong>Feel free to contact us at:</strong><br><a href="mailto:contact@sevaexchange.com " style="color:rgb(255,255,255) "
+                                                                                    <em>Copyright © 2021 Seva Exchange Corporation. All rights reserved.</em><br><br><strong>Feel free to contact us at:</strong><br><a href="mailto:contact@sevaexchange.com " style="color:rgb(255,255,255) "
                                                                                         target="_blank ">info@sevaexchange.com</a><br><br><a href="https://sevaxapp.com/PrivacyPolicy.html" target="_blank" style="color:rgb(255,255,255);">Privacy Policy&nbsp;</a>&nbsp;<br>
                                                                                 </td>
                                                                                     </tr>
@@ -182,3 +191,7 @@
         </div>
     </body>
   </html>
+
+ """)
+      .toString();
+}

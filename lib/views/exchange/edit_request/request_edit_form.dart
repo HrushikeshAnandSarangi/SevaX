@@ -1,3 +1,4 @@
+/*
 import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
@@ -10,18 +11,17 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
-import 'package:sevaexchange/components/common_help_icon.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
 import 'package:sevaexchange/components/goods_dynamic_selection_editRequest.dart';
 import 'package:sevaexchange/components/repeat_availability/edit_repeat_widget.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/basic_user_details.dart';
 import 'package:sevaexchange/models/category_model.dart';
 import 'package:sevaexchange/models/enums/lending_borrow_enums.dart';
@@ -34,9 +34,7 @@ import 'package:sevaexchange/ui/screens/request/pages/select_borrow_item.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/debouncer.dart';
 import 'package:sevaexchange/utils/app_config.dart';
-import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
-import 'package:sevaexchange/utils/data_managers/request_data_manager.dart'
-    as RequestManager;
+import 'package:sevaexchange/utils/data_managers/request_data_manager.dart' as RequestManager;
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -46,106 +44,22 @@ import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/svea_credits_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/exchange/widgets/project_selection.dart';
+import 'package:sevaexchange/views/exchange/widgets/request_enums.dart';
+import 'package:sevaexchange/views/exchange/edit_request/edit_request.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
-import 'package:sevaexchange/views/onboarding/interests_view.dart';
 import 'package:sevaexchange/views/requests/onetomany_request_instructor_card.dart';
-import 'package:sevaexchange/views/spell_check_manager.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
 import 'package:sevaexchange/widgets/add_images_for_request.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
-import 'package:sevaexchange/widgets/custom_chip.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
-import 'package:sevaexchange/widgets/multi_select/flutter_multiselect.dart';
 import 'package:sevaexchange/widgets/open_scope_checkbox_widget.dart';
 import 'package:sevaexchange/widgets/select_category.dart';
 import 'package:sevaexchange/widgets/user_profile_image.dart';
-import 'package:usage/uuid/uuid.dart';
-
-import '../../flavor_config.dart';
-import '../../labels.dart';
-
-class EditRequest extends StatefulWidget {
-  final bool isOfferRequest;
-  final OfferModel offer;
-  final String timebankId;
-  final UserModel userModel;
-  final ProjectModel projectModel;
-  String projectId;
-  RequestModel requestModel;
-
-  EditRequest({
-    Key key,
-    this.isOfferRequest,
-    this.offer,
-    this.timebankId,
-    this.userModel,
-    this.projectId,
-    this.projectModel,
-    @required this.requestModel,
-  }) : super(key: key);
-
-  @override
-  _EditRequestState createState() => _EditRequestState();
-}
-
-class _EditRequestState extends State<EditRequest> {
-  @override
-  Widget build(BuildContext context) {
-    return ExitWithConfirmation(
-      child: Scaffold(
-          backgroundColor: Colors.white,
-          appBar: AppBar(
-            title: Text(
-              title,
-              style: TextStyle(fontSize: 18),
-            ),
-            centerTitle: false,
-            actions: [
-              CommonHelpIconWidget(),
-            ],
-          ),
-          body: StreamBuilder<UserModelController>(
-              stream: userBloc.getLoggedInUser,
-              builder: (context, snapshot) {
-                if (snapshot.hasError)
-                  return Text(
-                    S.of(context).general_stream_error,
-                  );
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return LoadingIndicator();
-                }
-                if (snapshot.data != null) {
-                  logger.e('REQUESTMODEL CHECK:   ' +
-                      widget.requestModel.toString());
-                  return RequestEditForm(
-                    requestModel: widget.requestModel,
-                    isOfferRequest: widget.isOfferRequest,
-                    offer: widget.offer,
-                    timebankId: widget.timebankId,
-                    userModel: widget.userModel,
-                    loggedInUser: snapshot.data.loggedinuser,
-                    projectId: widget.projectId,
-                    projectModel: widget.projectModel,
-                  );
-                }
-                return Text('');
-              })),
-    );
-  }
-
-  String get title {
-    if (widget.requestModel.projectId == null ||
-        widget.requestModel.projectId == "" ||
-        widget.requestModel.projectId.isEmpty) {
-      return S.of(context).edit;
-    }
-    return S.of(context).edit_request;
-  }
-}
 
 class RequestEditForm extends StatefulWidget {
   final bool isOfferRequest;
@@ -156,6 +70,7 @@ class RequestEditForm extends StatefulWidget {
   final ProjectModel projectModel;
   final String projectId;
   RequestModel requestModel;
+
   RequestEditForm(
       {this.isOfferRequest,
       this.offer,
@@ -173,13 +88,11 @@ class RequestEditForm extends StatefulWidget {
 }
 
 class RequestEditFormState extends State<RequestEditForm> {
-  final GlobalKey<_EditRequestState> _offerState = GlobalKey();
   final GlobalKey<OfferDurationWidgetState> _calendarState = GlobalKey();
   final _formKey = GlobalKey<FormState>();
   final hoursTextFocus = FocusNode();
   final volunteersTextFocus = FocusNode();
   List<String> selectedCategoryIds = [];
-
   RequestModel requestModel;
   GeoFirePoint location;
   final _debouncer = Debouncer(milliseconds: 500);
@@ -207,6 +120,7 @@ class RequestEditFormState extends State<RequestEditForm> {
 
 //One To Many Request new variables
   bool isAdmin = false;
+
   //Map<dynamic,dynamic> selectedInstructorMap;
   final TextEditingController searchTextController = TextEditingController();
   final searchOnChange = BehaviorSubject<String>();
@@ -233,6 +147,7 @@ class RequestEditFormState extends State<RequestEditForm> {
     caseSensitive: false,
     multiLine: false,
   );
+
   @override
   void initState() {
     super.initState();
@@ -247,22 +162,17 @@ class RequestEditFormState extends State<RequestEditForm> {
     this.requestModel.timebankId = _selectedTimebankId;
     this.location = widget.requestModel.location;
 
-    logger.d(widget.requestModel.location.toString() +
-        "From Database =====================");
+    logger.d(widget.requestModel.location.toString() + "From Database =====================");
     this.selectedAddress = widget.requestModel.address;
     this.oldHours = widget.requestModel.numberOfHours;
     this.requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
     //this.requestModel.projectId = widget.projectId;
-    if (widget.requestModel.categories != null &&
-        widget.requestModel.categories.length > 0) {
+    if (widget.requestModel.categories != null && widget.requestModel.categories.length > 0) {
       getCategoryModels(widget.requestModel.categories, 'Selected Categories');
     }
     isPublicCheckboxVisible = widget.requestModel.virtualRequest ?? false;
-    getTimebankAdminStatus = getTimebankDetailsbyFuture(
-      timebankId: _selectedTimebankId,
-    );
-    getProjectsByFuture =
-        FirestoreManager.getAllProjectListFuture(timebankid: widget.timebankId);
+    getTimebankAdminStatus = getTimebankDetailsbyFuture(timebankId: _selectedTimebankId);
+    getProjectsByFuture = FirestoreManager.getAllProjectListFuture(timebankid: widget.timebankId);
 
     tempCredits = widget.requestModel.maxCredits;
     initialRequestTitle = widget.requestModel.title;
@@ -275,8 +185,7 @@ class RequestEditFormState extends State<RequestEditForm> {
       instructorAdded = true;
     }
 
-    log('Instructor Data:  ' +
-        widget.requestModel.selectedInstructor.toString());
+    log('Instructor Data:  ' + widget.requestModel.selectedInstructor.toString());
     log('Instructor Data:  ' + widget.requestModel.approvedUsers.toString());
 
     fetchRemoteConfig();
@@ -286,49 +195,6 @@ class RequestEditFormState extends State<RequestEditForm> {
     //   // _fetchCurrentlocation;
     // }
   }
-
-  // void get _fetchCurrentlocation async {
-  //   try {
-  //     Location templocation = Location();
-  //     bool _serviceEnabled;
-  //     PermissionStatus _permissionGranted;
-
-  //     _serviceEnabled = await templocation.serviceEnabled();
-  //     if (!_serviceEnabled) {
-  //       _serviceEnabled = await templocation.requestService();
-  //       if (!_serviceEnabled) {
-  //         return;
-  //       }
-  //     }
-
-  //     _permissionGranted = await templocation.hasPermission();
-  //     if (_permissionGranted == PermissionStatus.denied) {
-  //       _permissionGranted = await templocation.requestPermission();
-  //       if (_permissionGranted != PermissionStatus.granted) {
-  //         return;
-  //       }
-  //     }
-  //     Location().getLocation().then((onValue) {
-  //       location = GeoFirePoint(onValue.latitude, onValue.longitude);
-  //       LocationUtility()
-  //           .getFormattedAddress(
-  //         location.latitude,
-  //         location.longitude,
-  //       )
-  //           .then((address) {
-  //         setState(() {
-  //           this.selectedAddress = address;
-  //         });
-  //       });
-  //     });
-  //   } on PlatformException catch (e) {
-  //     if (e.code == 'PERMISSION_DENIED') {
-  //       //error = e.message;
-  //     } else if (e.code == 'SERVICE_STATUS_ERROR') {
-  //       //error = e.message;
-  //     }
-  //   }
-  // }
 
   Future<void> fetchRemoteConfig() async {
     AppConfig.remoteConfig = await RemoteConfig.instance;
@@ -343,8 +209,7 @@ class RequestEditFormState extends State<RequestEditForm> {
     this.requestModel.photoUrl = widget.requestModel.photoUrl;
     this.requestModel.sevaUserId = widget.requestModel.sevaUserId;
     if (widget.loggedInUser?.sevaUserID != null)
-      FirestoreManager.getUserForIdStream(
-              sevaUserId: widget.loggedInUser.sevaUserID)
+      FirestoreManager.getUserForIdStream(sevaUserId: widget.loggedInUser.sevaUserID)
           .listen((userModel) {});
     super.didChangeDependencies();
   }
@@ -356,23 +221,21 @@ class RequestEditFormState extends State<RequestEditForm> {
     fontFamily: 'Europa',
   );
 
-  Widget addToProjectContainer(
-      snapshot, List<ProjectModel> projectModelList, requestModel) {
+  Widget addToProjectContainer(snapshot, List<ProjectModel> projectModelList, requestModel) {
     if (snapshot.hasError) return Text(snapshot.error.toString());
     if (snapshot.connectionState == ConnectionState.waiting) {
       return Container();
     }
     timebankModel = snapshot.data;
-    if (isAccessAvailable(
-            snapshot.data, SevaCore.of(context).loggedInUser.sevaUserID) &&
+    if (isAccessAvailable(snapshot.data, SevaCore.of(context).loggedInUser.sevaUserID) &&
         widget.requestModel.requestMode == RequestMode.TIMEBANK_REQUEST &&
         isFromRequest()) {
       return ProjectSelection(
         requestModel: requestModel,
         projectModelList: projectModelList,
-        selectedProject: tempProjectId != null
-            ? projectModelList.firstWhere(
-                (element) => element.id == widget.requestModel.projectId,
+        admin: isAccessAvailable(snapshot.data, SevaCore.of(context).loggedInUser.sevaUserID),
+        selectedProject: (tempProjectId != null && tempProjectId.isNotEmpty)
+            ? projectModelList.firstWhere((element) => element.id == widget.requestModel.projectId,
                 orElse: () => null)
             : null,
         updateProjectIdCallback: (String projectid) {
@@ -380,8 +243,6 @@ class RequestEditFormState extends State<RequestEditForm> {
           tempProjectId = projectid;
           setState(() {});
         },
-        admin: isAccessAvailable(
-            snapshot.data, SevaCore.of(context).loggedInUser.sevaUserID),
       );
     } else {
       this.requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
@@ -396,115 +257,22 @@ class RequestEditFormState extends State<RequestEditForm> {
     }
   }
 
-  // Widget get assignProjectToRequestContainerWidget {
-  //   return InkWell(
-  //     splashColor: Colors.transparent,
-  //     focusColor: Colors.transparent,
-  //     hoverColor: Colors.transparent,
-  //     onTap: () async {
-  //       ExtendedNavigator.ofRouter<RequestsRouter>()
-  //           .pushAssignProjectToRequest(
-  //         timebankModel: timebankModel,
-  //         userModel: BlocProvider.of<AuthBloc>(context).user,
-  //         timebankProjectsList: timebankProjects,
-  //         personalProjectsList: userPersonalProjects,
-  //       )
-  //           .then((projectModelRes) {
-  //         if (projectModelRes != '') {
-  //           selectedProjectModel = projectModelRes;
-  //           //this.requestModel.projectId = selectedProjectModel.id;
-  //           tempProjectId = selectedProjectModel.id;
-  //           updateProject = true;
-  //           setState(() {});
-  //         }
-  //       });
-  //     },
-  //     child: Column(
-  //       mainAxisSize: MainAxisSize.min,
-  //       crossAxisAlignment: CrossAxisAlignment.start,
-  //       children: [
-  //         Row(
-  //           children: [
-  //             Text(S.of(context).assign_to_project,
-  //                 style: TextStyle(
-  //                     fontSize: 16,
-  //                     fontWeight: FontWeight.w600,
-  //                     color: Colors.black87)),
-  //             Spacer(),
-  //             Icon(
-  //               Icons.arrow_drop_down_circle,
-  //               size: 30,
-  //               color: Theme.of(context).primaryColor,
-  //             )
-  //           ],
-  //         ),
-  //         SizedBox(
-  //           height: 10,
-  //         ),
-  //         Chip(
-  //           label: Container(
-  //             constraints: BoxConstraints(
-  //                 maxWidth: MediaQuery.of(context).size.width - 80.0),
-  //             child: Text(
-  //                 selectedProjectModel == null
-  //                     ? S.of(context).unassigned
-  //                     : selectedProjectModel.name,
-  //                 overflow: TextOverflow.ellipsis),
-  //           ),
-  //           deleteIcon: Icon(
-  //             Icons.cancel,
-  //             size: 20,
-  //           ),
-  //           deleteIconColor: Colors.black38,
-  //           onDeleted: () {
-  //             if (selectedProjectModel != null) {
-  //               selectedProjectModel = null;
-  //               //selectedProjectModel.id = '';
-  //               tempProjectId = '';
-  //               setState(() {});
-  //             }
-  //           },
-  //         )
-  //       ],
-  //     ),
-  //   );
-  // }
-  void updateExitWithConfirmationValue(
-      BuildContext context, int index, String value) {
+  void updateExitWithConfirmationValue(BuildContext context, int index, String value) {
     ExitWithConfirmation.of(context).fieldValues[index] = value;
   }
 
   @override
   Widget build(BuildContext context) {
-    TextStyle textStyle = Theme.of(context).textTheme.headline6;
     startDate = getUpdatedDateTimeAccToUserTimezone(
         timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
-        dateTime: DateTime.fromMillisecondsSinceEpoch(
-            widget.requestModel.requestStart));
+        dateTime: DateTime.fromMillisecondsSinceEpoch(widget.requestModel.requestStart));
     endDate = getUpdatedDateTimeAccToUserTimezone(
         timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
-        dateTime: DateTime.fromMillisecondsSinceEpoch(
-            widget.requestModel.requestEnd));
+        dateTime: DateTime.fromMillisecondsSinceEpoch(widget.requestModel.requestEnd));
     hoursMessage = S.of(context).set_duration;
     UserModel loggedInUser = SevaCore.of(context).loggedInUser;
     this.requestModel.email = loggedInUser.email;
     this.requestModel.sevaUserId = loggedInUser.sevaUserID;
-
-    Widget headerContainer(snapshot) {
-      if (snapshot.hasError) return Text(snapshot.error.toString());
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return Container();
-      }
-      timebankModel = snapshot.data;
-      if (isAccessAvailable(
-          snapshot.data, SevaCore.of(context).loggedInUser.sevaUserID)) {
-        return requestSwitch();
-      } else {
-        this.requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
-        this.requestModel.requestType = RequestType.TIME;
-        return Container();
-      }
-    }
 
     return FutureBuilder<TimebankModel>(
         future: getTimebankAdminStatus,
@@ -518,8 +286,7 @@ class RequestEditFormState extends State<RequestEditForm> {
             return Text(snapshot.error);
           }
 
-          if (widget.requestModel.location == null ||
-              widget.requestModel.address == null) {
+          if (widget.requestModel.location == null || widget.requestModel.address == null) {
             // logger.d(selectedAddress + " =====Location " + location.toString());
 
             location = timebankModel.location;
@@ -532,8 +299,7 @@ class RequestEditFormState extends State<RequestEditForm> {
           return FutureBuilder<List<ProjectModel>>(
               future: getProjectsByFuture,
               builder: (projectscontext, projectListSnapshot) {
-                if (projectListSnapshot.connectionState ==
-                    ConnectionState.waiting) {
+                if (projectListSnapshot.connectionState == ConnectionState.waiting) {
                   return LoadingIndicator();
                 }
                 if (projectListSnapshot.hasError) {
@@ -565,18 +331,15 @@ class RequestEditFormState extends State<RequestEditForm> {
                               ),
                             ),
                             TextFormField(
-                              autovalidateMode:
-                                  AutovalidateMode.onUserInteraction,
+                              autovalidateMode: AutovalidateMode.onUserInteraction,
                               onChanged: (value) {
-                                updateExitWithConfirmationValue(
-                                    context, 1, value);
+                                updateExitWithConfirmationValue(context, 1, value);
                                 setState(() {
                                   initialRequestTitle = value;
                                 });
                               },
                               onFieldSubmitted: (v) {
-                                FocusScope.of(context)
-                                    .requestFocus(focusNodes[0]);
+                                FocusScope.of(context).requestFocus(focusNodes[0]);
                               },
                               // inputFormatters: <TextInputFormatter>[
                               //   WhitelistingTextInputFormatter(
@@ -609,8 +372,7 @@ class RequestEditFormState extends State<RequestEditForm> {
 
                             instructorAdded
                                 ? Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       SizedBox(height: 20),
                                       Text(
@@ -624,33 +386,22 @@ class RequestEditFormState extends State<RequestEditForm> {
                                       ),
                                       SizedBox(height: 15),
                                       Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 0, right: 10),
+                                        padding: const EdgeInsets.only(left: 0, right: 10),
                                         child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          mainAxisAlignment: MainAxisAlignment.center,
                                           children: <Widget>[
                                             // SizedBox(
                                             //   height: 15,
                                             // ),
                                             Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              crossAxisAlignment: CrossAxisAlignment.center,
                                               children: <Widget>[
                                                 UserProfileImage(
-                                                  photoUrl:
-                                                      selectedInstructorModelTemp
-                                                          .photoURL,
-                                                  email:
-                                                      selectedInstructorModelTemp
-                                                          .email,
-                                                  userId:
-                                                      selectedInstructorModelTemp
-                                                          .sevaUserID,
+                                                  photoUrl: selectedInstructorModelTemp.photoURL,
+                                                  email: selectedInstructorModelTemp.email,
+                                                  userId: selectedInstructorModelTemp.sevaUserID,
                                                   height: 75,
                                                   width: 75,
                                                   timebankModel: timebankModel,
@@ -660,16 +411,12 @@ class RequestEditFormState extends State<RequestEditForm> {
                                                 ),
                                                 Expanded(
                                                   child: Text(
-                                                    selectedInstructorModelTemp
-                                                            .fullname ??
-                                                        S
-                                                            .of(context)
-                                                            .name_not_available,
+                                                    selectedInstructorModelTemp.fullname ??
+                                                        S.of(context).name_not_available,
                                                     style: TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 18,
-                                                        fontWeight:
-                                                            FontWeight.bold),
+                                                        fontWeight: FontWeight.bold),
                                                   ),
                                                 ),
                                                 SizedBox(
@@ -677,8 +424,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                                                 ),
                                                 Container(
                                                   height: 37,
-                                                  padding: EdgeInsets.only(
-                                                      bottom: 0),
+                                                  padding: EdgeInsets.only(bottom: 0),
                                                   child: InkWell(
                                                     child: Icon(
                                                       Icons.cancel_rounded,
@@ -688,8 +434,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                                                     onTap: () {
                                                       setState(() {
                                                         instructorAdded = false;
-                                                        selectedInstructorModelTemp =
-                                                            null;
+                                                        selectedInstructorModelTemp = null;
                                                       });
                                                     },
                                                   ),
@@ -701,11 +446,9 @@ class RequestEditFormState extends State<RequestEditForm> {
                                       ),
                                     ],
                                   )
-                                : widget.requestModel.requestType ==
-                                        RequestType.ONE_TO_MANY_REQUEST
+                                : widget.requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST
                                     ? Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                             SizedBox(height: 20),
                                             Text(
@@ -719,8 +462,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                                             ),
                                             SizedBox(height: 15),
                                             TextField(
-                                              style: TextStyle(
-                                                  color: Colors.black),
+                                              style: TextStyle(color: Colors.black),
                                               controller: searchTextController,
                                               onChanged: _search,
                                               autocorrect: true,
@@ -732,8 +474,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                                                     ),
                                                     onPressed: () {
                                                       setState(() {
-                                                        searchTextController
-                                                            .clear();
+                                                        searchTextController.clear();
                                                       });
                                                     }),
                                                 alignLabelWithHint: true,
@@ -743,37 +484,22 @@ class RequestEditFormState extends State<RequestEditForm> {
                                                   color: Colors.grey,
                                                 ),
                                                 contentPadding:
-                                                    EdgeInsets.fromLTRB(
-                                                        10.0, 12.0, 10.0, 5.0),
+                                                    EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
                                                 filled: true,
                                                 fillColor: Colors.grey[200],
-                                                focusedBorder:
-                                                    OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color: Colors.white),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          15.7),
+                                                focusedBorder: OutlineInputBorder(
+                                                  borderSide: BorderSide(color: Colors.white),
+                                                  borderRadius: BorderRadius.circular(15.7),
                                                 ),
-                                                enabledBorder:
-                                                    UnderlineInputBorder(
-                                                        borderSide:
-                                                            BorderSide(
-                                                                color: Colors
-                                                                    .white),
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(
-                                                                    15.7)),
-                                                hintText: S
-                                                    .of(context)
-                                                    .select_speaker_hint,
+                                                enabledBorder: UnderlineInputBorder(
+                                                    borderSide: BorderSide(color: Colors.white),
+                                                    borderRadius: BorderRadius.circular(15.7)),
+                                                hintText: S.of(context).select_speaker_hint,
                                                 hintStyle: TextStyle(
                                                   color: Colors.black45,
                                                   fontSize: 14,
                                                 ),
-                                                floatingLabelBehavior:
-                                                    FloatingLabelBehavior.never,
+                                                floatingLabelBehavior: FloatingLabelBehavior.never,
                                               ),
                                             ),
 
@@ -782,16 +508,13 @@ class RequestEditFormState extends State<RequestEditForm> {
                                             Container(
                                                 child: Column(children: [
                                               StreamBuilder<List<UserModel>>(
-                                                stream: SearchManager
-                                                    .searchUserInSevaX(
-                                                  queryString:
-                                                      searchTextController.text,
+                                                stream: SearchManager.searchUserInSevaX(
+                                                  queryString: searchTextController.text,
                                                   //validItems: validItems,
                                                 ),
                                                 builder: (context, snapshot) {
                                                   if (snapshot.hasError) {
-                                                    Text(snapshot.error
-                                                        .toString());
+                                                    Text(snapshot.error.toString());
                                                   }
                                                   if (!snapshot.hasData) {
                                                     return Center(
@@ -799,78 +522,50 @@ class RequestEditFormState extends State<RequestEditForm> {
                                                         height: 48,
                                                         width: 40,
                                                         child: Container(
-                                                          margin:
-                                                              const EdgeInsets
-                                                                      .only(
-                                                                  top: 12.0),
-                                                          child:
-                                                              CircularProgressIndicator(),
+                                                          margin: const EdgeInsets.only(top: 12.0),
+                                                          child: CircularProgressIndicator(),
                                                         ),
                                                       ),
                                                     );
                                                   }
 
-                                                  List<UserModel> userList =
-                                                      snapshot.data;
+                                                  List<UserModel> userList = snapshot.data;
                                                   userList.removeWhere((user) =>
                                                       user.sevaUserID ==
                                                           SevaCore.of(context)
                                                               .loggedInUser
                                                               .sevaUserID ||
                                                       user.sevaUserID ==
-                                                          widget.requestModel
-                                                              .sevaUserId);
+                                                          widget.requestModel.sevaUserId);
 
                                                   if (userList.length == 0) {
                                                     return Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
+                                                      mainAxisAlignment: MainAxisAlignment.center,
                                                       children: [
                                                         Container(
-                                                          width: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .width *
+                                                          width: MediaQuery.of(context).size.width *
                                                               0.85,
-                                                          height: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .width *
-                                                              0.15,
+                                                          height:
+                                                              MediaQuery.of(context).size.width *
+                                                                  0.15,
                                                           child: Card(
-                                                            shape:
-                                                                RoundedRectangleBorder(
+                                                            shape: RoundedRectangleBorder(
                                                               side: BorderSide(
-                                                                  color: Colors
-                                                                      .transparent,
+                                                                  color: Colors.transparent,
                                                                   width: 0),
                                                               borderRadius: BorderRadius.vertical(
-                                                                  bottom: Radius
-                                                                      .circular(
-                                                                          7.0)),
+                                                                  bottom: Radius.circular(7.0)),
                                                             ),
-                                                            borderOnForeground:
-                                                                false,
-                                                            shadowColor:
-                                                                Colors.white24,
+                                                            borderOnForeground: false,
+                                                            shadowColor: Colors.white24,
                                                             elevation: 5,
                                                             child: Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                          .only(
-                                                                      left:
-                                                                          15.0,
-                                                                      top:
-                                                                          11.0),
+                                                              padding: const EdgeInsets.only(
+                                                                  left: 15.0, top: 11.0),
                                                               child: Text(
-                                                                S
-                                                                    .of(context)
-                                                                    .no_member_found,
-                                                                style:
-                                                                    TextStyle(
-                                                                  color: Colors
-                                                                      .grey,
+                                                                S.of(context).no_member_found,
+                                                                style: TextStyle(
+                                                                  color: Colors.grey,
                                                                 ),
                                                               ),
                                                             ),
@@ -880,59 +575,36 @@ class RequestEditFormState extends State<RequestEditForm> {
                                                     );
                                                   }
 
-                                                  if (searchTextController.text
-                                                          .trim()
-                                                          .length <
-                                                      3) {
+                                                  if (searchTextController.text.trim().length < 3) {
                                                     return Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
+                                                      mainAxisAlignment: MainAxisAlignment.center,
                                                       children: [
                                                         Container(
-                                                          width: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .width *
+                                                          width: MediaQuery.of(context).size.width *
                                                               0.85,
-                                                          height: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .width *
-                                                              0.15,
+                                                          height:
+                                                              MediaQuery.of(context).size.width *
+                                                                  0.15,
                                                           child: Card(
-                                                            shape:
-                                                                RoundedRectangleBorder(
+                                                            shape: RoundedRectangleBorder(
                                                               side: BorderSide(
-                                                                  color: Colors
-                                                                      .transparent,
+                                                                  color: Colors.transparent,
                                                                   width: 0),
                                                               borderRadius: BorderRadius.vertical(
-                                                                  bottom: Radius
-                                                                      .circular(
-                                                                          7.0)),
+                                                                  bottom: Radius.circular(7.0)),
                                                             ),
-                                                            borderOnForeground:
-                                                                false,
-                                                            shadowColor:
-                                                                Colors.white24,
+                                                            borderOnForeground: false,
+                                                            shadowColor: Colors.white24,
                                                             elevation: 5,
                                                             child: Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                          .only(
-                                                                      left:
-                                                                          15.0,
-                                                                      top:
-                                                                          11.0),
+                                                              padding: const EdgeInsets.only(
+                                                                  left: 15.0, top: 11.0),
                                                               child: Text(
                                                                 S
                                                                     .of(context)
                                                                     .validation_error_search_min_characters,
-                                                                style:
-                                                                    TextStyle(
-                                                                  color: Colors
-                                                                      .grey,
+                                                                style: TextStyle(
+                                                                  color: Colors.grey,
                                                                 ),
                                                               ),
                                                             ),
@@ -944,111 +616,86 @@ class RequestEditFormState extends State<RequestEditForm> {
                                                     return Scrollbar(
                                                       child: Center(
                                                         child: Card(
-                                                          shape:
-                                                              RoundedRectangleBorder(
+                                                          shape: RoundedRectangleBorder(
                                                             side: BorderSide(
-                                                                color: Colors
-                                                                    .transparent,
+                                                                color: Colors.transparent,
                                                                 width: 0),
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        10),
+                                                            borderRadius: BorderRadius.circular(10),
                                                           ),
-                                                          borderOnForeground:
-                                                              false,
-                                                          shadowColor:
-                                                              Colors.white24,
+                                                          borderOnForeground: false,
+                                                          shadowColor: Colors.white24,
                                                           elevation: 5,
                                                           child: LimitedBox(
                                                             maxHeight:
-                                                                MediaQuery.of(
-                                                                            context)
-                                                                        .size
-                                                                        .width *
+                                                                MediaQuery.of(context).size.width *
                                                                     0.55,
                                                             maxWidth: 90,
-                                                            child: ListView
-                                                                .separated(
-                                                                    primary:
-                                                                        false,
-                                                                    //physics: NeverScrollableScroflutter card bordellPhysics(),
-                                                                    shrinkWrap:
-                                                                        true,
-                                                                    padding:
-                                                                        EdgeInsets
-                                                                            .zero,
-                                                                    itemCount:
-                                                                        userList
-                                                                            .length,
-                                                                    separatorBuilder: (BuildContext
-                                                                                context,
-                                                                            int
-                                                                                index) =>
+                                                            child: ListView.separated(
+                                                                primary: false,
+                                                                //physics: NeverScrollableScroflutter card bordellPhysics(),
+                                                                shrinkWrap: true,
+                                                                padding: EdgeInsets.zero,
+                                                                itemCount: userList.length,
+                                                                separatorBuilder:
+                                                                    (BuildContext context,
+                                                                            int index) =>
                                                                         Divider(),
-                                                                    itemBuilder:
-                                                                        (context,
-                                                                            index) {
-                                                                      UserModel
-                                                                          user =
-                                                                          userList[
-                                                                              index];
+                                                                itemBuilder: (context, index) {
+                                                                  UserModel user = userList[index];
 
-                                                                      List<String>
-                                                                          timeBankIds =
-                                                                          snapshot.data[index].favoriteByTimeBank ??
-                                                                              [];
-                                                                      List<String>
-                                                                          memberId =
-                                                                          user.favoriteByMember ??
-                                                                              [];
+                                                                  List<String> timeBankIds =
+                                                                      snapshot.data[index]
+                                                                              .favoriteByTimeBank ??
+                                                                          [];
+                                                                  List<String> memberId =
+                                                                      user.favoriteByMember ?? [];
 
-                                                                      return OneToManyInstructorCard(
-                                                                        userModel:
-                                                                            user,
-                                                                        timebankModel:
-                                                                            timebankModel,
-                                                                        isAdmin:
-                                                                            isAdmin,
-                                                                        //refresh: refresh,
-                                                                        currentCommunity: SevaCore.of(context)
+                                                                  return OneToManyInstructorCard(
+                                                                    userModel: user,
+                                                                    timebankModel: timebankModel,
+                                                                    isAdmin: isAdmin,
+                                                                    //refresh: refresh,
+                                                                    currentCommunity:
+                                                                        SevaCore.of(context)
                                                                             .loggedInUser
                                                                             .currentCommunity,
-                                                                        loggedUserId: SevaCore.of(context)
+                                                                    loggedUserId:
+                                                                        SevaCore.of(context)
                                                                             .loggedInUser
                                                                             .sevaUserID,
-                                                                        isFavorite: isAdmin
-                                                                            ? timeBankIds.contains(widget.requestModel.timebankId)
-                                                                            : memberId.contains(SevaCore.of(context).loggedInUser.sevaUserID),
-                                                                        addStatus: S
-                                                                            .of(context)
-                                                                            .add,
-                                                                        onAddClick:
-                                                                            () {
-                                                                          setState(
-                                                                              () {
-                                                                            selectedInstructorModel =
-                                                                                user;
-                                                                            instructorAdded =
-                                                                                true;
-                                                                            selectedInstructorModelTemp =
-                                                                                BasicUserDetails(
-                                                                              fullname: user?.fullname,
-                                                                              email: user?.email,
-                                                                              photoURL: user?.photoURL,
-                                                                              sevaUserID: user?.sevaUserID,
-                                                                            );
-                                                                            // widget.requestModel.selectedInstructor =
-                                                                            //     BasicUserDetails(
-                                                                            //   fullname: user.fullname,
-                                                                            //   email: user.email,
-                                                                            //   photoURL: user.photoURL,
-                                                                            //   sevaUserID: user.sevaUserID,
-                                                                            // );
-                                                                          });
-                                                                        },
-                                                                      );
-                                                                    }),
+                                                                    isFavorite: isAdmin
+                                                                        ? timeBankIds.contains(
+                                                                            widget.requestModel
+                                                                                .timebankId)
+                                                                        : memberId.contains(
+                                                                            SevaCore.of(context)
+                                                                                .loggedInUser
+                                                                                .sevaUserID),
+                                                                    addStatus: S.of(context).add,
+                                                                    onAddClick: () {
+                                                                      setState(() {
+                                                                        selectedInstructorModel =
+                                                                            user;
+                                                                        instructorAdded = true;
+                                                                        selectedInstructorModelTemp =
+                                                                            BasicUserDetails(
+                                                                          fullname: user?.fullname,
+                                                                          email: user?.email,
+                                                                          photoURL: user?.photoURL,
+                                                                          sevaUserID:
+                                                                              user?.sevaUserID,
+                                                                        );
+                                                                        // widget.requestModel.selectedInstructor =
+                                                                        //     BasicUserDetails(
+                                                                        //   fullname: user.fullname,
+                                                                        //   email: user.email,
+                                                                        //   photoURL: user.photoURL,
+                                                                        //   sevaUserID: user.sevaUserID,
+                                                                        // );
+                                                                      });
+                                                                    },
+                                                                  );
+                                                                }),
                                                           ),
                                                         ),
                                                       ),
@@ -1060,8 +707,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                                           ])
                                     : Container(height: 0, width: 0),
                             HideWidget(
-                              hide: widget.requestModel.requestType !=
-                                  RequestType.BORROW,
+                              hide: widget.requestModel.requestType != RequestType.BORROW,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -1094,12 +740,9 @@ class RequestEditFormState extends State<RequestEditForm> {
                                     hide: widget.requestModel.roomOrTool ==
                                         LendingType.PLACE.readable,
                                     child: SelectBorrowItem(
-                                      selectedItems: widget.requestModel
-                                          .borrowModel.requiredItems,
-                                      onSelectedItems: (items) => {
-                                        widget.requestModel.borrowModel
-                                            .requiredItems = items
-                                      },
+                                      selectedItems: widget.requestModel.borrowModel.requiredItems,
+                                      onSelectedItems: (items) =>
+                                          {widget.requestModel.borrowModel.requiredItems = items},
                                     ),
                                   ),
                                 ],
@@ -1114,24 +757,18 @@ class RequestEditFormState extends State<RequestEditForm> {
 
                             widget.requestModel.requestType == RequestType.TIME
                                 ? TimeRequest(snapshot, projectModelList)
-                                : widget.requestModel.requestType ==
-                                        RequestType.CASH
+                                : widget.requestModel.requestType == RequestType.CASH
                                     ? CashRequest(snapshot, projectModelList)
                                     : widget.requestModel.requestType ==
                                             RequestType.ONE_TO_MANY_REQUEST
-                                        ? TimeRequest(
-                                            snapshot, projectModelList)
-                                        : widget.requestModel.requestType ==
-                                                RequestType.BORROW
-                                            ? BorrowRequest(
-                                                snapshot, projectModelList)
-                                            : GoodsRequest(
-                                                snapshot, projectModelList),
+                                        ? TimeRequest(snapshot, projectModelList)
+                                        : widget.requestModel.requestType == RequestType.BORROW
+                                            ? BorrowRequest(snapshot, projectModelList)
+                                            : GoodsRequest(snapshot, projectModelList),
 
                             SizedBox(height: 20),
 
-                            widget.requestModel.requestType !=
-                                    RequestType.BORROW
+                            widget.requestModel.requestType != RequestType.BORROW
                                 ? Center(
                                     child: LocationPickerWidget(
                                       selectedAddress: selectedAddress,
@@ -1139,14 +776,11 @@ class RequestEditFormState extends State<RequestEditForm> {
                                       onChanged: (LocationDataModel dataModel) {
                                         log("received data model");
                                         setState(() {
-                                          widget.requestModel.location =
-                                              dataModel.geoPoint;
-                                          widget.requestModel.address =
-                                              dataModel.location;
+                                          widget.requestModel.location = dataModel.geoPoint;
+                                          widget.requestModel.address = dataModel.location;
 
                                           location = dataModel.geoPoint;
-                                          this.selectedAddress =
-                                              dataModel.location;
+                                          this.selectedAddress = dataModel.location;
                                         });
                                       },
                                     ),
@@ -1158,11 +792,9 @@ class RequestEditFormState extends State<RequestEditForm> {
                               child: OpenScopeCheckBox(
                                 infoType: InfoType.VirtualRequest,
                                 isChecked: widget.requestModel.virtualRequest,
-                                checkBoxTypeLabel:
-                                    CheckBoxType.type_VirtualRequest,
+                                checkBoxTypeLabel: CheckBoxType.type_VirtualRequest,
                                 onChangedCB: (bool val) {
-                                  if (widget.requestModel.virtualRequest !=
-                                      val) {
+                                  if (widget.requestModel.virtualRequest != val) {
                                     widget.requestModel.virtualRequest = val;
                                     if (val) {
                                       isPublicCheckboxVisible = true;
@@ -1179,23 +811,18 @@ class RequestEditFormState extends State<RequestEditForm> {
                             ),
                             HideWidget(
                               hide: !isPublicCheckboxVisible ||
-                                  widget.requestModel.requestMode !=
-                                      RequestMode.TIMEBANK_REQUEST,
+                                  widget.requestModel.requestMode != RequestMode.TIMEBANK_REQUEST,
                               child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 10),
+                                padding: const EdgeInsets.symmetric(vertical: 10),
                                 child: TransactionsMatrixCheck(
                                   comingFrom: ComingFrom.Requests,
-                                  upgradeDetails: AppConfig
-                                      .upgradePlanBannerModel
-                                      .public_to_sevax_global,
-                                  transaction_matrix_type:
-                                      'create_public_request',
+                                  upgradeDetails:
+                                      AppConfig.upgradePlanBannerModel.public_to_sevax_global,
+                                  transaction_matrix_type: 'create_public_request',
                                   child: OpenScopeCheckBox(
                                       infoType: InfoType.OpenScopeRequest,
                                       isChecked: widget.requestModel.public,
-                                      checkBoxTypeLabel:
-                                          CheckBoxType.type_Requests,
+                                      checkBoxTypeLabel: CheckBoxType.type_Requests,
                                       onChangedCB: (bool val) {
                                         if (widget.requestModel.public != val) {
                                           widget.requestModel.public = val;
@@ -1208,22 +835,15 @@ class RequestEditFormState extends State<RequestEditForm> {
                             ),
 
                             Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 30.0),
+                              padding: const EdgeInsets.symmetric(vertical: 30.0),
                               child: Center(
                                 child: Container(
                                   // width: 150,
                                   child: CustomElevatedButton(
                                     onPressed: editRequest,
                                     child: Text(
-                                      S
-                                          .of(context)
-                                          .update_request
-                                          .padLeft(10)
-                                          .padRight(10),
-                                      style: Theme.of(context)
-                                          .primaryTextTheme
-                                          .button,
+                                      S.of(context).update_request.padLeft(10).padRight(10),
+                                      style: Theme.of(context).primaryTextTheme.button,
                                     ),
                                   ),
                                 ),
@@ -1250,256 +870,246 @@ class RequestEditFormState extends State<RequestEditForm> {
   }
 
   Widget RequestGoodsDescriptionData() {
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            S.of(context).request_goods_description,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Europa',
-              color: Colors.black,
-            ),
-          ),
-          GoodsDynamicSelection(
-            goodsbefore: widget.requestModel.goodsDonationDetails.requiredGoods,
-            onSelectedGoods: (goods) => {
-              widget.requestModel.goodsDonationDetails.requiredGoods = goods
-            },
-          ),
-          Text(
-            S.of(context).request_goods_address,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Europa',
-              color: Colors.black,
-            ),
-          ),
-          Text(
-            S.of(context).request_goods_address_hint,
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.grey,
-            ),
-          ),
-          TextFormField(
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            onChanged: (value) {
-              updateExitWithConfirmationValue(context, 2, value);
-            },
-            focusNode: focusNodes[8],
-            onFieldSubmitted: (v) {
-              FocusScope.of(context).requestFocus(focusNodes[8]);
-            },
-            textInputAction: TextInputAction.next,
-            decoration: InputDecoration(
-              errorMaxLines: 2,
-              hintText: S.of(context).request_goods_address_inputhint,
-              hintStyle: hintTextStyle,
-            ),
-            initialValue: widget.requestModel.goodsDonationDetails.address,
-            keyboardType: TextInputType.multiline,
-            maxLines: 3,
-            validator: (value) {
-              if (value.isEmpty) {
-                return S.of(context).validation_error_general_text;
-              } else {
-                widget.requestModel.goodsDonationDetails.address = value;
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
+      Text(
+        S.of(context).request_goods_description,
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          fontFamily: 'Europa',
+          color: Colors.black,
+        ),
+      ),
+      GoodsDynamicSelection(
+        goodsbefore: widget.requestModel.goodsDonationDetails.requiredGoods,
+        onSelectedGoods: (goods) =>
+            {widget.requestModel.goodsDonationDetails.requiredGoods = goods},
+      ),
+      Text(
+        S.of(context).request_goods_address,
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          fontFamily: 'Europa',
+          color: Colors.black,
+        ),
+      ),
+      Text(
+        S.of(context).request_goods_address_hint,
+        style: TextStyle(
+          fontSize: 12,
+          color: Colors.grey,
+        ),
+      ),
+      TextFormField(
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        onChanged: (value) {
+          updateExitWithConfirmationValue(context, 2, value);
+        },
+        focusNode: focusNodes[8],
+        onFieldSubmitted: (v) {
+          FocusScope.of(context).requestFocus(focusNodes[8]);
+        },
+        textInputAction: TextInputAction.next,
+        decoration: InputDecoration(
+          errorMaxLines: 2,
+          hintText: S.of(context).request_goods_address_inputhint,
+          hintStyle: hintTextStyle,
+        ),
+        initialValue: widget.requestModel.goodsDonationDetails.address,
+        keyboardType: TextInputType.multiline,
+        maxLines: 3,
+        validator: (value) {
+          if (value.isEmpty) {
+            return S.of(context).validation_error_general_text;
+          } else {
+            widget.requestModel.goodsDonationDetails.address = value;
 //                setState(() {});
-              }
-              return null;
-            },
-          ),
-        ]);
+          }
+          return null;
+        },
+      ),
+    ]);
   }
 
   Widget RequestPaymentACH() {
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          SizedBox(height: 20),
-          Text(
-            S.of(context).request_payment_ach_bank_name,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Europa',
-              color: Colors.black,
-            ),
-          ),
-          TextFormField(
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            initialValue: widget.requestModel.cashModel.achdetails.bank_name,
-            onChanged: (value) {
-              updateExitWithConfirmationValue(context, 3, value);
-            },
-            focusNode: focusNodes[12],
-            onFieldSubmitted: (v) {
-              FocusScope.of(context).requestFocus(focusNodes[13]);
-            },
-            textInputAction: TextInputAction.next,
-            keyboardType: TextInputType.multiline,
-            maxLines: 1,
-            validator: (value) {
-              if (value.isEmpty) {
-                return S.of(context).validation_error_general_text;
-              } else if (!value.isEmpty) {
-                widget.requestModel.cashModel.achdetails.bank_name = value;
-              } else {
-                return S.of(context).enter_valid_bank_name;
-              }
-              return null;
-            },
-          ),
-          SizedBox(height: 20),
-          Text(
-            S.of(context).request_payment_ach_bank_address,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Europa',
-              color: Colors.black,
-            ),
-          ),
-          TextFormField(
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            initialValue: widget.requestModel.cashModel.achdetails.bank_address,
-            onChanged: (value) {
-              updateExitWithConfirmationValue(context, 4, value);
-            },
-            focusNode: focusNodes[13],
-            onFieldSubmitted: (v) {
-              FocusScope.of(context).requestFocus(focusNodes[14]);
-            },
-            textInputAction: TextInputAction.next,
-            keyboardType: TextInputType.multiline,
-            maxLines: 1,
-            validator: (value) {
-              if (value.isEmpty) {
-                return S.of(context).validation_error_general_text;
-              } else if (!value.isEmpty) {
-                widget.requestModel.cashModel.achdetails.bank_address = value;
-              } else {
-                return S.of(context).enter_valid_bank_address;
-              }
-              return null;
-            },
-          ),
-          SizedBox(height: 20),
-          Text(
-            S.of(context).request_payment_ach_routing_number,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Europa',
-              color: Colors.black,
-            ),
-          ),
-          TextFormField(
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            initialValue:
-                widget.requestModel.cashModel.achdetails.routing_number,
-            onChanged: (value) {
-              updateExitWithConfirmationValue(context, 5, value);
-            },
-            focusNode: focusNodes[14],
-            onFieldSubmitted: (v) {
-              FocusScope.of(context).requestFocus(focusNodes[15]);
-            },
-            textInputAction: TextInputAction.next,
-            keyboardType: TextInputType.multiline,
-            maxLines: 1,
-            validator: (value) {
-              if (value.isEmpty) {
-                return S.of(context).validation_error_general_text;
-              } else if (!value.isEmpty) {
-                widget.requestModel.cashModel.achdetails.routing_number = value;
-              } else {
-                return S.of(context).enter_valid_routing_number;
-              }
-              return null;
-            },
-          ),
-          SizedBox(height: 20),
-          Text(
-            S.of(context).request_payment_ach_account_no,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Europa',
-              color: Colors.black,
-            ),
-          ),
-          TextFormField(
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            initialValue:
-                widget.requestModel.cashModel.achdetails.account_number,
-            onChanged: (value) {
-              updateExitWithConfirmationValue(context, 6, value);
-            },
-            focusNode: focusNodes[15],
-            onFieldSubmitted: (v) {
-              FocusScope.of(context).requestFocus(focusNodes[15]);
-            },
-            textInputAction: TextInputAction.next,
-            keyboardType: TextInputType.multiline,
-            maxLines: 1,
-            onSaved: (value) {
-              widget.requestModel.cashModel.achdetails.account_number = value;
-            },
-            validator: (value) {
-              if (value.isEmpty) {
-                return S.of(context).validation_error_general_text;
-              } else if (!value.isEmpty) {
-                widget.requestModel.cashModel.achdetails.account_number = value;
-              } else {
-                return S.of(context).enter_valid_account_number;
-              }
-              return null;
-            },
-          )
-        ]);
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
+      SizedBox(height: 20),
+      Text(
+        S.of(context).request_payment_ach_bank_name,
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          fontFamily: 'Europa',
+          color: Colors.black,
+        ),
+      ),
+      TextFormField(
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        initialValue: widget.requestModel.cashModel.achdetails.bank_name,
+        onChanged: (value) {
+          updateExitWithConfirmationValue(context, 3, value);
+        },
+        focusNode: focusNodes[12],
+        onFieldSubmitted: (v) {
+          FocusScope.of(context).requestFocus(focusNodes[13]);
+        },
+        textInputAction: TextInputAction.next,
+        keyboardType: TextInputType.multiline,
+        maxLines: 1,
+        validator: (value) {
+          if (value.isEmpty) {
+            return S.of(context).validation_error_general_text;
+          } else if (!value.isEmpty) {
+            widget.requestModel.cashModel.achdetails.bank_name = value;
+          } else {
+            return S.of(context).enter_valid_bank_name;
+          }
+          return null;
+        },
+      ),
+      SizedBox(height: 20),
+      Text(
+        S.of(context).request_payment_ach_bank_address,
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          fontFamily: 'Europa',
+          color: Colors.black,
+        ),
+      ),
+      TextFormField(
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        initialValue: widget.requestModel.cashModel.achdetails.bank_address,
+        onChanged: (value) {
+          updateExitWithConfirmationValue(context, 4, value);
+        },
+        focusNode: focusNodes[13],
+        onFieldSubmitted: (v) {
+          FocusScope.of(context).requestFocus(focusNodes[14]);
+        },
+        textInputAction: TextInputAction.next,
+        keyboardType: TextInputType.multiline,
+        maxLines: 1,
+        validator: (value) {
+          if (value.isEmpty) {
+            return S.of(context).validation_error_general_text;
+          } else if (!value.isEmpty) {
+            widget.requestModel.cashModel.achdetails.bank_address = value;
+          } else {
+            return S.of(context).enter_valid_bank_address;
+          }
+          return null;
+        },
+      ),
+      SizedBox(height: 20),
+      Text(
+        S.of(context).request_payment_ach_routing_number,
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          fontFamily: 'Europa',
+          color: Colors.black,
+        ),
+      ),
+      TextFormField(
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        initialValue: widget.requestModel.cashModel.achdetails.routing_number,
+        onChanged: (value) {
+          updateExitWithConfirmationValue(context, 5, value);
+        },
+        focusNode: focusNodes[14],
+        onFieldSubmitted: (v) {
+          FocusScope.of(context).requestFocus(focusNodes[15]);
+        },
+        textInputAction: TextInputAction.next,
+        keyboardType: TextInputType.multiline,
+        maxLines: 1,
+        validator: (value) {
+          if (value.isEmpty) {
+            return S.of(context).validation_error_general_text;
+          } else if (!value.isEmpty) {
+            widget.requestModel.cashModel.achdetails.routing_number = value;
+          } else {
+            return S.of(context).enter_valid_routing_number;
+          }
+          return null;
+        },
+      ),
+      SizedBox(height: 20),
+      Text(
+        S.of(context).request_payment_ach_account_no,
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          fontFamily: 'Europa',
+          color: Colors.black,
+        ),
+      ),
+      TextFormField(
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        initialValue: widget.requestModel.cashModel.achdetails.account_number,
+        onChanged: (value) {
+          updateExitWithConfirmationValue(context, 6, value);
+        },
+        focusNode: focusNodes[15],
+        onFieldSubmitted: (v) {
+          FocusScope.of(context).requestFocus(focusNodes[15]);
+        },
+        textInputAction: TextInputAction.next,
+        keyboardType: TextInputType.multiline,
+        maxLines: 1,
+        onSaved: (value) {
+          widget.requestModel.cashModel.achdetails.account_number = value;
+        },
+        validator: (value) {
+          if (value.isEmpty) {
+            return S.of(context).validation_error_general_text;
+          } else if (!value.isEmpty) {
+            widget.requestModel.cashModel.achdetails.account_number = value;
+          } else {
+            return S.of(context).enter_valid_account_number;
+          }
+          return null;
+        },
+      )
+    ]);
   }
 
-  RegExp emailPattern = RegExp(
-      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+  RegExp emailPattern =
+      RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
   String mobilePattern = r'^[0-9]+$';
 
   Widget RequestPaymentZellePay() {
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          TextFormField(
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            onChanged: (value) {
-              updateExitWithConfirmationValue(context, 7, value);
-            },
-            focusNode: focusNodes[12],
-            onFieldSubmitted: (v) {
-              FocusScope.of(context).requestFocus(focusNodes[12]);
-            },
-            textInputAction: TextInputAction.next,
-            decoration: InputDecoration(
-              errorMaxLines: 2,
-              hintText:
-                  S.of(context).request_payment_descriptionZelle_inputhint,
-              hintStyle: hintTextStyle,
-            ),
-            initialValue: widget.requestModel.cashModel.zelleId != null
-                ? widget.requestModel.cashModel.zelleId
-                : '',
-            keyboardType: TextInputType.multiline,
-            maxLines: 1,
-            onSaved: (value) {
-              widget.requestModel.cashModel.zelleId = value;
-            },
-            validator: (value) {
-              return _validateEmailAndPhone(value);
-            },
-          )
-        ]);
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
+      TextFormField(
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        onChanged: (value) {
+          updateExitWithConfirmationValue(context, 7, value);
+        },
+        focusNode: focusNodes[12],
+        onFieldSubmitted: (v) {
+          FocusScope.of(context).requestFocus(focusNodes[12]);
+        },
+        textInputAction: TextInputAction.next,
+        decoration: InputDecoration(
+          errorMaxLines: 2,
+          hintText: S.of(context).request_payment_descriptionZelle_inputhint,
+          hintStyle: hintTextStyle,
+        ),
+        initialValue: widget.requestModel.cashModel.zelleId != null
+            ? widget.requestModel.cashModel.zelleId
+            : '',
+        keyboardType: TextInputType.multiline,
+        maxLines: 1,
+        onSaved: (value) {
+          widget.requestModel.cashModel.zelleId = value;
+        },
+        validator: (value) {
+          return _validateEmailAndPhone(value);
+        },
+      )
+    ]);
   }
 
   String _validateEmailAndPhone(String value) {
@@ -1517,81 +1127,76 @@ class RequestEditFormState extends State<RequestEditForm> {
   }
 
   Widget RequestPaymentPaypal() {
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          TextFormField(
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            onChanged: (value) {
-              updateExitWithConfirmationValue(context, 8, value);
-            },
-            focusNode: focusNodes[12],
-            onFieldSubmitted: (v) {
-              FocusScope.of(context).requestFocus(focusNodes[12]);
-            },
-            textInputAction: TextInputAction.next,
-            decoration: InputDecoration(
-              errorMaxLines: 2,
-              hintText: 'Ex: Paypal ID (phone or email)',
-              hintStyle: hintTextStyle,
-            ),
-            initialValue: widget.requestModel.cashModel.paypalId != null
-                ? widget.requestModel.cashModel.paypalId
-                : '',
-            keyboardType: TextInputType.multiline,
-            maxLines: 1,
-            onSaved: (value) {
-              widget.requestModel.cashModel.paypalId = value;
-            },
-            validator: (value) {
-              RegExp regExp = RegExp(mobilePattern);
-              if (value.isEmpty) {
-                return S.of(context).validation_error_general_text;
-              } else if (emailPattern.hasMatch(value) ||
-                  regExp.hasMatch(value)) {
-                widget.requestModel.cashModel.paypalId = value;
-                return null;
-              } else {
-                return S.of(context).enter_valid_link;
-              }
-            },
-          )
-        ]);
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
+      TextFormField(
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        onChanged: (value) {
+          updateExitWithConfirmationValue(context, 8, value);
+        },
+        focusNode: focusNodes[12],
+        onFieldSubmitted: (v) {
+          FocusScope.of(context).requestFocus(focusNodes[12]);
+        },
+        textInputAction: TextInputAction.next,
+        decoration: InputDecoration(
+          errorMaxLines: 2,
+          hintText: 'Ex: Paypal ID (phone or email)',
+          hintStyle: hintTextStyle,
+        ),
+        initialValue: widget.requestModel.cashModel.paypalId != null
+            ? widget.requestModel.cashModel.paypalId
+            : '',
+        keyboardType: TextInputType.multiline,
+        maxLines: 1,
+        onSaved: (value) {
+          widget.requestModel.cashModel.paypalId = value;
+        },
+        validator: (value) {
+          RegExp regExp = RegExp(mobilePattern);
+          if (value.isEmpty) {
+            return S.of(context).validation_error_general_text;
+          } else if (emailPattern.hasMatch(value) || regExp.hasMatch(value)) {
+            widget.requestModel.cashModel.paypalId = value;
+            return null;
+          } else {
+            return S.of(context).enter_valid_link;
+          }
+        },
+      )
+    ]);
   }
 
   Widget RequestPaymentVenmo() {
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          TextFormField(
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            onChanged: (value) {},
-            focusNode: focusNodes[12],
-            onFieldSubmitted: (v) {
-              FocusScope.of(context).requestFocus(focusNodes[12]);
-            },
-            textInputAction: TextInputAction.next,
-            decoration: InputDecoration(
-              errorMaxLines: 2,
-              hintText: S.of(context).venmo_hint,
-              hintStyle: hintTextStyle,
-            ),
-            initialValue: widget.requestModel.cashModel.venmoId ?? '',
-            keyboardType: TextInputType.multiline,
-            maxLines: 1,
-            onSaved: (value) {
-              widget.requestModel.cashModel.venmoId = value;
-            },
-            validator: (value) {
-              if (value.isEmpty) {
-                return S.of(context).validation_error_general_text;
-              } else {
-                widget.requestModel.cashModel.venmoId = value;
-                return null;
-              }
-            },
-          )
-        ]);
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
+      TextFormField(
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        onChanged: (value) {},
+        focusNode: focusNodes[12],
+        onFieldSubmitted: (v) {
+          FocusScope.of(context).requestFocus(focusNodes[12]);
+        },
+        textInputAction: TextInputAction.next,
+        decoration: InputDecoration(
+          errorMaxLines: 2,
+          hintText: S.of(context).venmo_hint,
+          hintStyle: hintTextStyle,
+        ),
+        initialValue: widget.requestModel.cashModel.venmoId ?? '',
+        keyboardType: TextInputType.multiline,
+        maxLines: 1,
+        onSaved: (value) {
+          widget.requestModel.cashModel.venmoId = value;
+        },
+        validator: (value) {
+          if (value.isEmpty) {
+            return S.of(context).validation_error_general_text;
+          } else {
+            widget.requestModel.cashModel.venmoId = value;
+            return null;
+          }
+        },
+      )
+    ]);
   }
 
   Widget RequestPaymentDescriptionData(RequestModel requestModel) {
@@ -1671,96 +1276,94 @@ class RequestEditFormState extends State<RequestEditForm> {
   }
 
   Widget OtherDetailsWidget() {
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            S.of(context).other_payment_name,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
-          ),
-          TextFormField(
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            onChanged: (value) {},
-            focusNode: focusNodes[0],
-            onFieldSubmitted: (v) {
-              FocusScope.of(context).autofocus(focusNodes[17]);
-            },
-            textInputAction: TextInputAction.next,
-            decoration: InputDecoration(
-              errorMaxLines: 2,
-              hintText: 'Provide other payment mode details',
-              hintStyle: hintTextStyle,
-            ),
-            keyboardType: TextInputType.multiline,
-            initialValue: widget.requestModel.cashModel.others != null
-                ? widget.requestModel.cashModel.others
-                : '',
-            maxLines: 1,
-            onSaved: (value) {
-              widget.requestModel.cashModel.others = value;
-            },
-            validator: (value) {
-              if (value.isEmpty || value == null) {
-                return S.of(context).validation_error_general_text;
-              }
-              if (!value.isEmpty && profanityDetector.isProfaneString(value)) {
-                return S.of(context).profanity_text_alert;
-              } else {
-                widget.requestModel.cashModel.others = value;
-                return null;
-              }
-            },
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Text(
-            S.of(context).other_payment_details,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
-          ),
-          TextFormField(
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            focusNode: focusNodes[17],
-            onChanged: (value) {},
-            onFieldSubmitted: (v) {
-              FocusScope.of(context).unfocus();
-            },
-            textInputAction: TextInputAction.next,
-            keyboardType: TextInputType.multiline,
-            minLines: 5,
-            maxLines: null,
-            onSaved: (value) {
-              widget.requestModel.cashModel.other_details = value;
-            },
-            decoration: InputDecoration(
-              errorMaxLines: 2,
-              hintText: S.of(context).other_payment_details_hint,
-              hintStyle: hintTextStyle,
-            ),
-            initialValue: widget.requestModel.cashModel.other_details != null
-                ? widget.requestModel.cashModel.other_details
-                : '',
-            validator: (value) {
-              if (value.isEmpty || value == null) {
-                return S.of(context).validation_error_general_text;
-              }
-              if (!value.isEmpty && profanityDetector.isProfaneString(value)) {
-                return S.of(context).profanity_text_alert;
-              } else {
-                widget.requestModel.cashModel.other_details = value;
-                return null;
-              }
-            },
-          ),
-        ]);
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
+      Text(
+        S.of(context).other_payment_name,
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          color: Colors.black,
+        ),
+      ),
+      TextFormField(
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        onChanged: (value) {},
+        focusNode: focusNodes[0],
+        onFieldSubmitted: (v) {
+          FocusScope.of(context).autofocus(focusNodes[17]);
+        },
+        textInputAction: TextInputAction.next,
+        decoration: InputDecoration(
+          errorMaxLines: 2,
+          hintText: 'Provide other payment mode details',
+          hintStyle: hintTextStyle,
+        ),
+        keyboardType: TextInputType.multiline,
+        initialValue: widget.requestModel.cashModel.others != null
+            ? widget.requestModel.cashModel.others
+            : '',
+        maxLines: 1,
+        onSaved: (value) {
+          widget.requestModel.cashModel.others = value;
+        },
+        validator: (value) {
+          if (value.isEmpty || value == null) {
+            return S.of(context).validation_error_general_text;
+          }
+          if (!value.isEmpty && profanityDetector.isProfaneString(value)) {
+            return S.of(context).profanity_text_alert;
+          } else {
+            widget.requestModel.cashModel.others = value;
+            return null;
+          }
+        },
+      ),
+      SizedBox(
+        height: 10,
+      ),
+      Text(
+        S.of(context).other_payment_details,
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          color: Colors.black,
+        ),
+      ),
+      TextFormField(
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        focusNode: focusNodes[17],
+        onChanged: (value) {},
+        onFieldSubmitted: (v) {
+          FocusScope.of(context).unfocus();
+        },
+        textInputAction: TextInputAction.next,
+        keyboardType: TextInputType.multiline,
+        minLines: 5,
+        maxLines: null,
+        onSaved: (value) {
+          widget.requestModel.cashModel.other_details = value;
+        },
+        decoration: InputDecoration(
+          errorMaxLines: 2,
+          hintText: S.of(context).other_payment_details_hint,
+          hintStyle: hintTextStyle,
+        ),
+        initialValue: widget.requestModel.cashModel.other_details != null
+            ? widget.requestModel.cashModel.other_details
+            : '',
+        validator: (value) {
+          if (value.isEmpty || value == null) {
+            return S.of(context).validation_error_general_text;
+          }
+          if (!value.isEmpty && profanityDetector.isProfaneString(value)) {
+            return S.of(context).profanity_text_alert;
+          } else {
+            widget.requestModel.cashModel.other_details = value;
+            return null;
+          }
+        },
+      ),
+    ]);
   }
 
   Widget get getPaymentInformation {
@@ -1787,43 +1390,41 @@ class RequestEditFormState extends State<RequestEditForm> {
   }
 
   Widget RequestPaymentSwift() {
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          TextFormField(
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            onChanged: (value) {},
-            focusNode: focusNodes[12],
-            onFieldSubmitted: (v) {
-              FocusScope.of(context).requestFocus(focusNodes[12]);
-            },
-            textInputAction: TextInputAction.next,
-            decoration: InputDecoration(
-              errorMaxLines: 2,
-              hintText: 'Ex: Swift ID',
-              hintStyle: hintTextStyle,
-            ),
-            initialValue: widget.requestModel.cashModel.swiftId != null
-                ? widget.requestModel.cashModel.swiftId
-                : "",
-            keyboardType: TextInputType.multiline,
-            maxLines: 1,
-            maxLength: 11,
-            onSaved: (value) {
-              widget.requestModel.cashModel.swiftId = value;
-            },
-            validator: (value) {
-              if (value.isEmpty) {
-                return 'ID cannot be empty';
-              } else if (value.length < 8) {
-                return 'Enter valid Swift ID';
-              } else {
-                widget.requestModel.cashModel.swiftId = value;
-                return null;
-              }
-            },
-          )
-        ]);
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
+      TextFormField(
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        onChanged: (value) {},
+        focusNode: focusNodes[12],
+        onFieldSubmitted: (v) {
+          FocusScope.of(context).requestFocus(focusNodes[12]);
+        },
+        textInputAction: TextInputAction.next,
+        decoration: InputDecoration(
+          errorMaxLines: 2,
+          hintText: 'Ex: Swift ID',
+          hintStyle: hintTextStyle,
+        ),
+        initialValue: widget.requestModel.cashModel.swiftId != null
+            ? widget.requestModel.cashModel.swiftId
+            : "",
+        keyboardType: TextInputType.multiline,
+        maxLines: 1,
+        maxLength: 11,
+        onSaved: (value) {
+          widget.requestModel.cashModel.swiftId = value;
+        },
+        validator: (value) {
+          if (value.isEmpty) {
+            return 'ID cannot be empty';
+          } else if (value.length < 8) {
+            return 'Enter valid Swift ID';
+          } else {
+            widget.requestModel.cashModel.swiftId = value;
+            return null;
+          }
+        },
+      )
+    ]);
   }
 
   //  Widget BorrowToolTitleField(hintTextDesc) {
@@ -2014,8 +1615,7 @@ class RequestEditFormState extends State<RequestEditForm> {
   Future<void> getCategoriesFromApi(String query) async {
     try {
       var response = await http.post(
-        "https://proxy.sevaexchange.com/" +
-            "http://ai.api.sevaxapp.com/request_categories",
+        "https://proxy.sevaexchange.com/" + "http://ai.api.sevaxapp.com/request_categories",
         headers: {
           "Content-Type": "application/json",
           "Access-Control": "Allow-Headers",
@@ -2028,9 +1628,8 @@ class RequestEditFormState extends State<RequestEditForm> {
 
       if (response.statusCode == 200) {
         Map<String, dynamic> bodyMap = json.decode(response.body);
-        List<String> categoriesList = bodyMap.containsKey('string_vec')
-            ? List.castFrom(bodyMap['string_vec'])
-            : [];
+        List<String> categoriesList =
+            bodyMap.containsKey('string_vec') ? List.castFrom(bodyMap['string_vec']) : [];
         if (categoriesList != null && categoriesList.length > 0) {
           getCategoryModels(categoriesList, S.of(context).suggested_categories);
         }
@@ -2043,8 +1642,7 @@ class RequestEditFormState extends State<RequestEditForm> {
     }
   }
 
-  Future<void> getCategoryModels(
-      List<String> categoriesList, String title) async {
+  Future<void> getCategoryModels(List<String> categoriesList, String title) async {
     List<CategoryModel> modelList = [];
     for (int i = 0; i < categoriesList.length; i += 1) {
       CategoryModel categoryModel = await FirestoreManager.getCategoryForId(
@@ -2102,8 +1700,7 @@ class RequestEditFormState extends State<RequestEditForm> {
               color: Theme.of(context).primaryColor,
             ),
             child: Padding(
-              padding:
-                  const EdgeInsets.only(top: 3.5, bottom: 5, left: 9, right: 9),
+              padding: const EdgeInsets.only(top: 3.5, bottom: 5, left: 9, right: 9),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -2117,12 +1714,10 @@ class RequestEditFormState extends State<RequestEditForm> {
                       setState(() {
                         selectedCategoryIds.remove(item.typeId);
                         selectedSubCategories.remove(item.typeId);
-                        subCategories.removeWhere(
-                            (category) => category.typeId == item.typeId);
+                        subCategories.removeWhere((category) => category.typeId == item.typeId);
                       });
                     },
-                    child: Icon(Icons.cancel_rounded,
-                        color: Colors.grey[100], size: 28),
+                    child: Icon(Icons.cancel_rounded, color: Colors.grey[100], size: 28),
                   ),
                 ],
               ),
@@ -2185,19 +1780,15 @@ class RequestEditFormState extends State<RequestEditForm> {
                   updateExitWithConfirmationValue(context, 10, v);
                   if (v.isNotEmpty && int.parse(v) >= 0) {
                     //widget.requestModel.maxCredits = int.parse(v);
-                    logger.i("___________>>> Updating credits to " +
-                        int.parse(v).toString());
+                    logger.i("___________>>> Updating credits to " + int.parse(v).toString());
 
                     tempCredits = int.parse(v);
                     setState(() {});
                   }
                 },
                 decoration: InputDecoration(
-                  hintText: requestModel.requestType ==
-                          RequestType.ONE_TO_MANY_REQUEST
-                      ? S
-                          .of(context)
-                          .onetomanyrequest_participants_or_credits_hint
+                  hintText: requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST
+                      ? S.of(context).onetomanyrequest_participants_or_credits_hint
                       : S.of(context).max_credit_hint,
                   hintStyle: hintTextStyle,
                   // labelText: 'No. of volunteers',
@@ -2252,8 +1843,7 @@ class RequestEditFormState extends State<RequestEditForm> {
             }
           },
           decoration: InputDecoration(
-            hintText: requestModel.requestType ==
-                    RequestType.ONE_TO_MANY_REQUEST
+            hintText: requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST
                 ? S.of(context).onetomanyrequest_participants_or_credits_hint
                 : S.of(context).number_of_volunteers,
             hintStyle: hintTextStyle,
@@ -2353,251 +1943,234 @@ class RequestEditFormState extends State<RequestEditForm> {
   }
 
   Widget BorrowRequest(snapshot, projectModelList) {
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          RequestDescriptionData(
-              S.of(context).request_description_hint_text_borrow),
-          SizedBox(height: 20), //Same hint for Room and Tools ?
-          // Choose Category and Sub Category
-          categoryWidget(),
-          SizedBox(height: 20),
-          isFromRequest(
-            projectId: widget.projectId,
-          )
-              ? addToProjectContainer(
-                  snapshot,
-                  projectModelList,
-                  widget.requestModel,
-                )
-              : Container(),
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
+      RequestDescriptionData(S.of(context).request_description_hint_text_borrow),
+      SizedBox(height: 20), //Same hint for Room and Tools ?
+      // Choose Category and Sub Category
+      categoryWidget(),
+      SizedBox(height: 20),
+      isFromRequest(
+        projectId: widget.projectId,
+      )
+          ? addToProjectContainer(
+              snapshot,
+              projectModelList,
+              widget.requestModel,
+            )
+          : Container(),
 
-          SizedBox(height: 15),
+      SizedBox(height: 15),
 
-          Text(
-            S.of(context).city + '/' + S.of(context).state,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Europa',
-              color: Colors.black,
-            ),
-          ),
-          SizedBox(height: 10),
+      Text(
+        S.of(context).city + '/' + S.of(context).state,
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          fontFamily: 'Europa',
+          color: Colors.black,
+        ),
+      ),
+      SizedBox(height: 10),
 
-          Text(
-            L.of(context).provide_address,
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Europa',
-              color: Colors.grey,
-            ),
-          ),
+      Text(
+        L.of(context).provide_address,
+        style: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.bold,
+          fontFamily: 'Europa',
+          color: Colors.grey,
+        ),
+      ),
 
-          SizedBox(height: 10),
+      SizedBox(height: 10),
 
-          Center(
-            child: LocationPickerWidget(
-              selectedAddress: selectedAddress,
-              location: location,
-              onChanged: (LocationDataModel dataModel) {
-                log("received data model");
-                setState(() {
-                  location = dataModel.geoPoint;
-                  this.selectedAddress = dataModel.location;
-                });
-              },
-            ),
-          )
-        ]);
+      Center(
+        child: LocationPickerWidget(
+          selectedAddress: selectedAddress,
+          location: location,
+          onChanged: (LocationDataModel dataModel) {
+            log("received data model");
+            setState(() {
+              location = dataModel.geoPoint;
+              this.selectedAddress = dataModel.location;
+            });
+          },
+        ),
+      )
+    ]);
   }
 
   Widget CashRequest(snapshot, projectModelList) {
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          SizedBox(height: 20),
-          Text(
-            S.of(context).request_target_donation,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Europa',
-              color: Colors.black,
-            ),
-          ),
-          TextFormField(
-            focusNode: focusNodes[5],
-            onFieldSubmitted: (v) {
-              FocusScope.of(context).unfocus();
-            },
-            initialValue: widget.requestModel.cashModel.targetAmount.toString(),
-            onChanged: (v) {
-              updateExitWithConfirmationValue(context, 12, v);
-              if (v.isNotEmpty && int.parse(v) >= 0) {
-                widget.requestModel.cashModel.targetAmount = int.parse(v);
-                setState(() {});
-              }
-            },
-            decoration: InputDecoration(
-              hintText: S.of(context).request_target_donation_hint,
-              hintStyle: hintTextStyle,
-              prefixIcon: Icon(Icons.attach_money),
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
+      SizedBox(height: 20),
+      Text(
+        S.of(context).request_target_donation,
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          fontFamily: 'Europa',
+          color: Colors.black,
+        ),
+      ),
+      TextFormField(
+        focusNode: focusNodes[5],
+        onFieldSubmitted: (v) {
+          FocusScope.of(context).unfocus();
+        },
+        initialValue: widget.requestModel.cashModel.targetAmount.toString(),
+        onChanged: (v) {
+          updateExitWithConfirmationValue(context, 12, v);
+          if (v.isNotEmpty && int.parse(v) >= 0) {
+            widget.requestModel.cashModel.targetAmount = int.parse(v);
+            setState(() {});
+          }
+        },
+        decoration: InputDecoration(
+          hintText: S.of(context).request_target_donation_hint,
+          hintStyle: hintTextStyle,
+          prefixIcon: Icon(Icons.attach_money),
 
-              // labelText: 'No. of volunteers',
-            ),
-            inputFormatters: [
-              FilteringTextInputFormatter.allow(
-                (RegExp("[0-9]")),
-              ),
-            ],
-            keyboardType: TextInputType.number,
-            validator: (value) {
-              if (value.isEmpty) {
-                return S.of(context).validation_error_target_donation_count;
-              } else if (int.parse(value) < 0) {
-                return S
-                    .of(context)
-                    .validation_error_target_donation_count_negative;
-              } else if (int.parse(value) == 0) {
-                return S
-                    .of(context)
-                    .validation_error_target_donation_count_zero;
-              } else {
-                widget.requestModel.cashModel.targetAmount = int.parse(value);
-                setState(() {});
-                return null;
-              }
-            },
+          // labelText: 'No. of volunteers',
+        ),
+        inputFormatters: [
+          FilteringTextInputFormatter.allow(
+            (RegExp("[0-9]")),
           ),
-          SizedBox(height: 20),
-          Text(
-            S.of(context).request_min_donation,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Europa',
-              color: Colors.black,
-            ),
-          ),
-          TextFormField(
-            focusNode: focusNodes[6],
-            onFieldSubmitted: (v) {
-              FocusScope.of(context).unfocus();
-            },
-            initialValue: widget.requestModel.cashModel.minAmount.toString(),
-            onChanged: (v) {
-              updateExitWithConfirmationValue(context, 13, v);
-              if (v.isNotEmpty && int.parse(v) >= 0) {
-                widget.requestModel.cashModel.minAmount = int.parse(v);
-                setState(() {});
-              }
-            },
-            decoration: InputDecoration(
-              hintText: S.of(context).request_min_donation_hint,
-              hintStyle: hintTextStyle,
-              // labelText: 'No. of volunteers',
-              prefixIcon: Icon(Icons.attach_money),
+        ],
+        keyboardType: TextInputType.number,
+        validator: (value) {
+          if (value.isEmpty) {
+            return S.of(context).validation_error_target_donation_count;
+          } else if (int.parse(value) < 0) {
+            return S.of(context).validation_error_target_donation_count_negative;
+          } else if (int.parse(value) == 0) {
+            return S.of(context).validation_error_target_donation_count_zero;
+          } else {
+            widget.requestModel.cashModel.targetAmount = int.parse(value);
+            setState(() {});
+            return null;
+          }
+        },
+      ),
+      SizedBox(height: 20),
+      Text(
+        S.of(context).request_min_donation,
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          fontFamily: 'Europa',
+          color: Colors.black,
+        ),
+      ),
+      TextFormField(
+        focusNode: focusNodes[6],
+        onFieldSubmitted: (v) {
+          FocusScope.of(context).unfocus();
+        },
+        initialValue: widget.requestModel.cashModel.minAmount.toString(),
+        onChanged: (v) {
+          updateExitWithConfirmationValue(context, 13, v);
+          if (v.isNotEmpty && int.parse(v) >= 0) {
+            widget.requestModel.cashModel.minAmount = int.parse(v);
+            setState(() {});
+          }
+        },
+        decoration: InputDecoration(
+          hintText: S.of(context).request_min_donation_hint,
+          hintStyle: hintTextStyle,
+          // labelText: 'No. of volunteers',
+          prefixIcon: Icon(Icons.attach_money),
 
-              // labelText: 'No. of volunteers',
-            ),
-            inputFormatters: [
-              FilteringTextInputFormatter.allow(
-                (RegExp("[0-9]")),
-              ),
-            ],
-            keyboardType: TextInputType.number,
-            validator: (value) {
-              if (value.isEmpty) {
-                return S.of(context).validation_error_min_donation_count;
-              } else if (int.parse(value) < 0) {
-                return S
-                    .of(context)
-                    .validation_error_min_donation_count_negative;
-              } else if (int.parse(value) == 0) {
-                return S.of(context).validation_error_min_donation_count_zero;
-              } else {
-                widget.requestModel.cashModel.minAmount = int.parse(value);
-                setState(() {});
-                return null;
-              }
-            },
+          // labelText: 'No. of volunteers',
+        ),
+        inputFormatters: [
+          FilteringTextInputFormatter.allow(
+            (RegExp("[0-9]")),
           ),
-          SizedBox(height: 20),
-          RequestDescriptionData(S.of(context).request_description_hint_cash),
-          SizedBox(height: 20),
-          AddImagesForRequest(
-            onLinksCreated: (List<String> imageUrls) {
-              widget.requestModel.imageUrls = imageUrls;
-            },
-            selectedList: widget.requestModel.imageUrls,
-          ),
-          SizedBox(height: 20),
-          categoryWidget(),
-          SizedBox(height: 20),
-          isFromRequest(
-            projectId: widget.projectId,
-          )
-              ? addToProjectContainer(
-                  snapshot,
-                  projectModelList,
-                  widget.requestModel,
-                )
-              : Container(),
-          SizedBox(height: 20),
-          RequestPaymentDescriptionData(widget.requestModel),
-        ]);
+        ],
+        keyboardType: TextInputType.number,
+        validator: (value) {
+          if (value.isEmpty) {
+            return S.of(context).validation_error_min_donation_count;
+          } else if (int.parse(value) < 0) {
+            return S.of(context).validation_error_min_donation_count_negative;
+          } else if (int.parse(value) == 0) {
+            return S.of(context).validation_error_min_donation_count_zero;
+          } else {
+            widget.requestModel.cashModel.minAmount = int.parse(value);
+            setState(() {});
+            return null;
+          }
+        },
+      ),
+      SizedBox(height: 20),
+      RequestDescriptionData(S.of(context).request_description_hint_cash),
+      SizedBox(height: 20),
+      AddImagesForRequest(
+        onLinksCreated: (List<String> imageUrls) {
+          widget.requestModel.imageUrls = imageUrls;
+        },
+        selectedList: widget.requestModel.imageUrls,
+      ),
+      SizedBox(height: 20),
+      categoryWidget(),
+      SizedBox(height: 20),
+      isFromRequest(
+        projectId: widget.projectId,
+      )
+          ? addToProjectContainer(
+              snapshot,
+              projectModelList,
+              widget.requestModel,
+            )
+          : Container(),
+      SizedBox(height: 20),
+      RequestPaymentDescriptionData(widget.requestModel),
+    ]);
   }
 
   Widget GoodsRequest(snapshot, projectModelList) {
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          SizedBox(height: 20),
-          RequestDescriptionData(S.of(context).request_description_hint_goods),
-          SizedBox(height: 20),
-          categoryWidget(),
-          SizedBox(height: 20),
-          AddImagesForRequest(
-            onLinksCreated: (List<String> imageUrls) {
-              widget.requestModel.imageUrls = imageUrls;
-            },
-            selectedList: widget.requestModel.imageUrls,
-          ),
-          SizedBox(height: 20),
-          isFromRequest(
-            projectId: widget.projectId,
-          )
-              ? addToProjectContainer(
-                  snapshot,
-                  projectModelList,
-                  widget.requestModel,
-                )
-              : Container(),
-          SizedBox(height: 20),
-          RequestGoodsDescriptionData(),
-        ]);
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
+      SizedBox(height: 20),
+      RequestDescriptionData(S.of(context).request_description_hint_goods),
+      SizedBox(height: 20),
+      categoryWidget(),
+      SizedBox(height: 20),
+      AddImagesForRequest(
+        onLinksCreated: (List<String> imageUrls) {
+          widget.requestModel.imageUrls = imageUrls;
+        },
+        selectedList: widget.requestModel.imageUrls,
+      ),
+      SizedBox(height: 20),
+      isFromRequest(
+        projectId: widget.projectId,
+      )
+          ? addToProjectContainer(
+              snapshot,
+              projectModelList,
+              widget.requestModel,
+            )
+          : Container(),
+      SizedBox(height: 20),
+      RequestGoodsDescriptionData(),
+    ]);
   }
 
   bool isFromRequest({String projectId}) {
     return projectId == null || projectId.isEmpty || projectId == "";
   }
 
-  Widget _optionRadioButton(
-      {String title, value, groupvalue, Function onChanged}) {
+  Widget _optionRadioButton({String title, value, groupvalue, Function onChanged}) {
     return ListTile(
       contentPadding: EdgeInsets.only(left: 0.0, right: 0.0),
       title: Text(title),
-      leading:
-          Radio(value: value, groupValue: groupvalue, onChanged: onChanged),
+      leading: Radio(value: value, groupValue: groupvalue, onChanged: onChanged),
     );
   }
 
   Widget requestSwitch() {
-    if (widget.projectId == null ||
-        widget.projectId.isEmpty ||
-        widget.projectId == "") {
+    if (widget.projectId == null || widget.projectId.isEmpty || widget.projectId == "") {
       return Container(
         margin: EdgeInsets.only(bottom: 20),
         width: double.infinity,
@@ -2621,11 +2194,9 @@ class RequestEditFormState extends State<RequestEditForm> {
             if (val != sharedValue) {
               setState(() {
                 if (val == 0) {
-                  widget.requestModel.requestMode =
-                      RequestMode.TIMEBANK_REQUEST;
+                  widget.requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
                 } else {
-                  widget.requestModel.requestMode =
-                      RequestMode.PERSONAL_REQUEST;
+                  widget.requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
                   widget.requestModel.requestType = RequestType.TIME;
                 }
                 sharedValue = val;
@@ -2661,8 +2232,7 @@ class RequestEditFormState extends State<RequestEditForm> {
           content: Text(S.of(context).check_internet),
           action: SnackBarAction(
             label: S.of(context).dismiss,
-            onPressed: () =>
-                ScaffoldMessenger.of(context).hideCurrentSnackBar(),
+            onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
           ),
         ),
       );
@@ -2686,17 +2256,14 @@ class RequestEditFormState extends State<RequestEditForm> {
         return;
       }
       if (widget.requestModel.requestType == RequestType.BORROW &&
-          roomOrTool ==
-              1 && //because was throwing dialog when creating for place
+          roomOrTool == 1 && //because was throwing dialog when creating for place
           (widget.requestModel.borrowModel.requiredItems == null ||
               widget.requestModel.borrowModel.requiredItems.isEmpty)) {
         showDialogForTitle(dialogTitle: L.of(context).items_validation);
         return;
       }
-      if (widget.requestModel.isRecurring == true ||
-          widget.requestModel.autoGenerated == true) {
-        EditRepeatWidgetState.recurringDays =
-            EditRepeatWidgetState.getRecurringdays();
+      if (widget.requestModel.isRecurring == true || widget.requestModel.autoGenerated == true) {
+        EditRepeatWidgetState.recurringDays = EditRepeatWidgetState.getRecurringdays();
         // end.endType = EditRepeatWidgetState.endType == 0 ? "on" : "after";
         // end.on = end.endType == "on"
         //     ? EditRepeatWidgetState.selectedDate.millisecondsSinceEpoch
@@ -2709,15 +2276,11 @@ class RequestEditFormState extends State<RequestEditForm> {
 
       if (widget.requestModel.requestMode == RequestMode.PERSONAL_REQUEST) {
         var onBalanceCheckResult;
-        if (widget.requestModel.isRecurring == true ||
-            widget.requestModel.autoGenerated == true) {
+        if (widget.requestModel.isRecurring == true || widget.requestModel.autoGenerated == true) {
           int recurrences = widget.requestModel.end.endType == "after"
-              ? (widget.requestModel.end.after -
-                      widget.requestModel.occurenceCount)
-                  .abs()
+              ? (widget.requestModel.end.after - widget.requestModel.occurenceCount).abs()
               : calculateRecurrencesOnMode(widget.requestModel);
-          onBalanceCheckResult =
-              await SevaCreditLimitManager.hasSufficientCredits(
+          onBalanceCheckResult = await SevaCreditLimitManager.hasSufficientCredits(
             email: SevaCore.of(context).loggedInUser.email,
             userId: SevaCore.of(context).loggedInUser.sevaUserID,
             credits: widget.requestModel.isRecurring
@@ -2726,8 +2289,7 @@ class RequestEditFormState extends State<RequestEditForm> {
             communityId: widget.requestModel.communityId,
           );
         } else {
-          onBalanceCheckResult =
-              await SevaCreditLimitManager.hasSufficientCredits(
+          onBalanceCheckResult = await SevaCreditLimitManager.hasSufficientCredits(
             email: SevaCore.of(context).loggedInUser.email,
             userId: SevaCore.of(context).loggedInUser.sevaUserID,
             credits: widget.requestModel.isRecurring
@@ -2746,11 +2308,8 @@ class RequestEditFormState extends State<RequestEditForm> {
       logger.i("=============||||||===============");
 
       /// TODO take language from Prakash
-      if (OfferDurationWidgetState.starttimestamp ==
-          OfferDurationWidgetState.endtimestamp) {
-        showDialogForTitle(
-            dialogTitle:
-                S.of(context).validation_error_same_start_date_end_date);
+      if (OfferDurationWidgetState.starttimestamp == OfferDurationWidgetState.endtimestamp) {
+        showDialogForTitle(dialogTitle: S.of(context).validation_error_same_start_date_end_date);
         return;
       }
 
@@ -2760,10 +2319,8 @@ class RequestEditFormState extends State<RequestEditForm> {
         return;
       }
 
-      if (OfferDurationWidgetState.starttimestamp >
-          OfferDurationWidgetState.endtimestamp) {
-        showDialogForTitle(
-            dialogTitle: S.of(context).validation_error_end_date_greater);
+      if (OfferDurationWidgetState.starttimestamp > OfferDurationWidgetState.endtimestamp) {
+        showDialogForTitle(dialogTitle: S.of(context).validation_error_end_date_greater);
         return;
       }
 
@@ -2785,25 +2342,23 @@ class RequestEditFormState extends State<RequestEditForm> {
       if (widget.requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
         if (OfferDurationWidgetState.starttimestamp != null &&
             OfferDurationWidgetState.endtimestamp != null) {
-          DateTime startDateNew = DateTime.fromMillisecondsSinceEpoch(
-              OfferDurationWidgetState.starttimestamp);
-          DateTime endDateNew = DateTime.fromMillisecondsSinceEpoch(
-              OfferDurationWidgetState.endtimestamp);
+          DateTime startDateNew =
+              DateTime.fromMillisecondsSinceEpoch(OfferDurationWidgetState.starttimestamp);
+          DateTime endDateNew =
+              DateTime.fromMillisecondsSinceEpoch(OfferDurationWidgetState.endtimestamp);
 
           Duration sessionDuration = endDateNew.difference(startDateNew);
           double sixty = 60;
 
-          logger.e('----------> Speaking Minutes: ' +
-              sessionDuration.inMinutes.toString());
+          logger.e('----------> Speaking Minutes: ' + sessionDuration.inMinutes.toString());
 
-          selectedSpeakerTimeDetails.speakingTime = double.parse(
-              (sessionDuration.inMinutes / sixty).toStringAsPrecision(3));
+          selectedSpeakerTimeDetails.speakingTime =
+              double.parse((sessionDuration.inMinutes / sixty).toStringAsPrecision(3));
 
           //prep time will be entered by speaker when he/she is completing the request
           // selectedSpeakerTimeDetails.prepTime = 0;
 
-          widget.requestModel.selectedSpeakerTimeDetails =
-              selectedSpeakerTimeDetails;
+          widget.requestModel.selectedSpeakerTimeDetails = selectedSpeakerTimeDetails;
 
           setState(() {});
         }
@@ -2812,27 +2367,14 @@ class RequestEditFormState extends State<RequestEditForm> {
       //comparing the recurring days List
 
       Function eq = const ListEquality().equals;
-      bool recurrinDaysListsMatch = eq(widget.requestModel.recurringDays,
-          EditRepeatWidgetState.recurringDays);
+      bool recurrinDaysListsMatch =
+          eq(widget.requestModel.recurringDays, EditRepeatWidgetState.recurringDays);
       log('Days Match:  ' + recurrinDaysListsMatch.toString());
-      String tempSelectedEndType = EditRepeatWidgetState.endType == 0
-          ? S.of(context).on
-          : S.of(context).after;
+      String tempSelectedEndType =
+          EditRepeatWidgetState.endType == 0 ? S.of(context).on : S.of(context).after;
 
-      if (widget.requestModel.isRecurring == true ||
-          widget.requestModel.autoGenerated == true) {
-        if (widget.requestModel.title != initialRequestTitle ||
-            startDate.millisecondsSinceEpoch !=
-                OfferDurationWidgetState.starttimestamp ||
-            endDate.millisecondsSinceEpoch !=
-                OfferDurationWidgetState.endtimestamp ||
-            widget.requestModel.description != initialRequestDescription ||
-            tempCredits != widget.requestModel.maxCredits ||
-            tempNoOfVolunteers != widget.requestModel.numberOfApprovals ||
-            location != widget.requestModel.location ||
-            widget.requestModel.projectId != tempProjectId ||
-            !widget.requestModel.acceptors
-                .contains(selectedInstructorModel?.email)) {
+      if (widget.requestModel.isRecurring == true || widget.requestModel.autoGenerated == true) {
+        if (!widget.requestModel.acceptors.contains(selectedInstructorModel?.email)) {
           //setState(() {
           widget.requestModel.title = initialRequestTitle;
           widget.requestModel.description = initialRequestDescription;
@@ -2844,50 +2386,39 @@ class RequestEditFormState extends State<RequestEditForm> {
           widget.requestModel.numberOfApprovals = tempNoOfVolunteers;
           widget.requestModel.maxCredits = tempCredits;
 
-          startDate.millisecondsSinceEpoch !=
-                  OfferDurationWidgetState.starttimestamp
-              ? widget.requestModel.requestStart =
-                  OfferDurationWidgetState.starttimestamp
+          startDate.millisecondsSinceEpoch != OfferDurationWidgetState.starttimestamp
+              ? widget.requestModel.requestStart = OfferDurationWidgetState.starttimestamp
               : null;
 
-          endDate.millisecondsSinceEpoch !=
-                  OfferDurationWidgetState.endtimestamp
-              ? widget.requestModel.requestEnd =
-                  OfferDurationWidgetState.endtimestamp
+          endDate.millisecondsSinceEpoch != OfferDurationWidgetState.endtimestamp
+              ? widget.requestModel.requestEnd = OfferDurationWidgetState.endtimestamp
               : null;
           //});
 
           if (selectedInstructorModel != null &&
-              selectedInstructorModel.sevaUserID !=
-                  widget.requestModel.sevaUserId &&
-              !widget.requestModel.acceptors
-                  .contains(selectedInstructorModel.email) &&
-              widget.requestModel.requestType ==
-                  RequestType.ONE_TO_MANY_REQUEST) {
+              selectedInstructorModel.sevaUserID != widget.requestModel.sevaUserId &&
+              !widget.requestModel.acceptors.contains(selectedInstructorModel.email) &&
+              widget.requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
             //below is to update the invited speaker to inivted members list when speaker is changed
             await reUpdateInvitedSpeakerForRequest(
               requestID: widget.requestModel.id,
-              sevaUserIdPrevious:
-                  widget.requestModel.selectedInstructor.sevaUserID,
+              sevaUserIdPrevious: widget.requestModel.selectedInstructor.sevaUserID,
               emailPrevious: widget.requestModel.selectedInstructor.email,
               sevaUserIdNew: selectedInstructorModelTemp.sevaUserID,
               emailNew: selectedInstructorModelTemp.email,
             );
 
             List<String> acceptorsList = [];
-            Set<String> invitedUsersList =
-                Set.from(widget.requestModel.invitedUsers);
+            Set<String> invitedUsersList = Set.from(widget.requestModel.invitedUsers);
             //remove old speaker from invitedUsers and add new speaker to invited users
-            invitedUsersList
-                .remove(widget.requestModel.selectedInstructor.sevaUserID);
+            invitedUsersList.remove(widget.requestModel.selectedInstructor.sevaUserID);
             invitedUsersList.add(selectedInstructorModelTemp.sevaUserID);
             //assign updated list to request model invited users
             widget.requestModel.invitedUsers = invitedUsersList.toList();
 
             acceptorsList.add(selectedInstructorModel.email);
             widget.requestModel.acceptors = acceptorsList;
-            widget.requestModel.requestCreatorName =
-                SevaCore.of(context).loggedInUser.fullname;
+            widget.requestModel.requestCreatorName = SevaCore.of(context).loggedInUser.fullname;
             log('ADDED ACCEPTOR');
 
             // update new speaker details
@@ -2898,33 +2429,30 @@ class RequestEditFormState extends State<RequestEditForm> {
               sevaUserID: selectedInstructorModelTemp?.sevaUserID,
             );
 
-            if (selectedInstructorModel.communities
-                .contains(widget.requestModel.communityId)) {
-              speakerNotificationDocRefNew =
-                  await sendNotificationToMemberOneToManyRequest(
-                      communityId: widget.requestModel.communityId,
-                      timebankId: widget.requestModel.timebankId,
-                      sevaUserId: selectedInstructorModel.sevaUserID,
-                      userEmail: selectedInstructorModel.email,
-                      speakerNotificationDocRefOld:
-                          widget.requestModel.speakerInviteNotificationDocRef);
+            if (selectedInstructorModel.communities.contains(widget.requestModel.communityId)) {
+              speakerNotificationDocRefNew = await sendNotificationToMemberOneToManyRequest(
+                  communityId: widget.requestModel.communityId,
+                  timebankId: widget.requestModel.timebankId,
+                  sevaUserId: selectedInstructorModel.sevaUserID,
+                  userEmail: selectedInstructorModel.email,
+                  speakerNotificationDocRefOld:
+                      widget.requestModel.speakerInviteNotificationDocRef);
             } else {
-              speakerNotificationDocRefNew =
-                  await sendNotificationToMemberOneToManyRequest(
-                      communityId: FlavorConfig.values.timebankId,
-                      timebankId: FlavorConfig.values.timebankId,
-                      sevaUserId: selectedInstructorModel.sevaUserID,
-                      userEmail: selectedInstructorModel.email,
-                      speakerNotificationDocRefOld:
-                          widget.requestModel.speakerInviteNotificationDocRef);
+              speakerNotificationDocRefNew = await sendNotificationToMemberOneToManyRequest(
+                  communityId: FlavorConfig.values.timebankId,
+                  timebankId: FlavorConfig.values.timebankId,
+                  sevaUserId: selectedInstructorModel.sevaUserID,
+                  userEmail: selectedInstructorModel.email,
+                  speakerNotificationDocRefOld:
+                      widget.requestModel.speakerInviteNotificationDocRef);
               // send sevax global notification for user who is not part of the community for this request
               await sendMailToInstructor(
-                  senderEmail: 'noreply@sevaexchange.com', //requestModel.email,
+                  senderEmail: 'noreply@sevaexchange.com',
+                  //requestModel.email,
                   receiverEmail: selectedInstructorModel.email,
                   communityName: widget.requestModel.fullName,
                   requestName: widget.requestModel.title,
-                  requestCreatorName:
-                      SevaCore.of(context).loggedInUser.fullname,
+                  requestCreatorName: SevaCore.of(context).loggedInUser.fullname,
                   receiverName: selectedInstructorModel.fullname,
                   startDate: widget.requestModel.requestStart,
                   endDate: widget.requestModel.requestEnd);
@@ -2933,13 +2461,10 @@ class RequestEditFormState extends State<RequestEditForm> {
 
           //MIGRATE BELOW TO MOBILE
           widget.requestModel.isRecurring = EditRepeatWidgetState.isRecurring;
-          widget.requestModel.end.after =
-              int.parse(EditRepeatWidgetState.after);
+          widget.requestModel.end.after = int.parse(EditRepeatWidgetState.after);
           widget.requestModel.end.endType = tempSelectedEndType;
-          widget.requestModel.recurringDays =
-              EditRepeatWidgetState.recurringDays;
-          widget.requestModel.end.on =
-              EditRepeatWidgetState.selectedDate.millisecondsSinceEpoch;
+          widget.requestModel.recurringDays = EditRepeatWidgetState.recurringDays;
+          widget.requestModel.end.on = EditRepeatWidgetState.selectedDate.millisecondsSinceEpoch;
 
           return showDialog(
             barrierDismissible: false,
@@ -2980,11 +2505,8 @@ class RequestEditFormState extends State<RequestEditForm> {
                         await updateRequest(requestModel: widget.requestModel);
                         await RequestManager.updateRecurrenceRequestsFrontEnd(
                           updatedRequestModel: widget.requestModel,
-                          communityId: SevaCore.of(context)
-                              .loggedInUser
-                              .currentCommunity,
-                          timebankId:
-                              SevaCore.of(context).loggedInUser.currentTimebank,
+                          communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+                          timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
                         );
 
                         Navigator.pop(dialogContext);
@@ -3013,8 +2535,7 @@ class RequestEditFormState extends State<RequestEditForm> {
         logger.i("=============////////===============");
 
         if (tempSelectedEndType != widget.requestModel.end.endType ||
-            widget.requestModel.end.after !=
-                int.parse(EditRepeatWidgetState.after) ||
+            widget.requestModel.end.after != int.parse(EditRepeatWidgetState.after) ||
             widget.requestModel.end.on !=
                 EditRepeatWidgetState.selectedDate.millisecondsSinceEpoch ||
             recurrinDaysListsMatch == false) {
@@ -3022,13 +2543,10 @@ class RequestEditFormState extends State<RequestEditForm> {
           widget.requestModel.title = initialRequestTitle;
           widget.requestModel.description = initialRequestDescription;
           widget.requestModel.isRecurring = EditRepeatWidgetState.isRecurring;
-          widget.requestModel.end.after =
-              int.parse(EditRepeatWidgetState.after);
+          widget.requestModel.end.after = int.parse(EditRepeatWidgetState.after);
           widget.requestModel.end.endType = tempSelectedEndType;
-          widget.requestModel.recurringDays =
-              EditRepeatWidgetState.recurringDays;
-          widget.requestModel.end.on =
-              EditRepeatWidgetState.selectedDate.millisecondsSinceEpoch;
+          widget.requestModel.recurringDays = EditRepeatWidgetState.recurringDays;
+          widget.requestModel.end.on = EditRepeatWidgetState.selectedDate.millisecondsSinceEpoch;
           //});
 
           logger.i("=============IF===============");
@@ -3060,36 +2578,29 @@ class RequestEditFormState extends State<RequestEditForm> {
         log('HERE 1');
 
         if (selectedInstructorModel != null &&
-            selectedInstructorModel.sevaUserID !=
-                widget.requestModel.sevaUserId &&
-            !widget.requestModel.acceptors
-                .contains(selectedInstructorModel.email) &&
-            widget.requestModel.requestType ==
-                RequestType.ONE_TO_MANY_REQUEST) {
+            selectedInstructorModel.sevaUserID != widget.requestModel.sevaUserId &&
+            !widget.requestModel.acceptors.contains(selectedInstructorModel.email) &&
+            widget.requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
           //below is to update the invited speaker to inivted members list when speaker is changed
           await reUpdateInvitedSpeakerForRequest(
             requestID: widget.requestModel.id,
-            sevaUserIdPrevious:
-                widget.requestModel.selectedInstructor.sevaUserID,
+            sevaUserIdPrevious: widget.requestModel.selectedInstructor.sevaUserID,
             emailPrevious: widget.requestModel.selectedInstructor.email,
             sevaUserIdNew: selectedInstructorModelTemp.sevaUserID,
             emailNew: selectedInstructorModelTemp.email,
           );
 
           List<String> acceptorsList = [];
-          Set<String> invitedUsersList =
-              Set.from(widget.requestModel.invitedUsers);
+          Set<String> invitedUsersList = Set.from(widget.requestModel.invitedUsers);
           //remove old speaker from invitedUsers and add new speaker to invited users
-          invitedUsersList
-              .remove(widget.requestModel.selectedInstructor.sevaUserID);
+          invitedUsersList.remove(widget.requestModel.selectedInstructor.sevaUserID);
           invitedUsersList.add(selectedInstructorModelTemp.sevaUserID);
           //assign updated list to request model invited users
           widget.requestModel.invitedUsers = invitedUsersList.toList();
 
           acceptorsList.add(selectedInstructorModel.email);
           widget.requestModel.acceptors = acceptorsList;
-          widget.requestModel.requestCreatorName =
-              SevaCore.of(context).loggedInUser.fullname;
+          widget.requestModel.requestCreatorName = SevaCore.of(context).loggedInUser.fullname;
           log('ADDED ACCEPTOR');
 
           // update new speaker details
@@ -3100,28 +2611,24 @@ class RequestEditFormState extends State<RequestEditForm> {
             sevaUserID: selectedInstructorModelTemp?.sevaUserID,
           );
 
-          if (selectedInstructorModel.communities
-              .contains(widget.requestModel.communityId)) {
-            speakerNotificationDocRefNew =
-                await sendNotificationToMemberOneToManyRequest(
-                    communityId: widget.requestModel.communityId,
-                    timebankId: widget.requestModel.timebankId,
-                    sevaUserId: selectedInstructorModel.sevaUserID,
-                    userEmail: selectedInstructorModel.email,
-                    speakerNotificationDocRefOld:
-                        widget.requestModel.speakerInviteNotificationDocRef);
+          if (selectedInstructorModel.communities.contains(widget.requestModel.communityId)) {
+            speakerNotificationDocRefNew = await sendNotificationToMemberOneToManyRequest(
+                communityId: widget.requestModel.communityId,
+                timebankId: widget.requestModel.timebankId,
+                sevaUserId: selectedInstructorModel.sevaUserID,
+                userEmail: selectedInstructorModel.email,
+                speakerNotificationDocRefOld: widget.requestModel.speakerInviteNotificationDocRef);
           } else {
             // send sevax global notification for user who is not part of the community for this request
-            speakerNotificationDocRefNew =
-                await sendNotificationToMemberOneToManyRequest(
-                    communityId: FlavorConfig.values.timebankId,
-                    timebankId: FlavorConfig.values.timebankId,
-                    sevaUserId: selectedInstructorModel.sevaUserID,
-                    userEmail: selectedInstructorModel.email,
-                    speakerNotificationDocRefOld:
-                        widget.requestModel.speakerInviteNotificationDocRef);
+            speakerNotificationDocRefNew = await sendNotificationToMemberOneToManyRequest(
+                communityId: FlavorConfig.values.timebankId,
+                timebankId: FlavorConfig.values.timebankId,
+                sevaUserId: selectedInstructorModel.sevaUserID,
+                userEmail: selectedInstructorModel.email,
+                speakerNotificationDocRefOld: widget.requestModel.speakerInviteNotificationDocRef);
             await sendMailToInstructor(
-                senderEmail: 'noreply@sevaexchange.com', //requestModel.email,
+                senderEmail: 'noreply@sevaexchange.com',
+                //requestModel.email,
                 receiverEmail: selectedInstructorModel.email,
                 communityName: widget.requestModel.fullName,
                 requestName: widget.requestModel.title,
@@ -3133,8 +2640,7 @@ class RequestEditFormState extends State<RequestEditForm> {
         }
 
         //update current speaker notification document reference
-        widget.requestModel.speakerInviteNotificationDocRef =
-            speakerNotificationDocRefNew;
+        widget.requestModel.speakerInviteNotificationDocRef = speakerNotificationDocRefNew;
 
         widget.requestModel.title = initialRequestTitle;
         widget.requestModel.description = initialRequestDescription;
@@ -3142,14 +2648,11 @@ class RequestEditFormState extends State<RequestEditForm> {
         widget.requestModel.address = selectedAddress;
         widget.requestModel.projectId = tempProjectId;
         widget.requestModel.categories = selectedCategoryIds.toList();
-        startDate.millisecondsSinceEpoch !=
-                OfferDurationWidgetState.starttimestamp
-            ? widget.requestModel.requestStart =
-                OfferDurationWidgetState.starttimestamp
+        startDate.millisecondsSinceEpoch != OfferDurationWidgetState.starttimestamp
+            ? widget.requestModel.requestStart = OfferDurationWidgetState.starttimestamp
             : null;
         endDate.millisecondsSinceEpoch != OfferDurationWidgetState.endtimestamp
-            ? widget.requestModel.requestEnd =
-                OfferDurationWidgetState.endtimestamp
+            ? widget.requestModel.requestEnd = OfferDurationWidgetState.endtimestamp
             : null;
         widget.requestModel.numberOfApprovals = tempNoOfVolunteers;
         widget.requestModel.maxCredits = tempCredits;
@@ -3178,20 +2681,13 @@ class RequestEditFormState extends State<RequestEditForm> {
   // }
 
   int calculateRecurrencesOnMode(RequestModel requestModel) {
-    DateTime eventStartDate =
-        DateTime.fromMillisecondsSinceEpoch(requestModel.requestStart);
+    DateTime eventStartDate = DateTime.fromMillisecondsSinceEpoch(requestModel.requestStart);
     int recurrenceCount = 0;
     bool lastRound = false;
     while (lastRound == false) {
-      eventStartDate = DateTime(
-          eventStartDate.year,
-          eventStartDate.month,
-          eventStartDate.day + 1,
-          eventStartDate.hour,
-          eventStartDate.minute,
-          eventStartDate.second);
-      if (eventStartDate.millisecondsSinceEpoch <= requestModel.end.on &&
-          recurrenceCount < 11) {
+      eventStartDate = DateTime(eventStartDate.year, eventStartDate.month, eventStartDate.day + 1,
+          eventStartDate.hour, eventStartDate.minute, eventStartDate.second);
+      if (eventStartDate.millisecondsSinceEpoch <= requestModel.end.on && recurrenceCount < 11) {
         if (requestModel.recurringDays.contains(eventStartDate.weekday % 7)) {
           recurrenceCount++;
         }
@@ -3224,7 +2720,7 @@ class RequestEditFormState extends State<RequestEditForm> {
     } catch (error) {
       logger.e('did not find notification doc to delete');
     }
-    ;
+
 
     NotificationsModel notification = NotificationsModel(
         id: Utils.getUuid(),
@@ -3245,10 +2741,8 @@ class RequestEditFormState extends State<RequestEditForm> {
 
     log('WRITTEN TO DB--------------------->>');
 
-    return speakerNotificationDocRefNew = CollectionRef.users
-        .doc(userEmail)
-        .collection("notifications")
-        .doc(notification.id);
+    return speakerNotificationDocRefNew =
+        CollectionRef.users.doc(userEmail).collection("notifications").doc(notification.id);
   }
 
   //if another speaker is invited then we need to remove the previous speaker from the invited list
@@ -3303,8 +2797,7 @@ class RequestEditFormState extends State<RequestEditForm> {
         mailContent: MailContent.createMail(
       mailSender: senderEmail,
       mailReciever: receiverEmail,
-      mailSubject:
-          requestCreatorName + ' from ' + communityName + ' has invited you',
+      mailSubject: requestCreatorName + ' from ' + communityName + ' has invited you',
       mailContent:
           """<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
     <html xmlns="http://www.w3.org/1999/xhtml">
@@ -3603,8 +3096,7 @@ class RequestEditFormState extends State<RequestEditForm> {
             ),
           );
 
-          if (onActivityResult != null &&
-              onActivityResult.containsKey("membersSelected")) {
+          if (onActivityResult != null && onActivityResult.containsKey("membersSelected")) {
             selectedUsers = onActivityResult['membersSelected'];
             setState(() {
               if (selectedUsers != null && selectedUsers.length == 0)
@@ -3623,9 +3115,7 @@ class RequestEditFormState extends State<RequestEditForm> {
   }
 
   String getTimeInFormat(int timeStamp) {
-    return DateFormat(
-            'EEEEEEE, MMMM dd yyyy', Locale(getLangTag()).toLanguageTag())
-        .format(
+    return DateFormat('EEEEEEE, MMMM dd yyyy', Locale(getLangTag()).toLanguageTag()).format(
       getDateTimeAccToUserTimezone(
           dateTime: DateTime.fromMillisecondsSinceEpoch(timeStamp),
           timezoneAbb: SevaCore.of(context).loggedInUser.timezone),
@@ -3634,8 +3124,7 @@ class RequestEditFormState extends State<RequestEditForm> {
 
   bool hasSufficientBalance() {
     var requestCoins = widget.requestModel.numberOfHours;
-    var lowerLimit =
-        json.decode(AppConfig.remoteConfig.getString('user_minimum_balance'));
+    var lowerLimit = json.decode(AppConfig.remoteConfig.getString('user_minimum_balance'));
 
     var finalbalance = (sevaCoinsValue + lowerLimit ?? 10);
     return requestCoins <= finalbalance;
@@ -3706,579 +3195,4 @@ class RequestEditFormState extends State<RequestEditForm> {
         });
   }
 }
-
-class ProjectSelection extends StatefulWidget {
-  ProjectSelection(
-      {Key key,
-      this.requestModel,
-      this.admin,
-      this.projectModelList,
-      this.selectedProject,
-      this.updateProjectIdCallback})
-      : super(key: key);
-  final admin;
-  final List<ProjectModel> projectModelList;
-  final ProjectModel selectedProject;
-  RequestModel requestModel;
-  Function(String projectId) updateProjectIdCallback;
-
-  @override
-  ProjectSelectionState createState() => ProjectSelectionState();
-}
-
-class ProjectSelectionState extends State<ProjectSelection> {
-  ProjectModel selectedModel = ProjectModel();
-  @override
-  Widget build(BuildContext context) {
-    if (widget.projectModelList == null) {
-      return Container();
-    }
-    // log('Project Model Check:  ' + widget.projectModelList.toString());
-    List<dynamic> list = [
-      {"name": S.of(context).unassigned, "code": "None"}
-    ];
-    for (var i = 0; i < widget.projectModelList.length; i++) {
-      list.add({
-        "name": widget.projectModelList[i].name,
-        "code": widget.projectModelList[i].id,
-        "timebankproject":
-            widget.projectModelList[i].mode == ProjectMode.TIMEBANK_PROJECT,
-      });
-    }
-    // log('Model List:  ' + list.toString());
-    // log('Project Id:  ' + widget.requestModel.projectId.toString());
-    return MultiSelect(
-      autovalidate: true,
-      initialValue: [
-        widget.selectedProject != null ? widget.selectedProject.id : 'None'
-      ],
-      titleText: Row(
-        children: [
-          Text(S.of(context).assign_to_project),
-          SizedBox(
-            width: 10,
-          ),
-          Icon(
-            Icons.arrow_drop_down_circle,
-            color: Theme.of(context).primaryColor,
-            size: 30.0,
-          )
-        ],
-      ),
-      maxLength: 1, // optional
-      hintText: S.of(context).tap_to_select,
-      validator: (dynamic value) {
-        if (value == null) {
-          return S.of(context).assign_to_one_project;
-        }
-        return null;
-      },
-      errorText: S.of(context).assign_to_one_project,
-      dataSource: list,
-      admin: widget.admin,
-      textField: 'name',
-      valueField: 'code',
-      filterable: true,
-      required: true,
-      titleTextColor: Colors.black,
-      change: (value) {
-        if (value != null && value[0] != 'None') {
-          //widget.requestModel.projectId = value[0];
-          logger.e('inside project selection widget 1: ' + value.toString());
-          widget.updateProjectIdCallback(value[0]);
-        } else {
-          logger.e('inside project selection widget 2: ' + value.toString());
-          widget.updateProjectIdCallback('None');
-        }
-      },
-      selectIcon: Icons.arrow_drop_down_circle,
-      saveButtonColor: Theme.of(context).primaryColor,
-      checkBoxColor: Theme.of(context).primaryColorDark,
-      cancelButtonColor: Theme.of(context).primaryColorLight,
-    );
-  }
-
-//  void _onFormSaved() {
-//    final FormState form = _formKey.currentState;
-//    form.save();
-//  }
-}
-
-typedef StringMapCallback = void Function(Map<String, dynamic> goods);
-
-class GoodsDynamicSelection2 extends StatefulWidget {
-  final bool automaticallyImplyLeading;
-  Map<String, String> goodsbefore;
-  final StringMapCallback onSelectedGoods;
-
-  GoodsDynamicSelection2(
-      {this.goodsbefore,
-      @required this.onSelectedGoods,
-      this.automaticallyImplyLeading = true});
-  @override
-  _GoodsDynamicSelection2State createState() => _GoodsDynamicSelection2State();
-}
-
-class _GoodsDynamicSelection2State extends State<GoodsDynamicSelection2> {
-  SuggestionsBoxController controller = SuggestionsBoxController();
-  TextEditingController _textEditingController = TextEditingController();
-
-  bool autovalidate = false;
-  Map<String, String> goods = {};
-  Map<String, String> _selectedGoods = {};
-  bool isDataLoaded = false;
-
-  @override
-  void initState() {
-    this._selectedGoods = widget.goodsbefore != null ? widget.goodsbefore : {};
-    CollectionRef.donationCategories.get().then((QuerySnapshot querySnapshot) {
-      querySnapshot.docs.forEach((DocumentSnapshot data) {
-        // suggestionText.add(data['name']);
-        // suggestionID.add(data.id);
-        goods[data.id] = data['goodTitle'];
-
-        // ids[data['name']] = data.id;
-      });
-      setState(() {
-        isDataLoaded = true;
-      });
-    });
-
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ConstrainedBox(
-        constraints: BoxConstraints(
-            maxHeight: MediaQuery.of(context).size.height * 0.25),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            SizedBox(height: 8),
-            //TODOSUGGESTION
-            TypeAheadField<SuggestedItem>(
-                suggestionsBoxDecoration: SuggestionsBoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                errorBuilder: (context, err) {
-                  return Text(S.of(context).error_occured);
-                },
-                hideOnError: true,
-                textFieldConfiguration: TextFieldConfiguration(
-                  controller: _textEditingController,
-                  decoration: InputDecoration(
-                    hintText: S.of(context).search,
-                    filled: true,
-                    fillColor: Colors.grey[300],
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                      borderRadius: BorderRadius.circular(25.7),
-                    ),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                      borderRadius: BorderRadius.circular(25.7),
-                    ),
-                    contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
-                    prefixIcon: Icon(
-                      Icons.search,
-                      color: Colors.grey,
-                    ),
-                    suffixIcon: InkWell(
-                      splashColor: Colors.transparent,
-                      child: Icon(
-                        Icons.clear,
-                        color: Colors.grey,
-                      ),
-                      onTap: () {
-                        _textEditingController.clear();
-                        controller.close();
-                      },
-                    ),
-                  ),
-                ),
-                suggestionsBoxController: controller,
-                suggestionsCallback: (pattern) async {
-                  List<SuggestedItem> dataCopy = [];
-                  goods.forEach(
-                    (k, v) => dataCopy.add(SuggestedItem()
-                      ..suggestionMode = SuggestionMode.FROM_DB
-                      ..suggesttionTitle = v),
-                  );
-                  dataCopy.retainWhere((s) => s.suggesttionTitle
-                      .toLowerCase()
-                      .contains(pattern.toLowerCase()));
-                  if (pattern.length > 2 &&
-                      !dataCopy.contains(
-                          SuggestedItem()..suggesttionTitle = pattern)) {
-                    var spellCheckResult =
-                        await SpellCheckManager.evaluateSpellingFor(pattern,
-                            language:
-                                SevaCore.of(context).loggedInUser.language ??
-                                    'en');
-                    if (spellCheckResult.hasErros) {
-                      dataCopy.add(SuggestedItem()
-                        ..suggestionMode = SuggestionMode.USER_DEFINED
-                        ..suggesttionTitle = pattern);
-                    } else if (spellCheckResult.correctSpelling != pattern) {
-                      dataCopy.add(SuggestedItem()
-                        ..suggestionMode = SuggestionMode.SUGGESTED
-                        ..suggesttionTitle = spellCheckResult.correctSpelling);
-
-                      dataCopy.add(SuggestedItem()
-                        ..suggestionMode = SuggestionMode.USER_DEFINED
-                        ..suggesttionTitle = pattern);
-                    } else {
-                      dataCopy.add(SuggestedItem()
-                        ..suggestionMode = SuggestionMode.USER_DEFINED
-                        ..suggesttionTitle = pattern);
-                    }
-                  }
-                  return await Future.value(dataCopy);
-                },
-                itemBuilder: (context, suggestedItem) {
-                  switch (suggestedItem.suggestionMode) {
-                    case SuggestionMode.FROM_DB:
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          suggestedItem.suggesttionTitle,
-                          style: TextStyle(
-                            fontSize: 16,
-                          ),
-                        ),
-                      );
-
-                    case SuggestionMode.SUGGESTED:
-                      if (ProfanityDetector()
-                          .isProfaneString(suggestedItem.suggesttionTitle)) {
-                        return ProfanityDetector.getProanityAdvisory(
-                          suggestion: suggestedItem.suggesttionTitle,
-                          suggestionMode: SuggestionMode.SUGGESTED,
-                          context: context,
-                        );
-                      }
-                      return searchUserDefinedEntity(
-                        keyword: suggestedItem.suggesttionTitle,
-                        language: 'en',
-                        suggestionMode: suggestedItem.suggestionMode,
-                        showLoader: true,
-                      );
-
-                    case SuggestionMode.USER_DEFINED:
-                      if (ProfanityDetector()
-                          .isProfaneString(suggestedItem.suggesttionTitle)) {
-                        return ProfanityDetector.getProanityAdvisory(
-                          suggestion: suggestedItem.suggesttionTitle,
-                          suggestionMode: SuggestionMode.USER_DEFINED,
-                          context: context,
-                        );
-                      }
-
-                      return searchUserDefinedEntity(
-                        keyword: suggestedItem.suggesttionTitle,
-                        language: 'en',
-                        suggestionMode: suggestedItem.suggestionMode,
-                        showLoader: false,
-                      );
-
-                    default:
-                      return Container();
-                  }
-                },
-                noItemsFoundBuilder: (context) {
-                  return searchUserDefinedEntity(
-                    keyword: _textEditingController.text,
-                    language: 'en',
-                    showLoader: false,
-                  );
-                },
-                onSuggestionSelected: (SuggestedItem suggestion) {
-                  if (ProfanityDetector()
-                      .isProfaneString(suggestion.suggesttionTitle)) {
-                    return;
-                  }
-
-                  switch (suggestion.suggestionMode) {
-                    case SuggestionMode.SUGGESTED:
-                      var newGoodId = Uuid().generateV4();
-                      addGoodsToDb(
-                        goodsId: newGoodId,
-                        goodsLanguage: 'en',
-                        goodsTitle: suggestion.suggesttionTitle,
-                      );
-                      goods[newGoodId] = suggestion.suggesttionTitle;
-                      break;
-
-                    case SuggestionMode.USER_DEFINED:
-                      var goodId = Uuid().generateV4();
-                      addGoodsToDb(
-                        goodsId: goodId,
-                        goodsLanguage: 'en',
-                        goodsTitle: suggestion.suggesttionTitle,
-                      );
-                      goods[goodId] = suggestion.suggesttionTitle;
-                      break;
-
-                    case SuggestionMode.FROM_DB:
-                      break;
-                  }
-                  // controller.close();
-
-                  _textEditingController.clear();
-                  if (!_selectedGoods.containsValue(suggestion)) {
-                    controller.close();
-                    String id = goods.keys.firstWhere(
-                      (k) => goods[k] == suggestion.suggesttionTitle,
-                    );
-                    _selectedGoods[id] = suggestion.suggesttionTitle;
-                    widget.onSelectedGoods(_selectedGoods);
-                    setState(() {});
-                  }
-                }
-                // onSuggestionSelected: (suggestion) {
-                //   _textEditingController.clear();
-                //   if (!_selectedGoods.containsValue(suggestion)) {
-                //     controller.close();
-                //     String id =
-                //         goods.keys.firstWhere((k) => goods[k] == suggestion);
-                //     _selectedGoods[id] = suggestion;
-                //     widget.onSelectedGoods(_selectedGoods);
-                //     setState(() {});
-                //   }
-                // },
-                ),
-
-            SizedBox(height: 20),
-            !isDataLoaded
-                ? LoadingIndicator()
-                : Expanded(
-                    child: ListView(
-                      shrinkWrap: true,
-                      scrollDirection: Axis.vertical,
-                      children: <Widget>[
-                        Wrap(
-                          runSpacing: 5.0,
-                          spacing: 5.0,
-                          children: _selectedGoods.values
-                              .toList()
-                              .map(
-                                (value) => value == null
-                                    ? Container()
-                                    : CustomChip(
-                                        title: value,
-                                        onDelete: () {
-                                          String id =
-                                              _selectedGoods.keys.firstWhere(
-                                            (k) {
-                                              return _selectedGoods[k] == value;
-                                            },
-                                          );
-                                          _selectedGoods.remove(id);
-                                          widget
-                                              .onSelectedGoods(_selectedGoods);
-                                          setState(() {});
-                                        },
-                                      ),
-                              )
-                              .toList(),
-                        ),
-                      ],
-                    ),
-                  ),
-            //   Spacer(),
-          ],
-        ));
-  }
-
-  // FutureBuilder<SpellCheckResult> searchUserDefinedEntity({
-  //   String keyword,
-  //   String language,
-  // }) {
-  //   return FutureBuilder<SpellCheckResult>(
-  //     future: SpellCheckManager.evaluateSpellingFor(
-  //       keyword,
-  //       language: language,
-  //     ),
-  //     builder: (context, snapshot) {
-  //       if (snapshot.connectionState == ConnectionState.waiting) {
-  //         return getLinearLoading;
-  //       }
-
-  //       return getSuggestionLayout(
-  //         suggestion:
-  //             !snapshot.data.hasErros ? snapshot.data.correctSpelling : keyword,
-  //       );
-  //     },
-  //   );
-  // }
-
-  FutureBuilder<SpellCheckResult> searchUserDefinedEntity({
-    String keyword,
-    String language,
-    SuggestionMode suggestionMode,
-    bool showLoader,
-  }) {
-    return FutureBuilder<SpellCheckResult>(
-      future: SpellCheckManager.evaluateSpellingFor(
-        keyword,
-        language: language,
-      ),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return showLoader ? getLinearLoading : LinearProgressIndicator();
-        }
-
-        return getSuggestionLayout(
-          suggestion: keyword,
-          suggestionMode: suggestionMode,
-        );
-      },
-    );
-  }
-
-  Widget get getLinearLoading {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: LinearProgressIndicator(
-        backgroundColor: Colors.grey,
-        valueColor: AlwaysStoppedAnimation<Color>(
-          Theme.of(context).primaryColor,
-        ),
-      ),
-    );
-  }
-
-  static Future<void> addGoodsToDb({
-    String goodsId,
-    String goodsTitle,
-    String goodsLanguage,
-  }) async {
-    await CollectionRef.donationCategories.doc(goodsId).set(
-      {'goodTitle': goodsTitle, 'lang': goodsLanguage},
-    );
-  }
-
-  Padding getSuggestionLayout({
-    String suggestion,
-    SuggestionMode suggestionMode,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: Container(
-          height: 40,
-          alignment: Alignment.centerLeft,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    RichText(
-                      text: TextSpan(
-                        children: <TextSpan>[
-                          TextSpan(
-                            text: S.of(context).add + ' ',
-                            style: TextStyle(
-                              color: Colors.blue,
-                            ),
-                          ),
-                          TextSpan(
-                            text: "\"${suggestion}\"",
-                            style: suggestionMode == SuggestionMode.SUGGESTED
-                                ? TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.blue,
-                                  )
-                                : TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.blue,
-                                    decoration: TextDecoration.underline,
-                                    decorationColor: Colors.red,
-                                    decorationStyle: TextDecorationStyle.wavy,
-                                    decorationThickness: 1.5,
-                                  ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Text(
-                      suggestionMode == SuggestionMode.SUGGESTED
-                          ? S.of(context).suggested
-                          : S.of(context).you_entered,
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Icon(
-                Icons.add,
-                color: Colors.grey,
-              ),
-            ],
-          )),
-    );
-  }
-// Padding getSuggestionLayout({
-//   String suggestion,
-// }) {
-//   return Padding(
-//     padding: const EdgeInsets.all(18.0),
-//     child: GestureDetector(
-//       onTap: () async {
-//         _textEditingController.clear();
-//         controller.close();
-//         var goodsId = Uuid().generateV4();
-//         await addGoodsToDb(
-//           goodsId: goodsId,
-//           goodsLanguage: 'en',
-//           goodsTitle: suggestion,
-//         );
-//         goods[goodsId] = suggestion;
-
-//         if (!_selectedGoods.containsValue(suggestion)) {
-//           controller.close();
-//           String id = goods.keys.firstWhere((k) => goods[k] == suggestion);
-//           _selectedGoods[id] = suggestion;
-//           setState(() {});
-//         }
-//       },
-//       child: Container(
-//           height: 40,
-//           alignment: Alignment.centerLeft,
-//           child: Row(
-//             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//             children: [
-//               Expanded(
-//                 child: Column(
-//                   crossAxisAlignment: CrossAxisAlignment.start,
-//                   mainAxisAlignment: MainAxisAlignment.start,
-//                   children: [
-//                     Text(
-//                       "${S.of(context).add.toUpperCase()} \"${suggestion}\"",
-//                       style: TextStyle(fontSize: 16, color: Colors.blue),
-//                     ),
-//                     Text(
-//                       S.of(context).no_data,
-//                       style: TextStyle(fontSize: 16, color: Colors.grey),
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//               Icon(
-//                 Icons.add,
-//                 color: Colors.grey,
-//               ),
-//             ],
-//           )),
-//     ),
-//   );
-// }
-}
-
-enum TotalCreditseMode { EDIT_MODE, CREATE_MODE }
+*/

@@ -1,4 +1,5 @@
 import 'package:rxdart/rxdart.dart';
+import 'package:sevaexchange/constants/dropdown_currency_constants.dart';
 import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
@@ -7,6 +8,7 @@ import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/utils.dart';
 
 class DonationBloc {
   final _goodsDescription = BehaviorSubject<String>();
@@ -16,12 +18,18 @@ class DonationBloc {
   final _comment = BehaviorSubject<String>();
   final _selectedList =
       BehaviorSubject<Map<String, String>>.seeded(Map<String, String>());
+  final _offerDonatedCurrency = BehaviorSubject<String>();
+  final _requestDonatedCurrency = BehaviorSubject<String>();
+
 
   Stream<String> get goodsDescription => _goodsDescription.stream;
   Stream<String> get amountPledged => _amountPledged.stream;
   Stream<String> get commentEntered => _comment.stream;
   Stream<String> get errorMessage => _errorMessage.stream;
   Stream<Map<dynamic, dynamic>> get selectedList => _selectedList.stream;
+  Stream<String> get offerDonatedCurrency => _offerDonatedCurrency.stream;
+  Stream<String> get requestDonatedCurrency => _requestDonatedCurrency.stream;
+
   bool get isSelectedListEmpty => _selectedList.value?.isEmpty ?? true;
 
   Map<dynamic, dynamic> get selectedListVal => _selectedList.value;
@@ -31,6 +39,10 @@ class DonationBloc {
   Function(String) get onDescriptionChange => _goodsDescription.sink.add;
   Function(String) get onAmountChange => _amountPledged.sink.add;
   Function(String) get onCommentChanged => _comment.sink.add;
+  Function(String) get offerDonatedCurrencyType =>
+      _offerDonatedCurrency.sink.add;
+  Function(String) get requestDonatedCurrencyType =>
+      _requestDonatedCurrency.sink.add;
 
   void addAddRemove({
     String selectedKey,
@@ -70,6 +82,11 @@ class DonationBloc {
       var newDonors = new List<String>.from(offerModel.cashModel.donors);
       newDonors.add(donationModel.donatedTo);
       offerModel.cashModel.donors = newDonors;
+      donationModel.cashDetails.cashDetails.offerDonatedCurrencyType =
+          _offerDonatedCurrency.value ?? kDefaultCurrencyType;
+      donationModel.cashDetails.cashDetails.offerCurrencyType =
+          offerModel.cashModel.offerCurrencyType;
+
     }
 
     //Setting the receiver Community Title
@@ -162,10 +179,22 @@ class DonationBloc {
       String notificationId,
       UserModel donor}) async {
     donationModel.requestIdType = 'request';
-    donationModel.cashDetails.pledgedAmount = int.parse(_amountPledged.value);
+    donationModel.cashDetails.pledgedAmount = await currencyConversion(
+        fromCurrency:
+            donationModel.cashDetails.cashDetails.requestDonatedCurrency,
+        toCurrency: requestModel.cashModel.requestCurrencyType,
+        amount: double.parse(_amountPledged.value));
+
+
     donationModel.minimumAmount = requestModel.cashModel.minAmount;
     donationModel.cashDetails.cashDetails.minAmount =
         requestModel.cashModel.minAmount;
+
+    donationModel.cashDetails.cashDetails.requestCurrencyType =
+        requestModel.cashModel.requestCurrencyType;
+    donationModel.cashDetails.cashDetails.requestDonatedCurrency =
+        _requestDonatedCurrency.value ?? kDefaultCurrencyType;
+    requestModel.cashModel.requestDonatedCurrency = _requestDonatedCurrency.value ?? kDefaultCurrencyType;
 
     requestModel.cashModel.donors.add(donor.sevaUserID);
     // requestModel.cashModel.amountRaised =

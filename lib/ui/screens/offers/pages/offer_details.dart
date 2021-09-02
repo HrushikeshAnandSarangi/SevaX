@@ -250,7 +250,7 @@ class OfferDetails extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          subtitle: Text('\$${offerModel.cashModel.targetAmount}'),
+          subtitle: Text('${offerModel.cashModel.offerCurrencyType} ${offerModel.cashModel.targetAmount}'),
           leading: Image.asset(
             offerModel.type == RequestType.CASH
                 ? SevaAssetIcon.donateCash

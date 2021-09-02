@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:sevaexchange/components/lending_borrow_widgets/approve_lending_offer.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/globals.dart' as globals;
@@ -29,6 +30,8 @@ import 'package:sevaexchange/ui/screens/offers/pages/time_offer_participant.dart
 import 'package:sevaexchange/ui/screens/request/pages/request_donation_dispute_page.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
+import 'package:sevaexchange/utils/soft_delete_manager.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/create_offer_request.dart';
 import 'package:sevaexchange/views/requests/donations/donation_view.dart';
@@ -52,16 +55,13 @@ class PersonalNotificationReducerForRequests {
             .replaceAll('***', deletionRequest.entityTitle) +
         '\n';
     if (deletionRequest.noOfOpenOffers > 0) {
-      reason +=
-          '${deletionRequest.noOfOpenOffers} ${S.of(context).one_to_many_offers}\n';
+      reason += '${deletionRequest.noOfOpenOffers} ${S.of(context).one_to_many_offers}\n';
     }
     if (deletionRequest.noOfOpenProjects > 0) {
-      reason +=
-          '${deletionRequest.noOfOpenProjects} ${S.of(context).projects}\n';
+      reason += '${deletionRequest.noOfOpenProjects} ${S.of(context).projects}\n';
     }
     if (deletionRequest.noOfOpenRequests > 0) {
-      reason +=
-          '${deletionRequest.noOfOpenRequests} ${S.of(context).open_requests}\n';
+      reason += '${deletionRequest.noOfOpenRequests} ${S.of(context).open_requests}\n';
     }
 
     showDialog(
@@ -167,16 +167,14 @@ class PersonalNotificationReducerForRequests {
     BuildContext context,
     UserModel user,
   }) {
-    GroupInviteUserModel groupInviteUserModel =
-        GroupInviteUserModel.fromMap(notification.data);
+    GroupInviteUserModel groupInviteUserModel = GroupInviteUserModel.fromMap(notification.data);
 
     return NotificationCard(
       timestamp: notification.timestamp,
       entityName: groupInviteUserModel.timebankName.toLowerCase(),
       isDissmissible: true,
       onDismissed: () {
-        NotificationsRepository.readUserNotification(
-            notification.id, user.email);
+        NotificationsRepository.readUserNotification(notification.id, user.email);
       },
       onPressed: () {
         showDialog(
@@ -255,7 +253,8 @@ class PersonalNotificationReducerForRequests {
       onPressed: null,
       photoUrl: model.photoUrl,
       subTitle:
-          '${model.fullName} ${S.of(context).notifications_approved_for}  ${transactionModel.credits} ${transactionModel.credits > 1 ? S.of(context).hours : S.of(context).hour} ', //plural here
+          '${model.fullName} ${S.of(context).notifications_approved_for}  ${transactionModel.credits} ${transactionModel.credits > 1 ? S.of(context).hours : S.of(context).hour} ',
+      //plural here
       title: model.title,
     );
   }
@@ -286,12 +285,8 @@ class PersonalNotificationReducerForRequests {
     );
   }
 
-  static void _settingModalBottomSheet(
-      BuildContext context,
-      RequestInvitationModel requestInvitationModel,
-      String timebankId,
-      String id,
-      UserModel user) {
+  static void _settingModalBottomSheet(BuildContext context,
+      RequestInvitationModel requestInvitationModel, String timebankId, String id, UserModel user) {
     Map<String, dynamic> stateOfcalendarCallback = {
       "email": SevaCore.of(context).loggedInUser.email,
       "mobile": globals.isMobile,
@@ -320,23 +315,20 @@ class PersonalNotificationReducerForRequests {
                     children: <Widget>[
                       TransactionsMatrixCheck(
                         comingFrom: ComingFrom.Home,
-                        upgradeDetails:
-                            AppConfig.upgradePlanBannerModel.calendar_sync,
+                        upgradeDetails: AppConfig.upgradePlanBannerModel.calendar_sync,
                         transaction_matrix_type: "calender_sync",
                         child: GestureDetector(
                             child: CircleAvatar(
                               backgroundColor: Colors.white,
                               radius: 40,
-                              child: Image.asset(
-                                  "lib/assets/images/googlecal.png"),
+                              child: Image.asset("lib/assets/images/googlecal.png"),
                             ),
                             onTap: () async {
                               String redirectUrl =
                                   "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
                               String authorizationUrl =
                                   "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=google_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
-                              if (await canLaunch(
-                                  authorizationUrl.toString())) {
+                              if (await canLaunch(authorizationUrl.toString())) {
                                 await launch(authorizationUrl.toString());
                               }
                               Navigator.of(bc).pop();
@@ -344,8 +336,7 @@ class PersonalNotificationReducerForRequests {
                                 context: context,
                                 builder: (context) {
                                   return JoinRejectDialogView(
-                                    requestInvitationModel:
-                                        requestInvitationModel,
+                                    requestInvitationModel: requestInvitationModel,
                                     timeBankId: timebankId,
                                     notificationId: id,
                                     userModel: user,
@@ -356,23 +347,20 @@ class PersonalNotificationReducerForRequests {
                       ),
                       TransactionsMatrixCheck(
                         comingFrom: ComingFrom.Home,
-                        upgradeDetails:
-                            AppConfig.upgradePlanBannerModel.calendar_sync,
+                        upgradeDetails: AppConfig.upgradePlanBannerModel.calendar_sync,
                         transaction_matrix_type: "calender_sync",
                         child: GestureDetector(
                             child: CircleAvatar(
                               backgroundColor: Colors.white,
                               radius: 40,
-                              child: Image.asset(
-                                  "lib/assets/images/outlookcal.png"),
+                              child: Image.asset("lib/assets/images/outlookcal.png"),
                             ),
                             onTap: () async {
                               String redirectUrl =
                                   "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
                               String authorizationUrl =
                                   "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=outlook_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
-                              if (await canLaunch(
-                                  authorizationUrl.toString())) {
+                              if (await canLaunch(authorizationUrl.toString())) {
                                 await launch(authorizationUrl.toString());
                               }
                               Navigator.of(bc).pop();
@@ -380,8 +368,7 @@ class PersonalNotificationReducerForRequests {
                                 context: context,
                                 builder: (context) {
                                   return JoinRejectDialogView(
-                                    requestInvitationModel:
-                                        requestInvitationModel,
+                                    requestInvitationModel: requestInvitationModel,
                                     timeBankId: timebankId,
                                     notificationId: id,
                                     userModel: user,
@@ -392,8 +379,7 @@ class PersonalNotificationReducerForRequests {
                       ),
                       TransactionsMatrixCheck(
                         comingFrom: ComingFrom.Home,
-                        upgradeDetails:
-                            AppConfig.upgradePlanBannerModel.calendar_sync,
+                        upgradeDetails: AppConfig.upgradePlanBannerModel.calendar_sync,
                         transaction_matrix_type: "calender_sync",
                         child: GestureDetector(
                             child: CircleAvatar(
@@ -406,8 +392,7 @@ class PersonalNotificationReducerForRequests {
                                   "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
                               String authorizationUrl =
                                   "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=icloud_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
-                              if (await canLaunch(
-                                  authorizationUrl.toString())) {
+                              if (await canLaunch(authorizationUrl.toString())) {
                                 await launch(authorizationUrl.toString());
                               }
                               Navigator.of(bc).pop();
@@ -415,8 +400,7 @@ class PersonalNotificationReducerForRequests {
                                 context: context,
                                 builder: (context) {
                                   return JoinRejectDialogView(
-                                    requestInvitationModel:
-                                        requestInvitationModel,
+                                    requestInvitationModel: requestInvitationModel,
                                     timeBankId: timebankId,
                                     notificationId: id,
                                     userModel: user,
@@ -434,8 +418,7 @@ class PersonalNotificationReducerForRequests {
                     CustomTextButton(
                       child: Text(
                         S.of(context).do_it_later,
-                        style: TextStyle(
-                            color: FlavorConfig.values.theme.primaryColor),
+                        style: TextStyle(color: FlavorConfig.values.theme.primaryColor),
                       ),
                       onPressed: () async {
                         Navigator.of(bc).pop();
@@ -489,8 +472,7 @@ class PersonalNotificationReducerForRequests {
           onPressed: null,
           photoUrl: user.photoURL,
           title: S.of(context).notifications_offer_accepted,
-          subTitle:
-              '${user.fullname.toLowerCase()} ${S.of(context).notifications_shown_interest} ',
+          subTitle: '${user.fullname.toLowerCase()} ${S.of(context).notifications_shown_interest} ',
         );
       },
     );
@@ -585,8 +567,8 @@ class PersonalNotificationReducerForRequests {
       title: S.of(context).join_webinar,
       onPressed: () {
         if (SevaCore.of(context).loggedInUser.calendarId == null) {
-          _settingModalBottomSheet(context, requestInvitationModel,
-              notification.timebankId, notification.id, user);
+          _settingModalBottomSheet(
+              context, requestInvitationModel, notification.timebankId, notification.id, user);
         } else {
           showDialog(
             context: context,
@@ -623,8 +605,7 @@ class PersonalNotificationReducerForRequests {
       photoUrl: requestInvitationModel.timebankModel.photoUrl,
       subTitle:
           '${requestInvitationModel.timebankModel.name} ${S.of(context).goods_donation_invite}',
-      title:
-          "${requestInvitationModel.timebankModel.name} ${S.of(context).has_goods_donation}",
+      title: "${requestInvitationModel.timebankModel.name} ${S.of(context).has_goods_donation}",
       onPressed: () {
         Navigator.push(
           context,
@@ -661,8 +642,7 @@ class PersonalNotificationReducerForRequests {
       photoUrl: requestInvitationModel.timebankModel.photoUrl,
       subTitle:
           '${requestInvitationModel.timebankModel.name} ${S.of(context).cash_donation_invite}',
-      title:
-          "${requestInvitationModel.timebankModel.name} ${S.of(context).has_cash_donation}",
+      title: "${requestInvitationModel.timebankModel.name} ${S.of(context).has_cash_donation}",
       onPressed: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           return DonationView(
@@ -708,8 +688,7 @@ class PersonalNotificationReducerForRequests {
     BuildContext context,
     UserModel user,
   }) {
-    ReccuringOfferUpdated eventData =
-        ReccuringOfferUpdated.fromMap(notification.data);
+    ReccuringOfferUpdated eventData = ReccuringOfferUpdated.fromMap(notification.data);
     return NotificationCard(
       timestamp: notification.timestamp,
       title: S.of(context).offer_updated,
@@ -739,8 +718,7 @@ class PersonalNotificationReducerForRequests {
     BuildContext context,
     UserModel user,
   }) {
-    ReccuringRequestUpdated eventData =
-        ReccuringRequestUpdated.fromMap(notification.data);
+    ReccuringRequestUpdated eventData = ReccuringRequestUpdated.fromMap(notification.data);
     return NotificationCard(
       timestamp: notification.timestamp,
       title: S.of(context).request_updated,
@@ -779,8 +757,7 @@ class PersonalNotificationReducerForRequests {
   static Widget getNotificationForJoinRequest({
     NotificationsModel notification,
   }) {
-    JoinRequestNotificationModel model =
-        JoinRequestNotificationModel.fromMap(notification.data);
+    JoinRequestNotificationModel model = JoinRequestNotificationModel.fromMap(notification.data);
     return FutureBuilder<UserModel>(
       future: UserRepository.fetchUserById(notification.senderUserId),
       builder: (context, snapshot) {
@@ -845,8 +822,8 @@ class PersonalNotificationReducerForRequests {
       title: S.of(context).notifications_join_request,
       onPressed: () {
         if (SevaCore.of(context).loggedInUser.calendarId == null) {
-          _settingModalBottomSheet(context, requestInvitationModel,
-              notification.timebankId, notification.id, user);
+          _settingModalBottomSheet(
+              context, requestInvitationModel, notification.timebankId, notification.id, user);
         } else {
           showDialog(
             context: context,
@@ -936,8 +913,7 @@ class PersonalNotificationsReducerForOffer {
         );
       },
       photoUrl: model.photoUrlImage ?? defaultUserImageURL,
-      subTitle:
-          model.fullName + S.of(context).offer_invitation_notification_subtitle,
+      subTitle: model.fullName + S.of(context).offer_invitation_notification_subtitle,
       title: S.of(context).offer_invitation_notification_title,
     );
   }
@@ -1003,31 +979,60 @@ class PersonalNotificationsRedcerForDonations {
     BuildContext context,
   }) {
     DonationModel donationModel = DonationModel.fromMap(notification.data);
-    return NotificationCard(
-      isDissmissible: false,
-      timestamp: notification.timestamp,
-      entityName: donationModel.requestTitle.toLowerCase(),
-      onDismissed: () {
-        NotificationsRepository.readUserNotification(
-          notification.id,
-          user.email,
-        );
-      },
-      onPressed: () async {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => RequestDonationDisputePage(
-              notificationId: notification.id,
-              model: donationModel,
-            ),
-          ),
-        );
-      },
-      photoUrl: donationModel.donorDetails.photoUrl,
-      subTitle:
-          "${donationModel.donorDetails.name} ${S.of(context).pledged_to_donate} ${donationModel.donationType == RequestType.CASH ? "\$${donationModel.cashDetails.pledgedAmount}" : "goods/supplies"}, ${S.of(context).tap_to_view_details}",
-      title: S.of(context).donations_received,
-    );
+    return FutureBuilder<double>(
+        future: donationModel.requestIdType == 'offer'
+            ? currencyConversion(
+                fromCurrency: donationModel.cashDetails.cashDetails.offerCurrencyType,
+                toCurrency: donationModel.cashDetails.cashDetails.offerDonatedCurrencyType,
+                amount: donationModel.cashDetails.pledgedAmount)
+            : currencyConversion(
+                fromCurrency: donationModel.cashDetails.cashDetails.requestDonatedCurrency,
+                toCurrency: donationModel.cashDetails.cashDetails.requestCurrencyType,
+                amount: donationModel.cashDetails.pledgedAmount),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Text(
+              S.of(context).error_loading_data,
+            );
+          }
+
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Transform.scale(
+              scale: 0.5,
+              child: LoadingIndicator(),
+            );
+          }
+          double amount = snapshot.data;
+          return NotificationCard(
+            isDissmissible: false,
+            timestamp: notification.timestamp,
+            entityName: donationModel.requestTitle.toLowerCase(),
+            onDismissed: () {
+              NotificationsRepository.readUserNotification(
+                notification.id,
+                user.email,
+              );
+            },
+            onPressed: () async {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => RequestDonationDisputePage(
+                    convertedAmount: amount,
+                    currency: donationModel.requestIdType == 'offer'
+                        ? donationModel.cashDetails.cashDetails.offerDonatedCurrencyType
+                        : donationModel.cashDetails.cashDetails.requestCurrencyType,
+                    notificationId: notification.id,
+                    model: donationModel,
+                  ),
+                ),
+              );
+            },
+            photoUrl: donationModel.donorDetails.photoUrl,
+            subTitle:
+                "${donationModel.donorDetails.name} ${S.of(context).pledged_to_donate} ${donationModel.donationType == RequestType.CASH ? "${donationModel.requestIdType == 'offer' ? donationModel.cashDetails.cashDetails.offerDonatedCurrencyType : donationModel.cashDetails.cashDetails.requestCurrencyType} ${amount}" : "goods/supplies"}, ${S.of(context).tap_to_view_details}",
+            title: S.of(context).donations_received,
+          );
+        });
   }
 
   static Widget getWidgetNotificationForOfferRequestGoods({
@@ -1036,38 +1041,60 @@ class PersonalNotificationsRedcerForDonations {
     BuildContext context,
   }) {
     DonationModel donationModel = DonationModel.fromMap(notification.data);
-    var amount;
-    if (donationModel.requestIdType == 'offer' &&
-        donationModel.donationStatus == DonationStatus.REQUESTED) {
-      amount = donationModel.cashDetails.cashDetails.amountRaised;
-    } else {
-      amount = donationModel.cashDetails.pledgedAmount;
-    }
-    return NotificationCard(
-      isDissmissible: false,
-      timestamp: notification.timestamp,
-      entityName: donationModel.requestTitle.toLowerCase(),
-      onDismissed: () {
-        NotificationsRepository.readUserNotification(
-          notification.id,
-          user.email,
-        );
-      },
-      onPressed: () async {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => RequestDonationDisputePage(
-              notificationId: notification.id,
-              model: donationModel,
-            ),
-          ),
-        );
-      },
-      photoUrl: donationModel.receiverDetails.photoUrl,
-      subTitle:
-          "${donationModel.receiverDetails.name} ${S.of(context).requested.toLowerCase()} ${donationModel.donationType == RequestType.CASH ? "\$${amount}" : "goods/supplies"}, ${S.of(context).tap_to_view_details}",
-      title: S.of(context).donations_requested,
-    );
+    return FutureBuilder<double>(
+        future: currencyConversion(
+            fromCurrency: donationModel.cashDetails.cashDetails.offerDonatedCurrencyType,
+            toCurrency: donationModel.cashDetails.cashDetails.offerCurrencyType,
+            amount: donationModel.cashDetails.cashDetails.amountRaised),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Text(
+              S.of(context).error_loading_data,
+            );
+          }
+
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Transform.scale(
+              scale: 0.5,
+              child: LoadingIndicator(),
+            );
+          }
+
+          double amount;
+          if (donationModel.requestIdType == 'offer' &&
+              donationModel.donationStatus == DonationStatus.REQUESTED) {
+            amount = snapshot.data;
+          } else {
+            amount = donationModel.cashDetails.pledgedAmount;
+          }
+          return NotificationCard(
+            isDissmissible: false,
+            timestamp: notification.timestamp,
+            entityName: donationModel.requestTitle.toLowerCase(),
+            onDismissed: () {
+              NotificationsRepository.readUserNotification(
+                notification.id,
+                user.email,
+              );
+            },
+            onPressed: () async {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => RequestDonationDisputePage(
+                    notificationId: notification.id,
+                    model: donationModel,
+                    convertedAmountRaised: amount,
+                    currency: donationModel.cashDetails.cashDetails.offerCurrencyType,
+                  ),
+                ),
+              );
+            },
+            photoUrl: donationModel.receiverDetails.photoUrl,
+            subTitle:
+                "${donationModel.receiverDetails.name} ${S.of(context).requested.toLowerCase()} ${donationModel.donationType == RequestType.CASH ? "${donationModel.cashDetails.cashDetails.offerCurrencyType} ${amount}" : "goods/supplies"}, ${S.of(context).tap_to_view_details}",
+            title: S.of(context).donations_requested,
+          );
+        });
   }
 
   static Widget getWidgetForDonationsModifiedByDonor({
@@ -1082,6 +1109,7 @@ class PersonalNotificationsRedcerForDonations {
         holder.donorDetails.email != SevaCore.of(context).loggedInUser.email) {
       invertGoodsLabel = true;
     }
+    double amount;
     return NotificationCard(
       isDissmissible: false,
       photoUrl: holder.donorDetails.photoUrl ?? defaultUserImageURL,
@@ -1101,10 +1129,22 @@ class PersonalNotificationsRedcerForDonations {
               ? holder.donorDetails.name + S.of(context).pledge_goods_supplies
               : S.of(context).goods_modified_by_donor_desc,
       onDismissed: onDismissed,
-      onPressed: () {
+      onPressed: () async {
+        if (holder.donationType == RequestType.CASH) {
+          amount = await currencyConversion(
+              fromCurrency: holder.cashDetails.cashDetails.offerCurrencyType,
+              toCurrency: holder.cashDetails.cashDetails.offerDonatedCurrencyType,
+              amount: holder.cashDetails.pledgedAmount);
+        }
+
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => RequestDonationDisputePage(
+              convertedAmount:
+                  holder.requestIdType == 'offer' ? amount : holder.cashDetails.pledgedAmount,
+              currency: holder.requestIdType == 'offer'
+                  ? holder.cashDetails.cashDetails.offerDonatedCurrencyType
+                  : holder.cashDetails.cashDetails.requestCurrencyType,
               notificationId: notificationsModel.id,
               model: holder,
             ),
@@ -1137,11 +1177,10 @@ class PersonalNotificationsRedcerForDonations {
     int timestampVal,
   }) {
     final holder = DonationModel.fromMap(notificationsModel.data);
-
+    double amount;
     return NotificationCard(
       isDissmissible: false,
-      photoUrl: holder.donationAssociatedTimebankDetails.timebankPhotoURL ??
-          defaultGroupImageURL,
+      photoUrl: holder.donationAssociatedTimebankDetails.timebankPhotoURL ?? defaultGroupImageURL,
       entityName: holder.donationType == RequestType.CASH
           ? S.of(context).pledge_modified
           : S.of(context).goods_modified_by_creator,
@@ -1152,10 +1191,33 @@ class PersonalNotificationsRedcerForDonations {
           ? S.of(context).amount_modified_by_creator_desc
           : S.of(context).goods_modified_by_creator_desc,
       onDismissed: onDismissed,
-      onPressed: () {
+      onPressed: () async {
+        if (holder.donationType == RequestType.CASH) {
+/*          progressDialog = ProgressDialog(context,
+              customBody: Container(
+                height: 100,
+                width: 100,
+                child: LoadingIndicator(),
+              ));*/
+          // progressDialog.show();
+          // progressDialog.hide();
+          amount = await currencyConversion(
+              fromCurrency: holder.requestIdType == 'offer'
+                  ? holder.cashDetails.cashDetails.offerDonatedCurrencyType
+                  : holder.cashDetails.cashDetails.requestCurrencyType,
+              toCurrency: holder.requestIdType == 'offer'
+                  ? holder.cashDetails.cashDetails.offerCurrencyType
+                  : holder.cashDetails.cashDetails.requestDonatedCurrency,
+              amount: holder.cashDetails.pledgedAmount);
+        }
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => RequestDonationDisputePage(
+              convertedAmount:
+                  holder.requestIdType == 'offer' ? holder.cashDetails.pledgedAmount : amount,
+              currency: holder.requestIdType == 'offer'
+                  ? holder.cashDetails.cashDetails.offerCurrencyType
+                  : holder.cashDetails.cashDetails.requestDonatedCurrency,
               notificationId: notificationsModel.id,
               model: holder,
             ),

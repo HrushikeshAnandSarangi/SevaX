@@ -353,7 +353,7 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
       logger.i('========= send notifiction');
       linearProgressForCreatingRequest();
 
-      await FirestoreManager.createRequest(requestModel: requestModel);
+      await FirestoreManager.createRequestOffer(requestModel: requestModel);
       //create invitation if its from offer only for cash and goods
       try {
         await sendNotification(
@@ -487,7 +487,7 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
 
   Future<List<String>> _writeToDB() async {
     List<String> resultVar = [];
-    await FirestoreManager.createRequest(requestModel: requestModel);
+    await FirestoreManager.createRequestOffer(requestModel: requestModel);
     //create invitation if its from offer only for cash and goods
     try {
       await sendNotification(

@@ -161,6 +161,7 @@ TimebankConfigurations getConfigurationModel() {
       "create_feeds",
       "accept_requests",
       "create_goods_offers",
+      "create_borrow_request",
       "create_money_offers",
       "create_time_offers",
       "create_time_request",
@@ -244,6 +245,7 @@ TimebankConfigurations getFriendAndPlanConfigurationModel() {
     member: [
       "create_feeds",
       "accept_requests",
+      "create_borrow_request",
       "create_goods_offers",
       "create_money_offers",
       "create_time_offers",
@@ -380,6 +382,7 @@ TimebankConfigurations getGroupConfigurationModel() {
     member: [
       "create_feeds",
       "accept_requests",
+      "create_borrow_request",
       "create_goods_offers",
       "create_money_offers",
       "create_time_offers",
@@ -465,6 +468,7 @@ TimebankConfigurations getNonProfitConfigurationModel() {
     member: [
       "create_feeds",
       "accept_requests",
+      "create_borrow_request",
       "create_goods_offers",
       "create_money_offers",
       "create_time_offers",
@@ -551,6 +555,7 @@ TimebankConfigurations getEnterpriseConfigurationModel() {
     member: [
       "create_feeds",
       "accept_requests",
+      "create_borrow_request",
       "create_goods_offers",
       "create_money_offers",
       "create_time_offers",
@@ -637,6 +642,7 @@ TimebankConfigurations getCommunityPlanConfigurationModel() {
     member: [
       "create_feeds",
       "accept_requests",
+      "create_borrow_request",
       "create_goods_offers",
       "create_money_offers",
       "create_time_offers",
@@ -723,6 +729,7 @@ TimebankConfigurations getCommunityPlusPlanConfigurationModel() {
     member: [
       "create_feeds",
       "accept_requests",
+      "create_borrow_request",
       "create_goods_offers",
       "create_money_offers",
       "create_time_offers",
@@ -805,6 +812,7 @@ TimebankConfigurations getPrivateConfigurationModel() {
     member: [
       "create_feeds",
       "accept_requests",
+      "create_borrow_request",
       "create_goods_offers",
       "create_money_offers",
       "create_time_offers",

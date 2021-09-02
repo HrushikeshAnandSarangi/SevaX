@@ -2,7 +2,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/repositories/request_repository.dart';
-import 'package:sevaexchange/views/exchange/createrequest.dart';
+import 'package:sevaexchange/views/exchange/create_request/createrequest.dart';
 
 class RequestBloc {
   final _requests = BehaviorSubject<RequestLists>();

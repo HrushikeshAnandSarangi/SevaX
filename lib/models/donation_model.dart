@@ -178,7 +178,7 @@ class DonationModel {
 }
 
 class CashDetails {
-  int pledgedAmount;
+  double pledgedAmount;
   CashModel cashDetails = CashModel(
       paymentType: RequestPaymentType.ZELLEPAY, achdetails: new ACHModel());
 
@@ -192,7 +192,7 @@ class CashDetails {
             ? null
             : CashModel.fromMap(json['cashDetails']),
         pledgedAmount:
-            json["pledgedAmount"] == null ? null : json["pledgedAmount"],
+            json["pledgedAmount"] == null ? null : double.parse(json["pledgedAmount"].toString()),
       );
 
   Map<String, dynamic> toMap() => {

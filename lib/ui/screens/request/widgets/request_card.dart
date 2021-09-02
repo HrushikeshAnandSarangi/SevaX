@@ -248,7 +248,7 @@ class RequestCard extends StatelessWidget {
                           Container(
                             width: MediaQuery.of(context).size.width * 0.7,
                             child: Text(
-                              model.description,
+                              "${model.description}",
                               maxLines: 3,
                               overflow: TextOverflow.ellipsis,
                               style: Theme.of(context).textTheme.subtitle2,

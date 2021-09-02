@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:frankfurter/frankfurter.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
@@ -12,7 +13,8 @@ import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/exchange/edit_request.dart';
+import 'package:sevaexchange/views/exchange/widgets/request_enums.dart';
+import 'package:sevaexchange/views/exchange/edit_request/edit_request.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:usage/uuid/uuid.dart';
 
@@ -272,6 +274,25 @@ String getStartDateFormat(DateTime date) {
   return new DateFormat("EEEE MMM d'$suffix',  h:mm a").format(date);
 }
 
+
+Future<double> currencyConversion(
+    {String fromCurrency, String toCurrency, double amount}) async {
+  final frankfurter = Frankfurter();
+
+  // final latest = await frankfurter.latest(from: Currency('INR'));
+
+  if (fromCurrency == toCurrency) {
+    return amount.toDouble();
+  }
+  final rate = await frankfurter.getRate(
+    from: Currency(fromCurrency),
+    to: Currency(toCurrency),
+  );
+  double convertedCurrency = rate.rate * amount;
+  double convertedCurrencyTwoDecimalPoint =
+      ((convertedCurrency * pow(10, 2)).round()) / pow(10, 2);
+  return convertedCurrencyTwoDecimalPoint;
+}
 String createCryptoRandomString([int length = 10]) {
   String randomCode = Uuid().generateV4().substring(0, 8);
   return randomCode;
