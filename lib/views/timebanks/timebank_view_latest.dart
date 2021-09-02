@@ -7,7 +7,8 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
-import 'package:sevaexchange/ui/screens/timebank/widgets/sponsors_widget.dart';
+import 'package:sevaexchange/ui/screens/sponsors/sponsors_widget.dart';
+import 'package:sevaexchange/ui/screens/sponsors/widgets/get_user_verified.dart';
 import 'package:sevaexchange/ui/screens/user_info/pages/user_donations.dart';
 import 'package:sevaexchange/ui/screens/user_info/pages/user_donations_list.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
@@ -386,8 +387,13 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
               padding: const EdgeInsets.only(left: 20),
               child: SponsorsWidget(
                 sponsorsMode: SponsorsMode.ABOUT,
-                timebankModel: widget.timebankModel,
-                titleColor: Colors.lightBlueAccent,
+                sponsors: widget.timebankModel.sponsors,
+                isAdminVerified: GetUserVerified<bool>().verify(
+                  userId: SevaCore.of(context).loggedInUser.sevaUserID,
+                  creatorId: widget.timebankModel.creatorId,
+                  admins: widget.timebankModel.admins,
+                  organizers: widget.timebankModel.organizers,
+                ),
               ),
             ),
             Padding(

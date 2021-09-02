@@ -6,6 +6,7 @@ import 'package:sevaexchange/models/manual_time_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/ui/screens/add_manual_time/widgets/add_manual_time_button.dart';
+import 'package:sevaexchange/ui/screens/sponsors/sponsors_widget.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -125,14 +126,15 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                         projectModel.creatorId ==
                                 SevaCore.of(context).loggedInUser.sevaUserID
                             ? Center(
-                              child: Container(
+                                child: Container(
                                   child: CustomTextButton(
                                     color: Theme.of(context).primaryColor,
                                     onPressed: () {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) => CreateEditProject(
+                                          builder: (context) =>
+                                              CreateEditProject(
                                             timebankId: widget.timebankModel.id,
                                             isCreateProject: false,
                                             projectId: projectModel.id,
@@ -144,15 +146,15 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                                     child: Text(
                                       S.of(context).edit,
                                       style: TextStyle(
-                                          fontSize: 14,
-                                          fontFamily: 'Europa',
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white,
-                                          ),
+                                        fontSize: 14,
+                                        fontFamily: 'Europa',
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
                                     ),
                                   ),
                                 ),
-                            )
+                              )
                             : Container(),
                         headingText(S.of(context).title),
                         Text(projectModel.name ?? ""),
@@ -203,6 +205,14 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                                   ),
                                 ],
                               ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        SponsorsWidget(
+                          sponsorsMode: SponsorsMode.ABOUT,
+                          sponsors: projectModel.sponsors,
+                          isAdminVerified: false,
+                        ),
                         headingText(S.of(context).organizer),
                         SizedBox(height: 10),
                         Row(

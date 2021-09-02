@@ -16,8 +16,9 @@ import 'package:sevaexchange/ui/screens/explore/widgets/members_avatar_list_with
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_page_base_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/queries.dart';
+import 'package:sevaexchange/ui/screens/sponsors/sponsors_widget.dart';
+import 'package:sevaexchange/ui/screens/sponsors/widgets/get_user_verified.dart';
 import 'package:sevaexchange/ui/screens/timebank/widgets/community_about_widget.dart';
-import 'package:sevaexchange/ui/screens/timebank/widgets/sponsors_widget.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
@@ -285,7 +286,14 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
                         child: SponsorsWidget(
                           sponsorsMode: SponsorsMode.ABOUT,
-                          timebankModel: timebankModel,
+                          sponsors: timebankModel.sponsors,
+                          isAdminVerified: GetUserVerified<bool>().verify(
+                            userId:
+                                SevaCore.of(context).loggedInUser.sevaUserID,
+                            creatorId: timebankModel.creatorId,
+                            admins: timebankModel.admins,
+                            organizers: timebankModel.organizers,
+                          ),
                         ),
                       ),
                       Padding(

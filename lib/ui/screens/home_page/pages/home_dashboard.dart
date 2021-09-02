@@ -12,6 +12,7 @@ import 'package:sevaexchange/ui/screens/groups/pages/group_page.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/pages/timebank_home_page.dart';
+import 'package:sevaexchange/ui/screens/home_page/widgets/sandbox_community_banner.dart';
 import 'package:sevaexchange/ui/screens/members/pages/members_page.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/offer_router.dart';
 import 'package:sevaexchange/ui/screens/request/pages/request_listing_page.dart';
@@ -232,6 +233,7 @@ class _HomeDashBoardState extends State<HomeDashBoard>
               length: isAdmin ? tabLength + 1 : tabLength,
               child: Column(
                 children: <Widget>[
+                  SendBoxBanner(title: 'Sandbox Community'),
                   // ShowLimitBadge(),
                   TabBar(
                     onTap: (int index) {

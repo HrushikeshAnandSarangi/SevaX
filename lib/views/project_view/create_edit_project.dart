@@ -26,6 +26,7 @@ import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_template_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/screens/sponsors/sponsors_widget.dart';
 import 'package:sevaexchange/ui/utils/debouncer.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
@@ -565,9 +566,42 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   hintStyle: textStyle,
                 ),
               ),
+              SizedBox(
+                height: 10,
+              ),
+              SponsorsWidget(
+                sponsorsMode: widget.isCreateProject
+                    ? SponsorsMode.CREATE
+                    : SponsorsMode.EDIT,
+                sponsors: projectModel.sponsors,
+                isAdminVerified: false,
+                onSponsorsAdded: (
+                  List<SponsorDataModel> sponsorsData,
+                  SponsorDataModel addedSponsors,
+                ) {
+                  setState(() {
+                    projectModel.sponsors = sponsorsData;
+                  });
+                  logger.i(
+                      'Added Sponsors in Event:\n Name:${addedSponsors.name}\nLogo:${addedSponsors.logo}\nCreatedBy:${addedSponsors.createdBy}\nCreatedAt:${addedSponsors.createdAt}\n----------------------------------------------------------\n');
+                },
+                onSponsorsRemoved: (
+                  List<SponsorDataModel> sponsorsData,
+                  SponsorDataModel removedSponsors,
+                ) {
+                  setState(() {
+                    projectModel.sponsors = sponsorsData;
+                  });
 
-              Padding(
-                padding: EdgeInsets.all(8),
+                  logger.i(
+                      'Remove Sponsors from Event:\n Name:${removedSponsors.name}\nLogo:${removedSponsors.logo}\nCreatedBy:${removedSponsors.createdBy}\nCreatedAt:${removedSponsors.createdAt}\n----------------------------------------------------------\n');
+                },
+                onError: (error) {
+                  logger.e(error);
+                },
+              ),
+              SizedBox(
+                height: 10,
               ),
               headingText(
                 S.of(context).project_location,
