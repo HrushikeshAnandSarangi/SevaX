@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:sevaexchange/components/calendar_events/models/kloudless_models.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/labels.dart';
@@ -240,6 +243,8 @@ class IndividualOfferDataModel extends DataModel {
 }
 
 class OfferModel extends DataModel {
+  EventMetaData eventMetaData;
+
   bool acceptedOffer = false;
   String associatedRequest;
   String communityId;
@@ -314,6 +319,7 @@ class OfferModel extends DataModel {
     this.liveMode,
     this.communityName,
     this.lendingOfferDetailsModel,
+    this.eventMetaData,
   }) {
     this.root_timebank_id = FlavorConfig.values.timebankId;
   }
@@ -474,9 +480,29 @@ class OfferModel extends DataModel {
     } else {
       this.lendingOfferDetailsModel = new LendingOfferDetailsModel();
     }
+
+    if (map.containsKey('eventMetaData')) {
+      this.eventMetaData = EventMetaData.fromMap(
+        Map<String, dynamic>.from(map["eventMetaData"]),
+      );
+    }
   }
 
   OfferModel.fromMap(Map<dynamic, dynamic> map) {
+    log("OfferModel.fromMap=========================");
+
+    if (map.containsKey('eventMetaData')) {
+      log('Parsing eventMetaData =========≠');
+      this.eventMetaData = EventMetaData.fromMap(
+        Map<String, dynamic>.from(map["eventMetaData"]),
+      );
+      log('Parsed eventMetaData =========≠ ' +
+          this.eventMetaData.eventId.toString());
+    } else {
+      log('No Data found eventMetaData =========≠ ' +
+          this.eventMetaData.toString());
+    }
+
     if (map.containsKey('participantDetails')) {
       this.participantDetails = Map.castFrom(map['participantDetails']);
     }

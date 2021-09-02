@@ -1,6 +1,9 @@
+import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
+import 'package:sevaexchange/components/calendar_events/models/kloudless_models.dart';
+import 'package:sevaexchange/components/calendar_events/module/index.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -75,8 +78,12 @@ class OneToManyOfferBloc extends BlocBase {
   Stream<Status> get status => _status.stream;
 
   ///[Function] to create or update offer
-  void createOneToManyOffer(
-      {UserModel user, String timebankId, String communityName}) async {
+  void createOneToManyOffer({
+    UserModel user,
+    String timebankId,
+    String communityName,
+    @required BuildContext context,
+  }) async {
     if (!errorCheck()) {
       int prepHours = int.parse(_preparationHours.value);
       int classHours = int.parse(_classHours.value);
@@ -144,6 +151,15 @@ class OneToManyOfferBloc extends BlocBase {
           offerCreatedBool = true;
           mainOfferModel = offerModel;
           _status.add(Status.COMPLETE);
+
+          new KloudlessWidgetManager<CreateMode, OfferModel>().syncCalendar(
+            context: context,
+            builder: KloudlessWidgetBuilder().fromContext<CreateMode, OfferModel>(
+              context: context,
+              id: offerModel.id,
+              model: offerModel,
+            ),
+          );
         }).catchError((e) => _status.add(Status.ERROR));
       } else {
         _classSizeError.add(ValidationErrors.offerCreditError);

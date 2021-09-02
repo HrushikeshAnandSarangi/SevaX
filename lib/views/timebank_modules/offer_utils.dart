@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:sevaexchange/components/calendar_events/models/kloudless_models.dart';
+import 'package:sevaexchange/components/calendar_events/module/index.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
@@ -249,31 +251,31 @@ Future<bool> offerActions(
         title:
             "You are signing up for this ${model.groupOfferDataModel.classTitle.trim()}. Doing so will debit a total of ${model.groupOfferDataModel.numberOfClassHours} credits from you after you say OK.",
         onConfirmed: () async {
-          if (SevaCore.of(context).loggedInUser.calendarId != null) {
-            await updateOffer(
-              offerId: model.id,
-              userId: myUserID,
-              userEmail: email,
-              allowCalenderEvent: true,
-              communityId: communityMoel.id,
-              communityName: communityMoel.name,
-              memberName: SevaCore.of(context).loggedInUser.fullname,
-              memberPhotoUrl: SevaCore.of(context).loggedInUser.photoURL,
-              timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
-            );
-          } else {
-            await updateOffer(
-              offerId: model.id,
-              userId: myUserID,
-              userEmail: email,
-              allowCalenderEvent: false,
-              communityId: communityMoel.id,
-              communityName: communityMoel.name,
-              memberName: SevaCore.of(context).loggedInUser.fullname,
-              memberPhotoUrl: SevaCore.of(context).loggedInUser.photoURL,
-              timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
-            );
-          }
+          await updateOffer(
+            offerId: model.id,
+            userId: myUserID,
+            userEmail: email,
+            allowCalenderEvent: true,
+            communityId: communityMoel.id,
+            communityName: communityMoel.name,
+            memberName: SevaCore.of(context).loggedInUser.fullname,
+            memberPhotoUrl: SevaCore.of(context).loggedInUser.photoURL,
+            timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
+          ).then((value) => {
+                if (true)
+                  {
+                    KloudlessWidgetManager<ApplyMode, OfferModel>()
+                        .syncCalendar(
+                      context: context,
+                      builder: KloudlessWidgetBuilder()
+                          .fromContext<ApplyMode, OfferModel>(
+                        context: context,
+                        id: model.id,
+                        model: model,
+                      ),
+                    )
+                  }
+              });
         },
       );
     } else {
@@ -326,7 +328,7 @@ Future<bool> offerActions(
   return true;
 }
 
-void updateOffer({
+Future<bool> updateOffer({
   String userId,
   bool allowCalenderEvent,
   String userEmail,
@@ -336,26 +338,30 @@ void updateOffer({
   @required String memberName,
   @required String memberPhotoUrl,
   @required String timebankId,
-}) {
-  CollectionRef.offers.doc(offerId).update(
-    {
-      'groupOfferDataModel.signedUpMembers': FieldValue.arrayUnion(
-        [userId],
-      ),
-      if (allowCalenderEvent)
-        'allowedCalenderUsers': FieldValue.arrayUnion(
-          [userEmail],
-        ),
-      'participantDetails.' + userId: AcceptorModel(
-        communityId: communityId,
-        communityName: communityName,
-        memberEmail: userEmail,
-        memberName: memberName,
-        memberPhotoUrl: memberPhotoUrl,
-        timebankId: timebankId,
-      ).toMap()
-    },
-  );
+}) async {
+  return await CollectionRef.offers
+      .doc(offerId)
+      .update(
+        {
+          'groupOfferDataModel.signedUpMembers': FieldValue.arrayUnion(
+            [userId],
+          ),
+          if (allowCalenderEvent)
+            'allowedCalenderUsers': FieldValue.arrayUnion(
+              [userEmail],
+            ),
+          'participantDetails.' + userId: AcceptorModel(
+            communityId: communityId,
+            communityName: communityName,
+            memberEmail: userEmail,
+            memberName: memberName,
+            memberPhotoUrl: memberPhotoUrl,
+            timebankId: timebankId,
+          ).toMap()
+        },
+      )
+      .then((value) => true)
+      .catchError((onError) => false);
 }
 
 void handleFeedBackNotificationLendingOffer({

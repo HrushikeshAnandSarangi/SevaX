@@ -636,6 +636,7 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
       _bloc.allowedCalenderEvent = true;
 
       await _bloc.createOneToManyOffer(
+          context: context,
           user: SevaCore.of(context).loggedInUser,
           timebankId: widget.timebankId,
           communityName: communityModel.name ?? '');
@@ -643,6 +644,7 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
       _bloc.allowedCalenderEvent = false;
 
       await _bloc.createOneToManyOffer(
+          context: context,
           user: SevaCore.of(context).loggedInUser,
           timebankId: widget.timebankId,
           communityName: communityModel.name ?? '');

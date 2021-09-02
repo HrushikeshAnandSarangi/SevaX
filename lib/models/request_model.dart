@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:sevaexchange/components/calendar_events/models/kloudless_models.dart';
 import 'package:sevaexchange/models/basic_user_details.dart';
 import 'package:sevaexchange/models/cash_model.dart';
 import 'package:sevaexchange/models/models.dart';
@@ -155,6 +156,8 @@ class End extends DataModel {
 }
 
 class RequestModel extends DataModel {
+  EventMetaData eventMetaData;
+
   String id;
   String title;
   String description;
@@ -283,11 +286,18 @@ class RequestModel extends DataModel {
     this.communityName,
     this.speakerInviteNotificationDocRef,
     this.borrowModel,
+    this.eventMetaData,
   }) {
     log("===========Constructir called $communityId =======");
   }
 
   RequestModel.fromMap(Map<dynamic, dynamic> map) {
+    if (map.containsKey('eventMetaData')) {
+      this.eventMetaData = EventMetaData.fromMap(
+        Map<String, dynamic>.from(map["eventMetaData"]),
+      );
+    }
+
     if (map.containsKey('donationInstructionLink')) {
       this.donationInstructionLink = map["donationInstructionLink"];
     } else {
@@ -590,6 +600,11 @@ class RequestModel extends DataModel {
   }
 
   RequestModel.fromMapElasticSearch(Map<String, dynamic> map) {
+    if (map.containsKey('eventMetaData')) {
+      this.eventMetaData = EventMetaData.fromMap(
+        Map<String, dynamic>.from(map["eventMetaData"]),
+      );
+    }
     if (map.containsKey('donationInstructionLink')) {
       this.donationInstructionLink = map["donationInstructionLink"];
     }

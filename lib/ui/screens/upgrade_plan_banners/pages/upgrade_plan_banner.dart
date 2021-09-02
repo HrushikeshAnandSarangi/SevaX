@@ -2,12 +2,14 @@ import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/upgrade_plan-banner_details_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/screens/auth/bloc/user_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 
@@ -81,7 +83,10 @@ class _UpgradePlanBannerState extends State<UpgradePlanBanner> {
           : null,
       body: FutureBuilder<TimebankModel>(
         future: getTimeBankForId(
-            timebankId: SevaCore.of(context).loggedInUser.currentTimebank),
+          timebankId: Provider.of<UserBloc>(context, listen: false)
+              .loggedInUser
+              .currentTimebank,
+        ),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Text(S.of(context).upgrade_plan_msg1);
@@ -96,7 +101,9 @@ class _UpgradePlanBannerState extends State<UpgradePlanBanner> {
             );
           }
           timebankModel = snapshot.data;
-          currentUser = SevaCore.of(context).loggedInUser;
+          // currentUser = SevaCore.of(context).loggedInUser;
+          currentUser =
+              Provider.of<UserBloc>(context, listen: false).loggedInUser;
           return Container(
             width: double.infinity,
             padding: EdgeInsets.all(30),

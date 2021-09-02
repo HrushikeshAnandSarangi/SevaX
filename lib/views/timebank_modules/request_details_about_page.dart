@@ -5,6 +5,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:sevaexchange/components/calendar_events/models/kloudless_models.dart';
+import 'package:sevaexchange/components/calendar_events/module/index.dart';
 import 'package:sevaexchange/components/calender_event_confirm_dialog.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/globals.dart' as globals;
@@ -2220,56 +2222,18 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     }
   }
 
-  void proccedWithCalander() {
-    if (SevaCore.of(context).loggedInUser.calendarId != null) {
-      showDialog(
-        barrierDismissible: false,
+  void proccedWithCalander() async {
+    await _acceptRequest();
+
+    KloudlessWidgetManager<ApplyMode, RequestModel>().syncCalendar(
+      context: context,
+      builder: KloudlessWidgetBuilder().fromContext<ApplyMode, RequestModel>(
         context: context,
-        builder: (_context) {
-          return CalenderEventConfirmationDialog(
-            title: widget.requestItem.title,
-            isrequest: true,
-            cancelled: () async {
-              await _acceptRequest();
-              Navigator.pop(_context);
-              Navigator.pop(context);
-            },
-            addToCalender: () async {
-              await _acceptRequest();
-              Set<String> acceptorList =
-                  Set.from(widget.requestItem.allowedCalenderUsers);
-              acceptorList.add(SevaCore.of(context).loggedInUser.email);
-              widget.requestItem.allowedCalenderUsers = acceptorList.toList();
-              await FirestoreManager.updateRequest(
-                  requestModel: widget.requestItem);
-              Navigator.pop(_context);
-              Navigator.pop(context);
-            },
-          );
-        },
-      );
-    } else {
-      showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (_context) {
-          return CalenderEventConfirmationDialog(
-            title: widget.requestItem.title,
-            isrequest: true,
-            cancelled: () async {
-              await _acceptRequest();
-              Navigator.pop(_context);
-              Navigator.pop(context);
-            },
-            addToCalender: () async {
-              await _acceptRequest();
-              Navigator.pop(_context);
-              _settingModalBottomSheet(context);
-            },
-          );
-        },
-      );
-    }
+        model: widget.requestItem,
+        id: widget.requestItem.id,
+      ),
+    );
+    Navigator.pop(context);
   }
 
   void _acceptRequest() async {
@@ -2425,7 +2389,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                 children: [
                   Text(
                     widget.requestItem.fullName,
-                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 19),
+                    style:
+                        TextStyle(fontWeight: FontWeight.w500, fontSize: 19),
                   ),
                   SizedBox(height: 7),
                   createdAt,

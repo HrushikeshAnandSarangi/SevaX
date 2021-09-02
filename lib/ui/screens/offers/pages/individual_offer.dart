@@ -5,6 +5,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:sevaexchange/components/calendar_events/models/kloudless_models.dart';
+import 'package:sevaexchange/components/calendar_events/module/index.dart';
 import 'package:sevaexchange/components/common_help_icon.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
 import 'package:sevaexchange/components/goods_dynamic_selection_editRequest.dart';
@@ -1652,41 +1654,13 @@ class _IndividualOfferState extends State<IndividualOffer> {
       }
     }
 
-    if (SevaCore.of(context).loggedInUser.calendarId != null) {
-      _one_to_many_bloc.allowedCalenderEvent = true;
-
-      await _one_to_many_bloc.createOneToManyOffer(
-          user: SevaCore.of(context).loggedInUser,
-          timebankId: widget.timebankId,
-          communityName: communityModel.name ?? '');
-    } else {
-      _one_to_many_bloc.allowedCalenderEvent = false;
-
-      await _one_to_many_bloc.createOneToManyOffer(
-          user: SevaCore.of(context).loggedInUser,
-          timebankId: widget.timebankId,
-          communityName: communityModel.name ?? '');
-      _bloc.offerCreatedBool = true;
-      log("Here creation statusss - ${_bloc.offerCreatedBool}");
-      if (_bloc.offerCreatedBool) {
-        log("inside if with ${_bloc.offerCreatedBool}");
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) {
-              return AddToCalendar(
-                  isOfferRequest: null,
-                  offer: _bloc.mainOfferModel,
-                  requestModel: null,
-                  userModel: null,
-                  eventsIdsArr: _bloc.offerIds);
-            },
-          ),
-        ).then((_) {
-          logger.i("came back from cal page");
-        });
-      }
-    }
+    _one_to_many_bloc.allowedCalenderEvent = false;
+    await _one_to_many_bloc.createOneToManyOffer(
+        context: context,
+        user: SevaCore.of(context).loggedInUser,
+        timebankId: widget.timebankId,
+        communityName: communityModel.name ?? '');
+    _bloc.offerCreatedBool = true;
   }
 
   void updateOneToManyOfferFunc(int editType) async {

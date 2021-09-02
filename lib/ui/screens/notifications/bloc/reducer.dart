@@ -4,6 +4,8 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:sevaexchange/components/lending_borrow_widgets/approve_lending_offer.dart';
+import 'package:sevaexchange/components/calendar_events/models/kloudless_models.dart';
+import 'package:sevaexchange/components/calendar_events/module/index.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
@@ -588,22 +590,33 @@ class PersonalNotificationReducerForRequests {
           '${requestInvitationModel.timebankModel.name} ${S.of(context).notifications_requested_join} ${requestInvitationModel.requestModel.title}, ${S.of(context).notifications_tap_to_view}',
       title: S.of(context).join_webinar,
       onPressed: () {
-        if (SevaCore.of(context).loggedInUser.calendarId == null) {
-          _settingModalBottomSheet(context, requestInvitationModel,
-              notification.timebankId, notification.id, user);
-        } else {
-          showDialog(
-            context: context,
-            builder: (context) {
-              return JoinRejectDialogView(
-                requestInvitationModel: requestInvitationModel,
-                timeBankId: notification.timebankId,
-                notificationId: notification.id,
-                userModel: user,
-              );
-            },
-          );
-        }
+        //TODO calendar updated please test.
+        // if (SevaCore.of(context).loggedInUser.calendarId == null) {
+        //   _settingModalBottomSheet(context, requestInvitationModel,
+        //       notification.timebankId, notification.id, user);
+        // } else {}
+
+        showDialog(
+          context: context,
+          builder: (context) {
+            return JoinRejectDialogView(
+              requestInvitationModel: requestInvitationModel,
+              timeBankId: notification.timebankId,
+              notificationId: notification.id,
+              userModel: user,
+            );
+          },
+        ).then((value) => {
+              KloudlessWidgetManager<ApplyMode, RequestModel>().syncCalendar(
+                context: context,
+                builder: KloudlessWidgetBuilder()
+                    .fromContext<ApplyMode, RequestModel>(
+                  context: context,
+                  id: requestInvitationModel.requestModel.id,
+                  model: requestInvitationModel.requestModel,
+                ),
+              )
+            });
       },
       timestamp: notification.timestamp,
     );
@@ -848,22 +861,32 @@ class PersonalNotificationReducerForRequests {
           '${requestInvitationModel.timebankModel.name} ${S.of(context).notifications_requested_join} ${requestInvitationModel.requestModel.title}, ${S.of(context).notifications_tap_to_view}',
       title: S.of(context).notifications_join_request,
       onPressed: () {
-        if (SevaCore.of(context).loggedInUser.calendarId == null) {
-          _settingModalBottomSheet(context, requestInvitationModel,
-              notification.timebankId, notification.id, user);
-        } else {
-          showDialog(
-            context: context,
-            builder: (context) {
-              return JoinRejectDialogView(
-                requestInvitationModel: requestInvitationModel,
-                timeBankId: notification.timebankId,
-                notificationId: notification.id,
-                userModel: user,
-              );
-            },
-          );
-        }
+        // if (SevaCore.of(context).loggedInUser.calendarId == null) {
+        //   _settingModalBottomSheet(context, requestInvitationModel,
+        //       notification.timebankId, notification.id, user);
+        // } else {}
+
+        showDialog(
+          context: context,
+          builder: (context) {
+            return JoinRejectDialogView(
+              requestInvitationModel: requestInvitationModel,
+              timeBankId: notification.timebankId,
+              notificationId: notification.id,
+              userModel: user,
+            );
+          },
+        ).then((value) => {
+              KloudlessWidgetManager<ApplyMode, RequestModel>().syncCalendar(
+                context: context,
+                builder: KloudlessWidgetBuilder()
+                    .fromContext<ApplyMode, RequestModel>(
+                  context: context,
+                  id: requestInvitationModel.requestModel.id,
+                  model: requestInvitationModel.requestModel,
+                ),
+              )
+            });
       },
       timestamp: notification.timestamp,
     );

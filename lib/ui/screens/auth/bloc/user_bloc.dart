@@ -4,9 +4,11 @@ import 'package:sevaexchange/repositories/user_repository.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 class UserBloc {
-  final _user = PublishSubject<UserModel>();
+  final _user = BehaviorSubject<UserModel>();
 
   Stream<UserModel> get user => _user.stream;
+
+  UserModel get loggedInUser => _user.value;
 
   void loadUser(String userEmail) {
     logger.i("loading user ");
