@@ -15,6 +15,7 @@ import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/ui/screens/blocked_members/pages/blocked_members_page.dart';
+import 'package:sevaexchange/ui/screens/transaction_details/view/transaction_details_view.dart';
 import 'package:sevaexchange/ui/screens/user_info/pages/user_donations.dart';
 import 'package:sevaexchange/ui/screens/user_info/pages/user_donations_list.dart';
 import 'package:sevaexchange/utils/animations/fade_route.dart';
@@ -189,8 +190,11 @@ class _ProfilePageState extends State<ProfilePage> {
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) {
-                                  return ReviewEarningsPage(
-                                      type: "user", timebankid: "");
+                                  return TransactionDetailsView(
+                                    id: user.sevaUserID,
+                                    userId: user.sevaUserID,
+                                    userEmail: user.email,
+                                  );
                                 },
                               ),
                             );
@@ -467,7 +471,7 @@ class _ProfilePageState extends State<ProfilePage> {
 //              ),
 //            ),
 
-          actionsPadding: EdgeInsets.only(right: 20),
+            actionsPadding: EdgeInsets.only(right: 20),
             content: Form(
               child: Container(
                 height: 200,

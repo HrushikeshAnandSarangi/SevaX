@@ -19,6 +19,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/timebank_balance_transction_model.dart';
+import 'package:sevaexchange/models/transactions_timeline_model.dart';
 import 'package:sevaexchange/new_baseline/models/acceptor_model.dart';
 import 'package:sevaexchange/new_baseline/models/borrow_accpetor_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
@@ -1832,7 +1833,7 @@ Stream<List<TransactionModel>> getTimebankCreditsDebitsStream({
 }
 
 Stream<List<TransactionModel>> getUsersCreditsDebitsStream({
-  @required String userEmail,
+  String userEmail,
   @required String userId,
 }) async* {
   var data;
@@ -2344,6 +2345,37 @@ Stream<List<BorrowAcceptorModel>> getBorrowRequestAcceptorsModelStream({
           },
         );
         requestSink.add(acceptorList);
+      },
+    ),
+  );
+}
+
+
+
+Stream<List<TransacationsTimelineModel>> getRequestTimelineDocs(
+    {String transactionTypeId, String sevaUserID}) async* {
+  logger.e('User ID CHECKKK: ' + sevaUserID);
+  logger.e('request ID CHECKKK: ' + transactionTypeId);
+  var query = CollectionRef.timelineGroup
+      .where('typeId', isEqualTo: transactionTypeId)
+      .where('visible', arrayContains: sevaUserID);
+  // .orderBy("timestamp", descending: false)
+  var data = query.snapshots();
+
+  yield* data.transform(
+    StreamTransformer<QuerySnapshot,
+        List<TransacationsTimelineModel>>.fromHandlers(
+      handleData: (snapshot, timelineSink) {
+        List<TransacationsTimelineModel> timelineDocs = [];
+        snapshot.docs.forEach(
+          (documentSnapshot) {
+            logger.e('SNAPSHOT CHECK:  ' + documentSnapshot.toString());
+            TransacationsTimelineModel model =
+                TransacationsTimelineModel.fromJson(documentSnapshot.data());
+            timelineDocs.add(model);
+          },
+        );
+        timelineSink.add(timelineDocs);
       },
     ),
   );
