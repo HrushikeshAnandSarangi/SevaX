@@ -274,7 +274,6 @@ String getStartDateFormat(DateTime date) {
   return new DateFormat("EEEE MMM d'$suffix',  h:mm a").format(date);
 }
 
-
 Future<double> currencyConversion(
     {String fromCurrency, String toCurrency, double amount}) async {
   final frankfurter = Frankfurter();
@@ -293,6 +292,7 @@ Future<double> currencyConversion(
       ((convertedCurrency * pow(10, 2)).round()) / pow(10, 2);
   return convertedCurrencyTwoDecimalPoint;
 }
+
 String createCryptoRandomString([int length = 10]) {
   String randomCode = Uuid().generateV4().substring(0, 8);
   return randomCode;
