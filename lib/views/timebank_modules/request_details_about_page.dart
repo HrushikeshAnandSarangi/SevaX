@@ -2813,7 +2813,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                                       LendingType.ITEM.readable
                                   ? L.of(context).offering_items_to
                                   : L.of(context).offering_place_to) +
-                              widget.requestItem.creatorName,
+                               borrowAcceptorModel.acceptorName,
                           style: TextStyle(
                               fontSize: 14,
                               color: Colors.black,
