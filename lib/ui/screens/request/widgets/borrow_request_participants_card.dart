@@ -36,8 +36,7 @@ class BorrowRequestParticipantsCard extends StatelessWidget {
       : super(key: key);
   @override
   Widget build(BuildContext context) {
-    logger.e('Lending Model Items Length 2: ' +
-        borrowAcceptorModel.acceptorphotoURL.toString());
+    logger.e('requestModel.roomOrTool: ' + requestModel.roomOrTool.toString());
     return Padding(
       padding: padding ?? EdgeInsets.symmetric(horizontal: 2, vertical: 6),
       child: Container(
@@ -85,8 +84,9 @@ class BorrowRequestParticipantsCard extends StatelessWidget {
                     ),
                     SizedBox(height: 4),
                     Text(
-                      lendingPlaceModel.lendingPlaceModel.contactInformation ??
-                          borrowAcceptorModel
+                      requestModel.roomOrTool == LendingType.PLACE.readable
+                          ? lendingPlaceModel.lendingPlaceModel.contactInformation
+                          : borrowAcceptorModel
                               .acceptorEmail, //add date on which potential borrower requested
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -118,8 +118,7 @@ class BorrowRequestParticipantsCard extends StatelessWidget {
                               return Column(
                                 children: [
                                   LendingItemCardWidget(
-                                    lendingItemModel: lendingModelList[index]
-                                        .lendingItemModel,
+                                    lendingItemModel: lendingModelList[index].lendingItemModel,
                                     hidden: true,
                                   ),
                                   SizedBox(height: 10),
@@ -148,8 +147,7 @@ class BorrowRequestParticipantsCard extends StatelessWidget {
               children: [
                 Chip(
                   label: Text(
-                    requestModel.approvedUsers
-                            .contains(borrowAcceptorModel.acceptorEmail)
+                    requestModel.approvedUsers.contains(borrowAcceptorModel.acceptorEmail)
                         ? L.of(context).agreement_signed
                         : L.of(context).agreement_to_be_signed,
                     style: TextStyle(color: Colors.black),

@@ -33,14 +33,6 @@ class ConfigurationsList {
         title_en: 'Create Money Requests',
         type: 'request'),
     ConfigurationModel(
-        id: 'create_time_offers',
-        title_en: 'Create Time Offers',
-        type: 'offer'),
-    ConfigurationModel(
-        id: 'create_time_request',
-        title_en: 'Create Time Requests',
-        type: 'request'),
-    ConfigurationModel(
         id: 'invite_bulk_members',
         title_en: 'Invite / Invite bulk members',
         type: 'general'),
@@ -131,14 +123,6 @@ class ConfigurationsList {
         id: 'create_money_offers',
         title_en: 'Create Money Offers',
         type: 'offer'),
-    ConfigurationModel(
-        id: 'create_time_offers',
-        title_en: 'Create Time Offers',
-        type: 'offer'),
-    ConfigurationModel(
-        id: 'create_time_request',
-        title_en: 'Create Time Request',
-        type: 'request'),
     ConfigurationModel(
         id: 'create_group', title_en: 'Create Group', type: 'group'),
     ConfigurationModel(

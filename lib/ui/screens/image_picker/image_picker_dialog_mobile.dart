@@ -47,7 +47,7 @@ class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
           borderRadius: BorderRadius.circular(20),
         ),
         constraints: BoxConstraints(
-            maxHeight: 300, minHeight: 180, maxWidth: 450, minWidth: 400),
+            maxHeight: 311, minHeight: 180, maxWidth: 450, minWidth: 400),
         child: Column(
           children: [
             AppBar(

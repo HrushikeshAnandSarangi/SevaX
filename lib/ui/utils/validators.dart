@@ -5,6 +5,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 
 class Regex {
   static RegExp numericRegex = RegExp(r"^[0-9]+$");
+  static RegExp emailAndPhoneRegex = RegExp(r"^(?:\d{7,15}|\w+@\w+\.\w{2,3})$");
 }
 
 class Validators {

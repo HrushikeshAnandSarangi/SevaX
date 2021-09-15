@@ -85,9 +85,13 @@ class MemberSectionBuilder extends StatelessWidget {
               )
             : Container();
       },
-      separatorBuilder: (_, __) {
-        return Divider(
-          thickness: 0.5,
+      separatorBuilder: (context, index) {
+        UserModel member = members[index];
+        return Offstage(
+          offstage: member != null ? false : true,
+          child: Divider(
+            thickness: 0.5,
+          ),
         );
       },
     );
