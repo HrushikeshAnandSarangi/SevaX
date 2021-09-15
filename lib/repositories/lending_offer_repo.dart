@@ -533,6 +533,7 @@ class LendingOffersRepo {
         return LendingOfferBorrowerUpdateWidget(
           offerModel: offerModel,
           lendingOfferAcceptorModel: lendingOfferAcceptorModel,
+          parentContext: context,
         );
       },
     );

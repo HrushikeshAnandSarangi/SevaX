@@ -26,6 +26,8 @@ import 'package:sevaexchange/widgets/empty_widget.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
 import 'package:sevaexchange/utils/extensions.dart';
 
+import '../../../../labels.dart';
+
 class OfferList extends StatefulWidget {
   final TimebankModel timebankModel;
 
@@ -256,6 +258,18 @@ class _OfferListState extends State<OfferList> {
                   bloc.onFilterChange(
                     snapshot.data.copyWith(
                       oneToManyOffer: !snapshot.data.oneToManyOffer,
+                    ),
+                  );
+                },
+              ),
+              SizedBox(width: 10),
+              CustomChip(
+                label: L.of(context).lending_offer.sentenceCase(),
+                isSelected: filter.lendingOffer,
+                onTap: () {
+                  bloc.onFilterChange(
+                    snapshot.data.copyWith(
+                      lendingOffer: !snapshot.data.lendingOffer,
                     ),
                   );
                 },
