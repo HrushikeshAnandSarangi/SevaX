@@ -970,6 +970,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
 
                       Navigator.of(context).pop();
                       log('NEW TEMPLATE CREATED');
+                    
                     }
                     // } else {
                     //   log('HERE 5');
