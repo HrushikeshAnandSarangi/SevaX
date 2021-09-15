@@ -407,6 +407,8 @@ class OfferModel extends DataModel {
 
     if (map.containsKey("offerAccepted")) {
       this.acceptedOffer = map['offerAccepted'];
+    } else {
+      this.acceptedOffer = false;
     }
 
     if (map.containsKey('email')) {
@@ -516,7 +518,11 @@ class OfferModel extends DataModel {
     if (map.containsKey('virtual')) {
       this.virtual = map['virtual'];
     }
-
+    if (map.containsKey("offerAccepted")) {
+      this.acceptedOffer = map['offerAccepted'];
+    } else {
+      this.acceptedOffer = false;
+    }
     if (map.containsKey('requestType')) {
       if (map['requestType'] == "CASH") {
         this.type = RequestType.CASH;
