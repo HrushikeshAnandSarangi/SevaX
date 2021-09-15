@@ -38,6 +38,7 @@ class UpgradePlanBannerModel {
     this.community_sponsors,
     this.admin_role_customization,
     this.cash_goods_offers,
+    this.lending_offers
   });
   BannerDetails pin_feeds;
   BannerDetails multi_lang;
@@ -72,6 +73,7 @@ class UpgradePlanBannerModel {
   BannerDetails community_sponsors;
   BannerDetails admin_role_customization;
   BannerDetails cash_goods_offers;
+  BannerDetails lending_offers;
 
   factory UpgradePlanBannerModel.fromJson(Map<String, dynamic> json) =>
       UpgradePlanBannerModel(
@@ -175,6 +177,9 @@ class UpgradePlanBannerModel {
             : null,
         cash_goods_offers: json.containsKey("cash_goods_offers")
             ? BannerDetails.fromJson(json["cash_goods_offers"])
+            : null,
+        lending_offers: json.containsKey("lending_offers")
+            ? BannerDetails.fromJson(json["lending_offers"])
             : null,
       );
 }
