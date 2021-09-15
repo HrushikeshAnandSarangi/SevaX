@@ -6,7 +6,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
-import 'package:sevaexchange/views/exchange/create_request/request_create_form.dart';
+import 'package:sevaexchange/views/exchange/create_request/request_create_edit_form.dart';
 import 'package:sevaexchange/views/exchange/widgets/request_enums.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
@@ -64,7 +64,7 @@ class _CreateRequestState extends State<CreateRequest> {
               return LoadingIndicator();
             }
             if (snapshot.data != null) {
-              return RequestCreateForm(
+              return RequestCreateEditForm(
                 formType: RequestFormType.CREATE,
                 comingFrom: widget.comingFrom,
                 isOfferRequest: widget.offer != null ? widget.isOfferRequest : false,

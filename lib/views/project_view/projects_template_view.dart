@@ -174,23 +174,25 @@ class _ProjectTemplateViewState extends State<ProjectTemplateView> {
           if (projectTemplateList.length == 0) {
             return getEmptyWidget(S.of(context).no_templates_found);
           }
-          return ListView.builder(
-            shrinkWrap: true,
-            itemCount: projectTemplateList.length,
-            itemBuilder: (context, index) {
-              ProjectTemplateModel projectTemplateModel =
-                  projectTemplateList[index];
-              return RadioListTile(
-                value: index,
-                groupValue: value,
-                activeColor: primaryColor,
-                onChanged: (ind) => setState(() {
-                  value = ind;
-                  selectedProjectTemplate = projectTemplateList[ind];
-                }),
-                title: Text(projectTemplateModel.templateName),
-              );
-            },
+          return Flexible(
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: projectTemplateList.length,
+              itemBuilder: (context, index) {
+                ProjectTemplateModel projectTemplateModel =
+                    projectTemplateList[index];
+                return RadioListTile(
+                  value: index,
+                  groupValue: value,
+                  activeColor: primaryColor,
+                  onChanged: (ind) => setState(() {
+                    value = ind;
+                    selectedProjectTemplate = projectTemplateList[ind];
+                  }),
+                  title: Text(projectTemplateModel.templateName),
+                );
+              },
+            ),
           );
         },
       );
