@@ -699,7 +699,15 @@ class ExploreSearchTabBar extends StatelessWidget {
                   child: OfferFilters(
                     stream: _bloc.offerFilter,
                     onTap: _bloc.onOfferFilterChange,
-                    hideFilters: [false, false, false, false, true, true],
+                    hideFilters: [
+                      false,
+                      false,
+                      false,
+                      false,
+                      true,
+                      true,
+                      false
+                    ],
                   ),
                 ),
               ],

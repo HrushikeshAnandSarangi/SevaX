@@ -4,6 +4,8 @@ import 'package:sevaexchange/ui/screens/offers/bloc/offer_list_bloc.dart';
 import 'package:sevaexchange/widgets/custom_chip.dart';
 import 'package:sevaexchange/utils/extensions.dart';
 
+import '../../../../labels.dart';
+
 /// [hideFilters] Pass bool to hide in order
 /// Time offer
 /// Money
@@ -17,7 +19,7 @@ class OfferFilters extends StatelessWidget {
   final List<bool> hideFilters;
 
   const OfferFilters({Key key, this.stream, this.onTap, this.hideFilters})
-      : assert(hideFilters.length == 6),
+      : assert(hideFilters.length == 7),
         super(key: key);
 
   @override
@@ -98,6 +100,18 @@ class OfferFilters extends StatelessWidget {
                 onTap(
                   snapshot.data.copyWith(
                     virtualOffer: !snapshot.data.virtualOffer,
+                  ),
+                );
+              },
+            ),
+            CustomChipExploreFilter(
+              isHidden: hideFilters[6],
+              label: L.of(context).lending_offer.sentenceCase(),
+              isSelected: filter.lendingOffer,
+              onTap: () {
+                onTap(
+                  snapshot.data.copyWith(
+                    lendingOffer: !snapshot.data.lendingOffer,
                   ),
                 );
               },

@@ -990,6 +990,14 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                           );
                                           return;
                                         }
+                                        if (DateTime.fromMillisecondsSinceEpoch(
+                                            OfferDurationWidgetState.starttimestamp)
+                                            .isBefore(DateTime.now())) {
+                                          errorDialog(
+                                              context: context,
+                                              error: S.of(context).past_time_selected);
+                                          return;
+                                        }
                                         if (widget.offerModel == null) {
                                           await createOneToManyOfferFunc();
                                         } else {
@@ -1134,6 +1142,14 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                             context: context,
                                             error: S.of(context).validation_error_end_date_greater,
                                           );
+                                          return;
+                                        }
+                                        if (DateTime.fromMillisecondsSinceEpoch(
+                                            OfferDurationWidgetState.starttimestamp)
+                                            .isBefore(DateTime.now())) {
+                                          errorDialog(
+                                              context: context,
+                                              error: S.of(context).past_time_selected);
                                           return;
                                         }
 

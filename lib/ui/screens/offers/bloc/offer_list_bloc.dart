@@ -72,6 +72,7 @@ class OfferFilter {
   final bool goodsOffer;
   final bool oneToManyOffer;
   final bool cashOffer;
+  final bool lendingOffer;
   final bool publicOffer;
   final bool virtualOffer;
 
@@ -79,6 +80,7 @@ class OfferFilter {
     this.timeOffer = false,
     this.goodsOffer = false,
     this.cashOffer = false,
+    this.lendingOffer = false,
     this.oneToManyOffer = false,
     this.publicOffer = false,
     this.virtualOffer = false,
@@ -91,6 +93,7 @@ class OfferFilter {
     bool publicOffer,
     bool virtualOffer,
     bool oneToManyOffer,
+    bool lendingOffer,
   }) =>
       OfferFilter(
         timeOffer: timeOffer ?? this.timeOffer,
@@ -99,6 +102,7 @@ class OfferFilter {
         publicOffer: publicOffer ?? this.publicOffer,
         virtualOffer: virtualOffer ?? this.virtualOffer,
         oneToManyOffer: oneToManyOffer ?? this.oneToManyOffer,
+        lendingOffer: lendingOffer ?? this.lendingOffer,
       );
 
   bool get isFilterSelected =>
@@ -107,6 +111,7 @@ class OfferFilter {
       cashOffer ||
       publicOffer ||
       virtualOffer ||
+      lendingOffer ||
       oneToManyOffer;
 
   bool operator ==(Object other) {
@@ -116,7 +121,8 @@ class OfferFilter {
           this.cashOffer == other.cashOffer &&
           this.publicOffer == other.publicOffer &&
           this.virtualOffer == other.virtualOffer &&
-          this.oneToManyOffer == other.oneToManyOffer;
+          this.oneToManyOffer == other.oneToManyOffer &&
+          this.lendingOffer == other.lendingOffer;
     } else {
       return false;
     }
@@ -137,6 +143,10 @@ class OfferFilter {
       } else if (goodsOffer &&
           model.offerType == OfferType.INDIVIDUAL_OFFER &&
           model.type == RequestType.GOODS) {
+        return true;
+      } else if (lendingOffer &&
+          model.offerType == OfferType.INDIVIDUAL_OFFER &&
+          model.type == RequestType.LENDING_OFFER) {
         return true;
       } else if (publicOffer && model.public) {
         return true;
