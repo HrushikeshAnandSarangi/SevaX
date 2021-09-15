@@ -1444,4 +1444,9 @@ class L {
 
   //6th Aug
   String get completed_events => "Completed Events";
+
+  //15 sep 2021
+
+  String get add_sponsor => "Add Sponsor";
+  String get sponsor_details => "Sponsor Details";
 }
