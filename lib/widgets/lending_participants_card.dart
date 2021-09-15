@@ -48,6 +48,7 @@ class LendingParticipantCard extends StatelessWidget {
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 CircleAvatar(
                   radius: 25,
@@ -84,24 +85,22 @@ class LendingParticipantCard extends StatelessWidget {
                     Text(
                       acceptTime != null
                           ? DateFormat(
-                                  'MMMM dd, yyyy @ h:mm a',
-                                  Locale(AppConfig.prefs
-                                          .getString('language_code'))
+                                  'MMM dd, yyyy @ h:mm a',
+                                  Locale(AppConfig.prefs.getString('language_code'))
                                       .toLanguageTag())
                               .format(
                               getDateTimeAccToUserTimezone(
-                                dateTime: DateTime.fromMillisecondsSinceEpoch(
-                                    acceptTime),
-                                timezoneAbb:
-                                    SevaCore.of(context).loggedInUser.timezone,
+                                dateTime: DateTime.fromMillisecondsSinceEpoch(acceptTime),
+                                timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
                               ),
                             )
                           : S.of(context).error_loading_data,
-                      maxLines: 1,
+                      maxLines: 2,
                       overflow: TextOverflow.ellipsis,
+                      softWrap: true,
                       style: TextStyle(
                         color: Colors.grey[400],
-                        fontSize: 14,
+                        fontSize: 12,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
