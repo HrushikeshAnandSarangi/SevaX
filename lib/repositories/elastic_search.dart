@@ -333,8 +333,7 @@ class ElasticSearchApi {
       List<CommunityModel> communityListTemp =
           await SearchCommunityViaZIPCode.getCommunitiesViaZIPCode(queryString);
 
-      communityListTemp.forEach((item) {
-        logger.i("-----------First Community Name  " + communityListTemp[0].name);
+      communityListTemp?.forEach((item) {
         communityData[item.id] = item;
       });
     } on NoNearByCommunitesFoundException catch (e) {

@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/image_picker/image_picker_dialog_mobile.dart';
 import 'package:sevaexchange/ui/utils/avatar.dart';
@@ -489,7 +490,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                       Row(
                         children: [
                           Text(
-                            'Sponsor Details',
+                            L.of(context).sponsor_details,
                             style: TextStyle(fontSize: 18.0),
                           ),
                           Spacer(),
@@ -608,7 +609,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                               color: Theme.of(context).primaryColor,
                               // textColor: FlavorConfig.values.buttonTextColor,
                               child: Text(
-                                'Add Sponser',
+                                L.of(context).add_sponsor,
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontFamily: 'Europa',

@@ -784,6 +784,13 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm> with Widge
         return;
       }
 
+      if (DateTime.fromMillisecondsSinceEpoch(OfferDurationWidgetState.starttimestamp)
+          .isBefore(DateTime.now())) {
+        requestUtils.showDialogForTitle(
+            context: context, dialogTitle: S.of(context).past_time_selected);
+        return;
+      }
+
       if (requestModel.requestType == RequestType.GOODS &&
           (requestModel.goodsDonationDetails.requiredGoods == null ||
               requestModel.goodsDonationDetails.requiredGoods.isEmpty)) {

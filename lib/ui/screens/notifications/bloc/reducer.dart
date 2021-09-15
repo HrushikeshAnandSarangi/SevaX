@@ -1052,10 +1052,11 @@ class PersonalNotificationsRedcerForDonations {
           }
 
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Transform.scale(
-              scale: 0.5,
-              child: LoadingIndicator(),
-            );
+            return NotificationShimmer();
+            // Transform.scale(
+            //   scale: 0.5,
+            //   child: LoadingIndicator(),
+            // );
           }
           double amount = snapshot.data;
           return NotificationCard(
