@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/labels.dart';
+import 'package:sevaexchange/models/explore_distance_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/ui/screens/explore/bloc/explore_search_page_bloc.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/communities_search_view.dart';
@@ -30,7 +31,10 @@ class ExploreSearchPage extends StatefulWidget {
   final bool isUserSignedIn;
 
   const ExploreSearchPage(
-      {Key key, this.searchText, this.tabIndex = 0, @required this.isUserSignedIn})
+      {Key key,
+      this.searchText,
+      this.tabIndex = 0,
+      @required this.isUserSignedIn})
       : assert(tabIndex <= 4),
         super(key: key);
 
@@ -38,7 +42,8 @@ class ExploreSearchPage extends StatefulWidget {
   _ExploreSearchPageState createState() => _ExploreSearchPageState();
 }
 
-class _ExploreSearchPageState extends State<ExploreSearchPage> with SingleTickerProviderStateMixin {
+class _ExploreSearchPageState extends State<ExploreSearchPage>
+    with SingleTickerProviderStateMixin {
   TabController _controller;
   TextEditingController _searchController = TextEditingController();
   ExploreSearchPageBloc _bloc = ExploreSearchPageBloc();
@@ -55,7 +60,10 @@ class _ExploreSearchPageState extends State<ExploreSearchPage> with SingleTicker
     Future.delayed(
         Duration(milliseconds: 300),
         () => {
-              _bloc.load(widget.isUserSignedIn ? SevaCore.of(context).loggedInUser.sevaUserID : '',
+              _bloc.load(
+                  widget.isUserSignedIn
+                      ? SevaCore.of(context).loggedInUser.sevaUserID
+                      : '',
                   context),
             });
     _tabIndex.add(widget.tabIndex);
@@ -315,7 +323,9 @@ class ExploreCommunityCard extends StatelessWidget {
                         model.billing_address.city == null ||
                         model.billing_address.country == null),
                     child: Text(
-                      model.billing_address.city + ' | ' + model.billing_address.country,
+                      model.billing_address.city +
+                          ' | ' +
+                          model.billing_address.country,
                       style: TextStyle(
                         color: Theme.of(context).accentColor,
                       ),
@@ -349,7 +359,8 @@ class SimpleCommunityCard extends StatelessWidget {
   final String title;
   final VoidCallback onTap;
 
-  const SimpleCommunityCard({Key key, this.image, this.title, this.onTap}) : super(key: key);
+  const SimpleCommunityCard({Key key, this.image, this.title, this.onTap})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -420,14 +431,18 @@ class ExploreSearchTabBar extends StatelessWidget {
               children: [
                 Container(
                   height: 30,
-                  width: 135,
-                  child: StreamBuilder<int>(
-                    initialData: 0,
+                  width: 158,
+                  child: StreamBuilder<ExploreDistanceModel>(
+                    initialData: ExploreDistanceModel(0, DistancType.mi),
                     stream: _bloc.distance,
                     builder: (context, snapshot) {
+                      int _distance = snapshot.data.distance;
+                      DistancType _type = snapshot.data.type;
                       return Container(
                         decoration: BoxDecoration(
-                          color: snapshot.data != 0 ? Theme.of(context).primaryColor : Colors.white,
+                          color: _distance != 0
+                              ? Theme.of(context).primaryColor
+                              : Colors.white,
                           border: Border.all(
                             color: Theme.of(context).primaryColor,
                           ),
@@ -437,17 +452,20 @@ class ExploreSearchTabBar extends StatelessWidget {
                         child: InkWell(
                           onTap: () async {
                             await Navigator.of(context)
-                                .push<int>(
+                                .push<ExploreDistanceModel>(
                               MaterialPageRoute(
                                 builder: (context) => NearByFiltersView(),
                               ),
                             )
                                 .then(
                               (value) {
+                                logger.i(
+                                    'km value => ${value.distance} || ${value.type}');
                                 if (value != null) {
                                   _bloc.distanceChanged(value);
                                 } else {
-                                  _bloc.distanceChanged(0);
+                                  _bloc.distanceChanged(
+                                      ExploreDistanceModel(0, DistancType.mi));
                                 }
                               },
                             );
@@ -455,18 +473,18 @@ class ExploreSearchTabBar extends StatelessWidget {
                           child: Row(
                             children: [
                               Text(
-                                snapshot.data == 0
+                                _distance == 0
                                     ? L.of(context).any_distance
-                                    : 'Within ${snapshot.data} ' + S.of(context).miles,
+                                    : "Within $_distance ${_type == DistancType.km ? S.of(context).kilometers : S.of(context).miles}",
                                 style: TextStyle(
-                                  color: snapshot.data == 0
+                                  color: _distance == 0
                                       ? Theme.of(context).primaryColor
                                       : Colors.white,
                                 ),
                               ),
                               Spacer(),
                               HideWidget(
-                                hide: snapshot.data == 0,
+                                hide: _distance == 0,
                                 child: Padding(
                                   padding: const EdgeInsets.only(left: 4.0),
                                   child: GestureDetector(
@@ -475,7 +493,9 @@ class ExploreSearchTabBar extends StatelessWidget {
                                       color: Colors.white,
                                     ),
                                     onTap: () {
-                                      _bloc.distanceChanged(0);
+                                      _bloc.distanceChanged(
+                                          ExploreDistanceModel(
+                                              0, DistancType.mi));
                                     },
                                   ),
                                 ),
@@ -497,7 +517,9 @@ class ExploreSearchTabBar extends StatelessWidget {
                       if (snapshot.data == 1)
                         return Container(
                           decoration: BoxDecoration(
-                            color: eventFilter.data ? Theme.of(context).primaryColor : Colors.white,
+                            color: eventFilter.data
+                                ? Theme.of(context).primaryColor
+                                : Colors.white,
                             border: Border.all(
                               color: Theme.of(context).primaryColor,
                             ),
@@ -514,14 +536,17 @@ class ExploreSearchTabBar extends StatelessWidget {
                                   children: [
                                     eventFilter.data
                                         ? Padding(
-                                            padding: EdgeInsets.only(right: 4.0),
+                                            padding:
+                                                EdgeInsets.only(right: 4.0),
                                             child: Container(
                                               height: 16,
                                               width: 16,
                                               child: CircleAvatar(
                                                 radius: 12,
-                                                backgroundColor: Color(0xFFFFFFFF),
-                                                foregroundColor: Color(0xFFF70C493),
+                                                backgroundColor:
+                                                    Color(0xFFFFFFFF),
+                                                foregroundColor:
+                                                    Color(0xFFF70C493),
                                                 child: Icon(
                                                   Icons.check,
                                                   size: 14,
@@ -555,13 +580,15 @@ class ExploreSearchTabBar extends StatelessWidget {
                     (a, b) => SelectedCommunityCategoryWithData(a, b),
                   ),
                   builder: (context, selectedCommunityCategoryWithData) {
-                    if (selectedCommunityCategoryWithData.data == null || snapshot.data != 0) {
+                    if (selectedCommunityCategoryWithData.data == null ||
+                        snapshot.data != 0) {
                       return Container();
                     }
                     return Container(
                       height: 30,
                       decoration: BoxDecoration(
-                        border: Border.all(color: Theme.of(context).primaryColor),
+                        border:
+                            Border.all(color: Theme.of(context).primaryColor),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -570,10 +597,13 @@ class ExploreSearchTabBar extends StatelessWidget {
                           onChanged: (String value) {
                             _bloc.onCommunityCategoryChanged(value);
                           },
-                          value: selectedCommunityCategoryWithData.data.selectedId ?? '_',
+                          value: selectedCommunityCategoryWithData
+                                  .data.selectedId ??
+                              '_',
                           icon: Icon(Icons.keyboard_arrow_down),
                           iconEnabledColor: Theme.of(context).primaryColor,
-                          style: TextStyle(color: Theme.of(context).primaryColor),
+                          style:
+                              TextStyle(color: Theme.of(context).primaryColor),
                           items: <DropdownMenuItem<String>>[
                             DropdownMenuItem(
                               value: '_',
@@ -602,13 +632,15 @@ class ExploreSearchTabBar extends StatelessWidget {
                     (a, b) => SelectedRequestCategoryWithData(a, b),
                   ),
                   builder: (context, selectedRequestCategoryWithData) {
-                    if (selectedRequestCategoryWithData.data == null || snapshot.data != 2) {
+                    if (selectedRequestCategoryWithData.data == null ||
+                        snapshot.data != 2) {
                       return Container();
                     }
                     return Container(
                       height: 30,
                       decoration: BoxDecoration(
-                        border: Border.all(color: Theme.of(context).primaryColor),
+                        border:
+                            Border.all(color: Theme.of(context).primaryColor),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -617,14 +649,20 @@ class ExploreSearchTabBar extends StatelessWidget {
                           onChanged: (String value) {
                             _bloc.onRequestCategoryChanged(value);
                           },
-                          value: selectedRequestCategoryWithData.data.selectedId ?? '_',
+                          value:
+                              selectedRequestCategoryWithData.data.selectedId ??
+                                  '_',
                           icon: Icon(Icons.keyboard_arrow_down),
                           iconEnabledColor: Theme.of(context).primaryColor,
-                          style: TextStyle(color: Theme.of(context).primaryColor),
+                          style:
+                              TextStyle(color: Theme.of(context).primaryColor),
                           items: <DropdownMenuItem<String>>[
                             DropdownMenuItem(
                               value: '_',
-                              child: Text(S.of(context).any_category.firstWordUpperCase()),
+                              child: Text(S
+                                  .of(context)
+                                  .any_category
+                                  .firstWordUpperCase()),
                             ),
                             ...selectedRequestCategoryWithData.data.data.map(
                               (e) => DropdownMenuItem(

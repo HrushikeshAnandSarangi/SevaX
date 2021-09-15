@@ -55,16 +55,14 @@ class BorrowAgreementPdf {
 
     final Document pdf = Document();
 
-    final ByteData bytes =
-        await rootBundle.load('images/invoice_seva_logo.jpg');
+    final ByteData bytes = await rootBundle.load('images/invoice_seva_logo.jpg');
     final Uint8List byteList = bytes.buffer.asUint8List();
 
     String borrowAgreementLinkFinal = '';
 
     pdf.addPage(
       MultiPage(
-        pageFormat:
-            PdfPageFormat.letter.copyWith(marginBottom: 1.5 * PdfPageFormat.cm),
+        pageFormat: PdfPageFormat.letter.copyWith(marginBottom: 1.5 * PdfPageFormat.cm),
         crossAxisAlignment: CrossAxisAlignment.start,
         header: (Context context) {
           if (context.pageNumber == 1) {
@@ -75,16 +73,13 @@ class BorrowAgreementPdf {
             margin: const EdgeInsets.only(bottom: 3.0 * PdfPageFormat.mm),
             padding: const EdgeInsets.only(bottom: 3.0 * PdfPageFormat.mm),
             decoration: BoxDecoration(
-              border:
-                  Border(bottom: BorderSide(width: 0.5, color: PdfColors.grey)),
+              border: Border(bottom: BorderSide(width: 0.5, color: PdfColors.grey)),
             ),
             child: Text(
               isOffer
                   ? L.of(contextMain).borrow_request_agreement
                   : L.of(contextMain).lending_offer_agreement,
-              style: Theme.of(context)
-                  .defaultTextStyle
-                  .copyWith(color: PdfColors.grey),
+              style: Theme.of(context).defaultTextStyle.copyWith(color: PdfColors.grey),
             ),
           );
         },
@@ -122,46 +117,51 @@ class BorrowAgreementPdf {
 
           SizedBox(height: 7),
 
-          Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(L.of(contextMain).lease_duration,
-                style: TextStyle(fontSize: 16)),
-            SizedBox(width: 8),
-            Text(
-              DateFormat(
-                      'MMMM dd, yyyy @ h:mm a',
-                      Locale(AppConfig.prefs.getString('language_code'))
-                          .toLanguageTag())
-                  .format(
-                getDateTimeAccToUserTimezone(
-                  dateTime: DateTime.fromMillisecondsSinceEpoch(
-                      !isOffer ? requestModel.requestStart : startTime),
-                  timezoneAbb: SevaCore.of(contextMain).loggedInUser.timezone,
-                ),
-              ), //start date and end date
-              style: TextStyle(fontSize: 14),
-            ),
-            Text('  -  ', style: TextStyle(fontSize: 14)),
-            Text(
-              DateFormat(
-                      'MMMM dd, yyyy @ h:mm a',
-                      Locale(AppConfig.prefs.getString('language_code'))
-                          .toLanguageTag())
-                  .format(
-                getDateTimeAccToUserTimezone(
-                  dateTime: DateTime.fromMillisecondsSinceEpoch(
-                      !isOffer ? requestModel.requestEnd : endTime),
-                  timezoneAbb: SevaCore.of(contextMain).loggedInUser.timezone,
-                ),
-              ), //start date and end date
-              style: TextStyle(fontSize: 14),
-            ),
-          ]),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                L.of(contextMain).lease_duration,
+                style: TextStyle(fontSize: 16),
+              ),
+            ],
+          ),
+          SizedBox(width: 8),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                DateFormat('MMMM dd, yyyy @ h:mm a',
+                        Locale(AppConfig.prefs.getString('language_code')).toLanguageTag())
+                    .format(
+                  getDateTimeAccToUserTimezone(
+                    dateTime: DateTime.fromMillisecondsSinceEpoch(
+                        !isOffer ? requestModel.requestStart : startTime),
+                    timezoneAbb: SevaCore.of(contextMain).loggedInUser.timezone,
+                  ),
+                ), //start date and end date
+                style: TextStyle(fontSize: 14),
+              ),
+              Text('  -  ', style: TextStyle(fontSize: 14)),
+              Text(
+                DateFormat('MMMM dd, yyyy @ h:mm a',
+                        Locale(AppConfig.prefs.getString('language_code')).toLanguageTag())
+                    .format(
+                  getDateTimeAccToUserTimezone(
+                    dateTime: DateTime.fromMillisecondsSinceEpoch(
+                        !isOffer ? requestModel.requestEnd : endTime),
+                    timezoneAbb: SevaCore.of(contextMain).loggedInUser.timezone,
+                  ),
+                ), //start date and end date
+                style: TextStyle(fontSize: 14),
+              ),
+            ],
+          ),
 
           SizedBox(height: 10),
 
           Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(L.of(contextMain).agreement_id,
-                style: TextStyle(fontSize: 16)),
+            Text(L.of(contextMain).agreement_id, style: TextStyle(fontSize: 16)),
             SizedBox(width: 8),
             Text(
               agreementId ?? 'Not available',
@@ -174,80 +174,63 @@ class BorrowAgreementPdf {
           SizedBox(height: 20),
 
           Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(L.of(contextMain).agreement_details,
-                style: TextStyle(fontSize: 16)),
+            Text(L.of(contextMain).agreement_details, style: TextStyle(fontSize: 16)),
             specificConditions.isNotEmpty && specificConditions != null
                 ? SizedBox(height: 15)
                 : Container(),
             (specificConditions.isNotEmpty && specificConditions != null)
-                ? Text(
-                    L.of(contextMain).lenders_specific_conditions +
-                        specificConditions,
+                ? Text(L.of(contextMain).lenders_specific_conditions + specificConditions,
                     style: TextStyle(fontSize: 14))
                 : Container(),
             SizedBox(height: 10),
             (isDamageLiability == true)
-                ? Text(L.of(contextMain).agreement_damage_liability,
-                    style: TextStyle(fontSize: 14))
+                ? Text(L.of(contextMain).agreement_damage_liability, style: TextStyle(fontSize: 14))
                 : Container(),
             SizedBox(height: 10),
             (isUseDisclaimer == true)
-                ? Text(L.of(contextMain).agreement_user_disclaimer,
-                    style: TextStyle(fontSize: 14))
+                ? Text(L.of(contextMain).agreement_user_disclaimer, style: TextStyle(fontSize: 14))
                 : Container(),
             SizedBox(height: 10),
             placeOrItem == 'PLACE'
-                ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                        (isRefundDepositNeeded == true)
-                            ? Text(L.of(contextMain).agreement_refund_deposit,
-                                style: TextStyle(fontSize: 14))
-                            : Container(),
-                        SizedBox(height: 10),
-                        (isMaintainAndclean == true)
-                            ? Text(
-                                L.of(contextMain).agreement_maintain_and_clean,
-                                style: TextStyle(fontSize: 14))
-                            : Container(),
-                      ])
-                : Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                        (isDeliveryReturn == true)
-                            ? Text(L.of(contextMain).agreement_delivery_return,
-                                style: TextStyle(fontSize: 14))
-                            : Container(),
-                        SizedBox(height: 10),
-                        (isMaintainRepair == true)
-                            ? Text(
-                                L.of(contextMain).agreement_maintain_and_repair,
-                                style: TextStyle(fontSize: 14))
-                            : Container(),
-                      ]),
+                ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    (isRefundDepositNeeded == true)
+                        ? Text(L.of(contextMain).agreement_refund_deposit,
+                            style: TextStyle(fontSize: 14))
+                        : Container(),
+                    SizedBox(height: 10),
+                    (isMaintainAndclean == true)
+                        ? Text(L.of(contextMain).agreement_maintain_and_clean,
+                            style: TextStyle(fontSize: 14))
+                        : Container(),
+                  ])
+                : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    (isDeliveryReturn == true)
+                        ? Text(L.of(contextMain).agreement_delivery_return,
+                            style: TextStyle(fontSize: 14))
+                        : Container(),
+                    SizedBox(height: 10),
+                    (isMaintainRepair == true)
+                        ? Text(L.of(contextMain).agreement_maintain_and_repair,
+                            style: TextStyle(fontSize: 14))
+                        : Container(),
+                  ]),
           ]),
 
           SizedBox(height: 25),
 
           Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(L.of(contextMain).terms_of_service,
-                style: TextStyle(fontSize: 16)),
+            Text(L.of(contextMain).terms_of_service, style: TextStyle(fontSize: 16)),
             //additional texts here
             SizedBox(height: 15),
-            Text(L.of(contextMain).borrow_lender_dispute,
-                style: TextStyle(fontSize: 14)),
+            Text(L.of(contextMain).borrow_lender_dispute, style: TextStyle(fontSize: 14)),
             SizedBox(height: 15),
-            Text(L.of(contextMain).borrow_request_seva_disclaimer,
-                style: TextStyle(fontSize: 14)),
+            Text(L.of(contextMain).borrow_request_seva_disclaimer, style: TextStyle(fontSize: 14)),
             SizedBox(height: 15),
-            Text(L.of(contextMain).civil_code_dispute,
-                style: TextStyle(fontSize: 14)),
+            Text(L.of(contextMain).civil_code_dispute, style: TextStyle(fontSize: 14)),
             SizedBox(height: 15),
-            Text(L.of(contextMain).agreement_amending_disclaimer,
-                style: TextStyle(fontSize: 14)),
+            Text(L.of(contextMain).agreement_amending_disclaimer, style: TextStyle(fontSize: 14)),
             SizedBox(height: 15),
-            Text(L.of(contextMain).agreement_final_acknowledgement,
-                style: TextStyle(fontSize: 14)),
+            Text(L.of(contextMain).agreement_final_acknowledgement, style: TextStyle(fontSize: 14)),
           ]),
 
           SizedBox(height: 35),
@@ -280,10 +263,8 @@ class BorrowAgreementPdf {
                         SizedBox(width: 5),
                         Text(
                           lendingModel.lendingType == LendingType.PLACE
-                              ? lendingModel.lendingPlaceModel.placeName
-                                  .toString()
-                              : lendingModel.lendingItemModel.itemName
-                                  .toString(),
+                              ? lendingModel.lendingPlaceModel.placeName.toString()
+                              : lendingModel.lendingItemModel.itemName.toString(),
                           style: TextStyle(fontSize: 15),
                         ),
                       ],
@@ -292,23 +273,13 @@ class BorrowAgreementPdf {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                            L
-                                    .of(contextMain)
-                                    .estimated_value
-                                    .replaceAll('*', '') +
-                                ': ',
+                        Text(L.of(contextMain).estimated_value.replaceAll('*', '') + ': ',
                             style: TextStyle(fontSize: 16)),
                         SizedBox(width: 5),
                         Text(
                             lendingModel.lendingType == LendingType.PLACE
-                                ? "\$" +
-                                    lendingModel
-                                        .lendingPlaceModel.estimatedValue
-                                        .toString()
-                                : "\$" +
-                                    lendingModel.lendingItemModel.estimatedValue
-                                        .toString(),
+                                ? "\$" + lendingModel.lendingPlaceModel.estimatedValue.toString()
+                                : "\$" + lendingModel.lendingItemModel.estimatedValue.toString(),
                             style: TextStyle(fontSize: 15)),
                       ],
                     ),
@@ -342,18 +313,10 @@ class BorrowAgreementPdf {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                            L
-                                    .of(contextMain)
-                                    .estimated_value
-                                    .replaceAll('*', '') +
-                                ': ',
+                        Text(L.of(contextMain).estimated_value.replaceAll('*', '') + ': ',
                             style: TextStyle(fontSize: 16)),
                         SizedBox(width: 5),
-                        Text(
-                            "\$" +
-                                lendingModel.lendingPlaceModel.estimatedValue
-                                    .toString(),
+                        Text("\$" + lendingModel.lendingPlaceModel.estimatedValue.toString(),
                             style: TextStyle(fontSize: 15)),
                       ],
                     ),
@@ -381,9 +344,7 @@ class BorrowAgreementPdf {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  lendingModelListBorrowRequest[index]
-                                          .lendingItemModel
-                                          .itemName +
+                                  lendingModelListBorrowRequest[index].lendingItemModel.itemName +
                                       ': ',
                                   style: TextStyle(fontSize: 15),
                                 ),
@@ -414,10 +375,7 @@ class BorrowAgreementPdf {
               Text(L.of(contextMain).lender, style: TextStyle(fontSize: 16)),
               SizedBox(height: 15),
               Text(
-                isOffer
-                    ? SevaCore.of(contextMain).loggedInUser.fullname
-                    : requestModel
-                        .fullName, //need to modify according to offer model or request model
+                SevaCore.of(contextMain).loggedInUser.fullname,
                 style: TextStyle(
                   decoration: TextDecoration.underline,
                 ),
@@ -440,17 +398,13 @@ class BorrowAgreementPdf {
           ]),
           SizedBox(height: 20),
           Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(L.of(contextMain).agreement_date,
-                style: TextStyle(fontSize: 16)),
+            Text(L.of(contextMain).agreement_date, style: TextStyle(fontSize: 16)),
             SizedBox(height: 15),
             Text(
-              DateFormat('MMMM dd, yyyy | h:mm a',
-                      Locale(getLangTag()).toLanguageTag())
-                  .format(
+              DateFormat('MMMM dd, yyyy | h:mm a', Locale(getLangTag()).toLanguageTag()).format(
                 getDateTimeAccToUserTimezone(
                     dateTime: DateTime.now(),
-                    timezoneAbb:
-                        SevaCore.of(contextMain).loggedInUser.timezone),
+                    timezoneAbb: SevaCore.of(contextMain).loggedInUser.timezone),
               ),
               style: TextStyle(
                 decoration: TextDecoration.underline,
@@ -469,9 +423,7 @@ class BorrowAgreementPdf {
     await file.writeAsBytes(await pdf.save());
 
     borrowAgreementLinkFinal = await uploadDocument(
-        isOffer
-            ? SevaCore.of(contextMain).loggedInUser.sevaUserID
-            : requestModel.id,
+        isOffer ? SevaCore.of(contextMain).loggedInUser.sevaUserID : requestModel.id,
         file,
         documentName ?? 'Agreement Name Not available');
 
@@ -486,8 +438,7 @@ class BorrowAgreementPdf {
   }
 }
 
-Future openPdfViewer(
-    String pdfURL, String documentName, material.BuildContext context) {
+Future openPdfViewer(String pdfURL, String documentName, material.BuildContext context) {
   progressDialog = ProgressDialog(
     context,
     type: ProgressDialogType.Normal,
@@ -509,32 +460,26 @@ Future openPdfViewer(
   });
 }
 
-Future<String> uploadDocument(
-    String requestId, File _path, String documentName) async {
+Future<String> uploadDocument(String requestId, File _path, String documentName) async {
   int timestamp = DateTime.now().millisecondsSinceEpoch;
 
   String timestampString = timestamp.toString();
 
-  String name =
-      requestId.toString() + '_' + timestampString + '_' + documentName ??
-          'Agreement Name Not available';
+  String name = requestId.toString() + '_' + timestampString + '_' + documentName ??
+      'Agreement Name Not available';
 
-  Reference ref =
-      FirebaseStorage.instance.ref().child('agreement_docs').child(name);
+  Reference ref = FirebaseStorage.instance.ref().child('agreement_docs').child(name);
 
   UploadTask uploadTask = ref.putFile(
     _path,
     SettableMetadata(
       contentLanguage: 'en',
-      customMetadata: <String, String>{
-        'activity': 'request/offer agreement document'
-      },
+      customMetadata: <String, String>{'activity': 'request/offer agreement document'},
     ),
   );
   String documentURL = '';
   try {
-    String documentURL =
-        await (await uploadTask.whenComplete(() => null)).ref.getDownloadURL();
+    String documentURL = await (await uploadTask.whenComplete(() => null)).ref.getDownloadURL();
 
     logger.e('COMES Here 0 PDF Link:  ' + documentURL.toString());
     return documentURL;

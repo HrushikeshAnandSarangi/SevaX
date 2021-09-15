@@ -44,7 +44,7 @@ import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 import '../../core.dart';
 
-class RequestCreateForm extends StatefulWidget {
+class RequestCreateEditForm extends StatefulWidget {
   final bool isOfferRequest;
   final OfferModel offer;
   final String timebankId;
@@ -56,7 +56,7 @@ class RequestCreateForm extends StatefulWidget {
   final RequestModel requestModel;
   final RequestFormType formType;
 
-  RequestCreateForm({
+  RequestCreateEditForm({
     this.isOfferRequest = false,
     @required this.comingFrom,
     this.offer,
@@ -70,12 +70,12 @@ class RequestCreateForm extends StatefulWidget {
   });
 
   @override
-  RequestCreateFormState createState() {
-    return RequestCreateFormState();
+  RequestCreateEditFormState createState() {
+    return RequestCreateEditFormState();
   }
 }
 
-class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindingObserver {
+class RequestCreateEditFormState extends State<RequestCreateEditForm> with WidgetsBindingObserver {
   final _formKey = GlobalKey<FormState>();
   final hoursTextFocus = FocusNode();
   final volunteersTextFocus = FocusNode();
@@ -462,44 +462,44 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
               ),
               Column(
                 children: <Widget>[
-                  ConfigurationCheck(
-                    actionType: 'create_time_request',
-                    role: memberType(timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
-                    child: requestUtils.optionRadioButton<RequestType>(
-                      title: S.of(context).request_type_time,
-                      isEnabled: !widget.isOfferRequest,
-                      value: RequestType.TIME,
-                      groupvalue: requestModel.requestType,
-                      onChanged: (value) {
-                        //making false and clearing map because TIME and ONE_TO_MANY_REQUEST use same widget
-                        instructorAdded = false;
-                        requestModel.selectedInstructor = null;
-                        requestModel.requestType = value;
-                        AppConfig.helpIconContextMember = HelpContextMemberType.time_requests;
-                        setState(() => {});
-                      },
-                    ),
+                  requestUtils.optionRadioButton<RequestType>(
+                    title: S.of(context).request_type_time,
+                    isEnabled: !widget.isOfferRequest,
+                    value: RequestType.TIME,
+                    groupvalue: requestModel.requestType,
+                    onChanged: (value) {
+                      //making false and clearing map because TIME and ONE_TO_MANY_REQUEST use same widget
+                      instructorAdded = false;
+                      requestModel.selectedInstructor = null;
+                      requestModel.requestType = value;
+                      AppConfig.helpIconContextMember = HelpContextMemberType.time_requests;
+                      setState(() => {});
+                    },
                   ),
                   TransactionsMatrixCheck(
                     comingFrom: widget.comingFrom,
                     upgradeDetails: AppConfig.upgradePlanBannerModel.goods_request,
                     transaction_matrix_type: 'cash_goods_requests',
-                    child: requestUtils.optionRadioButton<RequestType>(
-                      title: S.of(context).request_type_goods,
-                      isEnabled: !(widget.isOfferRequest ?? false),
-                      value: RequestType.GOODS,
-                      groupvalue: requestModel.requestType,
-                      onChanged: (value) {
-                        requestModel.isRecurring = false;
-                        requestModel.requestType = value;
-                        AppConfig.helpIconContextMember = HelpContextMemberType.goods_requests;
+                    child: ConfigurationCheck(
+                      actionType: 'create_goods_request',
+                      role: memberType(timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
+                      child: requestUtils.optionRadioButton<RequestType>(
+                        title: S.of(context).request_type_goods,
+                        isEnabled: !(widget.isOfferRequest ?? false),
+                        value: RequestType.GOODS,
+                        groupvalue: requestModel.requestType,
+                        onChanged: (value) {
+                          requestModel.isRecurring = false;
+                          requestModel.requestType = value;
+                          AppConfig.helpIconContextMember = HelpContextMemberType.goods_requests;
 
-                        //making false and clearing map because TIME and ONE_TO_MANY_REQUEST use same widget
-                        instructorAdded = false;
-                        requestModel.selectedInstructor = null;
-                        requestModel.requestType = value;
-                        setState(() => {});
-                      },
+                          //making false and clearing map because TIME and ONE_TO_MANY_REQUEST use same widget
+                          instructorAdded = false;
+                          requestModel.selectedInstructor = null;
+                          requestModel.requestType = value;
+                          setState(() => {});
+                        },
+                      ),
                     ),
                   ),
                   TransactionsMatrixCheck(
@@ -532,27 +532,31 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
                     upgradeDetails: AppConfig.upgradePlanBannerModel.onetomany_requests,
                     transaction_matrix_type: 'onetomany_requests',
                     comingFrom: widget.comingFrom,
-                    child: requestUtils.optionRadioButton<RequestType>(
-                      title: S.of(context).one_to_many,
-                      // TODO => sentence case
-                      value: RequestType.ONE_TO_MANY_REQUEST,
-                      isEnabled: !widget.isOfferRequest,
-                      groupvalue: requestModel.requestType,
-                      onChanged: (value) {
-                        //requestModel.isRecurring = true;
-                        requestModel.requestType = value;
-                        //By default instructor for One To Many Requests is the creator
-                        instructorAdded = true;
-                        requestModel.selectedInstructor = BasicUserDetails(
-                          fullname: SevaCore.of(context).loggedInUser.fullname,
-                          email: SevaCore.of(context).loggedInUser.email,
-                          photoURL: SevaCore.of(context).loggedInUser.photoURL,
-                          sevaUserID: SevaCore.of(context).loggedInUser.sevaUserID,
-                        );
-                        AppConfig.helpIconContextMember =
-                            HelpContextMemberType.one_to_many_requests;
-                        setState(() => {});
-                      },
+                    child: ConfigurationCheck(
+                      actionType: 'create_onetomany_request',
+                      role: memberType(timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
+                      child: requestUtils.optionRadioButton<RequestType>(
+                        title: S.of(context).one_to_many,
+                        // TODO => sentence case
+                        value: RequestType.ONE_TO_MANY_REQUEST,
+                        isEnabled: !widget.isOfferRequest,
+                        groupvalue: requestModel.requestType,
+                        onChanged: (value) {
+                          //requestModel.isRecurring = true;
+                          requestModel.requestType = value;
+                          //By default instructor for One To Many Requests is the creator
+                          instructorAdded = true;
+                          requestModel.selectedInstructor = BasicUserDetails(
+                            fullname: SevaCore.of(context).loggedInUser.fullname,
+                            email: SevaCore.of(context).loggedInUser.email,
+                            photoURL: SevaCore.of(context).loggedInUser.photoURL,
+                            sevaUserID: SevaCore.of(context).loggedInUser.sevaUserID,
+                          );
+                          AppConfig.helpIconContextMember =
+                              HelpContextMemberType.one_to_many_requests;
+                          setState(() => {});
+                        },
+                      ),
                     ),
                   ),
                   TransactionsMatrixCheck(

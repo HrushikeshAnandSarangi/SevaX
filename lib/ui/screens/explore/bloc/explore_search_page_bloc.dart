@@ -3,6 +3,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/models/category_model.dart';
 import 'package:sevaexchange/models/community_category_model.dart';
+import 'package:sevaexchange/models/explore_distance_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
@@ -31,7 +32,8 @@ class ExploreSearchPageBloc {
   final _debouncer = Debouncer(milliseconds: 800);
 
   //filters
-  final _distance = BehaviorSubject<int>.seeded(0);
+  final _distance = BehaviorSubject<ExploreDistanceModel>.seeded(
+      ExploreDistanceModel(0, DistancType.mi));
   final _requestFilter = BehaviorSubject<RequestFilter>.seeded(RequestFilter());
   final _offerFilter = BehaviorSubject<OfferFilter>.seeded(OfferFilter());
 
@@ -46,7 +48,7 @@ class ExploreSearchPageBloc {
   Stream<List<OfferModel>> get offers => _offers.stream;
   Stream<List<CommunityModel>> get featuredCommunities =>
       _featuredCommunities.stream;
-  Stream<int> get distance => _distance.stream;
+  Stream<ExploreDistanceModel> get distance => _distance.stream;
   Stream<bool> get completedEvents => _completedEvents.stream;
   Stream<String> get selectedCommunityCategoryId =>
       _selectedCommunityCategory.stream;
@@ -59,7 +61,7 @@ class ExploreSearchPageBloc {
       _selectedCommunityCategory.sink.add;
   Function(String) get onRequestCategoryChanged =>
       _selectedRequestCategory.sink.add;
-  Function(int) get distanceChanged => _distance.sink.add;
+  Function(ExploreDistanceModel) get distanceChanged => _distance.sink.add;
   Function(bool) get onCompletedEventChanged => _completedEvents.sink.add;
 
   void onSearchChange(String value) {
@@ -95,7 +97,7 @@ class ExploreSearchPageBloc {
       String searchText = value[0];
       DistanceFilterData distanceFilterData = DistanceFilterData(
         location,
-        value[1],
+        value[1].distance,
       );
 
       if (searchText == null || searchText.isEmpty) {
@@ -127,22 +129,21 @@ class ExploreSearchPageBloc {
           );
         });
 
-
         _completedEvents.listen((value) {
           ElasticSearchApi.getPublicProjects(
-              distanceFilterData: distanceFilterData,
-              sevaUserID: sevaUserID,
-              showCompletedEvent: value
-          ).then((value) {
+                  distanceFilterData: distanceFilterData,
+                  sevaUserID: sevaUserID,
+                  showCompletedEvent: value)
+              .then((value) {
             _events.add(value);
           });
         });
 
         ElasticSearchApi.getPublicProjects(
-          distanceFilterData: distanceFilterData,
-          sevaUserID: sevaUserID,
-          showCompletedEvent: false
-        ).then((value) {
+                distanceFilterData: distanceFilterData,
+                sevaUserID: sevaUserID,
+                showCompletedEvent: false)
+            .then((value) {
           _events.add(value);
         });
 
@@ -202,7 +203,6 @@ class ExploreSearchPageBloc {
             );
           },
         );
-
 
         ElasticSearchApi.searchPublicEvents(
           queryString: searchText,
