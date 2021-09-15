@@ -97,9 +97,7 @@ class ProfileViewerState extends State<ProfileViewer> {
                       isReadOnly: true,
                       onRated: (v) {},
                       starCount: 5,
-                      rating: trustworthinessscore != null
-                          ? trustworthinessscore
-                          : 0,
+                      rating: trustworthinessscore != null ? trustworthinessscore : 0,
                       size: 28.0,
                       filledIconData: Icons.star,
                       halfFilledIconData: Icons.star_half,
@@ -160,8 +158,7 @@ class ProfileViewerState extends State<ProfileViewer> {
         stream: widget.userEmail == null
             ? getUserForIdStream(sevaUserId: widget.userId)
             : getUserForEmailStream(widget.userEmail),
-        builder:
-            (BuildContext firebasecontext, AsyncSnapshot<UserModel> snapshot) {
+        builder: (BuildContext firebasecontext, AsyncSnapshot<UserModel> snapshot) {
           if (snapshot.hasError) return Text('Error: ${snapshot.error}');
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
@@ -209,14 +206,10 @@ class ProfileViewerState extends State<ProfileViewer> {
                             name: user.fullname,
                             email: user.email,
                             isBlocked: isBlocked,
-                            message: widget.userEmail == loggedInEmail ||
-                                    isBlocked
+                            message: widget.userEmail == loggedInEmail || isBlocked
                                 ? null
-                                : () => onMessageClick(
-                                    user, SevaCore.of(context).loggedInUser),
-                            block: widget.userEmail == loggedInEmail
-                                ? null
-                                : onBlockClick,
+                                : () => onMessageClick(user, SevaCore.of(context).loggedInUser),
+                            block: widget.userEmail == loggedInEmail ? null : onBlockClick,
                             report: widget.userEmail == loggedInEmail
                                 ? null
                                 : () => onReportClick(
@@ -225,8 +218,7 @@ class ProfileViewerState extends State<ProfileViewer> {
                                     ),
                             reportStatus: getReportedStatus(
                               timebankId: widget.timebankId,
-                              currentUserId:
-                                  SevaCore.of(context).loggedInUser.sevaUserID,
+                              currentUserId: SevaCore.of(context).loggedInUser.sevaUserID,
                               profileUserId: user.sevaUserID,
                             ),
                           ),
@@ -239,8 +231,7 @@ class ProfileViewerState extends State<ProfileViewer> {
                         vertical: 20,
                       ),
                       child: UserProfileDetails(
-                        title:
-                            S.of(context).about + ' ${snapshot.data.fullname}',
+                        title: S.of(context).about + ' ${snapshot.data.fullname}',
                         details: snapshot.data.bio ?? '',
                       ),
                     ),
@@ -249,10 +240,8 @@ class ProfileViewerState extends State<ProfileViewer> {
                       interests: snapshot.data.interests,
                     ),
                     Padding(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                        child: TRscore(
-                            user.trustworthinessscore, user.reliabilityscore)),
+                        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                        child: TRscore(user.trustworthinessscore, user.reliabilityscore)),
                     // '$' donated and 'Items' donated
                     // SizedBox(
                     //   height: 20,
@@ -277,18 +266,15 @@ class ProfileViewerState extends State<ProfileViewer> {
                     //         isTimeBank: false,
                     //         onTap: () {})),
                     Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 25, vertical: 0),
+                      padding: EdgeInsets.symmetric(horizontal: 25, vertical: 0),
                       child: StreamBuilder<List<RequestModel>>(
                         stream: FirestoreManager.getCompletedRequestStream(
-                            userEmail: widget.userEmail,
-                            userId: user.sevaUserID),
+                            userEmail: widget.userEmail, userId: user.sevaUserID),
                         builder: (context, snapshot) {
                           if (snapshot.hasError) {
                             return Text(snapshot.error.toString());
                           }
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
                             return LoadingIndicator();
                           }
 
@@ -368,8 +354,7 @@ class ProfileViewerState extends State<ProfileViewer> {
                           children: <TextSpan>[
                             TextSpan(
                               text: S.of(context).availablity + '\n',
-                              style:
-                                  TextStyle(fontSize: 18, color: Colors.black),
+                              style: TextStyle(fontSize: 18, color: Colors.black),
                             ),
                             // TextSpan(text: '', style: TextStyle(height: 10)),
                             TextSpan(
@@ -460,8 +445,7 @@ class ProfileViewerState extends State<ProfileViewer> {
     });
   }
 
-  void onReportClick(
-      {UserModel reportedUserModel, UserModel reporterUserModel}) {
+  void onReportClick({UserModel reportedUserModel, UserModel reporterUserModel}) {
     Navigator.of(context)
         .push(
       ReportMemberPage.route(
@@ -479,34 +463,27 @@ class ProfileViewerState extends State<ProfileViewer> {
   void blockMember(ACTION action) {
     switch (action) {
       case ACTION.BLOCK:
-        CollectionRef.users
-            .doc(SevaCore.of(context).loggedInUser.email)
-            .update({
+        CollectionRef.users.doc(SevaCore.of(context).loggedInUser.email).update({
           'blockedMembers': FieldValue.arrayUnion([user.sevaUserID])
         });
         CollectionRef.users.doc(user.email).update({
-          'blockedBy': FieldValue.arrayUnion(
-              [SevaCore.of(context).loggedInUser.sevaUserID])
+          'blockedBy': FieldValue.arrayUnion([SevaCore.of(context).loggedInUser.sevaUserID])
         });
         setState(() {
           isBlocked = !isBlocked;
           var updateUser = SevaCore.of(context).loggedInUser;
           var blockedMembers = List<String>.from(updateUser.blockedMembers);
           blockedMembers.add(user.sevaUserID);
-          SevaCore.of(context).loggedInUser =
-              updateUser.setBlockedMembers(blockedMembers);
+          SevaCore.of(context).loggedInUser = updateUser.setBlockedMembers(blockedMembers);
         });
         break;
 
       case ACTION.UNBLOCK:
-        CollectionRef.users
-            .doc(SevaCore.of(context).loggedInUser.email)
-            .update({
+        CollectionRef.users.doc(SevaCore.of(context).loggedInUser.email).update({
           'blockedMembers': FieldValue.arrayRemove([user.sevaUserID])
         });
         CollectionRef.users.doc(user.email).update({
-          'blockedBy': FieldValue.arrayRemove(
-              [SevaCore.of(context).loggedInUser.sevaUserID])
+          'blockedBy': FieldValue.arrayRemove([SevaCore.of(context).loggedInUser.sevaUserID])
         });
 
         setState(() {
@@ -514,8 +491,7 @@ class ProfileViewerState extends State<ProfileViewer> {
           var updateUser = SevaCore.of(context).loggedInUser;
           var blockedMembers = List<String>.from(updateUser.blockedMembers);
           blockedMembers.remove(user.sevaUserID);
-          SevaCore.of(context).loggedInUser =
-              updateUser.setBlockedMembers(blockedMembers);
+          SevaCore.of(context).loggedInUser = updateUser.setBlockedMembers(blockedMembers);
         });
         break;
     }
@@ -534,10 +510,8 @@ class ProfileViewerState extends State<ProfileViewer> {
             children: <Widget>[
               Text(
                 isBlocked
-                    ? '${user.fullname.split(' ')[0]} ' +
-                        S.of(context).would_be_unblocked
-                    : "${user.fullname.split(' ')[0]} " +
-                        S.of(context).chat_block_warning,
+                    ? '${user.fullname.split(' ')[0]} ' + S.of(context).would_be_unblocked
+                    : "${user.fullname.split(' ')[0]} " + S.of(context).chat_block_warning,
               ),
               SizedBox(
                 height: 15,
@@ -568,9 +542,7 @@ class ProfileViewerState extends State<ProfileViewer> {
                     child: Text(
                       S.of(context).cancel,
                       style: TextStyle(
-                          fontSize: dialogButtonSize,
-                          fontFamily: 'Europa',
-                          color: Colors.red),
+                          fontSize: dialogButtonSize, fontFamily: 'Europa', color: Colors.red),
                     ),
                     onPressed: () {
                       Navigator.of(context).pop("CANCEL");
@@ -587,11 +559,12 @@ class ProfileViewerState extends State<ProfileViewer> {
 
   double getTotalWorkedHours(List<RequestModel> requestList) {
     double toltalHoursWorked = 0;
+    TransactionModel transmodel;
     requestList.forEach((requestModel) {
-      TransactionModel transmodel =
-          requestModel.transactions.firstWhere((transaction) {
+      if(requestModel.transactions.isNotEmpty)
+      transmodel = requestModel.transactions.firstWhere((transaction) {
         return transaction.to == user.sevaUserID;
-      });
+      }, orElse: null);
       if (transmodel != null && transmodel.credits != null) {
         toltalHoursWorked = toltalHoursWorked + transmodel.credits;
       }
@@ -706,8 +679,7 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
 
   @override
   void initState() {
-    viewFullDetails =
-        widget.details != null ? widget.details.length <= maxLength : false;
+    viewFullDetails = widget.details != null ? widget.details.length <= maxLength : false;
     // if (widget.details.length <= maxLength) viewFullDetails = true;
     super.initState();
   }
@@ -737,9 +709,7 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
             children: <TextSpan>[
               TextSpan(
                 // text: widget.details,
-                text: viewFullDetails
-                    ? widget.details
-                    : widget.details.substring(0, maxLength),
+                text: viewFullDetails ? widget.details : widget.details.substring(0, maxLength),
                 style: TextStyle(color: Colors.grey, fontSize: 16),
               ),
               // TextSpan(text: ' ...'),
@@ -789,9 +759,7 @@ class ProfileHeader extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         StreamBuilder<QuerySnapshot>(
-          stream: CollectionRef.reviews
-              .where("reviewed", isEqualTo: email)
-              .snapshots(),
+          stream: CollectionRef.reviews.where("reviewed", isEqualTo: email).snapshots(),
           builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
             double r = 0;
             if (snapshot.data != null) {
@@ -868,8 +836,7 @@ class ProfileHeader extends StatelessWidget {
                   Icons.block,
                 ),
                 onPressed: block,
-                tooltip:
-                    isBlocked ? S.of(context).unblock : S.of(context).block,
+                tooltip: isBlocked ? S.of(context).unblock : S.of(context).block,
                 color: isBlocked ? Colors.red : Theme.of(context).accentColor,
               ),
               FutureBuilder<bool>(
@@ -880,9 +847,7 @@ class ProfileHeader extends StatelessWidget {
                       icon: Icon(Icons.flag),
                       onPressed: !(snapshot.data ?? true) ? report : null,
                       tooltip: S.of(context).report_members,
-                      color: !(snapshot.data ?? true)
-                          ? Theme.of(context).accentColor
-                          : Colors.grey,
+                      color: !(snapshot.data ?? true) ? Theme.of(context).accentColor : Colors.grey,
                     );
                   }),
             ],
@@ -911,8 +876,7 @@ class CompletedList extends StatelessWidget {
       return Padding(
         padding: const EdgeInsets.only(bottom: 8.0),
         child: Center(
-          child: Text(
-              userModel.fullname + ' ' + S.of(context).not_completed_any_tasks,
+          child: Text(userModel.fullname + ' ' + S.of(context).not_completed_any_tasks,
               textAlign: TextAlign.center),
         ),
       );
@@ -931,12 +895,10 @@ class CompletedList extends StatelessWidget {
               child: ListTile(
                 title: Text(model.title),
                 leading: CircleAvatar(
-                  backgroundImage:
-                      NetworkImage(userModel.photoURL ?? defaultUserImageURL),
+                  backgroundImage: NetworkImage(userModel.photoURL ?? defaultUserImageURL),
                 ),
                 trailing: () {
-                  TransactionModel transmodel =
-                      model.transactions.firstWhere((transaction) {
+                  TransactionModel transmodel = model.transactions.firstWhere((transaction) {
                     return transaction.to == userModel.sevaUserID;
                   });
                   return Column(
@@ -995,8 +957,7 @@ class SkillAndInterestBuilder extends StatelessWidget {
   final List skills;
   final List interests;
 
-  const SkillAndInterestBuilder({Key key, this.skills, this.interests})
-      : super(key: key);
+  const SkillAndInterestBuilder({Key key, this.skills, this.interests}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -1022,9 +983,7 @@ class SkillAndInterestBuilder extends StatelessWidget {
               ),
               Container(
                 height: 40,
-                child: snapshot.data != null &&
-                        this.skills != null &&
-                        this.skills.length != 0
+                child: snapshot.data != null && this.skills != null && this.skills.length != 0
                     ? createLabels(snapshot.data['skills'])
                     : Padding(
                         padding: EdgeInsets.all(5.0),
@@ -1045,9 +1004,7 @@ class SkillAndInterestBuilder extends StatelessWidget {
               ),
               Container(
                 height: 40,
-                child: snapshot.data != null &&
-                        this.interests != null &&
-                        this.interests.length != 0
+                child: snapshot.data != null && this.interests != null && this.interests.length != 0
                     ? createLabels(snapshot.data['interests'])
                     : Padding(
                         padding: EdgeInsets.all(5.0),

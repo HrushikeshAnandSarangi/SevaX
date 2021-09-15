@@ -165,6 +165,9 @@ class _BorrowRequestState extends State<BorrowRequest> {
         selectedCategoryModels = value;
         setState(() {});
       });
+    } else {
+      //When creating request and switch is not touched (initialize as place)
+      widget.requestModel.roomOrTool = LendingType.PLACE.readable;
     }
   }
 
