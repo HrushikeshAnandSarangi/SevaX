@@ -2672,13 +2672,16 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   }
 
   Widget get trailingComponent {
-    return Container(
+    if(widget.requestItem.requestType == RequestType.CASH && widget.requestItem.cashModel.amountRaised != 0 ){
+      return Container();
+    }
+    return  Container(
       height: 39,
       width: 90,
       child: widget.requestItem.sevaUserId ==
                   SevaCore.of(context).loggedInUser.sevaUserID &&
               widget.requestItem.accepted == false
-          ? CustomTextButton(
+          ?  CustomTextButton(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
               ),
