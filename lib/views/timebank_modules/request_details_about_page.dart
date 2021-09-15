@@ -3490,7 +3490,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
             ),
           ),
           subtitle: Text(
-              '${widget.requestItem.cashModel.requestCurrencyType} ${widget.requestItem.cashModel.amountRaised}'),
+              '${widget.requestItem.cashModel.requestCurrencyType} ${widget.requestItem.cashModel.amountRaised.toStringAsFixed(2)}'),
           leading: Image.asset(
             widget.requestItem.requestType == RequestType.CASH
                 ? SevaAssetIcon.donateCash

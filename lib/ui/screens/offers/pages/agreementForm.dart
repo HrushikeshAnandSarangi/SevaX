@@ -970,25 +970,26 @@ class _OfferAgreementFormState extends State<AgreementForm> {
 
                       Navigator.of(context).pop();
                       log('NEW TEMPLATE CREATED');
-                    } else {
-                      log('HERE 5');
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext _context) {
-                          return AlertDialog(
-                            content: Text(S.of(context).something_went_wrong),
-                            actions: [
-                              CustomTextButton(
-                                child: Text(S.of(context).close),
-                                onPressed: () {
-                                  Navigator.of(_context).pop();
-                                },
-                              ),
-                            ],
-                          );
-                        },
-                      );
                     }
+                    // } else {
+                    //   log('HERE 5');
+                    //   showDialog(
+                    //     context: context,
+                    //     builder: (BuildContext _context) {
+                    //       return AlertDialog(
+                    //         content: Text(S.of(context).something_went_wrong),
+                    //         actions: [
+                    //           CustomTextButton(
+                    //             child: Text(S.of(context).close),
+                    //             onPressed: () {
+                    //               Navigator.of(_context).pop();
+                    //             },
+                    //           ),
+                    //         ],
+                    //       );
+                    //     },
+                    //   );
+                    // }
                   }
                 }
               }),
