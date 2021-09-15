@@ -48,6 +48,7 @@ class LendingParticipantCard extends StatelessWidget {
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 CircleAvatar(
                   radius: 25,
@@ -81,34 +82,35 @@ class LendingParticipantCard extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 4),
-                    Text(
-                      acceptTime != null
-                          ? DateFormat(
-                                  'MMMM dd, yyyy @ h:mm a',
-                                  Locale(AppConfig.prefs
-                                          .getString('language_code'))
-                                      .toLanguageTag())
-                              .format(
-                              getDateTimeAccToUserTimezone(
-                                dateTime: DateTime.fromMillisecondsSinceEpoch(
-                                    acceptTime),
-                                timezoneAbb:
-                                    SevaCore.of(context).loggedInUser.timezone,
-                              ),
-                            )
-                          : S.of(context).error_loading_data,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: Colors.grey[400],
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
+                    Container(
+                      width: 100,
+                      child: Text(
+                        acceptTime != null
+                            ? DateFormat(
+                                    'MMM dd, yyyy @ h:mm a',
+                                    Locale(AppConfig.prefs.getString('language_code'))
+                                        .toLanguageTag())
+                                .format(
+                                getDateTimeAccToUserTimezone(
+                                  dateTime: DateTime.fromMillisecondsSinceEpoch(acceptTime),
+                                  timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
+                                ),
+                              )
+                            : S.of(context).error_loading_data,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        softWrap: true,
+                        style: TextStyle(
+                          color: Colors.grey[400],
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ],
                 ),
                 Spacer(),
-                SizedBox(width: 8),
+                // SizedBox(width: 8),
                 buttonsContainer
               ],
             ),
