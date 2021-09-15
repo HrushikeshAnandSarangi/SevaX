@@ -46,7 +46,7 @@ import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/widgets/project_selection.dart';
 import 'package:sevaexchange/views/exchange/widgets/request_enums.dart';
-import 'package:sevaexchange/views/exchange/edit_request/edit_request.dart';
+import 'package:sevaexchange/views/exchange/edit_request/edit_request_old_code.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
 import 'package:sevaexchange/views/requests/onetomany_request_instructor_card.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
