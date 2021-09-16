@@ -291,7 +291,6 @@ class _RequestDonationDisputePageState extends State<RequestDonationDisputePage>
     }
   }
 
-  var n = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -309,8 +308,6 @@ class _RequestDonationDisputePageState extends State<RequestDonationDisputePage>
           ? widget.model.receiverDetails.name
           : widget.model.donorDetails.name;
     }
-    n++;
-    logger.e(" ######### ${widget.model.donationStatus.toString()} $n");
     return Scaffold(
       key: _key,
       appBar: AppBar(
