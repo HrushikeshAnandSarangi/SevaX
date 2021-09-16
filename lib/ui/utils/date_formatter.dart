@@ -31,3 +31,17 @@ String formatChatDate(int timestamp, String timezone, String locale) {
     ),
   );
 }
+
+String getTimeZoneFormattedString(
+  int timeInMilliseconds,
+  String timezoneAbb,
+) {
+  DateFormat dateFormat =
+      DateFormat('d MMM hh:mm a ', Locale(getLangTag()).toLanguageTag() ?? 'en');
+  DateTime datetime = DateTime.fromMillisecondsSinceEpoch(timeInMilliseconds);
+  DateTime localtime = getDateTimeAccToUserTimezone(dateTime: datetime, timezoneAbb: timezoneAbb);
+  String from = dateFormat.format(
+    localtime,
+  );
+  return from;
+}

@@ -208,8 +208,7 @@ class RequestModel extends DataModel {
   GoodsDonationDetails goodsDonationDetails = new GoodsDonationDetails();
   String communityId;
   BasicUserDetails selectedInstructor = new BasicUserDetails();
-  SelectedSpeakerTimeDetails selectedSpeakerTimeDetails =
-      new SelectedSpeakerTimeDetails();
+  SelectedSpeakerTimeDetails selectedSpeakerTimeDetails = new SelectedSpeakerTimeDetails();
   Map<String, dynamic> skills;
   bool liveMode = true;
 
@@ -304,8 +303,7 @@ class RequestModel extends DataModel {
       this.donationInstructionLink = '';
     }
     if (map.containsKey('recommendedMemberIdsForRequest')) {
-      List<String> recommendedMembeIds =
-          List.castFrom(map['recommendedMemberIdsForRequest']);
+      List<String> recommendedMembeIds = List.castFrom(map['recommendedMemberIdsForRequest']);
       this.recommendedMemberIdsForRequest = recommendedMembeIds;
     } else {
       this.recommendedMemberIdsForRequest = [];
@@ -318,8 +316,7 @@ class RequestModel extends DataModel {
     }
 
     if (map.containsKey('allowedCalenderUsers')) {
-      List<String> allowedCalenderUsers =
-          List.castFrom(map['allowedCalenderUsers']);
+      List<String> allowedCalenderUsers = List.castFrom(map['allowedCalenderUsers']);
       this.allowedCalenderUsers = allowedCalenderUsers;
     } else {
       this.allowedCalenderUsers = [];
@@ -516,13 +513,11 @@ class RequestModel extends DataModel {
     }
 
     if (map.containsKey('goodsDonationDetails')) {
-      this.goodsDonationDetails =
-          GoodsDonationDetails.fromMap(map['goodsDonationDetails']);
+      this.goodsDonationDetails = GoodsDonationDetails.fromMap(map['goodsDonationDetails']);
     }
 
     if (map.containsKey('selectedInstructor')) {
-      this.selectedInstructor =
-          BasicUserDetails.fromMap(map['selectedInstructor']);
+      this.selectedInstructor = BasicUserDetails.fromMap(map['selectedInstructor']);
     } else {
       this.selectedInstructor = new BasicUserDetails();
     }
@@ -542,12 +537,10 @@ class RequestModel extends DataModel {
       this.communityName = map['communityName'];
     }
     if (map.containsKey('speakerInviteNotificationDocRef')) {
-      this.speakerInviteNotificationDocRef =
-          map['speakerInviteNotificationDocRef'];
+      this.speakerInviteNotificationDocRef = map['speakerInviteNotificationDocRef'];
     }
     if (map.containsKey('oneToManyRequestAttenders')) {
-      List<String> oneToManyRequestAttenders =
-          List.castFrom(map['oneToManyRequestAttenders']);
+      List<String> oneToManyRequestAttenders = List.castFrom(map['oneToManyRequestAttenders']);
       this.oneToManyRequestAttenders = oneToManyRequestAttenders;
     } else {
       this.oneToManyRequestAttenders = [];
@@ -609,15 +602,13 @@ class RequestModel extends DataModel {
       this.donationInstructionLink = map["donationInstructionLink"];
     }
     if (map.containsKey('allowedCalenderUsers')) {
-      List<String> allowedCalenderUsers =
-          List.castFrom(map['allowedCalenderUsers']);
+      List<String> allowedCalenderUsers = List.castFrom(map['allowedCalenderUsers']);
       this.allowedCalenderUsers = allowedCalenderUsers;
     } else {
       this.allowedCalenderUsers = [];
     }
     if (map.containsKey('recommendedMemberIdsForRequest')) {
-      List<String> recommendedMembeIds =
-          List.castFrom(map['recommendedMemberIdsForRequest']);
+      List<String> recommendedMembeIds = List.castFrom(map['recommendedMemberIdsForRequest']);
       this.recommendedMemberIdsForRequest = recommendedMembeIds;
     } else {
       this.recommendedMemberIdsForRequest = [];
@@ -789,8 +780,7 @@ class RequestModel extends DataModel {
     }
 
     if (map.containsKey('selectedInstructor')) {
-      this.selectedInstructor =
-          BasicUserDetails.fromMap(map['selectedInstructor']);
+      this.selectedInstructor = BasicUserDetails.fromMap(map['selectedInstructor']);
     } else {
       this.selectedInstructor = new BasicUserDetails();
     }
@@ -888,8 +878,7 @@ class RequestModel extends DataModel {
       this.imageUrls = [];
     }
     if (map.containsKey('oneToManyRequestAttenders')) {
-      List<String> oneToManyRequestAttenders =
-          List.castFrom(map['oneToManyRequestAttenders']);
+      List<String> oneToManyRequestAttenders = List.castFrom(map['oneToManyRequestAttenders']);
       this.oneToManyRequestAttenders = oneToManyRequestAttenders;
     } else {
       this.oneToManyRequestAttenders = [];
@@ -898,8 +887,7 @@ class RequestModel extends DataModel {
       this.communityName = map['communityName'];
     }
     if (map.containsKey('speakerInviteNotificationDocRef')) {
-      this.speakerInviteNotificationDocRef =
-          map['speakerInviteNotificationDocRef'];
+      this.speakerInviteNotificationDocRef = map['speakerInviteNotificationDocRef'];
     }
     if (map.containsKey('borrowModel')) {
       this.borrowModel = BorrowModel.fromMap(map['borrowModel']);
@@ -983,8 +971,7 @@ class RequestModel extends DataModel {
       object['communityName'] = this.communityName;
     }
     if (this.speakerInviteNotificationDocRef != null) {
-      object['speakerInviteNotificationDocRef'] =
-          this.speakerInviteNotificationDocRef;
+      object['speakerInviteNotificationDocRef'] = this.speakerInviteNotificationDocRef;
     }
     if (this.softDelete != null) {
       object['softDelete'] = this.softDelete;
@@ -1020,8 +1007,7 @@ class RequestModel extends DataModel {
     }
 
     if (this.recommendedMemberIdsForRequest != null) {
-      object['recommendedMemberIdsForRequest'] =
-          this.recommendedMemberIdsForRequest;
+      object['recommendedMemberIdsForRequest'] = this.recommendedMemberIdsForRequest;
     }
     if (allowedCalenderUsers != null) {
       object['allowedCalenderUsers'] = allowedCalenderUsers;
@@ -1096,8 +1082,7 @@ class RequestModel extends DataModel {
       object['numberOfApprovals'] = this.numberOfApprovals;
     }
     if (this.location != null) {
-      object['location'] =
-          this.location.data; //Map<String, dynamic>.from(this.location.data());
+      object['location'] = this.location?.data; //Map<String, dynamic>.from(this.location.data());
     }
     if (this.id != null) {
       object['id'] = this.id;
@@ -1112,8 +1097,7 @@ class RequestModel extends DataModel {
       object['selectedInstructor'] = this.selectedInstructor.toMap();
     }
     if (this.selectedSpeakerTimeDetails != null) {
-      object['selectedSpeakerTimeDetails'] =
-          this.selectedSpeakerTimeDetails.toMap();
+      object['selectedSpeakerTimeDetails'] = this.selectedSpeakerTimeDetails.toMap();
     }
     if (this.occurenceCount != null) {
       object['occurenceCount'] = this.occurenceCount;
@@ -1161,8 +1145,7 @@ class RequestModel extends DataModel {
     }
 
     if (this.participantDetails != null) {
-      object['participantDetails'] =
-          Map<dynamic, dynamic>.from(this.participantDetails);
+      object['participantDetails'] = Map<dynamic, dynamic>.from(this.participantDetails);
     }
     if (this.isFromOfferRequest != null) {
       object['isFromOfferRequest'] = this.isFromOfferRequest;
@@ -1247,8 +1230,7 @@ class GoodsDonationDetails {
     }
 
     if (map.containsKey("requiredGoods")) {
-      this.requiredGoods =
-          Map<String, String>.from(map["requiredGoods"] ?? {}) ?? {};
+      this.requiredGoods = Map<String, String>.from(map["requiredGoods"] ?? {}) ?? {};
     }
   }
   Map<String, dynamic> toMap() => {
@@ -1278,8 +1260,7 @@ class BorrowModel {
 
   BorrowModel.fromMap(Map<dynamic, dynamic> map) {
     if (map.containsKey("requiredItems")) {
-      this.requiredItems =
-          Map<String, String>.from(map["requiredItems"] ?? {}) ?? {};
+      this.requiredItems = Map<String, String>.from(map["requiredItems"] ?? {}) ?? {};
     }
     if (map.containsKey('itemsCollected')) {
       this.itemsCollected = map['itemsCollected'];

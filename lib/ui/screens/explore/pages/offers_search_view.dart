@@ -14,7 +14,7 @@ import 'package:sevaexchange/ui/utils/tag_builder.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
-
+import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import '../../../../l10n/l10n.dart';
 
 class OffersSearchView extends StatelessWidget {
@@ -43,7 +43,7 @@ class OffersSearchView extends StatelessWidget {
               itemCount: snapshot.data.length,
               itemBuilder: (context, index) {
                 var offer = snapshot.data[index];
-                var date = DateTime.fromMillisecondsSinceEpoch(offer.timestamp);
+                // var date = DateTime.fromMillisecondsSinceEpoch(offer.timestamp);
                 return ExploreEventCard(
                   onTap: () {
                     if (isUserSignedIn) {
@@ -69,8 +69,8 @@ class OffersSearchView extends StatelessWidget {
                   description: getOfferDescription(offerDataModel: offer),
                   location: offer.selectedAdrress,
                   communityName: offer.communityName ?? '',
-                  date: DateFormat('d MMMM, y').format(date),
-                  time: DateFormat.jm().format(date),
+                  date: DateFormat('d MMMM, y').format(context.getDateTime(offer.timestamp)),
+                  time: DateFormat.jm().format(context.getDateTime(offer.timestamp)),
                   tagsToShow: TagBuilder(
                     isPublic: offer.public,
                     isVirtual: offer.virtual,
