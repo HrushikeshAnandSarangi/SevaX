@@ -232,10 +232,19 @@ class _TransactionDetailsViewState extends State<TransactionDetailsView> {
                                     ),
                                     SizedBox(width: 12),
                                     Expanded(
+                                      flex: 2,
                                       child: Text(
-                                          snapshot.data[index].credits
-                                              .toString(),
-                                          style: tableCellStyle),
+                                        "${snapshot.data[index].to == widget.userId ? "+" : "-"}${snapshot.data[index].credits}",
+                                        textAlign: TextAlign.right,
+                                        style: TextStyle(
+                                          color: snapshot.data[index].to ==
+                                                  widget.userId
+                                              ? Colors.green
+                                              : Colors.black,
+                                          fontSize: 16,
+                                          // fontFamily: 'Europa',
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -246,6 +255,9 @@ class _TransactionDetailsViewState extends State<TransactionDetailsView> {
                         separatorBuilder: (context, index) {
                           return Divider();
                         },
+                      ),
+                      SizedBox(
+                        height: 20,
                       ),
                     ],
                   ),
