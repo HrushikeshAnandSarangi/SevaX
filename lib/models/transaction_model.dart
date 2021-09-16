@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 
 import 'models.dart';
@@ -34,6 +35,10 @@ class TransactionModel extends DataModel {
     @required this.communityId,
   });
 
+  //local variables
+  String get createdDate =>
+      DateFormat('MMMM dd').format(DateTime.fromMillisecondsSinceEpoch(timestamp));
+
   TransactionModel.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('from')) {
       this.from = map['from'];
@@ -66,8 +71,7 @@ class TransactionModel extends DataModel {
       this.timebankid = map['timebankid'];
     }
     if (map.containsKey('transactionbetween')) {
-      List<String> transactionbetween =
-          List.castFrom(map['transactionbetween']);
+      List<String> transactionbetween = List.castFrom(map['transactionbetween']);
       this.transactionbetween = transactionbetween;
     }
     if (map.containsKey('communityId')) {

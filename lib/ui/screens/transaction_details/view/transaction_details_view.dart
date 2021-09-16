@@ -4,20 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
-import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/transaction_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/transaction_details/bloc/transaction_details_bloc.dart';
 import 'package:sevaexchange/ui/screens/transaction_details/dialog/transaction_details_dialog.dart';
-import 'package:sevaexchange/utils/bloc_provider.dart';
+import 'package:sevaexchange/ui/screens/transaction_details/manager/transactions_details_handler.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
-
-import '../../../../labels.dart';
 
 //  timebankModel = Provider.of<HomePageBaseBloc>(context, listen: false)
 //         .getTimebankModelFromCurrentCommunity(widget.timebankId);
@@ -70,17 +67,14 @@ class _TransactionDetailsViewState extends State<TransactionDetailsView> {
     if (transaction.typeid != null) {
       logger.e('TypeID CHECK 1: ' + transaction.typeid.toString());
       try {
-        requestModel = await FirestoreManager.getRequestFutureById(
-            requestId: transaction.typeid);
+        requestModel = await FirestoreManager.getRequestFutureById(requestId: transaction.typeid);
       } catch (e) {
         log('error fetching request model: ' + e.toString());
       }
       try {
-        timebankModel = await FirestoreManager.getTimeBankForId(
-            timebankId: transaction.timebankid);
-        communityModel =
-            await FirestoreManager.getCommunityDetailsByCommunityId(
-                communityId: transaction.communityId);
+        timebankModel = await FirestoreManager.getTimeBankForId(timebankId: transaction.timebankid);
+        communityModel = await FirestoreManager.getCommunityDetailsByCommunityId(
+            communityId: transaction.communityId);
       } catch (e) {
         log('error fetching timebank and/or community model: ' + e.toString());
       }
@@ -118,6 +112,10 @@ class _TransactionDetailsViewState extends State<TransactionDetailsView> {
     super.initState();
   }
 
+  final border = OutlineInputBorder(
+    borderRadius: BorderRadius.circular(16),
+  );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -129,10 +127,9 @@ class _TransactionDetailsViewState extends State<TransactionDetailsView> {
         elevation: 0.0,
       ),
       body: StreamBuilder<List<TransactionModel>>(
-          stream: _bloc.transactionDetailsStream,
+          stream: _bloc.data(context),
           builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting ||
-                snapshot.data == null) {
+            if (snapshot.connectionState == ConnectionState.waiting || snapshot.data == null) {
               return LoadingIndicator();
             }
 
@@ -154,8 +151,7 @@ class _TransactionDetailsViewState extends State<TransactionDetailsView> {
                       children: [
                         Text(
                           'Transactions',
-                          style: TextStyle(
-                              fontSize: 24, fontWeight: FontWeight.bold),
+                          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                         ),
                         SizedBox(height: 7),
                         RichText(
@@ -179,6 +175,28 @@ class _TransactionDetailsViewState extends State<TransactionDetailsView> {
                             ],
                           ),
                         ),
+                        const SizedBox(height: 8),
+                        StreamBuilder<String>(
+                          builder: (context, snapshot) {
+                            return SizedBox(
+                              height: 40,
+                              child: TextField(
+                                onChanged: _bloc.onSearchQueryChanged,
+                                decoration: InputDecoration(
+                                  prefixIcon: Icon(
+                                    Icons.search,
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                  contentPadding: const EdgeInsets.only(bottom: 8),
+                                  border: border,
+                                  enabledBorder: border,
+                                  disabledBorder: border,
+                                  focusedBorder: border,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
                         SizedBox(width: 8),
                       ],
                     ),
@@ -193,37 +211,33 @@ class _TransactionDetailsViewState extends State<TransactionDetailsView> {
                         shrinkWrap: true,
                         itemCount: snapshot.data.length,
                         physics: NeverScrollableScrollPhysics(),
-                        itemBuilder: (BuildContext context, int index) =>
-                            InkWell(
+                        itemBuilder: (BuildContext context, int index) => InkWell(
                           onTap: () => onRowTap(snapshot.data[index]),
                           child: Column(
                             children: [
                               Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 12.0, right: 12.0),
+                                padding: const EdgeInsets.only(left: 12.0, right: 12.0),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     CircleAvatar(
                                       backgroundImage: NetworkImage(
-                                        SevaCore.of(context)
-                                                .loggedInUser
-                                                .photoURL ??
+                                        SevaCore.of(context).loggedInUser.photoURL ??
                                             defaultUserImageURL,
                                         //need to add condition if from or to
                                       ),
                                     ),
                                     SizedBox(width: 8),
-                                    Text(
-                                        SevaCore.of(context)
-                                            .loggedInUser
-                                            .fullname,
+                                    Text(SevaCore.of(context).loggedInUser.fullname,
                                         style: tableCellStyle),
                                     SizedBox(width: 15),
                                     Expanded(
                                       flex: 3,
-                                      child: Text(snapshot.data[index].type,
-                                          style: tableCellStyle),
+                                      child: Text(
+                                        getTransactionTypeLabel(snapshot.data[index].type, context)
+                                            .toString(),
+                                        style: tableCellStyle,
+                                      ),
                                     ),
                                     SizedBox(width: 12),
                                     Expanded(
@@ -242,8 +256,7 @@ class _TransactionDetailsViewState extends State<TransactionDetailsView> {
                                         "${snapshot.data[index].to == widget.userId ? "+" : "-"}${snapshot.data[index].credits}",
                                         textAlign: TextAlign.right,
                                         style: TextStyle(
-                                          color: snapshot.data[index].to ==
-                                                  widget.userId
+                                          color: snapshot.data[index].to == widget.userId
                                               ? Colors.green
                                               : Colors.black,
                                           fontSize: 16,
@@ -306,8 +319,7 @@ class _TransactionDetailsViewState extends State<TransactionDetailsView> {
   }
 
   Widget getText(String title) {
-    final TextStyle style =
-        TextStyle(color: Colors.black, fontSize: 16, fontFamily: 'Europa');
+    final TextStyle style = TextStyle(color: Colors.black, fontSize: 16, fontFamily: 'Europa');
     return Text(
       title,
       style: style,
