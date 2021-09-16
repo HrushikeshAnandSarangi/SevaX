@@ -449,7 +449,6 @@ class ElasticSearchApi {
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
       OfferModel model = OfferModel.fromMap(sourceMap);
-      logger.i(">>>>>>>>>>>> OFFER TYPE : " + model.type.toString());
       if (distanceFilterData?.isInRadius(model.location) ?? true) {
         if (AppConfig.isTestCommunity != null && AppConfig.isTestCommunity) {
           if (!model.liveMode) models.add(model);
@@ -671,7 +670,6 @@ class ElasticSearchApi {
 
   static Future<List<ProjectModel>> getPublicProjects(
       {DistanceFilterData distanceFilterData, String sevaUserID, bool showCompletedEvent}) async {
-    logger.e('USER ID CHECK 6');
     String endPoint = '//elasticsearch/sevaxprojects/_doc/_search?size=1000';
     dynamic body = json.encode({
       "sort": {
@@ -706,8 +704,6 @@ class ElasticSearchApi {
       bool compareDates = false;
       if (distanceFilterData?.isInRadius(model.location) ?? true) {
         DateTime endDate = DateTime.fromMillisecondsSinceEpoch(model.endTime);
-
-        logger.e('USER ID CHECK 2:  ' + sevaUserID);
 
         //explore events listing page
         if (showCompletedEvent) {

@@ -25,6 +25,7 @@ import 'package:sevaexchange/views/timebank_modules/request_details_about_page.d
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_back.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
+import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 
 import '../../../../l10n/l10n.dart';
 
@@ -109,8 +110,8 @@ class _RequestsByCategoryViewState extends State<RequestsByCategoryView> {
                     itemCount: snapshot.data.length,
                     itemBuilder: (context, index) {
                       var request = snapshot.data[index];
-                      var date = DateTime.fromMillisecondsSinceEpoch(
-                          request.requestStart);
+                      // var date = DateTime.fromMillisecondsSinceEpoch(
+                      //     request.requestStart);
                       return widget.isUserSignedIn
                           ? FutureBuilder<TimebankModel>(
                               future: getTimeBankForId(
@@ -174,8 +175,8 @@ class _RequestsByCategoryViewState extends State<RequestsByCategoryView> {
                                   description: request.description,
                                   location: request.address,
                                   communityName: request.fullName ?? '',
-                                  date: DateFormat('d MMMM, y').format(date),
-                                  time: DateFormat.jm().format(date),
+                                  date: DateFormat('d MMMM, y').format(context.getDateTime(request.requestStart)),
+                                  time: DateFormat.jm().format(context.getDateTime(request.requestStart)),
                                   memberList: MemberAvatarListWithCount(
                                     userIds: request.approvedUsers,
                                   ),
@@ -193,8 +194,8 @@ class _RequestsByCategoryViewState extends State<RequestsByCategoryView> {
                               description: request.description,
                               location: request.address,
                               communityName: request.fullName ?? '',
-                              date: DateFormat('d MMMM, y').format(date),
-                              time: DateFormat.jm().format(date),
+                              date: DateFormat('d MMMM, y').format(context.getDateTime(request.requestStart)),
+                              time: DateFormat.jm().format(context.getDateTime(request.requestStart)),
                               memberList: MemberAvatarListWithCount(
                                 userIds: request.approvedUsers,
                               ),

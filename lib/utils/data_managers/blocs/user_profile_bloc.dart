@@ -21,7 +21,7 @@ class UserProfileBloc {
 
   void getAllCommunities(context, UserModel userModel) async {
     FirestoreManager.getUserForIdStream(
-      sevaUserId: userModel.sevaUserID,
+      sevaUserId: userModel?.sevaUserID,
     ).listen((userModel) {
       CollectionRef.communities
           .where("members", arrayContains: userModel.sevaUserID)

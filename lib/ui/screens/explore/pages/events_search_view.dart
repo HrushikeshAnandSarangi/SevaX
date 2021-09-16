@@ -12,6 +12,7 @@ import 'package:sevaexchange/ui/screens/explore/widgets/explore_search_cards.dar
 import 'package:sevaexchange/ui/screens/explore/widgets/members_avatar_list_with_count.dart';
 import 'package:sevaexchange/ui/utils/tag_builder.dart';
 import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
+import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/views/requests/project_request.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
@@ -22,6 +23,7 @@ class EventsSearchView extends StatelessWidget {
   final bool isUserSignedIn;
 
   const EventsSearchView({Key key, this.isUserSignedIn}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     var _bloc = Provider.of<ExploreSearchPageBloc>(context);
@@ -45,13 +47,12 @@ class EventsSearchView extends StatelessWidget {
               itemCount: snapshot.data.length,
               itemBuilder: (context, index) {
                 var event = snapshot.data[index];
-                var date = DateTime.fromMillisecondsSinceEpoch(event.startTime);
+                // var date = DateTime.fromMillisecondsSinceEpoch(event.startTime);
                 return isUserSignedIn
                     ? FutureBuilder<TimebankModel>(
                         future: getTimeBankForId(timebankId: event.timebankId),
                         builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
                             return LoadingIndicator();
                           }
                           if (snapshot.hasError) {
@@ -83,14 +84,13 @@ class EventsSearchView extends StatelessWidget {
                                   );
                                 }
                               },
-                              photoUrl:
-                                  event.photoUrl ?? defaultProjectImageURL,
+                              photoUrl: event.photoUrl ?? defaultProjectImageURL,
                               title: event.name,
                               description: event.description,
                               location: event.address,
                               communityName: event.communityName ?? '',
-                              date: DateFormat('d MMMM, y').format(date),
-                              time: DateFormat.jm().format(date),
+                              date: DateFormat('d MMMM, y').format(context.getDateTime(event.startTime)),
+                              time: DateFormat.jm().format(context.getDateTime(event.startTime)),
                               memberList: MemberAvatarListWithCount(
                                 userIds: event.associatedmembers.keys.toList(),
                               ),
@@ -102,16 +102,15 @@ class EventsSearchView extends StatelessWidget {
                     : ExploreEventCard(
                         onTap: () {
                           showSignInAlertMessage(
-                              context: context,
-                              message: S.of(context).sign_in_alert);
+                              context: context, message: S.of(context).sign_in_alert);
                         },
                         photoUrl: event.photoUrl ?? defaultProjectImageURL,
                         title: event.name,
                         description: event.description,
                         location: event.address,
                         communityName: event.communityName ?? '',
-                        date: DateFormat('d MMMM, y').format(date),
-                        time: DateFormat.jm().format(date),
+                        date: DateFormat('d MMMM, y').format(context.getDateTime(event.startTime)),
+                        time: DateFormat.jm().format(context.getDateTime(event.startTime)),
                         memberList: MemberAvatarListWithCount(
                           userIds: event.associatedmembers.keys.toList(),
                         ),

@@ -12,6 +12,7 @@ import 'package:sevaexchange/ui/screens/explore/widgets/members_avatar_list_with
 import 'package:sevaexchange/ui/screens/request/widgets/request_categories.dart';
 import 'package:sevaexchange/ui/utils/tag_builder.dart';
 import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
+import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
@@ -44,8 +45,8 @@ class RequestsSearchView extends StatelessWidget {
               itemCount: snapshot.data.length,
               itemBuilder: (context, index) {
                 var request = snapshot.data[index];
-                var date =
-                    DateTime.fromMillisecondsSinceEpoch(request.requestStart);
+                // var date =
+                //     DateTime.fromMillisecondsSinceEpoch(request.requestStart);
 
                 return isUserSignedIn
                     ? FutureBuilder<TimebankModel>(
@@ -86,8 +87,8 @@ class RequestsSearchView extends StatelessWidget {
                             description: request.description,
                             location: request.address,
                             communityName: request.communityName ?? ' ',
-                            date: DateFormat('d MMMM, y').format(date),
-                            time: DateFormat.jm().format(date),
+                            date: DateFormat('d MMMM, y').format(context.getDateTime(request.requestStart)),
+                            time: DateFormat.jm().format(context.getDateTime(request.requestStart)),
                             memberList: MemberAvatarListWithCount(
                               userIds: request.approvedUsers,
                             ),
@@ -118,8 +119,8 @@ class RequestsSearchView extends StatelessWidget {
                         description: request.description,
                         location: request.address,
                         communityName: request.communityName ?? ' ',
-                        date: DateFormat('d MMMM, y').format(date),
-                        time: DateFormat.jm().format(date),
+                        date: DateFormat('d MMMM, y').format(context.getDateTime(request.requestStart)),
+                        time: DateFormat.jm().format(context.getDateTime(request.requestStart)),
                         memberList: MemberAvatarListWithCount(
                           userIds: request.approvedUsers,
                         ),
