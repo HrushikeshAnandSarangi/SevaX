@@ -568,7 +568,6 @@ Future<ProfanityImageModel> checkProfanityForImage(
 //    return null;
   } on Exception catch (exception) {
     //other exception
-    logger.e("$imageUrl>>>>>>>>>>>>>>>>>>>>>${exception.toString()}");
     return null;
   }
 
