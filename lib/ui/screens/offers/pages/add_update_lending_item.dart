@@ -23,7 +23,8 @@ class AddUpdateLendingItem extends StatefulWidget {
   final String enteredTitle;
   final Function(LendingModel lendingModel) onItemCreateUpdate;
 
-  AddUpdateLendingItem({this.lendingModel, this.onItemCreateUpdate, this.enteredTitle});
+  AddUpdateLendingItem(
+      {this.lendingModel, this.onItemCreateUpdate, this.enteredTitle});
 
   @override
   _AddUpdateLendingItemState createState() => _AddUpdateLendingItemState();
@@ -49,7 +50,8 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
 
       _estimatedValueController.text =
           widget.lendingModel.lendingItemModel.estimatedValue.toString();
-      _bloc.onEstimatedValueChanged(widget.lendingModel.lendingItemModel.estimatedValue.toString());
+      _bloc.onEstimatedValueChanged(
+          widget.lendingModel.lendingItemModel.estimatedValue.toString());
     } else {
       if (widget.enteredTitle != null) {
         _itemNameController.text = widget.enteredTitle;
@@ -61,11 +63,11 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
       if (event.isNotEmpty && event != null) {
         //hideProgress();
         if (event == 'amenities') {
-          showScaffold(L.of(context).validation_error_amenities);
+          showScaffold(S.of(context).validation_error_amenities);
         } else if (event == 'create') {
-          showScaffold(L.of(context).creating_item);
+          showScaffold(S.of(context).creating_item);
         } else if (event == 'update') {
-          showScaffold(L.of(context).updating_item);
+          showScaffold(S.of(context).updating_item);
         }
       }
     });
@@ -80,7 +82,7 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
-          L.of(context).add_new_item,
+          S.of(context).add_new_item,
           style: TextStyle(fontSize: 18, fontFamily: 'Europa'),
         ),
         centerTitle: true,
@@ -102,8 +104,8 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                     SnackBar(
                       content: Text(
                         widget.lendingModel == null
-                            ? L.of(context).creating_item
-                            : L.of(context).updating_item,
+                            ? S.of(context).creating_item
+                            : S.of(context).updating_item,
                       ),
                     ),
                   );
@@ -118,8 +120,8 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                     SnackBar(
                       content: Text(
                         widget.lendingModel == null
-                            ? L.of(context).creating_item_error
-                            : L.of(context).updating_item_error,
+                            ? S.of(context).creating_item_error
+                            : S.of(context).updating_item_error,
                       ),
                     ),
                   );
@@ -142,14 +144,15 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                             currentNode: _itemName,
                             nextNode: null,
                             value: snapshot.data,
-                            heading: "${L.of(context).name_of_item}",
+                            heading: "${S.of(context).name_of_item}",
                             onChanged: (String value) {
                               _bloc.onPlaceNameChanged(value);
                               // title = value;
                             },
-                            hint: L.of(context).name_of_item_hint,
+                            hint: S.of(context).name_of_item_hint,
                             maxLength: null,
-                            error: getAddItemValidationError(context, snapshot.error),
+                            error: getAddItemValidationError(
+                                context, snapshot.error),
                           );
                         },
                       ),
@@ -161,18 +164,24 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                           return CustomTextField(
                             decoration: InputDecoration(
                                 prefixIcon: Icon(Icons.attach_money),
-                                errorText: getAddItemValidationError(context, snapshot.error),
-                                hintText: S.of(context).request_min_donation_hint),
+                                errorText: getAddItemValidationError(
+                                    context, snapshot.error),
+                                hintText:
+                                    S.of(context).request_min_donation_hint),
                             controller: _estimatedValueController,
                             currentNode: _estimatedValue,
                             value: snapshot.data.toString(),
-                            heading: "${L.of(context).estimated_value}",
+                            heading: "${S.of(context).estimated_value}",
                             onChanged: (String value) {
                               _bloc.onEstimatedValueChanged(value);
                               // title = value;
                             },
-                            formatters: [FilteringTextInputFormatter.allow(Regex.numericRegex)],
-                            error: getAddItemValidationError(context, snapshot.error),
+                            formatters: [
+                              FilteringTextInputFormatter.allow(
+                                  Regex.numericRegex)
+                            ],
+                            error: getAddItemValidationError(
+                                context, snapshot.error),
                           );
                         },
                       ),
@@ -184,7 +193,8 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                                 context: context,
                                 builder: (BuildContext dialogContext) {
                                   return ImagePickerDialogMobile(
-                                    imagePickerType: ImagePickerType.LENDING_OFFER,
+                                    imagePickerType:
+                                        ImagePickerType.LENDING_OFFER,
                                     onLinkCreated: (link) {
                                       imagesList.add(link);
                                       _bloc.onItemImageAdded(imagesList);
@@ -202,8 +212,12 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                                         defaultCameraImageURL,
                                       ),
                                       fit: BoxFit.cover),
-                                  borderRadius: BorderRadius.all(Radius.circular(75.0)),
-                                  boxShadow: [BoxShadow(blurRadius: 7.0, color: Colors.black12)]),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(75.0)),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        blurRadius: 7.0, color: Colors.black12)
+                                  ]),
                             ),
                           ),
                         ),
@@ -215,7 +229,9 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                           // if (snapshot.connectionState == ConnectionState.waiting) {
                           //   return LoadingIndicator();
                           // }
-                          if (snapshot.hasError || snapshot.data == null || !snapshot.hasData) {
+                          if (snapshot.hasError ||
+                              snapshot.data == null ||
+                              !snapshot.hasData) {
                             return Container();
                           }
                           imagesList = snapshot.data;
@@ -236,7 +252,8 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                                         onTap: () {
                                           showDialog(
                                               context: context,
-                                              builder: (BuildContext dialogContext) {
+                                              builder:
+                                                  (BuildContext dialogContext) {
                                                 return FullScreenImage(
                                                   imageUrl: imagesList[index],
                                                 );
@@ -244,8 +261,10 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                                         },
                                         child: Container(
                                           child: ClipRRect(
-                                              borderRadius: BorderRadius.circular(10),
-                                              child: Image.network(imagesList[index])),
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              child: Image.network(
+                                                  imagesList[index])),
                                         ),
                                       ),
                                       Align(
@@ -283,7 +302,8 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                           width: 200,
                           child: CustomElevatedButton(
                             onPressed: () async {
-                              var connResult = await Connectivity().checkConnectivity();
+                              var connResult =
+                                  await Connectivity().checkConnectivity();
                               if (connResult == ConnectivityResult.none) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
@@ -291,29 +311,35 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                                     action: SnackBarAction(
                                       label: S.of(context).dismiss,
                                       onPressed: () =>
-                                          ScaffoldMessenger.of(context).hideCurrentSnackBar(),
+                                          ScaffoldMessenger.of(context)
+                                              .hideCurrentSnackBar(),
                                     ),
                                   ),
                                 );
                                 return;
                               }
 
-                              if (imagesList == null || imagesList.length == 0) {
-                                showAlertMessage(context: context, message: 'Add images to item');
+                              if (imagesList == null ||
+                                  imagesList.length == 0) {
+                                showAlertMessage(
+                                    context: context,
+                                    message: 'Add images to item');
                               } else {
                                 if (widget.lendingModel == null) {
                                   _bloc.createLendingOfferPlace(
-                                      creator: SevaCore.of(context).loggedInUser);
+                                      creator:
+                                          SevaCore.of(context).loggedInUser);
                                 } else {
-                                  _bloc.updateLendingOfferPlace(model: widget.lendingModel);
+                                  _bloc.updateLendingOfferPlace(
+                                      model: widget.lendingModel);
                                 }
                               }
                             },
                             shape: StadiumBorder(),
                             child: Text(
                                 widget.lendingModel == null
-                                    ? L.of(context).add_item
-                                    : L.of(context).update_item,
+                                    ? S.of(context).add_item_text
+                                    : S.of(context).update_item,
                                 style: TextStyle(fontSize: 20)),
                           ),
                         ),

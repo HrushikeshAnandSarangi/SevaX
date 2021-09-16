@@ -57,7 +57,7 @@ class TabarView extends StatelessWidget {
                     Tab(
                       child: Text(
                         requestItem.requestType == RequestType.BORROW
-                            ? L.of(context).responses
+                            ? S.of(context).responses_text
                             : S.of(context).participants,
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),

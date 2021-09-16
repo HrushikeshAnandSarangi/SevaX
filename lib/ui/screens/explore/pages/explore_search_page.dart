@@ -556,7 +556,7 @@ class ExploreSearchTabBar extends StatelessWidget {
                                           )
                                         : SizedBox(),
                                     Text(
-                                      L.of(context).completed_events,
+                                      S.of(context).completed_events,
                                       style: TextStyle(
                                           color: eventFilter.data
                                               ? Colors.white

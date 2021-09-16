@@ -106,7 +106,7 @@ class OfferFilters extends StatelessWidget {
             ),
             CustomChipExploreFilter(
               isHidden: hideFilters[6],
-              label: L.of(context).lending_offer.sentenceCase(),
+              label: S.of(context).lending_offer.sentenceCase(),
               isSelected: filter.lendingOffer,
               onTap: () {
                 onTap(

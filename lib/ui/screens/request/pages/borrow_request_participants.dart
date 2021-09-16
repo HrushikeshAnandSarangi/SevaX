@@ -77,7 +77,7 @@ class BorrowRequestParticipants extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.only(left: 10),
                   child: Text(
-                    L.of(context).lenders,
+                    S.of(context).lenders_text,
                     style: TextStyle(color: Colors.grey, fontSize: 22),
                   ),
                 ),
@@ -207,8 +207,8 @@ class BorrowRequestParticipants extends StatelessWidget {
                                                                         fromNotification:
                                                                             false,
                                                                         borrowAcceptorModel:
-                                                                            borrowAcceptorModel[index]
-                                                                                ,
+                                                                            borrowAcceptorModel[
+                                                                                index],
                                                                         requestModel:
                                                                             requestModel);
                                                                     logger.e(
@@ -386,8 +386,8 @@ class BorrowRequestParticipants extends StatelessWidget {
                                                                         fromNotification:
                                                                             false,
                                                                         borrowAcceptorModel:
-                                                                            borrowAcceptorModel[index]
-                                                                                ,
+                                                                            borrowAcceptorModel[
+                                                                                index],
                                                                         requestModel:
                                                                             requestModel);
                                                                     logger.e(
@@ -542,7 +542,7 @@ Future<dynamic> alreadyAcceptedLenderDialog(BuildContext context) {
                   ],
                 ),
                 SizedBox(height: 25),
-                Text(L.of(context).already_accepted_lender),
+                Text(S.of(context).already_accepted_lender),
               ],
             ),
           ),

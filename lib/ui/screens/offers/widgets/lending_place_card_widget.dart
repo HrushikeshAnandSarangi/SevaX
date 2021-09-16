@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/new_baseline/models/lending_place_model.dart';
 import 'package:sevaexchange/utils/utils.dart';
@@ -72,11 +73,11 @@ class LendingPlaceCardWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               title('${lendingPlaceModel.noOfGuests}'
-                  ' ${L.of(context).guests} '),
+                  ' ${S.of(context).guests_text} '),
               title('${lendingPlaceModel.noOfRooms}'
-                  ' ${L.of(context).bed_rooms} .'),
+                  ' ${S.of(context).bed_rooms} .'),
               title('${lendingPlaceModel.noOfBathRooms}'
-                  ' ${L.of(context).bath_rooms} '),
+                  ' ${S.of(context).bath_rooms_text} '),
             ],
           )
         ],

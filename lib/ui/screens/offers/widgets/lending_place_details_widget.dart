@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/new_baseline/models/lending_model.dart';
 import 'package:sevaexchange/ui/utils/icons.dart';
 import 'package:sevaexchange/utils/utils.dart';
@@ -77,7 +78,7 @@ class _AmenitiesAndHouseRulesState extends State<AmenitiesAndHouseRules> {
           height: 10,
         ),
         Text(
-          L.of(context).house_rules,
+          S.of(context).house_rules,
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
         Text(

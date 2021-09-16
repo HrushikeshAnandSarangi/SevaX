@@ -85,7 +85,9 @@ class BorrowRequestParticipantsCard extends StatelessWidget {
                     SizedBox(height: 4),
                     Text(
                       requestModel.roomOrTool == LendingType.PLACE.readable
-                          ? lendingPlaceModel.lendingPlaceModel.contactInformation ?? ''
+                          ? lendingPlaceModel
+                                  .lendingPlaceModel.contactInformation ??
+                              ''
                           : borrowAcceptorModel.acceptorEmail ??
                               '', //add date on which potential borrower requested
                       maxLines: 1,
@@ -118,7 +120,8 @@ class BorrowRequestParticipantsCard extends StatelessWidget {
                               return Column(
                                 children: [
                                   LendingItemCardWidget(
-                                    lendingItemModel: lendingModelList[index].lendingItemModel,
+                                    lendingItemModel: lendingModelList[index]
+                                        .lendingItemModel,
                                     hidden: true,
                                   ),
                                   SizedBox(height: 10),
@@ -147,12 +150,13 @@ class BorrowRequestParticipantsCard extends StatelessWidget {
               children: [
                 Chip(
                   label: Text(
-                    requestModel.approvedUsers.contains(borrowAcceptorModel.acceptorEmail)
+                    requestModel.approvedUsers
+                            .contains(borrowAcceptorModel.acceptorEmail)
                         ? (borrowAcceptorModel.borrowAgreementLink == '' ||
                                 borrowAcceptorModel.borrowAgreementLink == null)
-                            ? L.of(context).agreement_accepted
-                            : L.of(context).agreement_signed
-                        : L.of(context).agreement_to_be_signed,
+                            ? S.of(context).agreement_accepted
+                            : S.of(context).agreement_signed
+                        : S.of(context).agreement_to_be_signed,
                     style: TextStyle(color: Colors.black),
                   ),
                   backgroundColor: Colors.grey[200],

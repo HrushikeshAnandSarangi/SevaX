@@ -229,7 +229,7 @@ class PendingTasks {
           onTap: null,
           title: element.individualOfferDataModel.title,
           subTitle: element.individualOfferDataModel.description,
-          tag: L.of(context).lending_offer,
+          tag: S.of(context).lending_offer,
           timeInMilliseconds: element.lendingOfferDetailsModel.startDate,
         ),
       ));

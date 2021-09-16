@@ -143,14 +143,16 @@ class _TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                                                               .to ==
                                                           widget.loggedInUserId
                                                       ? S.of(context).received
-                                                      : L.of(context).sent)
+                                                      : S.of(context).sent_text)
                                                   : (widget
                                                               .donationModel
                                                               .receiverDetails
                                                               .email ==
                                                           widget.loggedInEmail
                                                       ? S.of(context).received
-                                                      : L.of(context).sent),
+                                                      : S
+                                                          .of(context)
+                                                          .sent_text),
                                               style: TextStyle(
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.bold,
@@ -195,7 +197,9 @@ class _TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                                                               .length
                                                               .toString() +
                                                           ' ' +
-                                                          L.of(context).item_s
+                                                          S
+                                                              .of(context)
+                                                              .item_s_text
                                                       : '\$' +
                                                           widget
                                                               .donationModel
@@ -317,7 +321,7 @@ class _TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                                             shape: StadiumBorder(),
                                           ),
                                           child:
-                                              Text(L.of(context).download_pdf),
+                                              Text(S.of(context).download_pdf),
                                         ),
                                       ],
                                     ),

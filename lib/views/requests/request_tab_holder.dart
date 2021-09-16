@@ -27,7 +27,7 @@ class RequestTabHolder extends StatelessWidget {
             S.of(context).about,
             S.of(context).search,
             requestModel.requestType == RequestType.BORROW
-                ? L.of(context).responses
+                ? S.of(context).responses_text
                 : S.of(context).accepted
           ];
           return DefaultTabController(

@@ -70,7 +70,7 @@ class _SelectAmenitiesState extends State<SelectAmenities> {
               borderRadius: BorderRadius.circular(8),
             ),
             errorBuilder: (context, err) {
-              return Text(L.of(context).error_was_thrown);
+              return Text(S.of(context).error_was_thrown);
             },
             debounceDuration: Duration(milliseconds: 600),
             hideOnError: true,

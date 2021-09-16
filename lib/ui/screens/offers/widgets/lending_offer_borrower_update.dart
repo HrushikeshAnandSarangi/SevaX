@@ -172,24 +172,24 @@ class _LendingOfferBorrowerUpdateWidgetState
         widget.offerModel.lendingOfferDetailsModel.lendingModel.lendingType ==
             LendingType.PLACE) {
       lendingOfferStatus = LendingOfferStatus.CHECKED_IN;
-      return L.of(context).check_in;
+      return S.of(context).check_in_text;
     } else if (widget.lendingOfferAcceptorModel.status ==
             LendingOfferStatus.APPROVED &&
         widget.offerModel.lendingOfferDetailsModel.lendingModel.lendingType ==
             LendingType.ITEM) {
       lendingOfferStatus = LendingOfferStatus.ITEMS_COLLECTED;
 
-      return L.of(context).collect_items;
+      return S.of(context).collect_items;
     } else if (widget.lendingOfferAcceptorModel.status ==
         LendingOfferStatus.CHECKED_IN) {
       lendingOfferStatus = LendingOfferStatus.CHECKED_OUT;
 
-      return L.of(context).check_out;
+      return S.of(context).check_out_text;
     } else if (widget.lendingOfferAcceptorModel.status ==
         LendingOfferStatus.ITEMS_COLLECTED) {
       lendingOfferStatus = LendingOfferStatus.ITEMS_RETURNED;
 
-      return L.of(context).return_items;
+      return S.of(context).return_items;
     }
   }
 

@@ -76,12 +76,15 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
         ),
         centerTitle: true,
         title: Text(
-          L.of(context).accept_borrow_request,
-          style: TextStyle(fontFamily: "Europa", fontSize: 19, color: Colors.white),
+          S.of(context).accept_borrow_request,
+          style: TextStyle(
+              fontFamily: "Europa", fontSize: 19, color: Colors.white),
         ),
       ),
       body: SingleChildScrollView(
-        child: widget.requestModel.roomOrTool == LendingType.PLACE.readable ? roomForm : itemForm,
+        child: widget.requestModel.roomOrTool == LendingType.PLACE.readable
+            ? roomForm
+            : itemForm,
       ),
     );
   }
@@ -96,12 +99,12 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Text(
-              L.of(context).details_of_the_request,
+              S.of(context).details_of_the_request,
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 5),
             Text(
-              L.of(context).accept_borrow_agreement_place_hint,
+              S.of(context).accept_borrow_agreement_place_hint,
               style: TextStyle(fontSize: 14, color: Colors.grey),
             ),
             SizedBox(height: 10),
@@ -109,7 +112,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  L.of(context).select_a_place_lending,
+                  S.of(context).select_a_place_lending,
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 InkWell(
@@ -133,7 +136,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        L.of(context).add_new,
+                        S.of(context).add_new,
                         style: TextStyle(
                           fontSize: 14,
                           //fontWeight: FontWeight.bold,
@@ -142,7 +145,8 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
                         ),
                       ),
                       SizedBox(width: 3),
-                      Icon(Icons.add_circle_rounded, size: 25, color: Colors.grey[600]),
+                      Icon(Icons.add_circle_rounded,
+                          size: 25, color: Colors.grey[600]),
                     ],
                   ),
                 ),
@@ -158,7 +162,8 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
             ),
             selectedLendingPlaceModel != null
                 ? LendingPlaceCardWidget(
-                    lendingPlaceModel: selectedLendingPlaceModel.lendingPlaceModel,
+                    lendingPlaceModel:
+                        selectedLendingPlaceModel.lendingPlaceModel,
                     onDelete: () {
                       selectedLendingPlaceModel = null;
                       setState(() {});
@@ -202,14 +207,14 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Text(
-              L.of(context).accept_borrow_agreement_item_title,
+              S.of(context).accept_borrow_agreement_item_title,
               style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 10),
             borrowItemsWidget,
             SizedBox(height: 10),
             Text(
-              L.of(context).accept_borrow_agreement_page_hint,
+              S.of(context).accept_borrow_agreement_page_hint,
               style: TextStyle(fontSize: 14, color: Colors.grey),
             ),
             SizedBox(height: 10),
@@ -217,7 +222,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  L.of(context).select_item_for_lending,
+                  S.of(context).select_item_for_lending,
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 InkWell(
@@ -243,7 +248,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        L.of(context).add_new,
+                        S.of(context).add_new,
                         style: TextStyle(
                           fontSize: 14,
                           //fontWeight: FontWeight.bold,
@@ -252,7 +257,8 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
                         ),
                       ),
                       SizedBox(width: 3),
-                      Icon(Icons.add_circle_rounded, size: 25, color: Colors.grey[600]),
+                      Icon(Icons.add_circle_rounded,
+                          size: 25, color: Colors.grey[600]),
                     ],
                   ),
                 ),
@@ -333,12 +339,12 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          L.of(context).address,
+          S.of(context).address_text,
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
         ),
         SizedBox(height: 6),
         Text(
-          L.of(context).address_of_location,
+          S.of(context).address_of_location,
           style: TextStyle(fontSize: 15),
           softWrap: true,
         ),
@@ -405,17 +411,18 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
             padding: EdgeInsets.only(left: 5, right: 5),
             color: Colors.grey[300],
             child: Text(
-              L.of(context).send,
+              S.of(context).send_text,
               style: TextStyle(color: Colors.black, fontFamily: 'Europa'),
             ),
             onPressed: () async {
               //donation approved
               if (_formKey.currentState.validate()) {
                 if (selectedLendingPlaceModel == null &&
-                    widget.requestModel.roomOrTool == LendingType.PLACE.readable) {
+                    widget.requestModel.roomOrTool ==
+                        LendingType.PLACE.readable) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text(L.of(context).place_not_added),
+                      content: Text(S.of(context).place_not_added),
                     ),
                   );
 
@@ -423,10 +430,11 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
                 }
 
                 if (selectedItemModels.length == 0 &&
-                    widget.requestModel.roomOrTool == LendingType.ITEM.readable) {
+                    widget.requestModel.roomOrTool ==
+                        LendingType.ITEM.readable) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text(L.of(context).items_not_added),
+                      content: Text(S.of(context).items_not_added),
                     ),
                   );
 
@@ -447,22 +455,27 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
                   //   );
                   //
                 } else {
-                  if (widget.requestModel.roomOrTool == LendingType.PLACE.readable) {
+                  if (widget.requestModel.roomOrTool ==
+                      LendingType.PLACE.readable) {
                     logger.e('COMES HERE 25');
                     await storeAcceptorDataBorrowRequest(
                       model: widget.requestModel,
                       borrowAcceptorModel: BorrowAcceptorModel(
-                          acceptorEmail: SevaCore.of(context).loggedInUser.email,
+                          acceptorEmail:
+                              SevaCore.of(context).loggedInUser.email,
                           selectedAddress: selectedAddress,
-                          acceptorName: SevaCore.of(context).loggedInUser.fullname,
-                          acceptorId: SevaCore.of(context).loggedInUser.sevaUserID,
+                          acceptorName:
+                              SevaCore.of(context).loggedInUser.fullname,
+                          acceptorId:
+                              SevaCore.of(context).loggedInUser.sevaUserID,
                           timestamp: DateTime.now().millisecondsSinceEpoch,
                           borrowAgreementLink: borrowAgreementLinkFinal,
                           agreementId: agreementIdFinal,
                           // borrowedItemsIds: selectedModelsId.toList(),
                           borrowedPlaceId: selectedLendingPlaceModel.id,
                           isApproved: false,
-                          acceptorphotoURL: SevaCore.of(context).loggedInUser.photoURL),
+                          acceptorphotoURL:
+                              SevaCore.of(context).loggedInUser.photoURL),
                     );
                   } else {
                     logger.e('COMES HERE 26');
@@ -471,16 +484,19 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
                       model: widget.requestModel,
                       borrowAcceptorModel: BorrowAcceptorModel(
                         acceptorEmail: SevaCore.of(context).loggedInUser.email,
-                        acceptorphotoURL: SevaCore.of(context).loggedInUser.photoURL,
+                        acceptorphotoURL:
+                            SevaCore.of(context).loggedInUser.photoURL,
                         selectedAddress: selectedAddress,
-                        acceptorName: SevaCore.of(context).loggedInUser.fullname,
-                        acceptorId: SevaCore.of(context).loggedInUser.sevaUserID,
+                        acceptorName:
+                            SevaCore.of(context).loggedInUser.fullname,
+                        acceptorId:
+                            SevaCore.of(context).loggedInUser.sevaUserID,
                         timestamp: DateTime.now().millisecondsSinceEpoch,
                         borrowAgreementLink: borrowAgreementLinkFinal,
                         agreementId: agreementIdFinal,
                         isApproved: false,
-                        borrowedItemsIds:
-                            List<String>.from(selectedItemModels.map((e) => e.id)).toList(),
+                        borrowedItemsIds: List<String>.from(
+                            selectedItemModels.map((e) => e.id)).toList(),
                       ),
                     );
                   }
@@ -563,7 +579,8 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
             ),
             Image(
               width: 50,
-              image: AssetImage('lib/assets/images/request_offer_agreement_icon.png'),
+              image: AssetImage(
+                  'lib/assets/images/request_offer_agreement_icon.png'),
             ),
           ],
         ),
@@ -584,17 +601,21 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
                       child: Text(
                         documentName != ''
                             ? documentName
-                            : S.of(context).approve_borrow_no_agreement_selected,
+                            : S
+                                .of(context)
+                                .approve_borrow_no_agreement_selected,
                         style: TextStyle(
                             fontWeight: FontWeight.w600,
-                            color:
-                                documentName != '' ? Theme.of(context).primaryColor : Colors.grey),
+                            color: documentName != ''
+                                ? Theme.of(context).primaryColor
+                                : Colors.grey),
                         softWrap: true,
                       ),
                     ),
                     onTap: () async {
                       if (documentName != '') {
-                        await openPdfViewer(borrowAgreementLinkFinal, documentName, context);
+                        await openPdfViewer(
+                            borrowAgreementLinkFinal, documentName, context);
                       } else {
                         return null;
                       }
@@ -630,18 +651,20 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
                 ),
                 onPressed: () {
                   if (selectedLendingPlaceModel == null &&
-                      widget.requestModel.roomOrTool == LendingType.PLACE.readable) {
+                      widget.requestModel.roomOrTool ==
+                          LendingType.PLACE.readable) {
                     errorDialog(
                       context: context,
-                      error: L.of(context).select_a_place_lending,
+                      error: S.of(context).select_a_place_lending,
                     );
                     return;
                   }
                   if (selectedItemModels.isEmpty &&
-                      widget.requestModel.roomOrTool == LendingType.ITEM.readable) {
+                      widget.requestModel.roomOrTool ==
+                          LendingType.ITEM.readable) {
                     errorDialog(
                       context: context,
-                      error: L.of(context).select_item_for_lending,
+                      error: S.of(context).select_item_for_lending,
                     );
                     return;
                   }
@@ -653,7 +676,9 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
                       builder: (context) => AgreementForm(
                         lendingModel: selectedLendingPlaceModel,
                         lendingModelListBorrowRequest:
-                            selectedItemModels.length > 0 ? selectedItemModels : null,
+                            selectedItemModels.length > 0
+                                ? selectedItemModels
+                                : null,
                         requestModel: widget.requestModel,
                         isOffer: false,
                         placeOrItem: widget.requestModel.roomOrTool,
@@ -661,8 +686,10 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
                         timebankId: widget.requestModel.timebankId,
                         startTime: widget.requestModel.requestStart,
                         endTime: widget.requestModel.requestEnd,
-                        onPdfCreated: (pdfLink, documentNameFinal, agreementConfig, agreementId) {
-                          logger.e('COMES BACK FROM ON PDF CREATED:  ' + pdfLink.toString());
+                        onPdfCreated: (pdfLink, documentNameFinal,
+                            agreementConfig, agreementId) {
+                          logger.e('COMES BACK FROM ON PDF CREATED:  ' +
+                              pdfLink.toString());
                           borrowAgreementLinkFinal = pdfLink;
                           documentName = documentNameFinal;
                           agreementIdFinal = agreementId;

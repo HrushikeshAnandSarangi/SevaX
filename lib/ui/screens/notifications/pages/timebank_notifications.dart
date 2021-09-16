@@ -559,7 +559,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   },
                   photoUrl: model.photoUrl,
                   title: '${model.title}',
-                  subTitle: L.of(context).lender_acknowledged_feedback,
+                  subTitle: S.of(context).lender_acknowledged_feedback,
                 );
                 break;
 
@@ -1039,7 +1039,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   onPressed: () {},
                   photoUrl: model.photoUrlImage,
                   title: model.individualOfferDataModel.title +
-                      L.of(context).idle_for_2_weeks,
+                      S.of(context).idle_for_2_weeks,
                   subTitle: L
                       .of(context)
                       .idle_lending_offer_first_warning
@@ -1063,7 +1063,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   onPressed: () {},
                   photoUrl: model.photoUrlImage,
                   title: model.individualOfferDataModel.title +
-                      L.of(context).idle_for_4_weeks,
+                      S.of(context).idle_for_4_weeks,
                   subTitle: L
                       .of(context)
                       .idle_lending_offer_second_warning
@@ -1093,7 +1093,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                           .notifications_was_deleted
                           .replaceAll('!', ''),
                   subTitle:
-                      L.of(context).idle_lending_offer_third_warning_deleted,
+                      S.of(context).idle_lending_offer_third_warning_deleted,
                 );
                 break;
 
@@ -1112,7 +1112,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   },
                   onPressed: () {},
                   photoUrl: model.photoUrl,
-                  title: model.title + L.of(context).idle_for_2_weeks,
+                  title: model.title + S.of(context).idle_for_2_weeks,
                   subTitle: L
                       .of(context)
                       .idle_borrow_request_first_warning
@@ -1135,7 +1135,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   },
                   onPressed: () {},
                   photoUrl: model.photoUrl,
-                  title: model.title + L.of(context).idle_for_4_weeks,
+                  title: model.title + S.of(context).idle_for_4_weeks,
                   subTitle: L
                       .of(context)
                       .idle_borrow_request_second_warning
@@ -1165,7 +1165,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                           .notifications_was_deleted
                           .replaceAll('!', ''),
                   subTitle:
-                      L.of(context).idle_borrow_request_third_warning_deleted,
+                      S.of(context).idle_borrow_request_third_warning_deleted,
                 );
                 break;
 

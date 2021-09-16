@@ -264,7 +264,7 @@ class _OfferListState extends State<OfferList> {
               ),
               SizedBox(width: 10),
               CustomChip(
-                label: L.of(context).lending_offer.sentenceCase(),
+                label: S.of(context).lending_offer.sentenceCase(),
                 isSelected: filter.lendingOffer,
                 onTap: () {
                   bloc.onFilterChange(

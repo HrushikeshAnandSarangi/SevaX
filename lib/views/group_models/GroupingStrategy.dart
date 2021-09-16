@@ -199,7 +199,7 @@ class GroupOfferCommons {
             ? S.of(context).group + ' ' + S.of(context).offers
             : S.of(context).timebank_offers;
       default:
-        return S.of(context).other(3);
+        return S.of(context).other_text;
     }
   }
 }

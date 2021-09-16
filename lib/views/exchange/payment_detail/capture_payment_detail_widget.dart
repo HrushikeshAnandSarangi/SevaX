@@ -158,7 +158,7 @@ class _CapturePaymentDetailWidgetState
                     value: PaymentMode.ZELLEPAY,
                   ),
                   DropdownMenuItem(
-                    child: Text(S.of(context).other(1)),
+                    child: Text(S.of(context).other_text),
                     value: PaymentMode.OTHER,
                   ),
                 ]),

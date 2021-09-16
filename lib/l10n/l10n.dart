@@ -3836,70 +3836,55 @@ class S {
       );
 
   String timebank_project(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Seva Community Project', other: 'Seva Community Projects', args: [
-              count
-            ])}',
-        name: 'timebank_project',
+        '${Intl.plural(count, one: 'Seva Community Project', other: 'Seva Community Projects', args: [count])}',
+        name: 'timebank_project',        
         args: [count],
       );
 
   String personal_project(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Personal Project', other: 'Personal Projects', args: [
-              count
-            ])}',
-        name: 'personal_project',
+        '${Intl.plural(count, one: 'Personal Project', other: 'Personal Projects', args: [count])}',
+        name: 'personal_project',        
         args: [count],
       );
 
   String personal_request(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Personal Request', other: 'Personal Requests', args: [
-              count
-            ])}',
-        name: 'personal_request',
+        '${Intl.plural(count, one: 'Personal Request', other: 'Personal Requests', args: [count])}',
+        name: 'personal_request',        
         args: [count],
       );
 
   String timebank_request(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Seva Community Request', other: 'Seva Community Requests', args: [
-              count
-            ])}',
-        name: 'timebank_request',
+        '${Intl.plural(count, one: 'Seva Community Request', other: 'Seva Community Requests', args: [count])}',
+        name: 'timebank_request',        
         args: [count],
       );
 
   String members_selected(num count) => Intl.message(
-        '${Intl.plural(count, one: 'member selected', other: 'members selected', args: [
-              count
-            ])}',
-        name: 'members_selected',
+        '${Intl.plural(count, one: 'member selected', other: 'members selected', args: [count])}',
+        name: 'members_selected',        
         args: [count],
       );
 
   String volunteers_selected(num count) => Intl.message(
-        '${Intl.plural(count, one: 'volunteer selected', other: 'volunteers selected', args: [
-              count
-            ])}',
-        name: 'volunteers_selected',
+        '${Intl.plural(count, one: 'volunteer selected', other: 'volunteers selected', args: [count])}',
+        name: 'volunteers_selected',        
         args: [count],
       );
 
   String user(num count) => Intl.message(
         '${Intl.plural(count, one: 'user', other: 'users', args: [count])}',
-        name: 'user',
+        name: 'user',        
         args: [count],
       );
 
-  String other(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Other', other: 'Others', args: [count])}',
+  String get other => Intl.message(
+        'Other (Please write in details below.)',
         name: 'other',
-        args: [count],
       );
 
   String subscription(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Subscription', other: 'Subscriptions', args: [
-              count
-            ])}',
-        name: 'subscription',
+        '${Intl.plural(count, one: 'Subscription', other: 'Subscriptions', args: [count])}',
+        name: 'subscription',        
         args: [count],
       );
 
@@ -4035,13 +4020,13 @@ class S {
 
   String day(num count) => Intl.message(
         '${Intl.plural(count, one: 'Day', other: 'Days', args: [count])}',
-        name: 'day',
+        name: 'day',        
         args: [count],
       );
 
   String year(num count) => Intl.message(
         '${Intl.plural(count, one: 'Year', other: 'Years', args: [count])}',
-        name: 'year',
+        name: 'year',        
         args: [count],
       );
 
@@ -4871,7 +4856,7 @@ class S {
       );
 
   String get request_paymenttype_ach => Intl.message(
-        'ACH',
+        'ACH - Bank Account transfers within the US',
         name: 'request_paymenttype_ach',
       );
 
@@ -5206,7 +5191,7 @@ class S {
       );
 
   String get cancel_subscription_success_label => Intl.message(
-        'Your subscription is now cancelled. Until beginning at the conclusion of the current subscription period, your credit card will not be charged and transactions can be made until free limit of the current plan is reached.',
+        'Your subscription is now cancelled. At the conclusion of your current subscription period, your credit card will no longer be charged. You can continue to make transactions until you have reached the limit of your current plan.',
         name: 'cancel_subscription_success_label',
       );
 
@@ -5586,7 +5571,7 @@ class S {
       );
 
   String get timebank_about_title => Intl.message(
-        'Tell Us About your Seva Community',
+        'Tell us about your Seva Community',
         name: 'timebank_about_title',
       );
 
@@ -6286,7 +6271,7 @@ class S {
       );
 
   String get sandbox_community => Intl.message(
-        'Sandbox Community  ',
+        'Sandbox Community',
         name: 'sandbox_community',
       );
 
@@ -6666,7 +6651,7 @@ class S {
       );
 
   String get something_went_wrong => Intl.message(
-        'something went wrong',
+        'Something went wrong',
         name: 'something_went_wrong',
       );
 
@@ -6915,7 +6900,7 @@ class S {
         name: 'camera_not_available',
       );
 
-  String get loading_camera => Intl.message(
+  String get loading_camera  => Intl.message(
         'Loading Camera...',
         name: 'loading_camera ',
       );
@@ -6940,7 +6925,7 @@ class S {
         name: 'update_msg',
       );
 
-  String get member_permission => Intl.message(
+  String get member_permission  => Intl.message(
         'Member Permission',
         name: 'member_permission ',
       );
@@ -7000,7 +6985,7 @@ class S {
         name: 'click_to_view_request_agreement',
       );
 
-  String get enter_prep_time => Intl.message(
+  String get enter_prep_time  => Intl.message(
         'Enter Prep Time',
         name: 'enter_prep_time ',
       );
@@ -7040,7 +7025,7 @@ class S {
         name: 'reliabilitysocre',
       );
 
-  String get cv_not_available => Intl.message(
+  String get cv_not_available  => Intl.message(
         'CV not available',
         name: 'cv_not_available ',
       );
@@ -7575,7 +7560,7 @@ class S {
         name: 'and_complete_task',
       );
 
-  String get remove_from_bookmark => Intl.message(
+  String get remove_from_bookmark  => Intl.message(
         'Remove from bookmarks',
         name: 'remove_from_bookmark ',
       );
@@ -7660,8 +7645,7 @@ class S {
         name: 'back',
       );
 
-  String get by_selecting_this_you_will_be_creating_a_Sandbox_Community =>
-      Intl.message(
+  String get by_selecting_this_you_will_be_creating_a_Sandbox_Community => Intl.message(
         'By selecting this you will be creating a Sandbox Community',
         name: 'by_selecting_this_you_will_be_creating_a_Sandbox_Community',
       );
@@ -8072,7 +8056,7 @@ class S {
       );
 
   String get copy_requests_in_events => Intl.message(
-        'Would you like to copy all requests inside events as well?',
+        'You have requested to make this a recurring event. Would you like to include all the requests within this event over to all the remaining events?',
         name: 'copy_requests_in_events',
       );
 
@@ -8300,34 +8284,1504 @@ class S {
         'This task will be added to your To Do list, after you approve it.',
         name: 'accept_offer_invitation_confirmation_to_do_tasks',
       );
+
+  String get are_you_sure_you_want_to_cancel_the_subscription => Intl.message(
+        'Are you sure you want to cancel the subscription?',
+        name: 'are_you_sure_you_want_to_cancel_the_subscription',
+      );
+
+  String get subscription_reactivated => Intl.message(
+        'Subscription re-activated',
+        name: 'subscription_reactivated',
+      );
+
+  String get your_subscription_has_been_reactivated => Intl.message(
+        'Your subscription has been re-activated.',
+        name: 'your_subscription_has_been_reactivated',
+      );
+
+  String get trial_added => Intl.message(
+        'Your free 7 day trial starts now',
+        name: 'trial_added',
+      );
+
+  String get we_have_added_seven_days_free_trial_to_your_subscription => Intl.message(
+        'Note: If you do nothing after the 7 day free trial, your paid subscription will continue.',
+        name: 'we_have_added_seven_days_free_trial_to_your_subscription',
+      );
+
+  String get we_will_miss_you => Intl.message(
+        'We will miss you!',
+        name: 'we_will_miss_you',
+      );
+
+  String get your_subscription_will_be_cancelled_on_the => Intl.message(
+        'Your subscription will be cancelled on the',
+        name: 'your_subscription_will_be_cancelled_on_the',
+      );
+
+  String get add_in_critical_features => Intl.message(
+        'Add in critical features.',
+        name: 'add_in_critical_features',
+      );
+
+  String get add_a_free_trial => Intl.message(
+        'Add a free trial.',
+        name: 'add_a_free_trial',
+      );
+
+  String get add_in_more_comprehensive_training => Intl.message(
+        'Add in more comprehensive training.',
+        name: 'add_in_more_comprehensive_training',
+      );
+
+  String get not_the_right_product_fit_features_workflow_etc => Intl.message(
+        'Not the right product fit (ie. features, workflow, etc.)',
+        name: 'not_the_right_product_fit_features_workflow_etc',
+      );
+
+  String get technical_issues_such_as_glitches_crashes_or_bugs => Intl.message(
+        'Technical issues such as glitches, crashes, or bugs.',
+        name: 'technical_issues_such_as_glitches_crashes_or_bugs',
+      );
+
+  String get the_price_was_too_expensive => Intl.message(
+        'The price was too expensive.',
+        name: 'the_price_was_too_expensive',
+      );
+
+  String get product_was_too_complex_to_use => Intl.message(
+        'Product was too complex to use.',
+        name: 'product_was_too_complex_to_use',
+      );
+
+  String get not_integrating_with_existing_tools => Intl.message(
+        'Not integrating with existing tools.',
+        name: 'not_integrating_with_existing_tools',
+      );
+
+  String get just_not_the_right_time_to_implement => Intl.message(
+        'Just not the right time to implement.',
+        name: 'just_not_the_right_time_to_implement',
+      );
+
+  String get we_are_sorry_to_see_you_go => Intl.message(
+        'We are sorry to see you go!',
+        name: 'we_are_sorry_to_see_you_go',
+      );
+
+  String get does_your_cancellation_have_anything_to_do_with_the_following_Select_all_that_apply => Intl.message(
+        'Does your cancellation have anything to do with the following? (Select all that apply.)',
+        name: 'does_your_cancellation_have_anything_to_do_with_the_following_Select_all_that_apply',
+      );
+
+  String get the_app_did_not_meet_our_requirements_or_expectations_because => Intl.message(
+        'The app did not meet our requirements or expectations, because:',
+        name: 'the_app_did_not_meet_our_requirements_or_expectations_because',
+      );
+
+  String get please_let_us_know_if_we_can_do_anything_to_change_your_mind_select_all_that_apply => Intl.message(
+        'Please let us know if we can do anything to change your mind? (Select all that apply.)',
+        name: 'please_let_us_know_if_we_can_do_anything_to_change_your_mind_select_all_that_apply',
+      );
+
+  String get would_you_like_a_bit_more_time_to_evaluvate_our_app_for_free_full_seven_day_trial => Intl.message(
+        'Would you like a bit more time to evaluate our app for a free full 7 day trial?',
+        name: 'would_you_like_a_bit_more_time_to_evaluvate_our_app_for_free_full_seven_day_trial',
+      );
+
+  String get explore_full_feature_for_next_seven_days => Intl.message(
+        'Explore full feature for next 7 days',
+        name: 'explore_full_feature_for_next_seven_days',
+      );
+
+  String get yes_please_i_know_this_in_a_one_time_free_trial => Intl.message(
+        'Yes, please. I know this is a one time free trial.',
+        name: 'yes_please_i_know_this_in_a_one_time_free_trial',
+      );
+
+  String get no_thank_you => Intl.message(
+        'No, thank you.',
+        name: 'no_thank_you',
+      );
+
+  String get user_remove_from_timebank_failed => Intl.message(
+        'User cannot be removed from this Seva Community',
+        name: 'user_remove_from_timebank_failed',
+      );
+
+  String get completed_events => Intl.message(
+        'Completed Events',
+        name: 'completed_events',
+      );
+
+  String get goods_text => Intl.message(
+        'Goods',
+        name: 'goods_text',
+      );
+
+  String get request_paymenttype_swift => Intl.message(
+        'Swift - Bank Account transfers between countries',
+        name: 'request_paymenttype_swift',
+      );
+
+  String get approve_lending_offer => Intl.message(
+        'Approve Lending Offer',
+        name: 'approve_lending_offer',
+      );
+
+  String get date_to_borrow_and_return => Intl.message(
+        'Date to borrow and return',
+        name: 'date_to_borrow_and_return',
+      );
+
+  String get date_to_check_in_out => Intl.message(
+        'Date of Arrival and Expected Departure',
+        name: 'date_to_check_in_out',
+      );
+
+  String get addditional_instructions => Intl.message(
+        'Additional Instructions',
+        name: 'addditional_instructions',
+      );
+
+  String get addditional_instructions_error_text => Intl.message(
+        'Please enter additional instructions',
+        name: 'addditional_instructions_error_text',
+      );
+
+  String get additional_instructions_hint_item => Intl.message(
+        'Ex: Lawnmower is available next door',
+        name: 'additional_instructions_hint_item',
+      );
+
+  String get additional_instructions_hint_place => Intl.message(
+        'Ex: Keys are available next door',
+        name: 'additional_instructions_hint_place',
+      );
+
+  String get lending_approve_terms_item => Intl.message(
+        'I acknowledge that you can lend the item(s) on the mentioned dates.',
+        name: 'lending_approve_terms_item',
+      );
+
+  String get lending_approve_terms_place => Intl.message(
+        'I acknowledge that you can lend the place on the mentioned dates.',
+        name: 'lending_approve_terms_place',
+      );
+
+  String get lending_text => Intl.message(
+        'Lending',
+        name: 'lending_text',
+      );
+
+  String get cannot_approve_multiple_borrowers_item => Intl.message(
+        'You cannot approve multiple borrowers at once. Currently the items are with  **name. Once returned you can approve this request.',
+        name: 'cannot_approve_multiple_borrowers_item',
+      );
+
+  String get cannot_approve_multiple_borrowers_place => Intl.message(
+        'You cannot approve multiple borrowers at once. Currently  **name is checked in. Once  **name has checked out you can approve this request.',
+        name: 'cannot_approve_multiple_borrowers_place',
+      );
+
+  String get borrower_responsibilities => Intl.message(
+        'Borrower Responsibilities',
+        name: 'borrower_responsibilities',
+      );
+
+  String get borrower_responsibilities_subtext => Intl.message(
+        'Please check applicable sections to be added in the agreement.',
+        name: 'borrower_responsibilities_subtext',
+      );
+
+  String get liability_damage => Intl.message(
+        'Liability for damage',
+        name: 'liability_damage',
+      );
+
+  String get use_disclaimer => Intl.message(
+        'Use/Disclaimer',
+        name: 'use_disclaimer',
+      );
+
+  String get delivery_return_equipment => Intl.message(
+        'Delivery and Return of Equipment',
+        name: 'delivery_return_equipment',
+      );
+
+  String get maintain_repair => Intl.message(
+        'Maintenance and Repair',
+        name: 'maintain_repair',
+      );
+
+  String get place_agreement_name_hint => Intl.message(
+        'Ex: House for the weekend..',
+        name: 'place_agreement_name_hint',
+      );
+
+  String get add_new_place_text => Intl.message(
+        'Add New Place',
+        name: 'add_new_place_text',
+      );
+
+  String get update_place_text => Intl.message(
+        'Update Place',
+        name: 'update_place_text',
+      );
+
+  String get add_images_to_place => Intl.message(
+        'Add One or more Images of the place',
+        name: 'add_images_to_place',
+      );
+
+  String get name_of_place => Intl.message(
+        'Name of your place',
+        name: 'name_of_place',
+      );
+
+  String get name_place_text => Intl.message(
+        'Name of Place',
+        name: 'name_place_text',
+      );
+
+  String get name_item_text => Intl.message(
+        'Name of Item',
+        name: 'name_item_text',
+      );
+
+  String get name_of_place_hint => Intl.message(
+        'Apartment sunshine 3',
+        name: 'name_of_place_hint',
+      );
+
+  String get amenities_text => Intl.message(
+        'Amenities',
+        name: 'amenities_text',
+      );
+
+  String get amenities_hint => Intl.message(
+        'Please select Amenities guests can utilize',
+        name: 'amenities_hint',
+      );
+
+  String get no_of_guests => Intl.message(
+        'Number of guests',
+        name: 'no_of_guests',
+      );
+
+  String get bed_roooms_text => Intl.message(
+        'Bed Rooms for guests',
+        name: 'bed_roooms_text',
+      );
+
+  String get bath_rooms_text => Intl.message(
+        'Bath Room(s)',
+        name: 'bath_rooms_text',
+      );
+
+  String get common_spaces => Intl.message(
+        'Common Spaces',
+        name: 'common_spaces',
+      );
+
+  String get house_rules => Intl.message(
+        'House Rules',
+        name: 'house_rules',
+      );
+
+  String get estimated_value => Intl.message(
+        'Estimated value*',
+        name: 'estimated_value',
+      );
+
+  String get estimated_value_items => Intl.message(
+        'Estimated value of Item(s)',
+        name: 'estimated_value_items',
+      );
+
+  String get contact_information => Intl.message(
+        'Contact Information',
+        name: 'contact_information',
+      );
+
+  String get add_place_text => Intl.message(
+        'Add Place',
+        name: 'add_place_text',
+      );
+
+  String get lending_offer => Intl.message(
+        'Lending Offer',
+        name: 'lending_offer',
+      );
+
+  String get lending_offer_title_hint => Intl.message(
+        'Ex:Lawnmower',
+        name: 'lending_offer_title_hint',
+      );
+
+  String get lending_offer_desc_hint => Intl.message(
+        'Describe your lending',
+        name: 'lending_offer_desc_hint',
+      );
+
+  String get validation_error_place_name => Intl.message(
+        'Please enter name of your place',
+        name: 'validation_error_place_name',
+      );
+
+  String get validation_error_no_of_guests => Intl.message(
+        'Please enter no of guests can stay',
+        name: 'validation_error_no_of_guests',
+      );
+
+  String get validation_error_no_of_rooms => Intl.message(
+        'Please enter no of rooms available',
+        name: 'validation_error_no_of_rooms',
+      );
+
+  String get validation_error_no_estimated_value_room => Intl.message(
+        'Please enter an estimated value for the place',
+        name: 'validation_error_no_estimated_value_room',
+      );
+
+  String get validation_error_no_estimated_value_item => Intl.message(
+        'Please enter an estimated value for the item',
+        name: 'validation_error_no_estimated_value_item',
+      );
+
+  String get validation_error_no_of_bathrooms => Intl.message(
+        'Please enter no of bath rooms available',
+        name: 'validation_error_no_of_bathrooms',
+      );
+
+  String get validation_error_common_spaces => Intl.message(
+        'Please specify common spaces',
+        name: 'validation_error_common_spaces',
+      );
+
+  String get validation_error_house_rules => Intl.message(
+        'Please specify house rules',
+        name: 'validation_error_house_rules',
+      );
+
+  String get validation_error_amenities => Intl.message(
+        'Please select amenities',
+        name: 'validation_error_amenities',
+      );
+
+  String get validation_error_house_images => Intl.message(
+        'Please add place images',
+        name: 'validation_error_house_images',
+      );
+
+  String get common_spaces_hint => Intl.message(
+        'Ex: Sofa bed 1, Couch 1, Floor Mattress 1',
+        name: 'common_spaces_hint',
+      );
+
+  String get house_rules_hint => Intl.message(
+        'Ex: Smoking allowed',
+        name: 'house_rules_hint',
+      );
+
+  String get place_text => Intl.message(
+        'Place',
+        name: 'place_text',
+      );
+
+  String get items_text => Intl.message(
+        'Item(s)',
+        name: 'items_text',
+      );
+
+  String get updating_place => Intl.message(
+        'Updating place',
+        name: 'updating_place',
+      );
+
+  String get creating_place => Intl.message(
+        'Creating Place',
+        name: 'creating_place',
+      );
+
+  String get bed_rooms => Intl.message(
+        'Bedroom(s)',
+        name: 'bed_rooms',
+      );
+
+  String get guests_text => Intl.message(
+        'Guest(s)',
+        name: 'guests_text',
+      );
+
+  String get creating_place_error => Intl.message(
+        'There was error creating your place, Please try again.',
+        name: 'creating_place_error',
+      );
+
+  String get updating_place_error => Intl.message(
+        'There was error updating your place, Please try again.',
+        name: 'updating_place_error',
+      );
+
+  String get borrow_request_title => Intl.message(
+        'Borrow Request',
+        name: 'borrow_request_title',
+      );
+
+  String get your_location => Intl.message(
+        'Your location',
+        name: 'your_location',
+      );
+
+  String get your_location_subtext => Intl.message(
+        'location will help members to connect easily.',
+        name: 'your_location_subtext',
+      );
+
+  String get refund_deposit => Intl.message(
+        'Refundable Deposit Needed?',
+        name: 'refund_deposit',
+      );
+
+  String get maintain_clean => Intl.message(
+        'Maintenance and Cleanliness',
+        name: 'maintain_clean',
+      );
+
+  String get provide_address => Intl.message(
+        'Please provide particular area or zipcode',
+        name: 'provide_address',
+      );
+
+  String get borrow_request_lender => Intl.message(
+        'Borrow Request Lender',
+        name: 'borrow_request_lender',
+      );
+
+  String get borrow_request_lender_pending_return_check => Intl.message(
+        'Borrow Request Lender - Return Acknowledgment Pending (tap to complete request)',
+        name: 'borrow_request_lender_pending_return_check',
+      );
+
+  String get borrow_request_creator_awaiting_confirmation => Intl.message(
+        'Borrow Request - Awaiting Lender Confirmation',
+        name: 'borrow_request_creator_awaiting_confirmation',
+      );
+
+  String get details_of_the_request => Intl.message(
+        'Details of the Request',
+        name: 'details_of_the_request',
+      );
+
+  String get details_of_the_request_subtext_item => Intl.message(
+        'Please provide details of the item(s), agreement and location',
+        name: 'details_of_the_request_subtext_item',
+      );
+
+  String get details_of_the_request_subtext_place => Intl.message(
+        'Please provide details of the place, agreement and location',
+        name: 'details_of_the_request_subtext_place',
+      );
+
+  String get accept_borrow_request => Intl.message(
+        'Accept Borrower Request',
+        name: 'accept_borrow_request',
+      );
+
+  String get address_text => Intl.message(
+        'Address',
+        name: 'address_text',
+      );
+
+  String get address_of_location => Intl.message(
+        'Address of location',
+        name: 'address_of_location',
+      );
+
+  String get send_text => Intl.message(
+        'Send',
+        name: 'send_text',
+      );
+
+  String get select_a_item_lending => Intl.message(
+        'Select from the list of items to borrow*',
+        name: 'select_a_item_lending',
+      );
+
+  String get select_item_for_lending => Intl.message(
+        'Select item for lending*',
+        name: 'select_item_for_lending',
+      );
+
+  String get items_validation => Intl.message(
+        'You have not selected any Items. Please select one or more before creating the request to borrow.',
+        name: 'items_validation',
+      );
+
+  String get accept_borrow_agreement_page_hint => Intl.message(
+        'To help the borrower. Please provide information about the item available; the lending agreement and the location of property.',
+        name: 'accept_borrow_agreement_page_hint',
+      );
+
+  String get accept_borrow_agreement_place_hint => Intl.message(
+        'Please provide details of your place, agreement and location.',
+        name: 'accept_borrow_agreement_place_hint',
+      );
+
+  String get accept_borrow_agreement_item_title => Intl.message(
+        'You are about to give Items to the borrower',
+        name: 'accept_borrow_agreement_item_title',
+      );
+
+  String get select_a_place_lending => Intl.message(
+        'Select a place for lending*',
+        name: 'select_a_place_lending',
+      );
+
+  String get add_new_item => Intl.message(
+        'Add New Item',
+        name: 'add_new_item',
+      );
+
+  String get update_item => Intl.message(
+        'Update Item',
+        name: 'update_item',
+      );
+
+  String get name_of_item => Intl.message(
+        'Name of your item',
+        name: 'name_of_item',
+      );
+
+  String get name_of_item_hint => Intl.message(
+        'Ex: Lawn Mover',
+        name: 'name_of_item_hint',
+      );
+
+  String get add_item_text => Intl.message(
+        'Add Item',
+        name: 'add_item_text',
+      );
+
+  String get validation_error_item_name => Intl.message(
+        'Please enter name of your item',
+        name: 'validation_error_item_name',
+      );
+
+  String get updating_item => Intl.message(
+        'Updating item',
+        name: 'updating_item',
+      );
+
+  String get creating_item => Intl.message(
+        'Creating item',
+        name: 'creating_item',
+      );
+
+  String get creating_item_error => Intl.message(
+        'There was error creating your item, Please try again.',
+        name: 'creating_item_error',
+      );
+
+  String get updating_item_error => Intl.message(
+        'There was error updating your item, Please try again.',
+        name: 'updating_item_error',
+      );
+
+  String get agree_to_signature_legal_text => Intl.message(
+        'By accepting the conditions on this page, your electronic signature is assumed and you are responsible for all terms included within.',
+        name: 'agree_to_signature_legal_text',
+      );
+
+  String get agreement_to_be_signed => Intl.message(
+        'Agreement to be signed',
+        name: 'agreement_to_be_signed',
+      );
+
+  String get agreement_signed => Intl.message(
+        'You have signed the agreement',
+        name: 'agreement_signed',
+      );
+
+  String get responses_text => Intl.message(
+        'Responses',
+        name: 'responses_text',
+      );
+
+  String get you_have_received_responses => Intl.message(
+        'You have received ** response***.',
+        name: 'you_have_received_responses',
+      );
+
+  String get lenders_text => Intl.message(
+        'Lenders',
+        name: 'lenders_text',
+      );
+
+  String get already_accepted_lender => Intl.message(
+        'You have already accepted a lender for this request.',
+        name: 'already_accepted_lender',
+      );
+
+  String get borrow_request_agreement => Intl.message(
+        'Borrow Request Agreement',
+        name: 'borrow_request_agreement',
+      );
+
+  String get lending_offer_agreement => Intl.message(
+        'Lending Offer Agreement',
+        name: 'lending_offer_agreement',
+      );
+
+  String get lease_duration => Intl.message(
+        'Lease Duration: ',
+        name: 'lease_duration',
+      );
+
+  String get agreement_id => Intl.message(
+        'Agreement ID: ',
+        name: 'agreement_id',
+      );
+
+  String get agreement_details => Intl.message(
+        'Agreement Details: ',
+        name: 'agreement_details',
+      );
+
+  String get lenders_specific_conditions => Intl.message(
+        'Lender\'s Specific Conditions: ',
+        name: 'lenders_specific_conditions',
+      );
+
+  String get agreement_damage_liability => Intl.message(
+        'The Borrower is responsible for the full cost of repair or replacement of any or all of the Equipment that is damaged, lost, confiscated, or stolen from the time Borrower assumes custody until it is returned to the lender. If the Equipment is lost, stolen or damaged, Borrower agrees to promptly notify the Lender Representative designated above.',
+        name: 'agreement_damage_liability',
+      );
+
+  String get agreement_user_disclaimer => Intl.message(
+        'The Borrower shall be responsible for the proper use and deployment of the Equipment. The Borrower shall be responsible for training anyone using the Equipment on the proper use of the Equipment in accordance with any Equipment use procedures.',
+        name: 'agreement_user_disclaimer',
+      );
+
+  String get agreement_refund_deposit => Intl.message(
+        'The borrower will provide a refundable deposit as defined within the agreement with the lender. The Criteria established regarding the condition of the item or property upon return will also be defined in the agreement. ',
+        name: 'agreement_refund_deposit',
+      );
+
+  String get agreement_maintain_and_clean => Intl.message(
+        'All items and properties borrowed must be returned in a condition similar to the condition it is received by the borrower unless otherwise noted in the agreement. Specific details related to the item and the lender\'s requirements upon return should be noted in the contract and agreed upon prior to receipt by the borrower.',
+        name: 'agreement_maintain_and_clean',
+      );
+
+  String get agreement_delivery_return => Intl.message(
+        'Title to the Equipment the subject of this Agreement shall remain with Lender. The Borrower shall be repsonsible for the safe packaging, proper import, export, shipping and receiving of the Equipment. The Equipment shall be returned within a reasonable amount of time after the Loan Period end date identified.',
+        name: 'agreement_delivery_return',
+      );
+
+  String get agreement_maintain_and_repair => Intl.message(
+        'Equipment shall be returned to Lender in as good condition as when received by the Borrower, except for reasonable wear and tear. During the Loan Period and prior to return, the Borrower agrees to assume all responsibility for maintenance and repair.',
+        name: 'agreement_maintain_and_repair',
+      );
+
+  String get terms_of_service => Intl.message(
+        'Terms of Service: ',
+        name: 'terms_of_service',
+      );
+
+  String get please_note_text => Intl.message(
+        'Please Note:',
+        name: 'please_note_text',
+      );
+
+  String get borrow_lender_dispute => Intl.message(
+        'In the real world and online, communities and community members sometimes disagree. If you have a dispute with another Community member, we hope that you will be able to work it out amicably.\" ',
+        name: 'borrow_lender_dispute',
+      );
+
+  String get borrow_request_seva_disclaimer => Intl.message(
+        'However, if you cannot, please understand that SevaExchange is not responsible for the actions of its members, each member is responsible for their own actions and behavior, whether using SevaExchange or chatting over the back fence. Accordingly, to the maximum extent permitted by applicable law, you release us (and our officers, directors, agents, subsidiaries, joint ventures and employees) from claims, demands and damages (actual and consequential) of every kind and nature, known and unknown, arising out of or in any way connected with such disputes. If you are a California resident, you hereby waive California Civil Code §1542, which says: \"A general release does not extend to claims that the creditor or releasing party does not know or suspect to exist in his or her favor at the time of executing the release, and that, if known by him or her, would have materially affected his or her settlement with the debtor or releasing party.\"',
+        name: 'borrow_request_seva_disclaimer',
+      );
+
+  String get agreement_amending_disclaimer => Intl.message(
+        'If the lender and borrower adjust the return date of the item as defined in the agreement, it is the responsibility of the parties involved to maintain the agreement extension and it is not included in this process or the responsibility of Seva Exchange.',
+        name: 'agreement_amending_disclaimer',
+      );
+
+  String get agreement_final_acknowledgement => Intl.message(
+        'It is hereby acknowledged that while SevaExchange is furnishing this agreement and securely managing in their digital vault, SevaExchange is only providing this as a convenience to the two parties in this agreement. SevaExchange is indemnified from any loss or damage that occurs as a result of this transaction. Neither party will hold SevaExchange accountable and agree to completely absolve SevaExchange should there be any litigation arising from this transaction.',
+        name: 'agreement_final_acknowledgement',
+      );
+
+  String get agreement_prior_to_signing_disclaimer => Intl.message(
+        'The borrower should inspect the item or property being taken to ensure the description and operability of the borrowed item or property is represented properly in the agreement and request modifications as necessary prior to executing the agreement. Any adjustments to the defined provisions need to be made prior to signing the agreement. Any actions taken to resolve the issues outside the agreement will be the responsibility of the lender and/or borrower, example is Small Claims Court. SevaExchange will have no responsibility in the negotiation, management or collection related to the violations of the agreement.',
+        name: 'agreement_prior_to_signing_disclaimer',
+      );
+
+  String get lender_text => Intl.message(
+        'Lender',
+        name: 'lender_text',
+      );
+
+  String get borrower_text => Intl.message(
+        'Borrower',
+        name: 'borrower_text',
+      );
+
+  String get agreement_date => Intl.message(
+        'Agreement Date',
+        name: 'agreement_date',
+      );
+
+  String get lender_acknowledged_feedback => Intl.message(
+        'The Lender has acknowledged completion of this request. Tap to leave a feedback.',
+        name: 'lender_acknowledged_feedback',
+      );
+
+  String get offering_place_to => Intl.message(
+        'You are offering a place to ',
+        name: 'offering_place_to',
+      );
+
+  String get offering_items_to => Intl.message(
+        'You are offering item(s) to ',
+        name: 'offering_items_to',
+      );
+
+  String get length_of_stay => Intl.message(
+        'Length of stay between:  ',
+        name: 'length_of_stay',
+      );
+
+  String get collect_and_return_items => Intl.message(
+        'Collect and Return items:  ',
+        name: 'collect_and_return_items',
+      );
+
+  String get items_returned => Intl.message(
+        'Item(s) Returned',
+        name: 'items_returned',
+      );
+
+  String get checked_in_text => Intl.message(
+        'Checked In',
+        name: 'checked_in_text',
+      );
+
+  String get checked_out_text => Intl.message(
+        'Checked Out',
+        name: 'checked_out_text',
+      );
+
+  String get check_out_text => Intl.message(
+        'Check Out',
+        name: 'check_out_text',
+      );
+
+  String get check_in_text => Intl.message(
+        'Check In',
+        name: 'check_in_text',
+      );
+
+  String get check_in_pending => Intl.message(
+        'Check in pending',
+        name: 'check_in_pending',
+      );
+
+  String get borrow_request_collect_items_tag => Intl.message(
+        'Borrow Request - Collect Items',
+        name: 'borrow_request_collect_items_tag',
+      );
+
+  String get borrow_request_return_items_tag => Intl.message(
+        'Borrow Request - Return Items',
+        name: 'borrow_request_return_items_tag',
+      );
+
+  String get collect_items => Intl.message(
+        'Collect Items',
+        name: 'collect_items',
+      );
+
+  String get return_items => Intl.message(
+        'Return Items',
+        name: 'return_items',
+      );
+
+  String get collected_items => Intl.message(
+        'Collected Item(s)',
+        name: 'collected_items',
+      );
+
+  String get returned_items => Intl.message(
+        'Returned Item(s)',
+        name: 'returned_items',
+      );
+
+  String get lent_to_text => Intl.message(
+        'Lent to: ',
+        name: 'lent_to_text',
+      );
+
+  String get place_not_added => Intl.message(
+        'Place not added',
+        name: 'place_not_added',
+      );
+
+  String get items_not_added => Intl.message(
+        'Item(s) not added',
+        name: 'items_not_added',
+      );
+
+  String get lending_offer_location_hint => Intl.message(
+        'location will help members to locate the place easily.',
+        name: 'lending_offer_location_hint',
+      );
+
+  String get offer_agreement_not_available => Intl.message(
+        'Request agreement not available',
+        name: 'offer_agreement_not_available',
+      );
+
+  String get click_to_view_offer_agreement => Intl.message(
+        'Click to view offer agreement',
+        name: 'click_to_view_offer_agreement',
+      );
+
+  String get join_borrow_request => Intl.message(
+        'Invited to accept request',
+        name: 'join_borrow_request',
+      );
+
+  String get withdraw_lending_offer => Intl.message(
+        'Click here to withdraw your request',
+        name: 'withdraw_lending_offer',
+      );
+
+  String get lender_not_created_agreement => Intl.message(
+        'Lender has not created an agreement for this offer',
+        name: 'lender_not_created_agreement',
+      );
+
+  String get admin_borrow_request_received_back_check => Intl.message(
+        'If you have received your item/place back from the borrower, click the button below to complete this transaction.',
+        name: 'admin_borrow_request_received_back_check',
+      );
+
+  String get please_add_amenities => Intl.message(
+        'Please add Amenities.',
+        name: 'please_add_amenities',
+      );
+
+  String get has_reviewed_you_for_request => Intl.message(
+        'has reviewed you for this request. Click button below to review and complete the task',
+        name: 'has_reviewed_you_for_request',
+      );
+
+  String get view_text => Intl.message(
+        'view',
+        name: 'view_text',
+      );
+
+  String get request_has_been_approved => Intl.message(
+        'Request has been approved',
+        name: 'request_has_been_approved',
+      );
+
+  String get items_taken => Intl.message(
+        'Item(s) taken',
+        name: 'items_taken',
+      );
+
+  String get arrived_text => Intl.message(
+        'Arrived',
+        name: 'arrived_text',
+      );
+
+  String get departed_text => Intl.message(
+        'Departed',
+        name: 'departed_text',
+      );
+
+  String get items_collected_alert => Intl.message(
+        'Items to be collected and returned on:  ',
+        name: 'items_collected_alert',
+      );
+
+  String get items_collected_alert_two => Intl.message(
+        'You have collected item(s) from',
+        name: 'items_collected_alert_two',
+      );
+
+  String get please_return_by => Intl.message(
+        'Please return by: ',
+        name: 'please_return_by',
+      );
+
+  String get items_returned_to_lender => Intl.message(
+        'You have returned the item(s) to the lender, ',
+        name: 'items_returned_to_lender',
+      );
+
+  String get exchanged_completed => Intl.message(
+        'Exchange completed',
+        name: 'exchanged_completed',
+      );
+
+  String get your_departure_date_is => Intl.message(
+        'Your departure date is:',
+        name: 'your_departure_date_is',
+      );
+
+  String get you_departed_on => Intl.message(
+        'You departed on:',
+        name: 'you_departed_on',
+      );
+
+  String get arrival_text => Intl.message(
+        'Arrival',
+        name: 'arrival_text',
+      );
+
+  String get arrive_text => Intl.message(
+        'Arrival',
+        name: 'arrive_text',
+      );
+
+  String get departure_text => Intl.message(
+        'Departure',
+        name: 'departure_text',
+      );
+
+  String get notes_text => Intl.message(
+        'Notes',
+        name: 'notes_text',
+      );
+
+  String get share_feedback_place => Intl.message(
+        'You can leave an appreciation review for your host.',
+        name: 'share_feedback_place',
+      );
+
+  String get time_offer_accepted_tag => Intl.message(
+        'Time offer accepted',
+        name: 'time_offer_accepted_tag',
+      );
+
+  String get idle_borrow_request_first_warning => Intl.message(
+        '*** weeks have passed without any interest. Please re-evaluate this request or withdraw.',
+        name: 'idle_borrow_request_first_warning',
+      );
+
+  String get idle_borrow_request_second_warning => Intl.message(
+        '*** weeks have passed without any interest. Please note that this request will be deleted if there is still no activity after 14 more days',
+        name: 'idle_borrow_request_second_warning',
+      );
+
+  String get idle_borrow_request_third_warning_deleted => Intl.message(
+        'This request has now been deleted due to inactivity for the past 6 weeks.',
+        name: 'idle_borrow_request_third_warning_deleted',
+      );
+
+  String get idle_lending_offer_first_warning => Intl.message(
+        '*** weeks have passed without any interest. Please re-evaluate this offer or withdraw.',
+        name: 'idle_lending_offer_first_warning',
+      );
+
+  String get idle_lending_offer_second_warning => Intl.message(
+        '*** weeks have passed without any interest. Please note that this offer will be deleted if there is still no activity after 14 more days',
+        name: 'idle_lending_offer_second_warning',
+      );
+
+  String get idle_lending_offer_third_warning_deleted => Intl.message(
+        'This offer has now been deleted due to inactivity for the past 6 weeks.',
+        name: 'idle_lending_offer_third_warning_deleted',
+      );
+
+  String get idle_for_4_weeks => Intl.message(
+        ' has been idle for 4 weeks',
+        name: 'idle_for_4_weeks',
+      );
+
+  String get idle_for_2_weeks => Intl.message(
+        ' has been idle for 2 weeks',
+        name: 'idle_for_2_weeks',
+      );
+
+  String get lending_offer_collect_items_tag => Intl.message(
+        'Lending Offer - Collect Items',
+        name: 'lending_offer_collect_items_tag',
+      );
+
+  String get lending_offer_return_items_tag => Intl.message(
+        'Lending Offer - Return Items',
+        name: 'lending_offer_return_items_tag',
+      );
+
+  String get lending_offer_check_in_tag => Intl.message(
+        'Lending Offer - Arrival',
+        name: 'lending_offer_check_in_tag',
+      );
+
+  String get lending_offer_check_out_tag => Intl.message(
+        'Lending Offer - Departure',
+        name: 'lending_offer_check_out_tag',
+      );
+
+  String get change_departure_date => Intl.message(
+        'Change departure date?',
+        name: 'change_departure_date',
+      );
+
+  String get tab_to_leave_feedback => Intl.message(
+        'Tap to leave a feedback.',
+        name: 'tab_to_leave_feedback',
+      );
+
+  String get lending_offer_return_items_hint => Intl.message(
+        'Click here if you have returned the item(s).',
+        name: 'lending_offer_return_items_hint',
+      );
+
+  String get lending_offer_return_place_hint => Intl.message(
+        'Click here if you have checked out of the place',
+        name: 'lending_offer_return_place_hint',
+      );
+
+  String get borrower_returned_items_feedback => Intl.message(
+        'You returned items. Tap to leave comments about the transaction.',
+        name: 'borrower_returned_items_feedback',
+      );
+
+  String get borrower_departed_provide_feedback => Intl.message(
+        'You checked out from place. Tap to leave comments about the transaction.',
+        name: 'borrower_departed_provide_feedback',
+      );
+
+  String get check_out_alert => Intl.message(
+        'Are you sure you want to check out?',
+        name: 'check_out_alert',
+      );
+
+  String get return_items_alert => Intl.message(
+        'Are you sure you want to return item(s)',
+        name: 'return_items_alert',
+      );
+
+  String get add_new_text => Intl.message(
+        'Add new',
+        name: 'add_new_text',
+      );
+
+  String get completed_lending_offer => Intl.message(
+        'Completed Lending Offer',
+        name: 'completed_lending_offer',
+      );
+
+  String get end_date_after_offer_end_date_place => Intl.message(
+        'The check out date is after the offer end date. Please edit your offer end date or select a date before the offer end date to approve this request.',
+        name: 'end_date_after_offer_end_date_place',
+      );
+
+  String get end_date_after_offer_end_date_item => Intl.message(
+        'The return date is after the offer end date. Please edit your offer end date or select a date before the offer end date to approve this request.',
+        name: 'end_date_after_offer_end_date_item',
+      );
+
+  String get error_loading_status => Intl.message(
+        'error loading status',
+        name: 'error_loading_status',
+      );
+
+  String get download_pdf => Intl.message(
+        'Download PDF',
+        name: 'download_pdf',
+      );
+
+  String get time_applied_request_tag => Intl.message(
+        'applied for request',
+        name: 'time_applied_request_tag',
+      );
+
+  String get time_withdrawn_request_tag => Intl.message(
+        'withdrew from request',
+        name: 'time_withdrawn_request_tag',
+      );
+
+  String get time_request_approved_tag => Intl.message(
+        'request was approved',
+        name: 'time_request_approved_tag',
+      );
+
+  String get time_request_rejected_tag => Intl.message(
+        'request was rejected',
+        name: 'time_request_rejected_tag',
+      );
+
+  String get time_claim_credits_tag => Intl.message(
+        'claimed credits',
+        name: 'time_claim_credits_tag',
+      );
+
+  String get time_claim_accepted_tag => Intl.message(
+        'claim accepted',
+        name: 'time_claim_accepted_tag',
+      );
+
+  String get time_claim_declined_tag => Intl.message(
+        'claim declined',
+        name: 'time_claim_declined_tag',
+      );
+
+  String get goods_pledged_by_donor_tag => Intl.message(
+        'goods pledged by donor',
+        name: 'goods_pledged_by_donor_tag',
+      );
+
+  String get goods_acknowledged_donation_tag => Intl.message(
+        'goods donation acknowledged',
+        name: 'goods_acknowledged_donation_tag',
+      );
+
+  String get goods_donation_modified_by_creator_tag => Intl.message(
+        'goods donation modified by creator',
+        name: 'goods_donation_modified_by_creator_tag',
+      );
+
+  String get goods_donation_modified_by_donor_tag => Intl.message(
+        'goods donation modified by donor',
+        name: 'goods_donation_modified_by_donor_tag',
+      );
+
+  String get goods_donation_creator_rejected_tag => Intl.message(
+        'goods donation rejected',
+        name: 'goods_donation_creator_rejected_tag',
+      );
+
+  String get money_acknowledged_donation_tag => Intl.message(
+        'money donation acknowledged',
+        name: 'money_acknowledged_donation_tag',
+      );
+
+  String get money_donation_modified_by_creator_tag => Intl.message(
+        'money donation modified by creator',
+        name: 'money_donation_modified_by_creator_tag',
+      );
+
+  String get money_donation_modified_by_donor_tag => Intl.message(
+        'money donation modified by donor',
+        name: 'money_donation_modified_by_donor_tag',
+      );
+
+  String get money_donation_creator_rejected_tag => Intl.message(
+        'money donation rejected',
+        name: 'money_donation_creator_rejected_tag',
+      );
+
+  String get time_signed_up_for_offer_tag => Intl.message(
+        'signed up for offer',
+        name: 'time_signed_up_for_offer_tag',
+      );
+
+  String get time_debited_for_one_to_many_offer_tag => Intl.message(
+        'credits debited',
+        name: 'time_debited_for_one_to_many_offer_tag',
+      );
+
+  String get time_offer_creator_credited_for_one_to_many_offer_tag => Intl.message(
+        'creator credited',
+        name: 'time_offer_creator_credited_for_one_to_many_offer_tag',
+      );
+
+  String get timebank_debited_for_one_to_many_offer_tag => Intl.message(
+        'credits paid to creator',
+        name: 'timebank_debited_for_one_to_many_offer_tag',
+      );
+
+  String get timebank_credited_for_one_to_many_offer_tag => Intl.message(
+        'received credits for offer',
+        name: 'timebank_credited_for_one_to_many_offer_tag',
+      );
+
+  String get requested_by_admin_tag => Intl.message(
+        'requested by admin',
+        name: 'requested_by_admin_tag',
+      );
+
+  String get account_balance => Intl.message(
+        'Account Balance\n',
+        name: 'account_balance',
+      );
+
+  String get item_s_text => Intl.message(
+        'item(s)',
+        name: 'item_s_text',
+      );
+
+  String get sent_text => Intl.message(
+        'Sent',
+        name: 'sent_text',
+      );
+
+  String get donated_by => Intl.message(
+        'Donated By:',
+        name: 'donated_by',
+      );
+
+  String get donated_to => Intl.message(
+        'Donated To:',
+        name: 'donated_to',
+      );
+
+  String get transations => Intl.message(
+        'Transactions',
+        name: 'transations',
+      );
+
+  String get donation_amount => Intl.message(
+        'DONATION AMOUNT',
+        name: 'donation_amount',
+      );
+
+  String get receipt_statement => Intl.message(
+        'RECEIPT  STATEMENT:',
+        name: 'receipt_statement',
+      );
+
+  String get receipt_number => Intl.message(
+        'Receipt  Number:',
+        name: 'receipt_number',
+      );
+
+  String get receipt_date => Intl.message(
+        'Receipt Date:',
+        name: 'receipt_date',
+      );
+
+  String get donation_information => Intl.message(
+        'DONATION INFORMATION',
+        name: 'donation_information',
+      );
+
+  String get total_text => Intl.message(
+        ' TOTAL',
+        name: 'total_text',
+      );
+
+  String get goods_donated => Intl.message(
+        'GOODS DONATED',
+        name: 'goods_donated',
+      );
+
+  String get total_items => Intl.message(
+        'TOTAL  ITEMS',
+        name: 'total_items',
+      );
+
+  String get from_text => Intl.message(
+        'From:',
+        name: 'from_text',
+      );
+
+  String get to_text => Intl.message(
+        ' To:',
+        name: 'to_text',
+      );
+
+  String get name_text => Intl.message(
+        'Name',
+        name: 'name_text',
+      );
+
+  String get trasaction_amount => Intl.message(
+        'Transaction amount',
+        name: 'trasaction_amount',
+      );
+
+  String get trasaction_details => Intl.message(
+        'Transaction details',
+        name: 'trasaction_details',
+      );
+
+  String get agreement_accepted => Intl.message(
+        'You have accepted the agreement',
+        name: 'agreement_accepted',
+      );
+
+  String get usd_text => Intl.message(
+        'USD',
+        name: 'usd_text',
+      );
+
+  String get sandbox_community_lable => Intl.message(
+        'Sandbox Community',
+        name: 'sandbox_community_lable',
+      );
+
+  String get choose_place_agreement => Intl.message(
+        'Select Place Agreement',
+        name: 'choose_place_agreement',
+      );
+
+  String get choose_item_agreement => Intl.message(
+        'Select Item(s) Agreement',
+        name: 'choose_item_agreement',
+      );
+
+  String get place_returned_hint_text => Intl.message(
+        'Ex: place must be returned in the same condition.',
+        name: 'place_returned_hint_text',
+      );
+
+  String get pricing_text => Intl.message(
+        'Pricing',
+        name: 'pricing_text',
+      );
+
+  String get planPageNote1 => Intl.message(
+        'Signup in less than a minute. Try out all our features with our sandbox community for 7 days, then choose a plan that\'s right for you.',
+        name: 'planPageNote1',
+      );
+
+  String get chooseBundlePricing => Intl.message(
+        'Choose bundle pricing',
+        name: 'chooseBundlePricing',
+      );
+
+  String get other_text => Intl.message(
+        'Other',
+        name: 'other_text',
+      );
+
+  String get current_text => Intl.message(
+        'Current',
+        name: 'current_text',
+      );
+
+  String get test_text => Intl.message(
+        'test',
+        name: 'test_text',
+      );
+
+  String get claimed_for_manual_time_tag => Intl.message(
+        'Claimed manual time',
+        name: 'claimed_for_manual_time_tag',
+      );
+
+  String get accepted_manual_time_request_tag => Intl.message(
+        'Manual time claim was accepted',
+        name: 'accepted_manual_time_request_tag',
+      );
+
+  String get rejected_manual_time_request_tag => Intl.message(
+        'Manual time claim was rejected',
+        name: 'rejected_manual_time_request_tag',
+      );
+
+  String get ADMIN_DONATE_TOUSER_tag => Intl.message(
+        'Admin donated credits',
+        name: 'ADMIN_DONATE_TOUSER_tag',
+      );
+
+  String get MANNUAL_TIME_tag => Intl.message(
+        'Manual time claim',
+        name: 'MANNUAL_TIME_tag',
+      );
+
+  String get OFFER_CREDIT_FROM_TIMEBANK_tag => Intl.message(
+        'Credits for Offer',
+        name: 'OFFER_CREDIT_FROM_TIMEBANK_tag',
+      );
+
+  String get OFFER_CREDIT_TO_TIMEBANK => Intl.message(
+        'Credits for Offer',
+        name: 'OFFER_CREDIT_TO_TIMEBANK',
+      );
+
+  String get REQUEST_CREATION_TIMEBANK_FILL_CREDITS => Intl.message(
+        'Credited by SevaX Global',
+        name: 'REQUEST_CREATION_TIMEBANK_FILL_CREDITS',
+      );
+
+  String get SEVAX_TO_TIMEBANK_ONETOMANY_COMPLETE => Intl.message(
+        'SevaX Global - Completion of One To Many Request',
+        name: 'SEVAX_TO_TIMEBANK_ONETOMANY_COMPLETE',
+      );
+
+  String get TAX_tag => Intl.message(
+        'Tax',
+        name: 'TAX_tag',
+      );
+
+  String get TIMEBANK_TO_ATTENDEES_ONETOMANY_COMPLETE_tag => Intl.message(
+        'One to many request Attendee transaction',
+        name: 'TIMEBANK_TO_ATTENDEES_ONETOMANY_COMPLETE_tag',
+      );
+
+  String get TIMEBANK_TO_SPEAKER_ONETOMANY_COMPLETE_tag => Intl.message(
+        'One to many request Speaker transaction',
+        name: 'TIMEBANK_TO_SPEAKER_ONETOMANY_COMPLETE_tag',
+      );
+
+  String get TIME_REQUEST_tag => Intl.message(
+        'Time request completion',
+        name: 'TIME_REQUEST_tag',
+      );
+
+  String get USER_DONATE_TOTIMEBANK_tag => Intl.message(
+        'Donation',
+        name: 'USER_DONATE_TOTIMEBANK_tag',
+      );
+
+  String get USER_PAYLOAN_TOTIMEBANK_tag => Intl.message(
+        'Loan payment',
+        name: 'USER_PAYLOAN_TOTIMEBANK_tag',
+      );
+
+  String get annually => Intl.message(
+        'ANNUALLY',
+        name: 'annually',
+      );
+
+  String get goods_donation => Intl.message(
+        'Goods Donation',
+        name: 'goods_donation',
+      );
+
+  String get cash_donation => Intl.message(
+        'Cash Donation',
+        name: 'cash_donation',
+      );
 }
 
 class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {
   const ArbifyLocalizationsDelegate();
 
   List<Locale> get supportedLocales => [
+        Locale.fromSubtags(languageCode: 'af'),
+        Locale.fromSubtags(languageCode: 'en'),
         Locale.fromSubtags(languageCode: 'es'),
+        Locale.fromSubtags(languageCode: 'fr'),
         Locale.fromSubtags(languageCode: 'pt'),
         Locale.fromSubtags(languageCode: 'sn'),
-        Locale.fromSubtags(languageCode: 'zh', countryCode: 'CN'),
-        Locale.fromSubtags(languageCode: 'zh', countryCode: 'TW'),
-        Locale.fromSubtags(languageCode: 'af'),
         Locale.fromSubtags(languageCode: 'sw'),
-        Locale.fromSubtags(languageCode: 'en'),
-        Locale.fromSubtags(languageCode: 'fr'),
-      ];
+        Locale.fromSubtags(languageCode: 'zh'),
+        Locale.fromSubtags(languageCode: 'zh'),
+  ];
 
   @override
   bool isSupported(Locale locale) => [
+        'af',
+        'en',
         'es',
+        'fr',
         'pt',
         'sn',
-        'zh',
-        'zh',
-        'af',
         'sw',
-        'en',
-        'fr',
+        'zh',
+        'zh',
       ].contains(locale.languageCode);
 
   @override
