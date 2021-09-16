@@ -175,7 +175,7 @@ class _TransactionDetailsViewState extends State<TransactionDetailsView> {
                             ],
                           ),
                         ),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: 12),
                         StreamBuilder<String>(
                           builder: (context, snapshot) {
                             return SizedBox(
