@@ -655,7 +655,7 @@ class L {
 
   String get add_place => "Add Place";
 
-  String get lending_offer => "Lending Offer";
+  String get lending_offer => "Lending";
 
   String get lending_offer_title_hint => "Ex:Lawnmower";
 
