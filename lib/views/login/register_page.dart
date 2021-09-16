@@ -19,6 +19,7 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:path_drawing/path_drawing.dart';
 import 'package:sevaexchange/auth/auth.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
+import 'package:sevaexchange/auth/auth_router.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/dashed_border.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
@@ -92,6 +93,8 @@ class _RegisterPageState extends State<RegisterPage>
 
   @override
   void initState() {
+    logger.d("==============|||============Register page ::");
+
     LocationHelper.getLocation().then((value) {
       if (value != null) {
         value.fold((l) => null, (r) {
@@ -835,9 +838,17 @@ class _RegisterPageState extends State<RegisterPage>
         }
       });
 
+      logger.d("===========|||===========");
       Navigator.pop(dialogContext);
-      Navigator.pop(context, user);
-      Phoenix.rebirth(context);
+      // Navigator.pop(context, user);
+      // Phoenix.rebirth(context);
+      logger.d("===========|||====||||||||=======");
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) => AuthRouter(),
+        ),
+      );
     } on PlatformException catch (error) {
       if (dialogContext != null) {
         Navigator.pop(dialogContext);

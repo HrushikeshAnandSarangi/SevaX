@@ -14,6 +14,7 @@ import 'package:path/path.dart' as pathExt;
 import 'package:path_drawing/path_drawing.dart';
 import 'package:provider/provider.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
+import 'package:sevaexchange/auth/auth_router.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/dashed_border.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
@@ -42,6 +43,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../globals.dart' as globals;
 import '../../labels.dart';
 import '../core.dart';
+import '../splash_view.dart';
 
 class EditProfilePage extends StatefulWidget {
   UserModel userModel;
@@ -150,8 +152,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                           ),
                           backgroundColor: Colors.white,
                           onPressed: () {
-                            FocusScope.of(context)
-                                .requestFocus(new FocusNode());
+                            FocusScope.of(context).requestFocus(new FocusNode());
                             imagePicker.showDialog(context);
                             isLoading = false;
                           },
@@ -279,8 +280,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                             children: [
                               Expanded(
                                 child: Text(
-                                  usermodel.cvName ??
-                                      S.of(context).cv_not_available,
+                                  usermodel.cvName ?? S.of(context).cv_not_available,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(fontSize: 12),
                                   overflow: TextOverflow.ellipsis,
@@ -290,18 +290,15 @@ class _EditProfilePageState extends State<EditProfilePage>
                               ),
                               IconButton(
                                 onPressed: () async {
-                                  var connResult =
-                                      await Connectivity().checkConnectivity();
+                                  var connResult = await Connectivity().checkConnectivity();
                                   if (connResult == ConnectivityResult.none) {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
-                                        content:
-                                            Text(S.of(context).check_internet),
+                                        content: Text(S.of(context).check_internet),
                                         action: SnackBarAction(
                                           label: S.of(context).dismiss,
                                           onPressed: () =>
-                                              ScaffoldMessenger.of(context)
-                                                  .hideCurrentSnackBar(),
+                                              ScaffoldMessenger.of(context).hideCurrentSnackBar(),
                                         ),
                                       ),
                                     );
@@ -409,8 +406,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                                     child: ListTile(
                                       leading: Icon(Icons.attachment),
                                       title: Text(
-                                        cvName ??
-                                            S.of(context).cv_not_available,
+                                        cvName ?? S.of(context).cv_not_available,
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                       trailing: IconButton(
@@ -453,20 +449,15 @@ class _EditProfilePageState extends State<EditProfilePage>
                           content: Text(S.of(context).check_internet),
                           action: SnackBarAction(
                             label: S.of(context).dismiss,
-                            onPressed: () => ScaffoldMessenger.of(context)
-                                .hideCurrentSnackBar(),
+                            onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
                           ),
                         ),
                       );
                       return;
                     }
-                    if (cvUrl == null ||
-                        cvUrl == '' ||
-                        cvName == '' ||
-                        cvName == null) {
+                    if (cvUrl == null || cvUrl == '' || cvName == '' || cvName == null) {
                       setState(() {
-                        this.cvFileError =
-                            S.of(context).validation_error_cv_not_selected;
+                        this.cvFileError = S.of(context).validation_error_cv_not_selected;
                       });
                     } else {
                       await updateCV();
@@ -477,8 +468,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                           ),
                           action: SnackBarAction(
                             label: S.of(context).dismiss,
-                            onPressed: () => ScaffoldMessenger.of(context)
-                                .hideCurrentSnackBar(),
+                            onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
                           ),
                         ),
                       );
@@ -543,8 +533,8 @@ class _EditProfilePageState extends State<EditProfilePage>
     Map<String, String> _paths;
     try {
       _paths = null;
-      FilePickerResult result = await FilePicker.platform
-          .pickFiles(type: FileType.custom, allowedExtensions: ['pdf']);
+      FilePickerResult result =
+          await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ['pdf']);
       if (result != null) {
         _path = result.files.single.path;
       }
@@ -593,8 +583,7 @@ class _EditProfilePageState extends State<EditProfilePage>
       });
       checkFileSize();
     } else {
-      getExtensionAlertDialog(
-          context: context, message: S.of(context).only_pdf_files_allowed);
+      getExtensionAlertDialog(context: context, message: S.of(context).only_pdf_files_allowed);
     }
 
     return null;
@@ -619,10 +608,8 @@ class _EditProfilePageState extends State<EditProfilePage>
   Future<String> uploadDocument() async {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     String timestampString = timestamp.toString();
-    String name =
-        SevaCore.of(context).loggedInUser.email + timestampString + _fileName;
-    Reference ref =
-        FirebaseStorage.instance.ref().child('cv_files').child(name);
+    String name = SevaCore.of(context).loggedInUser.email + timestampString + _fileName;
+    Reference ref = FirebaseStorage.instance.ref().child('cv_files').child(name);
     UploadTask uploadTask = ref.putFile(
       File(_path),
       SettableMetadata(
@@ -630,8 +617,7 @@ class _EditProfilePageState extends State<EditProfilePage>
         customMetadata: <String, String>{'activity': 'CV File'},
       ),
     );
-    String documentURL =
-        await (await uploadTask.whenComplete(() => null)).ref.getDownloadURL();
+    String documentURL = await (await uploadTask.whenComplete(() => null)).ref.getDownloadURL();
 
     cvName = _fileName;
     cvUrl = documentURL;
@@ -688,8 +674,7 @@ class _EditProfilePageState extends State<EditProfilePage>
       setState(() {
         this._saving = true;
       });
-      String imageUrl =
-          await uploadImage(SevaCore.of(context).loggedInUser.email);
+      String imageUrl = await uploadImage(SevaCore.of(context).loggedInUser.email);
       log("link ${imageUrl.toString()}");
 
       await profanityCheck(imageURL: imageUrl, storagePath: imageUrl);
@@ -700,8 +685,7 @@ class _EditProfilePageState extends State<EditProfilePage>
     // _newsImageURL = imageURL;
     log("inside profanity");
 
-    profanityImageModel =
-        await checkProfanityForImage(imageUrl: imageURL, storagePath: imageUrl);
+    profanityImageModel = await checkProfanityForImage(imageUrl: imageURL, storagePath: imageUrl);
     log("model ${profanityImageModel.toString()}");
     if (profanityImageModel == null) {
       setState(() {
@@ -709,12 +693,10 @@ class _EditProfilePageState extends State<EditProfilePage>
       });
       showFailedLoadImage(context: context).then((value) {});
     } else {
-      profanityStatusModel =
-          await getProfanityStatus(profanityImageModel: profanityImageModel);
+      profanityStatusModel = await getProfanityStatus(profanityImageModel: profanityImageModel);
 
       if (profanityStatusModel.isProfane) {
-        showProfanityImageAlert(
-                context: context, content: profanityStatusModel.category)
+        showProfanityImageAlert(context: context, content: profanityStatusModel.category)
             .then((status) {
           if (status == 'Proceed') {
             deleteFireBaseImage(imageUrl: imageUrl).then((value) {
@@ -831,10 +813,8 @@ class _EditProfilePageState extends State<EditProfilePage>
       context: context,
       builder: (BuildContext viewContext) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10.0))),
-          title:
-              Text(S.of(context).update_name, style: TextStyle(fontSize: 15.0)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          title: Text(S.of(context).update_name, style: TextStyle(fontSize: 15.0)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
@@ -900,8 +880,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                             content: Text(S.of(context).check_internet),
                             action: SnackBarAction(
                               label: S.of(context).dismiss,
-                              onPressed: () => ScaffoldMessenger.of(context)
-                                  .hideCurrentSnackBar(),
+                              onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
                             ),
                           ),
                         );
@@ -932,10 +911,8 @@ class _EditProfilePageState extends State<EditProfilePage>
       builder: (BuildContext viewContext) {
         // return object of type Dialog
         return AlertDialog(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10.0))),
-          title:
-              Text(S.of(context).update_bio, style: TextStyle(fontSize: 15.0)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          title: Text(S.of(context).update_bio, style: TextStyle(fontSize: 15.0)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
@@ -1002,8 +979,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                             content: Text(S.of(context).check_internet),
                             action: SnackBarAction(
                               label: S.of(context).dismiss,
-                              onPressed: () => ScaffoldMessenger.of(context)
-                                  .hideCurrentSnackBar(),
+                              onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
                             ),
                           ),
                         );
@@ -1030,10 +1006,7 @@ class _EditProfilePageState extends State<EditProfilePage>
   }
 
   Future<String> uploadImage(String email) async {
-    Reference ref = FirebaseStorage.instance
-        .ref()
-        .child('profile_images')
-        .child(email + '.jpg');
+    Reference ref = FirebaseStorage.instance.ref().child('profile_images').child(email + '.jpg');
     UploadTask uploadTask = ref.putFile(
       selectedImage,
       SettableMetadata(
@@ -1044,8 +1017,7 @@ class _EditProfilePageState extends State<EditProfilePage>
     // UploadTask uploadTask = ref.putFile(File.)
     String imageURL = '';
 
-    imageURL =
-        await (await uploadTask.whenComplete(() => null)).ref.getDownloadURL();
+    imageURL = await (await uploadTask.whenComplete(() => null)).ref.getDownloadURL();
     return imageURL;
   }
 
@@ -1110,8 +1082,9 @@ class _EditProfilePageState extends State<EditProfilePage>
 
                       Navigator.of(_context).pop(true);
 
-                      // _signOut(
-                      //     context, SevaCore.of(context).loggedInUser.email);
+                      _signOut(
+                        context,
+                      );
                     },
                   ),
                 ],
@@ -1138,22 +1111,25 @@ class _EditProfilePageState extends State<EditProfilePage>
     }
   }
 
-//   Future<void> _signOut(
-//     BuildContext context,
-//   ) async {
-//     Navigator.pop(context);
-//     var auth = AuthProvider.of(context).auth;
-//     await auth.signOut();
-//     Provider.of<UserBloc>(context, listen: false).clearUserData;
+  Future<void> _signOut(
+    BuildContext context,
+  ) async {
+    var auth = AuthProvider.of(context).auth;
+    await auth.signOut();
+    Provider.of<UserBloc>(context, listen: false).clearUserData;
 
-//     Navigator.popUntil(
-//       context,
-//       // MaterialPageRoute(
-//       //   builder: (BuildContext context) => ExplorePage(),
-//       // ),
-//       (Route<dynamic> route) => false,
-//     );
-//   }
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (context) => AuthRouter()),
+      ((Route<dynamic> route) => false),
+    );
+
+    // Navigator.pushReplacement(
+    //   context,
+    //   MaterialPageRoute(
+    //     builder: (BuildContext context) => AuthRouter(),
+    //   ),
+    // );
+  }
 }
 
 getAlertDialog(BuildContext context) {

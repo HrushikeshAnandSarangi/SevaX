@@ -73,10 +73,8 @@ class RequestDonationDisputeBloc {
     RequestMode requestMode,
   }) async {
     log("Inside callDonateOfferCreatorPledge");
-    logger.i("${_cashAmount.value} ========================<<<<<<<<>>>>>>>>>>>>");
 
     var amountMatched = pledgedAmount == double.parse(_cashAmount.value);
-    logger.i("$amountMatched ========================<<<<<<<<>>>>>>>>>>>>");
     if (_cashAmount.value == null || _cashAmount.value == '') {
       log("Inside amount 1");
 
@@ -89,10 +87,10 @@ class RequestDonationDisputeBloc {
       _cashAmount.addError('min');
       return false;
     } else {
-      log("Inside else");
-      donationModel.donationStatus = donationModel.donationStatus == DonationStatus.REQUESTED
-          ? DonationStatus.PLEDGED
-          : donationModel.donationStatus;
+      donationModel.donationStatus =
+          donationModel.donationStatus == DonationStatus.REQUESTED
+              ? DonationStatus.PLEDGED
+              : donationModel.donationStatus;
       donationModel.minimumAmount = 0;
       return await _donationsRepository
           .donateOfferCreatorPledge(
@@ -129,8 +127,6 @@ class RequestDonationDisputeBloc {
     DonationModel donationModel,
     RequestMode requestMode,
   }) async {
-    // logger.e(
-    //     "$pledgedAmount ========================<<<<<<<<INSIDE DISPUTE CASH>>>>>>>>>>>> ${double.parse(_cashAmount.value)}");
     double convertedRate;
     double rate;
     if (donationModel.requestIdType == 'offer') {
@@ -172,7 +168,6 @@ class RequestDonationDisputeBloc {
           amount: double.parse(_cashAmount.value));
     }
 
-    logger.i("$status ========================<<<<<<<<>>>>>>>>>>>>");
 
     if (_cashAmount.value == null || _cashAmount.value == '') {
       _cashAmount.addError('amount1');

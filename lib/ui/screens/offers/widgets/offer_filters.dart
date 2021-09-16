@@ -82,7 +82,7 @@ class OfferFilters extends StatelessWidget {
             ),
             CustomChipExploreFilter(
               isHidden: hideFilters[4],
-              label: 'Public',
+              label: S.of(context).public,
               isSelected: filter.publicOffer,
               onTap: () {
                 onTap(

@@ -70,7 +70,6 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
         Provider.of<HomePageBaseBloc>(context, listen: false)
             .init(SevaCore.of(context).loggedInUser);
         _userBloc.userStream.listen((UserModel user) async {
-          logger.e("USER ID CHECK 1 =======> " + user.sevaUserID);
           Provider.of<MembersBloc>(context, listen: false)
               .init(user.currentCommunity);
 
