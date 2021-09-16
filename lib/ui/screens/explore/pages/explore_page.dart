@@ -105,9 +105,8 @@ class _ExplorePageState extends State<ExplorePage> {
           () => {
                 _exploreBloc.load(
                     isUserLoggedIn: widget.isUserSignedIn,
-                    sevaUserID: widget.isUserSignedIn
-                        ? SevaCore.of(context).loggedInUser.sevaUserID
-                        : '',
+                    sevaUserID:
+                        widget.isUserSignedIn ? SevaCore.of(context).loggedInUser.sevaUserID : '',
                     context: context),
               });
 
@@ -217,8 +216,7 @@ class _ExplorePageState extends State<ExplorePage> {
                               },
                             ),
                           ),
-                          contentPadding:
-                              const EdgeInsets.symmetric(vertical: 4),
+                          contentPadding: const EdgeInsets.symmetric(vertical: 4),
                         ),
                       ),
                     ),
@@ -325,8 +323,7 @@ class _ExplorePageState extends State<ExplorePage> {
                     StreamBuilder<List<ProjectModel>>(
                         stream: _exploreBloc.events,
                         builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
                             return Column(
                               children: [
                                 Align(
@@ -343,16 +340,13 @@ class _ExplorePageState extends State<ExplorePage> {
                               ],
                             );
                           }
-                          if (snapshot.hasError ||
-                              snapshot.data == null ||
-                              snapshot.data.isEmpty) {
+                          if (snapshot.hasError || snapshot.data == null || snapshot.data.isEmpty) {
                             return Container();
                           }
                           return Column(
                             children: [
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     S.of(context).projects,
@@ -366,11 +360,9 @@ class _ExplorePageState extends State<ExplorePage> {
                                     onPressed: () {
                                       Navigator.of(context).push(
                                         MaterialPageRoute(
-                                          builder: (context) =>
-                                              ExploreSearchPage(
+                                          builder: (context) => ExploreSearchPage(
                                             tabIndex: 1,
-                                            isUserSignedIn:
-                                                widget.isUserSignedIn,
+                                            isUserSignedIn: widget.isUserSignedIn,
                                           ),
                                         ),
                                       );
@@ -387,32 +379,25 @@ class _ExplorePageState extends State<ExplorePage> {
                                   itemCount: snapshot.data.length,
                                   scrollDirection: Axis.horizontal,
                                   itemBuilder: (context, index) {
-                                    ProjectModel projectModel =
-                                        snapshot.data[index];
+                                    ProjectModel projectModel = snapshot.data[index];
                                     String landMark = projectModel.address;
 
                                     if (projectModel.address != null &&
                                         projectModel.address.contains(',')) {
-                                      List<String> x =
-                                          projectModel.address.split(',');
-                                      landMark = x[x.length > 3
-                                          ? x.length - 3
-                                          : x.length - 1];
+                                      List<String> x = projectModel.address.split(',');
+                                      landMark = x[x.length > 3 ? x.length - 3 : x.length - 1];
                                     }
-                                    String formattedStartTime =
-                                        getStartDateFormat(
-                                            DateTime.fromMillisecondsSinceEpoch(
-                                                projectModel.startTime));
+                                    String formattedStartTime = getStartDateFormat(
+                                        DateTime.fromMillisecondsSinceEpoch(projectModel.startTime),
+                                        context: context);
                                     return Row(
                                       children: [
                                         widget.isUserSignedIn
                                             ? FutureBuilder<TimebankModel>(
                                                 future: getTimeBankForId(
-                                                    timebankId: projectModel
-                                                        .timebankId),
+                                                    timebankId: projectModel.timebankId),
                                                 builder: (context, snapshot) {
-                                                  if (snapshot
-                                                          .connectionState ==
+                                                  if (snapshot.connectionState ==
                                                       ConnectionState.waiting) {
                                                     return LoadingIndicator();
                                                   }
@@ -424,59 +409,40 @@ class _ExplorePageState extends State<ExplorePage> {
                                                   }
 
                                                   return ExploreEventsCard(
-                                                    eventStartDate:
-                                                        formattedStartTime,
-                                                    userIds: projectModel
-                                                        .associatedmembers.keys
+                                                    eventStartDate: formattedStartTime,
+                                                    userIds: projectModel.associatedmembers.keys
                                                         .toList(),
-                                                    imageUrl: projectModel
-                                                            .photoUrl ??
+                                                    imageUrl: projectModel.photoUrl ??
                                                         defaultGroupImageURL,
-                                                    communityName: projectModel
-                                                            .communityName ??
-                                                        '',
+                                                    communityName: projectModel.communityName ?? '',
                                                     city: landMark ?? '',
-                                                    description:
-                                                        projectModel.name,
+                                                    description: projectModel.name,
                                                     onTap: () {
                                                       Navigator.push(context,
-                                                          MaterialPageRoute(
-                                                              builder:
-                                                                  (context) {
+                                                          MaterialPageRoute(builder: (context) {
                                                         return ProjectRequests(
                                                           ComingFrom.Projects,
-                                                          timebankId:
-                                                              projectModel
-                                                                  .timebankId,
-                                                          projectModel:
-                                                              projectModel,
-                                                          timebankModel:
-                                                              snapshot.data,
+                                                          timebankId: projectModel.timebankId,
+                                                          projectModel: projectModel,
+                                                          timebankModel: snapshot.data,
                                                         );
                                                       }));
                                                     },
                                                   );
                                                 })
                                             : ExploreEventsCard(
-                                                eventStartDate:
-                                                    formattedStartTime,
-                                                userIds: projectModel
-                                                    .associatedmembers.keys
-                                                    .toList(),
+                                                eventStartDate: formattedStartTime,
+                                                userIds:
+                                                    projectModel.associatedmembers.keys.toList(),
                                                 imageUrl:
-                                                    projectModel.photoUrl ??
-                                                        defaultGroupImageURL,
-                                                communityName: projectModel
-                                                        .communityName ??
-                                                    '',
+                                                    projectModel.photoUrl ?? defaultGroupImageURL,
+                                                communityName: projectModel.communityName ?? '',
                                                 city: landMark ?? '',
                                                 description: projectModel.name,
                                                 onTap: () {
                                                   showSignInAlertMessage(
                                                       context: context,
-                                                      message: S
-                                                          .of(context)
-                                                          .sign_in_alert);
+                                                      message: S.of(context).sign_in_alert);
                                                 },
                                               ),
                                       ],
@@ -510,9 +476,7 @@ class _ExplorePageState extends State<ExplorePage> {
                           ],
                         );
                       }
-                      if (snapshot.hasError ||
-                          snapshot.data == null ||
-                          snapshot.data.isEmpty) {
+                      if (snapshot.hasError || snapshot.data == null || snapshot.data.isEmpty) {
                         return Container();
                       }
                       return Column(
@@ -549,30 +513,23 @@ class _ExplorePageState extends State<ExplorePage> {
                             height: 260,
                             child: ListView.builder(
                               shrinkWrap: true,
-                              itemCount: snapshot.data.length > 6
-                                  ? 6
-                                  : snapshot.data.length,
+                              itemCount: snapshot.data.length > 6 ? 6 : snapshot.data.length,
                               scrollDirection: Axis.horizontal,
                               itemBuilder: (context, index) {
                                 RequestModel model = snapshot.data[index];
                                 String landMark = model.address;
 
-                                if (model.address != null &&
-                                    model.address.contains(',')) {
+                                if (model.address != null && model.address.contains(',')) {
                                   List<String> x = model.address.split(',');
-                                  landMark = x[x.length > 3
-                                      ? x.length - 3
-                                      : x.length - 1];
+                                  landMark = x[x.length > 3 ? x.length - 3 : x.length - 1];
                                 }
                                 String formattedStartTime = getStartDateFormat(
-                                    DateTime.fromMillisecondsSinceEpoch(
-                                        model.requestStart));
+                                    DateTime.fromMillisecondsSinceEpoch(model.requestStart), context: context);
                                 return Row(
                                   children: [
                                     widget.isUserSignedIn
                                         ? FutureBuilder<TimebankModel>(
-                                            future: getTimeBankForId(
-                                                timebankId: model.timebankId),
+                                            future: getTimeBankForId(timebankId: model.timebankId),
                                             builder: (context, snapshot) {
                                               if (snapshot.connectionState ==
                                                   ConnectionState.waiting) {
@@ -587,10 +544,8 @@ class _ExplorePageState extends State<ExplorePage> {
 
                                               return ExploreRequestsCard(
                                                 requestDate: formattedStartTime,
-                                                imageUrl: model.photoUrl ??
-                                                    defaultGroupImageURL,
-                                                communityName:
-                                                    model.communityName ?? '',
+                                                imageUrl: model.photoUrl ?? defaultGroupImageURL,
+                                                communityName: model.communityName ?? '',
                                                 city: landMark ?? '',
                                                 description: model.title,
                                                 onTap: () {
@@ -606,17 +561,14 @@ class _ExplorePageState extends State<ExplorePage> {
                                                     Navigator.push(
                                                       context,
                                                       MaterialPageRoute(
-                                                        builder: (_context) =>
-                                                            BlocProvider(
-                                                          bloc: BlocProvider.of<
-                                                                  HomeDashBoardBloc>(
+                                                        builder: (_context) => BlocProvider(
+                                                          bloc: BlocProvider.of<HomeDashBoardBloc>(
                                                               context),
-                                                          child:
-                                                              RequestTabHolder(
-                                                            communityModel: BlocProvider
-                                                                    .of<HomeDashBoardBloc>(
+                                                          child: RequestTabHolder(
+                                                            communityModel:
+                                                                BlocProvider.of<HomeDashBoardBloc>(
                                                                         context)
-                                                                .selectedCommunityModel,
+                                                                    .selectedCommunityModel,
                                                             isAdmin: true,
                                                           ),
                                                         ),
@@ -626,16 +578,12 @@ class _ExplorePageState extends State<ExplorePage> {
                                                     Navigator.push(
                                                       context,
                                                       MaterialPageRoute(
-                                                        builder: (_context) =>
-                                                            BlocProvider(
-                                                          bloc: BlocProvider.of<
-                                                                  HomeDashBoardBloc>(
+                                                        builder: (_context) => BlocProvider(
+                                                          bloc: BlocProvider.of<HomeDashBoardBloc>(
                                                               context),
-                                                          child:
-                                                              RequestDetailsAboutPage(
+                                                          child: RequestDetailsAboutPage(
                                                             requestItem: model,
-                                                            timebankModel:
-                                                                snapshot.data,
+                                                            timebankModel: snapshot.data,
                                                             isAdmin: false,
                                                             //communityModel: BlocProvider.of<HomeDashBoardBloc>(context).selectedCommunityModel,
                                                           ),
@@ -650,18 +598,14 @@ class _ExplorePageState extends State<ExplorePage> {
                                         : ExploreRequestsCard(
                                             requestDate: formattedStartTime,
                                             userIds: model.approvedUsers,
-                                            imageUrl: model.photoUrl ??
-                                                defaultGroupImageURL,
-                                            communityName:
-                                                model.communityName ?? '',
+                                            imageUrl: model.photoUrl ?? defaultGroupImageURL,
+                                            communityName: model.communityName ?? '',
                                             city: landMark ?? '',
                                             description: model.title,
                                             onTap: () {
                                               showSignInAlertMessage(
                                                   context: context,
-                                                  message: S
-                                                      .of(context)
-                                                      .sign_in_alert);
+                                                  message: S.of(context).sign_in_alert);
                                             },
                                           ),
                                   ],
@@ -693,9 +637,7 @@ class _ExplorePageState extends State<ExplorePage> {
                         ],
                       );
                     }
-                    if (snapshot.hasError ||
-                        snapshot.data == null ||
-                        snapshot.data.isEmpty) {
+                    if (snapshot.hasError || snapshot.data == null || snapshot.data.isEmpty) {
                       return Container();
                     }
                     return Column(
@@ -732,9 +674,7 @@ class _ExplorePageState extends State<ExplorePage> {
                           height: 290,
                           child: ListView.builder(
                             shrinkWrap: true,
-                            itemCount: snapshot.data.length > 6
-                                ? 6
-                                : snapshot.data.length,
+                            itemCount: snapshot.data.length > 6 ? 6 : snapshot.data.length,
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (context, index) {
                               OfferModel offer = snapshot.data[index];
@@ -742,20 +682,16 @@ class _ExplorePageState extends State<ExplorePage> {
 
                               if (offer.selectedAdrress != null &&
                                   offer.selectedAdrress.contains(',')) {
-                                List<String> x =
-                                    offer.selectedAdrress.split(',');
-                                landMark = x[
-                                    x.length > 3 ? x.length - 3 : x.length - 1];
+                                List<String> x = offer.selectedAdrress.split(',');
+                                landMark = x[x.length > 3 ? x.length - 3 : x.length - 1];
                               }
                               String formattedStartTime = getStartDateFormat(
-                                  DateTime.fromMillisecondsSinceEpoch(
-                                      offer.timestamp));
+                                  DateTime.fromMillisecondsSinceEpoch(offer.timestamp), context: context);
                               return Row(
                                 children: [
                                   widget.isUserSignedIn
                                       ? FutureBuilder<TimebankModel>(
-                                          future: getTimeBankForId(
-                                              timebankId: offer.timebankId),
+                                          future: getTimeBankForId(timebankId: offer.timebankId),
                                           builder: (context, snapshot) {
                                             if (snapshot.connectionState ==
                                                 ConnectionState.waiting) {
@@ -769,19 +705,15 @@ class _ExplorePageState extends State<ExplorePage> {
                                             }
 
                                             return ExploreOffersCard(
-                                              offerStartDate:
-                                                  formattedStartTime,
+                                              offerStartDate: formattedStartTime,
                                               imageUrl: defaultGroupImageURL,
-                                              offerName: getOfferTitle(
-                                                      offerDataModel: offer) ??
-                                                  '',
+                                              offerName: getOfferTitle(offerDataModel: offer) ?? '',
                                               city: landMark ?? '',
-                                              description: getOfferDescription(
-                                                  offerDataModel: offer),
+                                              description:
+                                                  getOfferDescription(offerDataModel: offer),
                                               onTap: () {
                                                 Navigator.push(context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) {
+                                                    MaterialPageRoute(builder: (context) {
                                                   return OfferDetailsRouter(
                                                     offerModel: offer,
                                                     comingFrom: ComingFrom.Home,
@@ -794,18 +726,13 @@ class _ExplorePageState extends State<ExplorePage> {
                                       : ExploreOffersCard(
                                           offerStartDate: formattedStartTime,
                                           imageUrl: defaultGroupImageURL,
-                                          offerName: getOfferTitle(
-                                                  offerDataModel: offer) ??
-                                              '',
+                                          offerName: getOfferTitle(offerDataModel: offer) ?? '',
                                           city: landMark ?? '',
-                                          description: getOfferDescription(
-                                              offerDataModel: offer),
+                                          description: getOfferDescription(offerDataModel: offer),
                                           onTap: () {
                                             showSignInAlertMessage(
                                                 context: context,
-                                                message: S
-                                                    .of(context)
-                                                    .sign_in_alert);
+                                                message: S.of(context).sign_in_alert);
                                           },
                                         ),
                                 ],
@@ -827,8 +754,7 @@ class _ExplorePageState extends State<ExplorePage> {
                       child: StreamBuilder<List<CommunityModel>>(
                         stream: _exploreBloc.communities,
                         builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
                             return Column(
                               children: [
                                 Align(
@@ -876,19 +802,16 @@ class _ExplorePageState extends State<ExplorePage> {
                                     itemCount: snapshot.data.length,
                                     scrollDirection: Axis.horizontal,
                                     itemBuilder: (context, index) {
-                                      CommunityModel community =
-                                          snapshot.data[index];
+                                      CommunityModel community = snapshot.data[index];
                                       return ExploreFeaturedCard(
                                         imageUrl: community.logo_url,
                                         communityName: community.name,
                                         onTap: () {
                                           Navigator.of(context).push(
                                             MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ExploreCommunityDetails(
+                                              builder: (context) => ExploreCommunityDetails(
                                                 communityId: community.id,
-                                                isSignedUser:
-                                                    widget.isUserSignedIn,
+                                                isSignedUser: widget.isUserSignedIn,
                                               ),
                                             ),
                                           );
@@ -939,8 +862,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                 onPressed: () {
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
-                                      builder: (context) =>
-                                          CommunityByCategoryView(
+                                      builder: (context) => CommunityByCategoryView(
                                         isFromNearby: true,
                                         model: CommunityCategoryModel(),
                                         geoPoint: geoPoint,
@@ -967,45 +889,36 @@ class _ExplorePageState extends State<ExplorePage> {
                                 var status = widget.isUserSignedIn
                                     ? _bloc.compareUserStatus(
                                         snapshot.data[index],
-                                        SevaCore.of(context)
-                                            ?.loggedInUser
-                                            ?.sevaUserID,
+                                        SevaCore.of(context)?.loggedInUser?.sevaUserID,
                                       )
                                     : CompareUserStatus.JOIN;
                                 CommunityModel community = snapshot.data[index];
                                 return CommunityCard(
                                   memberIds: community.members.length > 20
                                       ? community.members.sublist(0, 20)
-                                      : community.members
-                                          .sublist(0, community.members.length),
+                                      : community.members.sublist(0, community.members.length),
                                   imageUrl: community.logo_url,
                                   name: community.name,
-                                  memberCount:
-                                      community.members.length.toString(),
-                                  buttonLabel:
-                                      status == CompareUserStatus.JOINED
-                                          ? S.of(context).joined
-                                          : S.of(context).info,
-                                  buttonColor:
-                                      status == CompareUserStatus.JOINED
-                                          ? HexColor("#D2D2D2")
-                                          : Theme.of(context).accentColor,
+                                  memberCount: community.members.length.toString(),
+                                  buttonLabel: status == CompareUserStatus.JOINED
+                                      ? S.of(context).joined
+                                      : S.of(context).info,
+                                  buttonColor: status == CompareUserStatus.JOINED
+                                      ? HexColor("#D2D2D2")
+                                      : Theme.of(context).accentColor,
                                   textColor: Colors.white,
-                                  onbuttonPress:
-                                      status == CompareUserStatus.JOINED
-                                          ? null
-                                          : () {
-                                              Navigator.of(context).push(
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      ExploreCommunityDetails(
-                                                    communityId: community.id,
-                                                    isSignedUser:
-                                                        widget.isUserSignedIn,
-                                                  ),
-                                                ),
-                                              );
-                                            },
+                                  onbuttonPress: status == CompareUserStatus.JOINED
+                                      ? null
+                                      : () {
+                                          Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (context) => ExploreCommunityDetails(
+                                                communityId: community.id,
+                                                isSignedUser: widget.isUserSignedIn,
+                                              ),
+                                            ),
+                                          );
+                                        },
                                 );
                               },
                             ),
@@ -1085,8 +998,7 @@ class SeeAllButton extends StatelessWidget {
 }
 
 class SearchBar extends StatelessWidget {
-  SearchBar({Key key, this.hintText, this.onChanged, this.controller})
-      : super(key: key);
+  SearchBar({Key key, this.hintText, this.onChanged, this.controller}) : super(key: key);
 
   final String hintText;
   final ValueChanged<String> onChanged;

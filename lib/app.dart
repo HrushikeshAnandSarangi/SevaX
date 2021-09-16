@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+
 // import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
@@ -12,6 +13,7 @@ import 'package:sevaexchange/auth/auth.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/localization/app_timezone.dart';
 import 'package:sevaexchange/localization/applanguage.dart';
 import 'package:sevaexchange/ui/screens/auth/bloc/user_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_page_base_bloc.dart';
@@ -40,8 +42,7 @@ Future<void> initApp(Flavor flavor) async {
     sound: true,
   );
 
-  ConnectionStatusSingleton connectionStatus =
-      ConnectionStatusSingleton.getInstance();
+  ConnectionStatusSingleton connectionStatus = ConnectionStatusSingleton.getInstance();
   connectionStatus.initialize();
 
   //Initialize app details
@@ -76,8 +77,11 @@ Future<void> initApp(Flavor flavor) async {
 class MainApplication extends StatelessWidget {
   final bool skipToHomePage;
   final AppLanguage appLanguage = AppLanguage()..fetchLocale();
+  final AppTimeZone appTimeZone = AppTimeZone()..fetchTimezone();
+
   MainApplication({Key key, this.skipToHomePage = false}) : super(key: key);
   final UserBloc userBloc = UserBloc();
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -107,30 +111,35 @@ class MainApplication extends StatelessWidget {
         create: (_) => appLanguage,
         child: Consumer<AppLanguage>(
           builder: (context, model, child) {
-            return AuthProvider(
-              auth: Auth(),
-              child: MaterialApp(
-                locale: model.appLocal,
-                supportedLocales: S.delegate.supportedLocales,
-                localizationsDelegates: [
-                  S.delegate,
-                  GlobalMaterialLocalizations.delegate,
-                  GlobalWidgetsLocalizations.delegate,
-                  GlobalCupertinoLocalizations.delegate,
-                ],
-                debugShowCheckedModeBanner: false,
-                theme: FlavorConfig.values.theme,
-                title: AppConfig.appName,
-                builder: (context, child) {
-                  return GestureDetector(
-                    child: child,
-                    onTap: () {
-                      FocusScope.of(context).unfocus();
+            return ChangeNotifierProvider<AppTimeZone>(
+              create: (_) => appTimeZone,
+              child: Consumer<AppTimeZone>(
+                builder: (context, timezone, child) => AuthProvider(
+                  auth: Auth(),
+                  child: MaterialApp(
+                    locale: model.appLocal,
+                    supportedLocales: S.delegate.supportedLocales,
+                    localizationsDelegates: [
+                      S.delegate,
+                      GlobalMaterialLocalizations.delegate,
+                      GlobalWidgetsLocalizations.delegate,
+                      GlobalCupertinoLocalizations.delegate,
+                    ],
+                    debugShowCheckedModeBanner: false,
+                    theme: FlavorConfig.values.theme,
+                    title: AppConfig.appName,
+                    builder: (context, child) {
+                      return GestureDetector(
+                        child: child,
+                        onTap: () {
+                          FocusScope.of(context).unfocus();
+                        },
+                      );
                     },
-                  );
-                },
-                home: SplashView(
-                  skipToHomePage: skipToHomePage,
+                    home: SplashView(
+                      skipToHomePage: skipToHomePage,
+                    ),
+                  ),
                 ),
               ),
             );

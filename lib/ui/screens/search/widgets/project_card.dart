@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
+import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/widgets/tag_view.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -17,6 +18,7 @@ class ProjectsCard extends StatelessWidget {
   final int pendingTask;
   final Function onTap;
   final bool isRecurring;
+
   const ProjectsCard({
     Key key,
     this.isRecurring,
@@ -42,6 +44,10 @@ class ProjectsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var projectLocation = getLocation(location);
+    String loggedintimezone = SevaCore.of(context).loggedInUser != null
+        ? SevaCore.of(context).loggedInUser.timezone
+        : 'IST';
+
     return InkWell(
       onTap: onTap,
       child: Card(
@@ -67,9 +73,7 @@ class ProjectsCard extends StatelessWidget {
                   Text(
                     timeago.format(
                       DateTime.fromMillisecondsSinceEpoch(timestamp),
-                      locale: S.of(context).localeName == 'sn'
-                          ? 'en'
-                          : S.of(context).localeName,
+                      locale: S.of(context).localeName == 'sn' ? 'en' : S.of(context).localeName,
                     ),
                     style: TextStyle(color: Colors.grey),
                   ),
@@ -82,8 +86,7 @@ class ProjectsCard extends StatelessWidget {
                   CircleAvatar(
                     radius: 38,
                     backgroundColor: Theme.of(context).primaryColor,
-                    backgroundImage:
-                        NetworkImage(photoUrl ?? defaultProjectImageURL),
+                    backgroundImage: NetworkImage(photoUrl ?? defaultProjectImageURL),
                   ),
                   SizedBox(width: 12),
                   Expanded(
@@ -92,8 +95,7 @@ class ProjectsCard extends StatelessWidget {
                       children: <Widget>[
                         Text(
                           title,
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                         SizedBox(height: 5),
                         Visibility(
@@ -110,12 +112,15 @@ class ProjectsCard extends StatelessWidget {
                           crossAxisAlignment: WrapCrossAlignment.center,
                           children: <Widget>[
                             Text(
-                              getTimeFormattedString(
+                              /*getTimeFormattedString(
                                 startTime,
                                 S.of(context).localeName,
+                              )*/
+                              getTimeZoneFormattedString(
+                                startTime,
+                                loggedintimezone,
                               ),
-                              style:
-                                  TextStyle(fontSize: 12, color: Colors.grey),
+                              style: TextStyle(fontSize: 12, color: Colors.grey),
                             ),
                             SizedBox(width: 2),
                             Icon(
@@ -125,12 +130,16 @@ class ProjectsCard extends StatelessWidget {
                             ),
                             SizedBox(width: 2),
                             Text(
-                              getTimeFormattedString(
+                              /*getTimeFormattedString(
                                 endTime,
                                 S.of(context).localeName,
+                              ),*/
+
+                              getTimeZoneFormattedString(
+                                endTime,
+                                loggedintimezone,
                               ),
-                              style:
-                                  TextStyle(fontSize: 12, color: Colors.grey),
+                              style: TextStyle(fontSize: 12, color: Colors.grey),
                             ),
                           ],
                         ),

@@ -17,6 +17,7 @@ import 'package:sevaexchange/views/exchange/widgets/request_enums.dart';
 import 'package:sevaexchange/views/exchange/edit_request/edit_request.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:usage/uuid/uuid.dart';
+import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 
 import '../flavor_config.dart';
 
@@ -265,13 +266,16 @@ Future<bool> deleteFireBaseImage({String imageUrl}) async {
   });
 }
 
-String getStartDateFormat(DateTime date) {
+String getStartDateFormat(DateTime date,{BuildContext context}) {
   var suffix = "th";
   var digit = date.day % 10;
   if ((digit > 0 && digit < 4) && (date.day < 11 || date.day > 13)) {
     suffix = ["st", "nd", "rd"][digit - 1];
   }
+  if(context == null)
   return new DateFormat("EEEE MMM d'$suffix',  h:mm a").format(date);
+  else
+  return new DateFormat("EEEE MMM d'$suffix',  h:mm a").format(context.getDateTime(date.millisecondsSinceEpoch));
 }
 
 Future<double> currencyConversion(
