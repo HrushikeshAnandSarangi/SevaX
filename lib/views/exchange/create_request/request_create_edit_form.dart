@@ -420,6 +420,10 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
                                         projectModelList: projectModelList,
                                         selectedInstructorModel:
                                             selectedInstructorModel,
+                                        selectedInstructorModelChanged:
+                                            (value) {
+                                          selectedInstructorModel = value;
+                                        },
                                         timebankId: widget.timebankId,
                                         comingFrom: widget.comingFrom,
                                         onCreateEventChanged: (value) =>
@@ -1058,6 +1062,7 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
           } else if (selectedInstructorModel.communities
                   .contains(requestModel.communityId) &&
               selectedInstructorModel.sevaUserID != requestModel.sevaUserId) {
+            logger.e("#123 Inside Notification");
             speakerNotificationDocRef =
                 await sendNotificationToMemberOneToManyRequest(
                     communityId: requestModel.communityId,
@@ -1224,7 +1229,6 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
   Future _updateProjectModel() async {
     if (widget.projectId.isNotEmpty && !requestModel.isRecurring) {
       ProjectModel projectModel = widget.projectModel;
-
       projectModel.pendingRequests.add(requestModel.id);
       await FirestoreManager.updateProject(projectModel: projectModel);
     }

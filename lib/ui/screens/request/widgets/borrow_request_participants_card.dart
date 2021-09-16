@@ -86,9 +86,10 @@ class BorrowRequestParticipantsCard extends StatelessWidget {
                     Text(
                       requestModel.roomOrTool == LendingType.PLACE.readable
                           ? lendingPlaceModel
-                              .lendingPlaceModel.contactInformation
-                          : borrowAcceptorModel
-                              .acceptorEmail, //add date on which potential borrower requested
+                                  .lendingPlaceModel.contactInformation ??
+                              ''
+                          : borrowAcceptorModel.acceptorEmail ??
+                              '', //add date on which potential borrower requested
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(

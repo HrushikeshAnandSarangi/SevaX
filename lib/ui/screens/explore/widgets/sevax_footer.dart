@@ -50,7 +50,6 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
 
   @override
   Widget build(BuildContext context) {
-
     timezoneName = Provider.of<AppTimeZone>(context).appTimeZone.toString();
 
     return Container(
@@ -354,36 +353,36 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
       case FooterData.Communities:
         return getOnTap(context, S.of(context).communities_explore, 'aboutSeva');
 
-      case FooterData.Create_offer:
-        return getOnTap(context, S.of(context).create_offer, 'trainingVideo');
-
-      case FooterData.Create_request:
-        return getOnTap(context, S.of(context).create_request, 'trainingVideo');
-
-      case FooterData.Discover:
-        return getOnTap(context, S.of(context).discover_explore, 'trainingVideo');
-
       case FooterData.Diversity_Belonging:
         return getOnTap(context, S.of(context).diversity_belonging_explore, 'diversityLink');
 
       case FooterData.Events:
         return getOnTap(context, S.of(context).projects, 'projectsInfoLink');
 
+      case FooterData.Create_offer:
+        return getOnTap(context, S.of(context).create_offer, 'offersInfoLink');
+
+      case FooterData.Create_request:
+        return getOnTap(context, S.of(context).create_request, 'requestsInfoLink');
+
+      case FooterData.Discover:
+        return getOnTap(context, S.of(context).discover_explore, 'trainingVideoDiscover');
+
       case FooterData.Guidebooks:
-        return getOnTap(context, S.of(context).guidebooks_explore, 'trainingVideo');
+        return getOnTap(context, S.of(context).guidebooks_explore, 'trainingVideoGuidebooks');
 
       case FooterData.Help:
         return getOnTap(
           context,
           S.of(context).help,
-          'help_videos_admin',
+          "trainingVideo",
         );
 
       case FooterData.Hosting:
-        return getOnTap(context, S.of(context).hosting_explore, 'aboutSeva');
+        return getOnTap(context, S.of(context).hosting_explore, 'hostingCommunity');
 
       case FooterData.Host_community:
-        return getOnTap(context, S.of(context).host_a_community_explore, 'aboutSeva');
+        return getOnTap(context, S.of(context).host_a_community_explore, 'hostingCommunity');
 
       case FooterData.Organize_event:
         return getOnTap(context, S.of(context).organize_an_event_explore, 'projectsInfoLink');
