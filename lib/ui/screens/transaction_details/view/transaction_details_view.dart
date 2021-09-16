@@ -201,7 +201,8 @@ class _TransactionDetailsViewState extends State<TransactionDetailsView> {
                                         SevaCore.of(context)
                                                 .loggedInUser
                                                 .photoURL ??
-                                            defaultUserImageURL, //need to add condition if from or to
+                                            defaultUserImageURL,
+                                        //need to add condition if from or to
                                       ),
                                     ),
                                     SizedBox(width: 8),
