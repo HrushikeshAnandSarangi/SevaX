@@ -847,8 +847,6 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                                 projectTemplateModel: projectTemplateModel);
                           }
 
-                          showProgressDialog(S.of(context).creating_project);
-
                           if (RepeatWidgetState.isRecurring) {
                             projectModel.isRecurring = true;
                             projectModel.recurringDays =
@@ -874,6 +872,15 @@ class _CreateEditProjectState extends State<CreateEditProject> {
 
                             projectModel.associatedMessaginfRoomId =
                                 messagingRoomId;
+
+                            if (projectModel.isRecurring &&
+                                projectModel.recurringDays.length == 0) {
+                              showDialogForTitle(
+                                  dialogTitle:
+                                  S.of(context).validation_error_empty_recurring_days);
+                              return;
+                            }
+                            showProgressDialog(S.of(context).creating_project);
 
                             await WatchDog.createRecurringEvents(
                                 projectModel: projectModel);
