@@ -97,7 +97,6 @@ class _RequestDonationDisputePageState extends State<RequestDonationDisputePage>
         timebankModel = value;
       });
     });
-    widget.model.goodsDetails.donatedGoods;
     _bloc.initGoodsReceived(widget.model.goodsDetails.donatedGoods);
   }
 
@@ -169,7 +168,7 @@ class _RequestDonationDisputePageState extends State<RequestDonationDisputePage>
           // print('Inside, switch');
           // null will happen for widget.model.cashDetails.pledgedAmount when its a offer
           // requests flow (if is written for clarity sake if we handle this logic at pledgedAmount Itself if is not nessasary (recommendation rename pledgeAmount to amount)
-          if (widget.model.requestIdType == S.of(context).offer &&
+          if (widget.model.requestIdType == 'offer' &&
               widget.model.donationStatus == DonationStatus.PLEDGED) {
 //          id = widget.notificationId;
             amount = 0;
@@ -242,6 +241,7 @@ class _RequestDonationDisputePageState extends State<RequestDonationDisputePage>
                     )
                     .then(handleCallBackDisputeCash);
               }
+              logger.e("#AFTER ${widget.model.donationStatus}");
             }).catchError((onError) {
               log("Inside ERROR PART $onError");
             });
@@ -262,7 +262,7 @@ class _RequestDonationDisputePageState extends State<RequestDonationDisputePage>
           progressDialogNew.show();
 
           if (widget.model.donationStatus == DonationStatus.REQUESTED &&
-              widget.model.requestIdType == S.of(context).offer) {
+              widget.model.requestIdType == 'offer') {
             // for the offers.
             widget.model.donationStatus = DonationStatus.PLEDGED;
           }
@@ -291,6 +291,8 @@ class _RequestDonationDisputePageState extends State<RequestDonationDisputePage>
     }
   }
 
+  var n = 0;
+
   @override
   Widget build(BuildContext context) {
     operatingMode = widget.model.donorSevaUserId == SevaCore.of(context).loggedInUser.sevaUserID
@@ -298,7 +300,7 @@ class _RequestDonationDisputePageState extends State<RequestDonationDisputePage>
         : OperatingMode.CREATOR;
     var name;
     var toWhom;
-    if (widget.model.requestIdType == S.of(context).offer &&
+    if (widget.model.requestIdType == 'offer' &&
         widget.model.donationStatus == DonationStatus.REQUESTED) {
       name = widget.model.receiverDetails.name;
     } else {
@@ -307,6 +309,8 @@ class _RequestDonationDisputePageState extends State<RequestDonationDisputePage>
           ? widget.model.receiverDetails.name
           : widget.model.donorDetails.name;
     }
+    n++;
+    logger.e(" ######### ${widget.model.donationStatus.toString()} $n");
     return Scaffold(
       key: _key,
       appBar: AppBar(
@@ -330,7 +334,7 @@ class _RequestDonationDisputePageState extends State<RequestDonationDisputePage>
                       model: widget.model,
                       scaffoldKey: _key,
                       to: widget.model.cashDetails.pledgedAmount != null
-                          ? widget.model.requestIdType == S.of(context).offer
+                          ? widget.model.requestIdType == 'offer'
                               ? toWhom
                               : widget.model.donationAssociatedTimebankDetails.timebankTitle
                           : name,
@@ -443,7 +447,7 @@ class _RequestDonationDisputePageState extends State<RequestDonationDisputePage>
                             isTimebankMessage: false,
                             communityId: loggedInUser.currentCommunity,
                             entityId: widget.model.id,
-                            showToCommunities: widget.model.requestIdType == S.of(context).offer
+                            showToCommunities: widget.model.requestIdType == 'offer'
                                 ? [
                                     widget.model.donorDetails.communityId,
                                     widget.model.receiverDetails.communityId,
@@ -452,7 +456,7 @@ class _RequestDonationDisputePageState extends State<RequestDonationDisputePage>
                                     widget.model.donorDetails.communityId,
                                     timebankModel.communityId
                                   ],
-                            interCommunity: widget.model.requestIdType == S.of(context).offer
+                            interCommunity: widget.model.requestIdType == 'offer'
                                 ? widget.model.donorDetails.communityId !=
                                     widget.model.receiverDetails.communityId
                                 : widget.model.donorDetails.communityId !=
@@ -468,7 +472,7 @@ class _RequestDonationDisputePageState extends State<RequestDonationDisputePage>
 
                           await HandlerForModificationManager.createChatForDispute(
                             entityId: widget.model.id,
-                            showToCommunities: widget.model.requestIdType == S.of(context).offer
+                            showToCommunities: widget.model.requestIdType == 'offer'
                                 ? [
                                     widget.model.donorDetails.communityId,
                                     widget.model.receiverDetails.communityId,
@@ -477,7 +481,7 @@ class _RequestDonationDisputePageState extends State<RequestDonationDisputePage>
                                     widget.model.donorDetails.communityId,
                                     timebankModel.communityId
                                   ],
-                            interCommunity: widget.model.requestIdType == S.of(context).offer
+                            interCommunity: widget.model.requestIdType == 'offer'
                                 ? widget.model.donorDetails.communityId !=
                                     widget.model.receiverDetails.communityId
                                 : widget.model.donorDetails.communityId !=
@@ -534,7 +538,7 @@ class _RequestDonationDisputePageState extends State<RequestDonationDisputePage>
                             context: context,
                             timeBankId: widget.model.timebankId,
                             entityId: widget.model.id,
-                            showToCommunities: widget.model.requestIdType == S.of(context).offer
+                            showToCommunities: widget.model.requestIdType == 'offer'
                                 ? [
                                     widget.model.donorDetails.communityId,
                                     widget.model.receiverDetails.communityId,
@@ -543,7 +547,7 @@ class _RequestDonationDisputePageState extends State<RequestDonationDisputePage>
                                     widget.model.donorDetails.communityId,
                                     timebankModel.communityId
                                   ],
-                            interCommunity: widget.model.requestIdType == S.of(context).offer
+                            interCommunity: widget.model.requestIdType == 'offer'
                                 ? widget.model.donorDetails.communityId !=
                                     widget.model.receiverDetails.communityId
                                 : widget.model.donorDetails.communityId !=
@@ -791,8 +795,7 @@ class _CashFlow extends StatelessWidget {
         SizedBox(
           height: 20,
         ),
-        model.requestIdType == S.of(context).offer &&
-                model.donationStatus == DonationStatus.REQUESTED
+        model.requestIdType == 'offer' && model.donationStatus == DonationStatus.REQUESTED
             ? offerDonatePaymentDetails()
             : Text(''),
         Divider(
