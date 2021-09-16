@@ -513,7 +513,7 @@ class RequestListItemsState extends State<RequestListItems> {
             '' +
             S.of(context).request);
       case RequestType.BORROW:
-        return getTagMainFrame(L.of(context).borrow_request_title);
+        return getTagMainFrame(S.of(context).borrow_request_title);
       case RequestType.TIME:
         return getTagMainFrame(S.of(context).time_request);
 

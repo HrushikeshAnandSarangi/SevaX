@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
@@ -19,7 +20,7 @@ String getTimelineLabel(
 
   logger.e('FINAL LABEL: ' + finalLabel);
 
-  return finalLabel == '' ? L.of(context).error_loading_status : finalLabel;
+  return finalLabel == '' ? S.of(context).error_loading_status : finalLabel;
 }
 
 //
@@ -28,58 +29,58 @@ String getTimelineLabel(
 getTimelineLabelForRequests(TimelineTransactionTags tag, BuildContext context) {
   switch (tag) {
     case TimelineTransactionTags.APPLIED_REQUEST:
-      return L.of(context).time_applied_request_tag;
+      return S.of(context).time_applied_request_tag;
       break;
     case TimelineTransactionTags.WITHDRAWN_REQUEST:
-      return L.of(context).time_withdrawn_request_tag;
+      return S.of(context).time_withdrawn_request_tag;
       break;
     case TimelineTransactionTags.REQUEST_APPROVED:
-      return L.of(context).time_request_approved_tag;
+      return S.of(context).time_request_approved_tag;
       break;
     case TimelineTransactionTags.REQUEST_REJECTED:
-      return L.of(context).time_request_rejected_tag;
+      return S.of(context).time_request_rejected_tag;
       break;
     case TimelineTransactionTags.CLAIM_CREDITS:
-      return L.of(context).time_claim_credits_tag;
+      return S.of(context).time_claim_credits_tag;
       break;
     case TimelineTransactionTags.CLAIM_ACCEPTED:
-      return L.of(context).time_claim_accepted_tag;
+      return S.of(context).time_claim_accepted_tag;
       break;
     case TimelineTransactionTags.CLAIM_DECLINED:
-      return L.of(context).time_claim_declined_tag;
+      return S.of(context).time_claim_declined_tag;
       break;
     case TimelineTransactionTags.PLEDGED_BY_DONOR:
-      return L.of(context).goods_pledged_by_donor_tag;
+      return S.of(context).goods_pledged_by_donor_tag;
       break;
     case TimelineTransactionTags.ACKNOWLEDGED_GOODS_DONATION:
-      return L.of(context).goods_acknowledged_donation_tag;
+      return S.of(context).goods_acknowledged_donation_tag;
       break;
     case TimelineTransactionTags.GOODS_DONATION_MODIFIED_BY_CREATOR:
-      return L.of(context).goods_donation_modified_by_creator_tag;
+      return S.of(context).goods_donation_modified_by_creator_tag;
       break;
     case TimelineTransactionTags.GOODS_DONATION_CREATOR_REJECTED:
-      return L.of(context).goods_donation_creator_rejected_tag;
+      return S.of(context).goods_donation_creator_rejected_tag;
       break;
     case TimelineTransactionTags.GOODS_DONATION_MODIFIED_BY_DONOR:
-      return L.of(context).goods_donation_modified_by_donor_tag;
+      return S.of(context).goods_donation_modified_by_donor_tag;
       break;
     case TimelineTransactionTags.ACKNOWLEDGED_MONEY_DONATION:
-      return L.of(context).money_acknowledged_donation_tag;
+      return S.of(context).money_acknowledged_donation_tag;
       break;
     case TimelineTransactionTags.MONEY_DONATION_MODIFIED_BY_CREATOR:
-      return L.of(context).money_donation_modified_by_creator_tag;
+      return S.of(context).money_donation_modified_by_creator_tag;
       break;
     case TimelineTransactionTags.MONEY_DONATION_CREATOR_REJECTED:
-      return L.of(context).money_donation_creator_rejected_tag;
+      return S.of(context).money_donation_creator_rejected_tag;
       break;
     case TimelineTransactionTags.MONEY_DONATION_MODIFIED_BY_DONOR:
-      return L.of(context).money_donation_modified_by_donor_tag;
+      return S.of(context).money_donation_modified_by_donor_tag;
       break;
     case TimelineTransactionTags.MONEY_DONATION_REJECTED_BY_CREATOR:
-      return L.of(context).money_donation_creator_rejected_tag;
+      return S.of(context).money_donation_creator_rejected_tag;
       break;
     case TimelineTransactionTags.GOODS_DONATION_REJECTED_BY_CREATOR:
-      return L.of(context).goods_donation_creator_rejected_tag;
+      return S.of(context).goods_donation_creator_rejected_tag;
       break;
     default:
       return '';
@@ -223,19 +224,19 @@ TimelineTransactionTags getConvertedTimelineTransactionTagsType(
 // getTimelineLabelForGoodsRequest(tag, BuildContext context) {
 //   switch (tag) {
 //     case GoodsRequestTransactionTags.PLEDGED_BY_DONOR:
-//       return L.of(context).goods_pledged_by_donor_tag;
+//       return S.of(context).goods_pledged_by_donor_tag;
 //       break;
 //     case GoodsRequestTransactionTags.ACKNOWLEDGED_GOODS_DONATION:
-//       return L.of(context).goods_acknowledged_donation_tag;
+//       return S.of(context).goods_acknowledged_donation_tag;
 //       break;
 //     case GoodsRequestTransactionTags.GOODS_DONATION_MODIFIED_BY_CREATOR:
-//       return L.of(context).goods_donation_modified_by_creator_tag;
+//       return S.of(context).goods_donation_modified_by_creator_tag;
 //       break;
 //     case GoodsRequestTransactionTags.GOODS_DONATION_CREATOR_REJECTED:
-//       return L.of(context).goods_donation_creator_rejected_tag;
+//       return S.of(context).goods_donation_creator_rejected_tag;
 //       break;
 //     case GoodsRequestTransactionTags.GOODS_DONATION_MODIFIED_BY_DONOR:
-//       return L.of(context).goods_donation_modified_by_donor_tag;
+//       return S.of(context).goods_donation_modified_by_donor_tag;
 //       break;
 //   }
 // }

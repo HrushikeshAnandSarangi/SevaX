@@ -49,9 +49,10 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
 
   @override
   Widget build(BuildContext context) {
-    isAdminOrOwner =
-        widget.timebankModel.admins.contains(SevaCore.of(context).loggedInUser.sevaUserID) ||
-            widget.timebankModel.organizers.contains(SevaCore.of(context).loggedInUser.sevaUserID);
+    isAdminOrOwner = widget.timebankModel.admins
+            .contains(SevaCore.of(context).loggedInUser.sevaUserID) ||
+        widget.timebankModel.organizers
+            .contains(SevaCore.of(context).loggedInUser.sevaUserID);
     return Scaffold(
       body: Column(
         children: <Widget>[
@@ -81,11 +82,12 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                   child: TransactionLimitCheck(
                     comingFrom: ComingFrom.Projects,
                     timebankId: widget.timebankId,
-                    isSoftDeleteRequested: widget.timebankModel.requestedSoftDelete,
+                    isSoftDeleteRequested:
+                        widget.timebankModel.requestedSoftDelete,
                     child: ConfigurationCheck(
                       actionType: 'create_events',
-                      role: memberType(
-                          widget.timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
+                      role: memberType(widget.timebankModel,
+                          SevaCore.of(context).loggedInUser.sevaUserID),
                       child: GestureDetector(
                         child: Container(
                           margin: EdgeInsets.only(left: 0),
@@ -107,8 +109,11 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
           Expanded(
             child: StreamBuilder<ProjectModelList>(
               stream: FirestoreManager.getAllProjectListStream(
-                  timebankid: widget.timebankId, isAdminOrOwner: isAdminOrOwner, context: context),
-              builder: (BuildContext context, AsyncSnapshot<ProjectModelList> projectListSnapshot) {
+                  timebankid: widget.timebankId,
+                  isAdminOrOwner: isAdminOrOwner,
+                  context: context),
+              builder: (BuildContext context,
+                  AsyncSnapshot<ProjectModelList> projectListSnapshot) {
                 if (projectListSnapshot.hasError) {
                   log("===================== ===== > ${projectListSnapshot.error}");
                   return Text(S.of(context).general_stream_error);
@@ -117,11 +122,13 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                   case ConnectionState.waiting:
                     return LoadingIndicator();
                   default:
-                    List<ProjectModel> projectModelList = projectListSnapshot.data.events;
+                    List<ProjectModel> projectModelList =
+                        projectListSnapshot.data.events;
                     List<ProjectModel> completedProjectModelList =
                         projectListSnapshot.data.completedEvents;
 
-                    if (projectModelList.length == 0 && completedProjectModelList.length == 0) {
+                    if (projectModelList.length == 0 &&
+                        completedProjectModelList.length == 0) {
                       return Center(
                         child: Padding(
                           padding: const EdgeInsets.all(12),
@@ -141,20 +148,24 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                           Column(
                             mainAxisSize: MainAxisSize.max,
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: projectModelList.map((model) => getEventCard(model)).toList(),
+                            children: projectModelList
+                                .map((model) => getEventCard(model))
+                                .toList(),
                           ),
                           completedProjectModelList.length != 0
                               ? Padding(
-                                  padding: const EdgeInsets.only(left: 8, top: 8),
+                                  padding:
+                                      const EdgeInsets.only(left: 8, top: 8),
                                   child: Text(
-                                    L.of(context).completed_events,
+                                    S.of(context).completed_events,
                                     style: TextStyle(
                                       fontSize: 18,
                                     ),
                                   ),
                                 )
                               : SizedBox(),
-                          ...completedProjectModelList.map((model) => getEventCard(model))
+                          ...completedProjectModelList
+                              .map((model) => getEventCard(model))
                         ],
                       ),
                     );
@@ -168,9 +179,10 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
   }
 
   Widget getEventCard(ProjectModel project) {
-    int totalTask = project.completedRequests != null && project.pendingRequests != null
-        ? project.pendingRequests.length + project.completedRequests.length
-        : 0;
+    int totalTask =
+        project.completedRequests != null && project.pendingRequests != null
+            ? project.pendingRequests.length + project.completedRequests.length
+            : 0;
 
     return ProjectsCard(
       isRecurring: project.isRecurring,
@@ -219,7 +231,8 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
 
   void navigateToCreateProject() {
     if (widget.timebankModel.id == FlavorConfig.values.timebankId &&
-        !isAccessAvailable(widget.timebankModel, SevaCore.of(context).loggedInUser.sevaUserID)) {
+        !isAccessAvailable(widget.timebankModel,
+            SevaCore.of(context).loggedInUser.sevaUserID)) {
       showAdminAccessMessage(context: context);
     } else {
       Navigator.push(

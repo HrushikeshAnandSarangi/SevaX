@@ -197,10 +197,10 @@ class CompletedTasks {
           TasksCardWrapper(
             taskCard: ToDoCard(
               title: model.title,
-              subTitle: L.of(context).lent_to + model.fullName,
+              subTitle: S.of(context).lent_to_text + model.fullName,
               timeInMilliseconds: model.requestStart,
               onTap: () async {},
-              tag: L.of(context).borrow_request_lender,
+              tag: S.of(context).borrow_request_lender,
             ),
             taskTimestamp: model.requestStart,
           ),
@@ -296,7 +296,7 @@ class CompletedTasks {
           onTap: null,
           title: element.individualOfferDataModel.title,
           subTitle: element.individualOfferDataModel.description,
-          tag: L.of(context).completed_lending_offer,
+          tag: S.of(context).completed_lending_offer,
           timeInMilliseconds: element.lendingOfferDetailsModel.startDate,
         ),
       ));

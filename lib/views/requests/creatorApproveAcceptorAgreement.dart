@@ -137,7 +137,7 @@ class _CreatorApproveAcceptorAgreeementState
               child: Text(
                   S.of(context).terms_acknowledgement_text +
                       '. ' +
-                      L.of(context).agree_to_signature_legal_text,
+                      S.of(context).agree_to_signature_legal_text,
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,

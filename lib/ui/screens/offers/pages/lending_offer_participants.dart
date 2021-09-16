@@ -241,7 +241,7 @@ class LendingOfferParticipants extends StatelessWidget {
             child: Text(
               !lendingOfferAcceptorModel.isLenderGaveReview
                   ? S.of(context).review
-                  : L.of(context).returned_items,
+                  : S.of(context).returned_items,
               style: TextStyle(color: Colors.black),
             ),
           )
@@ -252,7 +252,7 @@ class LendingOfferParticipants extends StatelessWidget {
             color: HexColor('#FAFAFA'),
             onPressed: () {},
             child: Text(
-              L.of(context).items_taken,
+              S.of(context).items_taken,
               style: TextStyle(color: Colors.black),
             ),
           )
@@ -263,7 +263,7 @@ class LendingOfferParticipants extends StatelessWidget {
             color: HexColor('#FAFAFA'),
             onPressed: () {},
             child: Text(
-              L.of(context).arrived,
+              S.of(context).arrived_text,
               style: TextStyle(color: Colors.black),
             ),
           )
@@ -287,7 +287,7 @@ class LendingOfferParticipants extends StatelessWidget {
             child: Text(
               !lendingOfferAcceptorModel.isLenderGaveReview
                   ? S.of(context).review
-                  : L.of(context).departed,
+                  : S.of(context).departed_text,
               style: TextStyle(color: Colors.black),
             ),
           )

@@ -68,7 +68,7 @@ class TimebankRequestWidget extends StatelessWidget {
                   if (model.approvedUsers.length >= 1) {
                     errorDialog(
                         context: context,
-                        error: L.of(context).already_accepted_lender);
+                        error: S.of(context).already_accepted_lender);
                   } else {
                     Navigator.of(context).push(
                       MaterialPageRoute(

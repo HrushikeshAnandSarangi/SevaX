@@ -162,7 +162,7 @@ class _TransactionDetailsViewState extends State<TransactionDetailsView> {
                           text: TextSpan(
                             children: [
                               TextSpan(
-                                text: L.of(context).account_balance,
+                                text: S.of(context).account_balance,
                                 style: TextStyle(
                                   fontSize: 14,
                                   color: Color(0xFF9B9B9B),

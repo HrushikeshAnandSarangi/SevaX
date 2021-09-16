@@ -180,8 +180,8 @@ class _OfferAgreementFormState extends State<AgreementForm> {
         centerTitle: true,
         title: Text(
           widget.placeOrItem == LendingType.PLACE.readable
-              ? L.of(context).choose_place_agreement
-              : L.of(context).choose_item_agreement,
+              ? S.of(context).choose_place_agreement
+              : S.of(context).choose_item_agreement,
           style: TextStyle(
               fontFamily: "Europa", fontSize: 20, color: Colors.white),
         ),
@@ -265,7 +265,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                           documentNameTextFieldWidget,
                           SizedBox(height: 17),
                           Text(
-                            L.of(context).borrower_responsibilities,
+                            S.of(context).borrower_responsibilities,
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -274,7 +274,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                             ),
                           ),
                           Text(
-                            L.of(context).borrower_responsibilities_subtext,
+                            S.of(context).borrower_responsibilities_subtext,
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
@@ -286,7 +286,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                L.of(context).liability_damage,
+                                S.of(context).liability_damage,
                                 style: TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.bold,
@@ -324,7 +324,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                L.of(context).use_disclaimer,
+                                S.of(context).use_disclaimer,
                                 style: TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.bold,
@@ -364,7 +364,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      L.of(context).delivery_return_equipment,
+                                      S.of(context).delivery_return_equipment,
                                       style: TextStyle(
                                         fontSize: 15,
                                         fontWeight: FontWeight.bold,
@@ -404,7 +404,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      L.of(context).refund_deposit,
+                                      S.of(context).refund_deposit,
                                       style: TextStyle(
                                         fontSize: 15,
                                         fontWeight: FontWeight.bold,
@@ -445,7 +445,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      L.of(context).maintain_repair,
+                                      S.of(context).maintain_repair,
                                       style: TextStyle(
                                         fontSize: 15,
                                         fontWeight: FontWeight.bold,
@@ -485,7 +485,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      L.of(context).maintain_clean,
+                                      S.of(context).maintain_clean,
                                       style: TextStyle(
                                         fontSize: 15,
                                         fontWeight: FontWeight.bold,
@@ -522,7 +522,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                                 ),
                           SizedBox(height: 17),
                           Text(
-                            L.of(context).any_specific_conditions,
+                            S.of(context).any_specific_conditions,
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -544,8 +544,8 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                             decoration: InputDecoration(
                               hintText: widget.placeOrItem ==
                                       LendingType.PLACE.readable
-                                  ? L.of(context).place_returned_hint_text
-                                  : L.of(context).item_returned_hint_text,
+                                  ? S.of(context).place_returned_hint_text
+                                  : S.of(context).item_returned_hint_text,
                               hintStyle:
                                   TextStyle(fontSize: 13, color: Colors.grey),
                               // labelText: 'No. of volunteers',
@@ -712,7 +712,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
           // initialValue: documentName,
           decoration: InputDecoration(
             hintText: widget.placeOrItem == LendingType.PLACE.readable
-                ? L.of(context).place_agreement_name_hint
+                ? S.of(context).place_agreement_name_hint
                 : S.of(context).request_title_hint,
             hintStyle: TextStyle(fontSize: 13, color: Colors.grey),
             // labelText: 'No. of volunteers',
@@ -790,7 +790,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
   }
 
   Widget get agreementText {
-    return Text(L.of(context).agreement,
+    return Text(S.of(context).agreement,
         style: TextStyle(
           fontSize: 17,
           fontWeight: FontWeight.w600,
@@ -970,7 +970,6 @@ class _OfferAgreementFormState extends State<AgreementForm> {
 
                       Navigator.of(context).pop();
                       log('NEW TEMPLATE CREATED');
-                    
                     }
                     // } else {
                     //   log('HERE 5');

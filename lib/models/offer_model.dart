@@ -31,7 +31,7 @@ extension OfferTypeExtension on OfferType {
         case RequestType.TIME:
           return S.of(context).time;
         case RequestType.LENDING_OFFER:
-          return L.of(context).lending;
+          return S.of(context).lending_text;
         default:
           return 'Individual'; //Label to be created
       }

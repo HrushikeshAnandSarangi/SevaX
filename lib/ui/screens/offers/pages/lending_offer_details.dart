@@ -159,12 +159,12 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                                           MainAxisAlignment.start,
                                       children: [
                                         title('${lendingPlaceModel.noOfGuests}'
-                                            ' ${L.of(context).guests} '),
+                                            ' ${S.of(context).guests_text} '),
                                         title('${lendingPlaceModel.noOfRooms}'
-                                            ' ${L.of(context).bed_rooms} .'),
+                                            ' ${S.of(context).bed_rooms} .'),
                                         title(
                                             '${lendingPlaceModel.noOfBathRooms}'
-                                            ' ${L.of(context).bath_rooms} '),
+                                            ' ${S.of(context).bath_rooms_text} '),
                                       ],
                                     )
                                   : Container(),
@@ -627,20 +627,20 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
             LendingType.PLACE &&
         !offerModel.lendingOfferDetailsModel.checkedIn &&
         !offerModel.lendingOfferDetailsModel.checkedOut) {
-      return L.of(context).check_in;
+      return S.of(context).check_in_text;
     } else if (offerModel.lendingOfferDetailsModel.lendingModel.lendingType ==
             LendingType.ITEM &&
         !offerModel.lendingOfferDetailsModel.collectedItems &&
         !offerModel.lendingOfferDetailsModel.returnedItems) {
-      return L.of(context).collect_items;
+      return S.of(context).collect_items;
     } else if (offerModel.lendingOfferDetailsModel.checkedIn) {
-      return L.of(context).check_out;
+      return S.of(context).check_out_text;
     } else if (offerModel.lendingOfferDetailsModel.collectedItems) {
-      return L.of(context).return_items;
+      return S.of(context).return_items;
     } else if (offerModel.lendingOfferDetailsModel.returnedItems) {
-      return L.of(context).returned_items;
+      return S.of(context).returned_items;
     } else {
-      return L.of(context).checked_out;
+      return S.of(context).checked_out_text;
     }
   }
 
@@ -661,16 +661,16 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
     } else if (offerModel.lendingOfferDetailsModel.checkedIn) {
       lendingOfferStatus = LendingOfferStatus.CHECKED_OUT;
 
-      return L.of(context).lending_offer_return_place_hint;
+      return S.of(context).lending_offer_return_place_hint;
     } else if (offerModel.lendingOfferDetailsModel.collectedItems) {
       lendingOfferStatus = LendingOfferStatus.ITEMS_RETURNED;
-      return L.of(context).lending_offer_return_items_hint;
+      return S.of(context).lending_offer_return_items_hint;
     } else if (offerModel.lendingOfferDetailsModel.returnedItems) {
       lendingOfferStatus = LendingOfferStatus.ITEMS_RETURNED;
-      return L.of(context).returned_items;
+      return S.of(context).returned_items;
     } else if (offerModel.lendingOfferDetailsModel.checkedOut) {
       lendingOfferStatus = LendingOfferStatus.CHECKED_OUT;
-      return L.of(context).checked_out;
+      return S.of(context).checked_out_text;
     }
   }
 
@@ -778,15 +778,15 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                     return AlertDialog(
                       title: Text(
                           lendingOfferStatus == LendingOfferStatus.CHECKED_OUT
-                              ? L.of(context).check_out
-                              : L.of(context).return_items),
+                              ? S.of(context).check_out_text
+                              : S.of(context).return_items),
                       content: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           Text(
                             lendingOfferStatus == LendingOfferStatus.CHECKED_OUT
-                                ? L.of(context).check_out_alert
-                                : L.of(context).return_items_alert,
+                                ? S.of(context).check_out_alert
+                                : S.of(context).return_items_alert,
                           ),
                           SizedBox(height: 10),
                           Row(
@@ -906,7 +906,7 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                   ' ' +
                   offerModel.fullName;
               subTitle = ' ';
-              dateText = L.of(context).arrival +
+              dateText = S.of(context).arrival_text +
                   ': ' +
                   DateFormat('EEEEEE, MMMM dd yyyy',
                           Locale(getLangTag()).toLanguageTag())
@@ -917,7 +917,7 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                         timezoneAbb:
                             SevaCore.of(context).loggedInUser.timezone),
                   );
-              dateSubText = L.of(context).departure +
+              dateSubText = S.of(context).departure_text +
                   ': ' +
                   DateFormat.MMMd(getLangTag()).add_jm().format(
                         getDateTimeAccToUserTimezone(
@@ -933,7 +933,7 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                       : '';
             } else if (lendingOfferAcceptorModel.status ==
                 LendingOfferStatus.CHECKED_IN) {
-              title = L.of(context).your_departure_date_is;
+              title = S.of(context).your_departure_date_is;
               subTitle = ' ';
               dateText = DateFormat('EEEEEE, MMMM dd yyyy',
                       Locale(getLangTag()).toLanguageTag())
@@ -952,7 +952,7 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
               );
             } else if (lendingOfferAcceptorModel.status ==
                 LendingOfferStatus.CHECKED_OUT) {
-              title = L.of(context).you_departed_on;
+              title = S.of(context).you_departed_on;
               subTitle = ' ';
               dateText = DateFormat('EEEEEE, MMMM dd yyyy',
                       Locale(getLangTag()).toLanguageTag())
@@ -963,7 +963,7 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                     timezoneAbb: SevaCore.of(context).loggedInUser.timezone),
               );
               if (!lendingOfferAcceptorModel.isBorrowerGaveReview) {
-                additionalInstruction = L.of(context).share_feedback_place;
+                additionalInstruction = S.of(context).share_feedback_place;
 
                 reviewWidget = Center(
                   child: CustomChip(
@@ -989,7 +989,7 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
               title = S.of(context).request_approved_by_msg +
                   ' ' +
                   offerModel.fullName;
-              subTitle = L.of(context).items_collected_alert;
+              subTitle = S.of(context).items_collected_alert;
               dateText = DateFormat(
                       'EEEEEE MMMM dd', Locale(getLangTag()).toLanguageTag())
                   .format(
@@ -1022,10 +1022,10 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                       : '';
             } else if (lendingOfferAcceptorModel.status ==
                 LendingOfferStatus.ITEMS_COLLECTED) {
-              title = L.of(context).items_collected_alert_two +
+              title = S.of(context).items_collected_alert_two +
                   ' ' +
                   offerModel.fullName;
-              subTitle = L.of(context).please_return_by;
+              subTitle = S.of(context).please_return_by;
               dateText = DateFormat(
                       'EEEEEE MMMM dd', Locale(getLangTag()).toLanguageTag())
                   .format(
@@ -1043,10 +1043,10 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                   );
             } else if (lendingOfferAcceptorModel.status ==
                 LendingOfferStatus.ITEMS_RETURNED) {
-              title = L.of(context).items_returned_to_lender +
+              title = S.of(context).items_returned_to_lender +
                   ' ' +
                   offerModel.fullName;
-              subTitle = L.of(context).exchanged_completed;
+              subTitle = S.of(context).exchanged_completed;
               dateText = DateFormat(
                       'EEEEEE MMMM dd', Locale(getLangTag()).toLanguageTag())
                   .format(
@@ -1074,7 +1074,7 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                         ),
                       );
               if (!lendingOfferAcceptorModel.isBorrowerGaveReview) {
-                additionalInstruction = L.of(context).share_feedback_place;
+                additionalInstruction = S.of(context).share_feedback_place;
 
                 reviewWidget = Center(
                   child: CustomChip(
@@ -1200,7 +1200,7 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                 offstage: additionalInstruction == null ||
                     additionalInstruction == '',
                 child: Text(
-                  L.of(context).notes,
+                  S.of(context).notes_text,
                   style: TextStyle(
                     fontSize: 14,
                     color: HexColor('#606670'),
