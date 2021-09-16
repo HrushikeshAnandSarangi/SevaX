@@ -35,7 +35,7 @@ class RequestFilters extends StatelessWidget {
           children: [
             CustomChipExploreFilter(
               isHidden: hideFilters[0],
-              label: 'Time',
+              label: S.of(context).time,
               isSelected: filter.timeRequest,
               onTap: () {
                 onTap(
@@ -47,7 +47,7 @@ class RequestFilters extends StatelessWidget {
             ),
             CustomChipExploreFilter(
               isHidden: hideFilters[1],
-              label: 'Money',
+              label: S.of(context).cash,
               isSelected: filter.cashRequest,
               onTap: () {
                 onTap(
@@ -59,7 +59,7 @@ class RequestFilters extends StatelessWidget {
             ),
             CustomChipExploreFilter(
               isHidden: hideFilters[2],
-              label: 'Goods',
+              label: S.of(context).goods,
               isSelected: filter.goodsRequest,
               onTap: () {
                 onTap(
@@ -95,7 +95,7 @@ class RequestFilters extends StatelessWidget {
             ),
             CustomChipExploreFilter(
               isHidden: hideFilters[5],
-              label: 'Public',
+              label: S.of(context).public,
               isSelected: filter.publicRequest,
               onTap: () {
                 onTap(
