@@ -46,9 +46,9 @@ class TimeRequest extends StatefulWidget {
   final RequestFormType formType;
   final TimebankModel timebankModel;
   UserModel selectedInstructorModel;
+  final Function selectedInstructorModelChanged;
   bool instructorAdded;
   bool createEvent;
-
 
   TimeRequest(
       {this.requestModel,
@@ -64,7 +64,7 @@ class TimeRequest extends StatefulWidget {
       this.onCreateEventChanged,
       this.instructorAdded,
       this.createEvent,
-      this.formType});
+      this.formType, this.selectedInstructorModelChanged});
 
   @override
   _TimeRequestState createState() => _TimeRequestState();
@@ -470,7 +470,8 @@ class _TimeRequestState extends State<TimeRequest> {
                                           addStatus: S.of(context).add,
                                           onAddClick: () {
                                             setState(() {
-                                              widget.selectedInstructorModel = user;
+                                              // logger.d("#111 ${user.fullname}");
+                                              widget.selectedInstructorModelChanged(user);
                                               widget.instructorAdded = true;
                                               widget.requestModel.selectedInstructor =
                                                   BasicUserDetails(
