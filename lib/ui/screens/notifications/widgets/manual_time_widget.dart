@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/manual_time_model.dart';
 import 'package:sevaexchange/models/transaction_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
@@ -74,7 +75,7 @@ void manualTimeActionDialog(
               padding: EdgeInsets.all(8.0),
               child: Center(
                 child: Text(
-                  "${S.of(context).by_approving_you_accept} ${model.userDetails.name} has worked for ${model.claimedTime / 60} hours",
+                  "${S.of(context).by_approving_you_accept} ${model.userDetails.name} ${L.of(context).has_worked_for_text} ${model.claimedTime / 60} ${L.of(context).hours_text}",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontFamily: 'Europa',

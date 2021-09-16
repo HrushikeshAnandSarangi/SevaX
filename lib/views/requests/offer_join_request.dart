@@ -83,7 +83,7 @@ class _OfferJoinRequestDialogState extends State<OfferJoinRequestDialog> {
               padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
               child: Text(
                 widget.timeOfferParticipantsModel.participantDetails.bio ??
-                    "${S.of(context).bio} name not updated",
+                    "${S.of(context).bio} ${L.of(context).name_not_updated_text}",
               ),
             ),
             // Padding(

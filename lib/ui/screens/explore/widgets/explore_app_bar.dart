@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/views/login/login_page.dart';
 import 'package:sevaexchange/views/login/register_page.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
@@ -77,7 +78,7 @@ class ExplorePageAppBar extends PreferredSize {
                       controller: controller,
                       onChanged: onSearchChanged,
                       decoration: InputDecoration(
-                        hintText: 'Try "Oska" "Postal Code"',
+                        hintText: L.of(context).try_oska_postal_code,
                         hintStyle: TextStyle(color: Colors.grey, fontSize: 12),
                         border: OutlineInputBorder(
                           borderSide: BorderSide.none,

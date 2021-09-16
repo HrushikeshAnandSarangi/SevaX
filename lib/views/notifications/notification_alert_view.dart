@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
@@ -124,8 +125,7 @@ class _NotificationAlertState extends State<NotificationAlert> {
                   ),
                   lineDivider,
                   NotificationWidgetSwitch(
-                    isTurnedOn:
-                        getCurrentStatus('MEMBER_PROMOTED_AS_ADMIN'),
+                    isTurnedOn: getCurrentStatus('MEMBER_PROMOTED_AS_ADMIN'),
                     title: S.of(context).promotion_to_admin_from_member,
                     onPressed: (bool status) {
                       NotificationWidgetSwitch.updatePersonalNotifications(
@@ -137,8 +137,7 @@ class _NotificationAlertState extends State<NotificationAlert> {
                   ),
                   lineDivider,
                   NotificationWidgetSwitch(
-                    isTurnedOn:
-                        getCurrentStatus('MEMBER_DEMOTED_FROM_ADMIN'),
+                    isTurnedOn: getCurrentStatus('MEMBER_DEMOTED_FROM_ADMIN'),
                     title: S.of(context).demotion_from_admin_to_member,
                     onPressed: (bool status) {
                       NotificationWidgetSwitch.updatePersonalNotifications(
@@ -153,7 +152,7 @@ class _NotificationAlertState extends State<NotificationAlert> {
                   lineDivider,
                   NotificationWidgetSwitch(
                     isTurnedOn: getCurrentStatus('TYPE_MESSAGING_NOTIFICATION'),
-                    title: "Notification for new messages.",
+                    title: "${L.of(context).notification_for_new_messages}.",
                     onPressed: (bool status) {
                       NotificationWidgetSwitch.updatePersonalNotifications(
                         userEmail: SevaCore.of(context).loggedInUser.email,
@@ -167,7 +166,7 @@ class _NotificationAlertState extends State<NotificationAlert> {
                   //feeds
                   NotificationWidgetSwitch(
                     isTurnedOn: getCurrentStatus('TYPE_FEEDS_NOTIFICATION'),
-                    title: "Feeds notification",
+                    title: "${L.of(context).feeds_notification_text}",
                     onPressed: (bool status) {
                       NotificationWidgetSwitch.updatePersonalNotifications(
                         userEmail: SevaCore.of(context).loggedInUser.email,

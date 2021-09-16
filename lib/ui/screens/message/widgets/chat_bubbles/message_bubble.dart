@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/decorations.dart';
@@ -57,7 +58,8 @@ class MessageBubble extends StatelessWidget {
                         MaterialPageRoute(
                           builder: (context) => SevaWebView(
                             AboutMode(
-                                title: "External Url", urlToHit: link.url),
+                                title: L.of(context).external_url_text,
+                                urlToHit: link.url),
                           ),
                         ),
                       );
@@ -93,7 +95,7 @@ class MessageBubble extends StatelessWidget {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => SevaWebView(
-          AboutMode(title: "External Url", urlToHit: url),
+          AboutMode(title: L.of(context).external_url_text, urlToHit: url),
         ),
       ),
     );

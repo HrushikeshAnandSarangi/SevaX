@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/ui/screens/members/pages/members_page.dart';
 import 'package:sevaexchange/utils/app_config.dart';
@@ -100,7 +101,7 @@ Widget permissionsAlertDialog(BuildContext context) {
   return AlertDialog(
     title: Text(S.of(context).alert),
     content: Text(
-        "This action is restricted for you by the owner of this Seva Community."),
+        "${L.of(context).this_action_is_restricted_for_you_by_the_owner_of_this} Seva Community."),
     actions: [
       CustomTextButton(
         shape: StadiumBorder(),

@@ -5,6 +5,7 @@ import 'package:sevaexchange/components/calendar_events/models/kloudless_models.
 import 'package:sevaexchange/components/calendar_events/module/index.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/acceptor_model.dart';
@@ -249,7 +250,7 @@ Future<bool> offerActions(
       await confirmationDialog(
         context: context,
         title:
-            "You are signing up for this ${model.groupOfferDataModel.classTitle.trim()}. Doing so will debit a total of ${model.groupOfferDataModel.numberOfClassHours} credits from you after you say OK.",
+            "${L.of(context).you_are_signing_up_for_this_test} ${model.groupOfferDataModel.classTitle.trim()}. ${L.of(context).doing_so_will_debit_a_total_of} ${model.groupOfferDataModel.numberOfClassHours} ${L.of(context).credits_from_you_after_you_say_ok}.",
         onConfirmed: () async {
           await updateOffer(
             offerId: model.id,
@@ -281,7 +282,8 @@ Future<bool> offerActions(
     } else {
       await errorDialog(
         context: context,
-        error: "You don't have enough credit to signup for this class",
+        error:
+            "${L.of(context).you_don_t_have_enough_credit_to_signup_for_this_class}",
       );
     }
   } else if ((model.type == RequestType.CASH ||
