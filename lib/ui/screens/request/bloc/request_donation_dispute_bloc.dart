@@ -89,10 +89,10 @@ class RequestDonationDisputeBloc {
       _cashAmount.addError('min');
       return false;
     } else {
-      log("Inside else");
-      donationModel.donationStatus = donationModel.donationStatus == DonationStatus.REQUESTED
-          ? DonationStatus.PLEDGED
-          : donationModel.donationStatus;
+      donationModel.donationStatus =
+          donationModel.donationStatus == DonationStatus.REQUESTED
+              ? DonationStatus.PLEDGED
+              : donationModel.donationStatus;
       donationModel.minimumAmount = 0;
       return await _donationsRepository
           .donateOfferCreatorPledge(

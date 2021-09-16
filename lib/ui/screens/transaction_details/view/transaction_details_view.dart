@@ -25,12 +25,14 @@ class TransactionDetailsView extends StatefulWidget {
   final String id;
   final String userId;
   final String userEmail;
+  final String totalBalance;
 
   TransactionDetailsView({
     Key key,
     this.id,
     this.userId,
     this.userEmail,
+    @required this.totalBalance,
   }) : super(key: key);
 
   @override
@@ -39,10 +41,11 @@ class TransactionDetailsView extends StatefulWidget {
 
 class _TransactionDetailsViewState extends State<TransactionDetailsView> {
   TransactionDetailsBloc _bloc = TransactionDetailsBloc();
-  double totalBalance = 0.0;
+  // double totalBalance = 0.0;
   RequestModel requestModel;
   TimebankModel timebankModel;
   CommunityModel communityModel;
+  TimebankModel timebankModelNew;
 
   final TextStyle tableCellStyle = TextStyle(
     fontSize: 18,
@@ -53,11 +56,12 @@ class _TransactionDetailsViewState extends State<TransactionDetailsView> {
     fontSize: 20,
   );
 
-  void loadTotalBalance(List<TransactionModel> transactions) {
-    transactions.forEach((element) {
-      totalBalance += element.credits;
-    });
-  }
+  // void loadTotalBalance(List<TransactionModel> transactions) {
+  //   transactions.forEach((element) {
+  //     totalBalance += element.credits;
+  //   }
+  //   );
+  // }
 
   Future<void> onRowTap(TransactionModel transaction) async {
     // List<TransacationsTimelineModel> timelineData = [];
@@ -132,7 +136,7 @@ class _TransactionDetailsViewState extends State<TransactionDetailsView> {
               return LoadingIndicator();
             }
 
-            loadTotalBalance(snapshot.data);
+            // loadTotalBalance(snapshot.data);
 
             final TextStyle tableCellStyle = TextStyle(
               fontSize: 14,
@@ -165,7 +169,7 @@ class _TransactionDetailsViewState extends State<TransactionDetailsView> {
                                 ),
                               ),
                               TextSpan(
-                                text: '\$ ${totalBalance.toStringAsFixed(2)}',
+                                text: '\$ ${widget.totalBalance}',
                                 style: TextStyle(
                                   fontSize: 20,
                                   color: Colors.black,

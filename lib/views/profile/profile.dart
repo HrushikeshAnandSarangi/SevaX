@@ -194,6 +194,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                     id: user.sevaUserID,
                                     userId: user.sevaUserID,
                                     userEmail: user.email,
+                                    totalBalance: balance != null
+                                        ? balance.toStringAsFixed(2)
+                                        : '0.0',
                                   );
                                 },
                               ),

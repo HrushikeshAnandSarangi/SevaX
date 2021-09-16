@@ -206,15 +206,13 @@ class L {
 
   String get member_permission => "Member Permission";
 
-  String get copy_and_share_code =>
-      'Code Generated: Copy the code and share to your friends';
+  String get copy_and_share_code => 'Code Generated: Copy the code and share to your friends';
 
   String get copy_community_code => "Copy Community Code";
 
   String get copy_code => "Copy Code";
 
-  String get share_code_msg =>
-      "You can share the code to invite them to your seva community";
+  String get share_code_msg => "You can share the code to invite them to your seva community";
 
   String get no_pending_join_request => 'No pending join requests';
 
@@ -228,11 +226,9 @@ class L {
 
   String get instruction_for_stay => 'Instruction for the stay';
 
-  String get request_agreement_not_available =>
-      'Request agreement not available';
+  String get request_agreement_not_available => 'Request agreement not available';
 
-  String get click_to_view_request_agreement =>
-      'Click to view request agreement';
+  String get click_to_view_request_agreement => 'Click to view request agreement';
 
   String get enter_prep_time => 'Enter Prep Time';
 
@@ -256,13 +252,11 @@ class L {
 
   String get any_specific_conditions => "Any specific condition(s)";
 
-  String get item_returned_hint_text =>
-      'Ex: item must be returned in the same condition.';
+  String get item_returned_hint_text => 'Ex: item must be returned in the same condition.';
 
   String get description_of_item => "Description of item(s)";
 
-  String get place_returned_hint_text =>
-      'Ex: place must be returned in the same condition.';
+  String get place_returned_hint_text => 'Ex: place must be returned in the same condition.';
 
   String get attending => "Attending";
 
@@ -270,16 +264,14 @@ class L {
 
   String get description_not_updated => "Description not yet updated";
 
-  String get terms_acknowledgement_text =>
-      "I accept the terms of use as per the agreement";
+  String get terms_acknowledgement_text => "I accept the terms of use as per the agreement";
 
   String get agreement => "Agreement";
 
   String get lender_not_accepted_request_msg =>
       "Lender has not created an agreement for this request";
 
-  String get review_before_proceding_text =>
-      "Please review the agreement below before proceeding.";
+  String get review_before_proceding_text => "Please review the agreement below before proceeding.";
 
   String get review_agreement => "Review Agreement";
 
@@ -308,8 +300,7 @@ class L {
 
   String get event_to_calender => "event to calender";
 
-  String get seva_community_name_not_updated =>
-      "Seva Community name not updated";
+  String get seva_community_name_not_updated => "Seva Community name not updated";
 
   String get create_new => "Create New";
 
@@ -399,15 +390,13 @@ class L {
 
   String get test_community => "Test Community";
 
-  String get you_already_created_test_community =>
-      'You already created a test community.';
+  String get you_already_created_test_community => 'You already created a test community.';
 
   String get selected_value => "Selected value :";
 
   String get upgrade_plan_msg1 => "Sorry Couldn't fetch data";
 
-  String get upgrade_plan_disable_msg1 =>
-      'This feature is disabled for your community';
+  String get upgrade_plan_disable_msg1 => 'This feature is disabled for your community';
 
   String get upgrade_plan_disable_msg2 =>
       'This is currently not permitted. Please see the following link for more information: http://web.sevaxapp.com/';
@@ -425,11 +414,9 @@ class L {
 
   String get join_seva_community => "Join Seva Community";
 
-  String get please_switch_to_access =>
-      'Please switch seva community to access ';
+  String get please_switch_to_access => 'Please switch seva community to access ';
 
-  String get please_join_seva_to_access =>
-      'Please join seva community to access ';
+  String get please_join_seva_to_access => 'Please join seva community to access ';
 
   String get no_events_available => "No Events Available";
 
@@ -445,8 +432,7 @@ class L {
 
   String get reset_list => "Reset list";
 
-  String get join_community_to_view_updates =>
-      "To view and receive updates join the community";
+  String get join_community_to_view_updates => "To view and receive updates join the community";
 
   String get join_chat => "Join Chat";
 
@@ -597,14 +583,11 @@ class L {
 
   String get addditional_instructions => "Additional Instructions";
 
-  String get addditional_instructions_error_text =>
-      "Please enter additional instructions";
+  String get addditional_instructions_error_text => "Please enter additional instructions";
 
-  String get additional_instructions_hint_item =>
-      "Ex: Lawnmower is available next door";
+  String get additional_instructions_hint_item => "Ex: Lawnmower is available next door";
 
-  String get additional_instructions_hint_place =>
-      "Ex: Keys are available next door";
+  String get additional_instructions_hint_place => "Ex: Keys are available next door";
 
   String get lending_approve_terms_item =>
       "I acknowledge that you can lend the item(s) on the mentioned dates.";
@@ -672,7 +655,7 @@ class L {
 
   String get add_place => "Add Place";
 
-  String get lending_offer => "Lending Offer";
+  String get lending_offer => "Lending";
 
   String get lending_offer_title_hint => "Ex:Lawnmower";
 
@@ -680,11 +663,9 @@ class L {
 
   String get validation_error_place_name => "Please enter name of your place";
 
-  String get validation_error_no_of_guests =>
-      "Please enter no of guests can stay";
+  String get validation_error_no_of_guests => "Please enter no of guests can stay";
 
-  String get validation_error_no_of_rooms =>
-      "Please enter no of rooms available";
+  String get validation_error_no_of_rooms => "Please enter no of rooms available";
 
   String get validation_error_no_estimated_value_room =>
       "Please enter an estimated value for the place";
@@ -692,8 +673,7 @@ class L {
   String get validation_error_no_estimated_value_item =>
       "Please enter an estimated value for the item";
 
-  String get validation_error_no_of_bathrooms =>
-      "Please enter no of bath rooms available";
+  String get validation_error_no_of_bathrooms => "Please enter no of bath rooms available";
 
   String get validation_error_common_spaces => "Please specify common spaces";
 
@@ -719,11 +699,9 @@ class L {
 
   String get guests => "Guest(s)";
 
-  String get creating_place_error =>
-      "There was error creating your place, Please try again.";
+  String get creating_place_error => "There was error creating your place, Please try again.";
 
-  String get updating_place_error =>
-      "There was error creating your place, Please try again.";
+  String get updating_place_error => "There was error creating your place, Please try again.";
 
   String get sevax => "SevaX";
 
@@ -789,55 +767,44 @@ class L {
 
   String get one_to_many_request_attende => "One to Many Request attendee";
 
-  String get completed_one_to_many_offer_attende_title =>
-      "This one to many offer has completed.";
+  String get completed_one_to_many_offer_attende_title => "This one to many offer has completed.";
 
   String get completed_one_to_many_offer_attende_subtitle =>
       "This one to many offer has completed.";
 
-  String get completed_one_to_many_offer_speaker_title =>
-      "This one to many offer has completed.";
+  String get completed_one_to_many_offer_speaker_title => "This one to many offer has completed.";
 
   String get completed_one_to_many_offer_speaker_subtitle =>
       "This one to many offer has completed.";
 
-  String get completed_one_to_many_request_attende_title =>
-      "This one to many offer has completed.";
+  String get completed_one_to_many_request_attende_title => "This one to many offer has completed.";
 
   String get completed_one_to_many_request_attende_subtitle =>
       "This one to many offer has completed.";
 
-  String get completed_one_to_many_request_speaker_title =>
-      "This one to many offer has completed.";
+  String get completed_one_to_many_request_speaker_title => "This one to many offer has completed.";
 
   String get completed_one_to_many_request_speaker_subtitle =>
       "This one to many offer has completed.";
 
 //ToDO List
 
-  String get to_do_one_to_many_offer_attende_title =>
-      "This one to many offer has completed.";
+  String get to_do_one_to_many_offer_attende_title => "This one to many offer has completed.";
 
-  String get to_do_one_to_many_offer_attende_subtitle =>
-      "This one to many offer has completed.";
+  String get to_do_one_to_many_offer_attende_subtitle => "This one to many offer has completed.";
 
-  String get to_do_one_to_many_reuqest_speaker_title =>
-      "This one to many reuqest has completed.";
+  String get to_do_one_to_many_reuqest_speaker_title => "This one to many reuqest has completed.";
 
   String get to_do_one_to_many_reuqest_speaker_subtitle =>
       "This one to many request has completed.";
 
-  String get to_do_one_to_many_request_attende_title =>
-      "This one to many offer has completed.";
+  String get to_do_one_to_many_request_attende_title => "This one to many offer has completed.";
 
-  String get to_do_one_to_many_request_attende_subtitle =>
-      "This one to many offer has completed.";
+  String get to_do_one_to_many_request_attende_subtitle => "This one to many offer has completed.";
 
-  String get to_do_one_to_many_request_speaker_title =>
-      "This one to many offer has completed.";
+  String get to_do_one_to_many_request_speaker_title => "This one to many offer has completed.";
 
-  String get to_do_one_to_many_request_speaker_subtitle =>
-      "This one to many offer has completed.";
+  String get to_do_one_to_many_request_speaker_subtitle => "This one to many offer has completed.";
 
 //   // <------------ PENDING START ------------>
 //   String get no_groups_text =>
@@ -881,36 +848,28 @@ class L {
   String get access_not_available => "Access not available"; //done in web
   String get no_interests_added => "No interests added"; //done in web
   String get no_skills_added => "No skills added"; //done in web
-  String get part_of_sevax =>
-      "Part of SevaX Global Network of Communities"; //done in web
-  String get upcoming_events =>
-      "Upcoming Events"; //done in web (but code is commented out)
-  String get latest_requests =>
-      "Latest Requests"; //done in web (but code is commented out)
+  String get part_of_sevax => "Part of SevaX Global Network of Communities"; //done in web
+  String get upcoming_events => "Upcoming Events"; //done in web (but code is commented out)
+  String get latest_requests => "Latest Requests"; //done in web (but code is commented out)
   String get provide_skills =>
       "Provide the list of Skills that you require for this request"; //done in web
   String get event_description => "Event Description"; //done in web
   String get request_to_join => "Request to join"; //done in web
   String get event => "Event"; //done in web
-  String get min_credits_error =>
-      "Minimum credits cannot be empty or zero"; //done in web
+  String get min_credits_error => "Minimum credits cannot be empty or zero"; //done in web
 //OFFERS LABELS STARTS HERE
   String get offer_description_error =>
       "Please give a detailed description of the class you’re offering.";
 
-  String get invitation_accepted =>
-      "Invitation Accepted."; //done in mobile & web
-  String get invitation_accepted_subtitle =>
-      " has accepted your offer."; //done in mobile & web
-  String get offer_invitation_notification_title =>
-      "Offer Invitation"; //done in mobile & web
+  String get invitation_accepted => "Invitation Accepted."; //done in mobile & web
+  String get invitation_accepted_subtitle => " has accepted your offer."; //done in mobile & web
+  String get offer_invitation_notification_title => "Offer Invitation"; //done in mobile & web
   String get offer_invitation_notification_subtitle =>
       " has invited you to accept an offer."; //done in mobile & web
   String get accept_offer_invitation_confirmation =>
       "This task will be added to your Pending Tasks, after you approve it."; //done in mobile & web
   String get minimum_credit_title => "Minimum Credits*"; //done in mobile & web
-  String get minimum_credit_hint =>
-      "Provide minimum credits you require"; //done in mobile & web
+  String get minimum_credit_hint => "Provide minimum credits you require"; //done in mobile & web
   String get option_one => "Standing Offer"; //done in mobile & web
   String get option_two => "One Time"; //done in mobile & web
   String get minimum_credits_offer => //done in web
@@ -918,21 +877,18 @@ class L {
 
   String get speaker_claim_form_field_title =>
       "How much prep time did you require for this request?"; //done in web
-  String get speaker_claim_form_field_title_hint =>
-      "Prep time in hours"; //done in web
+  String get speaker_claim_form_field_title_hint => "Prep time in hours"; //done in web
   String get speaker_claim_form_text_1 =>
       "I acknowledge that I have completed the session for the request."; //done in web
   String get speaker_claim_form_text_2 =>
       "Upon completing the one to many request, the combined prep time and session hours will be credited to you."; //done in web
   String get registration_link => "Registration Link"; //done in mobile & web
-  String get registration_link_hint =>
-      "Ex: Eventbrite link, etc."; //done in mobile & web
+  String get registration_link_hint => "Ex: Eventbrite link, etc."; //done in mobile & web
   String get request_closed => "Request closed"; //done in mobile & web
   String get speaker_claim_credits => 'Claim credits'; //done in mobile & web
   String get requested_for_completion =>
       "Your completed request is pending approval."; //done in mobile & web
-  String get this_request_has_now_ended =>
-      "This request has now ended"; //done in web
+  String get this_request_has_now_ended => "This request has now ended"; //done in web
   String get maximumNoOfParticipants =>
       'This request has a maximum number of participants. That limit has been reached.'; //done in web
   String get reject_request_completion => //done in mobile & web
@@ -949,13 +905,11 @@ class L {
 
   String get sign_in_alert =>
       "You need to sign in or register to view this."; //done in web //already in json
-  String get explore_page_title_text =>
-      "Explore Opportunities"; //done in mobile & web
+  String get explore_page_title_text => "Explore Opportunities"; //done in mobile & web
   String get explore_page_subtitle_text => //done in mobile & web //already in json
       "Find communities near you or online communities that interest you. You can offer to volunteer your services or request any assistance or search for Community Events.";
 
-  String get select_speaker_hint =>
-      "Ex: Name of speaker."; //done in mobile & web
+  String get select_speaker_hint => "Ex: Name of speaker."; //done in mobile & web
   String get my_groups => "My Groups"; //done in mobile & web
   String get onetomanyrequest_create_new_event => //done in mobile & web
       "A new event will be created and linked to this request.";
@@ -965,8 +919,7 @@ class L {
   String get request_completed_by_speaker =>
       "This request has been completed and is awaiting your approval."; //done in mobile & web
   String get speaker => 'Speaker'; //done in mobile & web
-  String get speaker_completion_rejected_notification_1 =>
-      "Request rejected."; //done in web
+  String get speaker_completion_rejected_notification_1 => "Request rejected."; //done in web
   String get you_are_the_speaker => "You are the speaker for: "; //done in web
   String get select_a_speaker => "Please select a Speaker*"; //done in web
   String get selected_speaker => "Selected Speaker"; //done in web
@@ -982,15 +935,13 @@ class L {
       'You do not have sufficient Seva credits to create this request. You need to have *** more Seva credits'; //done in web
   String get adminNotificationInsufficientCredits =>
       ' Has Insufficient Credits To Create Requests'; //done in web
-  String get adminNotificationInsufficientCreditsNeeded =>
-      'Credits Needed: '; //done in web
+  String get adminNotificationInsufficientCreditsNeeded => 'Credits Needed: '; //done in web
   String get oneToManyRequestSpeakerWithdrawDialog =>
       'Please confirm that you would like to withdraw as a speaker'; //done in web
   String get speakerRejectedNotificationLabel =>
       ' rejected the Speaker invitation for '; //done in web
   String get speaker_rejected => 'Speaker Rejected'; //done in web
-  String get people_applied_for_request =>
-      ' people have applied for this request'; //done in web
+  String get people_applied_for_request => ' people have applied for this request'; //done in web
   String get oneToManyRequestCreatorCompletingRequestDialog =>
       'Are you sure you want to accept and complete this request?'; //done in web
   String get duration_of_session => 'Duration of Session: '; //done in web
@@ -1003,40 +954,31 @@ class L {
       'Note: The hours will be credited to the speaker and to the attendees upon your approval. This list of attendees cannot be modified after approval.'; //done in web
   String get action_restricted_by_owner =>
       'This action is Restricted for you by the owner of the seva Community.'; //done in web
-  String get accepted_this_request =>
-      'You have accepted this request.'; //done in web
+  String get accepted_this_request => 'You have accepted this request.'; //done in web
   String get onetomanyrequest_member_invite_notif_subtitle =>
       'admin_name in community_name has invited you to join the webinar_name on date_webinar at time_webinar. Tap to accept the invitation.'; // done in web
   String get select_a_speaker_dialog => 'Select a speaker';
 
-  String get onetomanyrequest_title_hint =>
-      "Ex: Implicit Bias webinar."; //done in web
-  String get total_no_of_participants =>
-      "Total No. of Participants*"; //done in web
-  String get onetomanyrequest_participants_or_credits_hint =>
-      "Ex: 40."; //done in web
-  String get speaker_invite_notification =>
-      "Added you as the Speaker for request: "; //done in web
+  String get onetomanyrequest_title_hint => "Ex: Implicit Bias webinar."; //done in web
+  String get total_no_of_participants => "Total No. of Participants*"; //done in web
+  String get onetomanyrequest_participants_or_credits_hint => "Ex: 40."; //done in web
+  String get speaker_invite_notification => "Added you as the Speaker for request: "; //done in web
   String get sandbox_already_created_1 =>
       "Only one sandbox community is currently allowed for each SevaX member."; //done in web
   String get sandbox_community => "Sandbox Community"; //done in web
   String get sandbox_dialog_title => "Sandbox seva community"; //done in web
   String get sandbox_create_community_alert =>
       "Are you sure you want to create a sandbox community?"; //done in web
-  String get you_are_on_enterprise_plan =>
-      "You are on Enterprise Plan"; //done in web
+  String get you_are_on_enterprise_plan => "You are on Enterprise Plan"; //done in web
   String get sandbox_dialog_subtitle =>
       "Sandbox Seva communities are created for instructional purposes only. Any credits earned or debited will not count towards your account."; //done in web
 
 // labels added on june 11
-  String get create_community_upload_image_text =>
-      "Upload an image to represent your community";
+  String get create_community_upload_image_text => "Upload an image to represent your community";
 
-  String get create_community_select_categories_text =>
-      "Select categories for your community";
+  String get create_community_select_categories_text => "Select categories for your community";
 
-  String get create_community_negative_threshold_text =>
-      "Negative credits threshold";
+  String get create_community_negative_threshold_text => "Negative credits threshold";
 
   String get choose_plan => "Choose Plan";
 
@@ -1148,8 +1090,7 @@ class L {
 
   String get your_location => "Your location";
 
-  String get your_location_subtext =>
-      "location will help members to connect easily.";
+  String get your_location_subtext => "location will help members to connect easily.";
 
   String get refund_deposit => "Refundable Deposit Needed?";
 
@@ -1189,8 +1130,7 @@ class L {
   //4th aug
   String get request_payment_description => "Payment Method*";
 
-  String get select_a_item_lending =>
-      "Select list of related items for Borrow*";
+  String get select_a_item_lending => "Select list of related items for Borrow*";
 
   String get select_item_for_lending => "Select item for lending*";
 
@@ -1203,8 +1143,7 @@ class L {
   String get accept_borrow_agreement_place_hint =>
       "Please provide details of your place; agreement and location.";
 
-  String get accept_borrow_agreement_item_title =>
-      "You are about to give Items for the borrower";
+  String get accept_borrow_agreement_item_title => "You are about to give Items for the borrower";
 
   String get accept_borrow_agreement_place_title => "Details of the offer";
 
@@ -1232,11 +1171,9 @@ class L {
 
   String get creating_item => "Creating item";
 
-  String get creating_item_error =>
-      "There was error creating your item, Please try again.";
+  String get creating_item_error => "There was error creating your item, Please try again.";
 
-  String get updating_item_error =>
-      "There was error creating your item, Please try again.";
+  String get updating_item_error => "There was error creating your item, Please try again.";
 
   String get agree_to_signature_legal_text =>
       "By accepting the conditions on this page, your electronic signature is assumed and you are responsible for all terms included within.";
@@ -1246,12 +1183,12 @@ class L {
   String get agreement_to_be_signed => 'Agreement to be signed';
 
   String get agreement_signed => 'You have signed the agreement';
+  String get agreement_accepted => 'You have accepted the agreement';
 
   String get responses => 'Responses';
   String get you_have_received_responses => 'You have received ** response***.';
   String get lenders => "Lenders";
-  String get already_accepted_lender =>
-      "You have already accepted a lender for this request.";
+  String get already_accepted_lender => "You have already accepted a lender for this request.";
 
   //10 Aug
   String get borrow_request_agreement => 'Borrow Request Agreement';
@@ -1327,8 +1264,7 @@ class L {
   String get check_out => 'Check Out';
   String get check_in => 'Check In';
   String get check_in_pending => 'Check in pending';
-  String get borrow_request_collect_items_tag =>
-      'Borrow Request - Collect Items';
+  String get borrow_request_collect_items_tag => 'Borrow Request - Collect Items';
   String get borrow_request_return_items_tag => 'Borrow Request - Return Items';
   String get collect_items => 'Collect Items';
   String get return_items => 'Return Items';
@@ -1344,20 +1280,17 @@ class L {
   String get click_to_view_offer_agreement => 'Click to view offer agreement';
   String get join_borrow_request => 'Invited to accept request';
   String get withdraw_lending_offer => 'Click here to withdraw your request';
-  String get lender_not_created_agreement =>
-      'Lender has not created an agreement for this offer';
+  String get lender_not_created_agreement => 'Lender has not created an agreement for this offer';
   String get admin_borrow_request_received_back_check =>
       "If you have received your item/place back click the button below to complete this."; //add again label changed
   String get please_add_amenities => "Please add Amenities";
   String get items_taken => "Item(s) taken";
   String get arrived => "Arrived";
   String get departed => "Departed";
-  String get items_collected_alert =>
-      "Items to be collected and returned on:  ";
+  String get items_collected_alert => "Items to be collected and returned on:  ";
   String get items_collected_alert_two => "You have collected item(s) from";
   String get please_return_by => "Please return by: ";
-  String get items_returned_to_lender =>
-      "You have returned the item(s) to the lender, ";
+  String get items_returned_to_lender => "You have returned the item(s) to the lender, ";
   String get exchanged_completed => "Exchange completed";
   String get your_departure_date_is => "Your departure date is:";
   String get you_departed_on => "You departed on:";
@@ -1365,10 +1298,8 @@ class L {
   String get arrive => "Arrival";
   String get departure => "Departure";
   String get notes => "Notes";
-  String get share_feedback_place =>
-      "You can leave a appreciation review for your host.";
-  String get share_feedback_item =>
-      "Please provide your valuable feedback about your exchange.";
+  String get share_feedback_place => "You can leave a appreciation review for your host.";
+  String get share_feedback_item => "Please provide your valuable feedback about your exchange.";
 
 //Borrow/Lending idle notifications Labels below
   String get idle_borrow_request_first_warning =>
@@ -1393,12 +1324,9 @@ class L {
   String get lending_offer_check_out_tag => 'Lending Offer - Departure';
   String get change_departure_date => 'Change departure date?';
   String get tab_to_leave_feedback => 'Tap to leave a feedback.';
-  String get lending_offer_return_items_hint =>
-      'Click here if you have returned the item(s).';
-  String get lending_offer_return_place_hint =>
-      'Click here if you have checked out of the place';
-  String get borrower_returned_items_feedback =>
-      'You returned items. Tap to leave a feedback.';
+  String get lending_offer_return_items_hint => 'Click here if you have returned the item(s).';
+  String get lending_offer_return_place_hint => 'Click here if you have checked out of the place';
+  String get borrower_returned_items_feedback => 'You returned items. Tap to leave a feedback.';
   String get borrower_departed_provide_feedback =>
       'You checked out from place. Tap to leave a feedback.';
   String get check_out_alert => 'Are you sure you want to check out?';
@@ -1424,17 +1352,13 @@ class L {
 
   String get goods_pledged_by_donor_tag => "goods pledged by donor";
   String get goods_acknowledged_donation_tag => "goods donation acknowledged";
-  String get goods_donation_modified_by_creator_tag =>
-      "goods donation modified by creator";
-  String get goods_donation_modified_by_donor_tag =>
-      "goods donation modified by donor";
+  String get goods_donation_modified_by_creator_tag => "goods donation modified by creator";
+  String get goods_donation_modified_by_donor_tag => "goods donation modified by donor";
   String get goods_donation_creator_rejected_tag => "goods donation rejected";
 
   String get money_acknowledged_donation_tag => "money donation acknowledged";
-  String get money_donation_modified_by_creator_tag =>
-      "money donation modified by creator";
-  String get money_donation_modified_by_donor_tag =>
-      "money donation modified by donor";
+  String get money_donation_modified_by_creator_tag => "money donation modified by creator";
+  String get money_donation_modified_by_donor_tag => "money donation modified by donor";
   String get money_donation_creator_rejected_tag => "money donation rejected";
 
   String get account_balance => "Account Balance\n";

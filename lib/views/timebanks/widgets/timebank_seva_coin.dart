@@ -66,21 +66,23 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
                         SevaCoinWidget(
-                            amount: balance ?? 0,
-                            onTap: () => Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) {
-                                      return TransactionDetailsView(
-                                        id: SevaCore.of(context)
-                                            .loggedInUser
-                                            .currentTimebank,
-                                        userId: SevaCore.of(context)
-                                            .loggedInUser
-                                            .sevaUserID,
-                                      );
-                                    },
-                                  ),
-                                )),
+                          amount: balance ?? 0,
+                          onTap: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return TransactionDetailsView(
+                                  id: SevaCore.of(context)
+                                      .loggedInUser
+                                      .currentTimebank,
+                                  userId: SevaCore.of(context)
+                                      .loggedInUser
+                                      .sevaUserID,
+                                  totalBalance: '${balance ?? 0}',
+                                );
+                              },
+                            ),
+                          ),
+                        ),
                         SizedBox(
                           height: 5,
                         ),
