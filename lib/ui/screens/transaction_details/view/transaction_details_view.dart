@@ -185,6 +185,10 @@ class _TransactionDetailsViewState extends State<TransactionDetailsView> {
                   ),
                   Column(
                     children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 12.0, right: 12.0),
+                        child: getTitle("Name", "Comment", "Date", "Amount"),
+                      ),
                       ListView.separated(
                         shrinkWrap: true,
                         itemCount: snapshot.data.length,
@@ -265,6 +269,47 @@ class _TransactionDetailsViewState extends State<TransactionDetailsView> {
               ),
             );
           }),
+    );
+  }
+
+  Widget getTitle(String title1, String title2, String title3, String title4) {
+    return Column(
+      children: [
+        Divider(),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+              flex: 3,
+              child: getText(title1),
+            ),
+            Expanded(
+              flex: 3,
+              child: getText(title2),
+            ),
+            SizedBox(width: 12),
+            Expanded(
+              flex: 2,
+              child: getText(title3),
+            ),
+            SizedBox(width: 12),
+            Expanded(
+              flex: 2,
+              child: getText(title4),
+            ),
+          ],
+        ),
+        Divider(),
+      ],
+    );
+  }
+
+  Widget getText(String title) {
+    final TextStyle style =
+        TextStyle(color: Colors.black, fontSize: 16, fontFamily: 'Europa');
+    return Text(
+      title,
+      style: style,
     );
   }
 }
