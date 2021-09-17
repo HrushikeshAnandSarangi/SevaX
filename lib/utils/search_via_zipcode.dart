@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
+import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/app_config.dart';
@@ -34,7 +35,7 @@ class SearchCommunityViaZIPCode {
       //var coordinates = await geoCode.forwardGeocoding(address: searchTerm);
 
       var response = await http.get(
-          'https://maps.googleapis.com/maps/api/geocode/json?address=${searchTerm}&key=AIzaSyC5p0iPaOTJEtOpfc8bT5zQnxlIrHtVgsU');
+          'https://maps.googleapis.com/maps/api/geocode/json?address=${searchTerm}&key=${FlavorConfig.values.googleMapsKey}');
 
       var resultsBody = jsonDecode(response.body);
 
@@ -126,7 +127,7 @@ class SearchCommunityViaZIPCode {
   }
 
   static String _getZipCodeURL(String zipCode) {
-    return "https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyC5p0iPaOTJEtOpfc8bT5zQnxlIrHtVgsU&components=postal_code:" +
+    return "https://maps.googleapis.com/maps/api/geocode/json?key=${FlavorConfig.values.googleMapsKey}&components=postal_code:" +
         zipCode;
   }
 }
