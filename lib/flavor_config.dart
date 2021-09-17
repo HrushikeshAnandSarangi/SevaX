@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
@@ -22,7 +24,6 @@ class FlavorValues {
   final String packageName;
   final String envMode;
 
-  final String projectApiKey;
   final String googleMapsKey;
   FlavorValues({
     this.googleMapsKey,
@@ -43,7 +44,6 @@ class FlavorValues {
     @required this.stripePublishableKey,
     @required this.androidPayMode,
     @required this.dynamicLinkUriPrefix,
-    this.projectApiKey,
   });
 }
 
@@ -54,8 +54,9 @@ class FlavorConfig {
     switch (appFlavor) {
       case Flavor.SEVA_DEV:
         return FlavorValues(
-          googleMapsKey: "AIzaSyC5p0iPaOTJEtOpfc8bT5zQnxlIrHtVgsU",
-          projectApiKey: "AIzaSyA1uAGsq35nEARPexmT5c1AFL29wfOuv5Y",
+          googleMapsKey: Platform.isIOS
+              ? "AIzaSyCK7MCjpmmpw1Zftm3YzIh-zM-9MR-j7lE"
+              : "AIzaSyDqrcoceem6kuwknDPCt4ebO0Y9Hg5wMBs",
           bundleId: 'com.sevaexchange.dev',
           packageName: 'com.sevaexchange.dev',
           elasticSearchBaseURL: "https://dev-es.sevaexchange.com",
@@ -135,13 +136,13 @@ class FlavorConfig {
 
       case Flavor.APP:
         return FlavorValues(
-          googleMapsKey: "AIzaSyC5p0iPaOTJEtOpfc8bT5zQnxlIrHtVgsU",
-          projectApiKey: "AIzaSyC5p0iPaOTJEtOpfc8bT5zQnxlIrHtVgsU",
+          googleMapsKey: Platform.isIOS
+              ? "AIzaSyCK7MCjpmmpw1Zftm3YzIh-zM-9MR-j7lE"
+              : "AIzaSyDqrcoceem6kuwknDPCt4ebO0Y9Hg5wMBs",
           bundleId: 'com.sevaexchange.app',
           packageName: 'com.sevaexchange.sevax',
           elasticSearchBaseURL: "https://es.sevaexchange.com",
-          cloudFunctionBaseURL:
-              "https://us-central1-sevaxproject4sevax.cloudfunctions.net",
+          cloudFunctionBaseURL: "https://us-central1-sevaxproject4sevax.cloudfunctions.net",
           androidPayMode: "production",
           stripePublishableKey: "pk_live_UF4dJaTWW2zXECJ5xdzuAe7P00ga985PfN",
           appName: 'Seva Exchange',

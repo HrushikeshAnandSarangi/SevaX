@@ -3,11 +3,11 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:google_maps_webservice/places.dart';
+import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/location_model.dart';
 
 final searchScaffoldKey = GlobalKey<ScaffoldState>();
-//Prod web key
-const kGoogleApiKey = "AIzaSyC5p0iPaOTJEtOpfc8bT5zQnxlIrHtVgsU";
+final kGoogleApiKey = FlavorConfig.values.googleMapsKey;
 GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: kGoogleApiKey);
 
 class CustomSearchScaffold extends PlacesAutocompleteWidget {
@@ -45,8 +45,7 @@ class Uuid {
 
   int _generateBits(int bitCount) => _random.nextInt(1 << bitCount);
 
-  String _printDigits(int value, int count) =>
-      value.toRadixString(16).padLeft(count, '0');
+  String _printDigits(int value, int count) => value.toRadixString(16).padLeft(count, '0');
 }
 
 class _CustomSearchScaffoldState extends PlacesAutocompleteState {
