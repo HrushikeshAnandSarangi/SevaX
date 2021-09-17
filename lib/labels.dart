@@ -1138,8 +1138,6 @@ class L {
 
   String get no => "No";
 
-  String get any_distance => "Any Distance";
-
   //3rd August 2021
   // String get admin_borrow_request_received_back_check =>
   //     "If you have received your item/place back click the button below to complete this.";
@@ -1448,7 +1446,64 @@ class L {
 
   //15 sep 2021
 
-  String get add_sponsor => "Add Sponsor";
+  //todo:: update labels
+  String get any_distance => "Any Distance";
   String get sponsor_details => "Sponsor Details";
+  String get add_sponsor => "Add Sponsor";
   String get donate_text => "Donate";
+  String get try_oska_postal_code => "Try \"Oska\" \"Postal Code\"";
+  String get new_message_text => "new message";
+  String get new_messages_text => "new messages";
+  String get external_url_text => "External Url";
+  String get deletion_request_text => "Deletion Request";
+  String get has_worked_for_text => "has worked for";
+  String get hours_text => "hours";
+  String get has_reviewed_this_request_text => "has reviewed this request";
+  String get tap_to_share_feedback_text => "Tap to share feedback";
+  String get people_signed_up_text => "people signed up";
+  String get has_invited_you_to_join_their => "has invited you to join their";
+  String get seva_community_seva_means_selfless_service_in_Sanskrit =>
+      "Seva Community. Seva means \"selfless service\" in Sanskrit";
+  String get seva_ommunities_are_based_on_a_mutual_reciprocity_system =>
+      "Seva Communities are based on a mutual-reciprocity system";
+  String get where_community_members_help_each_other_out_in_exchange_for_seva_credits_that_can_be_redeemed_for_services_they_need =>
+      "where community members help each other out in exchange for Seva Credits that can be redeemed for services they need";
+  String get to_learn_more_about_being_a_part_of_a_Seva_Community_here_s_a_short_explainer_video =>
+      "To learn more about being a part of a Seva Community, here\'s a short explainer video";
+  String get here_is_what_you_ll_need_to_know =>
+      "Here is what you'll need to know";
+  String get first_text => "First";
+  String get depending_on_where_you_click_the_link_from_whether_it_s_your_web_browser_or_mobile_phone =>
+      "depending on where you click the link from, whether it\'s your web browser or mobile phone";
+  String get the_link_will_either_take_you_to_our_main =>
+      "the link will either take you to our main";
+  String get web_page_where_you_can_register_on_the_web_directly_or_it_will_take_you_from_your_mobile_phone_to_the_App_or_google_play_stores =>
+      "web page where you can register on the web directly or it will take you from your mobile phone to the App or Google Play Stores";
+  String get where_you_can_download_our_SevaX_App_Once_you_have_registered_on_the_SevaX_mobile_app_or_the_website =>
+      "where you can download our SevaX App. Once you have registered on the SevaX mobile app or the website";
+  String get you_can_explore_Seva_Communities_near_you_Type_in_the =>
+      "you can explore Seva Communities near you. Type in the";
+  String get and_enter_code_text => "and enter code";
+  String get when_prompted_text => "when prompted";
+  String get click_to_Join_text => "Click to Join";
+  String get and_their_Seva_Community_via_this_dynamic_link_at =>
+      "and their Seva Community via this dynamic link at";
+  String get thank_you_for_being_a_part_of_our_Seva_Exchange_movement_the_Seva_Exchange_team_Please_email_us_at =>
+      "Thank you for being a part of our Seva Exchange movement!\n-the Seva Exchange team\n\nPlease email us at support@sevaexchange.com";
+  String get if_you_have_any_questions_or_issues_joining_with_the_link_given =>
+      "if you have any questions or issues joining with the link given";
+  String get you_are_signing_up_for_this_test => "You are signing up for this";
+  String get doing_so_will_debit_a_total_of => "Doing so will debit a total of";
+  String get credits_from_you_after_you_say_ok =>
+      "credits from you after you say OK";
+  String get you_don_t_have_enough_credit_to_signup_for_this_class =>
+      "You don\'t have enough credit to signup for this class";
+  String get name_not_updated_text => "name not updated";
+  String get notification_for_new_messages => "Notification for new messages";
+  String get feeds_notification_text => "Feeds notification";
+  String get posting_to_text => "Posting to";
+  String get edit_subsequent_requests => "Edit subsequent requests";
+  String get edit_this_request_only => "Edit this request only";
+  String get this_action_is_restricted_for_you_by_the_owner_of_this =>
+      "This action is restricted for you by the owner of this";
 }

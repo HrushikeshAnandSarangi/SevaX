@@ -1,10 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/message_bloc.dart';
 import 'package:sevaexchange/ui/screens/message/pages/timebank_message_page.dart';
 import 'package:sevaexchange/ui/utils/avatar.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:timeago/timeago.dart' as timeago;
+
 class AdminMessageCard extends StatelessWidget {
   final AdminMessageWrapperModel model;
   const AdminMessageCard({
@@ -55,7 +57,8 @@ class AdminMessageCard extends StatelessWidget {
                                 horizontal: 8, vertical: 2),
                             color: Colors.grey[300],
                             child: Text(
-                              getMessageCountText(model.newMessageCount),
+                              getMessageCountText(
+                                  model.newMessageCount, context),
                             ),
                           )
                         : Container(),
@@ -89,14 +92,14 @@ class AdminMessageCard extends StatelessWidget {
     );
   }
 
-  String getMessageCountText(int count) {
+  String getMessageCountText(int count, BuildContext context) {
     if (count == null || count < 1) {
       return "";
     }
     if (count == 1) {
-      return "1 new message";
+      return "1 ${L.of(context).new_message_text}";
     } else {
-      return "$count new messages";
+      return "$count ${L.of(context).new_messages_text}";
     }
   }
 }

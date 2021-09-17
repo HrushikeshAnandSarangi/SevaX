@@ -9,6 +9,7 @@ import 'package:sevaexchange/components/calendar_events/module/index.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/join_req_model.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
@@ -104,7 +105,8 @@ class PersonalNotificationReducerForRequests {
 
     return NotificationCard(
       timestamp: notification.timestamp,
-      entityName: requestData.entityTitle ?? "Deletion Request",
+      entityName:
+          requestData.entityTitle ?? L.of(context).deletion_request_text,
       photoUrl: null,
       title: requestData.requestAccepted
           ? "${requestData.entityTitle} ${S.of(context).notifications_was_deleted}"
