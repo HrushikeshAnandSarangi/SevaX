@@ -41,5 +41,11 @@
 	"posting_to_text": "Posting to",
 	"edit_subsequent_requests": "Edit subsequent requests",
 	"edit_this_request_only": "Edit this request only",
-	"this_action_is_restricted_for_you_by_the_owner_of_this": "This action is restricted for you by the owner of this"
+	"this_action_is_restricted_for_you_by_the_owner_of_this": "This action is restricted for you by the owner of this",
+	"time":"Time",
+	"cash":"Money",
+	"goods":"Goods",
+	"public":"Public",
+	"latest":"Latest",
+	"likes":"Likes"
 }

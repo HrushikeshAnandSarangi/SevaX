@@ -1444,9 +1444,7 @@ class L {
   //6th Aug
   String get completed_events => "Completed Events";
 
-  //15 sep 2021
-
-  //todo:: update labels
+  //todo::17th sep update labels
   String get any_distance => "Any Distance";
   String get sponsor_details => "Sponsor Details";
   String get add_sponsor => "Add Sponsor";
