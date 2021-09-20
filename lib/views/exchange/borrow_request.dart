@@ -195,7 +195,7 @@ class _BorrowRequestState extends State<BorrowRequest> {
         },
         decoration: InputDecoration(
           errorMaxLines: 2,
-          hintText: L.of(context).request_borrow_title_hint,
+          hintText: L.of(context).borrow_request_title_hint_place,
           hintStyle: requestUtils.hintTextStyle,
         ),
         textInputAction: TextInputAction.next,
