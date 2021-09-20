@@ -470,7 +470,7 @@ class _ChatPageState extends State<ChatPage> {
     } else {
       Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) => GroupInfoPage(chatModel: chatModel),
+          builder: (context) => GroupInfoPage(chatModel: chatModel, timebankModel: timebankModel),
         ),
       );
     }
