@@ -2056,51 +2056,46 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       margin: EdgeInsets.only(right: 12),
       width: 100,
       height: 32,
-      child: ConfigurationCheck(
-        actionType: 'accept_requests',
-        role: memberType(
-            widget.timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
-        child: CustomTextButton(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          padding: EdgeInsets.all(0),
-          color: Theme.of(context).accentColor,
-          child: Row(
-            children: <Widget>[
-              SizedBox(width: 1),
-              Spacer(),
-              widget.requestItem.requestType == RequestType.BORROW
-                  ? Text(
-                      isApplied ? S.of(context).cancel : S.of(context).accept,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    )
-                  : Text(
-                      isApplied ? S.of(context).withdraw : S.of(context).apply,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-              Spacer(
-                flex: 1,
-              ),
-            ],
-          ),
-          onPressed: () {
-            if (widget.requestItem.requestType == RequestType.BORROW) {
-              //widget.requestItem.roomOrTool == 'PLACE'
-              //?
-              borrowApplyAction();
-              //: proccedWithCalander();
-            } else {
-              applyAction();
-            }
-          },
+      child: CustomTextButton(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
         ),
+        padding: EdgeInsets.all(0),
+        color: Theme.of(context).accentColor,
+        child: Row(
+          children: <Widget>[
+            SizedBox(width: 1),
+            Spacer(),
+            widget.requestItem.requestType == RequestType.BORROW
+                ? Text(
+                    isApplied ? S.of(context).cancel : S.of(context).accept,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  )
+                : Text(
+                    isApplied ? S.of(context).withdraw : S.of(context).apply,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+            Spacer(
+              flex: 1,
+            ),
+          ],
+        ),
+        onPressed: () {
+          if (widget.requestItem.requestType == RequestType.BORROW) {
+            //widget.requestItem.roomOrTool == 'PLACE'
+            //?
+            borrowApplyAction();
+            //: proccedWithCalander();
+          } else {
+            applyAction();
+          }
+        },
       ),
     );
   }
