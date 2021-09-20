@@ -76,14 +76,12 @@ class _BorrowRequestState extends State<BorrowRequest> {
 
   Widget addToProjectContainer() {
     if (requestUtils.isFromRequest(projectId: widget.projectId)) {
-      if (isAccessAvailable(widget.timebankModel,
-              SevaCore.of(context).loggedInUser.sevaUserID) &&
+      if (isAccessAvailable(widget.timebankModel, SevaCore.of(context).loggedInUser.sevaUserID) &&
           widget.requestModel.requestMode == RequestMode.TIMEBANK_REQUEST) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            (widget.requestModel.requestType ==
-                        RequestType.ONE_TO_MANY_REQUEST &&
+            (widget.requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST &&
                     widget.createEvent)
                 ? Container()
                 : Row(
@@ -96,23 +94,19 @@ class _BorrowRequestState extends State<BorrowRequest> {
                               setState(() {});
                               widget.onCreateEventChanged(widget.createEvent);
                             },
-                            createEvent:
-                                widget.formType == RequestFormType.CREATE
-                                    ? widget.createEvent
-                                    : false,
-                            selectedProject: (widget.requestModel.projectId !=
-                                        null &&
+                            createEvent: widget.formType == RequestFormType.CREATE
+                                ? widget.createEvent
+                                : false,
+                            selectedProject: (widget.requestModel.projectId != null &&
                                     widget.requestModel.projectId.isNotEmpty)
                                 ? widget.projectModelList.firstWhere(
-                                    (element) =>
-                                        element.id ==
-                                        widget.requestModel.projectId,
+                                    (element) => element.id == widget.requestModel.projectId,
                                     orElse: () => null)
                                 : null,
                             requestModel: widget.requestModel,
                             projectModelList: widget.projectModelList,
-                            admin: isAccessAvailable(widget.timebankModel,
-                                SevaCore.of(context).loggedInUser.sevaUserID),
+                            admin: isAccessAvailable(
+                                widget.timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
                             updateProjectIdCallback: (String projectid) {
                               widget.requestModel.projectId = projectid;
                               setState(() {});
@@ -126,8 +120,7 @@ class _BorrowRequestState extends State<BorrowRequest> {
                       setState(() {
                         widget.createEvent = !widget.createEvent;
                         widget.requestModel.projectId = '';
-                        log('projectId2:  ' +
-                            widget.requestModel.projectId.toString());
+                        log('projectId2:  ' + widget.requestModel.projectId.toString());
                         log('createEvent2:  ' + widget.createEvent.toString());
                       });
                     },
@@ -163,8 +156,12 @@ class _BorrowRequestState extends State<BorrowRequest> {
     super.initState();
     if (widget.formType == RequestFormType.EDIT) {
       if (widget.requestModel.roomOrTool == LendingType.ITEM.readable) {
+        if (widget.requestModel.virtualRequest == true) {
+          isPublicCheckboxVisible = true;
+        }
         roomOrTool = 1;
       } else {
+        isPublicCheckboxVisible = true;
         roomOrTool = 0;
       }
 
@@ -174,14 +171,14 @@ class _BorrowRequestState extends State<BorrowRequest> {
       });
     } else {
       //When creating request and switch is not touched (initialize as place)
+      isPublicCheckboxVisible = true;
       widget.requestModel.roomOrTool = LendingType.PLACE.readable;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
-        Widget>[
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
       Text(
         "${S.of(context).request_title}",
         style: TextStyle(
@@ -270,11 +267,11 @@ class _BorrowRequestState extends State<BorrowRequest> {
                   if (val != roomOrTool) {
                     setState(() {
                       if (val == 0) {
-                        widget.requestModel.roomOrTool =
-                            LendingType.PLACE.readable;
+                        widget.requestModel.roomOrTool = LendingType.PLACE.readable;
+                        isPublicCheckboxVisible = true;
                       } else {
-                        widget.requestModel.roomOrTool =
-                            LendingType.ITEM.readable;
+                        isPublicCheckboxVisible = false;
+                        widget.requestModel.roomOrTool = LendingType.ITEM.readable;
                       }
                       roomOrTool = val;
                     });
@@ -303,10 +300,8 @@ class _BorrowRequestState extends State<BorrowRequest> {
           HideWidget(
             hide: roomOrTool == 0,
             child: SelectBorrowItem(
-              selectedItems:
-                  widget.requestModel.borrowModel.requiredItems ?? {},
-              onSelectedItems: (items) =>
-                  {widget.requestModel.borrowModel.requiredItems = items},
+              selectedItems: widget.requestModel.borrowModel.requiredItems ?? {},
+              onSelectedItems: (items) => {widget.requestModel.borrowModel.requiredItems = items},
             ),
           ),
         ],
@@ -317,18 +312,15 @@ class _BorrowRequestState extends State<BorrowRequest> {
         startTime: widget.formType == RequestFormType.EDIT
             ? getUpdatedDateTimeAccToUserTimezone(
                 timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
-                dateTime: DateTime.fromMillisecondsSinceEpoch(
-                    widget.requestModel.requestStart))
+                dateTime: DateTime.fromMillisecondsSinceEpoch(widget.requestModel.requestStart))
             : null,
         endTime: widget.formType == RequestFormType.EDIT
             ? getUpdatedDateTimeAccToUserTimezone(
                 timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
-                dateTime: DateTime.fromMillisecondsSinceEpoch(
-                    widget.requestModel.requestEnd))
+                dateTime: DateTime.fromMillisecondsSinceEpoch(widget.requestModel.requestEnd))
             : null,
       ),
-      HideWidget(
-          hide: widget.formType == RequestFormType.EDIT, child: RepeatWidget()),
+      HideWidget(hide: widget.formType == RequestFormType.EDIT, child: RepeatWidget()),
       SizedBox(height: 15),
       (widget.requestModel.requestType == RequestType.BORROW && roomOrTool == 1)
           ? Text(
@@ -367,8 +359,7 @@ class _BorrowRequestState extends State<BorrowRequest> {
           hintStyle: requestUtils.hintTextStyle,
         ),
         initialValue: widget.formType == RequestFormType.CREATE
-            ? requestUtils.getInitialDescription(
-                widget.offer, widget.isOfferRequest)
+            ? requestUtils.getInitialDescription(widget.offer, widget.isOfferRequest)
             : widget.requestModel.description,
         keyboardType: TextInputType.multiline,
         maxLines: 1,
@@ -426,13 +417,12 @@ class _BorrowRequestState extends State<BorrowRequest> {
         ),
       ),
       HideWidget(
-        hide: AppConfig.isTestCommunity,
+        hide: AppConfig.isTestCommunity || roomOrTool == 0,
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 8),
           child: ConfigurationCheck(
             actionType: 'create_virtual_request',
-            role: memberType(widget.timebankModel,
-                SevaCore.of(context).loggedInUser.sevaUserID),
+            role: memberType(widget.timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
             child: OpenScopeCheckBox(
                 infoType: InfoType.VirtualRequest,
                 isChecked: widget.requestModel.virtualRequest,
@@ -462,13 +452,11 @@ class _BorrowRequestState extends State<BorrowRequest> {
           padding: const EdgeInsets.symmetric(vertical: 10),
           child: TransactionsMatrixCheck(
             comingFrom: widget.comingFrom,
-            upgradeDetails:
-                AppConfig.upgradePlanBannerModel.public_to_sevax_global,
+            upgradeDetails: AppConfig.upgradePlanBannerModel.public_to_sevax_global,
             transaction_matrix_type: 'create_public_request',
             child: ConfigurationCheck(
               actionType: 'create_public_request',
-              role: memberType(widget.timebankModel,
-                  SevaCore.of(context).loggedInUser.sevaUserID),
+              role: memberType(widget.timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
               child: OpenScopeCheckBox(
                   infoType: InfoType.OpenScopeEvent,
                   isChecked: widget.requestModel.public,
