@@ -131,10 +131,11 @@ class _GoodsAndAmountDonationsState extends State<GoodsAndAmountDonations> {
                                 case 0:
                                   {
                                     setState(() {
+                                      selectedItem = 0;
+                                      isLifeTime = false;
                                       timeStamp = DateTime.now()
                                           .subtract(Duration(days: 30))
                                           .millisecondsSinceEpoch;
-                                      selectedItem = 0;
                                     });
                                   }
                                   break;
@@ -142,6 +143,7 @@ class _GoodsAndAmountDonationsState extends State<GoodsAndAmountDonations> {
                                   {
                                     setState(() {
                                       selectedItem = 1;
+                                      isLifeTime = false;
                                       timeStamp = DateTime.now()
                                           .subtract(Duration(days: 90))
                                           .millisecondsSinceEpoch;
@@ -152,6 +154,7 @@ class _GoodsAndAmountDonationsState extends State<GoodsAndAmountDonations> {
                                   {
                                     setState(() {
                                       selectedItem = 2;
+                                      isLifeTime = false;
                                       timeStamp = DateTime.now()
                                           .subtract(Duration(days: 365))
                                           .millisecondsSinceEpoch;
