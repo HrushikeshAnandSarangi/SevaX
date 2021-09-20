@@ -1452,7 +1452,7 @@ class L {
       "This action is restricted for you by the owner of this";
 // ----------------------------------------------------------------------------------->
 //
-//to do: 20th September 2021 Updates --- > Labels to be updated in Arbify
+//todo: 20th September 2021 Updates --- > Labels to be updated in Arbify
   String get lending_offer_title_hint_item => "Ex: Offering to lend a lawnmower.";
   String get lending_offer_title_hint_place => "Ex: Offering to lend an apartment.";
   String get name_of_item_hint => "Ex: Lawnmower";
