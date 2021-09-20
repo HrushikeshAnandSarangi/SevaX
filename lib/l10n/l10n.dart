@@ -3836,44 +3836,56 @@ class S {
       );
 
   String timebank_project(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Seva Community Project', other: 'Seva Community Projects', args: [count])}',
-        name: 'timebank_project',        
+        '${Intl.plural(count, one: 'Seva Community Project', other: 'Seva Community Projects', args: [
+              count
+            ])}',
+        name: 'timebank_project',
         args: [count],
       );
 
   String personal_project(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Personal Project', other: 'Personal Projects', args: [count])}',
-        name: 'personal_project',        
+        '${Intl.plural(count, one: 'Personal Project', other: 'Personal Projects', args: [
+              count
+            ])}',
+        name: 'personal_project',
         args: [count],
       );
 
   String personal_request(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Personal Request', other: 'Personal Requests', args: [count])}',
-        name: 'personal_request',        
+        '${Intl.plural(count, one: 'Personal Request', other: 'Personal Requests', args: [
+              count
+            ])}',
+        name: 'personal_request',
         args: [count],
       );
 
   String timebank_request(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Seva Community Request', other: 'Seva Community Requests', args: [count])}',
-        name: 'timebank_request',        
+        '${Intl.plural(count, one: 'Seva Community Request', other: 'Seva Community Requests', args: [
+              count
+            ])}',
+        name: 'timebank_request',
         args: [count],
       );
 
   String members_selected(num count) => Intl.message(
-        '${Intl.plural(count, one: 'member selected', other: 'members selected', args: [count])}',
-        name: 'members_selected',        
+        '${Intl.plural(count, one: 'member selected', other: 'members selected', args: [
+              count
+            ])}',
+        name: 'members_selected',
         args: [count],
       );
 
   String volunteers_selected(num count) => Intl.message(
-        '${Intl.plural(count, one: 'volunteer selected', other: 'volunteers selected', args: [count])}',
-        name: 'volunteers_selected',        
+        '${Intl.plural(count, one: 'volunteer selected', other: 'volunteers selected', args: [
+              count
+            ])}',
+        name: 'volunteers_selected',
         args: [count],
       );
 
   String user(num count) => Intl.message(
         '${Intl.plural(count, one: 'user', other: 'users', args: [count])}',
-        name: 'user',        
+        name: 'user',
         args: [count],
       );
 
@@ -3883,8 +3895,10 @@ class S {
       );
 
   String subscription(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Subscription', other: 'Subscriptions', args: [count])}',
-        name: 'subscription',        
+        '${Intl.plural(count, one: 'Subscription', other: 'Subscriptions', args: [
+              count
+            ])}',
+        name: 'subscription',
         args: [count],
       );
 
@@ -4020,13 +4034,13 @@ class S {
 
   String day(num count) => Intl.message(
         '${Intl.plural(count, one: 'Day', other: 'Days', args: [count])}',
-        name: 'day',        
+        name: 'day',
         args: [count],
       );
 
   String year(num count) => Intl.message(
         '${Intl.plural(count, one: 'Year', other: 'Years', args: [count])}',
-        name: 'year',        
+        name: 'year',
         args: [count],
       );
 
@@ -6900,7 +6914,7 @@ class S {
         name: 'camera_not_available',
       );
 
-  String get loading_camera  => Intl.message(
+  String get loading_camera => Intl.message(
         'Loading Camera...',
         name: 'loading_camera ',
       );
@@ -6925,7 +6939,7 @@ class S {
         name: 'update_msg',
       );
 
-  String get member_permission  => Intl.message(
+  String get member_permission => Intl.message(
         'Member Permission',
         name: 'member_permission ',
       );
@@ -6985,7 +6999,7 @@ class S {
         name: 'click_to_view_request_agreement',
       );
 
-  String get enter_prep_time  => Intl.message(
+  String get enter_prep_time => Intl.message(
         'Enter Prep Time',
         name: 'enter_prep_time ',
       );
@@ -7025,7 +7039,7 @@ class S {
         name: 'reliabilitysocre',
       );
 
-  String get cv_not_available  => Intl.message(
+  String get cv_not_available => Intl.message(
         'CV not available',
         name: 'cv_not_available ',
       );
@@ -7560,7 +7574,7 @@ class S {
         name: 'and_complete_task',
       );
 
-  String get remove_from_bookmark  => Intl.message(
+  String get remove_from_bookmark => Intl.message(
         'Remove from bookmarks',
         name: 'remove_from_bookmark ',
       );
@@ -7645,7 +7659,8 @@ class S {
         name: 'back',
       );
 
-  String get by_selecting_this_you_will_be_creating_a_Sandbox_Community => Intl.message(
+  String get by_selecting_this_you_will_be_creating_a_Sandbox_Community =>
+      Intl.message(
         'By selecting this you will be creating a Sandbox Community',
         name: 'by_selecting_this_you_will_be_creating_a_Sandbox_Community',
       );
@@ -8305,7 +8320,8 @@ class S {
         name: 'trial_added',
       );
 
-  String get we_have_added_seven_days_free_trial_to_your_subscription => Intl.message(
+  String get we_have_added_seven_days_free_trial_to_your_subscription =>
+      Intl.message(
         'Note: If you do nothing after the 7 day free trial, your paid subscription will continue.',
         name: 'we_have_added_seven_days_free_trial_to_your_subscription',
       );
@@ -8370,25 +8386,35 @@ class S {
         name: 'we_are_sorry_to_see_you_go',
       );
 
-  String get does_your_cancellation_have_anything_to_do_with_the_following_Select_all_that_apply => Intl.message(
-        'Does your cancellation have anything to do with the following? (Select all that apply.)',
-        name: 'does_your_cancellation_have_anything_to_do_with_the_following_Select_all_that_apply',
-      );
+  String
+      get does_your_cancellation_have_anything_to_do_with_the_following_Select_all_that_apply =>
+          Intl.message(
+            'Does your cancellation have anything to do with the following? (Select all that apply.)',
+            name:
+                'does_your_cancellation_have_anything_to_do_with_the_following_Select_all_that_apply',
+          );
 
-  String get the_app_did_not_meet_our_requirements_or_expectations_because => Intl.message(
+  String get the_app_did_not_meet_our_requirements_or_expectations_because =>
+      Intl.message(
         'The app did not meet our requirements or expectations, because:',
         name: 'the_app_did_not_meet_our_requirements_or_expectations_because',
       );
 
-  String get please_let_us_know_if_we_can_do_anything_to_change_your_mind_select_all_that_apply => Intl.message(
-        'Please let us know if we can do anything to change your mind? (Select all that apply.)',
-        name: 'please_let_us_know_if_we_can_do_anything_to_change_your_mind_select_all_that_apply',
-      );
+  String
+      get please_let_us_know_if_we_can_do_anything_to_change_your_mind_select_all_that_apply =>
+          Intl.message(
+            'Please let us know if we can do anything to change your mind? (Select all that apply.)',
+            name:
+                'please_let_us_know_if_we_can_do_anything_to_change_your_mind_select_all_that_apply',
+          );
 
-  String get would_you_like_a_bit_more_time_to_evaluvate_our_app_for_free_full_seven_day_trial => Intl.message(
-        'Would you like a bit more time to evaluate our app for a free full 7 day trial?',
-        name: 'would_you_like_a_bit_more_time_to_evaluvate_our_app_for_free_full_seven_day_trial',
-      );
+  String
+      get would_you_like_a_bit_more_time_to_evaluvate_our_app_for_free_full_seven_day_trial =>
+          Intl.message(
+            'Would you like a bit more time to evaluate our app for a free full 7 day trial?',
+            name:
+                'would_you_like_a_bit_more_time_to_evaluvate_our_app_for_free_full_seven_day_trial',
+          );
 
   String get explore_full_feature_for_next_seven_days => Intl.message(
         'Explore full feature for next 7 days',
@@ -9490,7 +9516,8 @@ class S {
         name: 'time_debited_for_one_to_many_offer_tag',
       );
 
-  String get time_offer_creator_credited_for_one_to_many_offer_tag => Intl.message(
+  String get time_offer_creator_credited_for_one_to_many_offer_tag =>
+      Intl.message(
         'creator credited',
         name: 'time_offer_creator_credited_for_one_to_many_offer_tag',
       );
@@ -9767,9 +9794,9 @@ class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {
         Locale.fromSubtags(languageCode: 'pt'),
         Locale.fromSubtags(languageCode: 'sn'),
         Locale.fromSubtags(languageCode: 'sw'),
-        Locale.fromSubtags(languageCode: 'zh'),
-        Locale.fromSubtags(languageCode: 'zh'),
-  ];
+        Locale.fromSubtags(languageCode: 'zh', countryCode: 'CN'),
+        Locale.fromSubtags(languageCode: 'zh', countryCode: 'TW'),
+      ];
 
   @override
   bool isSupported(Locale locale) => [
