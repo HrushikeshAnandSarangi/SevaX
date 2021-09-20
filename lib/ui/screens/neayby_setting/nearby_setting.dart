@@ -75,11 +75,11 @@ class _NearbySettingsWidgetState extends State<NearbySettingsWidget> {
             double value = rating;
             bool isKm = NearbySettingBloc.KILOMETERS_SELECTION == selectedRadio;
 
-            if (isKm) {
-              value = value / 1.609;
-            }
+            // if (isKm) {
+            //   value = value / 1.609;
+            // }
             Navigator.of(context).pop(ExploreDistanceModel(
-                value.toInt(), isKm ? DistancType.km : DistancType.mi));
+                rating.toInt(), isKm ? DistancType.km : DistancType.mi));
           },
         ),
         title: Text(
@@ -237,20 +237,20 @@ class _NearbySettingsWidgetState extends State<NearbySettingsWidget> {
   void setSelectedRadio(int value) {
     if (value == NearbySettingBloc.MILES_SELECTION) {
       rating = rating / 1.6;
-      // rating = rating >= minMi && rating <= maxMi ? rating : minMi;
-      rating = rating >= minMi && rating <= maxMi
-          ? rating
-          : rating < minMi
-              ? minMi
-              : maxMi;
+      //// rating = rating >= minMi && rating <= maxMi ? rating : minMi;
+      // rating = rating >= minMi && rating <= maxMi
+      //     ? rating
+      //     : rating < minMi
+      //         ? minMi
+      //         : maxMi;
     } else if (value == NearbySettingBloc.KILOMETERS_SELECTION) {
       rating = rating * 1.6;
-      // rating = rating >= minKM && rating <= maxKM ? rating : minKM;
-      rating = rating >= minKM && rating <= maxKM
-          ? rating
-          : rating < minKM
-              ? minKM
-              : maxKM;
+      //// rating = rating >= minKM && rating <= maxKM ? rating : minKM;
+      // rating = rating >= minKM && rating <= maxKM
+      //     ? rating
+      //     : rating < minKM
+      //         ? minKM
+      //         : maxKM;
     }
     if (widget.loggedInUser != null) {
       NearbySettingBloc.udpateNearbyRadius(

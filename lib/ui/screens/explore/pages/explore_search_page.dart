@@ -431,13 +431,15 @@ class ExploreSearchTabBar extends StatelessWidget {
               children: [
                 Container(
                   height: 30,
-                  width: 158,
+                  width: 174,
                   child: StreamBuilder<ExploreDistanceModel>(
                     initialData: ExploreDistanceModel(0, DistancType.mi),
                     stream: _bloc.distance,
                     builder: (context, snapshot) {
-                      int _distance = snapshot.data.distance;
                       DistancType _type = snapshot.data.type;
+                      int _distance = _type == "km"
+                          ? snapshot.data.distance / 1.609
+                          : snapshot.data.distance;
                       return Container(
                         decoration: BoxDecoration(
                           color: _distance != 0
