@@ -288,7 +288,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                               Text(
                                 S.of(context).liability_damage,
                                 style: TextStyle(
-                                  fontSize: 15,
+                                  fontSize: 13,
                                   fontWeight: FontWeight.bold,
                                   fontFamily: 'Europa',
                                   color: Colors.black,
@@ -326,7 +326,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                               Text(
                                 S.of(context).use_disclaimer,
                                 style: TextStyle(
-                                  fontSize: 15,
+                                  fontSize: 13,
                                   fontWeight: FontWeight.bold,
                                   fontFamily: 'Europa',
                                   color: Colors.black,
@@ -360,13 +360,13 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                           ),
                           widget.placeOrItem == LendingType.ITEM.readable
                               ? Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  // mainAxisAlignment:
+                                  //     MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       S.of(context).delivery_return_equipment,
                                       style: TextStyle(
-                                        fontSize: 15,
+                                        fontSize: 13,
                                         fontWeight: FontWeight.bold,
                                         fontFamily: 'Europa',
                                         color: Colors.black,
@@ -406,7 +406,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                                     Text(
                                       S.of(context).refund_deposit,
                                       style: TextStyle(
-                                        fontSize: 15,
+                                        fontSize: 13,
                                         fontWeight: FontWeight.bold,
                                         fontFamily: 'Europa',
                                         color: Colors.black,
@@ -447,7 +447,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                                     Text(
                                       S.of(context).maintain_repair,
                                       style: TextStyle(
-                                        fontSize: 15,
+                                        fontSize: 13,
                                         fontWeight: FontWeight.bold,
                                         fontFamily: 'Europa',
                                         color: Colors.black,
@@ -487,7 +487,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                                     Text(
                                       S.of(context).maintain_clean,
                                       style: TextStyle(
-                                        fontSize: 15,
+                                        fontSize: 13,
                                         fontWeight: FontWeight.bold,
                                         fontFamily: 'Europa',
                                         color: Colors.black,
