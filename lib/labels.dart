@@ -254,8 +254,6 @@ class L {
 
   String get any_specific_conditions => "Any specific condition(s)";
 
-  String get item_returned_hint_text => 'Ex: item must be returned in the same condition.';
-
   String get description_of_item => "Description of item(s)";
 
   String get place_returned_hint_text => 'Ex: place must be returned in the same condition.';
@@ -347,15 +345,6 @@ class L {
   String get approve_borrow_alert_msg1 => "Please enter the do's and dont's";
 
   String get approve_borrow_no_agreement_selected => "No Agreement Selected";
-
-  String get request_agreement_form_component_text =>
-      'Create/Use agreement between you and borrower on how your item/place can be used.';
-
-  String get approve_borrow_terms_acknowledgement_text1 =>
-      "I acknowledge that you can use the room on the mentioned dates.";
-
-  String get approve_borrow_terms_acknowledgement_text2 =>
-      "I acknowledge that you can use the item on the mentioned dates.";
 
   String get approve_borrow_terms_acknowledgement_text3 =>
       "Note: Please instruct on how to reach the location and do and don't accordingly.";
@@ -579,10 +568,6 @@ class L {
 //Lending Offer Labels Below
   String get approve_lending_offer => "Approve Lending Offer";
 
-  String get date_to_borrow_and_return => "Date to borrow and return";
-
-  String get date_to_check_in_out => "Date of Arrival and Expected Departure";
-
   String get addditional_instructions => "Additional Instructions";
 
   String get addditional_instructions_error_text => "Please enter additional instructions";
@@ -633,8 +618,6 @@ class L {
 
   String get name_item => "Name of Item";
 
-  String get name_of_place_hint => "Ex: Apartment sunshine 3";
-
   String get amenities => "Amenities";
 
   String get amenities_hint => "Please select Amenities guests can utilize";
@@ -642,10 +625,6 @@ class L {
   String get no_of_guests => "Number of guests";
 
   String get bed_roooms => "Bed Rooms for guests";
-
-  String get bath_rooms => "Bath Room(s)";
-
-  String get common_spaces => "Common Spaces";
 
   String get house_rules => "House Rules";
 
@@ -686,8 +665,6 @@ class L {
   String get validation_error_house_images => "Please add place images";
 
   String get common_spaces_hint => "Ex: Sofa bed 1, Couch 1, Floor Mattress 1";
-
-  String get house_rules_hint => "Ex: Smoking allowed";
 
   String get place => "Place";
 
@@ -1132,23 +1109,15 @@ class L {
 
   String get select_a_item_lending => "Select list of related items for Borrow*";
 
-  String get select_item_for_lending => "Select item for lending*";
-
   String get items_validation =>
       "You have not selected any Items. Please select one or more before creating the Borrow request.";
 
   String get accept_borrow_agreement_page_hint =>
       "Please fill in your Item details, agreement and location of your place to help the borrower.";
 
-  String get accept_borrow_agreement_place_hint =>
-      "Please provide details of your place; agreement and location.";
-
   String get accept_borrow_agreement_item_title => "You are about to give Items for the borrower";
 
   String get accept_borrow_agreement_place_title => "Details of the offer";
-
-//3rd August
-  String get select_a_place_lending => "Select a place for lending*";
 
   //below labels yet to be added lending item labels
   String get add_new_item => "Add New Item";
@@ -1158,8 +1127,6 @@ class L {
   String get add_images_to_item => "Add One/Multiple Images of the item";
 
   String get name_of_item => "Name of your item";
-
-  String get name_of_item_hint => "Ex: Lawn Mover";
 
   String get add_item => "Add Item";
 
@@ -1202,24 +1169,6 @@ class L {
   String get agreement_details => 'Agreement Details: ';
 
   String get lenders_specific_conditions => "Lender's Specific Conditions: ";
-
-  String get agreement_damage_liability =>
-      'The Borrower is responsible for the full cost of repair or replacement of any or all of the Equipment that is damaged, lost, confiscated, or stolen from the time Borrower assumes custody until it is returned to lender. If the Equipment is lost, stolen or damaged, Borrower agrees to promptly notify the Lender Representative designated above.';
-
-  String get agreement_user_disclaimer =>
-      'The Borrower shall be responsible for the proper use and deployment of the Equipment. The Borrower shall be responsible for training anyone using the Equipment on the proper use of the Equipment in accordance with any Equipment use procedures.';
-
-  String get agreement_refund_deposit =>
-      'The borrower will provide a refundable deposit as defined within the agreement with the lender. The Criteria established regarding the condition of the item or property upon return will also be defined in the agreement. ';
-
-  String get agreement_maintain_and_clean =>
-      "All items and properties borrowed must be returned in a condition similar to the condition it is received by the borrower unless otherwise noted in the agreement. Specific details related to the item and the lender's requirements upon return should be noted in the contract and agreed upon prior to receipt by the borrower.";
-
-  String get agreement_delivery_return =>
-      'Title to the Equipment the subject of this Agreement shall remain with Lender. The Borrower shall be repsonsible for the safe packaging, proper import, export, shipping and receiving of the Equipment. The Equipment shall be returned within a reasonable amount of time after the Loan Period end date identified.';
-
-  String get agreement_maintain_and_repair =>
-      'Equipment shall be returned to Lender in as good condition as when received by the Borrower, except for reasonable wear and tear. During the Loan Period and prior to return, the Borrower agrees to assume all responsibility for maintenance and repair.';
 
   String get terms_of_service => 'Terms of Service: ';
 
@@ -1273,8 +1222,7 @@ class L {
   String get lent_to => 'Lent to: ';
   String get place_not_added => 'Place not added';
   String get items_not_added => 'Item(s) not added';
-  String get lending_offer_location_hint =>
-      'location will help members to locate the place easily.';
+
   String get offer_agreement_not_available => 'Request agreement not available';
 
   String get click_to_view_offer_agreement => 'Click to view offer agreement';
@@ -1320,8 +1268,6 @@ class L {
 
   String get lending_offer_collect_items_tag => 'Lending Offer - Collect Items';
   String get lending_offer_return_items_tag => 'Lending Offer - Return Items';
-  String get lending_offer_check_in_tag => 'Lending Offer - Arrival';
-  String get lending_offer_check_out_tag => 'Lending Offer - Departure';
   String get change_departure_date => 'Change departure date?';
   String get tab_to_leave_feedback => 'Tap to leave a feedback.';
   String get lending_offer_return_items_hint => 'Click here if you have returned the item(s).';
@@ -1427,4 +1373,92 @@ class L {
   String get edit_this_request_only => "Edit this request only";
   String get this_action_is_restricted_for_you_by_the_owner_of_this =>
       "This action is restricted for you by the owner of this";
+
+//
+// ----------------------------------------------------------------------------------->
+// ----------------------------------------------------------------------------------->
+// ----------------------------------------------------------------------------------->
+//
+//to do: 20th September 2021 Updates --- > Labels to be updated in Arbify
+  String get lending_offer_title_hint_item => "Ex: Offering to lend a lawnmower.";
+  String get lending_offer_title_hint_place => "Ex: Offering to lend an apartment.";
+  String get name_of_item_hint => "Ex: Lawnmower";
+  String get bath_rooms => "Bathroom(s)";
+  String get item_returned_hint_text => 'Ex: item(s) must be returned in the same condition.';
+  String get name_of_place_hint => "Ex: Apartment Bathed in Sunshine.";
+  String get common_spaces => "Common Space";
+  String get house_rules_hint => "Ex: No Smoking";
+  String get borrow_request_title_hint_item => "Ex: Lawnmower";
+  String get borrow_request_title_hint_place => "Ex: Apartment";
+  String get borrow_request_description_hint_item =>
+      "Provide a detailed description of the item you would like to borrow.";
+  String get borrow_request_description_hint_place =>
+      "Provide a detailed description of the place you would like to borrow including number of rooms, number of beds, etc.";
+  String get lending_offer_description_hint_item =>
+      "Provide a detailed description of the item you would like to lend.";
+  String get lending_offer_description_hint_place =>
+      "Provide a detailed description of the place you would like to lend including number of rooms, number of beds, etc.";
+  String get accept_borrow_agreement_place_hint =>
+      "Please provide details about your place, the proposed agreement and location of the property.";
+  String get select_a_place_lending => "Select a place to lend*";
+  String get select_item_for_lending => "Select an item to lend*";
+  String get approve_borrow_terms_acknowledgement_text1 =>
+      "I acknowledge that you can use the property on the mentioned dates";
+  String get approve_borrow_terms_acknowledgement_text2 =>
+      "I acknowledge that you can use the item(s) on the mentioned dates";
+  String get search_agreement_hint_place => "Enter name of a property agreement template";
+  String get search_agreement_hint_item => "Enter name of an item agreement template";
+  String get accept_place_borrow_request => "Accept Place Borrow Request";
+  String get accept_item_borrow_request => "Accept Item Borrow request";
+  String get accept_place_lending_offer => "Accept Place Lending Offer";
+  String get accept_item_lending_offer => "Accept Item Lending Offer";
+  String get request_agreement_form_component_text =>
+      'Create the proposed agreement between you and the borrower regarding the property. Use previous agreements if appropriate.';
+  String get lender_not_accepted_request_msg_place =>
+      "Lender is providing the property request with no agreement required";
+  String get lender_not_accepted_request_msg_item =>
+      "Lender is providing the item(s) request with no agreement required";
+  String get already_accepted_lender_place =>
+      "You have already accepted a property for this request";
+  String get already_accepted_lender_item => "You have already accepted an item for this request";
+  String get admin_borrow_request_received_back_check_place =>
+      "If you have received your place back from the borrower, please click the button below to complete this transaction";
+  String get admin_borrow_request_received_back_check_item =>
+      "If you have received your item(s) back from the borrower, please click the button below to complete this transaction";
+  String get place_agreement_name_hint_place => "Ex: House for the weekend..";
+  String get place_agreement_name_hint_item => "Ex: Lawnmower for the weekend..";
+  String get lend => "Lend";
+  String get canceled => 'Canceled';
+  String get date_to_borrow_and_return => "Date to Collect and Return item(s)";
+  String get date_to_check_in_out => "Date of Check In and expected Check Out";
+
+//Lending offers labels updates below ////---------------->
+  String get estimated_value_hint_place =>
+      " (This is the amount based on the property's rental value, including amenities)";
+  String get estimated_value_hint_item =>
+      " (This is the amount based on the item(s) current value)";
+  String get lending_offer_location_hint =>
+      'Provide the location you would like to lend to a borrower.';
+  String get end_date_after_offer_end_date =>
+      "The date(s) selected are outside the scope of this offer. Please edit your offer end date to approve this request";
+  String get lending_offer_check_in_tag => 'Lending Offer - Check In';
+  String get lending_offer_check_out_tag => 'Lending Offer - Check Out';
+
+//Finalised By Tim Below ------------------->
+  String get agreement_damage_liability =>
+      "The Borrower is responsible for the full cost of repair or replacement of any or all of the item(s) or properties that are damaged, lost, or stolen from the time Borrower assumes custody until it is returned to the lender unless otherwise agreed at the time the agreement is finalized. If the item(s) or property(s) is lost, stolen or damaged, Borrower agrees to promptly notify the Lender Representative designated above.";
+  String get agreement_user_disclaimer =>
+      "The Borrower shall be responsible for the proper use and deployment of the item(s) or properties. The Borrower shall be responsible for training anyone using the item(s) on the proper use of the item(s) in accordance with any item(s) use procedures.";
+
+  String get agreement_delivery_return =>
+      "Title to the item(s) the subject of this Agreement shall remain with Lender. The Borrower shall be responsible for the safe packaging, proper import, export, shipping and receiving of the item(s). The item(s) shall be returned within a reasonable amount of time after the Loan Period end date identified.";
+  String get agreement_maintain_and_repair =>
+      'Except for reasonable wear and tear, "Item(s) shall be returned to Lender in as good condition as when received by the Borrower. During the Loan Period and prior to return, the Borrower agrees to assume all responsibility for maintenance and repair."';
+
+  String get agreement_refund_deposit =>
+      "The borrower will provide a refundable deposit as defined within the agreement with the lender. The Criteria established regarding the condition of the item(s) or property upon return will also be defined in the agreement.";
+  String get agreement_maintain_and_clean =>
+      "All item(s) or properties borrowed must be returned in a condition similar to the condition it is received by the borrower unless otherwise noted in the agreement. Specific details related to the item(s) or properties and the lender's requirements upon return should be noted in the contract and agreed upon prior to prior to the borrower's receipt.";
+//Finalised by Tim above  ------------------->
+
 }
