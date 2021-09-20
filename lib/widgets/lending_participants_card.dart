@@ -57,6 +57,7 @@ class LendingParticipantCard extends StatelessWidget {
                       aspectRatio: 1,
                       child: CustomNetworkImage(
                         imageUrl ?? defaultUserImageURL,
+                        size: 30,
                         fit: BoxFit.cover,
                         onTap: onImageTap,
                       ),
@@ -83,17 +84,21 @@ class LendingParticipantCard extends StatelessWidget {
                     ),
                     SizedBox(height: 4),
                     Container(
-                      width: 100,
+                      width: 84,
                       child: Text(
                         acceptTime != null
                             ? DateFormat(
                                     'MMM dd, yyyy @ h:mm a',
-                                    Locale(AppConfig.prefs.getString('language_code'))
+                                    Locale(AppConfig.prefs
+                                            .getString('language_code'))
                                         .toLanguageTag())
                                 .format(
                                 getDateTimeAccToUserTimezone(
-                                  dateTime: DateTime.fromMillisecondsSinceEpoch(acceptTime),
-                                  timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
+                                  dateTime: DateTime.fromMillisecondsSinceEpoch(
+                                      acceptTime),
+                                  timezoneAbb: SevaCore.of(context)
+                                      .loggedInUser
+                                      .timezone,
                                 ),
                               )
                             : S.of(context).error_loading_data,
