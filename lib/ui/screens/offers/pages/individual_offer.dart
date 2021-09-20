@@ -408,7 +408,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                         ),
                         TransactionsMatrixCheck(
                           upgradeDetails: AppConfig.upgradePlanBannerModel
-                              .lending_offers, //lending offers banner to be added
+                              .lending_offers,
                           transaction_matrix_type: "lending_offer",
                           comingFrom: ComingFrom.Offers,
                           child: ConfigurationCheck(
