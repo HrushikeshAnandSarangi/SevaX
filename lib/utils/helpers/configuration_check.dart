@@ -58,7 +58,8 @@ class ConfigurationCheck extends StatelessWidget {
   static bool checkAllowedConfiguartions(MemberType role, String actionType) {
     TimebankConfigurations configurations =
         AppConfig.timebankConfigurations ?? getConfigurationModel();
-
+    log('config ${configurations}');
+    log('app config ${AppConfig.timebankConfigurations}');
     switch (role) {
       case MemberType.CREATOR:
         return true;
@@ -72,7 +73,7 @@ class ConfigurationCheck extends StatelessWidget {
         return configurations.superAdmin != null &&
             configurations.superAdmin.contains(actionType);
       default:
-        return true;
+        return false;
     }
   }
 }
