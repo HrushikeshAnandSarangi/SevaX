@@ -47,5 +47,9 @@
 	"goods":"Goods",
 	"public":"Public",
 	"latest":"Latest",
-	"likes":"Likes"
+	"likes":"Likes",
+	"offer_lend_title_hint":
+	"Ex: offering to lend an apartment.",
+	"request_brrow_title_hint": "Ex: Apartment"
+
 }

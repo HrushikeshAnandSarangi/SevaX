@@ -200,6 +200,9 @@ class _CapturePaymentDetailWidgetState
           ),
           TextFormField(
             // key: UniqueKey(),
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp(r'^\S.*$'))
+            ],
             autovalidateMode: AutovalidateMode.onUserInteraction,
             onChanged: (value) {
               updateExitWithConfirmationValue(context, 1, value);
@@ -232,6 +235,9 @@ class _CapturePaymentDetailWidgetState
           ),
           TextFormField(
             // key: UniqueKey(),
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp(r'^\S.*$'))
+            ],
             autovalidateMode: AutovalidateMode.onUserInteraction,
             onChanged: (value) {
               updateExitWithConfirmationValue(context, 2, value);
@@ -510,6 +516,9 @@ class _CapturePaymentDetailWidgetState
           ),
           TextFormField(
             // key: UniqueKey(),
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp(r'^\S.*$'))
+            ],
             autovalidateMode: AutovalidateMode.onUserInteraction,
             onChanged: (value) {
               updateExitWithConfirmationValue(context, 9, value);
@@ -558,6 +567,9 @@ class _CapturePaymentDetailWidgetState
           ),
           TextFormField(
             // key: UniqueKey(),
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp(r'^\S.*$'))
+            ],
             autovalidateMode: AutovalidateMode.onUserInteraction,
             onChanged: (value) {
               updateExitWithConfirmationValue(context, 10, value);

@@ -6,6 +6,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/utils/extensions.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:location/location.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
@@ -573,6 +574,29 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
                     ),
                   ),
                   TransactionsMatrixCheck(
+                    upgradeDetails: AppConfig.upgradePlanBannerModel.borrow_requests,
+                    transaction_matrix_type: 'borrow_request',
+                    comingFrom: widget.comingFrom,
+                    child: ConfigurationCheck(
+                      actionType: 'create_borrow_request',
+                      role: memberType(timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
+                      child: requestUtils.optionRadioButton<RequestType>(
+                        title: S.of(context).borrow,
+                        value: RequestType.BORROW,
+                        isEnabled: !widget.isOfferRequest,
+                        groupvalue: requestModel.requestType,
+                        onChanged: (value) {
+                          //requestModel.isRecurring = true;
+                          requestModel.requestType = value;
+                          instructorAdded = false;
+                          requestModel.selectedInstructor = null;
+                          AppConfig.helpIconContextMember = HelpContextMemberType.time_requests;
+                          setState(() => {});
+                        },
+                      ),
+                    ),
+                  ),
+                  TransactionsMatrixCheck(
                     upgradeDetails:
                         AppConfig.upgradePlanBannerModel.onetomany_requests,
                     transaction_matrix_type: 'onetomany_requests',
@@ -582,7 +606,7 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
                       role: memberType(timebankModel,
                           SevaCore.of(context).loggedInUser.sevaUserID),
                       child: requestUtils.optionRadioButton<RequestType>(
-                        title: S.of(context).one_to_many,
+                        title: S.of(context).one_to_many.sentenceCase(),
                         // TODO => sentence case
                         value: RequestType.ONE_TO_MANY_REQUEST,
                         isEnabled: !widget.isOfferRequest,
@@ -603,32 +627,6 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
                           );
                           AppConfig.helpIconContextMember =
                               HelpContextMemberType.one_to_many_requests;
-                          setState(() => {});
-                        },
-                      ),
-                    ),
-                  ),
-                  TransactionsMatrixCheck(
-                    upgradeDetails:
-                        AppConfig.upgradePlanBannerModel.borrow_requests,
-                    transaction_matrix_type: 'borrow_request',
-                    comingFrom: widget.comingFrom,
-                    child: ConfigurationCheck(
-                      actionType: 'create_borrow_request',
-                      role: memberType(timebankModel,
-                          SevaCore.of(context).loggedInUser.sevaUserID),
-                      child: requestUtils.optionRadioButton<RequestType>(
-                        title: S.of(context).borrow,
-                        value: RequestType.BORROW,
-                        isEnabled: !widget.isOfferRequest,
-                        groupvalue: requestModel.requestType,
-                        onChanged: (value) {
-                          //requestModel.isRecurring = true;
-                          requestModel.requestType = value;
-                          instructorAdded = false;
-                          requestModel.selectedInstructor = null;
-                          AppConfig.helpIconContextMember =
-                              HelpContextMemberType.time_requests;
                           setState(() => {});
                         },
                       ),
