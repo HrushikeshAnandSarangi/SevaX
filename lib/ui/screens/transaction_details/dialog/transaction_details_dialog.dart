@@ -35,8 +35,7 @@ class TransactionDetailsDialog extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _TransactionDetailsDialogState createState() =>
-      _TransactionDetailsDialogState();
+  _TransactionDetailsDialogState createState() => _TransactionDetailsDialogState();
 }
 
 class _TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
@@ -89,24 +88,19 @@ class _TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                       );
                     }
 
-                    List<TransacationsTimelineModel> timelineDocs =
-                        snapshot.data;
-                    logger.e('DOCS TIMELINE LENGTH:  ' +
-                        timelineDocs.length.toString());
-
+                    List<TransacationsTimelineModel> timelineDocs = snapshot.data;
                     if (snapshot.hasData) {
                       return (timelineDocs.length == 0 || timelineDocs == null)
                           ? Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text(S.of(context).no_search_result_found),
+                                Text(L.of(context).no_timeline_found),
                               ],
                             )
                           : Expanded(
                               child: Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(30, 20, 20, 30),
+                                padding: const EdgeInsets.fromLTRB(30, 20, 20, 30),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -130,29 +124,21 @@ class _TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                                           height: 25,
                                           alignment: Alignment.center,
                                           decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(20),
+                                            borderRadius: BorderRadius.circular(20),
                                             color: Color(0xFFDBDBDB),
                                           ),
                                           child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 8.0, right: 8),
+                                            padding: const EdgeInsets.only(left: 8.0, right: 8),
                                             child: Text(
                                               widget.transactionModel != null
-                                                  ? (widget.transactionModel
-                                                              .to ==
+                                                  ? (widget.transactionModel.to ==
                                                           widget.loggedInUserId
                                                       ? S.of(context).received
                                                       : S.of(context).sent_text)
-                                                  : (widget
-                                                              .donationModel
-                                                              .receiverDetails
-                                                              .email ==
+                                                  : (widget.donationModel.receiverDetails.email ==
                                                           widget.loggedInEmail
                                                       ? S.of(context).received
-                                                      : S
-                                                          .of(context)
-                                                          .sent_text),
+                                                      : S.of(context).sent_text),
                                               style: TextStyle(
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.bold,
@@ -174,8 +160,7 @@ class _TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                                     Row(
                                       children: [
                                         Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             Text(
                                               'Transaction amount',
@@ -187,32 +172,20 @@ class _TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                                             ),
                                             Text(
                                               (widget.donationModel != null
-                                                  ? (widget.donationModel
-                                                              .donationType ==
+                                                  ? (widget.donationModel.donationType ==
                                                           RequestType.GOODS
-                                                      ? widget
-                                                              .donationModel
-                                                              .goodsDetails
-                                                              .donatedGoods
-                                                              .length
+                                                      ? widget.donationModel.goodsDetails
+                                                              .donatedGoods.length
                                                               .toString() +
                                                           ' ' +
-                                                          S
-                                                              .of(context)
-                                                              .item_s_text
+                                                          S.of(context).item_s_text
                                                       : '\$' +
-                                                          widget
-                                                              .donationModel
-                                                              .cashDetails
+                                                          widget.donationModel.cashDetails
                                                               .pledgedAmount
                                                               .toString())
-                                                  : widget.transactionModel
-                                                          .credits
-                                                          .toString() +
+                                                  : widget.transactionModel.credits.toString() +
                                                       ' ' +
-                                                      S
-                                                          .of(context)
-                                                          .seva_credits),
+                                                      S.of(context).seva_credits),
                                               style: TextStyle(
                                                 color: Color(0xFF4A4A4A),
                                                 fontSize: 16,
@@ -223,8 +196,7 @@ class _TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                                         SizedBox(width: 20),
                                         Expanded(
                                           child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
                                               Text(
                                                 S.of(context).date,
@@ -235,16 +207,11 @@ class _TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                                                 ),
                                               ),
                                               Text(
-                                                DateFormat('MMMM dd @ h:mm a')
-                                                    .format(
+                                                DateFormat('MMMM dd @ h:mm a').format(
                                                   DateTime.fromMillisecondsSinceEpoch(
-                                                      widget.donationModel !=
-                                                              null
-                                                          ? widget.donationModel
-                                                              .timestamp
-                                                          : widget
-                                                              .transactionModel
-                                                              .timestamp),
+                                                      widget.donationModel != null
+                                                          ? widget.donationModel.timestamp
+                                                          : widget.transactionModel.timestamp),
                                                 ),
                                                 style: TextStyle(
                                                   color: Color(0xFF4A4A4A),
@@ -261,8 +228,7 @@ class _TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                                       'Transaction details',
                                       style: TextStyle(
                                         fontSize: 18,
-                                        color:
-                                            Color(0xFF9B9B9B).withOpacity(0.9),
+                                        color: Color(0xFF9B9B9B).withOpacity(0.9),
                                       ),
                                     ),
                                     const SizedBox(height: 8),
@@ -275,8 +241,7 @@ class _TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                                               alignment: Alignment.centerLeft,
                                               child: VerticalDivider(
                                                 thickness: 2,
-                                                color: Theme.of(context)
-                                                    .primaryColor,
+                                                color: Theme.of(context).primaryColor,
                                                 width: 0,
                                                 indent: 12,
                                                 endIndent: 12,
@@ -289,8 +254,7 @@ class _TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                                             itemCount: timelineDocs.length,
                                             itemBuilder: (context, index) {
                                               return TitleRow(
-                                                timelineDoc:
-                                                    timelineDocs[index],
+                                                timelineDoc: timelineDocs[index],
                                                 // requestType: requestType
                                               );
                                             },
@@ -300,8 +264,7 @@ class _TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                                     ),
                                     SizedBox(height: 25),
                                     Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
                                         ElevatedButton(
                                           onPressed: () {
@@ -315,13 +278,11 @@ class _TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                                           },
                                           style: ElevatedButton.styleFrom(
                                             padding: EdgeInsets.zero,
-                                            primary:
-                                                Theme.of(context).primaryColor,
+                                            primary: Theme.of(context).primaryColor,
                                             fixedSize: Size(130, 25),
                                             shape: StadiumBorder(),
                                           ),
-                                          child:
-                                              Text(S.of(context).download_pdf),
+                                          child: Text(S.of(context).download_pdf),
                                         ),
                                       ],
                                     ),
@@ -376,9 +337,8 @@ class TitleRow extends StatelessWidget {
             SizedBox(width: 8),
             Expanded(
               child: Text(
-                DateFormat('MMMM dd @ h:mm a ').format(
-                        DateTime.fromMillisecondsSinceEpoch(
-                            timelineDoc.timestamp)) +
+                DateFormat('MMMM dd @ h:mm a ')
+                        .format(DateTime.fromMillisecondsSinceEpoch(timelineDoc.timestamp)) +
                     '- ' +
                     getTimelineLabel(
                             // requestType,

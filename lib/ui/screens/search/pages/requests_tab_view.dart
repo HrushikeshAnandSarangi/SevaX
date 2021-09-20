@@ -21,8 +21,7 @@ import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 class RequestsTabView extends StatelessWidget {
   final CommunityModel communityModel;
 
-  const RequestsTabView({Key key, @required this.communityModel})
-      : super(key: key);
+  const RequestsTabView({Key key, @required this.communityModel}) : super(key: key);
 
   @override
   Widget build(BuildContext mcontext) {
@@ -46,7 +45,9 @@ class RequestsTabView extends StatelessWidget {
               }
               if (snapshot.data == null || snapshot.data.isEmpty) {
                 return Center(
-                  child: Text(S.of(context).no_search_result_found),
+                  child: Text(
+                    L.of(context).no_timeline_found,
+                  ),
                 );
               }
 
@@ -71,10 +72,9 @@ class RequestsTabView extends StatelessWidget {
                       subtitle: request.description,
                       startTime: request.requestStart,
                       endTime: request.requestEnd,
-                      isApplied: request.acceptors.contains(
-                              SevaCore.of(context).loggedInUser.email) ||
-                          request.approvedUsers.contains(
-                              SevaCore.of(context).loggedInUser.email) ||
+                      isApplied: request.acceptors
+                              .contains(SevaCore.of(context).loggedInUser.email) ||
+                          request.approvedUsers.contains(SevaCore.of(context).loggedInUser.email) ||
                           false,
                     ),
                   );
@@ -88,16 +88,12 @@ class RequestsTabView extends StatelessWidget {
   }
 
   void _navigateToRequest(
-      {BuildContext context,
-      RequestModel requestModel,
-      TimebankModel timebankModel}) {
+      {BuildContext context, RequestModel requestModel, TimebankModel timebankModel}) {
     var isAdmin;
     if (requestModel.requestMode == RequestMode.PERSONAL_REQUEST) {
-      isAdmin = requestModel.sevaUserId ==
-          SevaCore.of(context).loggedInUser.sevaUserID;
+      isAdmin = requestModel.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID;
     } else {
-      isAdmin = isAccessAvailable(
-          timebankModel, SevaCore.of(context).loggedInUser.sevaUserID);
+      isAdmin = isAccessAvailable(timebankModel, SevaCore.of(context).loggedInUser.sevaUserID);
     }
 
     if (requestModel.isRecurring) {
@@ -112,10 +108,8 @@ class RequestsTabView extends StatelessWidget {
         ),
       );
     } else {
-      if (requestModel.sevaUserId ==
-              SevaCore.of(context).loggedInUser.sevaUserID ||
-          isAccessAvailable(
-              timebankModel, SevaCore.of(context).loggedInUser.sevaUserID)) {
+      if (requestModel.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID ||
+          isAccessAvailable(timebankModel, SevaCore.of(context).loggedInUser.sevaUserID)) {
         timeBankBloc.setSelectedRequest(requestModel);
         timeBankBloc.setSelectedTimeBankDetails(timebankModel);
         timeBankBloc.setIsAdmin(isAdmin);
