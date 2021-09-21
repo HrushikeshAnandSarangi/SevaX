@@ -101,7 +101,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
             ),
             SizedBox(height: 5),
             Text(
-              S.of(context).accept_borrow_agreement_place_hint,
+              L.of(context).accept_borrow_agreement_place_hint,
               style: TextStyle(fontSize: 14, color: Colors.grey),
             ),
             SizedBox(height: 10),
@@ -109,7 +109,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  S.of(context).select_a_place_lending,
+                  L.of(context).select_a_place_lending,
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 // InkWell(
@@ -368,8 +368,8 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
         SizedBox(height: 20),
         Text(
             widget.requestModel.roomOrTool == LendingType.PLACE.readable
-                ? S.of(context).approve_borrow_terms_acknowledgement_text1
-                : S.of(context).approve_borrow_terms_acknowledgement_text2,
+                ? L.of(context).approve_borrow_terms_acknowledgement_text1
+                : L.of(context).approve_borrow_terms_acknowledgement_text2,
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w600,
@@ -558,7 +558,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
             Container(
               width: MediaQuery.of(context).size.width * 0.68,
               child: Text(
-                S.of(context).request_agreement_form_component_text,
+                L.of(context).request_agreement_form_component_text,
                 style: TextStyle(fontSize: 14),
                 softWrap: true,
               ),
@@ -635,7 +635,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
                       widget.requestModel.roomOrTool == LendingType.PLACE.readable) {
                     errorDialog(
                       context: context,
-                      error: S.of(context).select_a_place_lending,
+                      error: L.of(context).select_a_place_lending,
                     );
                     return;
                   }
@@ -643,7 +643,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
                       widget.requestModel.roomOrTool == LendingType.ITEM.readable) {
                     errorDialog(
                       context: context,
-                      error: S.of(context).select_item_for_lending,
+                      error: L.of(context).select_item_for_lending,
                     );
                     return;
                   }
