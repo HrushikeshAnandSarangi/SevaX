@@ -455,6 +455,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
             maxLength: 100,
             error: getValidationError(context, snapshot.error),
             formatters: [FilteringTextInputFormatter.allow(Regex.numericRegex)],
+            keyboardType: TextInputType.number,
           );
         },
       ),
@@ -544,12 +545,8 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                   decorationDropdown: BoxDecoration(
                                     borderRadius: BorderRadius.circular(8),
                                   ),
-                                  defaultWidget: Container(
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(4),
-                                    ),
-                                    // padding: EdgeInsets.symmetric(horizontal: 15),
+                                  defaultWidget: Padding(
+                                    padding: const EdgeInsets.only(bottom: 8.0),
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       children: [
@@ -1591,6 +1588,12 @@ class _IndividualOfferState extends State<IndividualOffer> {
                       setState(() {
                         _bloc.lendingOfferType = val;
                       });
+                      title_hint = (_bloc.lendingOfferType == 0
+                          ? L.of(context).lending_offer_title_hint_place
+                          : L.of(context).lending_offer_title_hint_item);
+                      description_hint = (_bloc.lendingOfferType == 0
+                          ? L.of(context).lending_offer_description_hint_place
+                          : L.of(context).lending_offer_description_hint_item);
                     }
                   },
                   //groupValue: sharedValue,
@@ -1747,6 +1750,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
             }),
         SizedBox(height: 20),
         OfferDurationWidget(
+          hideEndDate: _bloc.lendingOfferTypeMode != 1,
           title: S.of(context).offer_duration,
           startTime: widget.offerModel != null
               ? DateTime.fromMillisecondsSinceEpoch(
@@ -1808,7 +1812,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
         ),
         SizedBox(height: 12),
         Row(
-         // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Column(
