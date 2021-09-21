@@ -1301,68 +1301,128 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                     if (offerType ==
                                         RequestType.LENDING_OFFER) {
                                       FocusScope.of(context).unfocus();
-                                      if (OfferDurationWidgetState
-                                                  .starttimestamp !=
-                                              0 &&
-                                          OfferDurationWidgetState
-                                                  .endtimestamp !=
-                                              0) {
-                                        _bloc.startTime =
+                                      if (_bloc.lendingOfferTypeMode == 1) {
+                                        if (OfferDurationWidgetState
+                                                    .starttimestamp !=
+                                                0 &&
                                             OfferDurationWidgetState
-                                                .starttimestamp;
-                                        _bloc.endTime = OfferDurationWidgetState
-                                            .endtimestamp;
-                                        if (_bloc.endTime <= _bloc.startTime) {
+                                                    .endtimestamp !=
+                                                0) {
+                                          _bloc.startTime =
+                                              OfferDurationWidgetState
+                                                  .starttimestamp;
+                                          _bloc.endTime =
+                                              OfferDurationWidgetState
+                                                  .endtimestamp;
+                                          if (_bloc.endTime <=
+                                              _bloc.startTime) {
+                                            errorDialog(
+                                              context: context,
+                                              error: S
+                                                  .of(context)
+                                                  .validation_error_end_date_greater,
+                                            );
+                                            return;
+                                          }
+                                          if (DateTime
+                                                  .fromMillisecondsSinceEpoch(
+                                                      OfferDurationWidgetState
+                                                          .starttimestamp)
+                                              .isBefore(DateTime.now())) {
+                                            errorDialog(
+                                                context: context,
+                                                error: S
+                                                    .of(context)
+                                                    .past_time_selected);
+                                            return;
+                                          }
+
+                                          if (widget.offerModel == null) {
+                                            await _bloc.createLendingOffer(
+                                                user: SevaCore.of(context)
+                                                    .loggedInUser,
+                                                timebankId: widget.timebankId,
+                                                communityName:
+                                                    communityModel.name ?? '',
+                                                lendingAgreementLink:
+                                                    borrowAgreementLinkFinal,
+                                                agreementId: agreementIdFinal,
+                                                lendingOfferAgreementName:
+                                                    documentName,
+                                                agreementConfig:
+                                                    agreementConfig);
+                                          } else {
+                                            _bloc.updateLendingOffer(
+                                                offerModel: widget.offerModel,
+                                                lendingOfferAgreementName:
+                                                    documentName ?? '',
+                                                lendingOfferAgreementLink:
+                                                    borrowAgreementLinkFinal,
+                                                agreementId: agreementIdFinal,
+                                                agreementConfig:
+                                                    agreementConfig);
+                                          }
+                                        } else {
                                           errorDialog(
                                             context: context,
                                             error: S
                                                 .of(context)
-                                                .validation_error_end_date_greater,
+                                                .offer_start_end_date,
                                           );
-                                          return;
-                                        }
-                                        if (DateTime.fromMillisecondsSinceEpoch(
-                                                OfferDurationWidgetState
-                                                    .starttimestamp)
-                                            .isBefore(DateTime.now())) {
-                                          errorDialog(
-                                              context: context,
-                                              error: S
-                                                  .of(context)
-                                                  .past_time_selected);
-                                          return;
-                                        }
-
-                                        if (widget.offerModel == null) {
-                                          await _bloc.createLendingOffer(
-                                              user: SevaCore.of(context)
-                                                  .loggedInUser,
-                                              timebankId: widget.timebankId,
-                                              communityName:
-                                                  communityModel.name ?? '',
-                                              lendingAgreementLink:
-                                                  borrowAgreementLinkFinal,
-                                              agreementId: agreementIdFinal,
-                                              lendingOfferAgreementName:
-                                                  documentName,
-                                              agreementConfig: agreementConfig);
-                                        } else {
-                                          _bloc.updateLendingOffer(
-                                              offerModel: widget.offerModel,
-                                              lendingOfferAgreementName:
-                                                  documentName ?? '',
-                                              lendingOfferAgreementLink:
-                                                  borrowAgreementLinkFinal,
-                                              agreementId: agreementIdFinal,
-                                              agreementConfig: agreementConfig);
                                         }
                                       } else {
-                                        errorDialog(
-                                          context: context,
-                                          error: S
-                                              .of(context)
-                                              .offer_start_end_date,
-                                        );
+                                        if (OfferDurationWidgetState
+                                                .starttimestamp !=
+                                            0) {
+                                          _bloc.startTime =
+                                              OfferDurationWidgetState
+                                                  .starttimestamp;
+                                          if (DateTime
+                                                  .fromMillisecondsSinceEpoch(
+                                                      OfferDurationWidgetState
+                                                          .starttimestamp)
+                                              .isBefore(DateTime.now())) {
+                                            errorDialog(
+                                                context: context,
+                                                error: S
+                                                    .of(context)
+                                                    .past_time_selected);
+                                            return;
+                                          }
+
+                                          if (widget.offerModel == null) {
+                                            await _bloc.createLendingOffer(
+                                                user: SevaCore.of(context)
+                                                    .loggedInUser,
+                                                timebankId: widget.timebankId,
+                                                communityName:
+                                                    communityModel.name ?? '',
+                                                lendingAgreementLink:
+                                                    borrowAgreementLinkFinal,
+                                                agreementId: agreementIdFinal,
+                                                lendingOfferAgreementName:
+                                                    documentName,
+                                                agreementConfig:
+                                                    agreementConfig);
+                                          } else {
+                                            _bloc.updateLendingOffer(
+                                                offerModel: widget.offerModel,
+                                                lendingOfferAgreementName:
+                                                    documentName ?? '',
+                                                lendingOfferAgreementLink:
+                                                    borrowAgreementLinkFinal,
+                                                agreementId: agreementIdFinal,
+                                                agreementConfig:
+                                                    agreementConfig);
+                                          }
+                                        } else {
+                                          errorDialog(
+                                            context: context,
+                                            error: L
+                                                .of(context)
+                                                .offer_start_date_validation,
+                                          );
+                                        }
                                       }
                                     } else {
                                       if (widget.offerModel == null) {
