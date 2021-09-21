@@ -42,7 +42,7 @@ class CalendarPickerState extends State<CalendarPicker> {
   void initState() {
     super.initState();
     startDate = widget.startDate;
-    endDate = widget.endDate;
+    endDate = widget.hideEndDate ? startDate : widget.endDate;
     selectionType =
         widget.selectedstartorend == 'start' ? SelectionType.START_DATE : SelectionType.END_DATE;
   }
@@ -54,7 +54,7 @@ class CalendarPickerState extends State<CalendarPicker> {
         leading: BackButton(
           color: Colors.black,
           onPressed: () {
-            Navigator.pop(context, [startDate, endDate]);
+            Navigator.pop(context, [startDate, widget.hideEndDate ? endDate : null]);
           },
         ),
         title: Text(
