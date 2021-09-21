@@ -121,7 +121,9 @@ class BorrowAgreementPdf {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                L.of(contextMain).lease_duration,
+                endTime == 0 && isOffer
+                    ? L.of(contextMain).lease_start_date
+                    : L.of(contextMain).lease_duration,
                 style: TextStyle(fontSize: 16),
               ),
             ],
@@ -142,19 +144,21 @@ class BorrowAgreementPdf {
                 ), //start date and end date
                 style: TextStyle(fontSize: 14),
               ),
-              Text('  -  ', style: TextStyle(fontSize: 14)),
-              Text(
-                DateFormat('MMMM dd, yyyy @ h:mm a',
-                        Locale(AppConfig.prefs.getString('language_code')).toLanguageTag())
-                    .format(
-                  getDateTimeAccToUserTimezone(
-                    dateTime: DateTime.fromMillisecondsSinceEpoch(
-                        !isOffer ? requestModel.requestEnd : endTime),
-                    timezoneAbb: SevaCore.of(contextMain).loggedInUser.timezone,
-                  ),
-                ), //start date and end date
-                style: TextStyle(fontSize: 14),
-              ),
+              endTime == 0 && isOffer ? Container() : Text('  -  ', style: TextStyle(fontSize: 14)),
+              endTime == 0 && isOffer
+                  ? Container()
+                  : Text(
+                      DateFormat('MMMM dd, yyyy @ h:mm a',
+                              Locale(AppConfig.prefs.getString('language_code')).toLanguageTag())
+                          .format(
+                        getDateTimeAccToUserTimezone(
+                          dateTime: DateTime.fromMillisecondsSinceEpoch(
+                              !isOffer ? requestModel.requestEnd : endTime),
+                          timezoneAbb: SevaCore.of(contextMain).loggedInUser.timezone,
+                        ),
+                      ), //start date and end date
+                      style: TextStyle(fontSize: 14),
+                    ),
             ],
           ),
 
@@ -174,7 +178,9 @@ class BorrowAgreementPdf {
           SizedBox(height: 20),
 
           Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(L.of(contextMain).agreement_details, style: TextStyle(fontSize: 16)),
+            (specificConditions.isNotEmpty && specificConditions != null)
+                ? Text(L.of(contextMain).agreement_details, style: TextStyle(fontSize: 16))
+                : Container(),
             specificConditions.isNotEmpty && specificConditions != null
                 ? SizedBox(height: 15)
                 : Container(),

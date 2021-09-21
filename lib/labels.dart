@@ -1110,8 +1110,7 @@ class L {
   String get accept_borrow_agreement_page_hint =>
       "Please fill in your Item details, agreement and location of your place to help the borrower.";
 
-  String get accept_borrow_agreement_item_title =>
-      "You are about to give Items for the borrower";
+  String get accept_borrow_agreement_item_title => "You are about to give Items for the borrower";
 
   String get accept_borrow_agreement_place_title => "Details of the offer";
 
@@ -1146,7 +1145,6 @@ class L {
   String get agreement_to_be_signed => 'Agreement to be signed';
 
   String get agreement_signed => 'You have signed the agreement';
-  // String get agreement_accepted => 'You have accepted the agreement';
 
   String get responses => 'Responses';
   String get you_have_received_responses => 'You have received ** response***.';
@@ -1379,8 +1377,7 @@ class L {
       "Provide a detailed description of the place you would like to lend including number of rooms, number of beds, etc.";
   String get name_of_item_hint => "Ex: Lawnmower";
   String get bath_rooms => "Bathroom(s)";
-  String get item_returned_hint_text =>
-      'Ex: item(s) must be returned in the same condition.';
+  String get item_returned_hint_text => 'Ex: item(s) must be returned in the same condition.';
   String get name_of_place_hint => "Ex: Apartment Bathed in Sunshine.";
   String get common_spaces => "Common Space";
   String get house_rules_hint => "Ex: No Smoking";
@@ -1398,10 +1395,8 @@ class L {
       "I acknowledge that you can use the property on the mentioned dates";
   String get approve_borrow_terms_acknowledgement_text2 =>
       "I acknowledge that you can use the item(s) on the mentioned dates";
-  String get search_agreement_hint_place =>
-      "Enter name of a property agreement template";
-  String get search_agreement_hint_item =>
-      "Enter name of an item agreement template";
+  String get search_agreement_hint_place => "Enter name of a property agreement template";
+  String get search_agreement_hint_item => "Enter name of an item agreement template";
   String get accept_place_borrow_request => "Accept Place Borrow Request";
   String get accept_item_borrow_request => "Accept Item Borrow request";
   String get accept_place_lending_offer => "Accept Place Lending Offer";
@@ -1414,20 +1409,16 @@ class L {
       "Lender is providing the item(s) request with no agreement required";
   String get already_accepted_lender_place =>
       "You have already accepted a property for this request";
-  String get already_accepted_lender_item =>
-      "You have already accepted an item for this request";
+  String get already_accepted_lender_item => "You have already accepted an item for this request";
   String get admin_borrow_request_received_back_check_place =>
       "If you have received your place back from the borrower, please click the button below to complete this transaction";
   String get admin_borrow_request_received_back_check_item =>
       "If you have received your item(s) back from the borrower, please click the button below to complete this transaction";
   String get place_agreement_name_hint_place => "Ex: House for the weekend..";
-  String get place_agreement_name_hint_item =>
-      "Ex: Lawnmower for the weekend..";
+  String get place_agreement_name_hint_item => "Ex: Lawnmower for the weekend..";
   String get lend => "Lend";
   String get date_to_borrow_and_return => "Date to Collect and Return item(s)";
   String get date_to_check_in_out => "Date of Check In and expected Check Out";
-  String get agreement_accepted => 'Accepted without agreement';
-
 
 //Lending offers labels updates below ////---------------->
   String get estimated_value_hint_place =>
@@ -1459,5 +1450,9 @@ class L {
   String get borrower_returned_items_feedback => 'You returned items. Tap to leave a feedback.';
   String get validation_error_no_of_bathrooms => "Please enter no of bathrooms available";
 // ----------------------------------------------------------------------------------->
-String get offer_start_date_validation => "Please enter start date";
+
+//new labels
+  String get offer_start_date_validation => "Please enter start date";
+  String get lease_start_date => 'Lease Start Date: ';
+  String get agreement_accepted => 'Accepted without agreement';
 }

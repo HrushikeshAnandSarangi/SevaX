@@ -9,6 +9,7 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/sponsors/sponsors_widget.dart';
 import 'package:sevaexchange/ui/screens/sponsors/widgets/get_user_verified.dart';
+import 'package:sevaexchange/ui/screens/user_info/pages/donations_details_view.dart';
 import 'package:sevaexchange/ui/screens/user_info/pages/user_donations.dart';
 import 'package:sevaexchange/ui/screens/user_info/pages/user_donations_list.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
@@ -191,15 +192,17 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                           timebankId: widget.timebankModel.id,
                           isTimeBank: true,
                           onTap: () {
-                            Navigator.of(context).push(
+                            Navigator.push(
+                              context,
                               MaterialPageRoute(
-                                builder: (context) {
-                                  return GoodsAndAmountDonationsList(
-                                    type: "timebank",
-                                    isGoods: false,
-                                    timebankid: widget.timebankModel.id,
-                                  );
-                                },
+                                builder: (context) => DonationsDetailsView(
+                                  id: widget.timebankModel.id,
+                                  totalBalance:
+                                      '', //change this to total of goods donated
+                                  timebankModel: widget.timebankModel,
+                                  fromTimebank: true,
+                                  isGoods: false,
+                                ),
                               ),
                             );
                           }),
@@ -212,14 +215,17 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                           timebankId: widget.timebankModel.id,
                           isTimeBank: true,
                           onTap: () {
-                            Navigator.of(context).push(
+                            Navigator.push(
+                              context,
                               MaterialPageRoute(
-                                builder: (context) {
-                                  return GoodsAndAmountDonationsList(
-                                      type: "timebank",
-                                      isGoods: true,
-                                      timebankid: widget.timebankModel.id);
-                                },
+                                builder: (context) => DonationsDetailsView(
+                                  id: widget.timebankModel.id,
+                                  totalBalance:
+                                      '', //change this to total of goods donated
+                                  timebankModel: widget.timebankModel,
+                                  fromTimebank: true,
+                                  isGoods: true,
+                                ),
                               ),
                             );
                           }),

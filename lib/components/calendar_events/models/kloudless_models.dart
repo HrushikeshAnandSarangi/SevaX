@@ -108,8 +108,7 @@ class KloudlessWidgetBuilder {
     this.attendeeDetails,
     this.initialEventDetails,
   }) {
-    this.redirectUrl =
-        FlavorConfig.values.cloudFunctionBaseURL + "/callbackurlforoauth";
+    this.redirectUrl = FlavorConfig.values.cloudFunctionBaseURL + "/callbackurlforoauth";
   }
 
   KloudlessWidgetBuilder fromContext<M, T>({
@@ -132,8 +131,7 @@ class KloudlessWidgetBuilder {
       calendar: CalanderBuilder(
         caledarScope: SevaCore.of(context).loggedInUser.calendarScope,
         calendarAccId: SevaCore.of(context).loggedInUser.calendarAccId,
-        calendarAccessToken:
-            SevaCore.of(context).loggedInUser.calendarAccessToken,
+        calendarAccessToken: SevaCore.of(context).loggedInUser.calendarAccessToken,
         calendarEmail: SevaCore.of(context).loggedInUser.calendarEmail,
         calendarId: SevaCore.of(context).loggedInUser.calendarId,
       ),
@@ -167,7 +165,7 @@ class CalanderBuilder {
 
   CalanderBuilder.fromMap(Map<String, dynamic> map) {
     this.caledarScope = map['caledarScope'];
-    this.calendarAccId = map['calendarAccId'];
+    this.calendarAccId = int.tryParse(map['calendarAccId'].toString());
     this.calendarAccessToken = map['calendarAccessToken'];
     this.calendarEmail = map['calendarEmail'];
     this.calendarId = map['calendarId'];
@@ -228,9 +226,7 @@ class CalStateBuilder<M, T> {
 
     switch (T) {
       case RequestModel:
-        return M == CreateMode
-            ? MODE_CREATE_MODE_REQUEST
-            : MODE_APPLY_MODE_REQUEST;
+        return M == CreateMode ? MODE_CREATE_MODE_REQUEST : MODE_APPLY_MODE_REQUEST;
 
       case OfferModel:
         return M == CreateMode ? MODE_CREATE_MODE_OFFER : MODE_APPLY_MODE_OFFER;
