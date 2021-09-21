@@ -195,7 +195,9 @@ class _BorrowRequestState extends State<BorrowRequest> {
         },
         decoration: InputDecoration(
           errorMaxLines: 2,
-          hintText: L.of(context).borrow_request_title_hint_place,
+          hintText: (roomOrTool == 0
+              ? L.of(context).borrow_request_title_hint_place
+              : L.of(context).borrow_request_title_hint_item),
           hintStyle: requestUtils.hintTextStyle,
         ),
         textInputAction: TextInputAction.next,
@@ -355,7 +357,9 @@ class _BorrowRequestState extends State<BorrowRequest> {
         textInputAction: TextInputAction.next,
         decoration: InputDecoration(
           errorMaxLines: 2,
-          hintText: S.of(context).request_descrip_hint_text,
+          hintText: (roomOrTool == 0
+              ? L.of(context).borrow_request_description_hint_place
+              : L.of(context).borrow_request_description_hint_item),
           hintStyle: requestUtils.hintTextStyle,
         ),
         initialValue: widget.formType == RequestFormType.CREATE

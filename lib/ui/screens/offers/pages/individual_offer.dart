@@ -384,7 +384,12 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                   HelpContextMemberType.lending_offers;
                               _bloc.onTypeChanged(data);
                               offerType = data;
-                              description_hint = S.of(context).request_descrip_hint_text;
+                              title_hint = (_bloc.lendingOfferType == 0
+                                  ? L.of(context).lending_offer_title_hint_place
+                                  : L.of(context).lending_offer_title_hint_item);
+                              description_hint = (_bloc.lendingOfferType == 0
+                                  ? L.of(context).lending_offer_description_hint_place
+                                  : L.of(context).lending_offer_description_hint_item);
 
                               setState(() {});
                             }),
@@ -1599,8 +1604,8 @@ class _IndividualOfferState extends State<IndividualOffer> {
           children: [
             Text(
               _bloc.lendingOfferType == 0
-                  ? S.of(context).select_a_place_lending
-                  : S.of(context).select_item_for_lending,
+                  ? L.of(context).select_a_place_lending
+                  : L.of(context).select_item_for_lending,
               style: TextStyle(
                 fontSize: 16,
                 //fontWeight: FontWeight.bold,
@@ -1787,7 +1792,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                 Container(
                   width: MediaQuery.of(context).size.width * 0.68,
                   child: Text(
-                    S.of(context).request_agreement_form_component_text,
+                    L.of(context).request_agreement_form_component_text,
                     style: TextStyle(fontSize: 14),
                     softWrap: true,
                   ),
@@ -1868,11 +1873,11 @@ class _IndividualOfferState extends State<IndividualOffer> {
                     _bloc.lendingOfferType == 0
                         ? errorDialog(
                             context: context,
-                            error: S.of(context).select_a_place_lending,
+                            error: L.of(context).select_a_place_lending,
                           )
                         : errorDialog(
                             context: context,
-                            error: S.of(context).select_item_for_lending,
+                            error: L.of(context).select_item_for_lending,
                           );
                     return;
                   }
@@ -1974,7 +1979,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
         ),
         SizedBox(height: 6),
         Text(
-          S.of(context).lending_offer_location_hint,
+          L.of(context).lending_offer_location_hint,
           style: TextStyle(fontSize: 15),
           softWrap: true,
         ),
