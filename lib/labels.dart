@@ -1459,5 +1459,5 @@ class L {
   String get borrower_returned_items_feedback => 'You returned items. Tap to leave a feedback.';
   String get validation_error_no_of_bathrooms => "Please enter no of bathrooms available";
 // ----------------------------------------------------------------------------------->
-
+String get offer_start_date_validation => "Please enter start date";
 }
