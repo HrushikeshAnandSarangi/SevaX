@@ -354,6 +354,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                 type: InfoType.PRIVATE_GROUP,
               ),
             ),
+            Spacer(),
             TransactionsMatrixCheck(
               upgradeDetails: AppConfig.upgradePlanBannerModel.private_groups,
               comingFrom: ComingFrom.Groups,
@@ -380,6 +381,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
         Row(
           children: <Widget>[
             headingText(S.of(context).prevent_accidental_delete, false),
+            Spacer(),
             Padding(
               padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
               child: Checkbox(
@@ -421,6 +423,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                 type: InfoType.SPONSORED,
               ),
             ),
+            Spacer(),
             Column(
               children: <Widget>[
                 Divider(),

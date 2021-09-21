@@ -252,7 +252,7 @@ class LendingOfferParticipants extends StatelessWidget {
             color: HexColor('#FAFAFA'),
             onPressed: () {},
             child: Text(
-              S.of(context).items_taken,
+              S.of(context).items_collected,
               style: TextStyle(color: Colors.black),
             ),
           )
@@ -263,7 +263,7 @@ class LendingOfferParticipants extends StatelessWidget {
             color: HexColor('#FAFAFA'),
             onPressed: () {},
             child: Text(
-              S.of(context).arrived_text,
+              S.of(context).checked_in_text,
               style: TextStyle(color: Colors.black),
             ),
           )
