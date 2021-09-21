@@ -97,5 +97,7 @@
 	"borrower_departed_provide_feedback": "You checked out as noted above. Tap to leave a feedback.",
 	"borrower_returned_items_feedback": "You returned items. Tap to leave a feedback.",
 	"validation_error_no_of_bathrooms": "Please enter no of bathrooms available",
-	"offer_start_date_validation": "Please enter start date"
+	"offer_start_date_validation": "Please enter start date",
+	"---------the------------------":"--------------end--------------------",
+	"no_timeline_found": "No timeline found"
 }
