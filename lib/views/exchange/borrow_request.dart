@@ -163,8 +163,12 @@ class _BorrowRequestState extends State<BorrowRequest> {
     super.initState();
     if (widget.formType == RequestFormType.EDIT) {
       if (widget.requestModel.roomOrTool == LendingType.ITEM.readable) {
+        if (widget.requestModel.virtualRequest == true) {
+          isPublicCheckboxVisible = true;
+        }
         roomOrTool = 1;
       } else {
+        isPublicCheckboxVisible = true;
         roomOrTool = 0;
       }
 
@@ -174,6 +178,7 @@ class _BorrowRequestState extends State<BorrowRequest> {
       });
     } else {
       //When creating request and switch is not touched (initialize as place)
+      isPublicCheckboxVisible = true;
       widget.requestModel.roomOrTool = LendingType.PLACE.readable;
     }
   }
@@ -198,7 +203,9 @@ class _BorrowRequestState extends State<BorrowRequest> {
         },
         decoration: InputDecoration(
           errorMaxLines: 2,
-          hintText: S.of(context).request_title_hint,
+          hintText: (roomOrTool == 0
+              ? L.of(context).borrow_request_title_hint_place
+              : L.of(context).borrow_request_title_hint_item),
           hintStyle: requestUtils.hintTextStyle,
         ),
         textInputAction: TextInputAction.next,
@@ -272,7 +279,9 @@ class _BorrowRequestState extends State<BorrowRequest> {
                       if (val == 0) {
                         widget.requestModel.roomOrTool =
                             LendingType.PLACE.readable;
+                        isPublicCheckboxVisible = true;
                       } else {
+                        isPublicCheckboxVisible = false;
                         widget.requestModel.roomOrTool =
                             LendingType.ITEM.readable;
                       }
@@ -363,7 +372,9 @@ class _BorrowRequestState extends State<BorrowRequest> {
         textInputAction: TextInputAction.next,
         decoration: InputDecoration(
           errorMaxLines: 2,
-          hintText: S.of(context).request_descrip_hint_text,
+          hintText: (roomOrTool == 0
+              ? L.of(context).borrow_request_description_hint_place
+              : L.of(context).borrow_request_description_hint_item),
           hintStyle: requestUtils.hintTextStyle,
         ),
         initialValue: widget.formType == RequestFormType.CREATE
@@ -426,7 +437,7 @@ class _BorrowRequestState extends State<BorrowRequest> {
         ),
       ),
       HideWidget(
-        hide: AppConfig.isTestCommunity,
+        hide: AppConfig.isTestCommunity || roomOrTool == 0,
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 8),
           child: ConfigurationCheck(

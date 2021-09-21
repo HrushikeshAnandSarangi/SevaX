@@ -77,7 +77,7 @@ class LendingPlaceCardWidget extends StatelessWidget {
               title('${lendingPlaceModel.noOfRooms}'
                   ' ${S.of(context).bed_rooms} .'),
               title('${lendingPlaceModel.noOfBathRooms}'
-                  ' ${S.of(context).bath_rooms_text} '),
+                  ' ${L.of(context).bath_rooms} '),
             ],
           )
         ],

@@ -4,6 +4,7 @@ import 'package:sevaexchange/ui/utils/icons.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:shimmer/shimmer.dart';
 
 class GoodsAndAmountDonations extends StatefulWidget {
   final Function onTap;
@@ -68,7 +69,23 @@ class _GoodsAndAmountDonationsState extends State<GoodsAndAmountDonations> {
               isLifeTime: isLifeTime),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return LoadingIndicator();
+          return Shimmer.fromColors(
+            child: Container(
+              decoration: ShapeDecoration(
+                color: Colors.white.withAlpha(80),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              child: Container(
+                height: 75,
+                color: Colors.transparent,
+              ),
+            ),
+            baseColor: Colors.black.withAlpha(50),
+            highlightColor: Colors.white.withAlpha(50),
+          );
+          //LoadingIndicator();
         }
         return GestureDetector(
           onTap: widget.onTap,
@@ -114,10 +131,11 @@ class _GoodsAndAmountDonationsState extends State<GoodsAndAmountDonations> {
                                 case 0:
                                   {
                                     setState(() {
+                                      selectedItem = 0;
+                                      isLifeTime = false;
                                       timeStamp = DateTime.now()
                                           .subtract(Duration(days: 30))
                                           .millisecondsSinceEpoch;
-                                      selectedItem = 0;
                                     });
                                   }
                                   break;
@@ -125,6 +143,7 @@ class _GoodsAndAmountDonationsState extends State<GoodsAndAmountDonations> {
                                   {
                                     setState(() {
                                       selectedItem = 1;
+                                      isLifeTime = false;
                                       timeStamp = DateTime.now()
                                           .subtract(Duration(days: 90))
                                           .millisecondsSinceEpoch;
@@ -135,6 +154,7 @@ class _GoodsAndAmountDonationsState extends State<GoodsAndAmountDonations> {
                                   {
                                     setState(() {
                                       selectedItem = 2;
+                                      isLifeTime = false;
                                       timeStamp = DateTime.now()
                                           .subtract(Duration(days: 365))
                                           .millisecondsSinceEpoch;

@@ -620,6 +620,7 @@ class CreateEditCommunityViewFormState
                             //     type: InfoType.PROTECTED_TIMEBANK,
                             //   ),
                             // ),
+                            Spacer(),
                             Column(
                               children: <Widget>[
                                 Divider(),
@@ -644,6 +645,7 @@ class CreateEditCommunityViewFormState
                             headingText(
                               S.of(context).prevent_accidental_delete,
                             ),
+                            Spacer(),
                             Column(
                               children: <Widget>[
                                 Divider(),
@@ -683,6 +685,7 @@ class CreateEditCommunityViewFormState
                                   type: InfoType.TestCommunity,
                                 ),
                               ),
+                              Spacer(),
                               Column(
                                 children: <Widget>[
                                   Divider(),

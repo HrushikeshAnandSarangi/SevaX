@@ -62,8 +62,8 @@ class _BorrowerAcceptLendingOfferState
             widget.offerModel.lendingOfferDetailsModel.lendingModel
                         .lendingType ==
                     LendingType.PLACE
-                ? 'Accept Place Lending Offer'
-                : 'Accept Item Lending Offer',
+                ? L.of(context).accept_place_lending_offer
+                : L.of(context).accept_item_lending_offer,
             style: TextStyle(
                 fontFamily: "Europa", fontSize: 19, color: Colors.white),
           ),

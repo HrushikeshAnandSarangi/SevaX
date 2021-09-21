@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/chat_model.dart';
+import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/create_chat_bloc.dart';
 import 'package:sevaexchange/ui/screens/message/widgets/selected_member_widget.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
@@ -82,8 +83,9 @@ class GroupMemberBuilder extends StatelessWidget {
   final List<ParticipantInfo> participants;
   final Function(String id) onRemovePressed;
   final bool isAdmin;
+  final TimebankModel timebankModel;
 
-  GroupMemberBuilder({this.participants, this.onRemovePressed, this.isAdmin});
+  GroupMemberBuilder({this.participants, this.onRemovePressed, this.isAdmin, this.timebankModel});
 
   @override
   Widget build(BuildContext context) {
@@ -91,10 +93,10 @@ class GroupMemberBuilder extends StatelessWidget {
       children: List.generate(
         participants.length,
         (index) => SelectedMemberWidget(
+          timebankModel: timebankModel,
           info: participants[index],
-          isEditable: isAdmin &&
-              participants[index].id !=
-                  SevaCore.of(context).loggedInUser.sevaUserID,
+          isEditable:
+              isAdmin && participants[index]?.id != SevaCore.of(context).loggedInUser.sevaUserID,
           onRemovePressed: () => onRemovePressed(participants[index].id),
         ),
       ),

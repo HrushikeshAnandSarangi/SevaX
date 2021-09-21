@@ -58,7 +58,8 @@ class ConfigurationCheck extends StatelessWidget {
   static bool checkAllowedConfiguartions(MemberType role, String actionType) {
     TimebankConfigurations configurations =
         AppConfig.timebankConfigurations ?? getConfigurationModel();
-
+    log('config ${configurations}');
+    log('app config ${AppConfig.timebankConfigurations}');
     switch (role) {
       case MemberType.CREATOR:
         return true;
@@ -72,7 +73,7 @@ class ConfigurationCheck extends StatelessWidget {
         return configurations.superAdmin != null &&
             configurations.superAdmin.contains(actionType);
       default:
-        return true;
+        return false;
     }
   }
 }
@@ -126,7 +127,7 @@ TimebankConfigurations getConfigurationModel() {
     admin: [
       "create_feeds",
       "billing_access",
-      "accept_requests",
+
       "create_borrow_request",
       "create_events",
       "create_goods_offers",
@@ -160,7 +161,7 @@ TimebankConfigurations getConfigurationModel() {
     ],
     member: [
       "create_feeds",
-      "accept_requests",
+
       "create_goods_offers",
       "create_borrow_request",
       "create_money_offers",
@@ -178,7 +179,7 @@ TimebankConfigurations getConfigurationModel() {
     superAdmin: [
       "create_feeds",
       "billing_access",
-      "accept_requests",
+
       "create_borrow_request",
       "create_events",
       "create_goods_offers",
@@ -215,7 +216,7 @@ TimebankConfigurations getFriendAndPlanConfigurationModel() {
   return TimebankConfigurations(
     admin: [
       "create_feeds",
-      "accept_requests",
+
       "create_borrow_request",
       "create_events",
       "create_goods_offers",
@@ -245,7 +246,7 @@ TimebankConfigurations getFriendAndPlanConfigurationModel() {
     ],
     member: [
       "create_feeds",
-      "accept_requests",
+
       "create_borrow_request",
       "create_goods_offers",
       "create_money_offers",
@@ -262,7 +263,7 @@ TimebankConfigurations getFriendAndPlanConfigurationModel() {
     ],
     superAdmin: [
       "create_feeds",
-      "accept_requests",
+
       "create_events",
       "create_goods_offers",
       "create_goods_request",
@@ -298,7 +299,7 @@ TimebankConfigurations getNeighbourhoodPlanConfigurationModel() {
     admin: [
       "create_feeds",
       "billing_access",
-      "accept_requests",
+
       "create_events",
       "create_time_offers",
       "create_time_request",
@@ -317,7 +318,7 @@ TimebankConfigurations getNeighbourhoodPlanConfigurationModel() {
     ],
     member: [
       "create_feeds",
-      "accept_requests",
+
       "create_time_offers",
       "create_time_request",
       "create_group",
@@ -330,7 +331,7 @@ TimebankConfigurations getNeighbourhoodPlanConfigurationModel() {
     superAdmin: [
       "create_feeds",
       "billing_access",
-      "accept_requests",
+
       "create_events",
       "create_time_offers",
       "create_time_request",
@@ -355,7 +356,7 @@ TimebankConfigurations getGroupConfigurationModel() {
     admin: [
       "create_feeds",
       "billing_access",
-      "accept_requests",
+
       "create_events",
       "create_goods_offers",
       "create_goods_request",
@@ -382,7 +383,7 @@ TimebankConfigurations getGroupConfigurationModel() {
     ],
     member: [
       "create_feeds",
-      "accept_requests",
+
       "create_borrow_request",
       "create_goods_offers",
       "create_money_offers",
@@ -401,7 +402,7 @@ TimebankConfigurations getGroupConfigurationModel() {
       "billing_access",
       "create_feeds",
       "billing_access",
-      "accept_requests",
+
       "create_events",
       "create_goods_offers",
       "create_goods_request",
@@ -437,7 +438,7 @@ TimebankConfigurations getNonProfitConfigurationModel() {
     admin: [
       "create_feeds",
       "billing_access",
-      "accept_requests",
+
       "create_events",
       "create_goods_offers",
       "create_goods_request",
@@ -468,7 +469,7 @@ TimebankConfigurations getNonProfitConfigurationModel() {
     ],
     member: [
       "create_feeds",
-      "accept_requests",
+
       "create_borrow_request",
       "create_goods_offers",
       "create_money_offers",
@@ -487,7 +488,7 @@ TimebankConfigurations getNonProfitConfigurationModel() {
     superAdmin: [
       "create_feeds",
       "billing_access",
-      "accept_requests",
+
       "create_events",
       "create_goods_offers",
       "create_goods_request",
@@ -524,7 +525,7 @@ TimebankConfigurations getEnterpriseConfigurationModel() {
     admin: [
       "create_feeds",
       "billing_access",
-      "accept_requests",
+
       "create_events",
       "create_goods_offers",
       "create_goods_request",
@@ -555,7 +556,7 @@ TimebankConfigurations getEnterpriseConfigurationModel() {
     ],
     member: [
       "create_feeds",
-      "accept_requests",
+
       "create_borrow_request",
       "create_goods_offers",
       "create_money_offers",
@@ -574,7 +575,7 @@ TimebankConfigurations getEnterpriseConfigurationModel() {
     superAdmin: [
       "create_feeds",
       "billing_access",
-      "accept_requests",
+
       "create_events",
       "create_goods_offers",
       "create_goods_request",
@@ -611,7 +612,7 @@ TimebankConfigurations getCommunityPlanConfigurationModel() {
     admin: [
       "create_feeds",
       "billing_access",
-      "accept_requests",
+
       "create_events",
       "create_goods_offers",
       "create_goods_request",
@@ -642,7 +643,7 @@ TimebankConfigurations getCommunityPlanConfigurationModel() {
     ],
     member: [
       "create_feeds",
-      "accept_requests",
+
       "create_borrow_request",
       "create_goods_offers",
       "create_money_offers",
@@ -661,7 +662,7 @@ TimebankConfigurations getCommunityPlanConfigurationModel() {
     superAdmin: [
       "create_feeds",
       "billing_access",
-      "accept_requests",
+
       "create_events",
       "create_goods_offers",
       "create_goods_request",
@@ -698,7 +699,7 @@ TimebankConfigurations getCommunityPlusPlanConfigurationModel() {
     admin: [
       "create_feeds",
       "billing_access",
-      "accept_requests",
+
       "create_events",
       "create_goods_offers",
       "create_goods_request",
@@ -729,7 +730,7 @@ TimebankConfigurations getCommunityPlusPlanConfigurationModel() {
     ],
     member: [
       "create_feeds",
-      "accept_requests",
+
       "create_borrow_request",
       "create_goods_offers",
       "create_money_offers",
@@ -748,7 +749,7 @@ TimebankConfigurations getCommunityPlusPlanConfigurationModel() {
     superAdmin: [
       "create_feeds",
       "billing_access",
-      "accept_requests",
+
       "create_events",
       "create_goods_offers",
       "create_goods_request",
@@ -785,7 +786,7 @@ TimebankConfigurations getPrivateConfigurationModel() {
     admin: [
       "create_feeds",
       "billing_access",
-      "accept_requests",
+
       "create_events",
       "create_goods_offers",
       "create_money_offers",
@@ -812,7 +813,7 @@ TimebankConfigurations getPrivateConfigurationModel() {
     ],
     member: [
       "create_feeds",
-      "accept_requests",
+
       "create_borrow_request",
       "create_goods_offers",
       "create_money_offers",
@@ -831,7 +832,7 @@ TimebankConfigurations getPrivateConfigurationModel() {
     superAdmin: [
       "create_feeds",
       "billing_access",
-      "accept_requests",
+
       "create_events",
       "create_goods_offers",
       "create_money_offers",

@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/components/calendar_events/models/calendar_response.dart';
+//import 'package:sevaexchange/components/calendar_events/models/calendar_response.dart';
 import 'package:sevaexchange/components/calendar_events/models/kloudless_models.dart';
 import 'package:sevaexchange/components/calendar_events/repo/calendar_repo.dart';
+import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/data_model.dart';
 import 'package:sevaexchange/models/models.dart';
@@ -13,6 +14,7 @@ import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class KloudlessWidgetManager<M extends Mode, T extends DataModel> {
@@ -239,12 +241,15 @@ class NewCalendarRegisteration extends StatelessWidget {
             title: "iCalendar",
             typeId: 'icloud_calendar',
           ),
-          InkWell(
-            child: Container(
-              margin: const EdgeInsets.only(left: 0, top: 10),
-              child: Text('Skip for now'),
+          CustomTextButton(
+            shape: StadiumBorder(),
+            padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+            color: FlavorConfig.values.theme.primaryColor,
+            child: Text(
+              S.of(context).skip_for_now,
+              style: TextStyle(color: Colors.white, fontFamily: 'Europa'),
             ),
-            onTap: () {
+            onPressed: () {
               Navigator.of(dialogContext).pop();
             },
           ),

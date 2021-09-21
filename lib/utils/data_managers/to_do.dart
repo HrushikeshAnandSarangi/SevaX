@@ -597,7 +597,7 @@ class ToDo {
                       context: context,
                       lendingOfferAcceptorModel: lendingOfferAcceptorModel);
                 },
-                tag: S.of(context).lending_offer_check_in_tag,
+                tag: L.of(context).lending_offer_check_in_tag,
               ),
               taskTimestamp: model.lendingOfferDetailsModel.approvedStartDate ??
                   DateTime.now().millisecondsSinceEpoch,
@@ -625,7 +625,7 @@ class ToDo {
                       context: context,
                       lendingOfferAcceptorModel: lendingOfferAcceptorModel);
                 },
-                tag: S.of(context).lending_offer_check_out_tag,
+                tag: L.of(context).lending_offer_check_out_tag,
               ),
               taskTimestamp: model.lendingOfferDetailsModel.approvedStartDate ??
                   DateTime.now().millisecondsSinceEpoch,

@@ -222,19 +222,24 @@ class MemberSectionBuilder extends StatelessWidget {
                       );
                     }
                   } else {
-                    await MembershipManager.updateMembershipStatus(
-                      associatedName:
-                          SevaCore.of(context).loggedInUser.fullname,
-                      communityId:
-                          SevaCore.of(context).loggedInUser.currentCommunity,
-                      timebankId: timebank.id,
-                      notificationType:
-                          NotificationType.MEMBER_PROMOTED_AS_ADMIN,
-                      parentTimebankId: timebank.parentTimebankId,
-                      targetUserId: member.sevaUserID,
-                      timebankName: timebank.name,
-                      userEmail: member.email,
-                    );
+                    if (ConfigurationCheck.checkAllowedConfiguartions(
+                        type, 'promote_user')) {
+                      await MembershipManager.updateMembershipStatus(
+                        associatedName:
+                            SevaCore.of(context).loggedInUser.fullname,
+                        communityId:
+                            SevaCore.of(context).loggedInUser.currentCommunity,
+                        timebankId: timebank.id,
+                        notificationType:
+                            NotificationType.MEMBER_PROMOTED_AS_ADMIN,
+                        parentTimebankId: timebank.parentTimebankId,
+                        targetUserId: member.sevaUserID,
+                        timebankName: timebank.name,
+                        userEmail: member.email,
+                      );
+                    } else {
+                      actionNotAllowedDialog(context);
+                    }
                   }
                   break;
                 case ActionType.DEMOTE:
