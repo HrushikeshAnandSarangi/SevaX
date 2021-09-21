@@ -108,6 +108,7 @@ class _CapturePaymentDetailWidgetState
           ),
         ),
         Container(
+          height:40,
           margin: EdgeInsets.only(top: 12.0),
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
           decoration: BoxDecoration(
@@ -139,7 +140,7 @@ class _CapturePaymentDetailWidgetState
                 },
                 items: [
                   DropdownMenuItem(
-                    child: Text(S.of(context).request_paymenttype_ach, overflow: TextOverflow.ellipsis),
+                    child: Text(S.of(context).request_paymenttype_ach),
                     value: PaymentMode.ACH,
                   ),
                   DropdownMenuItem(
@@ -147,7 +148,7 @@ class _CapturePaymentDetailWidgetState
                     value: PaymentMode.PAYPAL,
                   ),
                   DropdownMenuItem(
-                    child: Text('Swift'),
+                    child: Text(S.of(context).request_paymenttype_swift),
                     value: PaymentMode.SWIFT,
                   ),
                   DropdownMenuItem(
