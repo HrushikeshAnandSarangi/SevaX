@@ -5,7 +5,6 @@ import 'package:sevaexchange/components/calendar_events/models/kloudless_models.
 import 'package:sevaexchange/components/calendar_events/module/index.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
-import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/acceptor_model.dart';
@@ -32,7 +31,6 @@ import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 import '../../flavor_config.dart';
 import '../core.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 
 String getCashDonationAmount({OfferModel offerDataModel}) {
   String TAGET_NOT_DEFINED = '';

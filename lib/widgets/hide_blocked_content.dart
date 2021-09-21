@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/user_model.dart';
-import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
 

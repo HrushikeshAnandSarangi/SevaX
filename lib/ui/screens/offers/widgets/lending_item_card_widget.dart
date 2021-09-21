@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/new_baseline/models/lending_item_model.dart';
-import 'package:sevaexchange/new_baseline/models/lending_place_model.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
 

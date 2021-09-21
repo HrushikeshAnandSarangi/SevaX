@@ -2,7 +2,6 @@
 //
 //     final lendingPlaceModel = lendingPlaceModelFromMap(jsonString);
 
-import 'package:meta/meta.dart';
 import 'package:sevaexchange/models/enums/lending_borrow_enums.dart';
 import 'dart:convert';
 

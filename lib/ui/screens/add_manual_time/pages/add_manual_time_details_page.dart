@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
-import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/manual_time_model.dart';
 import 'package:sevaexchange/ui/screens/add_manual_time/bloc/add_manual_time_bloc.dart';
 import 'package:sevaexchange/views/core.dart';

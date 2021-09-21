@@ -33,7 +33,6 @@ import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
-import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/components/sevaavatar/timebankcoverphoto.dart';
 
 class TimebankCreate extends StatelessWidget {

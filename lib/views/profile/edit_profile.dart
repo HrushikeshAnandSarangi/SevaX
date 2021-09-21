@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -42,9 +41,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../globals.dart' as globals;
-import '../../labels.dart';
 import '../core.dart';
-import '../splash_view.dart';
 
 class EditProfilePage extends StatefulWidget {
   UserModel userModel;
