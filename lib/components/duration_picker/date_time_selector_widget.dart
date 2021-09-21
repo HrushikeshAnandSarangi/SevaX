@@ -39,9 +39,7 @@ class DateTimeSelector extends StatelessWidget {
                     Text(
                       _title,
                       style: TextStyle(
-                          fontSize: 12.0,
-                          fontWeight: FontWeight.w600,
-                          fontFamily: 'Europa'
+                          fontSize: 12.0, fontWeight: FontWeight.w600, fontFamily: 'Europa'
                           //color: title == 'End' ? Colors.red : Colors.green,
                           ),
                     ),
@@ -57,9 +55,7 @@ class DateTimeSelector extends StatelessWidget {
               ),
               Container(
                 height: 2.0,
-                color: isSelected
-                    ? Theme.of(context).primaryColor
-                    : Colors.transparent,
+                color: isSelected ? Theme.of(context).primaryColor : Colors.transparent,
               )
             ],
           ),
@@ -85,12 +81,15 @@ class DateTimeSelector extends StatelessWidget {
                 getLangTag(),
               ).toString())
           .format(_date);
-      return Text(_forDate,
-          style: TextStyle(
-              // color: title == 'End' ? Colors.red : Colors.green,
-              fontSize: 14.0,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Europa'));
+      return Text(
+        _forDate,
+        style: TextStyle(
+          // color: title == 'End' ? Colors.red : Colors.green,
+          fontSize: 14.0,
+          fontWeight: FontWeight.bold,
+          fontFamily: 'Europa',
+        ),
+      );
     }
   }
 }

@@ -1746,6 +1746,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
             }),
         SizedBox(height: 20),
         OfferDurationWidget(
+          hideEndDate: _bloc.lendingOfferTypeMode != 1,
           title: S.of(context).offer_duration,
           startTime: widget.offerModel != null
               ? DateTime.fromMillisecondsSinceEpoch(
@@ -1807,7 +1808,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
         ),
         SizedBox(height: 12),
         Row(
-         // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Column(
