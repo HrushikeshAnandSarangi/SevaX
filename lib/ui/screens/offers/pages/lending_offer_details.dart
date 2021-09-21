@@ -1098,27 +1098,41 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
   }
 
   Widget get dateDetailsComponentLendingOffer {
-    return Text(
-      DateFormat.MMMd(getLangTag()).add_jm().format(
-                getDateTimeAccToUserTimezone(
-                  dateTime: DateTime.fromMillisecondsSinceEpoch(
-                    offerModel.lendingOfferDetailsModel.startDate,
+    return offerModel.lendingOfferDetailsModel.lendingOfferTypeMode == 'ONE_TIME'
+        ? Text(
+            DateFormat.MMMd(getLangTag()).add_jm().format(
+                      getDateTimeAccToUserTimezone(
+                        dateTime: DateTime.fromMillisecondsSinceEpoch(
+                          offerModel.lendingOfferDetailsModel.startDate,
+                        ),
+                        timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
+                      ),
+                    ) +
+                ' - ' +
+                DateFormat.MMMd(getLangTag()).add_jm().format(
+                      getDateTimeAccToUserTimezone(
+                        dateTime: DateTime.fromMillisecondsSinceEpoch(
+                            offerModel.lendingOfferDetailsModel.endDate),
+                        timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
+                      ),
+                    ),
+            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.grey),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          )
+        : Text(
+            DateFormat.MMMd(getLangTag()).add_jm().format(
+                  getDateTimeAccToUserTimezone(
+                    dateTime: DateTime.fromMillisecondsSinceEpoch(
+                      offerModel.lendingOfferDetailsModel.startDate,
+                    ),
+                    timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
                   ),
-                  timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
                 ),
-              ) +
-          ' - ' +
-          DateFormat.MMMd(getLangTag()).add_jm().format(
-                getDateTimeAccToUserTimezone(
-                  dateTime: DateTime.fromMillisecondsSinceEpoch(
-                      offerModel.lendingOfferDetailsModel.endDate),
-                  timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
-                ),
-              ),
-      style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.grey),
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
-    );
+            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.grey),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          );
   }
 
   Widget get lendingOfferCreatorWidget {
