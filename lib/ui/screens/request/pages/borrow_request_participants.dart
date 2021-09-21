@@ -132,8 +132,8 @@ class BorrowRequestParticipants extends StatelessWidget {
                                                 label: Text(
                                                   (requestModel.borrowModel.itemsCollected &&
                                                           requestModel.borrowModel.itemsReturned)
-                                                      ? L.of(context).items_returned
-                                                      : L.of(context).items_collected,
+                                                      ? S.of(context).items_returned
+                                                      : S.of(context).items_collected,
                                                   style:
                                                       TextStyle(color: Colors.grey, fontSize: 11),
                                                 ),
@@ -263,8 +263,8 @@ class BorrowRequestParticipants extends StatelessWidget {
                                                 label: Text(
                                                   (requestModel.borrowModel.isCheckedIn &&
                                                           requestModel.borrowModel.isCheckedOut)
-                                                      ? L.of(context).checked_out
-                                                      : L.of(context).checked_in,
+                                                      ? S.of(context).checked_out_text
+                                                      : S.of(context).checked_in_text,
                                                   style:
                                                       TextStyle(color: Colors.grey, fontSize: 11),
                                                 ),
@@ -441,8 +441,8 @@ Future<dynamic> alreadyAcceptedLenderDialog(BuildContext context, String roomOrT
                 ),
                 SizedBox(height: 25),
                 Text(roomOrTool == LendingType.PLACE.readable
-                    ? L.of(context).already_accepted_lender_place
-                    : L.of(context).already_accepted_lender_item),
+                    ? S.of(context).already_accepted_lender_place
+                    : S.of(context).already_accepted_lender_item),
               ],
             ),
           ),

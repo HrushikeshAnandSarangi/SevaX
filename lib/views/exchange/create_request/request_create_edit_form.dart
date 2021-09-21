@@ -1446,7 +1446,7 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
                 actions: [
                   CustomTextButton(
                     child: Text(
-                      "${L.of(context).edit_this_request_only}.",
+                      "${S.of(context).edit_this_request_only}.",
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.red,
@@ -1463,7 +1463,7 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
                   ),
                   CustomTextButton(
                     child: Text(
-                      "${L.of(context).edit_subsequent_requests}.",
+                      "${S.of(context).edit_subsequent_requests}.",
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.red,

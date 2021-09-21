@@ -68,8 +68,8 @@ class TimebankRequestWidget extends StatelessWidget {
                     errorDialog(
                         context: context,
                         error: model.roomOrTool == LendingType.PLACE.readable
-                            ? L.of(context).already_accepted_lender_place
-                            : L.of(context).already_accepted_lender_item);
+                            ? S.of(context).already_accepted_lender_place
+                            : S.of(context).already_accepted_lender_item);
                   } else {
                     Navigator.of(context).push(
                       MaterialPageRoute(

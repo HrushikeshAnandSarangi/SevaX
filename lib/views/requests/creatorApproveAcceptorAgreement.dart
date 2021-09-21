@@ -63,8 +63,8 @@ class _CreatorApproveAcceptorAgreeementState extends State<CreatorApproveAccepto
         centerTitle: true,
         title: Text(
           widget.requestModel.roomOrTool == 'PLACE'
-              ? L.of(context).accept_place_borrow_request
-              : L.of(context).accept_item_borrow_request,
+              ? S.of(context).accept_place_borrow_request
+              : S.of(context).accept_item_borrow_request,
           style: TextStyle(fontFamily: "Europa", fontSize: 19, color: Colors.white),
         ),
       ),
@@ -268,8 +268,8 @@ class _CreatorApproveAcceptorAgreeementState extends State<CreatorApproveAccepto
                         borrowAcceptorModel.borrowAgreementLink != ''
                     ? S.of(context).review_before_proceding_text
                     : (widget.requestModel.roomOrTool == 'PLACE'
-                        ? L.of(context).lender_not_accepted_request_msg_place
-                        : L.of(context).lender_not_accepted_request_msg_item),
+                        ? S.of(context).lender_not_accepted_request_msg_place
+                        : S.of(context).lender_not_accepted_request_msg_item),
                 style: TextStyle(fontSize: 15),
                 softWrap: true,
               ),

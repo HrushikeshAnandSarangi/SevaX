@@ -545,7 +545,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                               hintText: widget.placeOrItem ==
                                       LendingType.PLACE.readable
                                   ? S.of(context).place_returned_hint_text
-                                  : L.of(context).item_returned_hint_text,
+                                  : S.of(context).item_returned_hint_text,
                               hintStyle:
                                   TextStyle(fontSize: 13, color: Colors.grey),
                               // labelText: 'No. of volunteers',
@@ -712,8 +712,8 @@ class _OfferAgreementFormState extends State<AgreementForm> {
           // initialValue: documentName,
           decoration: InputDecoration(
             hintText: widget.placeOrItem == LendingType.PLACE.readable
-                ? L.of(context).place_agreement_name_hint_place
-                : L.of(context).place_agreement_name_hint_item,
+                ? S.of(context).place_agreement_name_hint_place
+                : S.of(context).place_agreement_name_hint_item,
             hintStyle: TextStyle(fontSize: 13, color: Colors.grey),
             // labelText: 'No. of volunteers',
           ),
@@ -1101,8 +1101,8 @@ class _OfferAgreementFormState extends State<AgreementForm> {
               isDense: true,
               // labelText: "Enter Email",
               hintText: widget.placeOrItem == LendingType.PLACE.readable
-                  ? L.of(context).search_agreement_hint_place
-                  : L.of(context).search_agreement_hint_item,
+                  ? S.of(context).search_agreement_hint_place
+                  : S.of(context).search_agreement_hint_item,
               fillColor: Colors.white,
               alignLabelWithHint: true,
               prefixIcon: Icon(

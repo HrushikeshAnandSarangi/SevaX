@@ -231,20 +231,20 @@ class _TimebankCodeWidgetState extends State<TimebankCodeWidget> {
   }
 
   String shareText(TimebankCodeModel timebankCode, String name) {
-    return '''$name ${L.of(context).has_invited_you_to_join_their} 
-    "${widget.timebankName}" ${L.of(context).seva_community_seva_means_selfless_service_in_Sanskrit}.
-     ${L.of(context).seva_ommunities_are_based_on_a_mutual_reciprocity_system},
-      ${L.of(context).where_community_members_help_each_other_out_in_exchange_for_seva_credits_that_can_be_redeemed_for_services_they_need}.
-       ${L.of(context).to_learn_more_about_being_a_part_of_a_Seva_Community_here_s_a_short_explainer_video}.
-        https://youtu.be/xe56UJyQ9ws \n\n${L.of(context).here_is_what_you_ll_need_to_know} \n${L.of(context).first_text},
-         ${L.of(context).depending_on_where_you_click_the_link_from_whether_it_s_your_web_browser_or_mobile_phone},
-          ${L.of(context).the_link_will_either_take_you_to_our_main} https://www.sevaxapp.com ${L.of(context).web_page_where_you_can_register_on_the_web_directly_or_it_will_take_you_from_your_mobile_phone_to_the_App_or_google_play_stores}, 
-         ${L.of(context).where_you_can_download_our_SevaX_App_Once_you_have_registered_on_the_SevaX_mobile_app_or_the_website},
-           ${L.of(context).you_can_explore_Seva_Communities_near_you_Type_in_the} "${widget.timebankName}" ${L.of(context).and_enter_code_text} "${timebankCode.timebankCode}" ${L.of(context).when_prompted_text}.
-           \n\n${L.of(context).click_to_Join_text} $name 
-           ${L.of(context).and_their_Seva_Community_via_this_dynamic_link_at} https://sevaexchange.page.link/sevaxapp.
-           \n\n${L.of(context).thank_you_for_being_a_part_of_our_Seva_Exchange_movement_the_Seva_Exchange_team_Please_email_us_at} 
-           ${L.of(context).if_you_have_any_questions_or_issues_joining_with_the_link_given}.
+    return '''$name ${S.of(context).has_invited_you_to_join_their} 
+    "${widget.timebankName}" ${S.of(context).seva_community_seva_means_selfless_service_in_Sanskrit}.
+     ${S.of(context).seva_ommunities_are_based_on_a_mutual_reciprocity_system},
+      ${S.of(context).where_community_members_help_each_other_out_in_exchange_for_seva_credits_that_can_be_redeemed_for_services_they_need}.
+       ${S.of(context).to_learn_more_about_being_a_part_of_a_Seva_Community_here_s_a_short_explainer_video}.
+        https://youtu.be/xe56UJyQ9ws \n\n${S.of(context).here_is_what_you_ll_need_to_know} \n${S.of(context).first_text},
+         ${S.of(context).depending_on_where_you_click_the_link_from_whether_it_s_your_web_browser_or_mobile_phone},
+          ${S.of(context).the_link_will_either_take_you_to_our_main} https://www.sevaxapp.com ${S.of(context).web_page_where_you_can_register_on_the_web_directly_or_it_will_take_you_from_your_mobile_phone_to_the_App_or_google_play_stores}, 
+         ${S.of(context).where_you_can_download_our_SevaX_App_Once_you_have_registered_on_the_SevaX_mobile_app_or_the_website},
+           ${S.of(context).you_can_explore_Seva_Communities_near_you_Type_in_the} "${widget.timebankName}" ${S.of(context).and_enter_code_text} "${timebankCode.timebankCode}" ${S.of(context).when_prompted_text}.
+           \n\n${S.of(context).click_to_Join_text} $name 
+           ${S.of(context).and_their_Seva_Community_via_this_dynamic_link_at} https://sevaexchange.page.link/sevaxapp.
+           \n\n${S.of(context).thank_you_for_being_a_part_of_our_Seva_Exchange_movement_the_Seva_Exchange_team_Please_email_us_at} 
+           ${S.of(context).if_you_have_any_questions_or_issues_joining_with_the_link_given}.
     ''';
   }
 

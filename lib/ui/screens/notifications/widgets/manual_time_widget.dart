@@ -75,7 +75,7 @@ void manualTimeActionDialog(
               padding: EdgeInsets.all(8.0),
               child: Center(
                 child: Text(
-                  "${S.of(context).by_approving_you_accept} ${model.userDetails.name} ${L.of(context).has_worked_for_text} ${model.claimedTime / 60} ${L.of(context).hours_text}",
+                  "${S.of(context).by_approving_you_accept} ${model.userDetails.name} ${S.of(context).has_worked_for_text} ${model.claimedTime / 60} ${S.of(context).hours_text}",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontFamily: 'Europa',

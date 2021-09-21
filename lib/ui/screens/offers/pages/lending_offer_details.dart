@@ -244,7 +244,7 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                                 height: 10,
                               ),
                               Text(
-                                L.of(context).estimated_value.replaceAll('*', ''),
+                                S.of(context).estimated_value.replaceAll('*', ''),
                                 style: titleStyle,
                               ),
                               SizedBox(
@@ -275,8 +275,8 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                                           offerModel.lendingOfferDetailsModel
                                                   .lendingOfferAgreementLink ==
                                               ''
-                                      ? L.of(context).offer_agreement_not_available
-                                      : L.of(context).click_to_view_offer_agreement,
+                                      ? S.of(context).offer_agreement_not_available
+                                      : S.of(context).click_to_view_offer_agreement,
                                   style: TextStyle(
                                       fontSize: 16,
                                       color: Theme.of(context).primaryColor,
@@ -399,8 +399,8 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                                     text: isCreator
                                         ? S.of(context).you_created_offer
                                         : isAccepted
-                                            ? L.of(context).withdraw_lending_offer
-                                            : L.of(context).would_like_to_accept_offer,
+                                            ? S.of(context).withdraw_lending_offer
+                                            : S.of(context).would_like_to_accept_offer,
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
@@ -485,8 +485,8 @@ class _LendingOfferDetailsState extends State<LendingOfferDetails> {
                                     text: isCreator
                                         ? S.of(context).you_created_offer
                                         : isAccepted
-                                            ? L.of(context).withdraw_lending_offer
-                                            : L.of(context).would_like_to_accept_offer,
+                                            ? S.of(context).withdraw_lending_offer
+                                            : S.of(context).would_like_to_accept_offer,
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,

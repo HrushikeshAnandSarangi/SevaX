@@ -428,8 +428,8 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                       context: context,
                       builder: (_context) => AlertDialog(
                         title: Text(requestModelNew.roomOrTool == LendingType.PLACE.readable
-                            ? L.of(context).admin_borrow_request_received_back_check_place
-                            : L.of(context).admin_borrow_request_received_back_check_item),
+                            ? S.of(context).admin_borrow_request_received_back_check_place
+                            : S.of(context).admin_borrow_request_received_back_check_item),
                         //label to be created later (borrow request)
                         actions: [
                           CustomTextButton(
@@ -972,7 +972,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   onPressed: () {},
                   photoUrl: model.photoUrlImage,
                   title: model.individualOfferDataModel.title + S.of(context).idle_for_2_weeks,
-                  subTitle: L.of(context).idle_lending_offer_first_warning.replaceAll('***', '2'),
+                  subTitle: S.of(context).idle_lending_offer_first_warning.replaceAll('***', '2'),
                 );
                 break;
 
@@ -992,7 +992,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   onPressed: () {},
                   photoUrl: model.photoUrlImage,
                   title: model.individualOfferDataModel.title + S.of(context).idle_for_4_weeks,
-                  subTitle: L.of(context).idle_lending_offer_second_warning.replaceAll('***', '4'),
+                  subTitle: S.of(context).idle_lending_offer_second_warning.replaceAll('***', '4'),
                 );
                 break;
 
@@ -1034,7 +1034,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   onPressed: () {},
                   photoUrl: model.photoUrl,
                   title: model.title + S.of(context).idle_for_2_weeks,
-                  subTitle: L.of(context).idle_borrow_request_first_warning.replaceAll('***', '2'),
+                  subTitle: S.of(context).idle_borrow_request_first_warning.replaceAll('***', '2'),
                 );
                 break;
 
@@ -1054,7 +1054,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   onPressed: () {},
                   photoUrl: model.photoUrl,
                   title: model.title + S.of(context).idle_for_4_weeks,
-                  subTitle: L.of(context).idle_borrow_request_second_warning.replaceAll('***', '4'),
+                  subTitle: S.of(context).idle_borrow_request_second_warning.replaceAll('***', '4'),
                 );
                 break;
 

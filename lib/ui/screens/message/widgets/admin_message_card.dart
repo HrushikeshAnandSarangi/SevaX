@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/message_bloc.dart';
 import 'package:sevaexchange/ui/screens/message/pages/timebank_message_page.dart';
@@ -97,9 +98,9 @@ class AdminMessageCard extends StatelessWidget {
       return "";
     }
     if (count == 1) {
-      return "1 ${L.of(context).new_message_text}";
+      return "1 ${S.of(context).new_message_text}";
     } else {
-      return "$count ${L.of(context).new_messages_text}";
+      return "$count ${S.of(context).new_messages_text}";
     }
   }
 }

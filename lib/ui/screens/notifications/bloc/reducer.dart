@@ -106,7 +106,7 @@ class PersonalNotificationReducerForRequests {
     return NotificationCard(
       timestamp: notification.timestamp,
       entityName:
-          requestData.entityTitle ?? L.of(context).deletion_request_text,
+          requestData.entityTitle ?? S.of(context).deletion_request_text,
       photoUrl: null,
       title: requestData.requestAccepted
           ? "${requestData.entityTitle} ${S.of(context).notifications_was_deleted}"

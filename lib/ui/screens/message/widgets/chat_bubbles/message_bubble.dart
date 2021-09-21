@@ -61,7 +61,7 @@ class MessageBubble extends StatelessWidget {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => SevaWebView(
-                          AboutMode(title: L.of(context).external_url_text, urlToHit: link.url),
+                          AboutMode(title: S.of(context).external_url_text, urlToHit: link.url),
                         ),
                       ),
                     );
@@ -90,7 +90,7 @@ class MessageBubble extends StatelessWidget {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => SevaWebView(
-          AboutMode(title: L.of(context).external_url_text, urlToHit: url),
+          AboutMode(title: S.of(context).external_url_text, urlToHit: url),
         ),
       ),
     );

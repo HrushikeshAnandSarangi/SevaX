@@ -147,7 +147,7 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                               _bloc.onPlaceNameChanged(value);
                               // title = value;
                             },
-                            hint: L.of(context).name_of_item_hint,
+                            hint: S.of(context).name_of_item_hint,
                             maxLength: null,
                             error: getAddItemValidationError(context, snapshot.error),
                           );
@@ -163,7 +163,7 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                                 prefixIcon: Icon(Icons.attach_money),
                                 errorText: getAddItemValidationError(context, snapshot.error),
                                 hintText: S.of(context).request_min_donation_hint +
-                                    L.of(context).estimated_value_hint_item),
+                                    S.of(context).estimated_value_hint_item),
                             controller: _estimatedValueController,
                             currentNode: _estimatedValue,
                             value: snapshot.data.toString(),

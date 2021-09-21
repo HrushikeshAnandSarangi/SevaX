@@ -476,7 +476,7 @@ class ExploreSearchTabBar extends StatelessWidget {
                             children: [
                               Text(
                                 _distance == 0
-                                    ? L.of(context).any_distance
+                                    ? S.of(context).any_distance
                                     : "Within $_distance ${_type == DistancType.km ? S.of(context).kilometers : S.of(context).miles}",
                                 style: TextStyle(
                                   color: _distance == 0
