@@ -728,7 +728,7 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
               timebankModel.parentTimebankId == FlavorConfig.values.timebankId
                   ? S.of(context).timebank_request(1)
                   : S.of(context).seva +
-                      timebankModel.name +
+                      " ${timebankModel.name}" +
                       " ${S.of(context).group} " +
                       S.of(context).request,
               style: TextStyle(fontSize: 12.0),

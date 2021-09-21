@@ -407,10 +407,13 @@ class OfferListItems extends StatelessWidget {
                     Spacer(),
                     CustomTextButton(
 //                        child: Text(S.of(context).skip_for_now, style: TextStyle(color: FlavorConfig.values.theme.primaryColor),),
+                        shape: StadiumBorder(),
+                        padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                        color: FlavorConfig.values.theme.primaryColor,
                         child: Text(
                           S.of(context).do_it_later,
                           style: TextStyle(
-                              color: FlavorConfig.values.theme.primaryColor),
+                              color: Colors.white, fontFamily: 'Europa'),
                         ),
                         onPressed: () {
                           Navigator.of(bc).pop();

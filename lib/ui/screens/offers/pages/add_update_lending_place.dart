@@ -294,7 +294,12 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                       SizedBox(height: 20),
                       Text(
                         S.of(context).amenities_text,
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          fontFamily: 'Europa',
+                          color: Colors.black,
+                        ),
                       ),
                       SizedBox(height: 10),
                       Text(
@@ -410,8 +415,8 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                               // title = value;
                             },
                             hint: L.of(context).house_rules_hint,
-                            minLines: 5,
-                            maxLines: 5,
+                            minLines: 2,
+                            maxLines: 2,
                             maxLength: null,
                             error: getAddPlaceValidationError(context, snapshot.error),
                           );

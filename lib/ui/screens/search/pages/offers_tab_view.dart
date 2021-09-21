@@ -222,10 +222,13 @@ class _OffersTabViewState extends State<OffersTabView> {
                   children: <Widget>[
                     Spacer(),
                     CustomTextButton(
+                        shape: StadiumBorder(),
+                        padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                        color: FlavorConfig.values.theme.primaryColor,
                         child: Text(
                           S.of(context).skip_for_now,
                           style: TextStyle(
-                              color: FlavorConfig.values.theme.primaryColor),
+                              color: Colors.white, fontFamily: 'Europa'),
                         ),
                         onPressed: () {
                           Navigator.of(bc).pop();
