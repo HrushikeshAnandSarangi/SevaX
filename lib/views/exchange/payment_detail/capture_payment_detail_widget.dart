@@ -116,6 +116,7 @@ class _CapturePaymentDetailWidgetState
           ),
           child: DropdownButtonHideUnderline(
             child: DropdownButton(
+              isExpanded: true,
                 onTap: widget.onTap,
                 style: TextStyle(
                     color: Theme.of(context).primaryColor,
@@ -138,7 +139,7 @@ class _CapturePaymentDetailWidgetState
                 },
                 items: [
                   DropdownMenuItem(
-                    child: Text(S.of(context).request_paymenttype_ach),
+                    child: Text(S.of(context).request_paymenttype_ach, overflow: TextOverflow.ellipsis),
                     value: PaymentMode.ACH,
                   ),
                   DropdownMenuItem(

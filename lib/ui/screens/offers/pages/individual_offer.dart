@@ -459,6 +459,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
         },
       ),
       Container(
+        margin: EdgeInsets.only(top: 10.0),
         alignment: Alignment.bottomLeft,
         child: CupertinoSegmentedControl<int>(
           unselectedColor: Colors.grey[200],
