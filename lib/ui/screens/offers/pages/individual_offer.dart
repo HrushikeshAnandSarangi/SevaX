@@ -475,6 +475,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                 formatters: [
                   FilteringTextInputFormatter.allow(Regex.numericRegex)
                 ],
+                keyboardType: TextInputType.number,
               );
             },
           ),
