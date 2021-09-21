@@ -16,6 +16,7 @@ import 'package:sevaexchange/ui/screens/transaction_details/manager/transactions
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/donations/donation_bloc.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
@@ -159,7 +160,7 @@ class _DonationsDetailsViewState extends State<DonationsDetailsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
+      backgroundColor: HexColor('#F8F8F8'),
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
@@ -177,7 +178,7 @@ class _DonationsDetailsViewState extends State<DonationsDetailsView> {
             color: Colors.black87,
           ),
         ),
-        backgroundColor: Colors.grey[200],
+        backgroundColor: HexColor('#F8F8F8'),
         elevation: 0.0,
       ),
       body: LoadingViewIndicator(
