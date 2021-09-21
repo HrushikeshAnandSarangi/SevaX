@@ -48,8 +48,79 @@
 	"public":"Public",
 	"latest":"Latest",
 	"likes":"Likes",
-	"offer_lend_title_hint":
-	"Ex: offering to lend an apartment.",
-	"request_brrow_title_hint": "Ex: Apartment"
-
+	"lending_offer_title_hint_item": "Ex: Offering to lend a lawnmower.",
+	"lending_offer_title_hint_place": "Ex: Offering to lend an apartment.",
+	"name_of_item_hint": "Ex: Lawnmower",
+	"bath_rooms": "Bathroom(s)",
+	"item_returned_hint_text": "Ex: item(s) must be returned in the same condition.",
+	"name_of_place_hint": "Ex: Apartment Bathed in Sunshine.",
+	"common_spaces": "Common Space",
+	"house_rules_hint": "Ex: No Smoking",
+	"borrow_request_title_hint_item": "Ex: Lawnmower",
+	"borrow_request_title_hint_place": "Ex: Apartment",
+	"borrow_request_description_hint_item":
+		"Provide a detailed description of the item you would like to borrow.",
+	"borrow_request_description_hint_place":
+		"Provide a detailed description of the place you would like to borrow including number of rooms, number of beds, etc.",
+	"lending_offer_description_hint_item":
+		"Provide a detailed description of the item you would like to lend.",
+	"lending_offer_description_hint_place":
+		"Provide a detailed description of the place you would like to lend including number of rooms, number of beds, etc.",
+	"accept_borrow_agreement_place_hint":
+		"Please provide details about your place, the proposed agreement and location of the property.",
+	"select_a_place_lending": "Select a place to lend*",
+	"select_item_for_lending": "Select an item to lend*",
+	"approve_borrow_terms_acknowledgement_text1":
+		"I acknowledge that you can use the property on the mentioned dates",
+	"approve_borrow_terms_acknowledgement_text2":
+		"I acknowledge that you can use the item(s) on the mentioned dates",
+	"search_agreement_hint_place": "Enter name of a property agreement template",
+	"search_agreement_hint_item": "Enter name of an item agreement template",
+	"accept_place_borrow_request": "Accept Place Borrow Request",
+	"accept_item_borrow_request": "Accept Item Borrow request",
+	"accept_place_lending_offer": "Accept Place Lending Offer",
+	"accept_item_lending_offer": "Accept Item Lending Offer",
+	"request_agreement_form_component_text":
+		"Create the proposed agreement between you and the borrower regarding the property. Use previous agreements if appropriate.",
+	"lender_not_accepted_request_msg_place":
+		"Lender is providing the property request with no agreement required",
+	"lender_not_accepted_request_msg_item":
+		"Lender is providing the item(s) request with no agreement required",
+	"already_accepted_lender_place":
+		"You have already accepted a property for this request",
+	"already_accepted_lender_item": "You have already accepted an item for this request",
+	"admin_borrow_request_received_back_check_place":
+		"If you have received your place back from the borrower, please click the button below to complete this transaction",
+	"admin_borrow_request_received_back_check_item":
+		"If you have received your item(s) back from the borrower, please click the button below to complete this transaction",
+	"place_agreement_name_hint_place": "Ex: House for the weekend..",
+	"place_agreement_name_hint_item": "Ex: Lawnmower for the weekend..",
+	"lend": "Lend",
+	"canceled": "Canceled",
+	"date_to_borrow_and_return": "Date to Collect and Return item(s)",
+	"date_to_check_in_out": "Date of Check In and expected Check Out",
+	"estimated_value_hint_place":
+		" (This is the amount based on the property's rental value, including amenities)",
+	"estimated_value_hint_item":
+		" (This is the amount based on the item(s) current value)",
+	"lending_offer_location_hint":
+		"Provide the location you would like to lend to a borrower.",
+	"end_date_after_offer_end_date":
+		"The date(s) selected are outside the scope of this offer. Please edit your offer end date to approve this request",
+	"lending_offer_check_in_tag": "Lending Offer - Check In",
+	"lending_offer_check_out_tag": "Lending Offer - Check Out",
+	"agreement_damage_liability":
+		"The Borrower is responsible for the full cost of repair or replacement of any or all of the item(s) or properties that are damaged, lost, or stolen from the time Borrower assumes custody until it is returned to the lender unless otherwise agreed at the time the agreement is finalized. If the item(s) or property(s) is lost, stolen or damaged, Borrower agrees to promptly notify the Lender Representative designated above.",
+	"agreement_user_disclaimer":
+		"The Borrower shall be responsible for the proper use and deployment of the item(s) or properties. The Borrower shall be responsible for training anyone using the item(s) on the proper use of the item(s) in accordance with any item(s) use procedures.",
+	"agreement_delivery_return":
+		"Title to the item(s) the subject of this Agreement shall remain with Lender. The Borrower shall be responsible for the safe packaging, proper import, export, shipping and receiving of the item(s). The item(s) shall be returned within a reasonable amount of time after the Loan Period end date identified.",
+	"agreement_maintain_and_repair":
+		"Except for reasonable wear and tear, \"Item(s) shall be returned to Lender in as good condition as when received by the Borrower. During the Loan Period and prior to return, the Borrower agrees to assume all responsibility for maintenance and repair.\"",
+  
+	"agreement_refund_deposit":
+		"The borrower will provide a refundable deposit as defined within the agreement with the lender. The Criteria established regarding the condition of the item(s) or property upon return will also be defined in the agreement.",
+	"agreement_maintain_and_clean":
+		"All item(s) or properties borrowed must be returned in a condition similar to the condition it is received by the borrower unless otherwise noted in the agreement. Specific details related to the item(s) or properties and the lender's requirements upon return should be noted in the contract and agreed upon prior to prior to the borrower's receipt."
+  
 }

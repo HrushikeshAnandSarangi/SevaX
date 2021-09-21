@@ -1174,7 +1174,8 @@ class L {
   String get accept_borrow_agreement_page_hint =>
       "Please fill in your Item details, agreement and location of your place to help the borrower.";
 
-  String get accept_borrow_agreement_item_title => "You are about to give Items for the borrower";
+  String get accept_borrow_agreement_item_title =>
+      "You are about to give Items for the borrower";
 
   String get accept_borrow_agreement_place_title => "Details of the offer";
 
@@ -1453,11 +1454,14 @@ class L {
 // ----------------------------------------------------------------------------------->
 //
 //todo: 20th September 2021 Updates --- > Labels to be updated in Arbify
-  String get lending_offer_title_hint_item => "Ex: Offering to lend a lawnmower.";
-  String get lending_offer_title_hint_place => "Ex: Offering to lend an apartment.";
+  String get lending_offer_title_hint_item =>
+      "Ex: Offering to lend a lawnmower.";
+  String get lending_offer_title_hint_place =>
+      "Ex: Offering to lend an apartment.";
   String get name_of_item_hint => "Ex: Lawnmower";
   String get bath_rooms => "Bathroom(s)";
-  String get item_returned_hint_text => 'Ex: item(s) must be returned in the same condition.';
+  String get item_returned_hint_text =>
+      'Ex: item(s) must be returned in the same condition.';
   String get name_of_place_hint => "Ex: Apartment Bathed in Sunshine.";
   String get common_spaces => "Common Space";
   String get house_rules_hint => "Ex: No Smoking";
@@ -1479,8 +1483,10 @@ class L {
       "I acknowledge that you can use the property on the mentioned dates";
   String get approve_borrow_terms_acknowledgement_text2 =>
       "I acknowledge that you can use the item(s) on the mentioned dates";
-  String get search_agreement_hint_place => "Enter name of a property agreement template";
-  String get search_agreement_hint_item => "Enter name of an item agreement template";
+  String get search_agreement_hint_place =>
+      "Enter name of a property agreement template";
+  String get search_agreement_hint_item =>
+      "Enter name of an item agreement template";
   String get accept_place_borrow_request => "Accept Place Borrow Request";
   String get accept_item_borrow_request => "Accept Item Borrow request";
   String get accept_place_lending_offer => "Accept Place Lending Offer";
@@ -1493,13 +1499,15 @@ class L {
       "Lender is providing the item(s) request with no agreement required";
   String get already_accepted_lender_place =>
       "You have already accepted a property for this request";
-  String get already_accepted_lender_item => "You have already accepted an item for this request";
+  String get already_accepted_lender_item =>
+      "You have already accepted an item for this request";
   String get admin_borrow_request_received_back_check_place =>
       "If you have received your place back from the borrower, please click the button below to complete this transaction";
   String get admin_borrow_request_received_back_check_item =>
       "If you have received your item(s) back from the borrower, please click the button below to complete this transaction";
   String get place_agreement_name_hint_place => "Ex: House for the weekend..";
-  String get place_agreement_name_hint_item => "Ex: Lawnmower for the weekend..";
+  String get place_agreement_name_hint_item =>
+      "Ex: Lawnmower for the weekend..";
   String get lend => "Lend";
   String get canceled => 'Canceled';
   String get date_to_borrow_and_return => "Date to Collect and Return item(s)";
@@ -1534,6 +1542,4 @@ class L {
       "All item(s) or properties borrowed must be returned in a condition similar to the condition it is received by the borrower unless otherwise noted in the agreement. Specific details related to the item(s) or properties and the lender's requirements upon return should be noted in the contract and agreed upon prior to prior to the borrower's receipt.";
 //Finalised by Tim above  ------------------->
 // <<<<<<< HEAD
-  String get offer_lend_title_hint => "Ex: offering to lend an apartment.";
-  String get request_borrow_title_hint => "Ex: Apartment";
 }
