@@ -154,7 +154,7 @@ class BorrowRequestParticipantsCard extends StatelessWidget {
                             .contains(borrowAcceptorModel.acceptorEmail)
                         ? (borrowAcceptorModel.borrowAgreementLink == '' ||
                                 borrowAcceptorModel.borrowAgreementLink == null)
-                            ? S.of(context).agreement_accepted
+                            ? L.of(context).agreement_accepted
                             : S.of(context).agreement_signed
                         : S.of(context).agreement_to_be_signed,
                     style: TextStyle(color: Colors.black),
