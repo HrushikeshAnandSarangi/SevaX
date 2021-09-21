@@ -1206,7 +1206,7 @@ class L {
   String get agreement_to_be_signed => 'Agreement to be signed';
 
   String get agreement_signed => 'You have signed the agreement';
-  String get agreement_accepted => 'You have accepted the agreement';
+  // String get agreement_accepted => 'You have accepted the agreement';
 
   String get responses => 'Responses';
   String get you_have_received_responses => 'You have received ** response***.';
@@ -1503,6 +1503,8 @@ class L {
   String get lend => "Lend";
   String get date_to_borrow_and_return => "Date to Collect and Return item(s)";
   String get date_to_check_in_out => "Date of Check In and expected Check Out";
+  String get agreement_accepted => 'Accepted without agreement';
+
 
 //Lending offers labels updates below ////---------------->
   String get estimated_value_hint_place =>

@@ -152,7 +152,7 @@ class _CapturePaymentDetailWidgetState
                     value: PaymentMode.SWIFT,
                   ),
                   DropdownMenuItem(
-                    child: Text('Venmo'),
+                    child: Text(S.of(context).request_paymenttype_venmo),
                     value: PaymentMode.VENMO,
                   ),
                   DropdownMenuItem(

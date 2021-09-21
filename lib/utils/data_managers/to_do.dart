@@ -378,14 +378,18 @@ class ToDo {
                     title: Text(S.of(context).item_received_alert_dialouge),
                     actions: [
                       CustomTextButton(
+                        shape: StadiumBorder(),
+                        color: Theme.of(context).accentColor,
+                        padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
                         onPressed: () {
                           Navigator.of(_context).pop();
                         },
                         child: Text(
                           S.of(context).not_yet,
                           style: TextStyle(
-                              fontSize: 17,
-                              color: Theme.of(context).accentColor),
+                              fontSize: 16,
+                              fontFamily: 'Europa',
+                              color: Colors.white),
                         ),
                       ),
                       CustomTextButton(
@@ -419,9 +423,15 @@ class ToDo {
                             fromNotification: false,
                           );
                         },
+                        shape: StadiumBorder(),
+                        color: Theme.of(context).primaryColor,
+                        padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
                         child: Text(
                           S.of(context).yes,
-                          style: TextStyle(fontSize: 17),
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontFamily: 'Europa',
+                              color: Colors.white),
                         ),
                       ),
                     ],
