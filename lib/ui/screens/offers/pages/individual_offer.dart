@@ -455,6 +455,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
             maxLength: 100,
             error: getValidationError(context, snapshot.error),
             formatters: [FilteringTextInputFormatter.allow(Regex.numericRegex)],
+            keyboardType: TextInputType.number,
           );
         },
       ),
