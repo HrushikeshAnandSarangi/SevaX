@@ -937,13 +937,13 @@ class _IndividualOfferState extends State<IndividualOffer> {
                             initialData: false,
                             stream: _bloc.isPublicVisible,
                             builder: (context, snapshot) {
-                              return (snapshot.data &&
-                                          widget.timebankId != FlavorConfig.values.timebankId &&
-                                          ((offerType == RequestType.LENDING_OFFER &&
-                                              _bloc.lendingOfferType == 0)) ||
+                              return snapshot.data ||
+                                      ((offerType == RequestType.LENDING_OFFER &&
+                                          _bloc.lendingOfferType == 0)) ||
                                       (offerType == RequestType.LENDING_OFFER &&
-                                          _bloc.lendingOfferType == 1 &&
-                                          lendingitemsShowPublic))
+                                              _bloc.lendingOfferType == 1 &&
+                                              lendingitemsShowPublic) &&
+                                          widget.timebankId != FlavorConfig.values.timebankId
                                   ? Padding(
                                       padding: const EdgeInsets.symmetric(vertical: 10),
                                       child: StreamBuilder<bool>(
