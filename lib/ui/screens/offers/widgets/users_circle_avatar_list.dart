@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/offer_participants_model.dart';
 import 'package:sevaexchange/ui/screens/offers/bloc/offer_bloc.dart';
@@ -29,8 +30,8 @@ class UserCircleAvatarList extends StatelessWidget {
           children: <Widget>[
             Text(
                 sizeOfClass == null
-                    ? "${snapshot.data.length} ${L.of(context).people_signed_up_text}"
-                    : "${snapshot.data.length}/$sizeOfClass ${L.of(context).people_signed_up_text}",
+                    ? "${snapshot.data.length} ${S.of(context).people_signed_up_text}"
+                    : "${snapshot.data.length}/$sizeOfClass ${S.of(context).people_signed_up_text}",
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
             Container(
               height: 50,

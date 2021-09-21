@@ -100,7 +100,7 @@ Widget permissionsAlertDialog(BuildContext context) {
   return AlertDialog(
     title: Text(S.of(context).alert),
     content: Text(
-        "${L.of(context).this_action_is_restricted_for_you_by_the_owner_of_this} Seva Community."),
+        "${S.of(context).this_action_is_restricted_for_you_by_the_owner_of_this} Seva Community."),
     actions: [
       CustomTextButton(
         shape: StadiumBorder(),

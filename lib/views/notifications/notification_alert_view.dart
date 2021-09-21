@@ -152,7 +152,7 @@ class _NotificationAlertState extends State<NotificationAlert> {
                   lineDivider,
                   NotificationWidgetSwitch(
                     isTurnedOn: getCurrentStatus('TYPE_MESSAGING_NOTIFICATION'),
-                    title: "${L.of(context).notification_for_new_messages}.",
+                    title: "${S.of(context).notification_for_new_messages}.",
                     onPressed: (bool status) {
                       NotificationWidgetSwitch.updatePersonalNotifications(
                         userEmail: SevaCore.of(context).loggedInUser.email,
@@ -166,7 +166,7 @@ class _NotificationAlertState extends State<NotificationAlert> {
                   //feeds
                   NotificationWidgetSwitch(
                     isTurnedOn: getCurrentStatus('TYPE_FEEDS_NOTIFICATION'),
-                    title: "${L.of(context).feeds_notification_text}",
+                    title: "${S.of(context).feeds_notification_text}",
                     onPressed: (bool status) {
                       NotificationWidgetSwitch.updatePersonalNotifications(
                         userEmail: SevaCore.of(context).loggedInUser.email,

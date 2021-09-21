@@ -185,7 +185,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                               _bloc.onPlaceNameChanged(value);
                               // title = value;
                             },
-                            hint: L.of(context).name_of_place_hint,
+                            hint: S.of(context).name_of_place_hint,
                             maxLength: null,
                             error: getAddPlaceValidationError(context, snapshot.error),
                           );
@@ -369,7 +369,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             currentNode: _bathrooms,
                             nextNode: _commonSPace,
                             value: snapshot.data,
-                            heading: "${L.of(context).bath_rooms}",
+                            heading: "${S.of(context).bath_rooms}",
                             onChanged: (String value) {
                               _bloc.onBathRoomsChanged(value);
                               // title = value;
@@ -390,7 +390,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             currentNode: _commonSPace,
                             nextNode: _houseRules,
                             value: snapshot.data,
-                            heading: "${L.of(context).common_spaces}",
+                            heading: "${S.of(context).common_spaces}",
                             onChanged: (String value) {
                               _bloc.onCommonSpacesChanged(value);
                               // title = value;
@@ -414,7 +414,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                               _bloc.onHouseRulesChanged(value);
                               // title = value;
                             },
-                            hint: L.of(context).house_rules_hint,
+                            hint: S.of(context).house_rules_hint,
                             minLines: 2,
                             maxLines: 2,
                             maxLength: null,
@@ -431,7 +431,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             decoration: InputDecoration(
                                 prefixIcon: Icon(Icons.attach_money),
                                 hintText: S.of(context).request_min_donation_hint +
-                                    L.of(context).estimated_value_hint_place,
+                                    S.of(context).estimated_value_hint_place,
                                 errorText: getAddPlaceValidationError(context, snapshot.error)),
                             controller: _estimatedValueController,
                             currentNode: _estimatedValue,

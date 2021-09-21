@@ -1346,7 +1346,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         photoUrl: notification.senderPhotoUrl ?? defaultUserImageURL,
                         title: '${model.individualOfferDataModel.title}',
                         subTitle:
-                            "${model.lendingOfferDetailsModel.lendingModel.lendingType == LendingType.PLACE ? L.of(context).borrower_departed_provide_feedback : L.of(context).borrower_returned_items_feedback}",
+                            "${model.lendingOfferDetailsModel.lendingModel.lendingType == LendingType.PLACE ? S.of(context).borrower_departed_provide_feedback : S.of(context).borrower_returned_items_feedback}",
                         onDismissed: () {
                           NotificationsRepository.readUserNotification(notification.id, user.email);
                         },

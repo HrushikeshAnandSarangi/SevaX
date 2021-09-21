@@ -375,7 +375,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                         role: memberType(
                             widget.timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
                         child: _optionRadioButton(
-                            title: L.of(context).lend,
+                            title: S.of(context).lend_text,
                             value: RequestType.LENDING_OFFER,
                             groupvalue:
                                 snapshot.data != null ? snapshot.data : RequestType.LENDING_OFFER,
@@ -385,11 +385,11 @@ class _IndividualOfferState extends State<IndividualOffer> {
                               _bloc.onTypeChanged(data);
                               offerType = data;
                               title_hint = (_bloc.lendingOfferType == 0
-                                  ? L.of(context).lending_offer_title_hint_place
-                                  : L.of(context).lending_offer_title_hint_item);
+                                  ? S.of(context).lending_offer_title_hint_place
+                                  : S.of(context).lending_offer_title_hint_item);
                               description_hint = (_bloc.lendingOfferType == 0
-                                  ? L.of(context).lending_offer_description_hint_place
-                                  : L.of(context).lending_offer_description_hint_item);
+                                  ? S.of(context).lending_offer_description_hint_place
+                                  : S.of(context).lending_offer_description_hint_item);
 
                               setState(() {});
                             }),
@@ -1243,7 +1243,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                         } else {
                                           errorDialog(
                                             context: context,
-                                            error: L.of(context).offer_start_date_validation,
+                                            error: S.of(context).offer_start_date_validation,
                                           );
                                         }
                                       }
@@ -1627,11 +1627,11 @@ class _IndividualOfferState extends State<IndividualOffer> {
                         _bloc.lendingOfferType = val;
                       });
                       title_hint = (_bloc.lendingOfferType == 0
-                          ? L.of(context).lending_offer_title_hint_place
-                          : L.of(context).lending_offer_title_hint_item);
+                          ? S.of(context).lending_offer_title_hint_place
+                          : S.of(context).lending_offer_title_hint_item);
                       description_hint = (_bloc.lendingOfferType == 0
-                          ? L.of(context).lending_offer_description_hint_place
-                          : L.of(context).lending_offer_description_hint_item);
+                          ? S.of(context).lending_offer_description_hint_place
+                          : S.of(context).lending_offer_description_hint_item);
                     }
                   },
                   //groupValue: sharedValue,
@@ -1646,8 +1646,8 @@ class _IndividualOfferState extends State<IndividualOffer> {
           children: [
             Text(
               _bloc.lendingOfferType == 0
-                  ? L.of(context).select_a_place_lending
-                  : L.of(context).select_item_for_lending,
+                  ? S.of(context).select_a_place_lending
+                  : S.of(context).select_item_for_lending,
               style: TextStyle(
                 fontSize: 16,
                 //fontWeight: FontWeight.bold,
@@ -1835,7 +1835,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                 Container(
                   width: MediaQuery.of(context).size.width * 0.68,
                   child: Text(
-                    L.of(context).request_agreement_form_component_text,
+                    S.of(context).request_agreement_form_component_text,
                     style: TextStyle(fontSize: 14),
                     softWrap: true,
                   ),
@@ -1915,11 +1915,11 @@ class _IndividualOfferState extends State<IndividualOffer> {
                     _bloc.lendingOfferType == 0
                         ? errorDialog(
                             context: context,
-                            error: L.of(context).select_a_place_lending,
+                            error: S.of(context).select_a_place_lending,
                           )
                         : errorDialog(
                             context: context,
-                            error: L.of(context).select_item_for_lending,
+                            error: S.of(context).select_item_for_lending,
                           );
                     return;
                   }
@@ -2021,7 +2021,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
         ),
         SizedBox(height: 6),
         Text(
-          L.of(context).lending_offer_location_hint,
+          S.of(context).lending_offer_location_hint,
           style: TextStyle(fontSize: 15),
           softWrap: true,
         ),

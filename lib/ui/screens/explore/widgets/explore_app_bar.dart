@@ -78,7 +78,7 @@ class ExplorePageAppBar extends PreferredSize {
                       controller: controller,
                       onChanged: onSearchChanged,
                       decoration: InputDecoration(
-                        hintText: L.of(context).try_oska_postal_code,
+                        hintText: S.of(context).try_oska_postal_code,
                         hintStyle: TextStyle(color: Colors.grey, fontSize: 12),
                         border: OutlineInputBorder(
                           borderSide: BorderSide.none,

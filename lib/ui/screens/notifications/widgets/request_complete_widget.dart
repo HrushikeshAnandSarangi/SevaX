@@ -212,7 +212,7 @@ class RequestCompleteWidget extends StatelessWidget {
                   padding: EdgeInsets.all(8.0),
                   child: Center(
                     child: Text(
-                      "${S.of(context).by_approving_you_accept} ${userModel.fullname} ${L.of(context).has_worked_for_text} $credits ${L.of(context).hours_text}",
+                      "${S.of(context).by_approving_you_accept} ${userModel.fullname} ${S.of(context).has_worked_for_text} $credits ${S.of(context).hours_text}",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontStyle: FontStyle.italic,
