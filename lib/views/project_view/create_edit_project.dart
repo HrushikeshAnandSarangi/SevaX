@@ -518,8 +518,13 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   projectModel.registrationLink = value;
                 },
                 validator: (value) {
-                  if (value.isEmpty) {
-                    return null;
+                  RegExp regExp = RegExp(
+                    r'(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])',
+                    caseSensitive: false,
+                    multiLine: false,
+                  );
+                  if (value.isNotEmpty && !regExp.hasMatch(value)) {
+                    return 'Add valid registration url';
                   } else {
                     projectModel.registrationLink = value;
                   }
@@ -876,8 +881,9 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                             if (projectModel.isRecurring &&
                                 projectModel.recurringDays.length == 0) {
                               showDialogForTitle(
-                                  dialogTitle:
-                                  S.of(context).validation_error_empty_recurring_days);
+                                  dialogTitle: S
+                                      .of(context)
+                                      .validation_error_empty_recurring_days);
                               return;
                             }
                             showProgressDialog(S.of(context).creating_project);
