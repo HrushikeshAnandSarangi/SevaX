@@ -1807,7 +1807,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
         ),
         SizedBox(height: 12),
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+         // mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Column(
@@ -1840,9 +1840,8 @@ class _IndividualOfferState extends State<IndividualOffer> {
                     }),
               ],
             ),
+            Spacer(),
             Container(
-              alignment: Alignment.bottomCenter,
-              margin: EdgeInsets.only(right: 12),
               width: 90,
               height: 32,
               child: CustomTextButton(

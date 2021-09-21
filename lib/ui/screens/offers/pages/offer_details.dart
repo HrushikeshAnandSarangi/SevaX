@@ -251,7 +251,8 @@ class OfferDetails extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          subtitle: Text('${offerModel.cashModel.offerCurrencyType} ${offerModel.cashModel.targetAmount}'),
+          subtitle: Text(
+              '${offerModel.cashModel.offerCurrencyType} ${offerModel.cashModel.targetAmount}'),
           leading: Image.asset(
             offerModel.type == RequestType.CASH
                 ? SevaAssetIcon.donateCash
@@ -703,34 +704,39 @@ class OfferDetails extends StatelessWidget {
   }
 
   Widget deleteActionButton(bool isAccepted, BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(right: 10),
-      width: isAccepted ? 150 : 120,
-      height: 32,
-      child: CustomTextButton(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
+    return Padding(
+      padding: EdgeInsets.only(bottom: 8.0),
+      child: Container(
+        margin: EdgeInsets.only(
+          right: 10,
         ),
-        padding: EdgeInsets.all(0),
-        color: Colors.green,
-        child: Row(
-          children: <Widget>[
-            SizedBox(width: 1),
-            Spacer(),
-            Text(
-              '${S.of(context).delete}',
-              style: TextStyle(
-                color: Colors.white,
+        width: isAccepted ? 150 : 120,
+        height: 32,
+        child: CustomTextButton(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          padding: EdgeInsets.all(0),
+          color: Colors.green,
+          child: Row(
+            children: <Widget>[
+              SizedBox(width: 1),
+              Spacer(),
+              Text(
+                '${S.of(context).delete}',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
               ),
-            ),
-            Spacer(
-              flex: 1,
-            ),
-          ],
+              Spacer(
+                flex: 1,
+              ),
+            ],
+          ),
+          onPressed: () async {
+            deleteOffer(context: context, offerId: offerModel.id);
+          },
         ),
-        onPressed: () async {
-          deleteOffer(context: context, offerId: offerModel.id);
-        },
       ),
     );
   }
@@ -880,10 +886,13 @@ class OfferDetails extends StatelessWidget {
                   children: <Widget>[
                     Spacer(),
                     CustomTextButton(
+                        shape: StadiumBorder(),
+                        padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                        color: FlavorConfig.values.theme.primaryColor,
                         child: Text(
                           S.of(context).skip_for_now,
                           style: TextStyle(
-                              color: FlavorConfig.values.theme.primaryColor),
+                              color: Colors.white, fontFamily: 'Europa'),
                         ),
                         onPressed: () {
                           Navigator.of(bc).pop();
