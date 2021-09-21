@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:developer';
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -13,16 +12,13 @@ import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
-import 'package:sevaexchange/repositories/storage_repository.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:sevaexchange/views/core.dart';
 
 import 'package:image_cropper/image_cropper.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../flavor_config.dart';
 
 class ImageUrlView extends StatefulWidget {
   final Function(String link) onLinkCreated;
