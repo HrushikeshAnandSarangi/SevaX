@@ -213,8 +213,9 @@ class _ApproveLendingOfferState extends State<ApproveLendingOffer> {
                   return;
                 }
 
-                if (widget.lendingOfferAcceptorModel.endDate >=
-                    widget.offerModel.lendingOfferDetailsModel.endDate) {
+                if (widget.offerModel.lendingOfferDetailsModel.lendingOfferTypeMode == 'ONE_TIME' &&
+                    widget.lendingOfferAcceptorModel.endDate >=
+                        widget.offerModel.lendingOfferDetailsModel.endDate) {
                   // widget.offerModel.lendingOfferDetailsModel.lendingModel
                   //             .lendingType ==
                   //         LendingType.PLACE
@@ -232,9 +233,11 @@ class _ApproveLendingOfferState extends State<ApproveLendingOffer> {
                   agreementId = createCryptoRandomString();
                   String agreementLink = await BorrowAgreementPdf().borrowAgreementPdf(
                       context,
-                      null, //request model
+                      null,
+                      //request model
                       widget.offerModel.lendingOfferDetailsModel.lendingModel,
-                      null, // borrow request items list
+                      null,
+                      // borrow request items list
                       widget.lendingOfferAcceptorModel.acceptorName,
                       widget.offerModel.lendingOfferDetailsModel.lendingOfferAgreementName,
                       true,
