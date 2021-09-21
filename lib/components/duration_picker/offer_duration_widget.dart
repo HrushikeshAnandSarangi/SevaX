@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
+import 'package:sevaexchange/widgets/hide_widget.dart';
 
 import 'calendar_picker.dart';
 
@@ -11,10 +13,15 @@ class OfferDurationWidget extends StatefulWidget {
   final String title;
   final DateTime startTime;
   final DateTime endTime;
+  final bool hideEndDate;
 
-  OfferDurationWidget(
-      {Key key, @required this.title, this.endTime, this.startTime})
-      : super(key: key);
+  OfferDurationWidget({
+    Key key,
+    @required this.title,
+    this.endTime,
+    this.startTime,
+    this.hideEndDate = false,
+  }) : super(key: key);
 
   @override
   OfferDurationWidgetState createState() => OfferDurationWidgetState();
@@ -48,12 +55,14 @@ class OfferDurationWidgetState extends State<OfferDurationWidget> {
               children: <Widget>[
                 startWidget,
                 SizedBox(width: 16),
-                endWidget,
+                HideWidget(
+                  hide: widget.hideEndDate,
+                  child: endWidget,
+                ),
               ],
             ),
           ],
         ),
-//        ),
       ),
     );
   }
@@ -107,14 +116,16 @@ class OfferDurationWidgetState extends State<OfferDurationWidget> {
       child: InkWell(
         splashColor: Color(0xffe5e5e5),
         onTap: () async {
+          logger.d(widget.hideEndDate.toString() + "<<<___");
           Navigator.of(context)
               .push(MaterialPageRoute<List<DateTime>>(
             builder: (context) => CalendarPicker(
-                widget.title.replaceAll('*', ''),
-                _calendarState,
-                startTime ?? DateTime.now(),
-                endTime ?? DateTime.now(),
-                type == DurationType.START ? 'start' : 'end'),
+                hideEndDate: widget.hideEndDate,
+                title: widget.title.replaceAll('*', ''),
+                key: _calendarState,
+                startDate: startTime ?? DateTime.now(),
+                endDate: endTime ?? DateTime.now(),
+                selectedstartorend: type == DurationType.START ? 'start' : 'end'),
             // Open calendar
           ))
               .then((List<DateTime> dateList) {
@@ -157,8 +168,7 @@ class OfferDurationWidgetState extends State<OfferDurationWidget> {
       return '${type == DurationType.START ? S.of(context).start : S.of(context).end}\n${S.of(context).date_time}';
     }
     String dateTimeString = '';
-    DateFormat format =
-        DateFormat('dd MMM,\nhh:mm a', Locale(getLangTag()).toLanguageTag());
+    DateFormat format = DateFormat('dd MMM,\nhh:mm a', Locale(getLangTag()).toLanguageTag());
     dateTimeString = format.format(dateTime);
     return dateTimeString;
   }

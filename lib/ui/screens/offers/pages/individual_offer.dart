@@ -1750,6 +1750,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
             }),
         SizedBox(height: 20),
         OfferDurationWidget(
+          hideEndDate: _bloc.lendingOfferTypeMode != 1,
           title: S.of(context).offer_duration,
           startTime: widget.offerModel != null
               ? DateTime.fromMillisecondsSinceEpoch(
