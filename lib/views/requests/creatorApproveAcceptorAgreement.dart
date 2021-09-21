@@ -34,12 +34,10 @@ class CreatorApproveAcceptorAgreeement extends StatefulWidget {
   });
 
   @override
-  _CreatorApproveAcceptorAgreeementState createState() =>
-      _CreatorApproveAcceptorAgreeementState();
+  _CreatorApproveAcceptorAgreeementState createState() => _CreatorApproveAcceptorAgreeementState();
 }
 
-class _CreatorApproveAcceptorAgreeementState
-    extends State<CreatorApproveAcceptorAgreeement> {
+class _CreatorApproveAcceptorAgreeementState extends State<CreatorApproveAcceptorAgreeement> {
   GeoFirePoint location;
   String selectedAddress = '';
   String doAndDonts = '';
@@ -65,16 +63,14 @@ class _CreatorApproveAcceptorAgreeementState
         centerTitle: true,
         title: Text(
           widget.requestModel.roomOrTool == 'PLACE'
-              ? 'Accept Room Borrow Request'
-              : 'Accept Item Borrow request',
-          style: TextStyle(
-              fontFamily: "Europa", fontSize: 19, color: Colors.white),
+              ? L.of(context).accept_place_borrow_request
+              : L.of(context).accept_item_borrow_request,
+          style: TextStyle(fontFamily: "Europa", fontSize: 19, color: Colors.white),
         ),
       ),
       body: FutureBuilder<BorrowAcceptorModel>(
           future: FirestoreManager.getBorrowRequestAcceptorModel(
-              requestId: widget.requestModel.id,
-              acceptorEmail: widget.acceptorUserModel.email),
+              requestId: widget.requestModel.id, acceptorEmail: widget.acceptorUserModel.email),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return LoadingIndicator();
@@ -221,8 +217,7 @@ class _CreatorApproveAcceptorAgreeementState
                 id: loggedInUser.sevaUserID,
                 name: loggedInUser.fullname,
                 photoUrl: loggedInUser.photoURL,
-                type: widget.requestModel.requestMode ==
-                        RequestMode.TIMEBANK_REQUEST
+                type: widget.requestModel.requestMode == RequestMode.TIMEBANK_REQUEST
                     ? ChatType.TYPE_TIMEBANK
                     : ChatType.TYPE_PERSONAL,
               );
@@ -272,15 +267,16 @@ class _CreatorApproveAcceptorAgreeementState
                 borrowAcceptorModel.borrowAgreementLink != null &&
                         borrowAcceptorModel.borrowAgreementLink != ''
                     ? S.of(context).review_before_proceding_text
-                    : S.of(context).lender_not_accepted_request_msg,
+                    : (widget.requestModel.roomOrTool == 'PLACE'
+                        ? L.of(context).lender_not_accepted_request_msg_place
+                        : L.of(context).lender_not_accepted_request_msg_item),
                 style: TextStyle(fontSize: 15),
                 softWrap: true,
               ),
             ),
             Image(
               width: 60,
-              image: AssetImage(
-                  'lib/assets/images/request_offer_agreement_icon.png'),
+              image: AssetImage('lib/assets/images/request_offer_agreement_icon.png'),
             ),
           ],
         ),
@@ -288,8 +284,7 @@ class _CreatorApproveAcceptorAgreeementState
         borrowAcceptorModel.borrowAgreementLink != null &&
                 borrowAcceptorModel.borrowAgreementLink != ''
             ? Container(
-                decoration:
-                    BoxDecoration(border: Border.all(color: Colors.grey[200])),
+                decoration: BoxDecoration(border: Border.all(color: Colors.grey[200])),
                 alignment: Alignment.center,
                 width: 300,
                 height: 360,
@@ -339,9 +334,7 @@ class _CreatorApproveAcceptorAgreeementState
                     if (borrowAcceptorModel.borrowAgreementLink != null &&
                         borrowAcceptorModel.borrowAgreementLink != '') {
                       await openPdfViewer(
-                          borrowAcceptorModel.borrowAgreementLink,
-                          'Review Agreement',
-                          context);
+                          borrowAcceptorModel.borrowAgreementLink, 'Review Agreement', context);
                     } else {
                       return;
                     }
@@ -365,8 +358,7 @@ class _CreatorApproveAcceptorAgreeementState
     usersSet.add(user.email);
     model.approvedUsers = usersSet.toList();
 
-    (model.numberOfApprovals <= model.approvedUsers.length ||
-            model.approvedUsers.length == 0)
+    (model.numberOfApprovals <= model.approvedUsers.length || model.approvedUsers.length == 0)
         ? model.accepted == true
         : null;
 

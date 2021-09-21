@@ -252,7 +252,7 @@ class LendingOfferParticipants extends StatelessWidget {
             color: HexColor('#FAFAFA'),
             onPressed: () {},
             child: Text(
-              S.of(context).items_taken,
+              S.of(context).items_collected,
               style: TextStyle(color: Colors.black),
             ),
           )
@@ -263,7 +263,7 @@ class LendingOfferParticipants extends StatelessWidget {
             color: HexColor('#FAFAFA'),
             onPressed: () {},
             child: Text(
-              S.of(context).arrived_text,
+              S.of(context).checked_in_text,
               style: TextStyle(color: Colors.black),
             ),
           )
@@ -299,6 +299,7 @@ class LendingOfferParticipants extends StatelessWidget {
               Icons.chat_bubble,
               color: Colors.grey,
             ),
+            padding: EdgeInsets.zero,
             iconSize: 30,
             onPressed: () {
               onMessageClick(
@@ -318,12 +319,10 @@ class LendingOfferParticipants extends StatelessWidget {
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               primary: Colors.grey[300],
-              shape: new RoundedRectangleBorder(
-                borderRadius: new BorderRadius.circular(30.0),
-              ),
+              shape: StadiumBorder(),
             ),
             onPressed: () async {
-              //Dialog box also to restrict approving more than one Borrower at a time.
+              //Dialog box also to rsestrict approving more than one Borrower at a time.
               bool isCurrentlyLent = false;
               if (offerModel.lendingOfferDetailsModel.approvedUsers != null &&
                   offerModel.lendingOfferDetailsModel.approvedUsers.length >
@@ -352,18 +351,16 @@ class LendingOfferParticipants extends StatelessWidget {
             },
             child: Text(
               S.of(context).approve,
-              style: TextStyle(color: Colors.black, fontSize: 11.5),
+              style: TextStyle(color: Colors.black, fontSize: 11),
             ),
           ),
           SizedBox(
-            width: 8,
+            width: 5,
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               primary: Colors.grey[300],
-              shape: new RoundedRectangleBorder(
-                borderRadius: new BorderRadius.circular(30.0),
-              ),
+              shape: StadiumBorder(),
             ),
             onPressed: () {
               LendingOffersRepo.updateOfferAcceptorActionRejected(

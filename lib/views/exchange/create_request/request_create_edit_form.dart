@@ -6,6 +6,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/utils/extensions.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/calendar_events/models/kloudless_models.dart';
@@ -534,37 +535,6 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm> with Widge
                     ),
                   ),
                   TransactionsMatrixCheck(
-                    upgradeDetails: AppConfig.upgradePlanBannerModel.onetomany_requests,
-                    transaction_matrix_type: 'onetomany_requests',
-                    comingFrom: widget.comingFrom,
-                    child: ConfigurationCheck(
-                      actionType: 'create_onetomany_request',
-                      role: memberType(timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
-                      child: requestUtils.optionRadioButton<RequestType>(
-                        title: S.of(context).one_to_many,
-                        // TODO => sentence case
-                        value: RequestType.ONE_TO_MANY_REQUEST,
-                        isEnabled: !widget.isOfferRequest,
-                        groupvalue: requestModel.requestType,
-                        onChanged: (value) {
-                          //requestModel.isRecurring = true;
-                          requestModel.requestType = value;
-                          //By default instructor for One To Many Requests is the creator
-                          instructorAdded = true;
-                          requestModel.selectedInstructor = BasicUserDetails(
-                            fullname: SevaCore.of(context).loggedInUser.fullname,
-                            email: SevaCore.of(context).loggedInUser.email,
-                            photoURL: SevaCore.of(context).loggedInUser.photoURL,
-                            sevaUserID: SevaCore.of(context).loggedInUser.sevaUserID,
-                          );
-                          AppConfig.helpIconContextMember =
-                              HelpContextMemberType.one_to_many_requests;
-                          setState(() => {});
-                        },
-                      ),
-                    ),
-                  ),
-                  TransactionsMatrixCheck(
                     upgradeDetails: AppConfig.upgradePlanBannerModel.borrow_requests,
                     transaction_matrix_type: 'borrow_request',
                     comingFrom: widget.comingFrom,
@@ -582,6 +552,37 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm> with Widge
                           instructorAdded = false;
                           requestModel.selectedInstructor = null;
                           AppConfig.helpIconContextMember = HelpContextMemberType.time_requests;
+                          setState(() => {});
+                        },
+                      ),
+                    ),
+                  ),
+                  TransactionsMatrixCheck(
+                    upgradeDetails: AppConfig.upgradePlanBannerModel.onetomany_requests,
+                    transaction_matrix_type: 'onetomany_requests',
+                    comingFrom: widget.comingFrom,
+                    child: ConfigurationCheck(
+                      actionType: 'create_onetomany_request',
+                      role: memberType(timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
+                      child: requestUtils.optionRadioButton<RequestType>(
+                        title: S.of(context).one_to_many.sentenceCase(),
+                        // TODO => sentence case
+                        value: RequestType.ONE_TO_MANY_REQUEST,
+                        isEnabled: !widget.isOfferRequest,
+                        groupvalue: requestModel.requestType,
+                        onChanged: (value) {
+                          //requestModel.isRecurring = true;
+                          requestModel.requestType = value;
+                          //By default instructor for One To Many Requests is the creator
+                          instructorAdded = true;
+                          requestModel.selectedInstructor = BasicUserDetails(
+                            fullname: SevaCore.of(context).loggedInUser.fullname,
+                            email: SevaCore.of(context).loggedInUser.email,
+                            photoURL: SevaCore.of(context).loggedInUser.photoURL,
+                            sevaUserID: SevaCore.of(context).loggedInUser.sevaUserID,
+                          );
+                          AppConfig.helpIconContextMember =
+                              HelpContextMemberType.one_to_many_requests;
                           setState(() => {});
                         },
                       ),

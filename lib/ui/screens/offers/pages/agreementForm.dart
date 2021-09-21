@@ -74,8 +74,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
   Color primaryColor = FlavorConfig.values.theme.primaryColor;
   AgreementTemplateModel selectedAgreementTemplate;
   AgreementTemplateModel agreementTemplateModel = AgreementTemplateModel();
-  AgreementFormSelectionModel agreementFormSelectionModel =
-      AgreementFormSelectionModel();
+  AgreementFormSelectionModel agreementFormSelectionModel = AgreementFormSelectionModel();
   bool saveAsTemplate = false;
   String templateName = '';
   bool templateFound = false;
@@ -115,8 +114,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
         } else {
           if (templateName != s) {
             setState(() {});
-            SearchManager.searchAgrrementTemplateForDuplicate(
-                    queryString: s.trim())
+            SearchManager.searchAgrrementTemplateForDuplicate(queryString: s.trim())
                 .catchError((onError) {
               templateFound = false;
             }).then((commFound) {
@@ -182,19 +180,16 @@ class _OfferAgreementFormState extends State<AgreementForm> {
           widget.placeOrItem == LendingType.PLACE.readable
               ? S.of(context).choose_place_agreement
               : S.of(context).choose_item_agreement,
-          style: TextStyle(
-              fontFamily: "Europa", fontSize: 20, color: Colors.white),
+          style: TextStyle(fontFamily: "Europa", fontSize: 20, color: Colors.white),
         ),
       ),
       body: SingleChildScrollView(
-        child: (agreementDocumentType ==
-                AgreementDocumentType.NO_AGREEMENT.readable)
+        child: (agreementDocumentType == AgreementDocumentType.NO_AGREEMENT.readable)
             ? noAgreementWidget
             : Form(
                 key: _formKey,
                 child: Padding(
-                  padding:
-                      const EdgeInsets.only(top: 15.0, left: 30, right: 30),
+                  padding: const EdgeInsets.only(top: 15.0, left: 30, right: 30),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
@@ -231,13 +226,11 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                       ),
 
                       //Below two widgets for previous templates created
-                      agreementDocumentType ==
-                              AgreementDocumentType.TEMPLATE.readable
+                      agreementDocumentType == AgreementDocumentType.TEMPLATE.readable
                           ? searchFieldWidget()
                           : Container(),
 
-                      agreementDocumentType ==
-                              AgreementDocumentType.TEMPLATE.readable
+                      agreementDocumentType == AgreementDocumentType.TEMPLATE.readable
                           ? buildTemplateWidget()
                           : Container(),
 
@@ -288,7 +281,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                               Text(
                                 S.of(context).liability_damage,
                                 style: TextStyle(
-                                  fontSize: 15,
+                                  fontSize: 13,
                                   fontWeight: FontWeight.bold,
                                   fontFamily: 'Europa',
                                   color: Colors.black,
@@ -304,16 +297,14 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                                 checkColor: Colors.white,
                                 activeColor: Colors.green,
                                 value: selectedAgreementTemplate != null
-                                    ? selectedAgreementTemplate
-                                            .isDamageLiability ??
+                                    ? selectedAgreementTemplate.isDamageLiability ??
                                         isDamageLiability
                                     : isDamageLiability,
                                 onChanged: (value) {
                                   setState(() {
                                     isDamageLiability = value;
                                     if (selectedAgreementTemplate != null) {
-                                      selectedAgreementTemplate
-                                          .isDamageLiability = value;
+                                      selectedAgreementTemplate.isDamageLiability = value;
                                     }
                                   });
                                 },
@@ -326,7 +317,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                               Text(
                                 S.of(context).use_disclaimer,
                                 style: TextStyle(
-                                  fontSize: 15,
+                                  fontSize: 13,
                                   fontWeight: FontWeight.bold,
                                   fontFamily: 'Europa',
                                   color: Colors.black,
@@ -342,16 +333,13 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                                 checkColor: Colors.white,
                                 activeColor: Colors.green,
                                 value: selectedAgreementTemplate != null
-                                    ? selectedAgreementTemplate
-                                            .isUseDisclaimer ??
-                                        isUseDisclaimer
+                                    ? selectedAgreementTemplate.isUseDisclaimer ?? isUseDisclaimer
                                     : isUseDisclaimer,
                                 onChanged: (value) {
                                   setState(() {
                                     isUseDisclaimer = value;
                                     if (selectedAgreementTemplate != null) {
-                                      selectedAgreementTemplate
-                                          .isUseDisclaimer = value;
+                                      selectedAgreementTemplate.isUseDisclaimer = value;
                                     }
                                   });
                                 },
@@ -360,13 +348,13 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                           ),
                           widget.placeOrItem == LendingType.ITEM.readable
                               ? Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  // mainAxisAlignment:
+                                  //     MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       S.of(context).delivery_return_equipment,
                                       style: TextStyle(
-                                        fontSize: 15,
+                                        fontSize: 13,
                                         fontWeight: FontWeight.bold,
                                         fontFamily: 'Europa',
                                         color: Colors.black,
@@ -382,17 +370,14 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                                       checkColor: Colors.white,
                                       activeColor: Colors.green,
                                       value: selectedAgreementTemplate != null
-                                          ? selectedAgreementTemplate
-                                                  .isDeliveryReturn ??
+                                          ? selectedAgreementTemplate.isDeliveryReturn ??
                                               isDeliveryReturn
                                           : isDeliveryReturn,
                                       onChanged: (value) {
                                         setState(() {
                                           isDeliveryReturn = value;
-                                          if (selectedAgreementTemplate !=
-                                              null) {
-                                            selectedAgreementTemplate
-                                                .isDeliveryReturn = value;
+                                          if (selectedAgreementTemplate != null) {
+                                            selectedAgreementTemplate.isDeliveryReturn = value;
                                           }
                                         });
                                       },
@@ -400,13 +385,12 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                                   ],
                                 )
                               : Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       S.of(context).refund_deposit,
                                       style: TextStyle(
-                                        fontSize: 15,
+                                        fontSize: 13,
                                         fontWeight: FontWeight.bold,
                                         fontFamily: 'Europa',
                                         color: Colors.black,
@@ -422,17 +406,14 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                                       checkColor: Colors.white,
                                       activeColor: Colors.green,
                                       value: selectedAgreementTemplate != null
-                                          ? selectedAgreementTemplate
-                                                  .isRefundDepositNeeded ??
+                                          ? selectedAgreementTemplate.isRefundDepositNeeded ??
                                               isRefundDepositNeeded
                                           : isRefundDepositNeeded,
                                       onChanged: (value) {
                                         setState(() {
                                           isRefundDepositNeeded = value;
-                                          if (selectedAgreementTemplate !=
-                                              null) {
-                                            selectedAgreementTemplate
-                                                .isRefundDepositNeeded = value;
+                                          if (selectedAgreementTemplate != null) {
+                                            selectedAgreementTemplate.isRefundDepositNeeded = value;
                                           }
                                         });
                                       },
@@ -441,13 +422,12 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                                 ),
                           widget.placeOrItem == LendingType.ITEM.readable
                               ? Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       S.of(context).maintain_repair,
                                       style: TextStyle(
-                                        fontSize: 15,
+                                        fontSize: 13,
                                         fontWeight: FontWeight.bold,
                                         fontFamily: 'Europa',
                                         color: Colors.black,
@@ -463,17 +443,14 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                                       checkColor: Colors.white,
                                       activeColor: Colors.green,
                                       value: selectedAgreementTemplate != null
-                                          ? selectedAgreementTemplate
-                                                  .isMaintainRepair ??
+                                          ? selectedAgreementTemplate.isMaintainRepair ??
                                               isMaintainRepair
                                           : isMaintainRepair,
                                       onChanged: (value) {
                                         setState(() {
                                           isMaintainRepair = value;
-                                          if (selectedAgreementTemplate !=
-                                              null) {
-                                            selectedAgreementTemplate
-                                                .isMaintainRepair = value;
+                                          if (selectedAgreementTemplate != null) {
+                                            selectedAgreementTemplate.isMaintainRepair = value;
                                           }
                                         });
                                       },
@@ -481,13 +458,12 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                                   ],
                                 )
                               : Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       S.of(context).maintain_clean,
                                       style: TextStyle(
-                                        fontSize: 15,
+                                        fontSize: 13,
                                         fontWeight: FontWeight.bold,
                                         fontFamily: 'Europa',
                                         color: Colors.black,
@@ -503,17 +479,14 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                                       checkColor: Colors.white,
                                       activeColor: Colors.green,
                                       value: selectedAgreementTemplate != null
-                                          ? selectedAgreementTemplate
-                                                  .isMaintainAndclean ??
+                                          ? selectedAgreementTemplate.isMaintainAndclean ??
                                               isMaintainAndclean
                                           : isMaintainAndclean,
                                       onChanged: (value) {
                                         setState(() {
                                           isMaintainAndclean = value;
-                                          if (selectedAgreementTemplate !=
-                                              null) {
-                                            selectedAgreementTemplate
-                                                .isMaintainAndclean = value;
+                                          if (selectedAgreementTemplate != null) {
+                                            selectedAgreementTemplate.isMaintainAndclean = value;
                                           }
                                         });
                                       },
@@ -542,12 +515,10 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                             // initialValue: specificConditions,
                             controller: specificConditionsController,
                             decoration: InputDecoration(
-                              hintText: widget.placeOrItem ==
-                                      LendingType.PLACE.readable
+                              hintText: widget.placeOrItem == LendingType.PLACE.readable
                                   ? S.of(context).place_returned_hint_text
-                                  : S.of(context).item_returned_hint_text,
-                              hintStyle:
-                                  TextStyle(fontSize: 13, color: Colors.grey),
+                                  : L.of(context).item_returned_hint_text,
+                              hintStyle: TextStyle(fontSize: 13, color: Colors.grey),
                               // labelText: 'No. of volunteers',
                             ),
                             keyboardType: TextInputType.text,
@@ -582,8 +553,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                                         saveAsTemplate = false;
                                       });
                                     } else {
-                                      _showSaveAsTemplateDialog()
-                                          .then((templateName) {
+                                      _showSaveAsTemplateDialog().then((templateName) {
                                         if (templateName != null) {
                                           setState(() {
                                             saveAsTemplate = true;
@@ -614,9 +584,8 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                           children: [
                             Container(
                               alignment: Alignment.topCenter,
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.grey[300]),
+                              decoration:
+                                  BoxDecoration(shape: BoxShape.circle, color: Colors.grey[300]),
                               child: Padding(
                                 padding: const EdgeInsets.all(4.0),
                                 child: Icon(
@@ -630,40 +599,26 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                             Expanded(
                               child: RichText(
                                 text: TextSpan(
-                                  style: TextStyle(
-                                      color: Colors.black45, fontSize: 14),
+                                  style: TextStyle(color: Colors.black45, fontSize: 14),
                                   text: S.of(context).login_agreement_message1,
                                   children: <TextSpan>[
                                     emptyTextSpan(),
                                     TextSpan(
-                                      text: S
-                                          .of(context)
-                                          .login_agreement_terms_link,
-                                      style: TextStyle(
-                                          color:
-                                              Theme.of(context).primaryColor),
-                                      recognizer: TapGestureRecognizer()
-                                        ..onTap = showTermsPage,
+                                      text: S.of(context).login_agreement_terms_link,
+                                      style: TextStyle(color: Theme.of(context).primaryColor),
+                                      recognizer: TapGestureRecognizer()..onTap = showTermsPage,
                                     ),
                                     emptyTextSpan(placeHolder: '.'),
                                     // emptyTextSpan(),
                                     TextSpan(
                                       text: ' ' +
-                                          L
-                                              .of(context)
-                                              .agree_to_signature_legal_text +
-                                          S
-                                              .of(context)
-                                              .login_agreement_message2,
+                                          L.of(context).agree_to_signature_legal_text +
+                                          S.of(context).login_agreement_message2,
                                     ),
                                     emptyTextSpan(),
                                     TextSpan(
-                                      text: S
-                                          .of(context)
-                                          .login_agreement_privacy_link,
-                                      style: TextStyle(
-                                          color:
-                                              Theme.of(context).primaryColor),
+                                      text: S.of(context).login_agreement_privacy_link,
+                                      style: TextStyle(color: Theme.of(context).primaryColor),
                                       recognizer: TapGestureRecognizer()
                                         ..onTap = showPrivacyPolicyPage,
                                     ),
@@ -712,8 +667,8 @@ class _OfferAgreementFormState extends State<AgreementForm> {
           // initialValue: documentName,
           decoration: InputDecoration(
             hintText: widget.placeOrItem == LendingType.PLACE.readable
-                ? S.of(context).place_agreement_name_hint
-                : S.of(context).request_title_hint,
+                ? L.of(context).place_agreement_name_hint_place
+                : L.of(context).place_agreement_name_hint_item,
             hintStyle: TextStyle(fontSize: 13, color: Colors.grey),
             // labelText: 'No. of volunteers',
           ),
@@ -816,19 +771,15 @@ class _OfferAgreementFormState extends State<AgreementForm> {
               onPressed: () async {
                 //generate 8 digit alphanumeric code for AgreementId
                 agreementId = createCryptoRandomString();
-                if (agreementDocumentType ==
-                    AgreementDocumentType.NO_AGREEMENT.readable) {
+                if (agreementDocumentType == AgreementDocumentType.NO_AGREEMENT.readable) {
                   //update text on voidcallback funtion for previous page that no agreement was selected
-                  widget.onPdfCreated(
-                      agreementLink, documentName, {}, agreementId);
+                  widget.onPdfCreated(agreementLink, documentName, {}, agreementId);
                   Navigator.of(context).pop();
                 } else {
-                  if (agreementDocumentType ==
-                      AgreementDocumentType.TEMPLATE.readable) {
+                  if (agreementDocumentType == AgreementDocumentType.TEMPLATE.readable) {
                     //update on voidcallback the final model details (check also if user has edited anything from template prefilled data)
                     logger.e("MODEL 2:  " + widget.lendingModel.toString());
-                    agreementLink =
-                        await BorrowAgreementPdf().borrowAgreementPdf(
+                    agreementLink = await BorrowAgreementPdf().borrowAgreementPdf(
                       context,
                       widget.requestModel,
                       widget.lendingModel,
@@ -859,8 +810,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                       'isRefundDepositNeeded': isRefundDepositNeeded,
                       'isMaintainAndclean': isMaintainAndclean,
                     };
-                    widget.onPdfCreated(agreementLink, documentName,
-                        agreementConfig, agreementId);
+                    widget.onPdfCreated(agreementLink, documentName, agreementConfig, agreementId);
 
                     Navigator.of(context).pop();
                     log('PREVIOUS TEMPLATE DONE');
@@ -877,29 +827,21 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                         agreementTemplateModel.id = Utils.getUuid();
                         agreementTemplateModel.timebankId = widget.timebankId;
                         agreementTemplateModel.communityId = widget.communityId;
-                        agreementTemplateModel.createdAt =
-                            DateTime.now().millisecondsSinceEpoch;
+                        agreementTemplateModel.createdAt = DateTime.now().millisecondsSinceEpoch;
                         agreementTemplateModel.isOffer = widget.isOffer;
                         agreementTemplateModel.placeOrItem = widget.placeOrItem;
-                        agreementTemplateModel.isDamageLiability =
-                            isDamageLiability;
-                        agreementTemplateModel.isUseDisclaimer =
-                            isUseDisclaimer;
+                        agreementTemplateModel.isDamageLiability = isDamageLiability;
+                        agreementTemplateModel.isUseDisclaimer = isUseDisclaimer;
 
                         if (widget.placeOrItem == LendingType.ITEM.readable) {
-                          agreementTemplateModel.isDeliveryReturn =
-                              isDeliveryReturn;
-                          agreementTemplateModel.isMaintainRepair =
-                              isMaintainRepair;
+                          agreementTemplateModel.isDeliveryReturn = isDeliveryReturn;
+                          agreementTemplateModel.isMaintainRepair = isMaintainRepair;
                         } else {
-                          agreementTemplateModel.isRefundDepositNeeded =
-                              isRefundDepositNeeded;
-                          agreementTemplateModel.isMaintainAndclean =
-                              isMaintainAndclean;
+                          agreementTemplateModel.isRefundDepositNeeded = isRefundDepositNeeded;
+                          agreementTemplateModel.isMaintainAndclean = isMaintainAndclean;
                         }
 
-                        agreementTemplateModel.specificConditions =
-                            specificConditions;
+                        agreementTemplateModel.specificConditions = specificConditions;
                         agreementTemplateModel.softDelete = false;
 
                         agreementTemplateModel.otherDetails = otherDetails;
@@ -930,8 +872,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                       // agreementFormSelectionModel.isOffer = widget.isOffer;
                       //agreementFormSelectionModel to be stored into LendingOfferModel
 
-                      agreementLink =
-                          await BorrowAgreementPdf().borrowAgreementPdf(
+                      agreementLink = await BorrowAgreementPdf().borrowAgreementPdf(
                         context,
                         widget.requestModel,
                         widget.lendingModel,
@@ -954,8 +895,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                         agreementId,
                       );
 
-                      logger.e('COMES Here 1.5 PDF Link:  ' +
-                          agreementLink.toString());
+                      logger.e('COMES Here 1.5 PDF Link:  ' + agreementLink.toString());
                       agreementConfig = {
                         'specificConditions': specificConditions,
                         'isDamageLiability': isDamageLiability,
@@ -965,8 +905,8 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                         'isRefundDepositNeeded': isRefundDepositNeeded,
                         'isMaintainAndclean': isMaintainAndclean,
                       };
-                      widget.onPdfCreated(agreementLink, documentName,
-                          agreementConfig, agreementId);
+                      widget.onPdfCreated(
+                          agreementLink, documentName, agreementConfig, agreementId);
 
                       Navigator.of(context).pop();
                       log('NEW TEMPLATE CREATED');
@@ -1099,11 +1039,11 @@ class _OfferAgreementFormState extends State<AgreementForm> {
             key: _formKeyElastic,
             decoration: InputDecoration(
               isDense: true,
-
               // labelText: "Enter Email",
-              hintText: S.of(context).search_template_hint,
+              hintText: widget.placeOrItem == LendingType.PLACE.readable
+                  ? L.of(context).search_agreement_hint_place
+                  : L.of(context).search_agreement_hint_item,
               fillColor: Colors.white,
-
               alignLabelWithHint: true,
               prefixIcon: Icon(
                 Icons.search,
@@ -1162,8 +1102,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
     if (agreementDocumentType != AgreementDocumentType.TEMPLATE.readable) {
       return Container();
     } else if (searchTextController.text.trim().length < 3) {
-      return getEmptyWidget(
-          S.of(context).validation_error_search_min_characters);
+      return getEmptyWidget(S.of(context).validation_error_search_min_characters);
     } else {
       return StreamBuilder<List<AgreementTemplateModel>>(
         stream: SearchManager.searchAgreementTemplate(
@@ -1186,16 +1125,14 @@ class _OfferAgreementFormState extends State<AgreementForm> {
 
           List<AgreementTemplateModel> agreementTemplateList = snapshot.data;
 
-          if (agreementTemplateList == null ||
-              agreementTemplateList.length == 0) {
+          if (agreementTemplateList == null || agreementTemplateList.length == 0) {
             return getEmptyWidget(S.of(context).no_templates_found);
           }
           return ListView.builder(
             shrinkWrap: true,
             itemCount: agreementTemplateList.length,
             itemBuilder: (context, index) {
-              AgreementTemplateModel borrowAgreementTemplateModel =
-                  agreementTemplateList[index];
+              AgreementTemplateModel borrowAgreementTemplateModel = agreementTemplateList[index];
               return Padding(
                 padding: const EdgeInsets.only(left: 14),
                 child: ListTile(
@@ -1205,8 +1142,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                   onTap: () => setState(() {
                     value = index;
                     selectedAgreementTemplate = agreementTemplateList[index];
-                    documentNameController.text =
-                        selectedAgreementTemplate.documentName;
+                    documentNameController.text = selectedAgreementTemplate.documentName;
                     specificConditionsController.text =
                         selectedAgreementTemplate.specificConditions;
                   }),
@@ -1274,10 +1210,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                     child: Center(
                       child: Text(
                         S.of(context).template_title,
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontFamily: 'Europa'),
+                        style: TextStyle(color: Colors.white, fontSize: 16, fontFamily: 'Europa'),
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -1301,8 +1234,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                               width: 1.0,
                             ),
                           ),
-                          contentPadding:
-                              EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
+                          contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
                           hintText: S.of(context).template_hint,
                         ),
                         keyboardType: TextInputType.text,
@@ -1312,16 +1244,13 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                           LengthLimitingTextInputFormatter(50),
                         ],
                         onChanged: (value) {
-                          ExitWithConfirmation.of(context).fieldValues[5] =
-                              value;
+                          ExitWithConfirmation.of(context).fieldValues[5] = value;
                         },
                         validator: (value) {
                           if (value.isEmpty) {
                             return S.of(context).validation_error_template_name;
                           } else if (templateFound) {
-                            return S
-                                .of(context)
-                                .validation_error_template_name_exists;
+                            return S.of(context).validation_error_template_name_exists;
                           } else {
                             templateName = value;
                             return null;
@@ -1342,17 +1271,13 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                         },
                         child: Text(
                           S.of(context).cancel,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Europa'),
+                          style: TextStyle(fontWeight: FontWeight.bold, fontFamily: 'Europa'),
                         ),
                         textColor: Colors.grey,
                       ),
                       FlatButton(
                         child: Text(S.of(context).save,
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'Europa')),
+                            style: TextStyle(fontWeight: FontWeight.bold, fontFamily: 'Europa')),
                         textColor: FlavorConfig.values.theme.primaryColor,
                         onPressed: () async {
                           if (!_formDialogKey.currentState.validate()) {

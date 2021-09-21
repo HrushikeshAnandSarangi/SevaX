@@ -72,7 +72,7 @@ Widget infoButton({
   return IconButton(
     key: key,
     enableFeedback: true,
-    padding: EdgeInsets.all(4),
+    padding: EdgeInsets.all(2),
     visualDensity: VisualDensity.standard,
     icon: Image.asset(
       'lib/assets/images/info.png',

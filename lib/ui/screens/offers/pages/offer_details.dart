@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:sevaexchange/components/rich_text_view/rich_text_view.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/enums/lending_borrow_enums.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/offer_model.dart';
@@ -468,7 +469,7 @@ class OfferDetails extends StatelessWidget {
                                       ? S.of(context).you_created_offer
                                       : isAccepted
                                           ? S.of(context).accepted_offer_msg
-                                          : S
+                                          : L
                                               .of(context)
                                               .would_like_to_accept_offer,
                                   style: TextStyle(

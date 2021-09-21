@@ -3,6 +3,7 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/labels.dart';
+import 'package:sevaexchange/models/enums/lending_borrow_enums.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -33,14 +34,12 @@ class TimebankRequestWidget extends StatelessWidget {
         requestId: model.id,
       ),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting ||
-            snapshot.data == null) {
+        if (snapshot.connectionState == ConnectionState.waiting || snapshot.data == null) {
           return NotificationShimmer();
         }
         RequestModel model = snapshot.data;
         return FutureBuilder<UserModel>(
-          future: FirestoreManager.getUserForIdFuture(
-              sevaUserId: notification.senderUserId),
+          future: FirestoreManager.getUserForIdFuture(sevaUserId: notification.senderUserId),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return Container();
@@ -68,7 +67,9 @@ class TimebankRequestWidget extends StatelessWidget {
                   if (model.approvedUsers.length >= 1) {
                     errorDialog(
                         context: context,
-                        error: S.of(context).already_accepted_lender);
+                        error: model.roomOrTool == LendingType.PLACE.readable
+                            ? L.of(context).already_accepted_lender_place
+                            : L.of(context).already_accepted_lender_item);
                   } else {
                     Navigator.of(context).push(
                       MaterialPageRoute(
@@ -110,8 +111,7 @@ class TimebankRequestWidget extends StatelessWidget {
       context: context,
       builder: (BuildContext viewContext) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(25.0))),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(25.0))),
           content: Form(
             //key: _formKey,
             child: Column(
@@ -145,8 +145,7 @@ class TimebankRequestWidget extends StatelessWidget {
                     padding: EdgeInsets.all(0.0),
                     child: Text(
                       "${S.of(context).about} ${userModel.fullname}",
-                      style:
-                          TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                     ),
                   ),
                 getBio(context, userModel),
@@ -160,9 +159,7 @@ class TimebankRequestWidget extends StatelessWidget {
                         child: requestModel.requestType == RequestType.BORROW
                             ? Text(
                                 "${S.of(context).notifications_by_approving} ${userModel.fullname}," +
-                                    S
-                                        .of(context)
-                                        .you_will_go_ahead_with_them_for_request,
+                                    S.of(context).you_will_go_ahead_with_them_for_request,
                                 style: TextStyle(
                                   //LABEL NEEDED FROM CLIENT FOR ABOVE TEXT
                                   fontStyle: FontStyle.italic,
@@ -260,8 +257,7 @@ class TimebankRequestWidget extends StatelessWidget {
     usersSet.add(user.email);
     model.approvedUsers = usersSet.toList();
 
-    (model.numberOfApprovals <= model.approvedUsers.length ||
-            model.approvedUsers.length == 0)
+    (model.numberOfApprovals <= model.approvedUsers.length || model.approvedUsers.length == 0)
         ? model.accepted == true
         : null;
 
