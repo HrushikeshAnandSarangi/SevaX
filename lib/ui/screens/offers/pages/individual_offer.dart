@@ -544,12 +544,8 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                   decorationDropdown: BoxDecoration(
                                     borderRadius: BorderRadius.circular(8),
                                   ),
-                                  defaultWidget: Container(
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(4),
-                                    ),
-                                    // padding: EdgeInsets.symmetric(horizontal: 15),
+                                  defaultWidget: Padding(
+                                    padding: const EdgeInsets.only(bottom:8.0),
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       children: [
@@ -1591,6 +1587,12 @@ class _IndividualOfferState extends State<IndividualOffer> {
                       setState(() {
                         _bloc.lendingOfferType = val;
                       });
+                      title_hint = (_bloc.lendingOfferType == 0
+                          ? L.of(context).lending_offer_title_hint_place
+                          : L.of(context).lending_offer_title_hint_item);
+                      description_hint = (_bloc.lendingOfferType == 0
+                          ? L.of(context).lending_offer_description_hint_place
+                          : L.of(context).lending_offer_description_hint_item);
                     }
                   },
                   //groupValue: sharedValue,
