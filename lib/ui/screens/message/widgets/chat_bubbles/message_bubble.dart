@@ -28,47 +28,48 @@ class MessageBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //TODO timestamp alignment
     return Align(
       alignment: isSent ? Alignment.topRight : Alignment.topLeft,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 5),
         child: Container(
-          decoration: isSent
-              ? MessageDecoration.sendDecoration()
-              : MessageDecoration.receiveDecoration(),
+          constraints: BoxConstraints.loose(
+            Size.fromWidth(MediaQuery.of(context).size.width * 0.6),
+          ),
+          decoration:
+              isSent ? MessageDecoration.sendDecoration() : MessageDecoration.receiveDecoration(),
           padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              isGroupMessage && !isSent
-                  ? Text(
+          child: IntrinsicWidth(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                if (isGroupMessage && !isSent)
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
                       info.name,
                       style: TextStyle(
                         color: info.color,
                         fontWeight: FontWeight.bold,
                       ),
-                    )
-                  : SizedBox(),
-              Linkify(
+                    ),
+                  ),
+                Linkify(
                   text: message,
                   onOpen: (link) {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => SevaWebView(
-                          AboutMode(
-                              title: L.of(context).external_url_text,
-                              urlToHit: link.url),
+                          AboutMode(title: L.of(context).external_url_text, urlToHit: link.url),
                         ),
                       ),
                     );
-                  }),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Text(
+                  },
+                ),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Text(
                     formatChatDate(
                       timestamp,
                       SevaCore.of(context).loggedInUser.timezone,
@@ -76,9 +77,9 @@ class MessageBubble extends StatelessWidget {
                     ),
                     style: TextStyle(fontSize: 10, color: Colors.grey[700]),
                   ),
-                ],
-              ),
-            ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
