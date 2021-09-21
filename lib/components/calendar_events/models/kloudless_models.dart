@@ -167,7 +167,7 @@ class CalanderBuilder {
 
   CalanderBuilder.fromMap(Map<String, dynamic> map) {
     this.caledarScope = map['caledarScope'];
-    this.calendarAccId = map['calendarAccId'];
+    this.calendarAccId = int.parse(map['calendarAccId']);
     this.calendarAccessToken = map['calendarAccessToken'];
     this.calendarEmail = map['calendarEmail'];
     this.calendarId = map['calendarId'];

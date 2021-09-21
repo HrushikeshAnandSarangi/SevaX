@@ -1974,6 +1974,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                             },
                           ),
                         ),
+                        SizedBox(width:50),
                       ],
                     ),
                   )
