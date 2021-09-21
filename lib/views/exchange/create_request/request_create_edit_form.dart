@@ -574,12 +574,14 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
                     ),
                   ),
                   TransactionsMatrixCheck(
-                    upgradeDetails: AppConfig.upgradePlanBannerModel.borrow_requests,
+                    upgradeDetails:
+                        AppConfig.upgradePlanBannerModel.borrow_requests,
                     transaction_matrix_type: 'borrow_request',
                     comingFrom: widget.comingFrom,
                     child: ConfigurationCheck(
                       actionType: 'create_borrow_request',
-                      role: memberType(timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
+                      role: memberType(timebankModel,
+                          SevaCore.of(context).loggedInUser.sevaUserID),
                       child: requestUtils.optionRadioButton<RequestType>(
                         title: S.of(context).borrow,
                         value: RequestType.BORROW,
@@ -590,7 +592,8 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
                           requestModel.requestType = value;
                           instructorAdded = false;
                           requestModel.selectedInstructor = null;
-                          AppConfig.helpIconContextMember = HelpContextMemberType.time_requests;
+                          AppConfig.helpIconContextMember =
+                              HelpContextMemberType.time_requests;
                           setState(() => {});
                         },
                       ),
