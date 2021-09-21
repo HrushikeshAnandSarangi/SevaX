@@ -13,6 +13,7 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/transaction_details/bloc/transaction_details_bloc.dart';
 import 'package:sevaexchange/ui/screens/transaction_details/dialog/transaction_details_dialog.dart';
 import 'package:sevaexchange/ui/screens/transaction_details/manager/transactions_details_handler.dart';
+import 'package:sevaexchange/ui/screens/transaction_details/view/transaction_details_view.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
@@ -56,7 +57,7 @@ class _DonationsDetailsViewState extends State<DonationsDetailsView> {
   bool isLoading = false;
 
   final TextStyle tableCellStyle = TextStyle(
-    fontSize: 18,
+    fontSize: 14,
   );
 
   final headerCellStyle = TextStyle(
@@ -81,8 +82,6 @@ class _DonationsDetailsViewState extends State<DonationsDetailsView> {
   }
 
   Future<void> onRowTap(DonationModel donation) async {
-    // List<TransacationsTimelineModel> timelineData = [];
-    // timelineData = _bloc.getRequestTimelineDocs(transaction.typeid);
     showLoader;
     if (donation.requestId != null) {
       try {
@@ -106,7 +105,7 @@ class _DonationsDetailsViewState extends State<DonationsDetailsView> {
 
     showDialog(
       context: context,
-      builder: (context) => Dialog(
+      builder: (dialogContext) => Dialog(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
@@ -126,18 +125,16 @@ class _DonationsDetailsViewState extends State<DonationsDetailsView> {
 
   @override
   void initState() {
-    // _bloc.init(
-    //   widget.id,
-    //   SevaCore.of(context).loggedInUser.sevaUserID,
-    // );
-    timebankModel = widget.timebankModel;
-
     if (widget.timebankModel == null) {
-      FirestoreManager.getTimeBankForId(
-        timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
-      ).then(
-        (model) => timebankModel = model,
-      );
+      Future.delayed(Duration.zero, () {
+        FirestoreManager.getTimeBankForId(
+          timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
+        ).then(
+          (model) => timebankModel = model,
+        );
+      });
+    } else {
+      timebankModel = widget.timebankModel;
     }
 
     super.initState();
@@ -184,7 +181,7 @@ class _DonationsDetailsViewState extends State<DonationsDetailsView> {
       body: LoadingViewIndicator(
         isLoading: isLoading,
         child: Padding(
-          padding: const EdgeInsets.all(40.0),
+          padding: const EdgeInsets.all(8.0),
           child: StreamBuilder<List<DonationModel>>(
               stream: FirestoreManager.getDonationList(
                   isGoods: widget.isGoods,
@@ -198,120 +195,284 @@ class _DonationsDetailsViewState extends State<DonationsDetailsView> {
 
                 totalBalance = loadTotalBalance(snapshot.data);
 
-                TransactionDataRow _data = TransactionDataRow(
-                    onRowTap,
-                    snapshot.data,
-                    context,
-                    widget.timebankModel == null
-                        ? timebankModel
-                        : widget.timebankModel,
-                    widget.fromTimebank,
-                    widget.isGoods);
+                // TransactionDataRow _data = TransactionDataRow(
+                //     onRowTap,
+                //     snapshot.data,
+                //     context,
+                //     widget.timebankModel == null
+                //         ? timebankModel
+                //         : widget.timebankModel,
+                //     widget.fromTimebank,
+                //     widget.isGoods);
 
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: PaginatedDataTable(
-                          showCheckboxColumn: false,
-                          header: Row(
-                            children: [
-                              Text(
-                                S.of(context).transations,
-                                style: TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                return SingleChildScrollView(
+                  physics: ScrollPhysics(),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        S.of(context).transations,
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: S.of(context).donations + "\n",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Color(0xFF9B9B9B),
                               ),
-                              Spacer(flex: 2),
-                              SizedBox(width: 8),
-                              Flexible(
-                                child: StreamBuilder<String>(
-                                  builder: (context, snapshot) {
-                                    return SizedBox(
-                                      height: 40,
-                                      child: TextField(
-                                        // onChanged: _donationBloc.onSearchQueryChanged,  //UPDATE AND ADD SEARCH
-                                        decoration: InputDecoration(
-                                          prefixIcon: Icon(
-                                            Icons.search,
-                                            color:
-                                                Theme.of(context).primaryColor,
-                                          ),
-                                          contentPadding:
-                                              const EdgeInsets.only(bottom: 8),
-                                          border: border,
-                                          enabledBorder: border,
-                                          disabledBorder: border,
-                                          focusedBorder: border,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                              SizedBox(width: 12),
-                              RichText(
-                                text: TextSpan(
-                                  children: [
-                                    TextSpan(
-                                      text: S.of(context).donations + "\n",
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Color(0xFF9B9B9B),
-                                      ),
-                                    ),
-                                    TextSpan(
-                                      text: totalBalance.toStringAsFixed(2),
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(width: 8),
-                            ],
-                          ),
-                          source: _data,
-                          rowsPerPage: 9,
-                          columns: [
-                            DataColumn(
-                              label: Text(S.of(context).name,
-                                  style: headerCellStyle),
                             ),
-                            DataColumn(
-                                label: Text(
-                                    S
-                                        .of(context)
-                                        .select_transaction_type_valid
-                                        .substring(
-                                            9,
-                                            S
-                                                .of(context)
-                                                .select_transaction_type_valid
-                                                .length)
-                                        .sentenceCase(),
-                                    style: headerCellStyle)),
-                            DataColumn(
-                                label: Text(S.of(context).date,
-                                    style: headerCellStyle)),
-                            DataColumn(
-                              label: Text(S.of(context).amount,
-                                  style: headerCellStyle),
+                            TextSpan(
+                              text: totalBalance.toStringAsFixed(2),
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ],
                         ),
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 12),
+                      StreamBuilder<String>(
+                        builder: (context, snapshot) {
+                          return SizedBox(
+                            height: 40,
+                            child: TextField(
+                              // onChanged: _donationBloc.onSearchQueryChanged,  //UPDATE AND ADD SEARCH
+                              decoration: InputDecoration(
+                                prefixIcon: Icon(
+                                  Icons.search,
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                                contentPadding:
+                                    const EdgeInsets.only(bottom: 8),
+                                border: border,
+                                enabledBorder: border,
+                                disabledBorder: border,
+                                focusedBorder: border,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      SizedBox(height: 8),
+                      Column(
+                        children: [
+                          getTitle(
+                              S.of(context).name,
+                              S
+                                  .of(context)
+                                  .select_transaction_type_valid
+                                  .substring(
+                                      9,
+                                      S
+                                          .of(context)
+                                          .select_transaction_type_valid
+                                          .length)
+                                  .sentenceCase(),
+                              S.of(context).date.replaceAll(':', ''),
+                              S.of(context).amount),
+                          ListView.separated(
+                            shrinkWrap: true,
+                            itemCount: snapshot.data.length,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemBuilder: (BuildContext context, int index) {
+                              DonationModel model = snapshot.data[index];
+                              return InkWell(
+                                onTap: () => onRowTap(snapshot.data[index]),
+                                child: Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 0, right: 5.0),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          CircleAvatar(
+                                            backgroundImage: NetworkImage(
+                                              model.donorSevaUserId
+                                                      .contains('-')
+                                                  ? (timebankModel != null
+                                                      ? timebankModel
+                                                              .photoUrl ??
+                                                          defaultUserImageURL
+                                                      : defaultUserImageURL)
+                                                  : (SevaCore.of(context)
+                                                              .loggedInUser !=
+                                                          null
+                                                      ? SevaCore.of(context)
+                                                              .loggedInUser
+                                                              .photoURL ??
+                                                          defaultUserImageURL
+                                                      : defaultUserImageURL),
+                                            ),
+                                          ),
+                                          SizedBox(width: 8),
+                                          Text(
+                                              model.donorSevaUserId
+                                                      .contains('-')
+                                                  ? (timebankModel != null
+                                                      ? timebankModel.name ??
+                                                          S.of(context).no_data
+                                                      : S
+                                                          .of(context)
+                                                          .error_loading_data)
+                                                  : (SevaCore.of(context)
+                                                              .loggedInUser !=
+                                                          null
+                                                      ? SevaCore.of(context)
+                                                              .loggedInUser
+                                                              .fullname ??
+                                                          S.of(context).no_data
+                                                      : S.of(context).no_data),
+                                              style: tableCellStyle),
+                                          SizedBox(width: 15),
+                                          Expanded(
+                                            flex: 3,
+                                            child: Text(
+                                                widget.isGoods
+                                                    ? S
+                                                        .of(context)
+                                                        .goods_donation
+                                                    : S
+                                                        .of(context)
+                                                        .cash_donation,
+                                                style: tableCellStyle),
+                                          ),
+                                          SizedBox(width: 8),
+                                          Expanded(
+                                            flex: 2,
+                                            child: Text(
+                                                DateFormat('MMMM dd').format(
+                                                    DateTime
+                                                        .fromMillisecondsSinceEpoch(
+                                                            model.timestamp)),
+                                                style: tableCellStyle),
+                                          ),
+                                          SizedBox(width: 12),
+                                          Expanded(
+                                            flex: 2,
+                                            child: Text(
+                                              widget.fromTimebank
+                                                  ? (model.donorSevaUserId == timebankModel.id
+                                                          ? '-'
+                                                          : '+') +
+                                                      (widget.isGoods
+                                                          ? (model.goodsDetails?.donatedGoods != null
+                                                                  ? model
+                                                                      .goodsDetails
+                                                                      .donatedGoods
+                                                                      .length
+                                                                      .toString()
+                                                                  : '0') +
+                                                              ' ' +
+                                                              S
+                                                                  .of(context)
+                                                                  .item_s_text
+                                                          : model.cashDetails
+                                                              .pledgedAmount
+                                                              .toString())
+                                                  : (model.donorSevaUserId == SevaCore.of(context).loggedInUser.sevaUserID
+                                                          ? '-'
+                                                          : '+') +
+                                                      (widget.isGoods
+                                                          ? (model.goodsDetails?.donatedGoods != null
+                                                                  ? model
+                                                                      .goodsDetails
+                                                                      .donatedGoods
+                                                                      .length
+                                                                      .toString()
+                                                                  : '0') +
+                                                              ' ' +
+                                                              S.of(context).item_s_text
+                                                          : model.cashDetails.pledgedAmount.toString()),
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  color: widget.fromTimebank
+                                                      ? model.donorSevaUserId ==
+                                                              timebankModel.id
+                                                          ? Colors.black
+                                                          : Colors.green[400]
+                                                      : model.donorSevaUserId ==
+                                                              SevaCore.of(
+                                                                      context)
+                                                                  .loggedInUser
+                                                                  .sevaUserID
+                                                          ? Colors.black
+                                                          : Colors.green[400]),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                            separatorBuilder: (context, index) {
+                              return Divider();
+                            },
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 );
               }),
         ),
       ),
+    );
+  }
+
+  Widget getTitle(String title1, String title2, String title3, String title4) {
+    return Column(
+      children: [
+        Divider(),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+              flex: 3,
+              child: getText(title1),
+            ),
+            Expanded(
+              flex: 4,
+              child: getText(title2),
+            ),
+            SizedBox(width: 18),
+            Expanded(
+              flex: 2,
+              child: getText(title3),
+            ),
+            SizedBox(width: 12),
+            Expanded(
+              flex: 2,
+              child: getText(title4),
+            ),
+          ],
+        ),
+        Divider(),
+      ],
+    );
+  }
+
+  Widget getText(String title) {
+    final TextStyle style =
+        TextStyle(color: Colors.black, fontSize: 15, fontFamily: 'Europa');
+    return Text(
+      title,
+      style: style,
     );
   }
 }
@@ -328,7 +489,7 @@ class TransactionDataRow extends DataTableSource {
   final ValueChanged<DonationModel> onRowTap;
 
   final TextStyle tableCellStyle = TextStyle(
-    fontSize: 18,
+    fontSize: 16,
   );
 
   // Generate some made-up data
@@ -417,7 +578,7 @@ class TransactionDataRow extends DataTableSource {
                             S.of(context).item_s_text
                         : data[index].cashDetails.pledgedAmount.toString()),
             style: TextStyle(
-                fontSize: 18,
+                fontSize: 16,
                 color: fromTimebank
                     ? data[index].donorSevaUserId == timebankModel.id
                         ? Colors.black
