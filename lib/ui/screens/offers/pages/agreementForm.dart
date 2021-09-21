@@ -1143,6 +1143,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                     value = index;
                     selectedAgreementTemplate = agreementTemplateList[index];
                     documentNameController.text = selectedAgreementTemplate.documentName;
+                    documentName = selectedAgreementTemplate.documentName;
                     specificConditionsController.text =
                         selectedAgreementTemplate.specificConditions;
                   }),
