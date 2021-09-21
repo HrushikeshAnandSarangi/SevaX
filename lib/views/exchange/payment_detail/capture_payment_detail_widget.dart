@@ -108,6 +108,7 @@ class _CapturePaymentDetailWidgetState
           ),
         ),
         Container(
+          height:40,
           margin: EdgeInsets.only(top: 12.0),
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
           decoration: BoxDecoration(
@@ -116,6 +117,7 @@ class _CapturePaymentDetailWidgetState
           ),
           child: DropdownButtonHideUnderline(
             child: DropdownButton(
+              isExpanded: true,
                 onTap: widget.onTap,
                 style: TextStyle(
                     color: Theme.of(context).primaryColor,
@@ -146,7 +148,7 @@ class _CapturePaymentDetailWidgetState
                     value: PaymentMode.PAYPAL,
                   ),
                   DropdownMenuItem(
-                    child: Text('Swift'),
+                    child: Text(S.of(context).request_paymenttype_swift),
                     value: PaymentMode.SWIFT,
                   ),
                   DropdownMenuItem(
