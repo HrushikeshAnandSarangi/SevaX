@@ -3242,7 +3242,7 @@ Widget borrowActionsWidget(RequestModel requestItem, BuildContext context, bool 
                   showDialog(
                     context: context,
                     builder: (_context) => AlertDialog(
-                      title: Text(S.of(context).item_received_alert_dialouge),
+                      title: Text(S.of(context).admin_borrow_request_received_back_check_item),
                       actions: [
                         CustomTextButton(
                           onPressed: () {
@@ -3299,7 +3299,7 @@ Widget borrowActionsWidget(RequestModel requestItem, BuildContext context, bool 
                   showDialog(
                     context: context,
                     builder: (_context) => AlertDialog(
-                      title: Text(S.of(context).item_received_alert_dialouge),
+                      title: Text(S.of(context).admin_borrow_request_received_back_check_place),
                       actions: [
                         CustomTextButton(
                           onPressed: () {
