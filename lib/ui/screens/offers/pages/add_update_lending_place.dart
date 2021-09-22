@@ -194,7 +194,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             currentNode: _placeName,
                             nextNode: _guests,
                             value: snapshot.data,
-                            heading: "${S.of(context).name_of_place}",
+                            heading: "${S.of(context).name_of_place }*",
                             onChanged: (String value) {
                               _bloc.onPlaceNameChanged(value);
                               // title = value;
@@ -318,7 +318,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                       ),
                       SizedBox(height: 20),
                       Text(
-                        S.of(context).amenities_text,
+                        S.of(context).amenities_text+'*',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
@@ -354,7 +354,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             currentNode: _guests,
                             nextNode: _rooms,
                             value: snapshot.data,
-                            heading: "${S.of(context).no_of_guests}",
+                            heading: "${S.of(context).no_of_guests}*",
                             onChanged: (String value) {
                               _bloc.onNoOfGuestsChanged(value);
                               // title = value;
@@ -379,7 +379,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             currentNode: _rooms,
                             nextNode: _bathrooms,
                             value: snapshot.data,
-                            heading: "${S.of(context).bed_roooms_text}",
+                            heading: "${S.of(context).bed_roooms_text}*",
                             onChanged: (String value) {
                               _bloc.onNoOfRoomsChanged(value);
                               // title = value;
@@ -404,7 +404,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             currentNode: _bathrooms,
                             nextNode: _commonSPace,
                             value: snapshot.data,
-                            heading: "${S.of(context).bath_rooms}",
+                            heading: "${S.of(context).bath_rooms}*",
                             onChanged: (String value) {
                               _bloc.onBathRoomsChanged(value);
                               // title = value;
@@ -429,7 +429,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             currentNode: _commonSPace,
                             nextNode: _houseRules,
                             value: snapshot.data,
-                            heading: "${S.of(context).common_spaces}",
+                            heading: "${S.of(context).common_spaces}*",
                             onChanged: (String value) {
                               _bloc.onCommonSpacesChanged(value);
                               // title = value;
@@ -449,7 +449,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             controller: _houseRulesController,
                             currentNode: _houseRules,
                             value: snapshot.data,
-                            heading: "${S.of(context).house_rules}",
+                            heading: "${S.of(context).house_rules}*",
                             onChanged: (String value) {
                               _bloc.onHouseRulesChanged(value);
                               // title = value;
@@ -510,8 +510,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             controller: _contactInformationController,
                             currentNode: _contactInformation,
                             value: snapshot.data,
-                            heading:
-                                "${S.of(context).contact_information + '*'}",
+                            heading: "${S.of(context).contact_information}*",
                             onChanged: (String value) {
                               _bloc.onContactInformationChanged(value);
                             },
