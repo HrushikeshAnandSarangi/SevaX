@@ -162,11 +162,11 @@ class LendingOfferParticipants extends StatelessWidget {
                     ],
                   ),
                   Text(lendingType == LendingType.PLACE
-                      ? L
+                      ? S
                           .of(context)
                           .cannot_approve_multiple_borrowers_place
                           .replaceAll(" **name", name)
-                      : L
+                      : S
                           .of(context)
                           .cannot_approve_multiple_borrowers_item
                           .replaceAll(" **name", name)),

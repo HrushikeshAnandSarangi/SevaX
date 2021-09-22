@@ -62,7 +62,7 @@ class BorrowRequestParticipants extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.only(left: 10),
                   child: Text(
-                    L
+                    S
                         .of(context)
                         .you_have_received_responses
                         .replaceFirst('**', borrowAcceptorModel.length.toString())

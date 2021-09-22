@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/enums/lending_borrow_enums.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/lending_model.dart';
@@ -220,7 +221,7 @@ class AddPlaceValidationErrors {
 
 String getAddPlaceValidationError(BuildContext context, String errorCode) {
 //  S error = S.of(context);
-  L error = L.of(context);
+  S error = S.of(context);
   switch (errorCode) {
     case AddPlaceValidationErrors.placeNameError:
       return error.validation_error_place_name;

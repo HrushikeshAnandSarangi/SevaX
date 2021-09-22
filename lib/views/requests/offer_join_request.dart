@@ -49,8 +49,7 @@ class _OfferJoinRequestDialogState extends State<OfferJoinRequestDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(25.0))),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(25.0))),
       content: Form(
         //key: _formKey,
         child: Column(
@@ -61,9 +60,9 @@ class _OfferJoinRequestDialogState extends State<OfferJoinRequestDialog> {
               height: 70,
               width: 70,
               child: CircleAvatar(
-                backgroundImage: NetworkImage(widget.timeOfferParticipantsModel
-                        .participantDetails.photourl ??
-                    defaultUserImageURL),
+                backgroundImage: NetworkImage(
+                    widget.timeOfferParticipantsModel.participantDetails.photourl ??
+                        defaultUserImageURL),
               ),
             ),
             Padding(
@@ -98,10 +97,7 @@ class _OfferJoinRequestDialogState extends State<OfferJoinRequestDialog> {
             //   ),
             // ),
             Center(
-              child: Text(
-                  L
-                      .of(context)
-                      .accept_offer_invitation_confirmation_to_do_tasks,
+              child: Text(S.of(context).accept_offer_invitation_confirmation_to_do_tasks,
                   style: TextStyle(
                     fontStyle: FontStyle.italic,
                   ),
@@ -119,8 +115,7 @@ class _OfferJoinRequestDialogState extends State<OfferJoinRequestDialog> {
                     color: FlavorConfig.values.theme.primaryColor,
                     child: Text(
                       S.of(context).accept,
-                      style:
-                          TextStyle(color: Colors.white, fontFamily: 'Europa'),
+                      style: TextStyle(color: Colors.white, fontFamily: 'Europa'),
                     ),
                     onPressed: () async {
                       //Once approvedp
@@ -162,8 +157,7 @@ class _OfferJoinRequestDialogState extends State<OfferJoinRequestDialog> {
                     color: Theme.of(context).accentColor,
                     child: Text(
                       S.of(context).decline,
-                      style:
-                          TextStyle(color: Colors.white, fontFamily: 'Europa'),
+                      style: TextStyle(color: Colors.white, fontFamily: 'Europa'),
                     ),
                     onPressed: () async {
                       declineInvitationbRequest(
@@ -215,11 +209,7 @@ class _OfferJoinRequestDialogState extends State<OfferJoinRequestDialog> {
       notificationId: notificationId,
     );
 
-    CollectionRef.offers
-        .doc(offerId)
-        .collection('offerAcceptors')
-        .doc(notificationId)
-        .update({
+    CollectionRef.offers.doc(offerId).collection('offerAcceptors').doc(notificationId).update({
       'status': 'REJECTED',
     });
     FirestoreManager.readUserNotification(notificationId, userModel.email);
@@ -242,11 +232,7 @@ class _OfferJoinRequestDialogState extends State<OfferJoinRequestDialog> {
       acceptorModel: acceptorModel,
     );
     //Update accetor document
-    CollectionRef.offers
-        .doc(offerId)
-        .collection('offerAcceptors')
-        .doc(notificationId)
-        .update({
+    CollectionRef.offers.doc(offerId).collection('offerAcceptors').doc(notificationId).update({
       'status': 'ACCEPTED',
     });
 
