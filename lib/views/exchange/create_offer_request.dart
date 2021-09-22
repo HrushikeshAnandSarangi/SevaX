@@ -301,7 +301,7 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
           var myDetails = SevaCore.of(context).loggedInUser;
           this.requestModel.fullName = myDetails.fullname;
           this.requestModel.photoUrl = myDetails.photoURL;
-          var onBalanceCheckResult =
+          CreditResult onBalanceCheckResult =
               await SevaCreditLimitManager.hasSufficientCredits(
             email: SevaCore.of(context).loggedInUser.email,
             credits:
