@@ -1850,7 +1850,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          L.of(context).request_payment_description,
+          S.of(context).request_payment_description,
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
