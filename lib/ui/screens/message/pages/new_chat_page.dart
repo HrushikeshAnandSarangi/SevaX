@@ -284,7 +284,7 @@ class _NewChatPageState extends State<NewChatPage> {
                               0,
                             ),
                             tabBuilder(
-                              S.of(context).timebank_members,
+                              S.of(context).timebank,
                               1,
                             ),
                           ],
