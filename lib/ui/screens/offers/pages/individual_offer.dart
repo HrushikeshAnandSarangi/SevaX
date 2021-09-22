@@ -935,18 +935,18 @@ class _IndividualOfferState extends State<IndividualOffer> {
                           ),
                         ),
                         HideWidget(
-                          hide: offerType == RequestType.ONE_TO_MANY_OFFER,
+                          hide: showVirtual(_bloc.lendingOfferType),
                           child: StreamBuilder<bool>(
                             initialData: false,
                             stream: _bloc.isPublicVisible,
                             builder: (context, snapshot) {
-                              return snapshot.data ||
-                                      ((offerType == RequestType.LENDING_OFFER &&
-                                          _bloc.lendingOfferType == 0)) ||
-                                      (offerType == RequestType.LENDING_OFFER &&
-                                              _bloc.lendingOfferType == 1 &&
-                                              lendingitemsShowPublic) &&
-                                          widget.timebankId != FlavorConfig.values.timebankId
+                              return snapshot.data &&
+                                      // ((offerType == RequestType.LENDING_OFFER &&
+                                      //     _bloc.lendingOfferType == 0)) ||
+                                      // (offerType == RequestType.LENDING_OFFER &&
+                                      //         _bloc.lendingOfferType == 1 &&
+                                      //         lendingitemsShowPublic) &&
+                                      widget.timebankId != FlavorConfig.values.timebankId
                                   ? Padding(
                                       padding: const EdgeInsets.symmetric(vertical: 10),
                                       child: StreamBuilder<bool>(
