@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:sevaexchange/models/cash_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 
@@ -175,6 +176,10 @@ class DonationModel {
   String toString() {
     return 'DonationModel{communityId: $communityId, donorSevaUserId: $donorSevaUserId,minimumAmount: $minimumAmount, donatedTo: $donatedTo, donatedToTimebank: $donatedToTimebank, donationInBetween: $donationInBetween, donationType: $donationType, id: $id, requestId: $requestId, requestTitle: $requestTitle, timebankId: $timebankId, notificationId: $notificationId, timestamp: $timestamp, donationStatus: $donationStatus, cashDetails: $cashDetails, goodsDetails: $goodsDetails, donorDetails: $donorDetails, receiverDetails: $receiverDetails}';
   }
+
+  //local variables
+  String get createdDate => DateFormat('MMMM dd')
+      .format(DateTime.fromMillisecondsSinceEpoch(timestamp));
 }
 
 class CashDetails {
@@ -191,8 +196,9 @@ class CashDetails {
         cashDetails: json['cashDetails'] == null
             ? null
             : CashModel.fromMap(json['cashDetails']),
-        pledgedAmount:
-            json["pledgedAmount"] == null ? null : double.parse(json["pledgedAmount"].toString()),
+        pledgedAmount: json["pledgedAmount"] == null
+            ? null
+            : double.parse(json["pledgedAmount"].toString()),
       );
 
   Map<String, dynamic> toMap() => {

@@ -1,6 +1,7 @@
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:sevaexchange/models/billing_plan_model.dart';
 import 'package:sevaexchange/models/enums/help_context_enums.dart';
+import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/upgrade_plan-banner_details_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
@@ -13,6 +14,11 @@ class AppConfig {
   static const String skip_bio = "skip_bio";
   static Map<String, dynamic> paymentStatusMap = {};
   static Map<String, dynamic> plan_transactions_matrix = {};
+  static const supportedRequestTypeForRecurring = [
+    RequestType.TIME,
+    RequestType.ONE_TO_MANY_REQUEST,
+    RequestType.BORROW
+  ];
 
   static BillingPlanModel billing;
   static SharedPreferences prefs;
@@ -44,11 +50,9 @@ class AppConfig {
 
   //plan check data
   static UpgradePlanBannerModel upgradePlanBannerModel;
-  static HelpContextMemberType helpIconContextMember =
-      HelpContextMemberType.seva_community;
+  static HelpContextMemberType helpIconContextMember = HelpContextMemberType.seva_community;
 
-  static HelpContextAdminType helpIconContextAdmin =
-      HelpContextAdminType.seva_community;
+  static HelpContextAdminType helpIconContextAdmin = HelpContextAdminType.seva_community;
 }
 
 class HelpIconContextClass {
