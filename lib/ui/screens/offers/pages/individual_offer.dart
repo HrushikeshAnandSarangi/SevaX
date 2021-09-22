@@ -1940,7 +1940,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                       OfferDurationWidgetState.endtimestamp != 0) {
                     _bloc.startTime = OfferDurationWidgetState.starttimestamp;
                     _bloc.endTime = OfferDurationWidgetState.endtimestamp;
-                    if (_bloc.endTime <= _bloc.startTime) {
+                    if (_bloc.endTime <= _bloc.startTime && _bloc.timeOfferType == 1) {
                       errorDialog(
                         context: context,
                         error: S.of(context).validation_error_end_date_greater,
