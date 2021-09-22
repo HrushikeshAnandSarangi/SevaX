@@ -125,6 +125,16 @@ class _DonationsDetailsViewState extends State<DonationsDetailsView> {
 
   @override
   void initState() {
+    Future.delayed(Duration.zero, () {
+      if (widget.fromTimebank) {
+        _donationBloc.init(
+            timebankId: widget.timebankModel.id, isGoods: widget.isGoods);
+      } else {
+        _donationBloc.init(
+            userId: SevaCore.of(context).loggedInUser.sevaUserID,
+            isGoods: widget.isGoods);
+      }
+    });
     if (widget.timebankModel == null) {
       Future.delayed(Duration.zero, () {
         FirestoreManager.getTimeBankForId(
@@ -183,9 +193,7 @@ class _DonationsDetailsViewState extends State<DonationsDetailsView> {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: StreamBuilder<List<DonationModel>>(
-              stream: FirestoreManager.getDonationList(
-                  isGoods: widget.isGoods,
-                  userId: SevaCore.of(context).loggedInUser.sevaUserID),
+              stream: _donationBloc.data(context, widget.isGoods),
               key: ValueKey(SevaCore.of(context).loggedInUser.sevaUserID),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting ||
@@ -194,16 +202,6 @@ class _DonationsDetailsViewState extends State<DonationsDetailsView> {
                 }
 
                 totalBalance = loadTotalBalance(snapshot.data);
-
-                // TransactionDataRow _data = TransactionDataRow(
-                //     onRowTap,
-                //     snapshot.data,
-                //     context,
-                //     widget.timebankModel == null
-                //         ? timebankModel
-                //         : widget.timebankModel,
-                //     widget.fromTimebank,
-                //     widget.isGoods);
 
                 return SingleChildScrollView(
                   physics: ScrollPhysics(),
@@ -240,27 +238,23 @@ class _DonationsDetailsViewState extends State<DonationsDetailsView> {
                         ),
                       ),
                       const SizedBox(height: 12),
-                      StreamBuilder<String>(
-                        builder: (context, snapshot) {
-                          return SizedBox(
-                            height: 40,
-                            child: TextField(
-                              // onChanged: _donationBloc.onSearchQueryChanged,  //UPDATE AND ADD SEARCH
-                              decoration: InputDecoration(
-                                prefixIcon: Icon(
-                                  Icons.search,
-                                  color: Theme.of(context).primaryColor,
-                                ),
-                                contentPadding:
-                                    const EdgeInsets.only(bottom: 8),
-                                border: border,
-                                enabledBorder: border,
-                                disabledBorder: border,
-                                focusedBorder: border,
-                              ),
+                      SizedBox(
+                        height: 40,
+                        child: TextField(
+                          onChanged: _donationBloc
+                              .onSearchQueryChanged, //UPDATE AND ADD SEARCH
+                          decoration: InputDecoration(
+                            prefixIcon: Icon(
+                              Icons.search,
+                              color: Theme.of(context).primaryColor,
                             ),
-                          );
-                        },
+                            contentPadding: const EdgeInsets.only(bottom: 8),
+                            border: border,
+                            enabledBorder: border,
+                            disabledBorder: border,
+                            focusedBorder: border,
+                          ),
+                        ),
                       ),
                       SizedBox(height: 8),
                       Column(
@@ -362,7 +356,8 @@ class _DonationsDetailsViewState extends State<DonationsDetailsView> {
                                             flex: 2,
                                             child: Text(
                                               widget.fromTimebank
-                                                  ? (model.donorSevaUserId == timebankModel.id
+                                                  ? (model.donorSevaUserId ==
+                                                              timebankModel.id
                                                           ? '-'
                                                           : '+') +
                                                       (widget.isGoods
@@ -380,9 +375,14 @@ class _DonationsDetailsViewState extends State<DonationsDetailsView> {
                                                           : model.cashDetails
                                                               .pledgedAmount
                                                               .toString())
-                                                  : (model.donorSevaUserId == SevaCore.of(context).loggedInUser.sevaUserID
-                                                          ? '-'
-                                                          : '+') +
+                                                  : (widget.isGoods
+                                                          ? ''
+                                                          : model.donorSevaUserId ==
+                                                                  SevaCore.of(context)
+                                                                      .loggedInUser
+                                                                      .sevaUserID
+                                                              ? '-'
+                                                              : '+') +
                                                       (widget.isGoods
                                                           ? (model.goodsDetails?.donatedGoods != null
                                                                   ? model

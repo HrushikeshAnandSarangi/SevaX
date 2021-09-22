@@ -827,7 +827,11 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                 },
                                 hint: title_hint != null
                                     ? title_hint
-                                    : S.of(context).offer_title_hint,
+                                    : offerType == RequestType.LENDING_OFFER
+                                        ? (_bloc.lendingOfferType == 0
+                                            ? S.of(context).lending_offer_title_hint_place
+                                            : S.of(context).lending_offer_title_hint_item)
+                                        : S.of(context).offer_title_hint,
                                 maxLength: null,
                                 error: getValidationError(context, snapshot.error),
                               );
@@ -1581,21 +1585,49 @@ class _IndividualOfferState extends State<IndividualOffer> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
+        StreamBuilder<String>(
+          stream: _bloc.offerDescription,
+          builder: (context, snapshot) {
+            return CustomTextField(
+              controller: _descriptionController,
+              currentNode: _description,
+              nextNode: _availability,
+              value: snapshot.data,
+              heading: "${S.of(context).offer_description}*",
+              onChanged: _bloc.onOfferDescriptionChanged,
+              hint: description_hint != null
+                  ? description_hint
+                  : (_bloc.lendingOfferType == 0
+                      ? S.of(context).lending_offer_description_hint_place
+                      : S.of(context).lending_offer_description_hint_item),
+              maxLength: 500,
+              maxLines: 2,
+              error: getValidationError(context, snapshot.error),
+            );
+          },
+        ),
+        SizedBox(height: 2),
         Container(
           alignment: Alignment.bottomLeft,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                S.of(context).lending_text,
-                style: TextStyle(
-                  fontSize: 16,
-                  //fontWeight: FontWeight.bold,
-                  fontFamily: 'Europa',
-                  color: Colors.black,
+              HideWidget(
+                hide: widget.offerModel != null,
+                child: Text(
+                  S.of(context).lending_text,
+                  style: TextStyle(
+                    fontSize: 16,
+                    //fontWeight: FontWeight.bold,
+                    fontFamily: 'Europa',
+                    color: Colors.black,
+                  ),
                 ),
               ),
-              SizedBox(height: 10),
+              HideWidget(
+                hide: widget.offerModel != null,
+                child: SizedBox(height: 10),
+              ),
               HideWidget(
                 hide: widget.offerModel != null,
                 child: CupertinoSegmentedControl<int>(
@@ -1623,8 +1655,10 @@ class _IndividualOfferState extends State<IndividualOffer> {
                   groupValue: _bloc.lendingOfferType,
                   onValueChanged: (int val) {
                     if (val != _bloc.lendingOfferType) {
+                      _bloc.onLendingModelAdded(null);
                       setState(() {
                         _bloc.lendingOfferType = val;
+                        selectedLendingModel = null;
                       });
                       title_hint = (_bloc.lendingOfferType == 0
                           ? S.of(context).lending_offer_title_hint_place
@@ -1795,32 +1829,13 @@ class _IndividualOfferState extends State<IndividualOffer> {
                   widget.offerModel.lendingOfferDetailsModel.startDate,
                 )
               : null,
-          endTime: widget.offerModel != null
+          endTime: widget.offerModel != null && widget.offerModel.offerType == 'ONE_TIME'
               ? DateTime.fromMillisecondsSinceEpoch(
                   widget.offerModel.lendingOfferDetailsModel.endDate,
                 )
               : null,
         ),
         SizedBox(height: 20),
-        StreamBuilder<String>(
-          stream: _bloc.offerDescription,
-          builder: (context, snapshot) {
-            return CustomTextField(
-              controller: _descriptionController,
-              currentNode: _description,
-              nextNode: _availability,
-              value: snapshot.data,
-              heading: "${S.of(context).offer_description}*",
-              onChanged: _bloc.onOfferDescriptionChanged,
-              hint: description_hint != null
-                  ? description_hint
-                  : S.of(context).offer_description_hint,
-              maxLength: 500,
-              error: getValidationError(context, snapshot.error),
-            );
-          },
-        ),
-        SizedBox(height: 12),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -1927,7 +1942,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                       OfferDurationWidgetState.endtimestamp != 0) {
                     _bloc.startTime = OfferDurationWidgetState.starttimestamp;
                     _bloc.endTime = OfferDurationWidgetState.endtimestamp;
-                    if (_bloc.endTime <= _bloc.startTime) {
+                    if (_bloc.endTime <= _bloc.startTime && _bloc.timeOfferType == 1) {
                       errorDialog(
                         context: context,
                         error: S.of(context).validation_error_end_date_greater,
@@ -1963,10 +1978,15 @@ class _IndividualOfferState extends State<IndividualOffer> {
                       ),
                     );
                   } else {
-                    errorDialog(
-                      context: context,
-                      error: S.of(context).offer_start_end_date,
-                    );
+                    _bloc.lendingOfferTypeMode == 0
+                        ? errorDialog(
+                            context: context,
+                            error: S.of(context).offer_start_date_validation,
+                          )
+                        : errorDialog(
+                            context: context,
+                            error: S.of(context).offer_start_end_date,
+                          );
                   }
                 },
               ),
@@ -2007,7 +2027,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                   } else {
                     _bloc.lendingOfferTypeMode = 1;
                   }
-                  _bloc.lendingOfferTypeMode = val;
+                  // _bloc.lendingOfferTypeMode = val;
                 });
               }
             },

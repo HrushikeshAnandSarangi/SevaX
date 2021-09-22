@@ -177,7 +177,8 @@ class CalendarPickerState extends State<CalendarPicker> {
           getBottomButton(
             context,
             () {
-              if (endDate.millisecondsSinceEpoch < startDate.millisecondsSinceEpoch) {
+              if (endDate.millisecondsSinceEpoch < startDate.millisecondsSinceEpoch &&
+                  !widget.hideEndDate) {
                 _dateInvalidAlert(context);
               } else {
                 Navigator.pop(context, [startDate, endDate]);

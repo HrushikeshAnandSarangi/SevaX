@@ -35,6 +35,7 @@ import 'package:sevaexchange/widgets/hide_widget.dart';
 
 import '../../../../flavor_config.dart';
 import '../../../../labels.dart';
+import 'package:sevaexchange/utils/extensions.dart';
 
 class ToDo {
   static Stream<List<RequestModel>> getSignedUpOneToManyRequests({
@@ -359,7 +360,9 @@ class ToDo {
                 showDialog(
                   context: context,
                   builder: (_context) => AlertDialog(
-                    title: Text(S.of(context).item_received_alert_dialouge),
+                    title: Text(element.roomOrTool == LendingType.PLACE.readable
+                        ? S.of(context).admin_borrow_request_received_back_check_place
+                        : S.of(context).admin_borrow_request_received_back_check_item),
                     actions: [
                       CustomTextButton(
                         shape: StadiumBorder(),
@@ -369,7 +372,7 @@ class ToDo {
                           Navigator.of(_context).pop();
                         },
                         child: Text(
-                          S.of(context).not_yet,
+                          S.of(context).not_yet.sentenceCase(),
                           style: TextStyle(fontSize: 16, fontFamily: 'Europa', color: Colors.white),
                         ),
                       ),
