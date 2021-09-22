@@ -82,6 +82,7 @@ class _SelectLendingPlaceItemState extends State<SelectLendingPlaceItem> {
                 textFieldConfiguration: TextFieldConfiguration(
                   focusNode: suggestionFocusNode,
                   controller: _textEditingController,
+                  maxLength: 100,
                   decoration: InputDecoration(
                     hintText: S.of(context).search,
                     filled: true,
@@ -205,7 +206,7 @@ class _SelectLendingPlaceItemState extends State<SelectLendingPlaceItem> {
             child: Padding(
               padding: const EdgeInsets.all(10.0),
               child: Container(
-                height: 40,
+                height: 92,
                 alignment: Alignment.centerLeft,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
