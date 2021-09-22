@@ -1200,7 +1200,6 @@ class L {
 
   String get length_of_stay => 'Length of stay between:  ';
   String get collect_and_return_items => 'Collect and Return items:  ';
-  String get items_collected => 'Item(s) Collected';
   String get items_returned => 'Item(s) Returned';
   String get checked_in => 'Checked In';
   String get checked_out => 'Checked Out';
@@ -1455,4 +1454,6 @@ class L {
   String get offer_start_date_validation => "Please enter start date";
   String get lease_start_date => 'Lease Start Date: ';
   String get agreement_accepted => 'Accepted without agreement';
+  String get items_collected => 'Item(s) Collected';
+
 }

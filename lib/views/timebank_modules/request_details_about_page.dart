@@ -7,11 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/components/calendar_events/models/kloudless_models.dart';
 import 'package:sevaexchange/components/calendar_events/module/index.dart';
-import 'package:sevaexchange/components/calender_event_confirm_dialog.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
-import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/basic_user_details.dart';
 import 'package:sevaexchange/models/enums/lending_borrow_enums.dart';
 import 'package:sevaexchange/models/request_model.dart';
@@ -27,7 +25,6 @@ import 'package:sevaexchange/ui/screens/borrow_agreement/borrow_agreement_pdf.da
 import 'package:sevaexchange/ui/screens/notifications/pages/personal_notifications.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/lending_offer_details.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/lending_item_card_widget.dart';
-import 'package:sevaexchange/ui/screens/offers/widgets/lending_place_card_widget.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/lending_place_details_widget.dart';
 import 'package:sevaexchange/ui/screens/request/pages/oneToManyCreatorCompleteRequestPage.dart';
 import 'package:sevaexchange/ui/screens/request/pages/oneToManySpeakerTimeEntryComplete_page.dart';
@@ -38,7 +35,6 @@ import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/utils/helpers/configuration_check.dart';
 import 'package:sevaexchange/utils/helpers/projects_helper.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
@@ -56,7 +52,7 @@ import 'package:sevaexchange/widgets/full_screen_widget.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 import 'package:url_launcher/url_launcher.dart';
-
+import 'package:sevaexchange/utils/extensions.dart';
 import '../../flavor_config.dart';
 // import 'package:timezone/browser.dart';
 
@@ -1205,16 +1201,16 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   ? S.of(context).request_approved
                   : S.of(context).request_has_been_assigned_to_a_member;
         } else if (widget.requestItem.roomOrTool == 'PLACE') {
-          textLabel = widget.requestItem.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID
+        textLabel = widget.requestItem.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID
               ? S.of(context).creator_of_request_message
               : S.of(context).borrow_request_for_place;
         } else {
-          textLabel = widget.requestItem.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID
+        textLabel = widget.requestItem.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID
               ? S.of(context).creator_of_request_message
               : S.of(context).borrow_request_for_item;
         }
 
-        actionWidget = widget.requestItem.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID
+      actionWidget = widget.requestItem.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID
             ? Container()
             : (widget.requestItem.approvedUsers.length >= 1
                 ? Container()

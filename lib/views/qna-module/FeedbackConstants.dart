@@ -99,7 +99,8 @@ class FeedbackConstants {
 //FEEDBACK_QUESTIONS_FOR_LENDER_TOOL
   static const FEEDBACK_QUESTIONS_FOR_LENDER_EN = const [
     {
-      FEEDBACK_TITLE: "How would you rate your experience?",
+      FEEDBACK_TITLE:
+          "How would you rate your experience? (on a scale between 0-5, where 0 = not at all satisfied and 5 = Extremely Satisfied)",
       ANSWERS: [
         {ANSWER_TEXT: "Excellent", SCORE: 5},
         {ANSWER_TEXT: "Above Average", SCORE: 4},
@@ -108,7 +109,8 @@ class FeedbackConstants {
       ]
     },
     {
-      FEEDBACK_TITLE: "Did you experience any difficulty in retrieving back what you lent",
+      FEEDBACK_TITLE:
+          "Did you experience any difficulty in retrieving back what you lent? (on a scale between 0-5, where 0 = not at all satisfied and 5 = Extremely Satisfied)",
       ANSWERS: [
         {ANSWER_TEXT: "No difficulty", SCORE: 5},
         {ANSWER_TEXT: "Only slightly", SCORE: 4},
@@ -116,7 +118,8 @@ class FeedbackConstants {
       ]
     },
     {
-      FEEDBACK_TITLE: "Was the item or place you lent given back in the same condition?",
+      FEEDBACK_TITLE:
+          "Was the item or place you lent given back in the same condition? (on a scale between 0-5, where 0 = not at all satisfied and 5 = Extremely Satisfied)",
       ANSWERS: [
         {"text": "Yes, just as good", SCORE: 5},
         {"text": "No, not as good condition", SCORE: 4},
@@ -124,7 +127,8 @@ class FeedbackConstants {
       ]
     },
     {
-      FEEDBACK_TITLE: "How likely are you to lend to this person again?",
+      FEEDBACK_TITLE:
+          "How likely are you to lend to this person again? (on a scale between 0-5, where 0 = not at all satisfied and 5 = Extremely Satisfied)",
       ANSWERS: [
         {ANSWER_TEXT: "Yes, I would", SCORE: 5},
         {ANSWER_TEXT: "I’m not sure", SCORE: 4},
@@ -132,7 +136,8 @@ class FeedbackConstants {
       ]
     },
     {
-      FEEDBACK_TITLE: "Based on your experience, are you likely to lend again?",
+      FEEDBACK_TITLE:
+          "Based on your experience, are you likely to lend again? (on a scale between 0-5, where 0 = not at all satisfied and 5 = Extremely Satisfied)",
       ANSWERS: [
         {ANSWER_TEXT: "Yes, I would", SCORE: 5},
         {ANSWER_TEXT: "I’m not sure", SCORE: 4},
@@ -140,6 +145,7 @@ class FeedbackConstants {
       ]
     },
   ];
+
 
   static const FEEDBACK_QUESTIONS_FOR_LENDER_SN = const [
     {
@@ -186,9 +192,10 @@ class FeedbackConstants {
   ];
 
 //----------------------------------------
-  static const FEEDBACK_QUESTIONS_FOR_LENDER_SW = const [
+ static const FEEDBACK_QUESTIONS_FOR_LENDER_SW = const [
     {
-      FEEDBACK_TITLE: "Je! Unaweza kukadiria uzoefu wako?",
+      FEEDBACK_TITLE:
+          "Je! Unaweza kukadiria uzoefu wako? (kwa kiwango kati ya 0-5, ambapo 0 = haijaridhika kabisa na 5 = Imeridhika kabisa)",
       ANSWERS: [
         {ANSWER_TEXT: "Bora", SCORE: 5},
         {ANSWER_TEXT: "Juu ya Wastani", SCORE: 4},
@@ -197,7 +204,8 @@ class FeedbackConstants {
       ]
     },
     {
-      FEEDBACK_TITLE: "Je! Ulipata shida yoyote katika kurudisha kile ulichokopesha",
+      FEEDBACK_TITLE:
+          "Je! Ulipata shida yoyote kurudisha kile ulichokopesha? (kwa kiwango kati ya 0-5, ambapo 0 = haijaridhika kabisa na 5 = Imeridhika kabisa)",
       ANSWERS: [
         {ANSWER_TEXT: "Hakuna ugumu", SCORE: 5},
         {ANSWER_TEXT: "Kidogo tu", SCORE: 4},
@@ -205,7 +213,8 @@ class FeedbackConstants {
       ]
     },
     {
-      FEEDBACK_TITLE: "Je! Bidhaa au mahali ulipokopesha vilirudishwa katika hali ile ile?",
+      FEEDBACK_TITLE:
+          "Je! Bidhaa au mahali ulipokopesha vilirudishwa katika hali ile ile? (kwa kiwango kati ya 0-5, ambapo 0 = haijaridhika kabisa na 5 = Imeridhika kabisa)",
       ANSWERS: [
         {"text": "Ndio, sawa tu", SCORE: 5},
         {"text": "Hapana, sio hali nzuri", SCORE: 4},
@@ -213,7 +222,8 @@ class FeedbackConstants {
       ]
     },
     {
-      FEEDBACK_TITLE: "Una uwezekano gani wa kumkopesha mtu huyu tena?",
+      FEEDBACK_TITLE:
+          "Una uwezekano gani wa kumkopesha mtu huyu tena? (kwa kiwango kati ya 0-5, ambapo 0 = haijaridhika kabisa na 5 = Imeridhika kabisa)",
       ANSWERS: [
         {ANSWER_TEXT: "Ndio, ningependa", SCORE: 5},
         {ANSWER_TEXT: "Sina uhakika", SCORE: 4},
@@ -221,7 +231,8 @@ class FeedbackConstants {
       ]
     },
     {
-      FEEDBACK_TITLE: "Kulingana na uzoefu wako, je! Kuna uwezekano wa kukopesha tena?",
+      FEEDBACK_TITLE:
+          "Kulingana na uzoefu wako, je! Kuna uwezekano wa kukopesha tena? (kwa kiwango kati ya 0-5, ambapo 0 = haijaridhika kabisa na 5 = Imeridhika kabisa)",
       ANSWERS: [
         {ANSWER_TEXT: "Ndio, ningependa", SCORE: 5},
         {ANSWER_TEXT: "Sina uhakika", SCORE: 4},
@@ -229,6 +240,7 @@ class FeedbackConstants {
       ]
     },
   ];
+
 
 //----------------------------------------
   static const FEEDBACK_QUESTIONS_FOR_LENDER_AF = const [
@@ -277,7 +289,8 @@ class FeedbackConstants {
 
   static const FEEDBACK_QUESTIONS_FOR_LENDER_FR = const [
     {
-      FEEDBACK_TITLE: "comment noteriez-vous votre expérience?",
+      FEEDBACK_TITLE:
+          "comment noteriez-vous votre expérience? (sur une échelle de 0 à 5, où 0 = pas du tout satisfait et 5 = extrêmement satisfait)",
       ANSWERS: [
         {ANSWER_TEXT: "Excellent", SCORE: 5},
         {ANSWER_TEXT: "Au dessus de la moyenne", SCORE: 4},
@@ -286,7 +299,8 @@ class FeedbackConstants {
       ]
     },
     {
-      FEEDBACK_TITLE: "Avez-vous rencontré des difficultés pour récupérer ce que vous avez prêté",
+      FEEDBACK_TITLE:
+          "Avez-vous rencontré des difficultés pour récupérer ce que vous avez prêté ? (sur une échelle de 0 à 5, où 0 = pas du tout satisfait et 5 = extrêmement satisfait)",
       ANSWERS: [
         {ANSWER_TEXT: "Aucune difficulté", SCORE: 5},
         {ANSWER_TEXT: "Seulement un peu", SCORE: 4},
@@ -294,7 +308,8 @@ class FeedbackConstants {
       ]
     },
     {
-      FEEDBACK_TITLE: "L'objet ou le lieu que vous avez prêté a-t-il été rendu dans le même état ?",
+      FEEDBACK_TITLE:
+          "L'objet ou le lieu que vous avez prêté a-t-il été rendu dans le même état ? (sur une échelle de 0 à 5, où 0 = pas du tout satisfait et 5 = extrêmement satisfait)",
       ANSWERS: [
         {"text": "Oui, tout aussi bien", SCORE: 5},
         {"text": "Non, pas en aussi bon état", SCORE: 4},
@@ -302,7 +317,8 @@ class FeedbackConstants {
       ]
     },
     {
-      FEEDBACK_TITLE: "Quelle est la probabilité que vous prêtiez à nouveau à cette personne ?",
+      FEEDBACK_TITLE:
+          "Quelle est la probabilité que vous prêtiez à nouveau à cette personne ? (sur une échelle de 0 à 5, où 0 = pas du tout satisfait et 5 = extrêmement satisfait)",
       ANSWERS: [
         {ANSWER_TEXT: "Oui je voudrais", SCORE: 5},
         {ANSWER_TEXT: "Je ne suis pas sûr", SCORE: 4},
@@ -311,7 +327,7 @@ class FeedbackConstants {
     },
     {
       FEEDBACK_TITLE:
-          "Sur la base de votre expérience, êtes-vous susceptible de prêter à nouveau ?",
+          "Sur la base de votre expérience, êtes-vous susceptible de prêter à nouveau ? (sur une échelle de 0 à 5, où 0 = pas du tout satisfait et 5 = extrêmement satisfait)",
       ANSWERS: [
         {ANSWER_TEXT: "Oui je voudrais", SCORE: 5},
         {ANSWER_TEXT: "Je ne suis pas sûr", SCORE: 4},
@@ -320,9 +336,10 @@ class FeedbackConstants {
     },
   ];
 
-  static const FEEDBACK_QUESTIONS_FOR_LENDER_CN = const [
+
+ static const FEEDBACK_QUESTIONS_FOR_LENDER_CN = const [
     {
-      FEEDBACK_TITLE: "你如何评价你的经验？",
+      FEEDBACK_TITLE: "您如何评价您的经验？ （在 0-5 之间的范围内，其中 0 = 完全不满意，5 = 非常满意）",
       ANSWERS: [
         {ANSWER_TEXT: "优秀", SCORE: 5},
         {ANSWER_TEXT: "高于平均水平", SCORE: 4},
@@ -331,7 +348,8 @@ class FeedbackConstants {
       ]
     },
     {
-      FEEDBACK_TITLE: "你在取回你借出的东西时有没有遇到任何困难",
+      FEEDBACK_TITLE:
+          "你在取回借出的东西时有没有遇到什么困难？ （在 0-5 之间的范围内，其中 0 = 完全不满意，5 = 非常满意）",
       ANSWERS: [
         {ANSWER_TEXT: "没有难度", SCORE: 5},
         {ANSWER_TEXT: "只是轻微", SCORE: 4},
@@ -339,7 +357,8 @@ class FeedbackConstants {
       ]
     },
     {
-      FEEDBACK_TITLE: "您借出的物品或地方是否以相同的状态归还？",
+      FEEDBACK_TITLE:
+          "您借出的物品或地方是否以相同的状态归还？ （在 0-5 之间的范围内，其中 0 = 完全不满意，5 = 非常满意）",
       ANSWERS: [
         {"text": "是的，一样好", SCORE: 5},
         {"text": "不，没有那么好", SCORE: 4},
@@ -347,7 +366,7 @@ class FeedbackConstants {
       ]
     },
     {
-      FEEDBACK_TITLE: "您再次借给此人的可能性有多大？",
+      FEEDBACK_TITLE: "您再次借给此人的可能性有多大？ （在 0-5 之间的范围内，其中 0 = 完全不满意，5 = 非常满意）",
       ANSWERS: [
         {ANSWER_TEXT: "是的，我会", SCORE: 5},
         {ANSWER_TEXT: "我不知道", SCORE: 4},
@@ -355,7 +374,7 @@ class FeedbackConstants {
       ]
     },
     {
-      FEEDBACK_TITLE: "根据您的经验，您有可能再次贷款吗？",
+      FEEDBACK_TITLE: "根据您的经验，您有可能再次贷款吗？ （在 0-5 之间的范围内，其中 0 = 完全不满意，5 = 非常满意）",
       ANSWERS: [
         {ANSWER_TEXT: "是的，我会", SCORE: 5},
         {ANSWER_TEXT: "我不知道", SCORE: 4},
@@ -363,6 +382,8 @@ class FeedbackConstants {
       ]
     },
   ];
+
+
 
   static const FEEDBACK_QUESTIONS_FOR_LENDER_DE = const [
     {
@@ -544,7 +565,8 @@ class FeedbackConstants {
 
   static const FEEDBACK_QUESTIONS_FOR_LENDER_PT = const [
     {
-      FEEDBACK_TITLE: "Como você classificaria sua experiência?",
+      FEEDBACK_TITLE:
+          "Como você classificaria sua experiência? (em uma escala entre 0-5, onde 0 = nada satisfeito e 5 = extremamente satisfeito)",
       ANSWERS: [
         {ANSWER_TEXT: "Excelente", SCORE: 5},
         {ANSWER_TEXT: "Acima da média", SCORE: 4},
@@ -553,7 +575,8 @@ class FeedbackConstants {
       ]
     },
     {
-      FEEDBACK_TITLE: "Você teve alguma dificuldade em recuperar o que emprestou",
+      FEEDBACK_TITLE:
+          "Você teve alguma dificuldade em recuperar o que emprestou? (em uma escala entre 0-5, onde 0 = nada satisfeito e 5 = extremamente satisfeito)",
       ANSWERS: [
         {ANSWER_TEXT: "Sem dificuldade", SCORE: 5},
         {ANSWER_TEXT: "Só um pouco", SCORE: 4},
@@ -561,7 +584,8 @@ class FeedbackConstants {
       ]
     },
     {
-      FEEDBACK_TITLE: "O item ou local que você emprestou foi devolvido nas mesmas condições?",
+      FEEDBACK_TITLE:
+          "O item ou local que você emprestou foi devolvido nas mesmas condições? (em uma escala entre 0-5, onde 0 = nada satisfeito e 5 = extremamente satisfeito)",
       ANSWERS: [
         {"text": "Sim tão bom", SCORE: 5},
         {"text": "Não, não está em boas condições", SCORE: 4},
@@ -569,7 +593,8 @@ class FeedbackConstants {
       ]
     },
     {
-      FEEDBACK_TITLE: "Qual é a probabilidade de você emprestar a essa pessoa novamente?",
+      FEEDBACK_TITLE:
+          "Qual é a probabilidade de você emprestar a essa pessoa novamente? (em uma escala entre 0-5, onde 0 = nada satisfeito e 5 = extremamente satisfeito)",
       ANSWERS: [
         {ANSWER_TEXT: "Sim eu iria", SCORE: 5},
         {ANSWER_TEXT: "Não tenho certeza", SCORE: 4},
@@ -577,7 +602,8 @@ class FeedbackConstants {
       ]
     },
     {
-      FEEDBACK_TITLE: "Com base em sua experiência, você provavelmente emprestará novamente?",
+      FEEDBACK_TITLE:
+          "Com base em sua experiência, você provavelmente emprestará novamente? (em uma escala entre 0-5, onde 0 = nada satisfeito e 5 = extremamente satisfeito)",
       ANSWERS: [
         {ANSWER_TEXT: "Sim eu iria", SCORE: 5},
         {ANSWER_TEXT: "Não tenho certeza", SCORE: 4},
@@ -586,9 +612,12 @@ class FeedbackConstants {
     },
   ];
 
-  static const FEEDBACK_QUESTIONS_FOR_LENDER_ES = const [
+
+
+ static const FEEDBACK_QUESTIONS_FOR_LENDER_ES = const [
     {
-      FEEDBACK_TITLE: "¿Cómo calificaría su experiencia?",
+      FEEDBACK_TITLE:
+          "¿Cómo calificaría usted su experiencia? (en una escala entre 0-5, donde 0 = nada satisfecho y 5 = extremadamente satisfecho)",
       ANSWERS: [
         {ANSWER_TEXT: "Excelente", SCORE: 5},
         {ANSWER_TEXT: "Por encima del promedio", SCORE: 4},
@@ -597,7 +626,8 @@ class FeedbackConstants {
       ]
     },
     {
-      FEEDBACK_TITLE: "¿Experimentó alguna dificultad para recuperar lo que prestó?",
+      FEEDBACK_TITLE:
+          "¿Experimentó alguna dificultad para recuperar lo prestado? (en una escala entre 0-5, donde 0 = nada satisfecho y 5 = extremadamente satisfecho)",
       ANSWERS: [
         {ANSWER_TEXT: "Sin dificultad", SCORE: 5},
         {ANSWER_TEXT: "Sólo ligeramente", SCORE: 4},
@@ -605,7 +635,8 @@ class FeedbackConstants {
       ]
     },
     {
-      FEEDBACK_TITLE: "¿El artículo o lugar que prestaste se devolvió en las mismas condiciones?",
+      FEEDBACK_TITLE:
+          "¿Se devolvió el artículo o lugar que prestó en las mismas condiciones? (en una escala entre 0-5, donde 0 = nada satisfecho y 5 = extremadamente satisfecho)",
       ANSWERS: [
         {"text": "Si igual de bueno", SCORE: 5},
         {"text": "No, no en tan buenas condiciones", SCORE: 4},
@@ -613,7 +644,8 @@ class FeedbackConstants {
       ]
     },
     {
-      FEEDBACK_TITLE: "¿Qué posibilidades hay de que le prestes de nuevo a esta persona?",
+      FEEDBACK_TITLE:
+          "¿Qué posibilidades hay de que le prestes de nuevo a esta persona? (en una escala entre 0-5, donde 0 = nada satisfecho y 5 = extremadamente satisfecho)",
       ANSWERS: [
         {ANSWER_TEXT: "Sí, lo haría", SCORE: 5},
         {ANSWER_TEXT: "No estoy seguro", SCORE: 4},
@@ -621,7 +653,8 @@ class FeedbackConstants {
       ]
     },
     {
-      FEEDBACK_TITLE: "Según su experiencia, ¿es probable que vuelva a prestar?",
+      FEEDBACK_TITLE:
+          "Según su experiencia, ¿es probable que vuelva a prestar? (en una escala entre 0-5, donde 0 = nada satisfecho y 5 = extremadamente satisfecho)",
       ANSWERS: [
         {ANSWER_TEXT: "Sí, lo haría", SCORE: 5},
         {ANSWER_TEXT: "No estoy seguro", SCORE: 4},
@@ -634,10 +667,10 @@ class FeedbackConstants {
 /////////////////////////////////================================================
 
 //FEEDBACK_QUESTIONS_FOR_BORROWER_TOOL
-  static const FEEDBACK_QUESTIONS_FOR_BORROWER_EN = const [
+   static const FEEDBACK_QUESTIONS_FOR_BORROWER_EN = const [
     {
       FEEDBACK_TITLE:
-          "Was the transaction completed in a professional manner on a scale between 0-10, where 0 = Not at all professional and 10 = Extremely Professional?",
+          "Was the transaction completed in a professional manner? (on a scale between 0-5, where 0 = not at all satisfied and 5 = Extremely Satisfied)",
       ANSWERS: [
         {ANSWER_TEXT: "Excellent", SCORE: 6},
         {ANSWER_TEXT: "Good", SCORE: 4},
@@ -648,7 +681,7 @@ class FeedbackConstants {
     },
     {
       FEEDBACK_TITLE:
-          "How easy was it for you to obtain the item(s) or place, on a scale between 0-10, where 0 = Not at all Easy and 10 = Extremely Easy?",
+          "How easy was it for you to obtain the item(s) or place? (on a scale between 0-5, where 0 = not at all satisfied and 5 = Extremely Satisfied)",
       ANSWERS: [
         {ANSWER_TEXT: "Excellent", SCORE: 6},
         {ANSWER_TEXT: "Good", SCORE: 4},
@@ -659,7 +692,7 @@ class FeedbackConstants {
     },
     {
       FEEDBACK_TITLE:
-          "How satisfied are you with the item or place you borrowed, on a scale between 0-10 where 0 = Not at all Satisfied and 10 = Extremely Satisfied?",
+          "How satisfied are you with the item or place you borrowed? (on a scale between 0-5, where 0 = not at all satisfied and 5 = Extremely Satisfied)",
       ANSWERS: [
         {ANSWER_TEXT: "Excellent", SCORE: 6},
         {ANSWER_TEXT: "Good", SCORE: 4},
@@ -670,7 +703,7 @@ class FeedbackConstants {
     },
     {
       FEEDBACK_TITLE:
-          "How likely are you to borrow from this person again, on a scale between 0-10 where 0 = Not at all Likely and 10 = Extremely Likely?",
+          "How likely are you to borrow from this person again? (on a scale between 0-5, where 0 = not at all satisfied and 5 = Extremely Satisfied)",
       ANSWERS: [
         {ANSWER_TEXT: "Excellent", SCORE: 6},
         {ANSWER_TEXT: "Good", SCORE: 4},
@@ -680,6 +713,7 @@ class FeedbackConstants {
       ]
     }
   ];
+
 
   static const FEEDBACK_QUESTIONS_FOR_BORROWER_SN = const [
     {
@@ -728,10 +762,10 @@ class FeedbackConstants {
     }
   ];
 
-  static const FEEDBACK_QUESTIONS_FOR_BORROWER_SW = const [
+ static const FEEDBACK_QUESTIONS_FOR_BORROWER_SW = const [
     {
       FEEDBACK_TITLE:
-      "Je! Shughuli hiyo ilikamilishwa kwa njia ya kitaalam kwa kiwango kati ya 0-10, ambapo 0 = Sio mtaalamu kabisa na 10 = Mtaalamu Sana?",
+          "Je! Shughuli hiyo ilikamilishwa kwa njia ya kitaalam? (kwa kiwango kati ya 0-5, ambapo 0 = haijaridhika kabisa na 5 = Imeridhika kabisa)",
       ANSWERS: [
         {ANSWER_TEXT: "Bora", SCORE: 6},
         {ANSWER_TEXT: "Nzuri", SCORE: 4},
@@ -742,7 +776,7 @@ class FeedbackConstants {
     },
     {
       FEEDBACK_TITLE:
-      "Je! Ilikuwa rahisi kwako kupata bidhaa au mahali, kwa kiwango kati ya 0-10, ambapo 0 = Sio Rahisi kabisa na 10 = Ni Rahisi Sana?",
+          "Je! Ilikuwa rahisi kwako kupata kitu au vitu? (kwa kiwango kati ya 0-5, ambapo 0 = haijaridhika kabisa na 5 = Imeridhika kabisa)",
       ANSWERS: [
         {ANSWER_TEXT: "Bora", SCORE: 6},
         {ANSWER_TEXT: "Nzuri", SCORE: 4},
@@ -753,7 +787,7 @@ class FeedbackConstants {
     },
     {
       FEEDBACK_TITLE:
-      "Umeridhika vipi na bidhaa au mahali ulipokopa, kwa kiwango kati ya 0-10 ambapo 0 = Hauridhiki kabisa na 10 = Umeridhika kabisa?",
+          "Umeridhika vipi na bidhaa au mahali ulipokopa? (kwa kiwango kati ya 0-5, ambapo 0 = haijaridhika kabisa na 5 = Imeridhika kabisa)",
       ANSWERS: [
         {ANSWER_TEXT: "Bora", SCORE: 6},
         {ANSWER_TEXT: "Nzuri", SCORE: 4},
@@ -764,7 +798,7 @@ class FeedbackConstants {
     },
     {
       FEEDBACK_TITLE:
-      "Una uwezekano gani wa kukopa kutoka kwa mtu huyu tena, kwa kiwango kati ya 0-10 ambapo 0 = Haiwezekani kabisa na 10 = Uwezekano mkubwa?",
+          "Una uwezekano gani wa kukopa kutoka kwa mtu huyu tena? (kwa kiwango kati ya 0-5, ambapo 0 = haijaridhika kabisa na 5 = Imeridhika kabisa)",
       ANSWERS: [
         {ANSWER_TEXT: "Bora", SCORE: 6},
         {ANSWER_TEXT: "Nzuri", SCORE: 4},
@@ -774,11 +808,12 @@ class FeedbackConstants {
       ]
     }
   ];
+
 
   static const FEEDBACK_QUESTIONS_FOR_BORROWER_AF = const [
     {
       FEEDBACK_TITLE:
-      "Is die transaksie professioneel afgehandel op 'n skaal tussen 0-10, waar 0 = Glad nie professioneel nie en 10 = Uiters professioneel?",
+          "Is die transaksie op 'n professionele manier afgehandel? (op 'n skaal tussen 0-5, waar 0 = glad nie tevrede nie en 5 = uiters tevrede)",
       ANSWERS: [
         {ANSWER_TEXT: "Uitstekend", SCORE: 6},
         {ANSWER_TEXT: "goed", SCORE: 4},
@@ -789,7 +824,7 @@ class FeedbackConstants {
     },
     {
       FEEDBACK_TITLE:
-      "Hoe maklik was dit vir u om die item (s) of plek op 'n skaal tussen 0-10 te kry, waar 0 = glad nie maklik nie en 10 = uiters maklik?",
+          "Hoe maklik was dit vir u om die item (s) of plek te bekom? (op 'n skaal tussen 0-5, waar 0 = glad nie tevrede nie en 5 = uiters tevrede)",
       ANSWERS: [
         {ANSWER_TEXT: "Uitstekend", SCORE: 6},
         {ANSWER_TEXT: "goed", SCORE: 4},
@@ -800,7 +835,7 @@ class FeedbackConstants {
     },
     {
       FEEDBACK_TITLE:
-      "Hoe tevrede is u met die item of plek wat u geleen het, op 'n skaal tussen 0-10 waar 0 = Glad nie tevrede nie en 10 = Uiters tevrede?",
+          "Hoe tevrede is u met die item of plek wat u geleen het? (op 'n skaal tussen 0-5, waar 0 = glad nie tevrede nie en 5 = uiters tevrede)",
       ANSWERS: [
         {ANSWER_TEXT: "Uitstekend", SCORE: 6},
         {ANSWER_TEXT: "goed", SCORE: 4},
@@ -811,7 +846,7 @@ class FeedbackConstants {
     },
     {
       FEEDBACK_TITLE:
-      "Hoe waarskynlik is dit dat u weer by hierdie persoon sal leen, op 'n skaal tussen 0-10 waar 0 = Glad nie waarskynlik nie en 10 = Uiters waarskynlik?",
+          "Hoe waarskynlik is dit dat u weer by hierdie persoon sal leen? (op 'n skaal tussen 0-5, waar 0 = glad nie tevrede nie en 5 = uiters tevrede)",
       ANSWERS: [
         {ANSWER_TEXT: "Uitstekend", SCORE: 6},
         {ANSWER_TEXT: "goed", SCORE: 4},
@@ -823,10 +858,11 @@ class FeedbackConstants {
   ];
 
 
-  static const FEEDBACK_QUESTIONS_FOR_BORROWER_FR = const [
+
+ static const FEEDBACK_QUESTIONS_FOR_BORROWER_FR = const [
     {
       FEEDBACK_TITLE:
-      "La transaction a-t-elle été réalisée de manière professionnelle sur une échelle de 0 à 10, où 0 = Pas du tout professionnel et 10 = Extrêmement professionnel ?",
+          "La transaction a-t-elle été réalisée de manière professionnelle ? (sur une échelle de 0 à 5, où 0 = pas du tout satisfait et 5 = extrêmement satisfait)",
       ANSWERS: [
         {ANSWER_TEXT: "Excellent", SCORE: 6},
         {ANSWER_TEXT: "Bon", SCORE: 4},
@@ -837,7 +873,7 @@ class FeedbackConstants {
     },
     {
       FEEDBACK_TITLE:
-      "A-t-il été facile pour vous d'obtenir le(s) article(s) ou le lieu, sur une échelle de 0 à 10, où 0 = Pas du tout facile et 10 = Extrêmement facile ?",
+          "A-t-il été facile pour vous d'obtenir le(s) article(s) ou le lieu ? (sur une échelle de 0 à 5, où 0 = pas du tout satisfait et 5 = extrêmement satisfait)",
       ANSWERS: [
         {ANSWER_TEXT: "Excellent", SCORE: 6},
         {ANSWER_TEXT: "Bon", SCORE: 4},
@@ -848,7 +884,7 @@ class FeedbackConstants {
     },
     {
       FEEDBACK_TITLE:
-      "Dans quelle mesure êtes-vous satisfait de l'article ou du lieu que vous avez emprunté, sur une échelle de 0 à 10 où 0 = Pas du tout satisfait et 10 = Extrêmement satisfait ?",
+          "Êtes-vous satisfait de l'article ou du lieu que vous avez emprunté ? (sur une échelle de 0 à 5, où 0 = pas du tout satisfait et 5 = extrêmement satisfait)",
       ANSWERS: [
         {ANSWER_TEXT: "Excellent", SCORE: 6},
         {ANSWER_TEXT: "Bon", SCORE: 4},
@@ -859,7 +895,7 @@ class FeedbackConstants {
     },
     {
       FEEDBACK_TITLE:
-      "Quelle est la probabilité que vous empruntiez à nouveau à cette personne, sur une échelle de 0 à 10 où 0 = Pas du tout probable et 10 = Extrêmement probable ?",
+          "Quelle est la probabilité que vous empruntiez à nouveau à cette personne ? (sur une échelle de 0 à 5, où 0 = pas du tout satisfait et 5 = extrêmement satisfait)",
       ANSWERS: [
         {ANSWER_TEXT: "Excellent", SCORE: 6},
         {ANSWER_TEXT: "Bon", SCORE: 4},
@@ -869,12 +905,12 @@ class FeedbackConstants {
       ]
     }
   ];
+
 
 
   static const FEEDBACK_QUESTIONS_FOR_BORROWER_CN = const [
     {
-      FEEDBACK_TITLE:
-      "交易是否以专业的方式完成，范围在 0-10 之间，其中 0 = 完全不专业，10 = 非常专业？",
+      FEEDBACK_TITLE: "交易是否以专业的方式完成？ （在 0-5 之间的范围内，其中 0 = 完全不满意，5 = 非常满意）",
       ANSWERS: [
         {ANSWER_TEXT: "优秀", SCORE: 6},
         {ANSWER_TEXT: "好的", SCORE: 4},
@@ -884,8 +920,7 @@ class FeedbackConstants {
       ]
     },
     {
-      FEEDBACK_TITLE:
-      "您在 0-10 之间的范围内获得物品或地点的难易程度，其中 0 = 一点也不简单，10 = 非常简单？",
+      FEEDBACK_TITLE: "您获得物品或地点的难易程度如何？ （在 0-5 之间的范围内，其中 0 = 完全不满意，5 = 非常满意）",
       ANSWERS: [
         {ANSWER_TEXT: "优秀", SCORE: 6},
         {ANSWER_TEXT: "好的", SCORE: 4},
@@ -895,8 +930,7 @@ class FeedbackConstants {
       ]
     },
     {
-      FEEDBACK_TITLE:
-      "您对借来的物品或地方的满意程度如何，范围在 0-10 之间，其中 0 = 完全不满意，10 = 非常满意？",
+      FEEDBACK_TITLE: "您对借来的物品或地方的满意程度如何？ （在 0-5 之间的范围内，其中 0 = 完全不满意，5 = 非常满意）",
       ANSWERS: [
         {ANSWER_TEXT: "优秀", SCORE: 6},
         {ANSWER_TEXT: "好的", SCORE: 4},
@@ -906,8 +940,7 @@ class FeedbackConstants {
       ]
     },
     {
-      FEEDBACK_TITLE:
-      "您再次向这个人借钱的可能性有多大，范围在 0-10 之间，其中 0 = 完全不可能，10 = 非常有可能？",
+      FEEDBACK_TITLE: "你再次向这个人借钱的可能性有多大？ （在 0-5 之间的范围内，其中 0 = 完全不满意，5 = 非常满意）",
       ANSWERS: [
         {ANSWER_TEXT: "优秀", SCORE: 6},
         {ANSWER_TEXT: "好的", SCORE: 4},
@@ -917,6 +950,7 @@ class FeedbackConstants {
       ]
     }
   ];
+
 
   static const FEEDBACK_QUESTIONS_FOR_BORROWER_DE = const [
     {
@@ -1108,10 +1142,10 @@ class FeedbackConstants {
   ];
 
 
-  static const FEEDBACK_QUESTIONS_FOR_BORROWER_PT = const [
+ static const FEEDBACK_QUESTIONS_FOR_BORROWER_PT = const [
     {
       FEEDBACK_TITLE:
-      "A transação foi concluída de maneira profissional em uma escala de 0 a 10, onde 0 = Nada profissional e 10 = Extremamente profissional?",
+          "A transação foi concluída de maneira profissional? (em uma escala entre 0-5, onde 0 = nada satisfeito e 5 = extremamente satisfeito)",
       ANSWERS: [
         {ANSWER_TEXT: "Excelente", SCORE: 6},
         {ANSWER_TEXT: "Bom", SCORE: 4},
@@ -1122,7 +1156,7 @@ class FeedbackConstants {
     },
     {
       FEEDBACK_TITLE:
-      "Quão fácil foi para você obter o (s) item (ns) ou local (is), em uma escala de 0 a 10, onde 0 = Nem um pouco Fácil e 10 = Extremamente Fácil?",
+          "Foi fácil para você obter o (s) item (ns) ou local? (em uma escala entre 0-5, onde 0 = nada satisfeito e 5 = extremamente satisfeito)",
       ANSWERS: [
         {ANSWER_TEXT: "Excelente", SCORE: 6},
         {ANSWER_TEXT: "Bom", SCORE: 4},
@@ -1133,7 +1167,7 @@ class FeedbackConstants {
     },
     {
       FEEDBACK_TITLE:
-      "Quão satisfeito você está com o item ou local que pediu emprestado, em uma escala de 0 a 10 onde 0 = Nada satisfeito e 10 = Extremamente satisfeito?",
+          "Quão satisfeito você está com o item ou lugar que você emprestou? (em uma escala entre 0-5, onde 0 = nada satisfeito e 5 = extremamente satisfeito)",
       ANSWERS: [
         {ANSWER_TEXT: "Excelente", SCORE: 6},
         {ANSWER_TEXT: "Bom", SCORE: 4},
@@ -1144,7 +1178,7 @@ class FeedbackConstants {
     },
     {
       FEEDBACK_TITLE:
-      "Qual é a probabilidade de você pedir emprestado a essa pessoa novamente, em uma escala entre 0-10 onde 0 = Nem um pouco provável e 10 = Extremamente provável?",
+          "Qual é a probabilidade de você pedir emprestado novamente a essa pessoa? (em uma escala entre 0-5, onde 0 = nada satisfeito e 5 = extremamente satisfeito)",
       ANSWERS: [
         {ANSWER_TEXT: "Excelente", SCORE: 6},
         {ANSWER_TEXT: "Bom", SCORE: 4},
@@ -1155,10 +1189,11 @@ class FeedbackConstants {
     }
   ];
 
-  static const FEEDBACK_QUESTIONS_FOR_BORROWER_ES = const [
+
+   static const FEEDBACK_QUESTIONS_FOR_BORROWER_ES = const [
     {
       FEEDBACK_TITLE:
-      "¿Se completó la transacción de manera profesional en una escala entre 0-10, donde 0 = Nada profesional y 10 = Extremadamente profesional?",
+          "¿Se completó la transacción de manera profesional? (en una escala entre 0-5, donde 0 = nada satisfecho y 5 = extremadamente satisfecho)",
       ANSWERS: [
         {ANSWER_TEXT: "Excelente", SCORE: 6},
         {ANSWER_TEXT: "Bueno", SCORE: 4},
@@ -1169,7 +1204,7 @@ class FeedbackConstants {
     },
     {
       FEEDBACK_TITLE:
-      "¿Qué tan fácil fue para usted obtener el (los) artículo (s) o colocarlo, en una escala entre 0-10, donde 0 = Nada fácil y 10 = Extremadamente fácil?",
+          "¿Qué tan fácil fue para usted obtener el (los) artículo (s) o el lugar? (en una escala entre 0-5, donde 0 = nada satisfecho y 5 = extremadamente satisfecho)",
       ANSWERS: [
         {ANSWER_TEXT: "Excelente", SCORE: 6},
         {ANSWER_TEXT: "Bueno", SCORE: 4},
@@ -1180,7 +1215,7 @@ class FeedbackConstants {
     },
     {
       FEEDBACK_TITLE:
-      "¿Qué tan satisfecho está con el artículo o lugar que pidió prestado, en una escala entre 0-10, donde 0 = Nada satisfecho y 10 = Extremadamente satisfecho?",
+          "¿Qué tan satisfecho está con el artículo o el lugar que pidió prestado? (en una escala entre 0-5, donde 0 = nada satisfecho y 5 = extremadamente satisfecho)",
       ANSWERS: [
         {ANSWER_TEXT: "Excelente", SCORE: 6},
         {ANSWER_TEXT: "Bueno", SCORE: 4},
@@ -1191,7 +1226,7 @@ class FeedbackConstants {
     },
     {
       FEEDBACK_TITLE:
-      "¿Qué tan probable es que vuelva a pedir prestado a esta persona, en una escala entre 0-10, donde 0 = Nada probable y 10 = Extremadamente probable?",
+          "¿Qué posibilidades hay de que vuelva a pedirle prestado a esta persona? (en una escala entre 0-5, donde 0 = nada satisfecho y 5 = extremadamente satisfecho)",
       ANSWERS: [
         {ANSWER_TEXT: "Excelente", SCORE: 6},
         {ANSWER_TEXT: "Bueno", SCORE: 4},
@@ -1201,6 +1236,7 @@ class FeedbackConstants {
       ]
     }
   ];
+
 
 
 

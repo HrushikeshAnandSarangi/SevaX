@@ -1029,19 +1029,25 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                           showDialog(
                             context: context,
                             builder: (_context) => AlertDialog(
-                              title: Text(S.of(context).item_received_alert_dialouge),
+                              title: Text(requestModelNew.roomOrTool == LendingType.PLACE.readable
+                                  ? S.of(context).admin_borrow_request_received_back_check_place
+                                  : S.of(context).admin_borrow_request_received_back_check_item),
                               actions: [
                                 CustomTextButton(
+                                  shape: StadiumBorder(),
+                                  color: Theme.of(context).accentColor,
+                                  padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
                                   onPressed: () {
                                     Navigator.of(_context).pop();
                                   },
-                                  child: Text(
-                                    S.of(context).not_yet,
-                                    style: TextStyle(
-                                        fontSize: 17, color: Theme.of(context).accentColor),
-                                  ),
+                                  child: Text(S.of(context).not_yet,
+                                      style: TextStyle(
+                                          fontSize: 16, fontFamily: 'Europa', color: Colors.white)),
                                 ),
                                 CustomTextButton(
+                                  shape: StadiumBorder(),
+                                  color: Theme.of(context).primaryColor,
+                                  padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
                                   onPressed: () async {
                                     Navigator.of(_context).pop();
 
@@ -1067,7 +1073,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                   },
                                   child: Text(
                                     S.of(context).yes,
-                                    style: TextStyle(fontSize: 17),
+                                    style: TextStyle(
+                                        fontSize: 16, fontFamily: 'Europa', color: Colors.white),
                                   ),
                                 ),
                               ],
