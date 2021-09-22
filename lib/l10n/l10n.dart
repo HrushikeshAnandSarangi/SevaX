@@ -1261,7 +1261,7 @@ class S {
       );
 
   String get project_location_hint => Intl.message(
-        'Event location will help your members to locate',
+        'Please specify the exact address.',
         name: 'project_location_hint',
       );
 
@@ -4046,7 +4046,7 @@ class S {
       );
 
   String get items_collected => Intl.message(
-        'Items collected',
+        'Item(s) Collected',
         name: 'items_collected',
       );
 
@@ -10114,6 +10114,66 @@ class S {
         'Lease Start Date: ',
         name: 'lease_start_date',
       );
+
+  String get canceled_text => Intl.message(
+        'Canceled',
+        name: 'canceled_text',
+      );
+
+  String get enter_minimum_three_characters => Intl.message(
+        'Enter minimum 3 characters',
+        name: 'enter_minimum_three_characters',
+      );
+
+  String get selected_date_should_be_less_then_current_date => Intl.message(
+        'Selected date should be less than current date.',
+        name: 'selected_date_should_be_less_then_current_date',
+      );
+
+  String get organization_text => Intl.message(
+        'Organization',
+        name: 'organization_text',
+      );
+
+  String get abc_cafe_text => Intl.message(
+        'Ex. ABC Cafe.',
+        name: 'abc_cafe_text',
+      );
+
+  String get sponsor_details_text => Intl.message(
+        'Sponsor Details',
+        name: 'sponsor_details_text',
+      );
+
+  String get add_event_sponsors_text => Intl.message(
+        'Add Event Sponsors',
+        name: 'add_event_sponsors_text',
+      );
+
+  String get sponsored_by_text => Intl.message(
+        'Sponsored by',
+        name: 'sponsored_by_text',
+      );
+
+  String get add_sponsor_text => Intl.message(
+        'Add Sponsor',
+        name: 'add_sponsor_text',
+      );
+
+  String get edit_name_text => Intl.message(
+        'Edit Name',
+        name: 'edit_name_text',
+      );
+
+  String get no_timeline_found => Intl.message(
+        'No timeline found',
+        name: 'no_timeline_found',
+      );
+
+  String get civil_code_dispute => Intl.message(
+        'Accordingly, to the maximum extent permitted by applicable law, you release us (and our officers, directors, agents, subsidiaries, joint ventures and employees) from claims, demands and damages (actual and consequential) of every kind and nature, known and unknown, arising out of or in any way connected with such disputes. If you are a California resident, you hereby waive California Civil Code §1542, which says: \"A general release does not extend to claims that the creditor or releasing party does not know or suspect to exist in his or her favor at the time of executing the release, and that, if known by him or her, would have materially affected his or her settlement with the debtor or releasing party.\" ',
+        name: 'civil_code_dispute',
+      );
 }
 
 class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {
@@ -10127,8 +10187,8 @@ class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {
         Locale.fromSubtags(languageCode: 'pt'),
         Locale.fromSubtags(languageCode: 'sn'),
         Locale.fromSubtags(languageCode: 'sw'),
-        Locale.fromSubtags(languageCode: 'zh', countryCode: 'CN'),
-        Locale.fromSubtags(languageCode: 'zh', countryCode: 'TW'),
+        Locale.fromSubtags(languageCode: 'zh'),
+        Locale.fromSubtags(languageCode: 'zh'),
   ];
 
   @override

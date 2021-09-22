@@ -93,7 +93,7 @@ class _TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(L.of(context).no_timeline_found),
+                              Text(S.of(context).no_timeline_found),
                             ],
                           )
                         : Expanded(
