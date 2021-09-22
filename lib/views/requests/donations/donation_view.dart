@@ -774,7 +774,7 @@ class _DonationViewState extends State<DonationView> {
                 width: 20,
               ),
               actionButton(
-                  buttonTitle: L.of(context).donate_text,
+                  buttonTitle: S.of(context).donate_text,
                   buttonColor: Colors.orange,
                   onPressed: () async {
                     var connResult = await Connectivity().checkConnectivity();

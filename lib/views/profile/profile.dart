@@ -16,6 +16,7 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/ui/screens/blocked_members/pages/blocked_members_page.dart';
 import 'package:sevaexchange/ui/screens/transaction_details/view/transaction_details_view.dart';
+import 'package:sevaexchange/ui/screens/user_info/pages/donations_details_view.dart';
 import 'package:sevaexchange/ui/screens/user_info/pages/user_donations.dart';
 import 'package:sevaexchange/ui/screens/user_info/pages/user_donations_list.dart';
 import 'package:sevaexchange/utils/animations/fade_route.dart';
@@ -233,15 +234,17 @@ class _ProfilePageState extends State<ProfilePage> {
                             isTimeBank: false,
                             userId: user.sevaUserID,
                             onTap: () {
-                              Navigator.of(context).push(
+                              Navigator.push(
+                                context,
                                 MaterialPageRoute(
-                                  builder: (context) {
-                                    return GoodsAndAmountDonationsList(
-                                      type: "user",
-                                      timebankid: "",
-                                      isGoods: false,
-                                    );
-                                  },
+                                  builder: (context) => DonationsDetailsView(
+                                    id: '',
+                                    totalBalance:
+                                        '', //change this to total of cash donated
+                                    timebankModel: null,
+                                    fromTimebank: false,
+                                    isGoods: false,
+                                  ),
                                 ),
                               );
                             }),
@@ -253,17 +256,20 @@ class _ProfilePageState extends State<ProfilePage> {
                             isTimeBank: false,
                             userId: user.sevaUserID,
                             onTap: () {
-                              Navigator.of(context).push(
+                              Navigator.push(
+                                context,
                                 MaterialPageRoute(
-                                  builder: (context) {
-                                    return GoodsAndAmountDonationsList(
-                                      type: "user",
-                                      timebankid: "",
-                                      isGoods: true,
-                                    );
-                                  },
+                                  builder: (context) => DonationsDetailsView(
+                                    id: '',
+                                    totalBalance:
+                                        '', //change this to total of goods donated
+                                    timebankModel: null,
+                                    fromTimebank: false,
+                                    isGoods: true,
+                                  ),
                                 ),
                               );
+                              // Na
                             }),
                       ],
                     ),

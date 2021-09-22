@@ -375,7 +375,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                         role: memberType(
                             widget.timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
                         child: _optionRadioButton(
-                            title: L.of(context).lend,
+                            title: S.of(context).lend_text,
                             value: RequestType.LENDING_OFFER,
                             groupvalue:
                                 snapshot.data != null ? snapshot.data : RequestType.LENDING_OFFER,
@@ -385,11 +385,11 @@ class _IndividualOfferState extends State<IndividualOffer> {
                               _bloc.onTypeChanged(data);
                               offerType = data;
                               title_hint = (_bloc.lendingOfferType == 0
-                                  ? L.of(context).lending_offer_title_hint_place
-                                  : L.of(context).lending_offer_title_hint_item);
+                                  ? S.of(context).lending_offer_title_hint_place
+                                  : S.of(context).lending_offer_title_hint_item);
                               description_hint = (_bloc.lendingOfferType == 0
-                                  ? L.of(context).lending_offer_description_hint_place
-                                  : L.of(context).lending_offer_description_hint_item);
+                                  ? S.of(context).lending_offer_description_hint_place
+                                  : S.of(context).lending_offer_description_hint_item);
 
                               setState(() {});
                             }),
@@ -827,7 +827,11 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                 },
                                 hint: title_hint != null
                                     ? title_hint
-                                    : S.of(context).offer_title_hint,
+                                    : offerType == RequestType.LENDING_OFFER
+                                        ? (_bloc.lendingOfferType == 0
+                                            ? S.of(context).lending_offer_title_hint_place
+                                            : S.of(context).lending_offer_title_hint_item)
+                                        : S.of(context).offer_title_hint,
                                 maxLength: null,
                                 error: getValidationError(context, snapshot.error),
                               );
@@ -935,18 +939,18 @@ class _IndividualOfferState extends State<IndividualOffer> {
                           ),
                         ),
                         HideWidget(
-                          hide: offerType == RequestType.ONE_TO_MANY_OFFER,
+                          hide: showVirtual(_bloc.lendingOfferType),
                           child: StreamBuilder<bool>(
                             initialData: false,
                             stream: _bloc.isPublicVisible,
                             builder: (context, snapshot) {
-                              return snapshot.data ||
-                                      ((offerType == RequestType.LENDING_OFFER &&
-                                          _bloc.lendingOfferType == 0)) ||
-                                      (offerType == RequestType.LENDING_OFFER &&
-                                              _bloc.lendingOfferType == 1 &&
-                                              lendingitemsShowPublic) &&
-                                          widget.timebankId != FlavorConfig.values.timebankId
+                              return snapshot.data &&
+                                      // ((offerType == RequestType.LENDING_OFFER &&
+                                      //     _bloc.lendingOfferType == 0)) ||
+                                      // (offerType == RequestType.LENDING_OFFER &&
+                                      //         _bloc.lendingOfferType == 1 &&
+                                      //         lendingitemsShowPublic) &&
+                                      widget.timebankId != FlavorConfig.values.timebankId
                                   ? Padding(
                                       padding: const EdgeInsets.symmetric(vertical: 10),
                                       child: StreamBuilder<bool>(
@@ -1166,48 +1170,86 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                     }
                                     if (offerType == RequestType.LENDING_OFFER) {
                                       FocusScope.of(context).unfocus();
-                                      if (OfferDurationWidgetState.starttimestamp != 0 &&
-                                          OfferDurationWidgetState.endtimestamp != 0) {
-                                        _bloc.startTime = OfferDurationWidgetState.starttimestamp;
-                                        _bloc.endTime = OfferDurationWidgetState.endtimestamp;
-                                        if (_bloc.endTime <= _bloc.startTime) {
+                                      if (_bloc.lendingOfferTypeMode == 1) {
+                                        if (OfferDurationWidgetState.starttimestamp != 0 &&
+                                            OfferDurationWidgetState.endtimestamp != 0) {
+                                          _bloc.startTime = OfferDurationWidgetState.starttimestamp;
+                                          _bloc.endTime = OfferDurationWidgetState.endtimestamp;
+                                          if (_bloc.endTime <= _bloc.startTime) {
+                                            errorDialog(
+                                              context: context,
+                                              error:
+                                                  S.of(context).validation_error_end_date_greater,
+                                            );
+                                            return;
+                                          }
+                                          if (DateTime.fromMillisecondsSinceEpoch(
+                                                  OfferDurationWidgetState.starttimestamp)
+                                              .isBefore(DateTime.now())) {
+                                            errorDialog(
+                                                context: context,
+                                                error: S.of(context).past_time_selected);
+                                            return;
+                                          }
+
+                                          if (widget.offerModel == null) {
+                                            await _bloc.createLendingOffer(
+                                                user: SevaCore.of(context).loggedInUser,
+                                                timebankId: widget.timebankId,
+                                                communityName: communityModel.name ?? '',
+                                                lendingAgreementLink: borrowAgreementLinkFinal,
+                                                agreementId: agreementIdFinal,
+                                                lendingOfferAgreementName: documentName,
+                                                agreementConfig: agreementConfig);
+                                          } else {
+                                            _bloc.updateLendingOffer(
+                                                offerModel: widget.offerModel,
+                                                lendingOfferAgreementName: documentName ?? '',
+                                                lendingOfferAgreementLink: borrowAgreementLinkFinal,
+                                                agreementId: agreementIdFinal,
+                                                agreementConfig: agreementConfig);
+                                          }
+                                        } else {
                                           errorDialog(
                                             context: context,
-                                            error: S.of(context).validation_error_end_date_greater,
+                                            error: S.of(context).offer_start_end_date,
                                           );
-                                          return;
-                                        }
-                                        if (DateTime.fromMillisecondsSinceEpoch(
-                                                OfferDurationWidgetState.starttimestamp)
-                                            .isBefore(DateTime.now())) {
-                                          errorDialog(
-                                              context: context,
-                                              error: S.of(context).past_time_selected);
-                                          return;
-                                        }
-
-                                        if (widget.offerModel == null) {
-                                          await _bloc.createLendingOffer(
-                                              user: SevaCore.of(context).loggedInUser,
-                                              timebankId: widget.timebankId,
-                                              communityName: communityModel.name ?? '',
-                                              lendingAgreementLink: borrowAgreementLinkFinal,
-                                              agreementId: agreementIdFinal,
-                                              lendingOfferAgreementName: documentName,
-                                              agreementConfig: agreementConfig);
-                                        } else {
-                                          _bloc.updateLendingOffer(
-                                              offerModel: widget.offerModel,
-                                              lendingOfferAgreementName: documentName ?? '',
-                                              lendingOfferAgreementLink: borrowAgreementLinkFinal,
-                                              agreementId: agreementIdFinal,
-                                              agreementConfig: agreementConfig);
                                         }
                                       } else {
-                                        errorDialog(
-                                          context: context,
-                                          error: S.of(context).offer_start_end_date,
-                                        );
+                                        if (OfferDurationWidgetState.starttimestamp != 0) {
+                                          _bloc.startTime = OfferDurationWidgetState.starttimestamp;
+                                          if (DateTime.fromMillisecondsSinceEpoch(
+                                                  OfferDurationWidgetState.starttimestamp)
+                                              .isBefore(DateTime.now())) {
+                                            errorDialog(
+                                                context: context,
+                                                error: S.of(context).past_time_selected);
+                                            return;
+                                          }
+
+                                          if (widget.offerModel == null) {
+                                            await _bloc.createLendingOffer(
+                                                user: SevaCore.of(context).loggedInUser,
+                                                timebankId: widget.timebankId,
+                                                communityName: communityModel.name ?? '',
+                                                lendingAgreementLink: borrowAgreementLinkFinal,
+                                                agreementId: agreementIdFinal,
+                                                lendingOfferAgreementName: documentName,
+                                                agreementConfig: agreementConfig);
+                                          } else {
+                                            _bloc.updateLendingOffer(
+                                                offerModel: widget.offerModel,
+                                                lendingOfferAgreementName: documentName ?? '',
+                                                lendingOfferAgreementLink: borrowAgreementLinkFinal,
+                                                agreementId: agreementIdFinal,
+                                                agreementConfig: agreementConfig);
+                                          }
+                                        } else {
+                                          errorDialog(
+                                            context: context,
+                                            error: S.of(context).offer_start_date_validation,
+                                          );
+                                        }
                                       }
                                     } else {
                                       if (widget.offerModel == null) {
@@ -1543,21 +1585,49 @@ class _IndividualOfferState extends State<IndividualOffer> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
+        StreamBuilder<String>(
+          stream: _bloc.offerDescription,
+          builder: (context, snapshot) {
+            return CustomTextField(
+              controller: _descriptionController,
+              currentNode: _description,
+              nextNode: _availability,
+              value: snapshot.data,
+              heading: "${S.of(context).offer_description}*",
+              onChanged: _bloc.onOfferDescriptionChanged,
+              hint: description_hint != null
+                  ? description_hint
+                  : (_bloc.lendingOfferType == 0
+                      ? S.of(context).lending_offer_description_hint_place
+                      : S.of(context).lending_offer_description_hint_item),
+              maxLength: 500,
+              maxLines: 2,
+              error: getValidationError(context, snapshot.error),
+            );
+          },
+        ),
+        SizedBox(height: 2),
         Container(
           alignment: Alignment.bottomLeft,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                S.of(context).lending_text,
-                style: TextStyle(
-                  fontSize: 16,
-                  //fontWeight: FontWeight.bold,
-                  fontFamily: 'Europa',
-                  color: Colors.black,
+              HideWidget(
+                hide: widget.offerModel != null,
+                child: Text(
+                  S.of(context).lending_text,
+                  style: TextStyle(
+                    fontSize: 16,
+                    //fontWeight: FontWeight.bold,
+                    fontFamily: 'Europa',
+                    color: Colors.black,
+                  ),
                 ),
               ),
-              SizedBox(height: 10),
+              HideWidget(
+                hide: widget.offerModel != null,
+                child: SizedBox(height: 10),
+              ),
               HideWidget(
                 hide: widget.offerModel != null,
                 child: CupertinoSegmentedControl<int>(
@@ -1589,11 +1659,11 @@ class _IndividualOfferState extends State<IndividualOffer> {
                         _bloc.lendingOfferType = val;
                       });
                       title_hint = (_bloc.lendingOfferType == 0
-                          ? L.of(context).lending_offer_title_hint_place
-                          : L.of(context).lending_offer_title_hint_item);
+                          ? S.of(context).lending_offer_title_hint_place
+                          : S.of(context).lending_offer_title_hint_item);
                       description_hint = (_bloc.lendingOfferType == 0
-                          ? L.of(context).lending_offer_description_hint_place
-                          : L.of(context).lending_offer_description_hint_item);
+                          ? S.of(context).lending_offer_description_hint_place
+                          : S.of(context).lending_offer_description_hint_item);
                     }
                   },
                   //groupValue: sharedValue,
@@ -1608,8 +1678,8 @@ class _IndividualOfferState extends State<IndividualOffer> {
           children: [
             Text(
               _bloc.lendingOfferType == 0
-                  ? L.of(context).select_a_place_lending
-                  : L.of(context).select_item_for_lending,
+                  ? S.of(context).select_a_place_lending
+                  : S.of(context).select_item_for_lending,
               style: TextStyle(
                 fontSize: 16,
                 //fontWeight: FontWeight.bold,
@@ -1750,38 +1820,20 @@ class _IndividualOfferState extends State<IndividualOffer> {
             }),
         SizedBox(height: 20),
         OfferDurationWidget(
+          hideEndDate: _bloc.lendingOfferTypeMode != 1,
           title: S.of(context).offer_duration,
           startTime: widget.offerModel != null
               ? DateTime.fromMillisecondsSinceEpoch(
                   widget.offerModel.lendingOfferDetailsModel.startDate,
                 )
               : null,
-          endTime: widget.offerModel != null
+          endTime: widget.offerModel != null && widget.offerModel.offerType == 'ONE_TIME'
               ? DateTime.fromMillisecondsSinceEpoch(
                   widget.offerModel.lendingOfferDetailsModel.endDate,
                 )
               : null,
         ),
         SizedBox(height: 20),
-        StreamBuilder<String>(
-          stream: _bloc.offerDescription,
-          builder: (context, snapshot) {
-            return CustomTextField(
-              controller: _descriptionController,
-              currentNode: _description,
-              nextNode: _availability,
-              value: snapshot.data,
-              heading: "${S.of(context).offer_description}*",
-              onChanged: _bloc.onOfferDescriptionChanged,
-              hint: description_hint != null
-                  ? description_hint
-                  : S.of(context).offer_description_hint,
-              maxLength: 500,
-              error: getValidationError(context, snapshot.error),
-            );
-          },
-        ),
-        SizedBox(height: 12),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -1796,7 +1848,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                 Container(
                   width: MediaQuery.of(context).size.width * 0.68,
                   child: Text(
-                    L.of(context).request_agreement_form_component_text,
+                    S.of(context).request_agreement_form_component_text,
                     style: TextStyle(fontSize: 14),
                     softWrap: true,
                   ),
@@ -1876,11 +1928,11 @@ class _IndividualOfferState extends State<IndividualOffer> {
                     _bloc.lendingOfferType == 0
                         ? errorDialog(
                             context: context,
-                            error: L.of(context).select_a_place_lending,
+                            error: S.of(context).select_a_place_lending,
                           )
                         : errorDialog(
                             context: context,
-                            error: L.of(context).select_item_for_lending,
+                            error: S.of(context).select_item_for_lending,
                           );
                     return;
                   }
@@ -1901,7 +1953,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                       MaterialPageRoute(
                         fullscreenDialog: true,
                         builder: (context) => AgreementForm(
-                          endTime: _bloc.endTime,
+                          endTime: _bloc.lendingOfferTypeMode == 0 ? 0 : _bloc.endTime,
                           startTime: _bloc.startTime,
                           requestModel: null,
                           lendingModel: selectedLendingModel,
@@ -1982,7 +2034,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
         ),
         SizedBox(height: 6),
         Text(
-          L.of(context).lending_offer_location_hint,
+          S.of(context).lending_offer_location_hint,
           style: TextStyle(fontSize: 15),
           softWrap: true,
         ),

@@ -75,7 +75,7 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
           isDissmissible: false,
           title: model.title,
           subTitle: model.requestType == RequestType.BORROW
-              ? '${user.fullname} ${L.of(context).has_reviewed_this_request_text}. \n${L.of(context).tap_to_share_feedback_text}.'
+              ? '${user.fullname} ${S.of(context).has_reviewed_this_request_text}. \n${S.of(context).tap_to_share_feedback_text}.'
               : '${user.fullname} ${S.of(context).completed_task_in} ${transactionModel.credits ?? "0"} ${transactionModel.credits > 1 ? S.of(context).hours : S.of(context).hour}, ${S.of(context).notifications_waiting_for_approval}.',
           photoUrl: user.photoURL,
           entityName: user.fullname,
@@ -289,7 +289,7 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
                                 ),
                               )
                             : Text(
-                                "${S.of(context).by_approving_you_accept} ${userModel.fullname} ${L.of(context).has_worked_for_text} $credits ${L.of(context).hours_text}",
+                                "${S.of(context).by_approving_you_accept} ${userModel.fullname} ${S.of(context).has_worked_for_text} $credits ${S.of(context).hours_text}",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontFamily: 'Europa',

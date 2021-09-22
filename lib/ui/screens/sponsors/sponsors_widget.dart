@@ -490,7 +490,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                       Row(
                         children: [
                           Text(
-                            L.of(context).sponsor_details,
+                            S.of(context).sponsor_details,
                             style: TextStyle(fontSize: 18.0),
                           ),
                           Spacer(),
@@ -609,7 +609,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                               color: Theme.of(context).primaryColor,
                               // textColor: FlavorConfig.values.buttonTextColor,
                               child: Text(
-                                L.of(context).add_sponsor,
+                                S.of(context).add_sponsor,
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontFamily: 'Europa',

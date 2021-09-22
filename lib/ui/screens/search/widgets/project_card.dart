@@ -70,12 +70,17 @@ class ProjectsCard extends StatelessWidget {
                       : Container(),
                   projectLocation != null ? Text(projectLocation) : Container(),
                   Spacer(),
-                  Text(
-                    timeago.format(
-                      DateTime.fromMillisecondsSinceEpoch(timestamp),
-                      locale: S.of(context).localeName == 'sn' ? 'en' : S.of(context).localeName,
+                  Expanded(
+                    child: Text(
+                      timeago.format(
+                        DateTime.fromMillisecondsSinceEpoch(timestamp),
+                        locale: S.of(context).localeName == 'sn'
+                            ? 'en'
+                            : S.of(context).localeName,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(color: Colors.grey),
                     ),
-                    style: TextStyle(color: Colors.grey),
                   ),
                 ],
               ),
@@ -86,7 +91,8 @@ class ProjectsCard extends StatelessWidget {
                   CircleAvatar(
                     radius: 38,
                     backgroundColor: Theme.of(context).primaryColor,
-                    backgroundImage: NetworkImage(photoUrl ?? defaultProjectImageURL),
+                    backgroundImage:
+                        NetworkImage(photoUrl ?? defaultProjectImageURL),
                   ),
                   SizedBox(width: 12),
                   Expanded(
@@ -95,7 +101,8 @@ class ProjectsCard extends StatelessWidget {
                       children: <Widget>[
                         Text(
                           title,
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                         SizedBox(height: 5),
                         Visibility(
@@ -120,7 +127,8 @@ class ProjectsCard extends StatelessWidget {
                                 startTime,
                                 loggedintimezone,
                               ),
-                              style: TextStyle(fontSize: 12, color: Colors.grey),
+                              style:
+                                  TextStyle(fontSize: 12, color: Colors.grey),
                             ),
                             SizedBox(width: 2),
                             Icon(
@@ -139,7 +147,8 @@ class ProjectsCard extends StatelessWidget {
                                 endTime,
                                 loggedintimezone,
                               ),
-                              style: TextStyle(fontSize: 12, color: Colors.grey),
+                              style:
+                                  TextStyle(fontSize: 12, color: Colors.grey),
                             ),
                           ],
                         ),

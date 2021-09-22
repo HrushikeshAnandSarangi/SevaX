@@ -204,8 +204,8 @@ class _BorrowRequestState extends State<BorrowRequest> {
         decoration: InputDecoration(
           errorMaxLines: 2,
           hintText: (roomOrTool == 0
-              ? L.of(context).borrow_request_title_hint_place
-              : L.of(context).borrow_request_title_hint_item),
+              ? S.of(context).borrow_request_title_hint_place
+              : S.of(context).borrow_request_title_hint_item),
           hintStyle: requestUtils.hintTextStyle,
         ),
         textInputAction: TextInputAction.next,
@@ -226,6 +226,63 @@ class _BorrowRequestState extends State<BorrowRequest> {
             widget.requestModel.title = value;
             return null;
           }
+        },
+      ),
+      SizedBox(height: 15),
+      (widget.requestModel.requestType == RequestType.BORROW && roomOrTool == 1)
+          ? Text(
+        S.of(context).request_description,
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          fontFamily: 'Europa',
+          color: Colors.black,
+        ),
+      )
+          : Text(
+        "${S.of(context).request_description}",
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          fontFamily: 'Europa',
+          color: Colors.black,
+        ),
+      ),
+      TextFormField(
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        onChanged: (value) {
+          if (value != null && value.length > 5) {
+            _debouncer.run(() async {
+              selectedCategoryModels = await getCategoriesFromApi(value);
+              categoryMode = S.of(context).suggested_categories;
+            });
+          }
+          requestUtils.updateExitWithConfirmationValue(context, 9, value);
+        },
+        textInputAction: TextInputAction.next,
+        decoration: InputDecoration(
+          errorMaxLines: 2,
+          hintText: (roomOrTool == 0
+              ? S.of(context).borrow_request_description_hint_place
+              : S.of(context).borrow_request_description_hint_item),
+          hintStyle: requestUtils.hintTextStyle,
+        ),
+        initialValue: widget.formType == RequestFormType.CREATE
+            ? requestUtils.getInitialDescription(
+            widget.offer, widget.isOfferRequest)
+            : widget.requestModel.description,
+        keyboardType: TextInputType.multiline,
+        maxLines: 2,
+        minLines: 2,
+        // ignore: missing_return
+        validator: (value) {
+          if (value.isEmpty) {
+            return S.of(context).validation_error_general_text;
+          }
+          if (profanityDetector.isProfaneString(value)) {
+            return S.of(context).profanity_text_alert;
+          }
+          widget.requestModel.description = value;
         },
       ),
       SizedBox(height: 15),
@@ -250,7 +307,7 @@ class _BorrowRequestState extends State<BorrowRequest> {
           HideWidget(
             hide: widget.formType == RequestFormType.EDIT,
             child: Container(
-              margin: EdgeInsets.only(top: 10, bottom: 20),
+              margin: EdgeInsets.only(top: 10, bottom: 10),
               child: CupertinoSegmentedControl<int>(
                 unselectedColor: Colors.grey[200],
                 selectedColor: Theme.of(context).primaryColor,
@@ -320,7 +377,7 @@ class _BorrowRequestState extends State<BorrowRequest> {
           ),
         ],
       ),
-      SizedBox(height: 30),
+      SizedBox(height: 10),
       OfferDurationWidget(
         title: "${S.of(context).request_duration} *",
         startTime: widget.formType == RequestFormType.EDIT
@@ -338,62 +395,6 @@ class _BorrowRequestState extends State<BorrowRequest> {
       ),
       HideWidget(
           hide: widget.formType == RequestFormType.EDIT, child: RepeatWidget()),
-      SizedBox(height: 15),
-      (widget.requestModel.requestType == RequestType.BORROW && roomOrTool == 1)
-          ? Text(
-              S.of(context).request_description,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Europa',
-                color: Colors.black,
-              ),
-            )
-          : Text(
-              "${S.of(context).request_description}",
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Europa',
-                color: Colors.black,
-              ),
-            ),
-      TextFormField(
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        onChanged: (value) {
-          if (value != null && value.length > 5) {
-            _debouncer.run(() async {
-              selectedCategoryModels = await getCategoriesFromApi(value);
-              categoryMode = S.of(context).suggested_categories;
-            });
-          }
-          requestUtils.updateExitWithConfirmationValue(context, 9, value);
-        },
-        textInputAction: TextInputAction.next,
-        decoration: InputDecoration(
-          errorMaxLines: 2,
-          hintText: (roomOrTool == 0
-              ? L.of(context).borrow_request_description_hint_place
-              : L.of(context).borrow_request_description_hint_item),
-          hintStyle: requestUtils.hintTextStyle,
-        ),
-        initialValue: widget.formType == RequestFormType.CREATE
-            ? requestUtils.getInitialDescription(
-                widget.offer, widget.isOfferRequest)
-            : widget.requestModel.description,
-        keyboardType: TextInputType.multiline,
-        maxLines: 1,
-        // ignore: missing_return
-        validator: (value) {
-          if (value.isEmpty) {
-            return S.of(context).validation_error_general_text;
-          }
-          if (profanityDetector.isProfaneString(value)) {
-            return S.of(context).profanity_text_alert;
-          }
-          widget.requestModel.description = value;
-        },
-      ),
       SizedBox(height: 20),
       CategoryWidget(
         requestModel: widget.requestModel,

@@ -4,21 +4,28 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
+import 'package:sevaexchange/widgets/hide_widget.dart';
 
 import 'calendar_widget.dart';
 import 'date_time_selector_widget.dart';
 import 'time_picker_widget.dart';
 
 class CalendarPicker extends StatefulWidget {
+  final bool hideEndDate;
   final String title;
   final DateTime startDate;
   final DateTime endDate;
   final String selectedstartorend;
   //final void Function(DateTime dateTime) onDateSelected;
 
-  CalendarPicker(this.title, Key key, this.startDate, this.endDate,
-      this.selectedstartorend)
-      : super(key: key);
+  CalendarPicker({
+    this.title,
+    Key key,
+    this.startDate,
+    this.endDate,
+    this.selectedstartorend,
+    this.hideEndDate = false,
+  }) : super(key: key);
 
   @override
   CalendarPickerState createState() => CalendarPickerState();
@@ -35,10 +42,9 @@ class CalendarPickerState extends State<CalendarPicker> {
   void initState() {
     super.initState();
     startDate = widget.startDate;
-    endDate = widget.endDate;
-    selectionType = widget.selectedstartorend == 'start'
-        ? SelectionType.START_DATE
-        : SelectionType.END_DATE;
+    endDate = widget.hideEndDate ? startDate : widget.endDate;
+    selectionType =
+        widget.selectedstartorend == 'start' ? SelectionType.START_DATE : SelectionType.END_DATE;
   }
 
   @override
@@ -48,13 +54,12 @@ class CalendarPickerState extends State<CalendarPicker> {
         leading: BackButton(
           color: Colors.black,
           onPressed: () {
-            Navigator.pop(context, [startDate, endDate]);
+            Navigator.pop(context, [startDate, widget.hideEndDate ? endDate : null]);
           },
         ),
         title: Text(
           widget.title,
-          style: TextStyle(
-              color: Colors.black, fontSize: 18, fontFamily: 'Europa'),
+          style: TextStyle(color: Colors.black, fontSize: 18, fontFamily: 'Europa'),
         ),
         centerTitle: false,
         backgroundColor: Colors.white,
@@ -75,15 +80,18 @@ class CalendarPickerState extends State<CalendarPicker> {
                   isSelected: selectionType == SelectionType.START_DATE,
                 ),
               ),
-              Expanded(
-                child: DateTimeSelector(
-                  title: S.of(context).end,
-                  onPressed: () {
-                    setState(() => {selectionType = SelectionType.END_DATE});
-                    log("end date : $endDate");
-                  },
-                  dateTime: endDate,
-                  isSelected: selectionType == SelectionType.END_DATE,
+              HideWidget(
+                hide: widget.hideEndDate,
+                child: Expanded(
+                  child: DateTimeSelector(
+                    title: S.of(context).end,
+                    onPressed: () {
+                      setState(() => {selectionType = SelectionType.END_DATE});
+                      log("end date : $endDate");
+                    },
+                    dateTime: endDate,
+                    isSelected: selectionType == SelectionType.END_DATE,
+                  ),
                 ),
               ),
             ],
@@ -91,22 +99,16 @@ class CalendarPickerState extends State<CalendarPicker> {
           Expanded(
             child: ListView(
               children: <Widget>[
-                CalendarWidget(
-                    DateTime.now(), startDate, endDate, selectionType,
+                CalendarWidget(DateTime.now(), startDate, endDate, selectionType,
                     (callbackDate, callbackSelectionType) {
                   setState(() {
                     // selectionType = callbackSelectionType;
                     if (selectionType == SelectionType.START_DATE) {
-                      startDate = DateTime(
-                          callbackDate.year,
-                          callbackDate.month,
-                          callbackDate.day,
-                          startDate.hour,
-                          startDate.minute);
-                      if (endDate.millisecondsSinceEpoch <
-                          startDate.millisecondsSinceEpoch) {
-                        endDate = DateTime(startDate.year, startDate.month,
-                            startDate.day, endDate.hour + 1, endDate.minute);
+                      startDate = DateTime(callbackDate.year, callbackDate.month, callbackDate.day,
+                          startDate.hour, startDate.minute);
+                      if (endDate.millisecondsSinceEpoch < startDate.millisecondsSinceEpoch) {
+                        endDate = DateTime(startDate.year, startDate.month, startDate.day,
+                            endDate.hour + 1, endDate.minute);
                       }
                     } else
                       endDate = callbackDate;
@@ -117,10 +119,8 @@ class CalendarPickerState extends State<CalendarPicker> {
                   color: Color(0xfff2f2f2),
                   child: Text(
                     S.of(context).time,
-                    style: TextStyle(
-                        fontFamily: 'Europa',
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold),
+                    style:
+                        TextStyle(fontFamily: 'Europa', fontSize: 14, fontWeight: FontWeight.bold),
                   ),
                 ),
                 SizedBox(
@@ -134,22 +134,19 @@ class CalendarPickerState extends State<CalendarPicker> {
                               ? startDate.hour == 12
                                   ? startDate.hour
                                   : startDate.hour % 12
-                              : startDate.millisecondsSinceEpoch <
-                                      endDate.millisecondsSinceEpoch
+                              : startDate.millisecondsSinceEpoch < endDate.millisecondsSinceEpoch
                                   ? endDate.hour % 12
                                   : startDate.hour % 12,
                           minute: selectionType == SelectionType.START_DATE
                               ? (((startDate.minute / 15).round() * 15) % 60)
-                              : startDate.millisecondsSinceEpoch <
-                                      endDate.millisecondsSinceEpoch
+                              : startDate.millisecondsSinceEpoch < endDate.millisecondsSinceEpoch
                                   ? ((endDate.minute / 15).round() * 15) % 60
                                   : ((startDate.minute / 15).round() * 15) % 60,
                           ispm: selectionType == SelectionType.START_DATE
                               ? startDate.hour >= 12
                                   ? "PM"
                                   : "AM"
-                              : startDate.millisecondsSinceEpoch <
-                                      endDate.millisecondsSinceEpoch
+                              : startDate.millisecondsSinceEpoch < endDate.millisecondsSinceEpoch
                                   ? endDate.hour >= 12
                                       ? "PM"
                                       : "AM"
@@ -160,12 +157,10 @@ class CalendarPickerState extends State<CalendarPicker> {
                             setState(() {
                               if (selectionType == SelectionType.START_DATE) {
                                 DateTime d1 = startDate;
-                                startDate = DateTime(
-                                    d1.year, d1.month, d1.day, hour, minute);
+                                startDate = DateTime(d1.year, d1.month, d1.day, hour, minute);
                               } else {
                                 DateTime d1 = endDate;
-                                endDate = DateTime(
-                                    d1.year, d1.month, d1.day, hour, minute);
+                                endDate = DateTime(d1.year, d1.month, d1.day, hour, minute);
                               }
                             });
                           },
@@ -182,8 +177,8 @@ class CalendarPickerState extends State<CalendarPicker> {
           getBottomButton(
             context,
             () {
-              if (endDate.millisecondsSinceEpoch <
-                  startDate.millisecondsSinceEpoch) {
+              if (endDate.millisecondsSinceEpoch < startDate.millisecondsSinceEpoch &&
+                  !widget.hideEndDate) {
                 _dateInvalidAlert(context);
               } else {
                 Navigator.pop(context, [startDate, endDate]);

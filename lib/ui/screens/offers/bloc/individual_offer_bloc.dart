@@ -134,6 +134,7 @@ class IndividualOfferBloc extends BlocBase with Validators {
   Stream<String> get offeredCurrency => _offeredCurrencyType.stream;
   Stream<String> get donatedOfferCurrency => _offerDonatedCurrencyType.stream;
   Stream<String> get offerFlag => _offerCurrencyFlag.stream;
+
   ///[Function] to create offer
   void createOrUpdateOffer(
       {UserModel user, String timebankId, String communityName}) {
@@ -268,8 +269,7 @@ class IndividualOfferBloc extends BlocBase with Validators {
     _makeVirtual.add(offerModel.virtual);
     _goodsDonationDetails.add(offerModel.goodsDonationDetails);
     _donationAmount.add(offerModel.cashModel.targetAmount);
-     _offeredCurrencyType
-          .add(offerModel?.cashModel?.offerCurrencyType ?? 'USD');
+    _offeredCurrencyType.add(offerModel?.cashModel?.offerCurrencyType ?? 'USD');
 
     if (offerModel.individualOfferDataModel != null) {
       _minimumCredits
@@ -462,7 +462,7 @@ class IndividualOfferBloc extends BlocBase with Validators {
           ..agreementId = agreementId
           ..lendingOfferAgreementName = lendingOfferAgreementName
           ..startDate = startTime
-          ..endDate = endTime
+          ..endDate = endTime ?? null
           ..lendingOfferTypeMode =
               lendingOfferTypeMode == 0 ? 'SPOT_ON' : 'ONE_TIME'
           ..agreementConfig = agreementConfig ?? {};

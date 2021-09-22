@@ -17,10 +17,10 @@
 	"seva_community_seva_means_selfless_service_in_Sanskrit": "Seva Community. Seva means \"selfless service\" in Sanskrit",
 	"seva_ommunities_are_based_on_a_mutual_reciprocity_system": "Seva Communities are based on a mutual-reciprocity system",
 	"where_community_members_help_each_other_out_in_exchange_for_seva_credits_that_can_be_redeemed_for_services_they_need": "where community members help each other out in exchange for Seva Credits that can be redeemed for services they need",
-	"to_learn_more_about_being_a_part_of_a_Seva_Community_here_s_a_short_explainer_video": "To learn more about being a part of a Seva Community, here's a short explainer video",
+	"to_learn_more_about_being_a_part_of_a_Seva_Community_here_s_a_short_explainer_video": "To learn more about being a part of a Seva Community, here\"s a short explainer video",
 	"here_is_what_you_ll_need_to_know": "Here is what you'll need to know",
 	"first_text": "First",
-	"depending_on_where_you_click_the_link_from_whether_it_s_your_web_browser_or_mobile_phone": "depending on where you click the link from, whether it's your web browser or mobile phone",
+	"depending_on_where_you_click_the_link_from_whether_it_s_your_web_browser_or_mobile_phone": "depending on where you click the link from, whether it\"s your web browser or mobile phone",
 	"the_link_will_either_take_you_to_our_main": "the link will either take you to our main",
 	"web_page_where_you_can_register_on_the_web_directly_or_it_will_take_you_from_your_mobile_phone_to_the_App_or_google_play_stores": "web page where you can register on the web directly or it will take you from your mobile phone to the App or Google Play Stores",
 	"where_you_can_download_our_SevaX_App_Once_you_have_registered_on_the_SevaX_mobile_app_or_the_website": "where you can download our SevaX App. Once you have registered on the SevaX mobile app or the website",
@@ -34,7 +34,7 @@
 	"you_are_signing_up_for_this_test": "You are signing up for this",
 	"doing_so_will_debit_a_total_of": "Doing so will debit a total of",
 	"credits_from_you_after_you_say_ok": "credits from you after you say OK",
-	"you_don_t_have_enough_credit_to_signup_for_this_class": "You don't have enough credit to signup for this class",
+	"you_don_t_have_enough_credit_to_signup_for_this_class": "You don\"t have enough credit to signup for this class",
 	"name_not_updated_text": "name not updated",
 	"notification_for_new_messages": "Notification for new messages",
 	"feeds_notification_text": "Feeds notification",
@@ -42,14 +42,10 @@
 	"edit_subsequent_requests": "Edit subsequent requests",
 	"edit_this_request_only": "Edit this request only",
 	"this_action_is_restricted_for_you_by_the_owner_of_this": "This action is restricted for you by the owner of this",
-	"time":"Time",
-	"cash":"Money",
-	"goods":"Goods",
-	"public":"Public",
-	"latest":"Latest",
-	"likes":"Likes",
 	"lending_offer_title_hint_item": "Ex: Offering to lend a lawnmower.",
 	"lending_offer_title_hint_place": "Ex: Offering to lend an apartment.",
+	"lending_offer_description_hint_item": "Provide a detailed description of the item you would like to lend.",
+	"lending_offer_description_hint_place": "Provide a detailed description of the place you would like to lend including number of rooms, number of beds, etc.",
 	"name_of_item_hint": "Ex: Lawnmower",
 	"bath_rooms": "Bathroom(s)",
 	"item_returned_hint_text": "Ex: item(s) must be returned in the same condition.",
@@ -58,69 +54,51 @@
 	"house_rules_hint": "Ex: No Smoking",
 	"borrow_request_title_hint_item": "Ex: Lawnmower",
 	"borrow_request_title_hint_place": "Ex: Apartment",
-	"borrow_request_description_hint_item":
-		"Provide a detailed description of the item you would like to borrow.",
-	"borrow_request_description_hint_place":
-		"Provide a detailed description of the place you would like to borrow including number of rooms, number of beds, etc.",
-	"lending_offer_description_hint_item":
-		"Provide a detailed description of the item you would like to lend.",
-	"lending_offer_description_hint_place":
-		"Provide a detailed description of the place you would like to lend including number of rooms, number of beds, etc.",
-	"accept_borrow_agreement_place_hint":
-		"Please provide details about your place, the proposed agreement and location of the property.",
+	"borrow_request_description_hint_item": "Provide a detailed description of the item you would like to borrow.",
+	"borrow_request_description_hint_place": "Provide a detailed description of the place you would like to borrow including number of rooms, number of beds, etc.",
+	"accept_borrow_agreement_place_hint": "Please provide details about your place, the proposed agreement and location of the property.",
 	"select_a_place_lending": "Select a place to lend*",
 	"select_item_for_lending": "Select an item to lend*",
-	"approve_borrow_terms_acknowledgement_text1":
-		"I acknowledge that you can use the property on the mentioned dates",
-	"approve_borrow_terms_acknowledgement_text2":
-		"I acknowledge that you can use the item(s) on the mentioned dates",
+	"approve_borrow_terms_acknowledgement_text1": "I acknowledge that you can use the property on the mentioned dates",
+	"approve_borrow_terms_acknowledgement_text2": "I acknowledge that you can use the item(s) on the mentioned dates",
 	"search_agreement_hint_place": "Enter name of a property agreement template",
 	"search_agreement_hint_item": "Enter name of an item agreement template",
 	"accept_place_borrow_request": "Accept Place Borrow Request",
 	"accept_item_borrow_request": "Accept Item Borrow request",
 	"accept_place_lending_offer": "Accept Place Lending Offer",
 	"accept_item_lending_offer": "Accept Item Lending Offer",
-	"request_agreement_form_component_text":
-		"Create the proposed agreement between you and the borrower regarding the property. Use previous agreements if appropriate.",
-	"lender_not_accepted_request_msg_place":
-		"Lender is providing the property request with no agreement required",
-	"lender_not_accepted_request_msg_item":
-		"Lender is providing the item(s) request with no agreement required",
-	"already_accepted_lender_place":
-		"You have already accepted a property for this request",
+	"request_agreement_form_component_text": "Create the proposed agreement between you and the borrower regarding the property. Use previous agreements if appropriate.",
+	"lender_not_accepted_request_msg_place": "Lender is providing the property request with no agreement required",
+	"lender_not_accepted_request_msg_item": "Lender is providing the item(s) request with no agreement required",
+	"already_accepted_lender_place": "You have already accepted a property for this request",
 	"already_accepted_lender_item": "You have already accepted an item for this request",
-	"admin_borrow_request_received_back_check_place":
-		"If you have received your place back from the borrower, please click the button below to complete this transaction",
-	"admin_borrow_request_received_back_check_item":
-		"If you have received your item(s) back from the borrower, please click the button below to complete this transaction",
+	"admin_borrow_request_received_back_check_place": "If you have received your place back from the borrower, please click the button below to complete this transaction",
+	"admin_borrow_request_received_back_check_item": "If you have received your item(s) back from the borrower, please click the button below to complete this transaction",
 	"place_agreement_name_hint_place": "Ex: House for the weekend..",
 	"place_agreement_name_hint_item": "Ex: Lawnmower for the weekend..",
-	"lend": "Lend",
-	"canceled": "Canceled",
+	"lend_text": "Lend",
 	"date_to_borrow_and_return": "Date to Collect and Return item(s)",
 	"date_to_check_in_out": "Date of Check In and expected Check Out",
-	"estimated_value_hint_place":
-		" (This is the amount based on the property's rental value, including amenities)",
-	"estimated_value_hint_item":
-		" (This is the amount based on the item(s) current value)",
-	"lending_offer_location_hint":
-		"Provide the location you would like to lend to a borrower.",
-	"end_date_after_offer_end_date":
-		"The date(s) selected are outside the scope of this offer. Please edit your offer end date to approve this request",
+	"agreement_accepted": "Accepted without agreement",
+	"estimated_value_hint_place": " (This is the amount based on the property's rental value, including amenities)",
+	"estimated_value_hint_item": " (This is the amount based on the item's current value)",
+	"lending_offer_location_hint": "Provide the information regarding the location you would like to lend",
+	"end_date_after_offer_end_date": "The dates selected are outside the scope of this offer. Please review and edit your requested dates to approve this request.",
 	"lending_offer_check_in_tag": "Lending Offer - Check In",
 	"lending_offer_check_out_tag": "Lending Offer - Check Out",
-	"agreement_damage_liability":
-		"The Borrower is responsible for the full cost of repair or replacement of any or all of the item(s) or properties that are damaged, lost, or stolen from the time Borrower assumes custody until it is returned to the lender unless otherwise agreed at the time the agreement is finalized. If the item(s) or property(s) is lost, stolen or damaged, Borrower agrees to promptly notify the Lender Representative designated above.",
-	"agreement_user_disclaimer":
-		"The Borrower shall be responsible for the proper use and deployment of the item(s) or properties. The Borrower shall be responsible for training anyone using the item(s) on the proper use of the item(s) in accordance with any item(s) use procedures.",
-	"agreement_delivery_return":
-		"Title to the item(s) the subject of this Agreement shall remain with Lender. The Borrower shall be responsible for the safe packaging, proper import, export, shipping and receiving of the item(s). The item(s) shall be returned within a reasonable amount of time after the Loan Period end date identified.",
-	"agreement_maintain_and_repair":
-		"Except for reasonable wear and tear, \"Item(s) shall be returned to Lender in as good condition as when received by the Borrower. During the Loan Period and prior to return, the Borrower agrees to assume all responsibility for maintenance and repair.\"",
-  
-	"agreement_refund_deposit":
-		"The borrower will provide a refundable deposit as defined within the agreement with the lender. The Criteria established regarding the condition of the item(s) or property upon return will also be defined in the agreement.",
-	"agreement_maintain_and_clean":
-		"All item(s) or properties borrowed must be returned in a condition similar to the condition it is received by the borrower unless otherwise noted in the agreement. Specific details related to the item(s) or properties and the lender's requirements upon return should be noted in the contract and agreed upon prior to prior to the borrower's receipt."
-  
+	"agreement_damage_liability": "The Borrower is responsible for the full cost of repair or replacement of any or all of the item(s) or properties that are damaged, lost, or stolen from the time Borrower assumes custody until it is returned to the lender unless otherwise agreed at the time the agreement is finalized. If the item(s) or property(s) is lost, stolen or damaged, Borrower agrees to promptly notify the Lender Representative designated above.",
+	"agreement_user_disclaimer": "The Borrower shall be responsible for the proper use and deployment of the item(s) or properties. The Borrower shall be responsible for training anyone using the item(s) on the proper use of the item(s) in accordance with any item(s) use procedures.",
+	"agreement_delivery_return": "Title to the item(s) the subject of this Agreement shall remain with Lender. The Borrower shall be responsible for the safe packaging, proper import, export, shipping and receiving of the item(s). The item(s) shall be returned within a reasonable amount of time after the Loan Period end date identified.",
+	"agreement_maintain_and_repair": "Except for reasonable wear and tear, \"Item(s) shall be returned to Lender in as good condition as when received by the Borrower. During the Loan Period and prior to return, the Borrower agrees to assume all responsibility for maintenance and repair.\"",
+	"agreement_refund_deposit": "The borrower will provide a refundable deposit as defined within the agreement with the lender. The Criteria established regarding the condition of the item(s) or property upon return will also be defined in the agreement.",
+	"agreement_maintain_and_clean": "All item(s) or properties borrowed must be returned in a condition similar to the condition it is received by the borrower unless otherwise noted in the agreement. Specific details related to the item(s) or properties and the lender's requirements upon return should be noted in the contract and agreed upon prior to the borrower's receipt.",
+	"would_like_to_accept_offer": "Would you like to accept this offer?",
+	"withdraw_lending_offer": "Click here if you want to withdraw your request",
+	"borrower_departed_provide_feedback": "You checked out as noted above. Tap to leave a feedback.",
+	"borrower_returned_items_feedback": "You returned items. Tap to leave a feedback.",
+	"validation_error_no_of_bathrooms": "Please enter no of bathrooms available",
+	"offer_start_date_validation": "Please enter start date",
+	"---------the------------------":"--------------end--------------------",
+	"no_timeline_found": "No timeline found",
+	"civil_code_dispute": "Accordingly, to the maximum extent permitted by applicable law, you release us (and our officers, directors, agents, subsidiaries, joint ventures and employees) from claims, demands and damages (actual and consequential) of every kind and nature, known and unknown, arising out of or in any way connected with such disputes. If you are a California resident, you hereby waive California Civil Code §1542, which says: \"A general release does not extend to claims that the creditor or releasing party does not know or suspect to exist in his or her favor at the time of executing the release, and that, if known by him or her, would have materially affected his or her settlement with the debtor or releasing party.\" "
 }

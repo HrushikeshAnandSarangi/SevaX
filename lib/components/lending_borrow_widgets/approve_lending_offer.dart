@@ -2,29 +2,16 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
-import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
-import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/enums/lending_borrow_enums.dart';
-import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/offer_model.dart';
-import 'package:sevaexchange/models/user_model.dart';
-import 'package:sevaexchange/new_baseline/models/borrow_accpetor_model.dart';
 import 'package:sevaexchange/repositories/lending_offer_repo.dart';
 import 'package:sevaexchange/ui/screens/borrow_agreement/borrow_agreement_pdf.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/lending_offer_participants.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/time_offer_participant.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/custom_dialog.dart';
-import 'package:sevaexchange/ui/utils/message_utils.dart';
-import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
-import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart';
-import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/requests/requestOfferAgreementForm.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
-import 'package:sevaexchange/widgets/location_picker_widget.dart';
-
-import '../../labels.dart';
 
 class ApproveLendingOffer extends StatefulWidget {
   final OfferModel offerModel;
@@ -85,8 +72,8 @@ class _ApproveLendingOfferState extends State<ApproveLendingOffer> {
             OfferDurationWidget(
               title: widget.offerModel.lendingOfferDetailsModel.lendingModel.lendingType ==
                       LendingType.PLACE
-                  ? L.of(context).date_to_check_in_out
-                  : L.of(context).date_to_borrow_and_return,
+                  ? S.of(context).date_to_check_in_out
+                  : S.of(context).date_to_borrow_and_return,
             ),
             SizedBox(height: 15),
             Text(S.of(context).addditional_instructions + '*',
@@ -213,15 +200,16 @@ class _ApproveLendingOfferState extends State<ApproveLendingOffer> {
                   return;
                 }
 
-                if (widget.lendingOfferAcceptorModel.endDate >=
-                    widget.offerModel.lendingOfferDetailsModel.endDate) {
+                if (widget.offerModel.lendingOfferDetailsModel.lendingOfferTypeMode == 'ONE_TIME' &&
+                    widget.lendingOfferAcceptorModel.endDate >=
+                        widget.offerModel.lendingOfferDetailsModel.endDate) {
                   // widget.offerModel.lendingOfferDetailsModel.lendingModel
                   //             .lendingType ==
                   //         LendingType.PLACE
                   //     ?
                   errorDialog(
                     context: context,
-                    error: L.of(context).end_date_after_offer_end_date,
+                    error: S.of(context).end_date_after_offer_end_date,
                   );
 
                   return;
@@ -232,9 +220,11 @@ class _ApproveLendingOfferState extends State<ApproveLendingOffer> {
                   agreementId = createCryptoRandomString();
                   String agreementLink = await BorrowAgreementPdf().borrowAgreementPdf(
                       context,
-                      null, //request model
+                      null,
+                      //request model
                       widget.offerModel.lendingOfferDetailsModel.lendingModel,
-                      null, // borrow request items list
+                      null,
+                      // borrow request items list
                       widget.lendingOfferAcceptorModel.acceptorName,
                       widget.offerModel.lendingOfferDetailsModel.lendingOfferAgreementName,
                       true,

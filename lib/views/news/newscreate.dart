@@ -310,7 +310,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                               children: <Widget>[
                                 Expanded(
                                   child: Text(
-                                    "${L.of(context).posting_to_text} ${((this.selectedTimebanks.length > 1) ? this.selectedTimebanks.length.toString() + ' Seva Communities' : this.widget.timebankModel.name)}",
+                                    "${S.of(context).posting_to_text} ${((this.selectedTimebanks.length > 1) ? this.selectedTimebanks.length.toString() + ' Seva Communities' : this.widget.timebankModel.name)}",
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
                                   ),
