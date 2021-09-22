@@ -470,7 +470,7 @@ class OfferDetails extends StatelessWidget {
                                       ? S.of(context).you_created_offer
                                       : isAccepted
                                           ? S.of(context).accepted_offer_msg
-                                          : L
+                                          : S
                                               .of(context)
                                               .would_like_to_accept_offer,
                                   style: TextStyle(

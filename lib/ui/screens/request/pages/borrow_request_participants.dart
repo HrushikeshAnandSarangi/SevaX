@@ -62,7 +62,7 @@ class BorrowRequestParticipants extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.only(left: 10),
                   child: Text(
-                    L
+                    S
                         .of(context)
                         .you_have_received_responses
                         .replaceFirst('**', borrowAcceptorModel.length.toString())
@@ -133,7 +133,7 @@ class BorrowRequestParticipants extends StatelessWidget {
                                                   (requestModel.borrowModel.itemsCollected &&
                                                           requestModel.borrowModel.itemsReturned)
                                                       ? S.of(context).items_returned
-                                                      : L.of(context).items_collected,
+                                                      : S.of(context).items_collected,
                                                   style:
                                                       TextStyle(color: Colors.grey, fontSize: 11),
                                                 ),

@@ -649,7 +649,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                                     // emptyTextSpan(),
                                     TextSpan(
                                       text: ' ' +
-                                          L
+                                          S
                                               .of(context)
                                               .agree_to_signature_legal_text +
                                           S

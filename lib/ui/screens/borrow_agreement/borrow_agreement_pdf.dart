@@ -233,7 +233,7 @@ class BorrowAgreementPdf {
             SizedBox(height: 15),
             Text(S.of(contextMain).borrow_request_seva_disclaimer, style: TextStyle(fontSize: 14)),
             SizedBox(height: 15),
-            Text(L.of(contextMain).civil_code_dispute, style: TextStyle(fontSize: 14)),
+            Text(S.of(contextMain).civil_code_dispute, style: TextStyle(fontSize: 14)),
             SizedBox(height: 15),
             Text(S.of(contextMain).agreement_amending_disclaimer, style: TextStyle(fontSize: 14)),
             SizedBox(height: 15),

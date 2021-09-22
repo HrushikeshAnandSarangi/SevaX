@@ -357,6 +357,10 @@ class LendingOffersRepo {
             .doc(notification.id);
     var offerAcceptorsReference = CollectionRef.lendingOfferAcceptors(model.id)
         .doc(lendingOfferAcceptorModel.id);
+    
+    model.acceptedOffer = true;
+    model.individualOfferDataModel.isAccepted = true;
+    
     batch.update(offersRef, model.toMap());
     batch.update(
         CollectionRef.userNotification(model.email)

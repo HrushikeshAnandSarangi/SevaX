@@ -6,6 +6,7 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/components/get_location.dart';
 import 'package:sevaexchange/models/offer_model.dart';
+import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/utils/location_helper.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
@@ -43,27 +44,21 @@ Stream<List<OfferModel>> getOffersStream(
           model.id = snapshot.id;
           model.currentUserLocation = coordinates;
 
-          if (model.offerType == OfferType.GROUP_OFFER &&
-              !model.groupOfferDataModel.isCanceled) {
+          if (model.offerType == OfferType.GROUP_OFFER && !model.groupOfferDataModel.isCanceled) {
             offerList.add(model);
           } else if (model.offerType == OfferType.INDIVIDUAL_OFFER) {
-            logger.i("====INDI");
             if (model.individualOfferDataModel.timeOfferType == 'ONE_TIME' &&
                 model.individualOfferDataModel.isAccepted) {
-              logger.i("====INSIDE IF");
-
               if (model.sevaUserId == loggedInMemberSevaUserId) {
-                logger.i("====CREATOR");
                 offerList.add(model);
-              } else {
-                logger.i("Exemtion reported!!");
-              }
+              } else {}
             } else {
-              logger.i(model.individualOfferDataModel.isAccepted.toString() +
-                  "====NOT ACCEPTED/ SPOT ON " +
-                  model.individualOfferDataModel.title);
-
-              offerList.add(model);
+              if ((model.type == RequestType.LENDING_OFFER &&
+                  model.lendingOfferDetailsModel.lendingOfferTypeMode == "ONE_TIME" &&
+                  model.individualOfferDataModel.isAccepted)) {
+              } else {
+                offerList.add(model);
+              }
             }
           }
         });
@@ -80,8 +75,7 @@ Future<void> createOffer({@required OfferModel offerModel}) async {
   await CollectionRef.offers.doc(offerModel.id).set(offerModel.toMap());
 }
 
-Future<void> updateOffersByFields(
-    {List<String> offerIds, Map<String, dynamic> fields}) async {
+Future<void> updateOffersByFields({List<String> offerIds, Map<String, dynamic> fields}) async {
   var futures = <Future>[];
   int i;
   for (i = 0; i < offerIds.length; i++) {
@@ -90,15 +84,13 @@ Future<void> updateOffersByFields(
   await Future.wait(futures);
 }
 
-Future<List<String>> createRecurringEventsOffer(
-    {@required OfferModel offerModel}) async {
+Future<List<String>> createRecurringEventsOffer({@required OfferModel offerModel}) async {
   var batch = CollectionRef.batch;
 
   bool lastRound = false;
-  DateTime eventStartDate = DateTime.fromMillisecondsSinceEpoch(
-          offerModel.groupOfferDataModel.startDate),
-      eventEndDate = DateTime.fromMillisecondsSinceEpoch(
-          offerModel.groupOfferDataModel.endDate);
+  DateTime eventStartDate =
+          DateTime.fromMillisecondsSinceEpoch(offerModel.groupOfferDataModel.startDate),
+      eventEndDate = DateTime.fromMillisecondsSinceEpoch(offerModel.groupOfferDataModel.endDate);
   List<Map<String, dynamic>> temparr = [];
   List<String> offerIds = [];
   offerIds.add(offerModel.id);
@@ -109,30 +101,17 @@ Future<List<String>> createRecurringEventsOffer(
     int occurenceCount = 2;
     var numTemp = 0;
     while (lastRound == false) {
-      eventStartDate = DateTime(
-          eventStartDate.year,
-          eventStartDate.month,
-          eventStartDate.day + 1,
-          eventStartDate.hour,
-          eventStartDate.minute,
-          eventStartDate.second);
-      eventEndDate = DateTime(
-          eventEndDate.year,
-          eventEndDate.month,
-          eventEndDate.day + 1,
-          eventEndDate.hour,
-          eventEndDate.minute,
-          eventEndDate.second);
+      eventStartDate = DateTime(eventStartDate.year, eventStartDate.month, eventStartDate.day + 1,
+          eventStartDate.hour, eventStartDate.minute, eventStartDate.second);
+      eventEndDate = DateTime(eventEndDate.year, eventEndDate.month, eventEndDate.day + 1,
+          eventEndDate.hour, eventEndDate.minute, eventEndDate.second);
 
-      if (eventStartDate.millisecondsSinceEpoch <= offerModel.end.on &&
-          occurenceCount < 11) {
+      if (eventStartDate.millisecondsSinceEpoch <= offerModel.end.on && occurenceCount < 11) {
         numTemp = eventStartDate.weekday % 7;
         if (offerModel.recurringDays.contains(numTemp)) {
           OfferModel temp = offerModel;
-          temp.groupOfferDataModel.startDate =
-              eventStartDate.millisecondsSinceEpoch;
-          temp.groupOfferDataModel.endDate =
-              eventEndDate.millisecondsSinceEpoch;
+          temp.groupOfferDataModel.startDate = eventStartDate.millisecondsSinceEpoch;
+          temp.groupOfferDataModel.endDate = eventEndDate.millisecondsSinceEpoch;
           temp.timestamp = DateTime.now().millisecondsSinceEpoch;
           temp.id = temp.email +
               "*" +
@@ -156,26 +135,15 @@ Future<List<String>> createRecurringEventsOffer(
     var numTemp = 0;
     int occurenceCount = 2;
     while (occurenceCount <= offerModel.end.after) {
-      eventStartDate = DateTime(
-          eventStartDate.year,
-          eventStartDate.month,
-          eventStartDate.day + 1,
-          eventStartDate.hour,
-          eventStartDate.minute,
-          eventStartDate.second);
-      eventEndDate = DateTime(
-          eventEndDate.year,
-          eventEndDate.month,
-          eventEndDate.day + 1,
-          eventEndDate.hour,
-          eventEndDate.minute,
-          eventEndDate.second);
+      eventStartDate = DateTime(eventStartDate.year, eventStartDate.month, eventStartDate.day + 1,
+          eventStartDate.hour, eventStartDate.minute, eventStartDate.second);
+      eventEndDate = DateTime(eventEndDate.year, eventEndDate.month, eventEndDate.day + 1,
+          eventEndDate.hour, eventEndDate.minute, eventEndDate.second);
 
       numTemp = eventStartDate.weekday % 7;
       if (offerModel.recurringDays.contains(numTemp)) {
         OfferModel temp = offerModel;
-        temp.groupOfferDataModel.startDate =
-            eventStartDate.millisecondsSinceEpoch;
+        temp.groupOfferDataModel.startDate = eventStartDate.millisecondsSinceEpoch;
         temp.groupOfferDataModel.endDate = eventEndDate.millisecondsSinceEpoch;
         temp.timestamp = DateTime.now().millisecondsSinceEpoch;
         temp.id = temp.email +
@@ -206,8 +174,7 @@ Future<List<String>> createRecurringEventsOffer(
   return offerIds;
 }
 
-Future<void> updateRecurrenceOffersFrontEnd(
-    {@required OfferModel updatedOfferModel}) async {
+Future<void> updateRecurrenceOffersFrontEnd({@required OfferModel updatedOfferModel}) async {
   var batch = CollectionRef.batch;
   bool lastRound = false;
   String uuidvar = "";
@@ -216,10 +183,10 @@ Future<void> updateRecurrenceOffersFrontEnd(
   List<OfferModel> upcomingEventsArr = [], prevEventsArr = [];
   var futures = <Future>[];
   Set<String> usersIds = Set();
-  DateTime eventStartDate = DateTime.fromMillisecondsSinceEpoch(
-          updatedOfferModel.groupOfferDataModel.startDate),
-      eventEndDate = DateTime.fromMillisecondsSinceEpoch(
-          updatedOfferModel.groupOfferDataModel.endDate);
+  DateTime eventStartDate =
+          DateTime.fromMillisecondsSinceEpoch(updatedOfferModel.groupOfferDataModel.startDate),
+      eventEndDate =
+          DateTime.fromMillisecondsSinceEpoch(updatedOfferModel.groupOfferDataModel.endDate);
 
   QuerySnapshot snapEvents = await CollectionRef.offers
       .where("parent_offer_id", isEqualTo: updatedOfferModel.parent_offer_id)
@@ -244,29 +211,17 @@ Future<void> updateRecurrenceOffersFrontEnd(
     int occurenceCount = updatedOfferModel.occurenceCount + 1;
     var numTemp = 0;
     while (lastRound == false) {
-      eventStartDate = DateTime(
-          eventStartDate.year,
-          eventStartDate.month,
-          eventStartDate.day + 1,
-          eventStartDate.hour,
-          eventStartDate.minute,
-          eventStartDate.second);
-      eventEndDate = DateTime(
-          eventEndDate.year,
-          eventEndDate.month,
-          eventEndDate.day + 1,
-          eventEndDate.hour,
-          eventEndDate.minute,
-          eventEndDate.second);
+      eventStartDate = DateTime(eventStartDate.year, eventStartDate.month, eventStartDate.day + 1,
+          eventStartDate.hour, eventStartDate.minute, eventStartDate.second);
+      eventEndDate = DateTime(eventEndDate.year, eventEndDate.month, eventEndDate.day + 1,
+          eventEndDate.hour, eventEndDate.minute, eventEndDate.second);
       if (eventStartDate.millisecondsSinceEpoch <= updatedOfferModel.end.on &&
           occurenceCount < 11) {
         numTemp = eventStartDate.weekday % 7;
         if (updatedOfferModel.recurringDays.contains(numTemp)) {
           OfferModel temp = updatedOfferModel;
-          temp.groupOfferDataModel.startDate =
-              eventStartDate.millisecondsSinceEpoch;
-          temp.groupOfferDataModel.endDate =
-              eventEndDate.millisecondsSinceEpoch;
+          temp.groupOfferDataModel.startDate = eventStartDate.millisecondsSinceEpoch;
+          temp.groupOfferDataModel.endDate = eventEndDate.millisecondsSinceEpoch;
           temp.timestamp = DateTime.now().millisecondsSinceEpoch;
           temp.id = temp.email +
               "*" +
@@ -290,25 +245,14 @@ Future<void> updateRecurrenceOffersFrontEnd(
     var numTemp = 0;
     int occurenceCount = updatedOfferModel.occurenceCount + 1;
     while (occurenceCount <= updatedOfferModel.end.after) {
-      eventStartDate = DateTime(
-          eventStartDate.year,
-          eventStartDate.month,
-          eventStartDate.day + 1,
-          eventStartDate.hour,
-          eventStartDate.minute,
-          eventStartDate.second);
-      eventEndDate = DateTime(
-          eventEndDate.year,
-          eventEndDate.month,
-          eventEndDate.day + 1,
-          eventEndDate.hour,
-          eventEndDate.minute,
-          eventEndDate.second);
+      eventStartDate = DateTime(eventStartDate.year, eventStartDate.month, eventStartDate.day + 1,
+          eventStartDate.hour, eventStartDate.minute, eventStartDate.second);
+      eventEndDate = DateTime(eventEndDate.year, eventEndDate.month, eventEndDate.day + 1,
+          eventEndDate.hour, eventEndDate.minute, eventEndDate.second);
       numTemp = eventStartDate.weekday % 7;
       if (updatedOfferModel.recurringDays.contains(numTemp)) {
         OfferModel temp = updatedOfferModel;
-        temp.groupOfferDataModel.startDate =
-            eventStartDate.millisecondsSinceEpoch;
+        temp.groupOfferDataModel.startDate = eventStartDate.millisecondsSinceEpoch;
         temp.groupOfferDataModel.endDate = eventEndDate.millisecondsSinceEpoch;
         temp.timestamp = DateTime.now().millisecondsSinceEpoch;
         temp.id = temp.email +
@@ -336,17 +280,15 @@ Future<void> updateRecurrenceOffersFrontEnd(
 
   // s2 ---------- update parent request and previous events with end data of updated event model
 
-  batch.update(CollectionRef.offers.doc(updatedOfferModel.parent_offer_id), {
-    "end": updatedOfferModel.end.toMap(),
-    "recurringDays": updatedOfferModel.recurringDays
-  });
+  batch.update(CollectionRef.offers.doc(updatedOfferModel.parent_offer_id),
+      {"end": updatedOfferModel.end.toMap(), "recurringDays": updatedOfferModel.recurringDays});
 
   // s3 ---------- delete old recurrences since the updated model
 
   if (upcomingEventsArr.length != 0) {
     upcomingEventsArr.forEach((upcomingEvent) {
-      batch.delete(CollectionRef.offers
-          .doc(upcomingEvent.id)); // delete old upcoming recurrence-events
+      batch.delete(
+          CollectionRef.offers.doc(upcomingEvent.id)); // delete old upcoming recurrence-events
     });
   }
 
@@ -354,8 +296,7 @@ Future<void> updateRecurrenceOffersFrontEnd(
 
   upcomingEventsArr.forEach((upcomingEvent) {
     if (upcomingEvent.groupOfferDataModel.signedUpMembers.length > 0) {
-      upcomingEvent.groupOfferDataModel.signedUpMembers
-          .forEach((signedUpMemberId) {
+      upcomingEvent.groupOfferDataModel.signedUpMembers.forEach((signedUpMemberId) {
         usersIds.add(signedUpMemberId);
       });
     }
@@ -368,15 +309,13 @@ Future<void> updateRecurrenceOffersFrontEnd(
     if (usersIdsList.length > 10) {
       for (endIndex = 10; endIndex < usersIdsList.length; endIndex += 10) {
         futures.add(CollectionRef.users
-            .where("sevauserid",
-                whereIn: usersIdsList.sublist(startIndex, endIndex))
+            .where("sevauserid", whereIn: usersIdsList.sublist(startIndex, endIndex))
             .get());
         startIndex = endIndex;
       }
     }
     futures.add(CollectionRef.users
-        .where("sevauserid",
-            whereIn: usersIdsList.sublist(startIndex, usersIdsList.length))
+        .where("sevauserid", whereIn: usersIdsList.sublist(startIndex, usersIdsList.length))
         .get());
 
     var futuresResult = await Future.wait(futures);
@@ -389,25 +328,21 @@ Future<void> updateRecurrenceOffersFrontEnd(
                 .contains(docUser.data['sevauserid'])) {
               uuidvar = Uuid().generateV4();
               batch.set(
-                  CollectionRef.users
-                      .doc(docUser.id)
-                      .collection("notifications")
-                      .doc(uuidvar),
-                  {
-                    'communityId': upcomingEvent.communityId,
-                    'data': {
-                      'eventName': upcomingEvent.groupOfferDataModel.classTitle,
-                      'eventDate': upcomingEvent.groupOfferDataModel.startDate,
-                      'offerId': upcomingEvent.id,
-                    },
-                    'id': uuidvar,
-                    'isRead': false,
-                    'senderUserId': upcomingEvent.sevaUserId,
-                    'timebankId': upcomingEvent.timebankId,
-                    'timestamp': DateTime.now().millisecondsSinceEpoch,
-                    'type': "RecurringOfferUpdated",
-                    'userId': docUser.data['sevauserid']
-                  });
+                  CollectionRef.users.doc(docUser.id).collection("notifications").doc(uuidvar), {
+                'communityId': upcomingEvent.communityId,
+                'data': {
+                  'eventName': upcomingEvent.groupOfferDataModel.classTitle,
+                  'eventDate': upcomingEvent.groupOfferDataModel.startDate,
+                  'offerId': upcomingEvent.id,
+                },
+                'id': uuidvar,
+                'isRead': false,
+                'senderUserId': upcomingEvent.sevaUserId,
+                'timebankId': upcomingEvent.timebankId,
+                'timestamp': DateTime.now().millisecondsSinceEpoch,
+                'type': "RecurringOfferUpdated",
+                'userId': docUser.data['sevauserid']
+              });
             }
           });
         });
@@ -500,8 +435,7 @@ Stream<List<OfferModel>> getBookMarkedOffers(
           OfferModel model = OfferModel.fromMap(snapshot.data());
           model.id = snapshot.id;
 
-          if (model.timebanksPosted != null &&
-              model.timebanksPosted.contains(timebankid)) {
+          if (model.timebanksPosted != null && model.timebanksPosted.contains(timebankid)) {
             offerList.add(model);
           }
         });

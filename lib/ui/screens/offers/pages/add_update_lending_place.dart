@@ -29,7 +29,8 @@ class AddUpdateLendingPlace extends StatefulWidget {
   final String enteredTitle;
   final Function(LendingModel lendingModel) onPlaceCreateUpdate;
 
-  AddUpdateLendingPlace({this.lendingModel, this.onPlaceCreateUpdate, this.enteredTitle});
+  AddUpdateLendingPlace(
+      {this.lendingModel, this.onPlaceCreateUpdate, this.enteredTitle});
 
   @override
   _AddUpdateLendingPlaceState createState() => _AddUpdateLendingPlaceState();
@@ -63,31 +64,44 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
     if (widget.lendingModel != null) {
       _bloc.loadData(widget.lendingModel);
 
-      _placeNameController.text = widget.lendingModel.lendingPlaceModel.placeName;
+      _placeNameController.text =
+          widget.lendingModel.lendingPlaceModel.placeName;
       _bloc.onPlaceNameChanged(widget.lendingModel.lendingPlaceModel.placeName);
 
-      _guestsController.text = widget.lendingModel.lendingPlaceModel.noOfGuests.toString();
-      _bloc.onNoOfGuestsChanged(widget.lendingModel.lendingPlaceModel.noOfGuests.toString());
+      _guestsController.text =
+          widget.lendingModel.lendingPlaceModel.noOfGuests.toString();
+      _bloc.onNoOfGuestsChanged(
+          widget.lendingModel.lendingPlaceModel.noOfGuests.toString());
 
-      _roomsController.text = widget.lendingModel.lendingPlaceModel.noOfRooms.toString();
-      _bloc.onNoOfRoomsChanged(widget.lendingModel.lendingPlaceModel.noOfRooms.toString());
+      _roomsController.text =
+          widget.lendingModel.lendingPlaceModel.noOfRooms.toString();
+      _bloc.onNoOfRoomsChanged(
+          widget.lendingModel.lendingPlaceModel.noOfRooms.toString());
 
-      _bathroomsController.text = widget.lendingModel.lendingPlaceModel.noOfBathRooms.toString();
-      _bloc.onBathRoomsChanged(widget.lendingModel.lendingPlaceModel.noOfBathRooms.toString());
+      _bathroomsController.text =
+          widget.lendingModel.lendingPlaceModel.noOfBathRooms.toString();
+      _bloc.onBathRoomsChanged(
+          widget.lendingModel.lendingPlaceModel.noOfBathRooms.toString());
 
-      _commonSpaceController.text = widget.lendingModel.lendingPlaceModel.commonSpace;
-      _bloc.onCommonSpacesChanged(widget.lendingModel.lendingPlaceModel.commonSpace);
+      _commonSpaceController.text =
+          widget.lendingModel.lendingPlaceModel.commonSpace;
+      _bloc.onCommonSpacesChanged(
+          widget.lendingModel.lendingPlaceModel.commonSpace);
 
-      _houseRulesController.text = widget.lendingModel.lendingPlaceModel.houseRules.toString();
-      _bloc.onHouseRulesChanged(widget.lendingModel.lendingPlaceModel.houseRules.toString());
+      _houseRulesController.text =
+          widget.lendingModel.lendingPlaceModel.houseRules.toString();
+      _bloc.onHouseRulesChanged(
+          widget.lendingModel.lendingPlaceModel.houseRules.toString());
 
       _estimatedValueController.text =
           widget.lendingModel.lendingPlaceModel.estimatedValue.toString();
-      _bloc
-          .onEstimatedValueChanged(widget.lendingModel.lendingPlaceModel.estimatedValue.toString());
+      _bloc.onEstimatedValueChanged(
+          widget.lendingModel.lendingPlaceModel.estimatedValue.toString());
 
-      _contactInformationController.text = widget.lendingModel.lendingPlaceModel.contactInformation;
-      _bloc.onContactInformationChanged(widget.lendingModel.lendingPlaceModel.contactInformation);
+      _contactInformationController.text =
+          widget.lendingModel.lendingPlaceModel.contactInformation;
+      _bloc.onContactInformationChanged(
+          widget.lendingModel.lendingPlaceModel.contactInformation);
     } else {
       if (widget.enteredTitle != null) {
         _placeNameController.text = widget.enteredTitle;
@@ -187,7 +201,8 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             },
                             hint: S.of(context).name_of_place_hint,
                             maxLength: null,
-                            error: getAddPlaceValidationError(context, snapshot.error),
+                            error: getAddPlaceValidationError(
+                                context, snapshot.error),
                           );
                         },
                       ),
@@ -199,7 +214,8 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                                 context: context,
                                 builder: (BuildContext dialogContext) {
                                   return ImagePickerDialogMobile(
-                                    imagePickerType: ImagePickerType.LENDING_OFFER,
+                                    imagePickerType:
+                                        ImagePickerType.LENDING_OFFER,
                                     onLinkCreated: (link) {
                                       imagesList.add(link);
                                       _bloc.onHouseImageAdded(imagesList);
@@ -217,8 +233,12 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                                         defaultCameraImageURL,
                                       ),
                                       fit: BoxFit.cover),
-                                  borderRadius: BorderRadius.all(Radius.circular(75.0)),
-                                  boxShadow: [BoxShadow(blurRadius: 7.0, color: Colors.black12)]),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(75.0)),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        blurRadius: 7.0, color: Colors.black12)
+                                  ]),
                             ),
                           ),
                         ),
@@ -230,7 +250,9 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                           // if (snapshot.connectionState == ConnectionState.waiting) {
                           //   return LoadingIndicator();
                           // }
-                          if (snapshot.hasError || snapshot.data == null || !snapshot.hasData) {
+                          if (snapshot.hasError ||
+                              snapshot.data == null ||
+                              !snapshot.hasData) {
                             return Container();
                           }
                           imagesList = snapshot.data;
@@ -251,7 +273,8 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                                         onTap: () {
                                           showDialog(
                                               context: context,
-                                              builder: (BuildContext dialogContext) {
+                                              builder:
+                                                  (BuildContext dialogContext) {
                                                 return FullScreenImage(
                                                   imageUrl: imagesList[index],
                                                 );
@@ -259,8 +282,10 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                                         },
                                         child: Container(
                                           child: ClipRRect(
-                                              borderRadius: BorderRadius.circular(10),
-                                              child: Image.network(imagesList[index])),
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              child: Image.network(
+                                                  imagesList[index])),
                                         ),
                                       ),
                                       Align(
@@ -308,10 +333,12 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                       ),
                       SizedBox(height: 8),
                       SelectAmenities(
-                        languageCode: SevaCore.of(context).loggedInUser.language ?? 'en',
+                        languageCode:
+                            SevaCore.of(context).loggedInUser.language ?? 'en',
                         selectedAmenities: _bloc.getSelectedAmenities() ?? {},
                         onSelectedAmenitiesMap: (amenitiesMap) {
-                          if (amenitiesMap.values != null && amenitiesMap.values.length > 0) {
+                          if (amenitiesMap.values != null &&
+                              amenitiesMap.values.length > 0) {
                             _bloc.amenitiesChanged(amenitiesMap);
                             log('amenit ${amenitiesMap.values}');
                             //setState(() {});
@@ -334,8 +361,12 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             },
                             hint: 'Ex: 3',
                             maxLength: 1,
-                            error: getAddPlaceValidationError(context, snapshot.error),
-                            formatters: [FilteringTextInputFormatter.allow(Regex.numericRegex)],
+                            error: getAddPlaceValidationError(
+                                context, snapshot.error),
+                            formatters: [
+                              FilteringTextInputFormatter.allow(
+                                  Regex.numericRegex)
+                            ],
                           );
                         },
                       ),
@@ -355,8 +386,12 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             },
                             hint: 'Ex: 2',
                             maxLength: 1,
-                            error: getAddPlaceValidationError(context, snapshot.error),
-                            formatters: [FilteringTextInputFormatter.allow(Regex.numericRegex)],
+                            error: getAddPlaceValidationError(
+                                context, snapshot.error),
+                            formatters: [
+                              FilteringTextInputFormatter.allow(
+                                  Regex.numericRegex)
+                            ],
                           );
                         },
                       ),
@@ -376,8 +411,12 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             },
                             hint: 'Ex: 1',
                             maxLength: 1,
-                            error: getAddPlaceValidationError(context, snapshot.error),
-                            formatters: [FilteringTextInputFormatter.allow(Regex.numericRegex)],
+                            error: getAddPlaceValidationError(
+                                context, snapshot.error),
+                            formatters: [
+                              FilteringTextInputFormatter.allow(
+                                  Regex.numericRegex)
+                            ],
                           );
                         },
                       ),
@@ -397,7 +436,8 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             },
                             hint: S.of(context).common_spaces_hint,
                             maxLength: null,
-                            error: getAddPlaceValidationError(context, snapshot.error),
+                            error: getAddPlaceValidationError(
+                                context, snapshot.error),
                           );
                         },
                       ),
@@ -418,7 +458,8 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             minLines: 2,
                             maxLines: 2,
                             maxLength: null,
-                            error: getAddPlaceValidationError(context, snapshot.error),
+                            error: getAddPlaceValidationError(
+                                context, snapshot.error),
                           );
                         },
                       ),
@@ -428,11 +469,17 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                         stream: _bloc.estimatedValue,
                         builder: (context, snapshot) {
                           return CustomTextField(
+                            keyboardType: TextInputType.number,
                             decoration: InputDecoration(
+                                prefixIconConstraints:
+                                    BoxConstraints(minWidth: 23, maxHeight: 20),
                                 prefixIcon: Icon(Icons.attach_money),
-                                hintText: S.of(context).request_min_donation_hint +
+                                hintText: S
+                                        .of(context)
+                                        .request_min_donation_hint +
                                     S.of(context).estimated_value_hint_place,
-                                errorText: getAddPlaceValidationError(context, snapshot.error)),
+                                errorText: getAddPlaceValidationError(
+                                    context, snapshot.error)),
                             controller: _estimatedValueController,
                             currentNode: _estimatedValue,
                             value: snapshot.data,
@@ -442,8 +489,12 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                               // title = value;
                             },
                             // hint: S.of(context).request_min_donation_hint,
-                            formatters: [FilteringTextInputFormatter.allow(Regex.numericRegex)],
-                            error: getAddPlaceValidationError(context, snapshot.error),
+                            formatters: [
+                              FilteringTextInputFormatter.allow(
+                                  Regex.numericRegex)
+                            ],
+                            error: getAddPlaceValidationError(
+                                context, snapshot.error),
                           );
                         },
                       ),
@@ -453,7 +504,9 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                         stream: _bloc.contactInformation,
                         builder: (context, snapshot) {
                           return CustomTextField(
-                            hint: S.of(context).email + ' / ' + S.of(context).phone_number,
+                            hint: S.of(context).email +
+                                ' / ' +
+                                S.of(context).phone_number,
                             controller: _contactInformationController,
                             currentNode: _contactInformation,
                             value: snapshot.data,
@@ -462,7 +515,8 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                               _bloc.onContactInformationChanged(value);
                             },
                             keyboardType: TextInputType.text,
-                            error: getAddPlaceValidationError(context, snapshot.error),
+                            error: getAddPlaceValidationError(
+                                context, snapshot.error),
                             validator: (String value) {
                               if (value.isEmpty) {
                                 return 'Email or Phone Number is required';
@@ -486,7 +540,8 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                                 return;
                               }
 
-                              var connResult = await Connectivity().checkConnectivity();
+                              var connResult =
+                                  await Connectivity().checkConnectivity();
                               if (connResult == ConnectivityResult.none) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
@@ -494,7 +549,8 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                                     action: SnackBarAction(
                                       label: S.of(context).dismiss,
                                       onPressed: () =>
-                                          ScaffoldMessenger.of(context).hideCurrentSnackBar(),
+                                          ScaffoldMessenger.of(context)
+                                              .hideCurrentSnackBar(),
                                     ),
                                   ),
                                 );
@@ -504,19 +560,25 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                               if (_bloc.getSelectedAmenities() == {} ||
                                   _bloc.getSelectedAmenities() == null) {
                                 showAlertMessage(
-                                    context: context, message: S.of(context).please_add_amenities);
+                                    context: context,
+                                    message:
+                                        S.of(context).please_add_amenities);
                                 return;
                               }
 
-                              if (imagesList == null || imagesList.length == 0) {
+                              if (imagesList == null ||
+                                  imagesList.length == 0) {
                                 showAlertMessage(
-                                    context: context, message: S.of(context).add_images_to_place);
+                                    context: context,
+                                    message: S.of(context).add_images_to_place);
                               } else {
                                 if (widget.lendingModel == null) {
                                   _bloc.createLendingOfferPlace(
-                                      creator: SevaCore.of(context).loggedInUser);
+                                      creator:
+                                          SevaCore.of(context).loggedInUser);
                                 } else {
-                                  _bloc.updateLendingOfferPlace(model: widget.lendingModel);
+                                  _bloc.updateLendingOfferPlace(
+                                      model: widget.lendingModel);
                                 }
                               }
                             },
