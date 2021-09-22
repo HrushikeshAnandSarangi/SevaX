@@ -142,7 +142,7 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                             currentNode: _itemName,
                             nextNode: null,
                             value: snapshot.data,
-                            heading: "${S.of(context).name_of_item}",
+                            heading: "${S.of(context).name_of_item}*",
                             onChanged: (String value) {
                               _bloc.onPlaceNameChanged(value);
                               // title = value;
