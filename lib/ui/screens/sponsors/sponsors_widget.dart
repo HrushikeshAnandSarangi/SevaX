@@ -24,6 +24,7 @@ class SponsorsWidget extends StatefulWidget {
   final Color textColor;
   final double textSize;
   final bool isAdminVerified;
+  final String title;
   final Function(
     List<SponsorDataModel> sponsors,
     SponsorDataModel addedSponsors,
@@ -37,6 +38,7 @@ class SponsorsWidget extends StatefulWidget {
   SponsorsWidget({
     @required this.sponsors,
     @required this.sponsorsMode,
+    this.title,
     this.onSponsorsAdded,
     this.textColor = const Color(0xFFF766FE0),
     this.textSize = 18.0,
@@ -338,12 +340,15 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                         ),
                         actions: <Widget>[
                           CustomTextButton(
+                            shape: StadiumBorder(),
+                            padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                            color: Theme.of(context).accentColor,
                             onPressed: () {
                               Navigator.of(dialogContext).pop();
                             },
                             child: Text(
                               S.of(context).cancel,
-                              style: TextStyle(color: Colors.redAccent),
+                              style: TextStyle(color: Colors.white),
                             ),
                           ),
                         ],
@@ -366,7 +371,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
     return Container(
       margin: EdgeInsets.only(top: 15),
       child: Text(
-        S.of(context).sponsored_by,
+        widget.title ?? S.of(context).sponsored_by,
         style: TextStyle(
           color: widget.textColor, // ?? HexColor('#766FE0'),
           fontSize: 16,
@@ -519,7 +524,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                S.of(context).name,
+                                S.of(context).organization_text,
                                 style: TextStyle(
                                   fontFamily: 'Europa',
                                   fontSize: 12,
@@ -560,7 +565,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                                         disabledBorder: InputBorder.none,
                                         focusedErrorBorder: InputBorder.none,
                                         errorBorder: InputBorder.none,
-                                        hintText: 'Andreson Smith',
+                                        hintText: S.of(context).abc_cafe_text,
                                         hintStyle: TextStyle(
                                           fontFamily: 'Europa',
                                           fontSize: 12,

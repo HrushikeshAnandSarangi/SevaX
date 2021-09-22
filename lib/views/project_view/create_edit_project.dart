@@ -575,6 +575,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 height: 10,
               ),
               SponsorsWidget(
+                title: S.of(context).add_event_sponsors_text,
                 sponsorsMode: widget.isCreateProject
                     ? SponsorsMode.CREATE
                     : SponsorsMode.EDIT,
