@@ -1187,27 +1187,35 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       canDelete =
           widget.requestItem.participantDetails != null && widget.requestItem.acceptors.length == 0;
 
-      if (widget.requestItem.approvedUsers.length >= 1) {
-        textLabel = (widget.requestItem.sevaUserId ==
-                    SevaCore.of(context).loggedInUser.sevaUserID ||
-                widget.requestItem.approvedUsers.contains(SevaCore.of(context).loggedInUser.email))
-            ? S.of(context).request_approved
-            : S.of(context).request_has_been_assigned_to_a_member;
-      } else if (widget.requestItem.roomOrTool == 'PLACE') {
-        textLabel = widget.requestItem.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID
-            ? S.of(context).creator_of_request_message
-            : S.of(context).borrow_request_for_place;
+      if (widget.requestItem.approvedUsers.contains(SevaCore.of(context).loggedInUser.email)) {
+        return Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            borrowActionsWidget(widget.requestItem, context, isApplied),
+          ],
+        );
       } else {
+        if (widget.requestItem.approvedUsers.length >= 1) {
+          textLabel =
+              (widget.requestItem.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID)
+                  ? S.of(context).request_approved
+                  : S.of(context).request_has_been_assigned_to_a_member;
+        } else if (widget.requestItem.roomOrTool == 'PLACE') {
         textLabel = widget.requestItem.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID
-            ? S.of(context).creator_of_request_message
-            : S.of(context).borrow_request_for_item;
-      }
+              ? S.of(context).creator_of_request_message
+              : S.of(context).borrow_request_for_place;
+        } else {
+        textLabel = widget.requestItem.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID
+              ? S.of(context).creator_of_request_message
+              : S.of(context).borrow_request_for_item;
+        }
 
       actionWidget = widget.requestItem.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID
-          ? Container()
-          : (widget.requestItem.approvedUsers.length >= 1
-              ? Container()
-              : timeRequestActionWidgetForParticipant);
+            ? Container()
+            : (widget.requestItem.approvedUsers.length >= 1
+                ? Container()
+                : timeRequestActionWidgetForParticipant);
+      }
     } else if (widget.requestItem.requestType == RequestType.ONE_TO_MANY_REQUEST) {
       canDelete = widget.requestItem.acceptors.length == 0 &&
           widget.requestItem.approvedUsers.length == 0 &&
@@ -1650,223 +1658,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
             : widget.requestItem.requestType == RequestType.BORROW &&
                     widget.requestItem.approvedUsers
                         .contains(SevaCore.of(context).loggedInUser.email)
-                ? Container(
-                    width: 370,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Expanded(
-                          child: RichText(
-                            text: TextSpan(
-                              style: TextStyle(color: Colors.black),
-                              children: [
-                                TextSpan(
-                                  text: (widget.requestItem.approvedUsers.length >= 1 &&
-                                          widget.requestItem.requestType == RequestType.BORROW)
-                                      ? ((widget.requestItem.sevaUserId ==
-                                                  SevaCore.of(context).loggedInUser.sevaUserID ||
-                                              widget.requestItem.approvedUsers.contains(
-                                                  SevaCore.of(context).loggedInUser.email))
-                                          ? S.of(context).request_approved
-                                          : S.of(context).request_has_been_assigned_to_a_member)
-                                      : isApplied
-                                          ? S.of(context).applied_for_request
-                                          : (widget.requestItem.roomOrTool == 'PLACE'
-                                              ? S.of(context).borrow_request_for_place
-                                              : S.of(context).borrow_request_for_item),
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontFamily: 'Europa',
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Container(
-                          width: 153,
-                          child: CustomTextButton(
-                            color: Theme.of(context).primaryColor,
-                            child: Row(
-                              children: <Widget>[
-                                SizedBox(width: 1),
-                                Spacer(),
-                                Text(
-                                  widget.requestItem.roomOrTool == LendingType.PLACE.readable
-                                      ? widget.requestItem.borrowModel.isCheckedIn
-                                          ? S.of(context).check_out_text
-                                          : S.of(context).check_in_text
-                                      : widget.requestItem.borrowModel.itemsCollected
-                                          ? S.of(context).items_returned
-                                          : S.of(context).items_collected,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                Spacer(
-                                  flex: 1,
-                                ),
-                              ],
-                            ),
-                            onPressed: () async {
-                              if (widget.requestItem.roomOrTool == LendingType.ITEM.readable) {
-                                if (!widget.requestItem.borrowModel.itemsCollected) {
-                                  logger.e('ITEMS GIVEN TO BORROWER');
-                                  widget.requestItem.borrowModel.itemsCollected = true;
-                                  await updateRequest(requestModel: widget.requestItem);
-                                  Navigator.pop(context);
-                                } else if (widget.requestItem.borrowModel.itemsCollected == true &&
-                                    !widget.requestItem.borrowModel.itemsReturned) {
-                                  logger.e('ITEMS RECEIVED BACK - COMES TO COMPLETE REQUEST');
-
-                                  showDialog(
-                                    context: context,
-                                    builder: (_context) => AlertDialog(
-                                      title: Text(S
-                                          .of(context)
-                                          .admin_borrow_request_received_back_check_item),
-                                      actions: [
-                                        CustomTextButton(
-                                          shape: StadiumBorder(),
-                                          color: Theme.of(context).accentColor,
-                                          padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-                                          onPressed: () {
-                                            Navigator.of(_context).pop();
-                                          },
-                                          child: Text(
-                                            S.of(context).not_yet.sentenceCase(),
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontFamily: 'Europa',
-                                              color: Colors.white),
-                                          ),
-                                        ),
-                                        CustomTextButton(
-                                          onPressed: () async {
-                                            widget.requestItem.borrowModel.itemsReturned =
-                                                true; //confirmed items are returned
-                                            widget.requestItem.acceptors = [];
-                                            widget.requestItem.accepted =
-                                                true; //so that we can know that this request has completed
-                                            widget.requestItem.isNotified =
-                                                true; //resets to false otherwise
-                                            var notificationId = await getNotificationId(
-                                              SevaCore.of(context).loggedInUser,
-                                              //redundant because function does not use user model
-                                              widget.requestItem,
-                                            ).then((notificationId) async {
-                                              await lenderReceivedBackCheck(
-                                                  notificationId: notificationId,
-                                                  requestModelUpdated: widget.requestItem,
-                                                  context: context);
-
-                                              await updateRequest(requestModel: widget.requestItem);
-
-                                              Navigator.of(_context).pop();
-
-                                              Navigator.pop(context);
-                                            });
-                                          },
-                                          shape: StadiumBorder(),
-                                          color: Theme.of(context).primaryColor,
-                                          padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-                                          child: Text(
-                                            S.of(context).yes,
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                fontFamily: 'Europa',
-                                                color: Colors.white),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                } else {
-                                  return;
-                                }
-                              } else {
-                                if (!widget.requestItem.borrowModel.isCheckedIn) {
-                                  widget.requestItem.borrowModel.isCheckedIn = true;
-                                  await updateRequest(requestModel: widget.requestItem);
-                                  Navigator.pop(context);
-                                } else if (widget.requestItem.borrowModel.isCheckedIn == true &&
-                                    !widget.requestItem.borrowModel.isCheckedOut) {
-                                  showDialog(
-                                    context: context,
-                                    builder: (_context) => AlertDialog(
-                                      title: Text(S
-                                          .of(context)
-                                          .admin_borrow_request_received_back_check_place),
-                                      actions: [
-                                        CustomTextButton(
-                                          shape: StadiumBorder(),
-                                          color: Theme.of(context).accentColor,
-                                          padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-                                          onPressed: () {
-                                            Navigator.of(_context).pop();
-                                          },
-                                          child: Text(
-                                            S.of(context).not_yet.sentenceCase(),
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                fontFamily: 'Europa',
-                                                color: Colors.white),
-                                          ),
-                                        ),
-                                        CustomTextButton(
-                                          onPressed: () async {
-                                            widget.requestItem.borrowModel.isCheckedOut =
-                                                true; //confirmed items are returned
-                                            widget.requestItem.acceptors = [];
-                                            widget.requestItem.accepted =
-                                                true; //so that we can know that this request has completed
-                                            widget.requestItem.isNotified =
-                                                true; //resets to false otherwise
-
-                                            await getNotificationId(
-                                              SevaCore.of(context).loggedInUser,
-                                              //redundant because function does not use user model
-                                              widget.requestItem,
-                                            ).then((notificationId) async {
-                                              await lenderReceivedBackCheck(
-                                                  notificationId: notificationId,
-                                                  requestModelUpdated: widget.requestItem,
-                                                  context: context);
-
-                                              await updateRequest(requestModel: widget.requestItem);
-
-                                              Navigator.of(_context).pop();
-
-                                              Navigator.pop(context);
-                                            });
-                                          },
-                                          shape: StadiumBorder(),
-                                          color: Theme.of(context).primaryColor,
-                                          padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-                                          child: Text(
-                                            S.of(context).yes,
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                fontFamily: 'Europa',
-                                                color: Colors.white),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                } else {
-                                  return;
-                                }
-                              }
-                            },
-                          ),
-                        ),
-                        SizedBox(width: 50),
-                      ],
-                    ),
-                  )
+                ? borrowActionsWidget(widget.requestItem, context, isApplied)
                 : Expanded(
                     child: RichText(
                       text: TextSpan(
@@ -2607,24 +2399,20 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           }
           BorrowAcceptorModel borrowAcceptorModel = snapshot.data;
           return Container(
-            height: widget.requestItem.roomOrTool == LendingType.ITEM.readable
-                ? 320
-                : 610, //to be fixed (give dynamic height)
+            height: widget.requestItem.roomOrTool == LendingType.ITEM.readable ? 320 : 635,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 widget.requestItem.email == SevaCore.of(context).loggedInUser.email
                     ? Container()
-                    : Expanded(
-                        child: Text(
-                          (widget.requestItem.roomOrTool == LendingType.ITEM.readable
-                                  ? S.of(context).offering_items_to
-                                  : S.of(context).offering_place_to) +
-                              borrowAcceptorModel.acceptorName,
-                          style: TextStyle(
-                              fontSize: 14, color: Colors.black, fontWeight: FontWeight.w600),
-                        ),
+                    : Text(
+                        (widget.requestItem.roomOrTool == LendingType.ITEM.readable
+                                ? S.of(context).offering_items_to
+                                : S.of(context).offering_place_to) +
+                            borrowAcceptorModel.acceptorName,
+                        style: TextStyle(
+                            fontSize: 14, color: Colors.black, fontWeight: FontWeight.w600),
                       ),
                 Text(
                   (widget.requestItem.roomOrTool == LendingType.ITEM.readable
@@ -3378,4 +3166,193 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       ],
     );
   }
+}
+
+Widget borrowActionsWidget(RequestModel requestItem, BuildContext context, bool isApplied) {
+  return Container(
+    width: 370,
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        Expanded(
+          child: RichText(
+            text: TextSpan(
+              style: TextStyle(color: Colors.black),
+              children: [
+                TextSpan(
+                  text: (requestItem.approvedUsers.length >= 1 &&
+                          requestItem.requestType == RequestType.BORROW)
+                      ? ((requestItem.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID ||
+                              requestItem.approvedUsers
+                                  .contains(SevaCore.of(context).loggedInUser.email))
+                          ? S.of(context).request_approved
+                          : S.of(context).request_has_been_assigned_to_a_member)
+                      : isApplied
+                          ? S.of(context).applied_for_request
+                          : (requestItem.roomOrTool == 'PLACE'
+                              ? S.of(context).borrow_request_for_place
+                              : S.of(context).borrow_request_for_item),
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontFamily: 'Europa',
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        Container(
+          width: 153,
+          child: CustomTextButton(
+            color: Theme.of(context).primaryColor,
+            child: Row(
+              children: <Widget>[
+                SizedBox(width: 1),
+                Spacer(),
+                Text(
+                  requestItem.roomOrTool == LendingType.PLACE.readable
+                      ? requestItem.borrowModel.isCheckedIn
+                          ? S.of(context).check_out_text
+                          : S.of(context).check_in_text
+                      : requestItem.borrowModel.itemsCollected
+                          ? S.of(context).items_returned
+                          : S.of(context).items_collected,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+                Spacer(
+                  flex: 1,
+                ),
+              ],
+            ),
+            onPressed: () async {
+              if (requestItem.roomOrTool == LendingType.ITEM.readable) {
+                if (!requestItem.borrowModel.itemsCollected) {
+                  logger.e('ITEMS GIVEN TO BORROWER');
+                  requestItem.borrowModel.itemsCollected = true;
+                  await updateRequest(requestModel: requestItem);
+                  Navigator.pop(context);
+                } else if (requestItem.borrowModel.itemsCollected == true &&
+                    !requestItem.borrowModel.itemsReturned) {
+                  logger.e('ITEMS RECEIVED BACK - COMES TO COMPLETE REQUEST');
+
+                  showDialog(
+                    context: context,
+                    builder: (_context) => AlertDialog(
+                      title: Text(S.of(context).item_received_alert_dialouge),
+                      actions: [
+                        CustomTextButton(
+                          onPressed: () {
+                            Navigator.of(_context).pop();
+                          },
+                          child: Text(
+                            S.of(context).not_yet,
+                            style: TextStyle(fontSize: 17, color: Theme.of(context).accentColor),
+                          ),
+                        ),
+                        CustomTextButton(
+                          onPressed: () async {
+                            requestItem.borrowModel.itemsReturned =
+                                true; //confirmed items are returned
+                            requestItem.acceptors = [];
+                            requestItem.accepted =
+                                true; //so that we can know that this request has completed
+                            requestItem.isNotified = true; //resets to false otherwise
+                            var notificationId = await getNotificationId(
+                              SevaCore.of(context).loggedInUser,
+                              //redundant because function does not use user model
+                              requestItem,
+                            ).then((notificationId) async {
+                              await lenderReceivedBackCheck(
+                                  notificationId: notificationId,
+                                  requestModelUpdated: requestItem,
+                                  context: context);
+
+                              await updateRequest(requestModel: requestItem);
+
+                              Navigator.of(_context).pop();
+
+                              Navigator.pop(context);
+                            });
+                          },
+                          child: Text(
+                            S.of(context).yes,
+                            style: TextStyle(fontSize: 17),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                } else {
+                  return;
+                }
+              } else {
+                if (!requestItem.borrowModel.isCheckedIn) {
+                  requestItem.borrowModel.isCheckedIn = true;
+                  await updateRequest(requestModel: requestItem);
+                  Navigator.pop(context);
+                } else if (requestItem.borrowModel.isCheckedIn == true &&
+                    !requestItem.borrowModel.isCheckedOut) {
+                  showDialog(
+                    context: context,
+                    builder: (_context) => AlertDialog(
+                      title: Text(S.of(context).item_received_alert_dialouge),
+                      actions: [
+                        CustomTextButton(
+                          onPressed: () {
+                            Navigator.of(_context).pop();
+                          },
+                          child: Text(
+                            S.of(context).not_yet,
+                            style: TextStyle(fontSize: 17, color: Theme.of(context).accentColor),
+                          ),
+                        ),
+                        CustomTextButton(
+                          onPressed: () async {
+                            requestItem.borrowModel.isCheckedOut =
+                                true; //confirmed items are returned
+                            requestItem.acceptors = [];
+                            requestItem.accepted =
+                                true; //so that we can know that this request has completed
+                            requestItem.isNotified = true; //resets to false otherwise
+
+                            await getNotificationId(
+                              SevaCore.of(context).loggedInUser,
+                              //redundant because function does not use user model
+                              requestItem,
+                            ).then((notificationId) async {
+                              await lenderReceivedBackCheck(
+                                  notificationId: notificationId,
+                                  requestModelUpdated: requestItem,
+                                  context: context);
+
+                              await updateRequest(requestModel: requestItem);
+
+                              Navigator.of(_context).pop();
+
+                              Navigator.pop(context);
+                            });
+                          },
+                          child: Text(
+                            S.of(context).yes,
+                            style: TextStyle(fontSize: 17),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                } else {
+                  return;
+                }
+              }
+            },
+          ),
+        ),
+        SizedBox(width: 50),
+      ],
+    ),
+  );
 }

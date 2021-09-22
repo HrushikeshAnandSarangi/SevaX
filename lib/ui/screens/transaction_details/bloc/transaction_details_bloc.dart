@@ -6,14 +6,16 @@ import 'package:sevaexchange/ui/screens/transaction_details/manager/transactions
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 
 class TransactionDetailsBloc {
-  final _transactionDetailsController = BehaviorSubject<List<TransactionModel>>();
+  final _transactionDetailsController =
+      BehaviorSubject<List<TransactionModel>>();
   final _searchQuery = BehaviorSubject<String>.seeded(null);
 
   Stream<List<TransactionModel>> get _transactionDetailsStream =>
       _transactionDetailsController.stream;
   Stream<String> get _query => _searchQuery.stream;
 
-  Stream<List<TransactionModel>> data(BuildContext context) => CombineLatestStream.combine2(
+  Stream<List<TransactionModel>> data(BuildContext context) =>
+      CombineLatestStream.combine2(
         _transactionDetailsStream,
         _query,
         (transactions, searchText) {
@@ -25,7 +27,9 @@ class TransactionDetailsBloc {
           final searchTextLower = searchText.toLowerCase();
           _transactions.retainWhere(
             (element) =>
-                getTransactionTypeLabel(element.type, context).toLowerCase().contains(
+                getTransactionTypeLabel(element.type, context)
+                    .toLowerCase()
+                    .contains(
                       searchTextLower,
                     ) ||
                 element.credits.toString().contains(searchTextLower) ||

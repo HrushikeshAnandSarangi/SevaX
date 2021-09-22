@@ -1,5 +1,9 @@
+import 'dart:developer';
+
+import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/constants/dropdown_currency_constants.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
@@ -20,7 +24,13 @@ class DonationBloc {
       BehaviorSubject<Map<String, String>>.seeded(Map<String, String>());
   final _offerDonatedCurrency = BehaviorSubject<String>();
   final _requestDonatedCurrency = BehaviorSubject<String>();
+  //Donations search bar cod
+  final _donationsDetailsController = BehaviorSubject<List<DonationModel>>();
+  final _searchQuery = BehaviorSubject<String>.seeded(null);
 
+  Stream<List<DonationModel>> get _donationDetailsStream =>
+      _donationsDetailsController.stream;
+  Stream<String> get _query => _searchQuery.stream;
 
   Stream<String> get goodsDescription => _goodsDescription.stream;
   Stream<String> get amountPledged => _amountPledged.stream;
@@ -86,7 +96,6 @@ class DonationBloc {
           _offerDonatedCurrency.value ?? kDefaultCurrencyType;
       donationModel.cashDetails.cashDetails.offerCurrencyType =
           offerModel.cashModel.offerCurrencyType;
-
     }
 
     //Setting the receiver Community Title
@@ -185,7 +194,6 @@ class DonationBloc {
         toCurrency: requestModel.cashModel.requestCurrencyType,
         amount: double.parse(_amountPledged.value));
 
-
     donationModel.minimumAmount = requestModel.cashModel.minAmount;
     donationModel.cashDetails.cashDetails.minAmount =
         requestModel.cashModel.minAmount;
@@ -194,7 +202,8 @@ class DonationBloc {
         requestModel.cashModel.requestCurrencyType;
     donationModel.cashDetails.cashDetails.requestDonatedCurrency =
         _requestDonatedCurrency.value ?? kDefaultCurrencyType;
-    requestModel.cashModel.requestDonatedCurrency = _requestDonatedCurrency.value ?? kDefaultCurrencyType;
+    requestModel.cashModel.requestDonatedCurrency =
+        _requestDonatedCurrency.value ?? kDefaultCurrencyType;
 
     requestModel.cashModel.donors.add(donor.sevaUserID);
     // requestModel.cashModel.amountRaised =
@@ -287,6 +296,51 @@ class DonationBloc {
     }
   }
 
+  /// donations for donations list
+  void init({@required bool isGoods, String userId, String timebankId}) {
+    FirestoreManager.getDonationList(
+            isGoods: isGoods, timebankId: timebankId, userId: userId)
+        .listen((result) => _donationsDetailsController.add(result));
+  }
+
+  Stream<List<DonationModel>> data(BuildContext context, bool isGoods) =>
+      CombineLatestStream.combine2(
+        _donationDetailsStream,
+        _query,
+        (transactions, searchText) {
+          if (searchText == null || searchText.isEmpty) {
+            return transactions;
+          }
+
+          final _transactions = List<DonationModel>.from(transactions);
+          final searchTextLower = searchText.toLowerCase();
+          _transactions.retainWhere(
+            (element) =>
+                getDonationType(element.donationType, context)
+                        .toLowerCase()
+                        .contains(
+                          searchTextLower,
+                        ) ||
+                    element.createdDate
+                        .toLowerCase()
+                        .contains(searchTextLower) ||
+                    element?.goodsDetails?.donatedGoods?.values
+                        .contains(searchTextLower) ??
+                false ||
+                    element?.cashDetails?.pledgedAmount
+                        .toString()
+                        .contains(searchTextLower),
+          );
+          return _transactions;
+        },
+      );
+
+  Function(String) get onSearchQueryChanged => _searchQuery.sink.add;
+
+  String getDonationType(RequestType donationType, BuildContext context) =>
+      donationType == RequestType.GOODS
+          ? S.of(context).goods_donation
+          : S.of(context).cash_donation;
   void dispose() {
     _selectedList.close();
     _amountPledged.close();
@@ -294,5 +348,7 @@ class DonationBloc {
     _errorMessage.close();
     _community.close();
     _comment.close();
+    _searchQuery.close();
+    _donationsDetailsController.close();
   }
 }
