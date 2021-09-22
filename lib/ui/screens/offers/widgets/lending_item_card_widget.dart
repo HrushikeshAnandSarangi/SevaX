@@ -11,8 +11,7 @@ class LendingItemCardWidget extends StatelessWidget {
   final VoidCallback onDelete;
   bool hidden = false;
 
-  LendingItemCardWidget(
-      {this.lendingItemModel, this.onEdit, this.onDelete, this.hidden = false});
+  LendingItemCardWidget({this.lendingItemModel, this.onEdit, this.onDelete, this.hidden = false});
 
   @override
   Widget build(BuildContext context) {
@@ -28,16 +27,20 @@ class LendingItemCardWidget extends StatelessWidget {
           SizedBox(
             width: 15,
           ),
-          Text(
-            lendingItemModel.itemName,
-            style: TextStyle(
-              fontSize: 16,
-              //fontWeight: FontWeight.bold,
-              fontFamily: 'Europa',
-              color: Colors.black,
+          Expanded(
+            child: Text(
+              lendingItemModel.itemName,
+              style: TextStyle(
+                fontSize: 16,
+                //fontWeight: FontWeight.bold,
+                fontFamily: 'Europa',
+                color: Colors.black,
+              ),
             ),
           ),
-          Spacer(),
+          SizedBox(
+            width: 3,
+          ),
           HideWidget(
             hide: hidden,
             child: InkWell(

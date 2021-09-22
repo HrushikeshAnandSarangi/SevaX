@@ -1240,7 +1240,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                     title: '${model.individualOfferDataModel.title}',
                                     subTitle: "${user.fullname} " +
                                         S.of(context).checked_out_text +
-                                        ' ' +
+                                        '. ' +
                                         S.of(context).tab_to_leave_feedback,
                                     onDismissed: () {
                                       NotificationsRepository.readUserNotification(

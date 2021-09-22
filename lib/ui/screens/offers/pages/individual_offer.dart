@@ -1655,8 +1655,10 @@ class _IndividualOfferState extends State<IndividualOffer> {
                   groupValue: _bloc.lendingOfferType,
                   onValueChanged: (int val) {
                     if (val != _bloc.lendingOfferType) {
+                      _bloc.onLendingModelAdded(null);
                       setState(() {
                         _bloc.lendingOfferType = val;
+                        selectedLendingModel = null;
                       });
                       title_hint = (_bloc.lendingOfferType == 0
                           ? S.of(context).lending_offer_title_hint_place
@@ -1976,10 +1978,15 @@ class _IndividualOfferState extends State<IndividualOffer> {
                       ),
                     );
                   } else {
-                    errorDialog(
-                      context: context,
-                      error: S.of(context).offer_start_end_date,
-                    );
+                    _bloc.lendingOfferTypeMode == 0
+                        ? errorDialog(
+                            context: context,
+                            error: S.of(context).offer_start_date_validation,
+                          )
+                        : errorDialog(
+                            context: context,
+                            error: S.of(context).offer_start_end_date,
+                          );
                   }
                 },
               ),
@@ -2020,7 +2027,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                   } else {
                     _bloc.lendingOfferTypeMode = 1;
                   }
-                  _bloc.lendingOfferTypeMode = val;
+                  // _bloc.lendingOfferTypeMode = val;
                 });
               }
             },
