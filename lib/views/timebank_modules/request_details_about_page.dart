@@ -1201,16 +1201,16 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   ? S.of(context).request_approved
                   : S.of(context).request_has_been_assigned_to_a_member;
         } else if (widget.requestItem.roomOrTool == 'PLACE') {
-        textLabel = widget.requestItem.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID
+          textLabel = widget.requestItem.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID
               ? S.of(context).creator_of_request_message
               : S.of(context).borrow_request_for_place;
         } else {
-        textLabel = widget.requestItem.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID
+          textLabel = widget.requestItem.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID
               ? S.of(context).creator_of_request_message
               : S.of(context).borrow_request_for_item;
         }
 
-      actionWidget = widget.requestItem.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID
+        actionWidget = widget.requestItem.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID
             ? Container()
             : (widget.requestItem.approvedUsers.length >= 1
                 ? Container()
@@ -3242,15 +3242,19 @@ Widget borrowActionsWidget(RequestModel requestItem, BuildContext context, bool 
                   showDialog(
                     context: context,
                     builder: (_context) => AlertDialog(
-                      title: Text(S.of(context).item_received_alert_dialouge),
+                      title: Text(S.of(context).admin_borrow_request_received_back_check_item),
                       actions: [
                         CustomTextButton(
+                          shape: StadiumBorder(),
+                          color: Theme.of(context).accentColor,
+                          padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
                           onPressed: () {
                             Navigator.of(_context).pop();
                           },
                           child: Text(
-                            S.of(context).not_yet,
-                            style: TextStyle(fontSize: 17, color: Theme.of(context).accentColor),
+                            S.of(context).not_yet.sentenceCase(),
+                            style:
+                                TextStyle(fontSize: 16, fontFamily: 'Europa', color: Colors.white),
                           ),
                         ),
                         CustomTextButton(
@@ -3278,9 +3282,13 @@ Widget borrowActionsWidget(RequestModel requestItem, BuildContext context, bool 
                               Navigator.pop(context);
                             });
                           },
+                          shape: StadiumBorder(),
+                          color: Theme.of(context).primaryColor,
+                          padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
                           child: Text(
                             S.of(context).yes,
-                            style: TextStyle(fontSize: 17),
+                            style:
+                                TextStyle(fontSize: 16, fontFamily: 'Europa', color: Colors.white),
                           ),
                         ),
                       ],
@@ -3299,15 +3307,19 @@ Widget borrowActionsWidget(RequestModel requestItem, BuildContext context, bool 
                   showDialog(
                     context: context,
                     builder: (_context) => AlertDialog(
-                      title: Text(S.of(context).item_received_alert_dialouge),
+                      title: Text(S.of(context).admin_borrow_request_received_back_check_place),
                       actions: [
                         CustomTextButton(
+                          shape: StadiumBorder(),
+                          color: Theme.of(context).accentColor,
+                          padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
                           onPressed: () {
                             Navigator.of(_context).pop();
                           },
                           child: Text(
-                            S.of(context).not_yet,
-                            style: TextStyle(fontSize: 17, color: Theme.of(context).accentColor),
+                            S.of(context).not_yet.sentenceCase(),
+                            style:
+                                TextStyle(fontSize: 16, fontFamily: 'Europa', color: Colors.white),
                           ),
                         ),
                         CustomTextButton(
@@ -3336,9 +3348,13 @@ Widget borrowActionsWidget(RequestModel requestItem, BuildContext context, bool 
                               Navigator.pop(context);
                             });
                           },
+                          shape: StadiumBorder(),
+                          color: Theme.of(context).primaryColor,
+                          padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
                           child: Text(
                             S.of(context).yes,
-                            style: TextStyle(fontSize: 17),
+                            style:
+                                TextStyle(fontSize: 16, fontFamily: 'Europa', color: Colors.white),
                           ),
                         ),
                       ],
