@@ -11,7 +11,6 @@ import 'package:sevaexchange/ui/screens/sponsors/sponsors_widget.dart';
 import 'package:sevaexchange/ui/screens/sponsors/widgets/get_user_verified.dart';
 import 'package:sevaexchange/ui/screens/user_info/pages/donations_details_view.dart';
 import 'package:sevaexchange/ui/screens/user_info/pages/user_donations.dart';
-import 'package:sevaexchange/ui/screens/user_info/pages/user_donations_list.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;

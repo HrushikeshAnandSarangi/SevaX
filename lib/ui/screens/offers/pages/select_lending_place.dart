@@ -3,16 +3,11 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
-import 'package:sevaexchange/models/community_category_model.dart';
 import 'package:sevaexchange/models/enums/lending_borrow_enums.dart';
 import 'package:sevaexchange/new_baseline/models/lending_model.dart';
-import 'package:sevaexchange/new_baseline/models/lending_place_model.dart';
-import 'package:sevaexchange/repositories/community_repository.dart';
 import 'package:sevaexchange/repositories/lending_offer_repo.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/add_update_lending_item.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
-import 'package:sevaexchange/widgets/custom_chip.dart';
 import 'package:sevaexchange/utils/extensions.dart';
 
 import 'add_update_lending_place.dart';

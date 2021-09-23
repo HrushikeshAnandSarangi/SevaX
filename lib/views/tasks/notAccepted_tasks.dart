@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
-import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/pending_tasks.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/tasks_card_wrapper.dart';
 import 'package:sevaexchange/views/core.dart';
 

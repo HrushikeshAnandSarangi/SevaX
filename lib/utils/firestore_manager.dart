@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'package:async/async.dart' show StreamGroup;
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';

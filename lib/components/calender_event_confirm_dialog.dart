@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
-import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 
-import '../flavor_config.dart';
 
 class CalenderEventConfirmationDialog extends StatelessWidget {
   final String title;

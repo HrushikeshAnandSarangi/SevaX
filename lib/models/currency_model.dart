@@ -1,7 +1,5 @@
-import 'dart:convert';
 
 import 'package:sevaexchange/constants/sevatitles.dart';
-import 'package:sevaexchange/utils/app_config.dart';
 
 List<Map<String, String>> CurrencyNames = [
   {

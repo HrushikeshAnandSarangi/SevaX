@@ -1,29 +1,17 @@
-import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/common_help_icon.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
-import 'package:sevaexchange/repositories/firestore_keys.dart';
-import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
-import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/create_request/request_create_edit_form.dart';
 import 'package:sevaexchange/views/exchange/widgets/request_enums.dart';
-import 'package:sevaexchange/views/onboarding/interests_view.dart';
-import 'package:sevaexchange/views/spell_check_manager.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
-import 'package:sevaexchange/widgets/custom_chip.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
-import 'package:sevaexchange/widgets/multi_select/flutter_multiselect.dart';
-import 'package:usage/uuid/uuid.dart';
 
 class EditRequest extends StatefulWidget {
   final bool isOfferRequest;

@@ -9,7 +9,6 @@ import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/time_offer_participant.dart';
-import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/to_do.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/tasks_card_wrapper.dart';
@@ -19,7 +18,6 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 
 import '../../../../flavor_config.dart';
-import '../../../../labels.dart';
 
 class PendingTasks {
   static Stream<List<OfferModel>> getAcceptedOffers(

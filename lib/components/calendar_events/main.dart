@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/components/calendar_events/models/calendar_response.dart';
 import 'package:sevaexchange/components/calendar_events/models/kloudless_models.dart';
-import 'package:sevaexchange/components/calendar_events/repo/calendar_repo.dart';
-import 'package:sevaexchange/models/offer_model.dart';
-import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
-import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 import 'module/index.dart';
 
