@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/components/lending_borrow_widgets/approve_lending_offer.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
-import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/enums/lending_borrow_enums.dart';
 import 'package:sevaexchange/models/models.dart';
@@ -26,15 +25,13 @@ class LendingOfferParticipants extends StatelessWidget {
   final OfferModel offerModel;
   final TimebankModel timebankModel;
 
-  const LendingOfferParticipants({Key key, this.offerModel, this.timebankModel})
-      : super(key: key);
+  const LendingOfferParticipants({Key key, this.offerModel, this.timebankModel}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     final _bloc = BlocProvider.of<OfferBloc>(context);
     return SingleChildScrollView(
       child: StreamBuilder<List<LendingOfferAcceptorModel>>(
-        stream:
-            LendingOffersRepo.getLendingOfferAcceptors(offerId: offerModel.id),
+        stream: LendingOffersRepo.getLendingOfferAcceptors(offerId: offerModel.id),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return LoadingIndicator();
@@ -63,8 +60,7 @@ class LendingOfferParticipants extends StatelessWidget {
                 itemCount: snapshot.data.length,
                 physics: NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
-                  LendingOfferAcceptorModel acceptorModel =
-                      acceptorsList[index];
+                  LendingOfferAcceptorModel acceptorModel = acceptorsList[index];
                   return Column(
                     children: [
                       LendingParticipantCard(
@@ -80,8 +76,7 @@ class LendingOfferParticipants extends StatelessWidget {
                                   timebankId: timebankModel.id,
                                   entityName: timebankModel.name,
                                   isFromTimebank: isPrimaryTimebank(
-                                      parentTimebankId:
-                                          timebankModel.parentTimebankId),
+                                      parentTimebankId: timebankModel.parentTimebankId),
                                   userEmail: acceptorModel.acceptorEmail,
                                 );
                               },
@@ -113,8 +108,7 @@ class LendingOfferParticipants extends StatelessWidget {
                               acceptorDoumentId: acceptorModel.acceptorEmail,
                               offerId: offerModel.id,
                               status: snapshot.data[index].status,
-                              notificationId:
-                                  acceptorModel.notificationId ?? '',
+                              notificationId: acceptorModel.notificationId ?? '',
                               hostEmail: offerModel.email,
                               lendingOfferAcceptorModel: acceptorModel,
                               context: context,
@@ -228,8 +222,7 @@ class LendingOfferParticipants extends StatelessWidget {
                     notificationId: null,
                     context: context,
                     email: SevaCore.of(context).loggedInUser.email,
-                    feedbackType:
-                        FeedbackType.FEEDBACK_FOR_BORROWER_FROM_LENDER,
+                    feedbackType: FeedbackType.FEEDBACK_FOR_BORROWER_FROM_LENDER,
                     lendingOfferAcceptorModel: lendingOfferAcceptorModel);
               }
             },
@@ -274,8 +267,7 @@ class LendingOfferParticipants extends StatelessWidget {
                     notificationId: null,
                     context: context,
                     email: SevaCore.of(context).loggedInUser.email,
-                    feedbackType:
-                        FeedbackType.FEEDBACK_FOR_BORROWER_FROM_LENDER,
+                    feedbackType: FeedbackType.FEEDBACK_FOR_BORROWER_FROM_LENDER,
                     lendingOfferAcceptorModel: lendingOfferAcceptorModel);
               }
             },
@@ -320,8 +312,7 @@ class LendingOfferParticipants extends StatelessWidget {
               //Dialog box also to rsestrict approving more than one Borrower at a time.
               bool isCurrentlyLent = false;
               if (offerModel.lendingOfferDetailsModel.approvedUsers != null &&
-                  offerModel.lendingOfferDetailsModel.approvedUsers.length >
-                      0) {
+                  offerModel.lendingOfferDetailsModel.approvedUsers.length > 0) {
                 isCurrentlyLent = true;
               }
 
@@ -329,8 +320,7 @@ class LendingOfferParticipants extends StatelessWidget {
                 await cannotApproveMultipleDialog(
                     context,
                     lendingOfferAcceptorModel.acceptorName ?? '',
-                    offerModel
-                        .lendingOfferDetailsModel.lendingModel.lendingType);
+                    offerModel.lendingOfferDetailsModel.lendingModel.lendingType);
               } else {
                 Navigator.push(
                   context,
@@ -414,8 +404,7 @@ class LendingOfferParticipants extends StatelessWidget {
       communityId: communityId,
       sender: sender,
       reciever: receiver,
-      showToCommunities:
-          showToCommunities.isNotEmpty ? showToCommunities : null,
+      showToCommunities: showToCommunities.isNotEmpty ? showToCommunities : null,
       interCommunity: showToCommunities.isNotEmpty,
     );
   }
@@ -467,45 +456,32 @@ class LendingOfferAcceptorModel {
     this.endDate,
   });
 
-  factory LendingOfferAcceptorModel.fromMap(Map<String, dynamic> json) =>
-      LendingOfferAcceptorModel(
+  factory LendingOfferAcceptorModel.fromMap(Map<String, dynamic> json) => LendingOfferAcceptorModel(
         id: json["id"] == null ? null : json["id"],
-        acceptorEmail:
-            json["acceptorEmail"] == null ? null : json["acceptorEmail"],
+        acceptorEmail: json["acceptorEmail"] == null ? null : json["acceptorEmail"],
         acceptorId: json["acceptorId"] == null ? null : json["acceptorId"],
-        acceptorName:
-            json["acceptorName"] == null ? null : json["acceptorName"],
-        acceptorMobile:
-            json["acceptorMobile"] == null ? null : json["acceptorMobile"],
-        borrowAgreementLink: json["borrowAgreementLink"] == null
-            ? null
-            : json["borrowAgreementLink"],
-        selectedAddress:
-            json["selectedAddress"] == null ? null : json["selectedAddress"],
+        acceptorName: json["acceptorName"] == null ? null : json["acceptorName"],
+        acceptorMobile: json["acceptorMobile"] == null ? null : json["acceptorMobile"],
+        borrowAgreementLink:
+            json["borrowAgreementLink"] == null ? null : json["borrowAgreementLink"],
+        selectedAddress: json["selectedAddress"] == null ? null : json["selectedAddress"],
         isApproved: json["isApproved"] == null ? false : json["isApproved"],
         borrowedItemsIds: json["borrowedItemsIds"] == null
             ? []
             : List<String>.from(json["borrowedItemsIds"].map((x) => x)),
-        borrowedPlaceId:
-            json["borrowedPlaceId"] == null ? null : json["borrowedPlaceId"],
+        borrowedPlaceId: json["borrowedPlaceId"] == null ? null : json["borrowedPlaceId"],
         timestamp: json["timestamp"] == null ? null : json["timestamp"],
-        acceptorphotoURL:
-            json["acceptorphotoURL"] == null ? null : json["acceptorphotoURL"],
-        notificationId:
-            json["notificationId"] == null ? null : json["notificationId"],
+        acceptorphotoURL: json["acceptorphotoURL"] == null ? null : json["acceptorphotoURL"],
+        notificationId: json["notificationId"] == null ? null : json["notificationId"],
         communityId: json["communityId"] == null ? null : json["communityId"],
-        additionalInstructions: json["additionalInstructions"] == null
-            ? null
-            : json["additionalInstructions"],
+        additionalInstructions:
+            json["additionalInstructions"] == null ? null : json["additionalInstructions"],
         status: json["status"] == null
             ? LendingOfferStatus.ACCEPTED
             : ReadableLendingOfferStatus.getValue(json["status"]),
-        isLenderGaveReview: json["isLenderGaveReview"] == null
-            ? false
-            : json["isLenderGaveReview"],
-        isBorrowerGaveReview: json["isBorrowerGaveReview"] == null
-            ? false
-            : json["isBorrowerGaveReview"],
+        isLenderGaveReview: json["isLenderGaveReview"] == null ? false : json["isLenderGaveReview"],
+        isBorrowerGaveReview:
+            json["isBorrowerGaveReview"] == null ? false : json["isBorrowerGaveReview"],
         startDate: json["startDate"] == null ? null : json["startDate"],
         endDate: json["endDate"] == null ? null : json["endDate"],
       );
@@ -516,25 +492,20 @@ class LendingOfferAcceptorModel {
         "acceptorId": acceptorId == null ? null : acceptorId,
         "acceptorName": acceptorName == null ? null : acceptorName,
         "acceptorMobile": acceptorMobile == null ? null : acceptorMobile,
-        "borrowAgreementLink":
-            borrowAgreementLink == null ? null : borrowAgreementLink,
+        "borrowAgreementLink": borrowAgreementLink == null ? null : borrowAgreementLink,
         "selectedAddress": selectedAddress == null ? null : selectedAddress,
         "isApproved": isApproved == null ? null : isApproved,
-        "borrowedItemsIds": borrowedItemsIds == null
-            ? []
-            : List<dynamic>.from(borrowedItemsIds.map((x) => x)),
+        "borrowedItemsIds":
+            borrowedItemsIds == null ? [] : List<dynamic>.from(borrowedItemsIds.map((x) => x)),
         "borrowedPlaceId": borrowedPlaceId == null ? null : borrowedPlaceId,
         "timestamp": timestamp == null ? null : timestamp,
         "acceptorphotoURL": acceptorphotoURL == null ? null : acceptorphotoURL,
         "notificationId": notificationId == null ? null : notificationId,
         "communityId": communityId == null ? null : communityId,
-        "additionalInstructions":
-            additionalInstructions == null ? null : additionalInstructions,
+        "additionalInstructions": additionalInstructions == null ? null : additionalInstructions,
         "status": status == null ? null : status.readable,
-        "isBorrowerGaveReview":
-            isBorrowerGaveReview == null ? false : isBorrowerGaveReview,
-        "isLenderGaveReview":
-            isLenderGaveReview == null ? false : isLenderGaveReview,
+        "isBorrowerGaveReview": isBorrowerGaveReview == null ? false : isBorrowerGaveReview,
+        "isLenderGaveReview": isLenderGaveReview == null ? false : isLenderGaveReview,
         "startDate": startDate == null ? null : startDate,
         "endDate": endDate == null ? null : endDate,
       };
