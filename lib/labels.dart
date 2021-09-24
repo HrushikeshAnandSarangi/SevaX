@@ -1430,18 +1430,6 @@ class L {
 //   String get lending_offer_check_in_tag => 'Lending Offer - Check In';
 //   String get lending_offer_check_out_tag => 'Lending Offer - Check Out';
 
-//   String get agreement_damage_liability =>
-//       "The Borrower is responsible for the full cost of repair or replacement of any or all of the item(s) or properties that are damaged, lost, or stolen from the time Borrower assumes custody until it is returned to the lender unless otherwise agreed at the time the agreement is finalized. If the item(s) or property(s) is lost, stolen or damaged, Borrower agrees to promptly notify the Lender Representative designated above.";
-//   String get agreement_user_disclaimer =>
-//       "The Borrower shall be responsible for the proper use and deployment of the item(s) or properties. The Borrower shall be responsible for training anyone using the item(s) on the proper use of the item(s) in accordance with any item(s) use procedures.";
-//   String get agreement_delivery_return =>
-//       "Title to the item(s) the subject of this Agreement shall remain with Lender. The Borrower shall be responsible for the safe packaging, proper import, export, shipping and receiving of the item(s). The item(s) shall be returned within a reasonable amount of time after the Loan Period end date identified.";
-//   String get agreement_maintain_and_repair =>
-//       'Except for reasonable wear and tear, "Item(s) shall be returned to Lender in as good condition as when received by the Borrower. During the Loan Period and prior to return, the Borrower agrees to assume all responsibility for maintenance and repair."';
-//   String get agreement_refund_deposit =>
-//       "The borrower will provide a refundable deposit as defined within the agreement with the lender. The Criteria established regarding the condition of the item(s) or property upon return will also be defined in the agreement.";
-//   String get agreement_maintain_and_clean =>
-//       "All item(s) or properties borrowed must be returned in a condition similar to the condition it is received by the borrower unless otherwise noted in the agreement. Specific details related to the item(s) or properties and the lender's requirements upon return should be noted in the contract and agreed upon prior to the borrower's receipt.";
 //   String get would_like_to_accept_offer => "Would you like to accept this offer?";
 //   String get withdraw_lending_offer => 'Click here if you want to withdraw your request';
 //   String get borrower_departed_provide_feedback =>
@@ -1456,4 +1444,22 @@ class L {
 //   String get agreement_accepted => 'Accepted without agreement';
 //   String get items_collected => 'Item(s) Collected';
 
+//-------------------------------------------------------->
+//-------------------------------------------------------->
+// 24th September - LABEL UPDATES (more updates to be added)
+  //Finalised By Anitha Below ------------------->
+  String get agreement_damage_liability =>
+      "The Borrower is responsible for the full cost of repair or replacement of any or all of the item(s) or properties that are damaged, lost, or stolen from the time the Borrower assumes custody until it is returned to the lender, unless otherwise agreed at the time the agreement is finalized. If the item(s) or property(s) is lost, stolen or damaged, Borrower agrees to promptly notify the Lender Representative designated above.";
+  String get agreement_user_disclaimer =>
+      "The Borrower shall be responsible for the proper use and deployment of the item(s) or property. The Borrower shall be responsible for training anyone using the item(s) on the proper use of the item(s) in accordance with any item(s) use procedures.";
+
+  String get agreement_delivery_return =>
+      "The item(s) subject to this Agreement shall remain with Lender. The Borrower shall be responsible for the safe packaging, proper import, export, shipping and receiving of the item(s). The item(s) shall be returned within a reasonable amount of time after the loan duration end date identified.";
+  String get agreement_maintain_and_repair =>
+      'Except for reasonable wear and tear, Item(s) shall be returned to Lender in as good condition as when received by the Borrower. During the loan duration and prior to return, the Borrower agrees to assume all responsibility for maintenance and repair.';
+
+  String get agreement_refund_deposit =>
+      "The Borrower will provide a refundable deposit as defined within the agreement with the lender. The criteria established regarding the condition of the item(s) or property upon return will also be defined in the agreement.";
+  String get agreement_maintain_and_clean =>
+      "All item(s) or property borrowed must be returned in a condition similar to the condition it is received by the borrower, unless otherwise noted in the agreement. Specific details related to the item(s) or property and the lender's requirements upon return should be noted in the contract and agreed upon prior to the Borrower's receipt.";
 }
