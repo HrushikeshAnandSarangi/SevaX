@@ -9,6 +9,7 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/donation_model.dart';
+import 'package:sevaexchange/models/enums/lending_borrow_enums.dart';
 import 'package:sevaexchange/models/join_req_model.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/offer_model.dart';
@@ -993,17 +994,87 @@ class PersonalNotificationsReducerForOffer {
                   LendingOfferAcceptorModel lendingOfferAcceptorModel =
                       await LendingOffersRepo.getBorrowAcceptorModel(
                           offerId: model.id, acceptorEmail: user.email);
+                  //Fetch latest offer model
+                  OfferModel offerModel =
+                      await getOfferFromId(offerId: model.id);
 
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      // fullscreenDialog: true,
-                      builder: (context) => ApproveLendingOffer(
-                        offerModel: model,
-                        lendingOfferAcceptorModel: lendingOfferAcceptorModel,
+                  //Implemented by lending offer team
+                  LendingOfferAcceptorModel lendingOfferAcceptorModelOfApproved;
+                  if (offerModel.lendingOfferDetailsModel.approvedUsers.length >
+                      0) {
+                    lendingOfferAcceptorModelOfApproved =
+                        await LendingOffersRepo.getBorrowAcceptorModel(
+                            offerId: model.id,
+                            acceptorEmail: offerModel
+                                .lendingOfferDetailsModel.approvedUsers.first);
+                  }
+                  //Dialog box also to restrict approving more than one Borrower at a time.
+                  bool isCurrentlyLent = false;
+                  if (offerModel.lendingOfferDetailsModel.approvedUsers !=
+                          null &&
+                      offerModel.lendingOfferDetailsModel.approvedUsers.length >
+                          0) {
+                    isCurrentlyLent = true;
+                  }
+
+                  if (isCurrentlyLent) {
+                    return showDialog(
+                        context: context,
+                        builder: (dialogContext) {
+                          return AlertDialog(
+                            content: Container(
+                              height: MediaQuery.of(context).size.width * 0.40,
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      InkWell(
+                                        child: Icon(
+                                          Icons.cancel_rounded,
+                                          color: Colors.grey,
+                                        ),
+                                        onTap: () =>
+                                            Navigator.of(dialogContext).pop(),
+                                      ),
+                                    ],
+                                  ),
+                                  Text(offerModel.lendingOfferDetailsModel
+                                              .lendingModel.lendingType ==
+                                          LendingType.PLACE
+                                      ? S
+                                          .of(context)
+                                          .cannot_approve_multiple_borrowers_place
+                                          .replaceAll(
+                                              " **name",
+                                              lendingOfferAcceptorModelOfApproved
+                                                  .acceptorName)
+                                      : S
+                                          .of(context)
+                                          .cannot_approve_multiple_borrowers_item
+                                          .replaceAll(
+                                              " **name",
+                                              lendingOfferAcceptorModelOfApproved
+                                                  .acceptorName)),
+                                ],
+                              ),
+                            ),
+                          );
+                        });
+                  } else {
+                    //if no other member is currently approved
+                    //then we can navigate to approve page
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        // fullscreenDialog: true,
+                        builder: (context) => ApproveLendingOffer(
+                          offerModel: model,
+                          lendingOfferAcceptorModel: lendingOfferAcceptorModel,
+                        ),
                       ),
-                    ),
-                  );
+                    );
+                  }
                 },
                 photoUrl: notification.senderPhotoUrl ?? defaultUserImageURL,
                 title: '${model.individualOfferDataModel.title}',
