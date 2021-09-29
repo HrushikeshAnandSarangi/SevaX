@@ -187,7 +187,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             currentNode: _placeName,
                             nextNode: _guests,
                             value: snapshot.data,
-                            heading: "${S.of(context).name_of_place }*",
+                            heading: "${S.of(context).name_of_place}*",
                             onChanged: (String value) {
                               _bloc.onPlaceNameChanged(value);
                               // title = value;
@@ -311,7 +311,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                       ),
                       SizedBox(height: 20),
                       Text(
-                        S.of(context).amenities_text+'*',
+                        S.of(context).amenities_text + '*',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
@@ -353,9 +353,10 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                               // title = value;
                             },
                             hint: 'Ex: 3',
-                            maxLength: 1,
+                            maxLength: 4,
                             error: getAddPlaceValidationError(
                                 context, snapshot.error),
+                            keyboardType: TextInputType.number,
                             formatters: [
                               FilteringTextInputFormatter.allow(
                                   Regex.numericRegex)
@@ -378,9 +379,10 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                               // title = value;
                             },
                             hint: 'Ex: 2',
-                            maxLength: 1,
+                            maxLength: 4,
                             error: getAddPlaceValidationError(
                                 context, snapshot.error),
+                            keyboardType: TextInputType.number,
                             formatters: [
                               FilteringTextInputFormatter.allow(
                                   Regex.numericRegex)
@@ -403,9 +405,10 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                               // title = value;
                             },
                             hint: 'Ex: 1',
-                            maxLength: 1,
+                            maxLength: 4,
                             error: getAddPlaceValidationError(
                                 context, snapshot.error),
+                            keyboardType: TextInputType.number,
                             formatters: [
                               FilteringTextInputFormatter.allow(
                                   Regex.numericRegex)
