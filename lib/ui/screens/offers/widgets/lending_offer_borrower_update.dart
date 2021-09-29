@@ -164,7 +164,7 @@ class _LendingOfferBorrowerUpdateWidgetState extends State<LendingOfferBorrowerU
         widget.offerModel.lendingOfferDetailsModel.lendingModel.lendingType == LendingType.ITEM) {
       lendingOfferStatus = LendingOfferStatus.ITEMS_COLLECTED;
 
-      return S.of(context).collect_items;
+      return L.of(context).collect_items;
     } else if (widget.lendingOfferAcceptorModel.status == LendingOfferStatus.CHECKED_IN) {
       lendingOfferStatus = LendingOfferStatus.CHECKED_OUT;
 
@@ -172,7 +172,7 @@ class _LendingOfferBorrowerUpdateWidgetState extends State<LendingOfferBorrowerU
     } else if (widget.lendingOfferAcceptorModel.status == LendingOfferStatus.ITEMS_COLLECTED) {
       lendingOfferStatus = LendingOfferStatus.ITEMS_RETURNED;
 
-      return S.of(context).return_items;
+      return L.of(context).return_items;
     } else {
       return S.of(context).approved;
     }

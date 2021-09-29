@@ -188,33 +188,33 @@ class BorrowAgreementPdf {
                 : Container(),
             SizedBox(height: 10),
             (isDamageLiability == true)
-                ? Text(S.of(contextMain).agreement_damage_liability, style: TextStyle(fontSize: 14))
+                ? Text(L.of(contextMain).agreement_damage_liability, style: TextStyle(fontSize: 14))
                 : Container(),
             SizedBox(height: 10),
             (isUseDisclaimer == true)
-                ? Text(S.of(contextMain).agreement_user_disclaimer, style: TextStyle(fontSize: 14))
+                ? Text(L.of(contextMain).agreement_user_disclaimer, style: TextStyle(fontSize: 14))
                 : Container(),
             SizedBox(height: 10),
             placeOrItem == 'PLACE'
                 ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     (isRefundDepositNeeded == true)
-                        ? Text(S.of(contextMain).agreement_refund_deposit,
+                        ? Text(L.of(contextMain).agreement_refund_deposit,
                             style: TextStyle(fontSize: 14))
                         : Container(),
                     SizedBox(height: 10),
                     (isMaintainAndclean == true)
-                        ? Text(S.of(contextMain).agreement_maintain_and_clean,
+                        ? Text(L.of(contextMain).agreement_maintain_and_clean,
                             style: TextStyle(fontSize: 14))
                         : Container(),
                   ])
                 : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     (isDeliveryReturn == true)
-                        ? Text(S.of(contextMain).agreement_delivery_return,
+                        ? Text(L.of(contextMain).agreement_delivery_return,
                             style: TextStyle(fontSize: 14))
                         : Container(),
                     SizedBox(height: 10),
                     (isMaintainRepair == true)
-                        ? Text(S.of(contextMain).agreement_maintain_and_repair,
+                        ? Text(L.of(contextMain).agreement_maintain_and_repair,
                             style: TextStyle(fontSize: 14))
                         : Container(),
                   ]),
@@ -228,13 +228,13 @@ class BorrowAgreementPdf {
             SizedBox(height: 15),
             Text(S.of(contextMain).borrow_lender_dispute, style: TextStyle(fontSize: 14)),
             SizedBox(height: 15),
-            Text(S.of(contextMain).borrow_request_seva_disclaimer, style: TextStyle(fontSize: 14)),
+            Text(L.of(contextMain).borrow_request_seva_disclaimer, style: TextStyle(fontSize: 14)),
             SizedBox(height: 15),
             Text(S.of(contextMain).civil_code_dispute, style: TextStyle(fontSize: 14)),
             SizedBox(height: 15),
             Text(S.of(contextMain).agreement_amending_disclaimer, style: TextStyle(fontSize: 14)),
             SizedBox(height: 15),
-            Text(S.of(contextMain).agreement_final_acknowledgement, style: TextStyle(fontSize: 14)),
+            Text(L.of(contextMain).agreement_final_acknowledgement, style: TextStyle(fontSize: 14)),
           ]),
 
           SizedBox(height: 35),
@@ -243,7 +243,7 @@ class BorrowAgreementPdf {
             Text(S.of(contextMain).please_note_text, style: TextStyle(fontSize: 16)),
             //additional texts here
             SizedBox(height: 15),
-            Text(S.of(contextMain).agreement_prior_to_signing_disclaimer,
+            Text(L.of(contextMain).agreement_prior_to_signing_disclaimer,
                 style: TextStyle(fontSize: 14)),
           ]),
 
@@ -277,7 +277,7 @@ class BorrowAgreementPdf {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(S.of(contextMain).estimated_value.replaceAll('*', '') + ': ',
+                        Text(L.of(contextMain).estimated_value.replaceAll('*', '') + ': ',
                             style: TextStyle(fontSize: 16)),
                         SizedBox(width: 5),
                         Text(
@@ -317,7 +317,7 @@ class BorrowAgreementPdf {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(S.of(contextMain).estimated_value.replaceAll('*', '') + ': ',
+                        Text(L.of(contextMain).estimated_value.replaceAll('*', '') + ': ',
                             style: TextStyle(fontSize: 16)),
                         SizedBox(width: 5),
                         Text("\$" + lendingModel.lendingPlaceModel.estimatedValue.toString(),
@@ -402,7 +402,7 @@ class BorrowAgreementPdf {
           ]),
           SizedBox(height: 20),
           Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(S.of(contextMain).agreement_date, style: TextStyle(fontSize: 16)),
+            Text(L.of(contextMain).agreement_date, style: TextStyle(fontSize: 16)),
             SizedBox(height: 15),
             Text(
               DateFormat('MMMM dd, yyyy | h:mm a', Locale(getLangTag()).toLanguageTag()).format(

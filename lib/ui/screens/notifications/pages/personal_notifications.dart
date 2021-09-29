@@ -1278,7 +1278,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                     onPressed: null,
                                     photoUrl: notification.senderPhotoUrl ?? defaultUserImageURL,
                                     title: '${model.individualOfferDataModel.title}',
-                                    subTitle: "${user.fullname} " + S.of(context).collected_items,
+                                    subTitle: "${user.fullname} " + L.of(context).collected_items,
                                     onDismissed: () {
                                       NotificationsRepository.readUserNotification(
                                           notification.id, SevaCore.of(context).loggedInUser.email);
@@ -1353,7 +1353,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         photoUrl: notification.senderPhotoUrl ?? defaultUserImageURL,
                         title: '${model.individualOfferDataModel.title}',
                         subTitle:
-                            "${model.lendingOfferDetailsModel.lendingModel.lendingType == LendingType.PLACE ? S.of(context).borrower_departed_provide_feedback : S.of(context).borrower_returned_items_feedback}",
+                            "${model.lendingOfferDetailsModel.lendingModel.lendingType == LendingType.PLACE ? S.of(context).borrower_departed_provide_feedback : L.of(context).borrower_returned_items_feedback}",
                         onDismissed: () {
                           NotificationsRepository.readUserNotification(notification.id, user.email);
                         },
