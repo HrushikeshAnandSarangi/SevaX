@@ -301,8 +301,6 @@ class L {
 
 //   String get create_new => "Create New";
 
-//   String get choose_previous_agreement => "Choose previous agreement";
-
 //   String get no_agrreement => "No Agreement";
 
 //   String get fixed => "Fixed";
@@ -571,8 +569,6 @@ class L {
 
 //   String get additional_instructions_hint_item => "Ex: Lawnmower is available next door";
 
-//   String get additional_instructions_hint_place => "Ex: Keys are available next door";
-
 //   String get lending_approve_terms_item =>
 //       "I acknowledge that you can lend the item(s) on the mentioned dates.";
 
@@ -580,9 +576,6 @@ class L {
 //       "I acknowledge that you can lend the place on the mentioned dates.";
 
 //   String get lending => "Lending";
-
-//   String get cannot_approve_multiple_borrowers_item =>
-//       "You cannot approve multiple borrowers at once. Currently the items are with  **name. Once returned you can approve this request.";
 
 //   String get cannot_approve_multiple_borrowers_place =>
 //       "You cannot approve multiple borrowers at once. Currently  **name is checked in. Once  **name has checked out you can approve this request.";
@@ -624,8 +617,6 @@ class L {
 //   String get bed_roooms => "Bed Rooms for guests";
 
 //   String get house_rules => "House Rules";
-
-//   String get estimated_value => "Estimated value*";
 
 //   String get estimated_value_items => "Estimated value of Item(s)";
 
@@ -1102,15 +1093,8 @@ class L {
 //   //4th aug
 //   String get request_payment_description => "Payment Method*";
 
-//   String get select_a_item_lending => "Select list of related items for Borrow*";
-
-//   String get items_validation =>
-//       "You have not selected any Items. Please select one or more before creating the Borrow request.";
-
 //   String get accept_borrow_agreement_page_hint =>
 //       "Please fill in your Item details, agreement and location of your place to help the borrower.";
-
-//   String get accept_borrow_agreement_item_title => "You are about to give Items for the borrower";
 
 //   String get accept_borrow_agreement_place_title => "Details of the offer";
 
@@ -1136,9 +1120,6 @@ class L {
 //   String get creating_item_error => "There was error creating your item, Please try again.";
 
 //   String get updating_item_error => "There was error creating your item, Please try again.";
-
-//   String get agree_to_signature_legal_text =>
-//       "By accepting the conditions on this page, your electronic signature is assumed and you are responsible for all terms included within.";
 
 //   String get applied_for_request => 'You have accepted the request';
 
@@ -1171,26 +1152,15 @@ class L {
 //   String get borrow_lender_dispute =>
 //       'In the real world and online, communities and community members sometimes disagree. If you have a dispute with another Community member, we hope that you will be able to work it out amicably." ';
 
-//   String get borrow_request_seva_disclaimer =>
-//       'However, if you cannot, please understand that SevaExchange is not responsible for the actions of its members; each member is responsible for their own actions and behavior, whether using SevaExchange or chatting over the back fence. Accordingly, to the maximum extent permitted by applicable law, you release us (and our officers, directors, agents, subsidiaries, joint ventures and employees) from claims, demands and damages (actual and consequential) of every kind and nature, known and unknown, arising out of or in any way connected with such disputes. If you are a California resident, you hereby waive California Civil Code §1542, which says: "A general release does not extend to claims that the creditor or releasing party does not know or suspect to exist in his or her favor at the time of executing the release, and that, if known by him or her, would have materially affected his or her settlement with the debtor or releasing party." ';
-
 //   String get civil_code_dispute =>
 //       'Accordingly, to the maximum extent permitted by applicable law, you release us (and our officers, directors, agents, subsidiaries, joint ventures and employees) from claims, demands and damages (actual and consequential) of every kind and nature, known and unknown, arising out of or in any way connected with such disputes. If you are a California resident, you hereby waive California Civil Code §1542, which says: "A general release does not extend to claims that the creditor or releasing party does not know or suspect to exist in his or her favor at the time of executing the release, and that, if known by him or her, would have materially affected his or her settlement with the debtor or releasing party." ';
 
 //   String get agreement_amending_disclaimer =>
 //       'If the lender and borrower adjust the return date of the item as defined in the agreement, it is the responsibility of the parties involved to maintain the agreement extension and it is not included in this process or the responsibility of Seva Exchange.';
 
-//   String get agreement_final_acknowledgement =>
-//       'It is hereby acknowledged that while SevaExchange is furnishing this agreement and securely managing in their digital vault, SevaExchange is only providing this as a convenience to the two parties in this agreement. SevaExchange is indemnified from any loss or damage that occurs as a result of this transaction. Neither party will hold SevaExchange accountable and agree to completely absolve SevaExchange should there be any litigation arising from this transaction.';
-
-//   String get agreement_prior_to_signing_disclaimer =>
-//       "The borrower should inspect the item or property being taken to ensure the description and operability of the borrowed item or property is represented properly in the agreement and request modifications as necessary prior to executing the agreement. Any adjustments to the defined provisions need to be made prior to signing the agreement. Any actions taken to resolve the issues outside the agreement will be the responsibility of the lender and/or borrower; example is Small Claims Court. SevaExchange will have no responsibility in the negotiation, management or collection related to the violations of the agreement.";
-
 //   String get lender => 'Lender';
 
 //   String get borrower => 'Borrower';
-
-//   String get agreement_date => 'Agreement Date';
 
 //   String get lender_acknowledged_feedback =>
 //       "The Lender has acknowledged completion of this request. Tap to leave a feedback.";
@@ -1199,18 +1169,14 @@ class L {
 //   String get offering_items_to => 'You are offering item(s) to ';
 
 //   String get length_of_stay => 'Length of stay between:  ';
-//   String get collect_and_return_items => 'Collect and Return items:  ';
+
 //   String get items_returned => 'Item(s) Returned';
 //   String get checked_in => 'Checked In';
 //   String get checked_out => 'Checked Out';
 //   String get check_out => 'Check Out';
 //   String get check_in => 'Check In';
 //   String get check_in_pending => 'Check in pending';
-//   String get borrow_request_collect_items_tag => 'Borrow Request - Collect Items';
-//   String get borrow_request_return_items_tag => 'Borrow Request - Return Items';
-//   String get collect_items => 'Collect Items';
-//   String get return_items => 'Return Items';
-//   String get collected_items => 'Collected Item(s)';
+
 //   String get returned_items => 'Returned Item(s)';
 //   String get lent_to => 'Lent to: ';
 //   String get place_not_added => 'Place not added';
@@ -1227,8 +1193,7 @@ class L {
 //   String get items_taken => "Item(s) taken";
 //   String get arrived => "Arrived";
 //   String get departed => "Departed";
-//   String get items_collected_alert => "Items to be collected and returned on:  ";
-//   String get items_collected_alert_two => "You have collected item(s) from";
+
 //   String get please_return_by => "Please return by: ";
 //   String get items_returned_to_lender => "You have returned the item(s) to the lender, ";
 //   String get exchanged_completed => "Exchange completed";
@@ -1258,15 +1223,12 @@ class L {
 //   String get idle_for_4_weeks => " has been idle for 4 weeks";
 //   String get idle_for_2_weeks => " has been idle for 2 weeks";
 
-//   String get lending_offer_collect_items_tag => 'Lending Offer - Collect Items';
-//   String get lending_offer_return_items_tag => 'Lending Offer - Return Items';
 //   String get change_departure_date => 'Change departure date?';
 //   String get tab_to_leave_feedback => 'Tap to leave a feedback.';
 //   String get lending_offer_return_items_hint => 'Click here if you have returned the item(s).';
 //   String get lending_offer_return_place_hint => 'Click here if you have checked out of the place';
 
 //   String get check_out_alert => 'Are you sure you want to check out?';
-//   String get return_items_alert => 'Are you sure you want to return items?';
 //   String get add_new => "Add new";
 //   String get end_date_after_offer_end_date_place =>
 //       "The check out date is after the offer end date. Please edit your offer end date or select a date before offer end date to approve this request.";
@@ -1369,7 +1331,6 @@ class L {
 //   ///
 //   ///todo: 20th september updated labels (ALL Below have been integrated to code)
 //   String get lending_offer_title_hint_item => "Ex: Offering to lend a lawnmower.";
-//   String get lending_offer_title_hint_place => "Ex: Offering to lend an apartment.";
 //   String get lending_offer_description_hint_item =>
 //       "Provide a detailed description of the item you would like to lend.";
 //   String get lending_offer_description_hint_place =>
@@ -1377,11 +1338,9 @@ class L {
 //   String get name_of_item_hint => "Ex: Lawnmower";
 //   String get bath_rooms => "Bathroom(s)";
 //   String get item_returned_hint_text => 'Ex: item(s) must be returned in the same condition.';
-//   String get name_of_place_hint => "Ex: Apartment Bathed in Sunshine.";
 //   String get common_spaces => "Common Space";
 //   String get house_rules_hint => "Ex: No Smoking";
 //   String get borrow_request_title_hint_item => "Ex: Lawnmower";
-//   String get borrow_request_title_hint_place => "Ex: Apartment";
 //   String get borrow_request_description_hint_item =>
 //       "Provide a detailed description of the item you would like to borrow.";
 //   String get borrow_request_description_hint_place =>
@@ -1390,10 +1349,7 @@ class L {
 //       "Please provide details about your place, the proposed agreement and location of the property.";
 //   String get select_a_place_lending => "Select a place to lend*";
 //   String get select_item_for_lending => "Select an item to lend*";
-//   String get approve_borrow_terms_acknowledgement_text1 =>
-//       "I acknowledge that you can use the property on the mentioned dates";
-//   String get approve_borrow_terms_acknowledgement_text2 =>
-//       "I acknowledge that you can use the item(s) on the mentioned dates";
+
 //   String get search_agreement_hint_place => "Enter name of a property agreement template";
 //   String get search_agreement_hint_item => "Enter name of an item agreement template";
 //   String get accept_place_borrow_request => "Accept Place Borrow Request";
@@ -1413,10 +1369,9 @@ class L {
 //       "If you have received your place back from the borrower, please click the button below to complete this transaction";
 //   String get admin_borrow_request_received_back_check_item =>
 //       "If you have received your item(s) back from the borrower, please click the button below to complete this transaction";
-//   String get place_agreement_name_hint_place => "Ex: House for the weekend..";
-//   String get place_agreement_name_hint_item => "Ex: Lawnmower for the weekend..";
+
 //   String get lend => "Lend";
-//   String get date_to_borrow_and_return => "Date to Collect and Return item(s)";
+
 //   String get date_to_check_in_out => "Date of Check In and expected Check Out";
 
 // //Lending offers labels updates below ////---------------->
@@ -1430,23 +1385,10 @@ class L {
 //   String get lending_offer_check_in_tag => 'Lending Offer - Check In';
 //   String get lending_offer_check_out_tag => 'Lending Offer - Check Out';
 
-//   String get agreement_damage_liability =>
-//       "The Borrower is responsible for the full cost of repair or replacement of any or all of the item(s) or properties that are damaged, lost, or stolen from the time Borrower assumes custody until it is returned to the lender unless otherwise agreed at the time the agreement is finalized. If the item(s) or property(s) is lost, stolen or damaged, Borrower agrees to promptly notify the Lender Representative designated above.";
-//   String get agreement_user_disclaimer =>
-//       "The Borrower shall be responsible for the proper use and deployment of the item(s) or properties. The Borrower shall be responsible for training anyone using the item(s) on the proper use of the item(s) in accordance with any item(s) use procedures.";
-//   String get agreement_delivery_return =>
-//       "Title to the item(s) the subject of this Agreement shall remain with Lender. The Borrower shall be responsible for the safe packaging, proper import, export, shipping and receiving of the item(s). The item(s) shall be returned within a reasonable amount of time after the Loan Period end date identified.";
-//   String get agreement_maintain_and_repair =>
-//       'Except for reasonable wear and tear, "Item(s) shall be returned to Lender in as good condition as when received by the Borrower. During the Loan Period and prior to return, the Borrower agrees to assume all responsibility for maintenance and repair."';
-//   String get agreement_refund_deposit =>
-//       "The borrower will provide a refundable deposit as defined within the agreement with the lender. The Criteria established regarding the condition of the item(s) or property upon return will also be defined in the agreement.";
-//   String get agreement_maintain_and_clean =>
-//       "All item(s) or properties borrowed must be returned in a condition similar to the condition it is received by the borrower unless otherwise noted in the agreement. Specific details related to the item(s) or properties and the lender's requirements upon return should be noted in the contract and agreed upon prior to the borrower's receipt.";
 //   String get would_like_to_accept_offer => "Would you like to accept this offer?";
 //   String get withdraw_lending_offer => 'Click here if you want to withdraw your request';
 //   String get borrower_departed_provide_feedback =>
 //       'You checked out as noted above. Tap to leave a feedback.';
-//   String get borrower_returned_items_feedback => 'You returned items. Tap to leave a feedback.';
 //   String get validation_error_no_of_bathrooms => "Please enter no of bathrooms available";
 // // ----------------------------------------------------------------------------------->
 
@@ -1454,6 +1396,86 @@ class L {
 //   String get offer_start_date_validation => "Please enter start date";
 //   String get lease_start_date => 'Lease Start Date: ';
 //   String get agreement_accepted => 'Accepted without agreement';
-//   String get items_collected => 'Item(s) Collected';
 
+//-------------------------------------------------------->
+//-------------------------------------------------------->
+// 24th September - LABEL UPDATES (more updates to be added)
+
+// 29th September - LABEL UPDATES (more updates to be added) ------------------------>
+  //Finalised By Anitha Below ------------------->
+  String get agreement_damage_liability =>
+      "The Borrower is responsible for the full cost of repair or replacement of any or all of the item(s) or properties that are damaged, lost, or stolen from the time the Borrower assumes custody until it is returned to the Lender, unless otherwise agreed at the time the agreement is finalized. If the item(s) or property(s) is lost, stolen or damaged, Borrower agrees to promptly notify the Lender Representative designated above.";
+  String get agreement_user_disclaimer =>
+      "The Borrower shall be responsible for the proper use and deployment of the item(s) or property. The Borrower shall be responsible for training anyone using the item(s) on the proper use of the item(s) in accordance with any item(s) use procedures.";
+
+  String get agreement_delivery_return =>
+      "The item(s) subject to this Agreement shall remain with Lender. The Borrower shall be responsible for the safe packaging, proper import, export, shipping and receiving of the item(s). The item(s) shall be returned within a reasonable amount of time after the loan duration end date identified.";
+  String get agreement_maintain_and_repair =>
+      'Except for reasonable wear and tear, Item(s) shall be returned to Lender in as good condition as when received by the Borrower. During the loan duration and prior to return, the Borrower agrees to assume all responsibility for maintenance and repair.';
+
+  String get agreement_refund_deposit =>
+      "The Borrower will provide a refundable deposit as defined within the agreement with the Lender. The criteria established regarding the condition of the item(s) or property upon return will also be defined in the agreement.";
+  String get agreement_maintain_and_clean =>
+      "All item(s) or property borrowed must be returned in a condition similar to the condition it is received by the Borrower, unless otherwise noted in the agreement. Specific details related to the item(s) or property and the Lender's requirements upon return should be noted in the contract and agreed upon prior to the Borrower's receipt.";
+//Above Finalised by Anitha 
+  String get estimated_value_item_hint => "Ex: \$100"; 
+  String get estimated_value_place_hint => "Ex: \$2000"; 
+  String get place_agreement_name_hint_place => "Ex: Room in New York"; 
+  String get place_agreement_name_hint_item =>
+      "Ex: Lawnmower for the weekend"; //done
+  String get seva_exchange_text_new =>
+      "By continuing, you agree to Seva Exchange's"; //done
+  String get agree_to_signature_legal_text => //done
+      "By accepting the conditions, your electronic signature is assumed and you are responsible for all terms within this agreement.";
+  String get choose_previous_agreement => "Choose Previous Agreement";
+  String get borrower_returned_items_feedback =>
+      'You returned item(s). Tap to leave a feedback.';
+  String get cannot_approve_multiple_borrowers_item =>
+      "You cannot approve multiple borrowers at once. Currently the item(s) are with **name. Once returned you can approve this request.";
+  String get select_a_item_lending =>
+      "Select list of related item(s) for Borrow*";
+  String get items_validation =>
+      "You have not selected any Item(s). Please select one or more before creating the Borrow request.";
+  String get accept_borrow_agreement_item_title =>
+      "You are about to give item(s) to the borrower";
+  String get borrow_request_return_items_tag =>
+      'Borrow Request - Return Item(s)';
+  String get return_items => 'Return Item(s)';
+  String get lending_offer_return_items_tag => 'Lending Offer - Return Item(s)';
+  String get return_items_alert => 'Are you sure you want to return item(s)?';
+  String get lending_offer_location_hint_item =>
+      'Provide general vicinity of pick-up location';
+  String get lending_offer_location_hint_place =>
+      'Provide general vicinity of where the accommodation is';
+//added new label below
+  String get location_safety_disclaimer =>
+      "Note: For safety precautions, do not list the exact location.";
+  String get items_collected => 'Item(s) Picked-up';
+  String get date_to_borrow_and_return => "Date to Pick-up and Return item(s)";
+  String get collected_items => 'Picked-up Item(s)';
+  String get items_collected_alert_two => "You have picked-up item(s) from";
+  String get lending_offer_collect_items_tag =>
+      'Lending Offer - Pick-up Item(s)';
+  String get items_collected_alert =>
+      "Item(s) to be picked-up and returned on:  ";
+  String get collect_items => 'Pick-up Item(s)';
+  String get borrow_request_collect_items_tag =>
+      'Borrow Request - Pick-up Item(s)';
+  String get collect_and_return_items => 'Pick-up and Return item(s):  ';
+  String get borrow_request_title_hint_place => "Ex: Room";
+  String get name_of_place_hint => "Ex: Room near downtown";
+  String get agreement_prior_to_signing_disclaimer =>
+      "The Borrower should inspect the item or property being taken to ensure the description and operability of the borrowed item or property is represented properly in the agreement and request modifications as necessary prior to executing the agreement. Any adjustments to the defined provisions need to be made prior to signing the agreement. Any actions taken to resolve the issues outside the agreement will be the responsibility of the lender and/or borrower; example is Small Claims Court. Seva Exchange will have no responsibility in the negotiation, management or collection related to the violations of the agreement.";
+  String get agreement_final_acknowledgement =>
+      'It is hereby acknowledged that while Seva Exchange is furnishing this agreement and securely managing in their digital vault, Seva Exchange is only providing this as a convenience to the two parties in this agreement. Seva Exchange is indemnified from any loss or damage that occurs as a result of this transaction. Neither party will hold Seva Exchange accountable and agree to completely absolve Seva Exchange should there be any litigation arising from this transaction.';
+  String get borrow_request_seva_disclaimer =>
+      'However, if you cannot, please understand that Seva Exchange is not responsible for the actions of its members; each member is responsible for their own actions and behavior, whether using Seva Exchange or chatting over the back fence. Accordingly, to the maximum extent permitted by applicable law, you release us (and our officers, directors, agents, subsidiaries, joint ventures and employees) from claims, demands and damages (actual and consequential) of every kind and nature, known and unknown, arising out of or in any way connected with such disputes. If you are a California resident, you hereby waive California Civil Code §1542, which says: "A general release does not extend to claims that the creditor or releasing party does not know or suspect to exist in his or her favor at the time of executing the release, and that, if known by him or her, would have materially affected his or her settlement with the debtor or releasing party." ';
+  String get agreement_date => 'Agreement Date and Time';
+  String get estimated_value => "Estimated Value*";
+  String get additional_instructions_hint_place =>
+      "Ex: Keys are available in the lockbox'";
+  String get approve_borrow_terms_acknowledgement_text1 =>
+      "I acknowledge that this Borrower can use the place on the mentioned dates";
+  String get approve_borrow_terms_acknowledgement_text2 =>
+      "I acknowledge that this Borrower can use the item(s) on the mentioned dates";
 }

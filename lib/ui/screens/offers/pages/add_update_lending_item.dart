@@ -162,12 +162,12 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                             decoration: InputDecoration(
                                 prefixIcon: Icon(Icons.attach_money),
                                 errorText: getAddItemValidationError(context, snapshot.error),
-                                hintText: S.of(context).request_min_donation_hint +
+                                hintText: L.of(context).estimated_value_item_hint +
                                     S.of(context).estimated_value_hint_item),
                             controller: _estimatedValueController,
                             currentNode: _estimatedValue,
                             value: snapshot.data.toString(),
-                            heading: "${S.of(context).estimated_value}",
+                            heading: "${L.of(context).estimated_value}",
                             onChanged: (String value) {
                               _bloc.onEstimatedValueChanged(value);
                               // title = value;

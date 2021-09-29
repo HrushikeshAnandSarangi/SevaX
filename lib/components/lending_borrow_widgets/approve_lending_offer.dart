@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/enums/lending_borrow_enums.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/repositories/lending_offer_repo.dart';
@@ -73,7 +74,7 @@ class _ApproveLendingOfferState extends State<ApproveLendingOffer> {
               title: widget.offerModel.lendingOfferDetailsModel.lendingModel.lendingType ==
                       LendingType.PLACE
                   ? S.of(context).date_to_check_in_out
-                  : S.of(context).date_to_borrow_and_return,
+                  : L.of(context).date_to_borrow_and_return,
             ),
             SizedBox(height: 15),
             Text(S.of(context).addditional_instructions + '*',
@@ -94,7 +95,7 @@ class _ApproveLendingOfferState extends State<ApproveLendingOffer> {
               decoration: InputDecoration(
                 hintText: widget.offerModel.lendingOfferDetailsModel.lendingModel.lendingType ==
                         LendingType.PLACE
-                    ? S.of(context).additional_instructions_hint_place
+                    ? L.of(context).additional_instructions_hint_place
                     : S.of(context).additional_instructions_hint_item,
                 hintStyle: TextStyle(fontSize: 13, color: Colors.grey),
                 // labelText: 'No. of volunteers',

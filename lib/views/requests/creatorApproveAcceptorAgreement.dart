@@ -133,7 +133,7 @@ class _CreatorApproveAcceptorAgreeementState extends State<CreatorApproveAccepto
               child: Text(
                   S.of(context).terms_acknowledgement_text +
                       '. ' +
-                      S.of(context).agree_to_signature_legal_text,
+                      L.of(context).agree_to_signature_legal_text,
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
