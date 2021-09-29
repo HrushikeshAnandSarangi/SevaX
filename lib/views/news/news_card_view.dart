@@ -128,6 +128,7 @@ class NewsCardViewState extends State<NewsCardView> {
                           newsMmodel: widget.newsModel,
                           timebankId:
                               SevaCore.of(context).loggedInUser.currentTimebank,
+                              timebankModel: widget.timebankModel,
                         ),
                       ),
                     );
