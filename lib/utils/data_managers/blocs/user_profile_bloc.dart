@@ -20,9 +20,7 @@ class UserProfileBloc {
   StreamSink<bool> get changeCommunity => _communityLoaded.sink;
 
   void getAllCommunities(context, UserModel userModel) async {
-    FirestoreManager.getUserForIdStream(
-      sevaUserId: userModel?.sevaUserID,
-    ).listen((userModel) {
+    if (userModel != null) {
       CollectionRef.communities
           .where("members", arrayContains: userModel.sevaUserID)
           .get()
@@ -43,7 +41,8 @@ class UserProfileBloc {
           },
         );
       });
-    });
+    }
+
     // Set<String> communitiesList = Set.from(userModel?.communities ?? []);
     // if (userModel?.sevaUserID != null)
     //   FirestoreManager.getUserForIdStream(
@@ -78,15 +77,12 @@ class UserProfileBloc {
     //   });
   }
 
-  void setDefaultCommunity(
-      String email, CommunityModel community, BuildContext context) {
+  void setDefaultCommunity(String email, CommunityModel community, BuildContext context) {
     _communityLoaded.add(false);
 
     if (community != null)
-      SevaCore.of(context).loggedInUser.currentTimebank =
-          community.primary_timebank;
-    SevaCore.of(context).loggedInUser.associatedWithTimebanks =
-        community.timebanks.length;
+      SevaCore.of(context).loggedInUser.currentTimebank = community.primary_timebank;
+    SevaCore.of(context).loggedInUser.associatedWithTimebanks = community.timebanks.length;
     CollectionRef.users.doc(email).update({
       "currentCommunity": community.id,
       "currentTimebank": community.primary_timebank
