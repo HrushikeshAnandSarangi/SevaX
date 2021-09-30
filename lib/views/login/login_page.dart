@@ -5,6 +5,7 @@ import 'dart:ui' as ui;
 
 import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:doseform/doseform.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
@@ -41,7 +42,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final GlobalKey<FormState> _formKey = GlobalKey();
+  final GlobalKey<DoseFormState> _formKey = GlobalKey();
   final GlobalKey<FormState> _formKeyDialog = GlobalKey();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   Alignment childAlignment = Alignment.center;
@@ -541,16 +542,20 @@ class _LoginPageState extends State<LoginPage> {
         height: 200,
         child: Padding(
           padding: EdgeInsets.only(top: 8.0, bottom: 0.0),
-          child: Form(
+          child: DoseForm(
             key: _formKey,
+            physics: NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            primary: true,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                TextFormField(
-                  focusNode: emailFocus,
+                DoseTextField(
+                  isRequired: true,
+                  currentNode: emailFocus,
                   style: textStyle,
-                  cursorColor: Colors.black54,
+                  // cursorColor: Colors.black54,
                   validator: _validateEmailId,
                   onSaved: _saveEmail,
                   onFieldSubmitted: (v) {
@@ -567,11 +572,12 @@ class _LoginPageState extends State<LoginPage> {
                     labelStyle: textStyle,
                   ),
                 ),
-                TextFormField(
-                  focusNode: pwdFocus,
+                DoseTextField(
+                  isRequired: true,
+                  currentNode: pwdFocus,
                   obscureText: _shouldObscurePassword,
                   style: textStyle,
-                  cursorColor: Colors.black54,
+                  // cursorColor: Colors.black54,
                   validator: _validatePassword,
                   onSaved: _savePassword,
                   decoration: InputDecoration(

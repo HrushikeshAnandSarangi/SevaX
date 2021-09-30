@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:doseform/doseform.dart';
 // import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -82,7 +83,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
   // us to validate the form
   //
   // Note: This is a GlobalKey<FormState>, not a GlobalKey<NewsCreateFormState>!
-  final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<DoseFormState>();
   var groupFound = false;
   TimebankModel timebankModel = TimebankModel({});
   TimebankModel parentTimebankModel = TimebankModel({});
@@ -239,8 +240,11 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
   @override
   Widget build(BuildContext context) {
     memberAssignment = "+ ${S.of(context).add_members}";
-    return Form(
+    return DoseForm(
       key: _formKey,
+      primary: true,
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
         child: SingleChildScrollView(child: FadeAnimation(1.4, createSevaX)),
@@ -287,13 +291,14 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           ),
         )),
         headingText(S.of(context).name_your_group, true),
-        TextFormField(
+        DoseTextField(
+          isRequired: true,
           textCapitalization: TextCapitalization.sentences,
-          focusNode: nameNode,
+          currentNode: nameNode,
           onFieldSubmitted: (v) {
             FocusScope.of(context).requestFocus(aboutNode);
           },
-          controller: searchTextController,
+          textEditingController: searchTextController,
           onChanged: (value) {
             ExitWithConfirmation.of(context).fieldValues[1] = value;
           },
@@ -320,10 +325,11 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           },
         ),
         headingText(S.of(context).about, true),
-        TextFormField(
+        DoseTextField(
+          isRequired: true,
           textCapitalization: TextCapitalization.sentences,
 
-          focusNode: aboutNode,
+          currentNode: aboutNode,
           onFieldSubmitted: (v) {
             FocusScope.of(context).requestFocus(FocusNode());
           },

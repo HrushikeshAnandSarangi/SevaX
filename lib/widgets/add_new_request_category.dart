@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:doseform/doseform.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
@@ -26,7 +27,7 @@ class AddNewRequestCategory extends StatefulWidget {
 class _AddNewRequestCategoryState extends State<AddNewRequestCategory> {
   String subcategorytitle = '';
   String newRequestCategoryLogo;
-  final formKey = GlobalKey<FormState>();
+  final formKey = GlobalKey<DoseFormState>();
   String errTxt = '';
   final _subcategorytitleStream = StreamController<String>();
   TextEditingController searchTextController = TextEditingController();
@@ -121,17 +122,21 @@ class _AddNewRequestCategoryState extends State<AddNewRequestCategory> {
                                 borderRadius: BorderRadius.circular(10)),
                             onTap: () {},
                             // leading: Icon(Icons.add_circle_outline, size: 16),
-                            title: Form(
-                              autovalidateMode:
-                                  AutovalidateMode.onUserInteraction,
+                            title: DoseForm(
+                              physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              primary: true,
+                              // autovalidateMode:
+                              //     AutovalidateMode.onUserInteraction,
                               key: formKey,
                               child: Container(
                                 height:
                                     MediaQuery.of(context).size.width * 0.08,
-                                child: TextFormField(
+                                child: DoseTextField(
+                                  isRequired: true,
                                   autovalidateMode:
                                       AutovalidateMode.onUserInteraction,
-                                  controller: searchTextController,
+                                  textEditingController: searchTextController,
                                   onChanged: (val) {
                                     subcategorytitle = val;
                                     _subcategorytitleStream.add(val);

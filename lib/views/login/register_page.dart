@@ -5,6 +5,7 @@ import 'dart:ui' as ui;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:doseform/doseform.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -54,7 +55,7 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage>
     with ImagePickerListener, SingleTickerProviderStateMixin {
-  final GlobalKey<FormState> _formKey = GlobalKey();
+  final GlobalKey<DoseFormState> _formKey = GlobalKey();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   final fullnameFocus = FocusNode();
   final emailFocus = FocusNode();
@@ -389,8 +390,11 @@ class _RegisterPageState extends State<RegisterPage>
   // }
 
   Widget get _formFields {
-    return Form(
+    return DoseForm(
       key: _formKey,
+      primary: true,
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
       child: Column(
         children: <Widget>[
           getFormField(
@@ -509,11 +513,12 @@ class _RegisterPageState extends State<RegisterPage>
     var size = shouldRestrictLength ? 20 : 150;
     return Padding(
       padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-      child: TextFormField(
+      child: DoseTextField(
+        isRequired: true,
         autovalidateMode: AutovalidateMode.onUserInteraction,
-        focusNode: focusNode,
+        currentNode: focusNode,
         onFieldSubmitted: onFieldSubmittedCB,
-        enabled: !isLoading,
+        // enabled: !isLoading,
         decoration: InputDecoration(
           labelText: hint,
           errorMaxLines: 2,
@@ -532,7 +537,7 @@ class _RegisterPageState extends State<RegisterPage>
         textCapitalization: capitalization,
         validator: validator,
         onSaved: onSave,
-        inputFormatters: [
+        formatters: [
           LengthLimitingTextInputFormatter(size),
         ],
         obscureText: shouldObscure,
@@ -554,10 +559,11 @@ class _RegisterPageState extends State<RegisterPage>
     var size = shouldRestrictLength ? 20 : 150;
     return Padding(
       padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-      child: TextFormField(
-        focusNode: focusNode,
+      child: DoseTextField(
+        isRequired: true,
+        currentNode: focusNode,
         onFieldSubmitted: onFieldSubmittedCB,
-        enabled: !isLoading,
+        // enabled: !isLoading,
         decoration: InputDecoration(
           labelText: hint,
           errorMaxLines: 2,
@@ -576,7 +582,7 @@ class _RegisterPageState extends State<RegisterPage>
         textCapitalization: capitalization,
         validator: validator,
         onSaved: onSave,
-        inputFormatters: [
+        formatters: [
           LengthLimitingTextInputFormatter(size),
         ],
         obscureText: shouldObscure,

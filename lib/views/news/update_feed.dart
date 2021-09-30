@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:connectivity/connectivity.dart';
+import 'package:doseform/doseform.dart';
 import 'package:flutter/material.dart' as prefix0;
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
@@ -59,6 +60,7 @@ class NewsCreateForm extends StatefulWidget {
   NewsModel newsModel;
 
   NewsCreateForm({Key key, this.timebankId, this.newsModel}) : super(key: key);
+
   @override
   NewsCreateFormState createState() {
     return NewsCreateFormState();
@@ -119,6 +121,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     selectedAddress = newsObject.placeAddress;
     location = newsObject.location;
 
+    subheadingController.text = newsObject.subheading;
+
     dataList.add(EntityModel(entityType: EntityType.general));
 //    ApiManager.getTimeBanksForUser(userEmail: globals.email)
 //        .then((List<TimebankModel> timeBankModelList) {
@@ -152,201 +156,204 @@ class NewsCreateFormState extends State<NewsCreateForm> {
   Widget build(BuildContext context) {
     textStyle = Theme.of(context).textTheme.headline6;
     // Build a Form widget using the formKey we created above
-    return Form(
+    return DoseForm(
         key: formKey,
-        child: Container(
-          // margin: EdgeInsets.all(10),
-          // padding: EdgeInsets.all(10.0),
-          child: SingleChildScrollView(
-              child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+        primary: true,
+        shrinkWrap: true,
+        physics: prefix0.NeverScrollableScrollPhysics(),
+        child: prefix0.Column(
+          children: [
+            Container(
+              // margin: EdgeInsets.all(10),
+              // padding: EdgeInsets.all(10.0),
+              child: SingleChildScrollView(
+                  child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  Container(
-                    margin: EdgeInsets.only(left: 20, right: 20, top: 20),
-                    child: Column(
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.only(bottom: 0.0),
-                          child: TextFormField(
-                            // controller: subheadingController,
-                            initialValue: newsObject.subheading,
-                            textInputAction: TextInputAction.newline,
-                            autofocus: true,
-                            textAlign: TextAlign.start,
-                            decoration: InputDecoration(
-                              alignLabelWithHint: false,
-                              hintText: S.of(context).create_feed_desc_hint,
-                              labelText: S.of(context).create_feed_placeholder,
-                              border: OutlineInputBorder(
-                                borderRadius: const BorderRadius.all(
-                                  const Radius.circular(0.0),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Container(
+                        margin: EdgeInsets.only(left: 20, right: 20, top: 20),
+                        child: Column(
+                          children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.only(bottom: 0.0),
+                              child: DoseTextField(
+                                isRequired: true,
+                                textEditingController: subheadingController,
+                                // initialValue: newsObject.subheading,
+                                textInputAction: TextInputAction.newline,
+                                // autofocus: true,
+                                textAlign: TextAlign.start,
+                                decoration: InputDecoration(
+                                  alignLabelWithHint: false,
+                                  hintText: S.of(context).create_feed_desc_hint,
+                                  labelText: S.of(context).create_feed_placeholder,
+                                  border: OutlineInputBorder(
+                                    borderRadius: const BorderRadius.all(
+                                      const Radius.circular(0.0),
+                                    ),
+                                    borderSide: BorderSide(
+                                      color: Colors.black,
+                                      width: 0.5,
+                                    ),
+                                  ),
                                 ),
-                                borderSide: BorderSide(
-                                  color: Colors.black,
-                                  width: 0.5,
-                                ),
+                                keyboardType: TextInputType.multiline,
+                                maxLines: 5,
+                                onChanged: (value) {
+                                  ExitWithConfirmation.of(context).fieldValues[1] = value;
+                                  widget.newsModel.subheading = value;
+                                },
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return S.of(context).validation_error_general_text;
+                                  }
+                                  newsObject.subheading = value;
+                                  return null;
+                                },
                               ),
                             ),
-                            keyboardType: TextInputType.multiline,
-                            maxLines: 5,
-                            onChanged: (value) {
-                              ExitWithConfirmation.of(context).fieldValues[1] =
-                                  value;
-                              widget.newsModel.subheading = value;
+                            Text(""),
+                            // TextFormField(
+                            //   decoration: InputDecoration(
+                            //     hintText: 'Your news and any #hashtags',
+                            //     labelText: 'Photo Credits',
+                            //     border: OutlineInputBorder(
+                            //       borderRadius: const BorderRadius.all(
+                            //         const Radius.circular(10.0),
+                            //       ),
+                            //       borderSide: BorderSide(
+                            //         color: Colors.black,
+                            //         width: 0.5,
+                            //       ),
+                            //     ),
+                            //   ),
+                            //   keyboardType: TextInputType.multiline,
+                            //   //style: textStyle,
+                            //   maxLines: null,
+                            //   validator: (value) {
+                            //     if (value.isEmpty) {
+                            //       return 'Please enter some text';
+                            //     }
+                            //     newsObject.description = value;
+                            //   },
+                            // ),
+                          ],
+                        ),
+                      ),
+                      // Container(
+                      //   padding: EdgeInsets.fromLTRB(
+                      //       MediaQuery.of(context).size.width / 4,
+                      //       0,
+                      //       MediaQuery.of(context).size.width / 4,
+                      //       0),
+                      //   child: TextFormField(
+                      //     initialValue: newsObject.photoCredits,
+                      //     onChanged: (value) {
+                      //       newsObject.photoCredits = value;
+                      //     },
+                      //     decoration: InputDecoration(
+                      //       hintText: '+ Photo Credits',
+                      //     ),
+                      //     keyboardType: TextInputType.text,
+                      //     textAlign: TextAlign.center,
+                      //     //style: textStyle,
+                      //     validator: (value) {
+                      //       // if (value.isEmpty) {
+                      //       //   return 'Please enter some text';
+                      //       // }
+                      //       newsObject.photoCredits = value;
+                      //     },
+                      //   ),
+                      // ),
+                      // Text(""),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 0),
+                        child: Center(
+                          child: NewsImage(
+                            photoCredits: newsObject.photoCredits,
+                            geoFirePointLocation: location,
+                            selectedAddress: selectedAddress,
+                            onLocationDataModelUpdate: (LocationDataModel dataModel) async {
+                              location = dataModel.geoPoint;
+                              setState(() {
+                                this.selectedAddress = dataModel.location;
+                              });
+                              // await _getLocation();
                             },
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return S
-                                    .of(context)
-                                    .validation_error_general_text;
-                              }
-                              newsObject.subheading = value;
-                              return null;
+                            onCreditsEntered: (photoCreditsFromNews) {
+                              photoCredits = photoCreditsFromNews;
                             },
                           ),
                         ),
-                        Text(""),
-                        // TextFormField(
-                        //   decoration: InputDecoration(
-                        //     hintText: 'Your news and any #hashtags',
-                        //     labelText: 'Photo Credits',
-                        //     border: OutlineInputBorder(
-                        //       borderRadius: const BorderRadius.all(
-                        //         const Radius.circular(10.0),
-                        //       ),
-                        //       borderSide: BorderSide(
-                        //         color: Colors.black,
-                        //         width: 0.5,
-                        //       ),
-                        //     ),
-                        //   ),
-                        //   keyboardType: TextInputType.multiline,
-                        //   //style: textStyle,
-                        //   maxLines: null,
-                        //   validator: (value) {
-                        //     if (value.isEmpty) {
-                        //       return 'Please enter some text';
-                        //     }
-                        //     newsObject.description = value;
-                        //   },
-                        // ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                  // Container(
-                  //   padding: EdgeInsets.fromLTRB(
-                  //       MediaQuery.of(context).size.width / 4,
-                  //       0,
-                  //       MediaQuery.of(context).size.width / 4,
-                  //       0),
-                  //   child: TextFormField(
-                  //     initialValue: newsObject.photoCredits,
-                  //     onChanged: (value) {
-                  //       newsObject.photoCredits = value;
-                  //     },
-                  //     decoration: InputDecoration(
-                  //       hintText: '+ Photo Credits',
-                  //     ),
-                  //     keyboardType: TextInputType.text,
-                  //     textAlign: TextAlign.center,
-                  //     //style: textStyle,
-                  //     validator: (value) {
-                  //       // if (value.isEmpty) {
-                  //       //   return 'Please enter some text';
-                  //       // }
-                  //       newsObject.photoCredits = value;
-                  //     },
-                  //   ),
-                  // ),
-                  // Text(""),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 0),
-                    child: Center(
-                      child: NewsImage(
-                        photoCredits: newsObject.photoCredits,
-                        geoFirePointLocation: location,
-                        selectedAddress: selectedAddress,
-                        onLocationDataModelUpdate:
-                            (LocationDataModel dataModel) async {
-                          location = dataModel.geoPoint;
-                          setState(() {
-                            this.selectedAddress = dataModel.location;
-                          });
-                          // await _getLocation();
-                        },
-                        onCreditsEntered: (photoCreditsFromNews) {
-                          photoCredits = photoCreditsFromNews;
-                        },
+
+                  Container(
+                    margin: EdgeInsets.fromLTRB(20, 0, 20, 20),
+                    alignment: Alignment(0, 1),
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: CustomElevatedButton(
+                      shape: StadiumBorder(),
+                      onPressed: () async {
+                        var connResult = await Connectivity().checkConnectivity();
+                        if (connResult == ConnectivityResult.none) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(S.of(context).check_internet),
+                              action: SnackBarAction(
+                                label: S.of(context).dismiss,
+                                onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
+                              ),
+                            ),
+                          );
+                          return;
+                        }
+                        if (formKey.currentState.validate()) {
+                          // If the form is valid, we want to show a Snackbar
+                          showDialog(
+                              barrierDismissible: false,
+                              context: context,
+                              builder: (createDialogContext) {
+                                dialogContext = createDialogContext;
+                                return AlertDialog(
+                                  title: Text(S.of(context).updating_feed),
+                                  content: LinearProgressIndicator(),
+                                );
+                              });
+                          scrapeURLFromSubheading(newsObject.subheading);
+                          scrapeHashTagsFromSubHeadings(newsObject.subheading);
+
+                          if (newsObject.urlsFromPost.length > 0) {
+                            await scrapeURLDetails(newsObject.urlsFromPost.first);
+                          } else {
+                            newsObject.title = '';
+                            newsObject.imageScraped = "NoData";
+                            newsObject.newsImageUrl = '';
+                            newsObject.description = '';
+                          }
+
+                          writeToDB();
+                        }
+                      },
+                      child: Text(
+                        S.of(context).update_feed,
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
+                  // Text(sevaUserID),
                 ],
-              ),
-
-              Container(
-                margin: EdgeInsets.fromLTRB(20, 0, 20, 20),
-                alignment: Alignment(0, 1),
-                padding: const EdgeInsets.only(top: 10.0),
-                child: CustomElevatedButton(
-                  shape: StadiumBorder(),
-                  onPressed: () async {
-                    var connResult = await Connectivity().checkConnectivity();
-                    if (connResult == ConnectivityResult.none) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(S.of(context).check_internet),
-                          action: SnackBarAction(
-                            label: S.of(context).dismiss,
-                            onPressed: () => ScaffoldMessenger.of(context)
-                                .hideCurrentSnackBar(),
-                          ),
-                        ),
-                      );
-                      return;
-                    }
-                    if (formKey.currentState.validate()) {
-                      // If the form is valid, we want to show a Snackbar
-                      showDialog(
-                          barrierDismissible: false,
-                          context: context,
-                          builder: (createDialogContext) {
-                            dialogContext = createDialogContext;
-                            return AlertDialog(
-                              title: Text(S.of(context).updating_feed),
-                              content: LinearProgressIndicator(),
-                            );
-                          });
-                      scrapeURLFromSubheading(newsObject.subheading);
-                      scrapeHashTagsFromSubHeadings(newsObject.subheading);
-
-                      if (newsObject.urlsFromPost.length > 0) {
-                        await scrapeURLDetails(newsObject.urlsFromPost.first);
-                      } else {
-                        newsObject.title = '';
-                        newsObject.imageScraped = "NoData";
-                        newsObject.newsImageUrl = '';
-                        newsObject.description = '';
-                      }
-
-                      writeToDB();
-                    }
-                  },
-                  child: Text(
-                    S.of(context).update_feed,
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
-              // Text(sevaUserID),
-            ],
-          )),
+              )),
+            ),
+          ],
         ));
   }
 
@@ -360,8 +367,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
 
     regExp.allMatches(subHeadings).forEach((match) {
       var scapedUrl = subHeadings.substring(match.start, match.end);
-      scappedURLs
-          .add(scapedUrl.contains("http") ? scapedUrl : "http://" + scapedUrl);
+      scappedURLs.add(scapedUrl.contains("http") ? scapedUrl : "http://" + scapedUrl);
     });
 
     newsObject.urlsFromPost = scappedURLs;

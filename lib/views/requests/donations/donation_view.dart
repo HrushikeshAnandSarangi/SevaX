@@ -175,57 +175,61 @@ class _DonationViewState extends State<DonationView> {
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
           key: _formKey,
-          child: Container(
-            padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-            child: Card(
-              margin: EdgeInsets.only(bottom: 10, top: 20),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              shadowColor: Color.fromRGBO(0, 0, 0, 0.4),
-              elevation: 2,
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  children: <Widget>[
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        S.of(context).donations,
-                        // textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 32,
-                          color: Colors.black54,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    new Expanded(
-                      child: PageView(
-                        physics: NeverScrollableScrollPhysics(),
-                        controller: pageController,
-                        scrollDirection: Axis.horizontal,
-                        pageSnapping: true,
-                        onPageChanged: (number) {},
-                        children: [
-                          donatedItems(),
-                          amountWidget(),
-                          donationDetails(),
-                          donationOfferAt(),
-                          SingleChildScrollView(
-                            // physics: NeverScrollableScrollPhysics(),
-                            child: RequestPaymentDescriptionData(
-                              widget.offerModel,
+          child: Column(
+            children: [
+              Container(
+                padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                child: Card(
+                  margin: EdgeInsets.only(bottom: 10, top: 20),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  shadowColor: Color.fromRGBO(0, 0, 0, 0.4),
+                  elevation: 2,
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      children: <Widget>[
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            S.of(context).donations,
+                            // textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 32,
+                              color: Colors.black54,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                        ],
-                      ),
-                    )
-                  ],
+                        ),
+                        new Expanded(
+                          child: PageView(
+                            physics: NeverScrollableScrollPhysics(),
+                            controller: pageController,
+                            scrollDirection: Axis.horizontal,
+                            pageSnapping: true,
+                            onPageChanged: (number) {},
+                            children: [
+                              donatedItems(),
+                              amountWidget(),
+                              donationDetails(),
+                              donationOfferAt(),
+                              SingleChildScrollView(
+                                // physics: NeverScrollableScrollPhysics(),
+                                child: RequestPaymentDescriptionData(
+                                  widget.offerModel,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
                 ),
               ),
-            ),
+            ],
           ),
         ),
       ),
@@ -334,12 +338,12 @@ class _DonationViewState extends State<DonationView> {
                           color: Colors.grey,
                         ),
                       ),
-                      TextFormField(
-                        inputFormatters: [
+                      DoseTextField(
+                        formatters: [
                           FilteringTextInputFormatter.allow(RegExp("[0-9]")),
                         ],
                         autovalidateMode: AutovalidateMode.onUserInteraction,
-                        focusNode: focusNodes[0],
+                        currentNode: focusNodes[0],
                         onFieldSubmitted: (v) {
                           FocusScope.of(context).requestFocus(focusNodes[1]);
                         },
