@@ -419,7 +419,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                               _bloc.onTypeChanged(data);
                               offerType = data;
                               title_hint = (_bloc.lendingOfferType == 0
-                                  ? S.of(context).lending_offer_title_hint_place
+                                  ? L.of(context).lending_offer_title_hint_place
                                   : S
                                       .of(context)
                                       .lending_offer_title_hint_item);
@@ -907,7 +907,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                     ? title_hint
                                     : offerType == RequestType.LENDING_OFFER
                                         ? (_bloc.lendingOfferType == 0
-                                            ? S
+                                            ? L
                                                 .of(context)
                                                 .lending_offer_title_hint_place
                                             : S
@@ -1894,7 +1894,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                         selectedLendingModel = null;
                       });
                       title_hint = (_bloc.lendingOfferType == 0
-                          ? S.of(context).lending_offer_title_hint_place
+                          ? L.of(context).lending_offer_title_hint_place
                           : S.of(context).lending_offer_title_hint_item);
                       description_hint = (_bloc.lendingOfferType == 0
                           ? S.of(context).lending_offer_description_hint_place
