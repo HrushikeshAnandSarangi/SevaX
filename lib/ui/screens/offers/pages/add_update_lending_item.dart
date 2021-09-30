@@ -1,4 +1,5 @@
 import 'package:connectivity/connectivity.dart';
+import 'package:doseform/doseform.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
@@ -10,6 +11,7 @@ import 'package:sevaexchange/new_baseline/models/lending_model.dart';
 
 import 'package:sevaexchange/ui/screens/image_picker/image_picker_dialog_mobile.dart';
 import 'package:sevaexchange/ui/screens/offers/bloc/add_update_item_bloc.dart';
+import 'package:sevaexchange/ui/screens/offers/widgets/custom_dose_text_field.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/custom_textfield.dart';
 import 'package:sevaexchange/ui/utils/offer_utility.dart';
 import 'package:sevaexchange/ui/utils/validators.dart';
@@ -30,7 +32,7 @@ class AddUpdateLendingItem extends StatefulWidget {
 }
 
 class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
-  final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<DoseFormState>();
   List<AmenitiesModel> amenitiesList = [];
   List<String> imagesList = [];
   AddUpdateItemBloc _bloc = AddUpdateItemBloc();
@@ -129,7 +131,10 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
             return SingleChildScrollView(
               child: Container(
                 padding: EdgeInsets.all(30.0),
-                child: Form(
+                child: DoseForm(
+                  primary: true,
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
                   key: _formKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -137,7 +142,8 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                       StreamBuilder<String>(
                         stream: _bloc.itemName,
                         builder: (context, snapshot) {
-                          return CustomTextField(
+                          return CustomDoseTextField(
+                            isRequired: true,
                             controller: _itemNameController,
                             currentNode: _itemName,
                             nextNode: null,
@@ -158,7 +164,8 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                       StreamBuilder<String>(
                         stream: _bloc.estimatedValue,
                         builder: (context, snapshot) {
-                          return CustomTextField(
+                          return CustomDoseTextField(
+                            isRequired: true,
                             decoration: InputDecoration(
                                 prefixIcon: Icon(Icons.attach_money),
                                 errorText: getAddItemValidationError(context, snapshot.error),

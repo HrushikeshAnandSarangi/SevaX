@@ -1,4 +1,5 @@
 import 'package:connectivity/connectivity.dart';
+import 'package:doseform/doseform.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:progress_dialog/progress_dialog.dart';
@@ -47,7 +48,7 @@ class DonationView extends StatefulWidget {
 class _DonationViewState extends State<DonationView> {
   final IndividualOfferBloc _bloc = IndividualOfferBloc();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
-  final GlobalKey<FormState> _formKey = GlobalKey();
+  final GlobalKey<DoseFormState> _formKey = GlobalKey();
   final DonationBloc donationBloc = DonationBloc();
   ProgressDialog progressDialog;
   RegExp emailPattern = RegExp(
@@ -169,7 +170,10 @@ class _DonationViewState extends State<DonationView> {
           ),
           centerTitle: true,
         ),
-        body: Form(
+        body: DoseForm(
+          primary: true,
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
           key: _formKey,
           child: Container(
             padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
@@ -699,7 +703,7 @@ class _DonationViewState extends State<DonationView> {
           StreamBuilder<String>(
               stream: donationBloc.commentEntered,
               builder: (context, snapshot) {
-                return TextFormField(
+                return DoseTextField(
                   keyboardType: TextInputType.text,
                   textCapitalization: TextCapitalization.sentences,
                   textInputAction: TextInputAction.done,
@@ -856,12 +860,13 @@ class _DonationViewState extends State<DonationView> {
                 color: Colors.grey,
               ),
             ),
-            TextFormField(
+            DoseTextField(
+              isRequired: true,
               autovalidateMode: AutovalidateMode.onUserInteraction,
               onChanged: (value) {
                 donationsModel.goodsDetails.toAddress = value;
               },
-              focusNode: focusNodes[1],
+              currentNode: focusNodes[1],
               onFieldSubmitted: (v) {
                 FocusScope.of(context).requestFocus(focusNodes[1]);
               },
@@ -1035,7 +1040,8 @@ class _DonationViewState extends State<DonationView> {
             builder: (context, snapshot) {
               return Container(
                 constraints: BoxConstraints(maxHeight: 55, minHeight: 50),
-                child: TextField(
+                child: DoseTextField(
+                  isRequired: true,
                   onChanged: (value) {
                     if (value.isNotEmpty) {
                       donationBloc.onAmountChange(value);

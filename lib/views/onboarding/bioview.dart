@@ -1,3 +1,4 @@
+import 'package:doseform/doseform.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
@@ -23,7 +24,7 @@ class BioView extends StatefulWidget {
 }
 
 class _BioViewState extends State<BioView> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<DoseFormState> _formKey = GlobalKey<DoseFormState>();
   final OutlineInputBorder textFieldBorder = OutlineInputBorder(
     borderRadius: BorderRadius.circular(8),
     borderSide: BorderSide(color: Color(0x0FFC7C7CC)),
@@ -77,11 +78,15 @@ class _BioViewState extends State<BioView> {
                         ),
                       ),
                       SizedBox(height: 20),
-                      Form(
+                      DoseForm(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        primary: true,
                         key: _formKey,
                         child: Container(
                           height: 200,
-                          child: TextFormField(
+                          child: DoseTextField(
+                            isRequired: true,
                               textCapitalization: TextCapitalization.sentences,
                               style: TextStyle(
                                   fontSize: 16.0, color: Colors.black54),

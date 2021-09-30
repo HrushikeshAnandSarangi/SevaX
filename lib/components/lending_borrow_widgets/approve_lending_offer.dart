@@ -86,13 +86,15 @@ class _ApproveLendingOfferState extends State<ApproveLendingOffer> {
                 ),
                 textAlign: TextAlign.start),
             SizedBox(height: 2),
-            TextFormField(
+            DoseTextField(
+              isRequired: true,
               onFieldSubmitted: (v) {
                 FocusScope.of(context).unfocus();
               },
               onChanged: (enteredValue) {
                 additionalInstructionsText = enteredValue;
-                setState(() {});
+                //TODO setstate causes form to reload
+                // setState(() {});
               },
               decoration: InputDecoration(
                 hintText: widget.offerModel.lendingOfferDetailsModel.lendingModel.lendingType ==

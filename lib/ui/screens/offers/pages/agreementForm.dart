@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:doseform/doseform.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -93,7 +94,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
   Map<String, dynamic> agreementConfig = {};
   // String otherDetails = '';
 
-  final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<DoseFormState>();
   final _formKeyElastic = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _key = GlobalKey();
   final _formDialogKey = GlobalKey<FormState>();
@@ -187,12 +188,15 @@ class _OfferAgreementFormState extends State<AgreementForm> {
         child: (agreementDocumentType ==
                 AgreementDocumentType.NO_AGREEMENT.readable)
             ? noAgreementWidget
-            : Form(
+            : Padding(
+              padding:
+                    const EdgeInsets.only(top: 15.0, left: 30, right: 30),
+              child: DoseForm(
+                shrinkWrap: true,
+                primary: true,
+                physics: NeverScrollableScrollPhysics(),
                 key: _formKey,
-                child: Padding(
-                  padding:
-                      const EdgeInsets.only(top: 15.0, left: 30, right: 30),
-                  child: Column(
+                child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
@@ -527,7 +531,8 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                               color: Colors.black,
                             ),
                           ),
-                          TextFormField(
+                          DoseTextField(
+                            isRequired: true,
                             maxLines: 3,
                             onFieldSubmitted: (v) {
                               FocusScope.of(context).unfocus();
@@ -537,7 +542,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                               setState(() {});
                             },
                             // initialValue: specificConditions,
-                            controller: specificConditionsController,
+                            textEditingController: specificConditionsController,
                             decoration: InputDecoration(
                               hintText: widget.placeOrItem ==
                                       LendingType.PLACE.readable
@@ -678,8 +683,8 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                       SizedBox(height: width * 0.05),
                     ],
                   ),
-                ),
               ),
+            ),
       ),
     );
   }
@@ -697,8 +702,8 @@ class _OfferAgreementFormState extends State<AgreementForm> {
             color: Colors.black,
           ),
         ),
-        TextFormField(
-          controller: documentNameController,
+        DoseTextField(
+          textEditingController: documentNameController,
           onFieldSubmitted: (v) {
             FocusScope.of(context).unfocus();
           },

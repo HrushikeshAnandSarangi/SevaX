@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:doseform/doseform.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -28,13 +29,12 @@ class OneToManySpeakerTimeEntryComplete extends StatefulWidget {
       @required this.isFromtasks});
 
   @override
-  OneToManySpeakerTimeEntryCompleteState createState() =>
-      OneToManySpeakerTimeEntryCompleteState();
+  OneToManySpeakerTimeEntryCompleteState createState() => OneToManySpeakerTimeEntryCompleteState();
 }
 
-class OneToManySpeakerTimeEntryCompleteState
-    extends State<OneToManySpeakerTimeEntryComplete> {
+class OneToManySpeakerTimeEntryCompleteState extends State<OneToManySpeakerTimeEntryComplete> {
   int prepTime = 0;
+
   // int speakingTime = 0;
 
   RequestModel requestModel;
@@ -46,13 +46,11 @@ class OneToManySpeakerTimeEntryCompleteState
     this.requestModel = widget.requestModel;
   }
 
-  final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<DoseFormState>();
 
   TextEditingController hoursController = TextEditingController();
-  TextEditingController selectedHoursPrepTimeController =
-      TextEditingController();
-  TextEditingController selectedHoursDeliveryTimeController =
-      TextEditingController();
+  TextEditingController selectedHoursPrepTimeController = TextEditingController();
+  TextEditingController selectedHoursDeliveryTimeController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -74,8 +72,7 @@ class OneToManySpeakerTimeEntryCompleteState
           FocusScope.of(context).requestFocus(FocusNode());
         },
         child: LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints constraints) =>
-              SingleChildScrollView(
+          builder: (BuildContext context, BoxConstraints constraints) => SingleChildScrollView(
             child: Container(
               alignment: Alignment.topCenter,
               width: MediaQuery.of(context).size.width * 0.9,
@@ -84,10 +81,13 @@ class OneToManySpeakerTimeEntryCompleteState
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Form(
-                    key: _formKey,
-                    child: Container(
-                      width: constraints.maxWidth * 0.9,
+                  Container(
+                    width: constraints.maxWidth * 0.9,
+                    child: DoseForm(
+                      primary: true,
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      key: _formKey,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
@@ -98,9 +98,7 @@ class OneToManySpeakerTimeEntryCompleteState
                                 width: constraints.maxWidth * 0.7,
                                 child: Text(
                                   S.of(context).speaker_claim_form_field_title,
-                                  style: TextStyle(
-                                      fontSize: 17.0,
-                                      fontWeight: FontWeight.w500),
+                                  style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w500),
                                   textAlign: TextAlign.left,
                                 ),
                               ),
@@ -116,23 +114,18 @@ class OneToManySpeakerTimeEntryCompleteState
                               children: <Widget>[
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: <Widget>[
-                                      TextFormField(
-                                        controller:
-                                            selectedHoursPrepTimeController,
+                                      DoseTextField(
+                                        isRequired: true,
+                                        textEditingController: selectedHoursPrepTimeController,
                                         keyboardType: TextInputType.number,
-                                        inputFormatters: [
-                                          FilteringTextInputFormatter.digitsOnly
-                                        ],
+                                        formatters: [FilteringTextInputFormatter.digitsOnly],
                                         decoration: InputDecoration(
                                           //errorText: S.of(context).enter_hours,
-                                          contentPadding:
-                                              EdgeInsets.only(bottom: 5),
-                                          hintText: S
-                                              .of(context)
-                                              .speaker_claim_form_field_title_hint,
+                                          contentPadding: EdgeInsets.only(bottom: 5),
+                                          hintText:
+                                              S.of(context).speaker_claim_form_field_title_hint,
                                           hintStyle: TextStyle(fontSize: 13),
                                         ),
                                         validator: (value) {
@@ -283,17 +276,14 @@ class OneToManySpeakerTimeEntryCompleteState
                                     });
 
                                 //store form input to map in requestModel
-                                requestModel.selectedSpeakerTimeDetails
-                                    .prepTime = prepTime;
+                                requestModel.selectedSpeakerTimeDetails.prepTime = prepTime;
                                 // requestModel.selectedSpeakerTimeDetails
                                 //     .speakingTime = speakingTime;
 
                                 Set<String> approvedUsersList =
                                     Set.from(requestModel.approvedUsers);
-                                approvedUsersList.add(
-                                    SevaCore.of(context).loggedInUser.email);
-                                requestModel.approvedUsers =
-                                    approvedUsersList.toList();
+                                approvedUsersList.add(SevaCore.of(context).loggedInUser.email);
+                                requestModel.approvedUsers = approvedUsersList.toList();
 
                                 await CollectionRef.requests
                                     .doc(requestModel.id)
@@ -301,8 +291,7 @@ class OneToManySpeakerTimeEntryCompleteState
 
                                 //Navigator.of(creditRequestDialogContext).pop();
 
-                                Navigator.of(dialogContext)
-                                    .pop(); //this is to pop loader
+                                Navigator.of(dialogContext).pop(); //this is to pop loader
 
                                 widget.onFinish();
 
@@ -310,9 +299,7 @@ class OneToManySpeakerTimeEntryCompleteState
                                   await FirestoreManager
                                       .readUserNotificationOneToManyWhenSpeakerIsRejectedCompletion(
                                           requestModel: requestModel,
-                                          userEmail: SevaCore.of(context)
-                                              .loggedInUser
-                                              .email,
+                                          userEmail: SevaCore.of(context).loggedInUser.email,
                                           fromNotification: false);
 
                                   // Navigator.of(context).pop();
@@ -327,9 +314,7 @@ class OneToManySpeakerTimeEntryCompleteState
                             },
                             child: Text(
                               S.of(context).accept,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.black),
+                              style: TextStyle(fontWeight: FontWeight.w600, color: Colors.black),
                             ),
                             elevation: 0,
                             color: Colors.grey[200],
@@ -342,13 +327,9 @@ class OneToManySpeakerTimeEntryCompleteState
                           child: CustomElevatedButton(
                             onPressed: () {
                               ParticipantInfo sender = ParticipantInfo(
-                                id: SevaCore.of(context)
-                                    .loggedInUser
-                                    .sevaUserID,
-                                name:
-                                    SevaCore.of(context).loggedInUser.fullname,
-                                photoUrl:
-                                    SevaCore.of(context).loggedInUser.photoURL,
+                                id: SevaCore.of(context).loggedInUser.sevaUserID,
+                                name: SevaCore.of(context).loggedInUser.fullname,
+                                photoUrl: SevaCore.of(context).loggedInUser.photoURL,
                                 type: ChatType.TYPE_PERSONAL,
                               );
 
@@ -362,9 +343,7 @@ class OneToManySpeakerTimeEntryCompleteState
                               createAndOpenChat(
                                 isTimebankMessage: true,
                                 context: context,
-                                communityId: SevaCore.of(context)
-                                    .loggedInUser
-                                    .currentCommunity,
+                                communityId: SevaCore.of(context).loggedInUser.currentCommunity,
                                 timebankId: requestModel.timebankId,
                                 sender: sender,
                                 reciever: reciever,
@@ -377,9 +356,7 @@ class OneToManySpeakerTimeEntryCompleteState
                             },
                             child: Text(
                               S.of(context).message,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.black),
+                              style: TextStyle(fontWeight: FontWeight.w600, color: Colors.black),
                             ),
                             elevation: 0,
                             color: Colors.grey[200],
@@ -398,6 +375,7 @@ class OneToManySpeakerTimeEntryCompleteState
   }
 
   BuildContext creditRequestDialogContext;
+
   void showProgressForCreditRetrieval() {
     showDialog(
         barrierDismissible: false,
@@ -411,77 +389,77 @@ class OneToManySpeakerTimeEntryCompleteState
         });
   }
 
-  //void startTransaction() async {
-  //  if (_formKey.currentState.validate()) {
-  // TODO needs flow correction to tasks model (currently reliying on requests collection for changes which will be huge instead tasks have to be individual to users)
-  // int totalMinutes = 0;
+//void startTransaction() async {
+//  if (_formKey.currentState.validate()) {
+// TODO needs flow correction to tasks model (currently reliying on requests collection for changes which will be huge instead tasks have to be individual to users)
+// int totalMinutes = 0;
 
-  // if (requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST &&
-  //     requestModel.selectedInstructor.sevaUserID ==
-  //         SevaCore.of(context).loggedInUser.sevaUserID) {
-  //   totalMinutes = int.parse(selectedMinutesPrepTime) +
-  //       int.parse(selectedMinutesDeliveryTime) +
-  //       (int.parse(selectedHoursPrepTimeController.text) * 60) +
-  //       (int.parse(selectedHoursDeliveryTimeController.text) * 60);
-  // } else {
-  //   totalMinutes = int.parse(selectedMinuteValue) +
-  //       (int.parse(selectedHourValue) * 60);
-  //   // TODO needs flow correction need to be removed when tasks introduced- Eswar
-  // }
+// if (requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST &&
+//     requestModel.selectedInstructor.sevaUserID ==
+//         SevaCore.of(context).loggedInUser.sevaUserID) {
+//   totalMinutes = int.parse(selectedMinutesPrepTime) +
+//       int.parse(selectedMinutesDeliveryTime) +
+//       (int.parse(selectedHoursPrepTimeController.text) * 60) +
+//       (int.parse(selectedHoursDeliveryTimeController.text) * 60);
+// } else {
+//   totalMinutes = int.parse(selectedMinuteValue) +
+//       (int.parse(selectedHourValue) * 60);
+//   // TODO needs flow correction need to be removed when tasks introduced- Eswar
+// }
 
-  // this.requestModel.durationOfRequest = totalMinutes;
+// this.requestModel.durationOfRequest = totalMinutes;
 
-  // TransactionModel transactionModel = TransactionModel(
-  //   from: requestModel.sevaUserId,
-  //   to: SevaCore.of(context).loggedInUser.sevaUserID,
-  //   credits: totalMinutes / 60,
-  //   timestamp: DateTime.now().millisecondsSinceEpoch,
-  //   communityId: requestModel.communityId,
-  // );
+// TransactionModel transactionModel = TransactionModel(
+//   from: requestModel.sevaUserId,
+//   to: SevaCore.of(context).loggedInUser.sevaUserID,
+//   credits: totalMinutes / 60,
+//   timestamp: DateTime.now().millisecondsSinceEpoch,
+//   communityId: requestModel.communityId,
+// );
 
-  // if (requestModel.transactions == null) {
-  //   requestModel.transactions = [transactionModel];
-  // } else if (!requestModel.transactions
-  //     .any((model) => model.to == transactionModel.to)) {
-  //   requestModel.transactions.add(transactionModel);
-  // }
+// if (requestModel.transactions == null) {
+//   requestModel.transactions = [transactionModel];
+// } else if (!requestModel.transactions
+//     .any((model) => model.to == transactionModel.to)) {
+//   requestModel.transactions.add(transactionModel);
+// }
 
-  //FirestoreManager.requestComplete(model: requestModel);
+//FirestoreManager.requestComplete(model: requestModel);
 
-  // END OF CODE correction mentioned above
-  // await transactionBloc.createNewTransaction(
-  //   requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-  //       ? requestModel.sevaUserId
-  //       : requestModel.timebankId,
-  //   SevaCore.of(context).loggedInUser.sevaUserID,
-  //   DateTime.now().millisecondsSinceEpoch,
-  //   totalMinutes / 60,
-  //   false,
-  //   this.requestModel.requestMode == RequestMode.TIMEBANK_REQUEST
-  //       ? RequestMode.TIMEBANK_REQUEST.toString()
-  //       : RequestMode.PERSONAL_REQUEST.toString(),
-  //   this.requestModel.id,
-  //   this.requestModel.timebankId,
-  //   communityId: requestModel.communityId,
-  // );
+// END OF CODE correction mentioned above
+// await transactionBloc.createNewTransaction(
+//   requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+//       ? requestModel.sevaUserId
+//       : requestModel.timebankId,
+//   SevaCore.of(context).loggedInUser.sevaUserID,
+//   DateTime.now().millisecondsSinceEpoch,
+//   totalMinutes / 60,
+//   false,
+//   this.requestModel.requestMode == RequestMode.TIMEBANK_REQUEST
+//       ? RequestMode.TIMEBANK_REQUEST.toString()
+//       : RequestMode.PERSONAL_REQUEST.toString(),
+//   this.requestModel.id,
+//   this.requestModel.timebankId,
+//   communityId: requestModel.communityId,
+// );
 
-  // FirestoreManager.createTaskCompletedNotification(
-  //   model: NotificationsModel(
-  //     id: utils.Utils.getUuid(),
-  //     data: requestModel.toMap(),
-  //     type: NotificationType.RequestCompleted,
-  //     senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
-  //     targetUserId: requestModel.sevaUserId,
-  //     communityId: requestModel.communityId,
-  //     timebankId: requestModel.timebankId,
-  //     isTimebankNotification:
-  //         requestModel.requestMode == RequestMode.TIMEBANK_REQUEST,
-  //     isRead: false,
-  //   ),
-  // );
-  // Navigator.of(creditRequestDialogContext).pop();
-  // Navigator.of(context).pop();
-  // }
-  //}
+// FirestoreManager.createTaskCompletedNotification(
+//   model: NotificationsModel(
+//     id: utils.Utils.getUuid(),
+//     data: requestModel.toMap(),
+//     type: NotificationType.RequestCompleted,
+//     senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+//     targetUserId: requestModel.sevaUserId,
+//     communityId: requestModel.communityId,
+//     timebankId: requestModel.timebankId,
+//     isTimebankNotification:
+//         requestModel.requestMode == RequestMode.TIMEBANK_REQUEST,
+//     isRead: false,
+//   ),
+// );
+// Navigator.of(creditRequestDialogContext).pop();
+// Navigator.of(context).pop();
+// }
+//}
 
 }

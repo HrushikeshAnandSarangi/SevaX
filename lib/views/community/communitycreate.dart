@@ -4,6 +4,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:doseform/doseform.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,7 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
+
 // import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/community_category_model.dart';
 import 'package:sevaexchange/models/enums/plan_ids.dart';
@@ -98,8 +100,7 @@ class CreateEditCommunityViewForm extends StatefulWidget {
   final bool isFromFind;
   final bool isCreateTimebank;
 
-  CreateEditCommunityViewForm(
-      {@required this.timebankId, this.isFromFind, this.isCreateTimebank});
+  CreateEditCommunityViewForm({@required this.timebankId, this.isFromFind, this.isCreateTimebank});
 
   @override
   CreateEditCommunityViewFormState createState() {
@@ -107,15 +108,14 @@ class CreateEditCommunityViewForm extends StatefulWidget {
   }
 }
 
-GlobalKey<FormState> _billingInformationKey = GlobalKey();
+GlobalKey<DoseFormState> _billingInformationKey = GlobalKey();
 
-class CreateEditCommunityViewFormState
-    extends State<CreateEditCommunityViewForm> {
+class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm> {
   double taxPercentage = 0.0;
   double negativeCreditsThreshold = 0;
   CommunityModel communityModel = CommunityModel({});
   CommunityModel editCommunityModel = CommunityModel({});
-  final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<DoseFormState>();
   final infoWindowKeys = [
     GlobalKey(),
     GlobalKey(),
@@ -195,8 +195,7 @@ class CreateEditCommunityViewFormState
         } else {
           if (communitynName != s) {
             setState(() {});
-            SearchManager.searchCommunityForDuplicate(queryString: s.trim())
-                .catchError((onError) {
+            SearchManager.searchCommunityForDuplicate(queryString: s.trim()).catchError((onError) {
               communityFound = false;
               errTxt = null;
             }).then((commFound) {
@@ -245,8 +244,7 @@ class CreateEditCommunityViewFormState
       });
     });
 
-    timebankModel =
-        await FirestoreManager.getTimeBankForId(timebankId: widget.timebankId);
+    timebankModel = await FirestoreManager.getTimeBankForId(timebankId: widget.timebankId);
     selectedAddress = timebankModel.address;
     location = timebankModel.location;
 
@@ -274,10 +272,7 @@ class CreateEditCommunityViewFormState
   Widget build(BuildContext context) {
     this.parentContext = context;
 
-    return Form(
-        autovalidateMode: AutovalidateMode.disabled,
-        key: _formKey,
-        child: createSevaX);
+    return DoseForm(primary: true,shrinkWrap: true, key: _formKey, child: createSevaX);
   }
 
   void moveToTop() {
@@ -289,8 +284,7 @@ class CreateEditCommunityViewFormState
     );
   }
 
-  void updateExitWithConfirmationValue(
-      BuildContext context, int index, String value) {
+  void updateExitWithConfirmationValue(BuildContext context, int index, String value) {
     ExitWithConfirmation.of(context)?.fieldValues[index] = value;
   }
 
@@ -300,11 +294,9 @@ class CreateEditCommunityViewFormState
         builder: (_, snapshot) {
           if (snapshot.data != null) {
             if (selectedAddress != null) {
-              if ((selectedAddress.length > 0 &&
-                      snapshot.data.timebank.address.length == 0) ||
+              if ((selectedAddress.length > 0 && snapshot.data.timebank.address.length == 0) ||
                   (snapshot.data.timebank.address != selectedAddress)) {
-                snapshot.data.timebank
-                    .updateValueByKey('address', selectedAddress);
+                snapshot.data.timebank.updateValueByKey('address', selectedAddress);
                 createEditCommunityBloc.onChange(snapshot.data);
               }
             }
@@ -319,8 +311,7 @@ class CreateEditCommunityViewFormState
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 10),
+                          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                           child: widget.isCreateTimebank
                               ? Text(
                                   S.of(context).create_timebank_description,
@@ -341,8 +332,7 @@ class CreateEditCommunityViewFormState
                                 widget.isCreateTimebank
                                     ? TimebankCoverPhoto()
                                     : TimebankCoverPhoto(
-                                        coverUrl: (communityModel.cover_url ==
-                                                    null ||
+                                        coverUrl: (communityModel.cover_url == null ||
                                                 communityModel.cover_url == '')
                                             ? null
                                             : communityModel.cover_url,
@@ -382,14 +372,15 @@ class CreateEditCommunityViewFormState
                           ),
                         ),
                         headingText('${S.of(context).timebank_name} *'),
-                        TextFormField(
+                        DoseTextField(
+                          isRequired: true,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
-                          focusNode: nameFocus,
+                          currentNode: nameFocus,
                           textCapitalization: TextCapitalization.sentences,
                           onFieldSubmitted: (v) {
                             FocusScope.of(context).requestFocus(aboutFocus);
                           },
-                          controller: searchTextController,
+                          textEditingController: searchTextController,
                           onChanged: (value) {
                             updateExitWithConfirmationValue(context, 1, value);
                           },
@@ -399,13 +390,9 @@ class CreateEditCommunityViewFormState
                           ),
                           textInputAction: TextInputAction.next,
                           keyboardType: TextInputType.text,
-                          autocorrect: true,
+                          //TODO autocorrect required
+                          // autocorrect: true,
                           maxLines: 1,
-                          // inputFormatters: <TextInputFormatter>[
-                          //   WhitelistingTextInputFormatter(
-                          //     RegExp("[a-zA-Z0-9_ ]*"),
-                          //   )
-                          // ],
                           onSaved: (value) {
                             enteredName =
                                 // value.replaceAll("[^a-zA-Z0-9_ ]*", "").trim();
@@ -417,18 +404,16 @@ class CreateEditCommunityViewFormState
                               return S.of(context).timebank_name_error;
                             } else if (communityFound) {
                               return S.of(context).timebank_name_exists_error;
-                            } else if (profanityDetector
-                                .isProfaneString(value)) {
+                            } else if (profanityDetector.isProfaneString(value)) {
                               return S.of(context).profanity_text_alert;
                             } else if (value.substring(0, 1).contains('_') &&
-                                !AppConfig.testingEmails.contains(
-                                    SevaCore.of(context).loggedInUser.email)) {
+                                !AppConfig.testingEmails
+                                    .contains(SevaCore.of(context).loggedInUser.email)) {
                               return 'Creating community with "_" is not allowed';
                             } else {
-                              enteredName =
-                                  value.replaceAll("[^a-zA-Z0-9]", "").trim();
-                              snapshot.data.community.updateValueByKey('name',
-                                  value.replaceAll("[^a-zA-Z0-9]", "").trim());
+                              enteredName = value.replaceAll("[^a-zA-Z0-9]", "").trim();
+                              snapshot.data.community.updateValueByKey(
+                                  'name', value.replaceAll("[^a-zA-Z0-9]", "").trim());
                               createEditCommunityBloc.onChange(snapshot.data);
                             }
 
@@ -436,10 +421,11 @@ class CreateEditCommunityViewFormState
                           },
                         ),
                         headingText('${S.of(context).about} *'),
-                        TextFormField(
-                          controller: descriptionTextController,
+                        DoseTextField(
+                          isRequired: true,
+                          textEditingController: descriptionTextController,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
-                          focusNode: aboutFocus,
+                          currentNode: aboutFocus,
                           decoration: InputDecoration(
                             errorMaxLines: 2,
                             hintText: S.of(context).timbank_about_hint,
@@ -457,15 +443,12 @@ class CreateEditCommunityViewFormState
                           validator: (value) {
                             if (value.trim().isEmpty) {
                               return S.of(context).timebank_tell_more;
-                            } else if (profanityDetector
-                                .isProfaneString(value)) {
+                            } else if (profanityDetector.isProfaneString(value)) {
                               return S.of(context).profanity_text_alert;
                             } else {
-                              snapshot.data.community
-                                  .updateValueByKey('about', value);
+                              snapshot.data.community.updateValueByKey('about', value);
 
-                              snapshot.data.timebank
-                                  .updateValueByKey('missionStatement', value);
+                              snapshot.data.timebank.updateValueByKey('missionStatement', value);
                               createEditCommunityBloc.onChange(snapshot.data);
                               timebankModel.missionStatement = value;
                               communityModel.about = value;
@@ -476,21 +459,17 @@ class CreateEditCommunityViewFormState
                         SizedBox(
                           height: 20,
                         ),
-                        headingText(
-                            S.of(context).select_categories_community_headding),
+                        headingText(S.of(context).select_categories_community_headding),
                         SizedBox(
                           height: 10,
                         ),
                         CommunityCategorySelector(
-                          selectedCategories:
-                              communityModel.communityCategories ?? [],
-                          onChanged:
-                              (List<CommunityCategoryModel> categoryList) {
+                          selectedCategories: communityModel.communityCategories ?? [],
+                          onChanged: (List<CommunityCategoryModel> categoryList) {
                             communityModel.communityCategories =
                                 categoryList.map((e) => e.id).toList();
                             snapshot.data.community.updateValueByKey(
-                                'communityCategories',
-                                communityModel.communityCategories.toList());
+                                'communityCategories', communityModel.communityCategories.toList());
                             setState(() {});
                           },
                         ),
@@ -630,10 +609,8 @@ class CreateEditCommunityViewFormState
                                       : timebankModel.protected,
                                   onChanged: (bool value) {
                                     timebankModel.protected = value;
-                                    snapshot.data.timebank
-                                        .updateValueByKey('protected', value);
-                                    createEditCommunityBloc
-                                        .onChange(snapshot.data);
+                                    snapshot.data.timebank.updateValueByKey('protected', value);
+                                    createEditCommunityBloc.onChange(snapshot.data);
                                   },
                                 ),
                               ],
@@ -651,18 +628,15 @@ class CreateEditCommunityViewFormState
                                 Divider(),
                                 Checkbox(
                                   value: widget.isCreateTimebank
-                                      ? snapshot
-                                          .data.timebank.preventAccedentalDelete
+                                      ? snapshot.data.timebank.preventAccedentalDelete
                                       : timebankModel.preventAccedentalDelete,
                                   onChanged: (bool value) {
-                                    timebankModel.preventAccedentalDelete =
-                                        value;
+                                    timebankModel.preventAccedentalDelete = value;
                                     snapshot.data.timebank.updateValueByKey(
                                       'preventAccedentalDelete',
                                       value,
                                     );
-                                    createEditCommunityBloc
-                                        .onChange(snapshot.data);
+                                    createEditCommunityBloc.onChange(snapshot.data);
                                   },
                                 ),
                               ],
@@ -699,30 +673,24 @@ class CreateEditCommunityViewFormState
                                                       .of(context)
                                                       .sandbox_dialog_title
                                                       .sentenceCase(),
-                                                  description: S
-                                                      .of(context)
-                                                      .sandbox_community_description)
+                                                  description:
+                                                      S.of(context).sandbox_community_description)
                                               .then((status) {
                                             if (status) {
                                               communityModel.payment = {
-                                                "planId": PlanIds
-                                                    .enterprise_plan.label,
+                                                "planId": PlanIds.enterprise_plan.label,
                                                 "payment_success": true,
-                                                "message":
-                                                    "You are on Enterprise Plan",
+                                                "message": "You are on Enterprise Plan",
                                                 "status": 200,
                                               };
 
-                                              snapshot.data.community
-                                                  .updateValueByKey(
+                                              snapshot.data.community.updateValueByKey(
                                                 'payment',
                                                 communityModel.payment,
                                               );
 
-                                              communityModel.testCommunity =
-                                                  true;
-                                              snapshot.data.community
-                                                  .updateValueByKey(
+                                              communityModel.testCommunity = true;
+                                              snapshot.data.community.updateValueByKey(
                                                 'testCommunity',
                                                 true,
                                               );
@@ -734,8 +702,7 @@ class CreateEditCommunityViewFormState
                                           });
                                         } else {
                                           communityModel.payment = null;
-                                          snapshot.data.community
-                                              .updateValueByKey(
+                                          snapshot.data.community.updateValueByKey(
                                             'testCommunity',
                                             false,
                                           );
@@ -747,9 +714,8 @@ class CreateEditCommunityViewFormState
                                         }
                                       } else {
                                         showDialogForSuccess(
-                                            dialogTitle: S
-                                                .of(context)
-                                                .you_created_sandbox_community,
+                                            dialogTitle:
+                                                S.of(context).you_created_sandbox_community,
                                             err: true);
                                       }
                                     },
@@ -763,18 +729,14 @@ class CreateEditCommunityViewFormState
                           hide: widget.isCreateTimebank,
                           child: TransactionsMatrixCheck(
                             comingFrom: ComingFrom.Community,
-                            upgradeDetails: AppConfig
-                                .upgradePlanBannerModel.community_sponsors,
+                            upgradeDetails: AppConfig.upgradePlanBannerModel.community_sponsors,
                             transaction_matrix_type: 'community_sponsors',
                             child: SponsorsWidget(
-                              sponsorsMode: widget.isCreateTimebank
-                                  ? SponsorsMode.CREATE
-                                  : SponsorsMode.EDIT,
+                              sponsorsMode:
+                                  widget.isCreateTimebank ? SponsorsMode.CREATE : SponsorsMode.EDIT,
                               sponsors: timebankModel.sponsors,
                               isAdminVerified: GetUserVerified<bool>().verify(
-                                userId: SevaCore.of(context)
-                                    .loggedInUser
-                                    .sevaUserID,
+                                userId: SevaCore.of(context).loggedInUser.sevaUserID,
                                 creatorId: timebankModel.creatorId,
                                 admins: timebankModel.admins,
                                 organizers: timebankModel.organizers,
@@ -809,20 +771,15 @@ class CreateEditCommunityViewFormState
                             ),
                           ),
                         ),
-                        widget.isCreateTimebank
-                            ? Container()
-                            : SizedBox(height: 10),
+                        widget.isCreateTimebank ? Container() : SizedBox(height: 10),
                         widget.isCreateTimebank
                             ? Container()
                             : Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: <Widget>[
-                                  headingText(S
-                                      .of(context)
-                                      .timebank_select_tax_percentage),
+                                  headingText(S.of(context).timebank_select_tax_percentage),
                                   Padding(
-                                    padding:
-                                        const EdgeInsets.fromLTRB(2, 5, 0, 0),
+                                    padding: const EdgeInsets.fromLTRB(2, 5, 0, 0),
                                     child: getInfoWidget(
                                       infoKey: infoWindowKeys[1],
                                       type: InfoType.TAX_CONFIGURATION,
@@ -848,13 +805,12 @@ class CreateEditCommunityViewFormState
                                 max: 15,
                                 divisions: 15,
                                 onChanged: (value) {
-                                  snapshot.data.community.updateValueByKey(
-                                      'taxPercentage', value / 100);
+                                  snapshot.data.community
+                                      .updateValueByKey('taxPercentage', value / 100);
                                   setState(
                                     () {
                                       taxPercentage = value;
-                                      communityModel.taxPercentage =
-                                          value / 100;
+                                      communityModel.taxPercentage = value / 100;
                                     },
                                   );
                                 },
@@ -883,12 +839,10 @@ class CreateEditCommunityViewFormState
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: <Widget>[
-                                  headingText(
-                                      S.of(context).negative_threshold_title),
+                                  headingText(S.of(context).negative_threshold_title),
                                   SizedBox(width: 8),
                                   Padding(
-                                    padding:
-                                        const EdgeInsets.fromLTRB(2, 5, 0, 0),
+                                    padding: const EdgeInsets.fromLTRB(2, 5, 0, 0),
                                     child: getInfoWidget(
                                       infoKey: infoWindowKeys[2],
                                       type: InfoType.NEGATIVE_CREDITS,
@@ -942,8 +896,7 @@ class CreateEditCommunityViewFormState
                                   setState(
                                     () {
                                       negativeCreditsThreshold = value;
-                                      communityModel.negativeCreditsThreshold =
-                                          value;
+                                      communityModel.negativeCreditsThreshold = value;
                                     },
                                   );
                                 },
@@ -965,14 +918,11 @@ class CreateEditCommunityViewFormState
                         ),
                         Offstage(
                             offstage: widget.isCreateTimebank,
-                            child:
-                                headingText(S.of(context).timebank_has_parent)),
+                            child: headingText(S.of(context).timebank_has_parent)),
                         Offstage(
                           offstage: widget.isCreateTimebank,
                           child: Text(
-                            S
-                                .of(context)
-                                .timebank_location_has_parent_hint_text,
+                            S.of(context).timebank_location_has_parent_hint_text,
                             style: TextStyle(
                               fontSize: 12,
                               color: Colors.grey,
@@ -983,16 +933,14 @@ class CreateEditCommunityViewFormState
                           offstage: widget.isCreateTimebank,
                           child: TransactionsMatrixCheck(
                             comingFrom: ComingFrom.Community,
-                            upgradeDetails: AppConfig
-                                .upgradePlanBannerModel.parent_timebanks,
+                            upgradeDetails: AppConfig.upgradePlanBannerModel.parent_timebanks,
                             transaction_matrix_type: "parent_timebanks",
                             child: Center(
                               child: ParentTimebankPickerWidget(
                                 selectedTimebank: this.selectedTimebank,
                                 onChanged: (CommunityModel selectedTimebank) {
                                   setState(() {
-                                    this.selectedTimebank =
-                                        selectedTimebank.name;
+                                    this.selectedTimebank = selectedTimebank.name;
                                   });
                                   snapshot.data.timebank.updateValueByKey(
                                       'associatedParentTimebankId',
@@ -1002,16 +950,13 @@ class CreateEditCommunityViewFormState
                                   communityModel.parentTimebankId =
                                       selectedTimebank.primary_timebank;
                                   snapshot.data.community.updateValueByKey(
-                                      'parentTimebankId',
-                                      selectedTimebank.primary_timebank);
+                                      'parentTimebankId', selectedTimebank.primary_timebank);
                                 },
                               ),
                             ),
                           ),
                         ),
-                        widget.isCreateTimebank
-                            ? Container()
-                            : SizedBox(height: 20),
+                        widget.isCreateTimebank ? Container() : SizedBox(height: 20),
                         headingText(S.of(context).timebank_location),
                         Text(
                           S.of(context).timebank_location_hint,
@@ -1037,8 +982,7 @@ class CreateEditCommunityViewFormState
                         SizedBox(height: 10),
                         widget.isCreateTimebank
                             ? Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 0),
+                                padding: const EdgeInsets.symmetric(vertical: 0),
                                 child: tappableAddBillingDetails,
                               )
                             : Container(),
@@ -1054,11 +998,9 @@ class CreateEditCommunityViewFormState
                             ? Container(
                                 width: double.infinity,
                                 child: Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 0.0),
+                                  padding: const EdgeInsets.symmetric(vertical: 0.0),
                                   child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
                                       // Text(
@@ -1080,17 +1022,14 @@ class CreateEditCommunityViewFormState
                             alignment: Alignment.center,
                             child: CustomElevatedButton(
                               onPressed: () async {
-                                var connResult =
-                                    await Connectivity().checkConnectivity();
+                                var connResult = await Connectivity().checkConnectivity();
                                 if (connResult == ConnectivityResult.none) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
-                                      content:
-                                          Text(S.of(context).check_internet),
+                                      content: Text(S.of(context).check_internet),
                                       action: SnackBarAction(
                                         label: S.of(context).dismiss,
-                                        onPressed: () => Scaffold.of(context)
-                                            .hideCurrentSnackBar(),
+                                        onPressed: () => Scaffold.of(context).hideCurrentSnackBar(),
                                       ),
                                     ),
                                   );
@@ -1099,8 +1038,7 @@ class CreateEditCommunityViewFormState
 
                                 if (errTxt != null) {
                                   showDialogForSuccess(
-                                    dialogTitle:
-                                        S.of(context).timebank_name_exists,
+                                    dialogTitle: S.of(context).timebank_name_exists,
                                     err: true,
                                   );
                                   return;
@@ -1114,9 +1052,7 @@ class CreateEditCommunityViewFormState
                                       });
                                       if (!hasRegisteredLocation()) {
                                         showDialogForSuccess(
-                                            dialogTitle: S
-                                                .of(context)
-                                                .timebank_location_error,
+                                            dialogTitle: S.of(context).timebank_location_error,
                                             err: true);
                                         return;
                                       }
@@ -1149,37 +1085,27 @@ class CreateEditCommunityViewFormState
                                           globals.timebankCoverURL,
                                         );
                                         // updating the community with default timebank id
-                                        snapshot.data.community.timebanks = [
-                                          snapshot.data.timebank.id
-                                        ].cast<String>();
-                                        snapshot.data.community
-                                            .primary_timebank = snapshot.data
-                                                .community.primary_timebank =
-                                            snapshot.data.timebank.id;
-                                        snapshot.data.community.location =
-                                            location;
-                                        snapshot.data.community.softDelete =
-                                            false;
+                                        snapshot.data.community.timebanks =
+                                            [snapshot.data.timebank.id].cast<String>();
+                                        snapshot.data.community.primary_timebank = snapshot.data
+                                            .community.primary_timebank = snapshot.data.timebank.id;
+                                        snapshot.data.community.location = location;
+                                        snapshot.data.community.softDelete = false;
                                         snapshot.data.community.members = [
-                                          SevaCore.of(context)
-                                              .loggedInUser
-                                              .sevaUserID
+                                          SevaCore.of(context).loggedInUser.sevaUserID
                                         ];
 
                                         snapshot.data.community.billMe = false;
 
-                                        await createEditCommunityBloc
-                                            .createCommunity(
+                                        await createEditCommunityBloc.createCommunity(
                                           snapshot.data,
                                           SevaCore.of(context).loggedInUser,
                                         );
 
                                         if (testCommunity == false) {
                                           //by default every community is on neighbourhood plan
-                                          var result =
-                                              await PaymentRepository.subscribe(
-                                            communityId:
-                                                snapshot.data.community.id,
+                                          var result = await PaymentRepository.subscribe(
+                                            communityId: snapshot.data.community.id,
                                             paymentMethodId: 'sample',
                                             planId: PlanIds.neighbourhood_plan,
                                             isPrivate: false,
@@ -1196,28 +1122,20 @@ class CreateEditCommunityViewFormState
                                         }
 
                                         await CollectionRef.users
-                                            .doc(SevaCore.of(context)
-                                                .loggedInUser
-                                                .email)
+                                            .doc(SevaCore.of(context).loggedInUser.email)
                                             .update({
-                                          'communities': FieldValue.arrayUnion(
-                                              [snapshot.data.community.id]),
-                                          'currentCommunity':
-                                              snapshot.data.community.id,
-                                          'currentTimebank': snapshot
-                                              .data.community.primary_timebank,
+                                          'communities':
+                                              FieldValue.arrayUnion([snapshot.data.community.id]),
+                                          'currentCommunity': snapshot.data.community.id,
+                                          'currentTimebank':
+                                              snapshot.data.community.primary_timebank,
                                         });
 
                                         setState(() {
-                                          SevaCore.of(context)
-                                                  .loggedInUser
-                                                  .currentCommunity =
+                                          SevaCore.of(context).loggedInUser.currentCommunity =
                                               snapshot.data.community.id;
-                                          SevaCore.of(context)
-                                                  .loggedInUser
-                                                  .currentTimebank =
-                                              snapshot.data.community
-                                                  .primary_timebank;
+                                          SevaCore.of(context).loggedInUser.currentTimebank =
+                                              snapshot.data.community.primary_timebank;
                                         });
 
                                         globals.timebankAvatarURL = null;
@@ -1225,14 +1143,10 @@ class CreateEditCommunityViewFormState
                                         globals.webImageUrl = null;
 
                                         Navigator.pop(dialogContext);
-                                        //   _formKey.currentState.reset();
-                                        // _billingInformationKey.currentState.reset();
-                                        UserModel user =
-                                            SevaCore.of(context).loggedInUser;
-                                        _formKey.currentState.reset();
-                                        // _billingInformationKey.currentState.reset();
-                                        Navigator.of(context)
-                                            .pushAndRemoveUntil(
+                                        UserModel user = SevaCore.of(context).loggedInUser;
+                                        //TODO reset
+                                        // _formKey.currentState.reset();
+                                        Navigator.of(context).pushAndRemoveUntil(
                                           MaterialPageRoute(
                                             builder: (context) => SevaCore(
                                               loggedInUser: user,
@@ -1244,9 +1158,8 @@ class CreateEditCommunityViewFormState
                                       }
                                     } else {
                                       setState(() {
-                                        this._billingDetailsError = S
-                                            .of(context)
-                                            .timebank_account_error;
+                                        this._billingDetailsError =
+                                            S.of(context).timebank_account_error;
                                       });
                                     }
                                   }
@@ -1254,9 +1167,7 @@ class CreateEditCommunityViewFormState
                                   if (_formKey.currentState.validate()) {
                                     if (!hasRegisteredLocation()) {
                                       showDialogForSuccess(
-                                          dialogTitle: S
-                                              .of(context)
-                                              .timebank_location_error,
+                                          dialogTitle: S.of(context).timebank_location_error,
                                           err: true);
                                       return;
                                     }
@@ -1265,30 +1176,22 @@ class CreateEditCommunityViewFormState
                                       S.of(context).updating_timebank,
                                     );
 
-                                    log('UPDATE CHECK 3: ' +
-                                        globals.timebankAvatarURL.toString());
-                                    log('UPDATE CHECK 4: ' +
-                                        globals.timebankCoverURL.toString());
+                                    log('UPDATE CHECK 3: ' + globals.timebankAvatarURL.toString());
+                                    log('UPDATE CHECK 4: ' + globals.timebankCoverURL.toString());
 
                                     if (globals.timebankAvatarURL != null) {
-                                      communityModel.logo_url =
-                                          globals.timebankAvatarURL;
-                                      timebankModel.photoUrl =
-                                          globals.timebankAvatarURL;
+                                      communityModel.logo_url = globals.timebankAvatarURL;
+                                      timebankModel.photoUrl = globals.timebankAvatarURL;
                                     }
 
                                     if (globals.timebankCoverURL != null) {
-                                      communityModel.cover_url =
-                                          globals.timebankCoverURL;
-                                      timebankModel.cover_url =
-                                          globals.timebankCoverURL;
+                                      communityModel.cover_url = globals.timebankCoverURL;
+                                      timebankModel.cover_url = globals.timebankCoverURL;
                                       setState(() {});
                                     }
 
-                                    timebankModel.name =
-                                        searchTextController.text.trim();
-                                    communityModel.name =
-                                        searchTextController.text.trim();
+                                    timebankModel.name = searchTextController.text.trim();
+                                    communityModel.name = searchTextController.text.trim();
 
                                     timebankModel.location = location;
 
@@ -1297,15 +1200,13 @@ class CreateEditCommunityViewFormState
                                     await FirestoreManager.updateTimebank(
                                       timebankModel: timebankModel,
                                     ).then((onValue) {});
-                                    communityModel.taxPercentage =
-                                        taxPercentage / 100;
+                                    communityModel.taxPercentage = taxPercentage / 100;
 
                                     communityModel.negativeCreditsThreshold =
                                         negativeCreditsThreshold;
 //                            //updating community with latest values
-                                    await FirestoreManager
-                                            .updateCommunityDetails(
-                                                communityModel: communityModel)
+                                    await FirestoreManager.updateCommunityDetails(
+                                            communityModel: communityModel)
                                         .then((onValue) {});
 
                                     globals.timebankAvatarURL = null;
@@ -1314,7 +1215,8 @@ class CreateEditCommunityViewFormState
                                     if (dialogContext != null) {
                                       Navigator.pop(dialogContext);
                                     }
-                                    _formKey.currentState.reset();
+                                    //TODO reset
+                                    // _formKey.currentState.reset();
                                     if (widget.isFromFind) {
                                       Navigator.of(context).pop();
                                     } else {
@@ -1322,8 +1224,7 @@ class CreateEditCommunityViewFormState
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) => SwitchTimebank(
-                                            content:
-                                                S.of(context).updating_timebank,
+                                            content: S.of(context).updating_timebank,
                                           ),
                                         ),
                                       );
@@ -1336,8 +1237,7 @@ class CreateEditCommunityViewFormState
                                 widget.isCreateTimebank
                                     ? S.of(context).create_timebank
                                     : S.of(context).save,
-                                style: TextStyle(
-                                    fontSize: 16.0, color: Colors.white),
+                                style: TextStyle(fontSize: 16.0, color: Colors.white),
                               ),
                               textColor: FlavorConfig.values.buttonTextColor,
                             ),
@@ -1364,7 +1264,11 @@ class CreateEditCommunityViewFormState
       padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
       child: colums,
     );
-    return contain;
+    return Column(
+      children: [
+        contain,
+      ],
+    );
   }
 
   getInfoWidget({
@@ -1522,8 +1426,7 @@ class CreateEditCommunityViewFormState
       builder: (builder) {
         return SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom),
+            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
             child: Container(
               child: _scrollingList(mcontext, focusNodes),
             ),
@@ -1666,7 +1569,8 @@ class CreateEditCommunityViewFormState
     Widget _stateWidget(controller) {
       return Container(
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
-        child: TextFormField(
+        child: DoseTextField(
+          isRequired: true,
           textCapitalization: TextCapitalization.sentences,
           onFieldSubmitted: (input) {
             FocusScope.of(context).requestFocus(focusNodes[2]);
@@ -1675,13 +1579,12 @@ class CreateEditCommunityViewFormState
           onChanged: (value) {
             updateExitWithConfirmationValue(context, 3, value);
 
-            controller.community.billing_address
-                .updateValueByKey('state', value);
+            controller.community.billing_address.updateValueByKey('state', value);
             createEditCommunityBloc.onChange(controller);
           },
-          initialValue: controller.community.billing_address.state != null
+         /* initialValue: controller.community.billing_address.state != null
               ? '${controller.community.billing_address.state}'
-              : '',
+              : '',*/
           validator: (value) {
             return value.isEmpty
                 ? S.of(context).validation_error_required_fields
@@ -1689,7 +1592,7 @@ class CreateEditCommunityViewFormState
                     ? S.of(context).profanity_text_alert
                     : null;
           },
-          focusNode: focusNodes[1],
+          currentNode: focusNodes[1],
           textInputAction: TextInputAction.next,
           decoration: getInputDecoration(
             fieldTitle: '${S.of(context).state} *',
@@ -1701,7 +1604,8 @@ class CreateEditCommunityViewFormState
     Widget _cityWidget(controller) {
       return Container(
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
-        child: TextFormField(
+        child: DoseTextField(
+          isRequired: true,
           textCapitalization: TextCapitalization.sentences,
           onFieldSubmitted: (input) {
             FocusScope.of(context).requestFocus(focusNodes[1]);
@@ -1710,13 +1614,12 @@ class CreateEditCommunityViewFormState
           onChanged: (value) {
             updateExitWithConfirmationValue(context, 4, value);
 
-            controller.community.billing_address
-                .updateValueByKey('city', value);
+            controller.community.billing_address.updateValueByKey('city', value);
             createEditCommunityBloc.onChange(controller);
           },
-          initialValue: controller.community.billing_address.city != null
+         /* initialValue: controller.community.billing_address.city != null
               ? '${controller.community.billing_address.city}'
-              : '',
+              : '',*/
           validator: (value) {
             return value.isEmpty
                 ? S.of(context).validation_error_required_fields
@@ -1724,7 +1627,7 @@ class CreateEditCommunityViewFormState
                     ? S.of(context).profanity_text_alert
                     : null;
           },
-          focusNode: focusNodes[0],
+          currentNode: focusNodes[0],
           textInputAction: TextInputAction.next,
           decoration: getInputDecoration(
             fieldTitle: '${S.of(context).city} *',
@@ -1736,19 +1639,19 @@ class CreateEditCommunityViewFormState
     Widget _pinCodeWidget(controller) {
       return Container(
         margin: EdgeInsets.fromLTRB(20, 10, 20, 0),
-        child: TextFormField(
+        child: DoseTextField(
+          isRequired: true,
           onFieldSubmitted: (input) {
             FocusScope.of(context).requestFocus(focusNodes[4]);
           },
           onChanged: (value) {
             updateExitWithConfirmationValue(context, 5, value);
-            controller.community.billing_address
-                .updateValueByKey('pincode', value);
+            controller.community.billing_address.updateValueByKey('pincode', value);
             createEditCommunityBloc.onChange(controller);
           },
-          initialValue: controller.community.billing_address.pincode != null
+         /* initialValue: controller.community.billing_address.pincode != null
               ? '${controller.community.billing_address.pincode.toString()}'
-              : '',
+              : '',*/
           validator: (value) {
             return value.isEmpty
                 ? S.of(context).validation_error_required_fields
@@ -1756,7 +1659,7 @@ class CreateEditCommunityViewFormState
                     ? S.of(context).profanity_text_alert
                     : null;
           },
-          focusNode: focusNodes[3],
+          currentNode: focusNodes[3],
           keyboardType: TextInputType.text,
           textInputAction: TextInputAction.next,
           maxLength: 15,
@@ -1780,14 +1683,12 @@ class CreateEditCommunityViewFormState
           onChanged: (value) {
             updateExitWithConfirmationValue(context, 6, value);
 
-            controller.community.billing_address
-                .updateValueByKey('additionalnotes', value);
+            controller.community.billing_address.updateValueByKey('additionalnotes', value);
             createEditCommunityBloc.onChange(controller);
           },
-          initialValue:
-              controller.community.billing_address.additionalnotes != null
-                  ? controller.community.billing_address.additionalnotes
-                  : '',
+          initialValue: controller.community.billing_address.additionalnotes != null
+              ? controller.community.billing_address.additionalnotes
+              : '',
           validator: (value) {
             return (profanityDetector.isProfaneString(value))
                 ? S.of(context).profanity_text_alert
@@ -1806,7 +1707,8 @@ class CreateEditCommunityViewFormState
     Widget _streetAddressWidget(controller) {
       return Container(
         margin: EdgeInsets.fromLTRB(20, 0, 20, 10),
-        child: TextFormField(
+        child: DoseTextField(
+          isRequired: true,
           textCapitalization: TextCapitalization.sentences,
           onFieldSubmitted: (input) {
             // FocusScope.of(context).requestFocus(focusNodes[5]);
@@ -1816,8 +1718,7 @@ class CreateEditCommunityViewFormState
           onChanged: (value) {
             updateExitWithConfirmationValue(context, 7, value);
 
-            controller.community.billing_address
-                .updateValueByKey('street_address1', value);
+            controller.community.billing_address.updateValueByKey('street_address1', value);
             createEditCommunityBloc.onChange(controller);
           },
           validator: (value) {
@@ -1827,12 +1728,11 @@ class CreateEditCommunityViewFormState
                     ? S.of(context).profanity_text_alert
                     : null;
           },
-          focusNode: focusNodes[4],
+          currentNode: focusNodes[4],
           textInputAction: TextInputAction.done,
-          initialValue:
-              controller.community.billing_address.street_address1 != null
-                  ? '${controller.community.billing_address.street_address1}'
-                  : '',
+/*          initialValue: controller.community.billing_address.street_address1 != null
+              ? '${controller.community.billing_address.street_address1}'
+              : '',*/
           decoration: getInputDecoration(
             fieldTitle: "${S.of(context).street_add1} *",
           ),
@@ -1853,8 +1753,7 @@ class CreateEditCommunityViewFormState
             onChanged: (value) {
               updateExitWithConfirmationValue(context, 8, value);
 
-              controller.community.billing_address
-                  .updateValueByKey('street_address2', value);
+              controller.community.billing_address.updateValueByKey('street_address2', value);
               createEditCommunityBloc.onChange(controller);
             },
             validator: (value) {
@@ -1864,10 +1763,9 @@ class CreateEditCommunityViewFormState
             },
             focusNode: focusNodes[5],
             textInputAction: TextInputAction.done,
-            initialValue:
-                controller.community.billing_address.street_address2 != null
-                    ? controller.community.billing_address.street_address2
-                    : '',
+            initialValue: controller.community.billing_address.street_address2 != null
+                ? controller.community.billing_address.street_address2
+                : '',
             decoration: getInputDecoration(
               fieldTitle: S.of(context).street_add2,
             )),
@@ -1892,8 +1790,7 @@ class CreateEditCommunityViewFormState
           onChanged: (value) {
             updateExitWithConfirmationValue(context, 9, value);
 
-            controller.community.billing_address
-                .updateValueByKey('companyname', value);
+            controller.community.billing_address.updateValueByKey('companyname', value);
             createEditCommunityBloc.onChange(controller);
           },
           initialValue: controller.community.billing_address.companyname != null
@@ -1911,7 +1808,8 @@ class CreateEditCommunityViewFormState
     Widget _countryNameWidget(controller) {
       return Container(
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
-        child: TextFormField(
+        child: DoseTextField(
+          isRequired: true,
           textCapitalization: TextCapitalization.sentences,
           onFieldSubmitted: (input) {
             FocusScope.of(context).requestFocus(focusNodes[3]);
@@ -1919,13 +1817,12 @@ class CreateEditCommunityViewFormState
           autovalidateMode: AutovalidateMode.onUserInteraction,
           onChanged: (value) {
             updateExitWithConfirmationValue(context, 10, value);
-            controller.community.billing_address
-                .updateValueByKey('country', value);
+            controller.community.billing_address.updateValueByKey('country', value);
             createEditCommunityBloc.onChange(controller);
           },
-          initialValue: controller.community.billing_address.country != null
-              ? '${controller.community.billing_address.country}'
-              : '',
+         /*   initialValue: controller.community.billing_address.country != null
+                ? '${controller.community.billing_address.country}'
+                : '',*/
           validator: (value) {
             return value.isEmpty
                 ? S.of(context).validation_error_required_fields
@@ -1933,7 +1830,7 @@ class CreateEditCommunityViewFormState
                     ? S.of(context).profanity_text_alert
                     : null;
           },
-          focusNode: focusNodes[2],
+          currentNode: focusNodes[2],
           textInputAction: TextInputAction.next,
           decoration: getInputDecoration(
             fieldTitle: '${S.of(context).country} *',
@@ -1972,35 +1869,41 @@ class CreateEditCommunityViewFormState
       //to open/close the sliding panel
       margin: const EdgeInsets.only(top: 15.0),
       color: Colors.white,
-      child: Form(
+      child: DoseForm(
+        primary: true,
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
         key: _billingInformationKey,
-        child: StreamBuilder(
-          stream: createEditCommunityBloc.createEditCommunity,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return ListView(
-                shrinkWrap: true,
-                controller: scollContainer,
-                padding: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).viewInsets.bottom),
-                children: <Widget>[
-                  _billingDetailsTitle,
-                  _cityWidget(snapshot.data),
-                  _stateWidget(snapshot.data),
-                  _countryNameWidget(snapshot.data),
-                  _pinCodeWidget(snapshot.data),
-                  _streetAddressWidget(snapshot.data),
-                  _streetAddressTwoWidget(snapshot.data),
-                  _companyNameWidget(snapshot.data),
-                  _additionalNotesWidget(snapshot.data),
-                  _continueBtn(snapshot.data),
-                ],
-              );
-            } else if (snapshot.hasError) {
-              return Text(snapshot.error.toString());
-            }
-            return Text("");
-          },
+        child: Column(
+          children: [
+            StreamBuilder(
+              stream: createEditCommunityBloc.createEditCommunity,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return ListView(
+                    shrinkWrap: true,
+                    controller: scollContainer,
+                    padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                    children: <Widget>[
+                      _billingDetailsTitle,
+                      _cityWidget(snapshot.data),
+                      _stateWidget(snapshot.data),
+                      _countryNameWidget(snapshot.data),
+                      _pinCodeWidget(snapshot.data),
+                      _streetAddressWidget(snapshot.data),
+                      _streetAddressTwoWidget(snapshot.data),
+                      _companyNameWidget(snapshot.data),
+                      _additionalNotesWidget(snapshot.data),
+                      _continueBtn(snapshot.data),
+                    ],
+                  );
+                } else if (snapshot.hasError) {
+                  return Text(snapshot.error.toString());
+                }
+                return Text("");
+              },
+            ),
+          ],
         ),
       ),
     );
