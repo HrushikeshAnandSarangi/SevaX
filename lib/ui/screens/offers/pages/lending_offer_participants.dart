@@ -161,7 +161,7 @@ class LendingOfferParticipants extends StatelessWidget {
                           .of(context)
                           .cannot_approve_multiple_borrowers_place
                           .replaceAll(" **name", name)
-                      : L
+                      : S
                           .of(context)
                           .cannot_approve_multiple_borrowers_item
                           .replaceAll(" **name", name)),
@@ -247,7 +247,7 @@ class LendingOfferParticipants extends StatelessWidget {
             color: HexColor('#FAFAFA'),
             onPressed: () {},
             child: Text(
-              L.of(context).items_collected,
+              S.of(context).items_collected,
               style: TextStyle(color: Colors.black),
             ),
           )

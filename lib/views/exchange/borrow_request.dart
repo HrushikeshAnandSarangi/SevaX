@@ -202,7 +202,7 @@ class _BorrowRequestState extends State<BorrowRequest> {
         decoration: InputDecoration(
           errorMaxLines: 2,
           hintText: (roomOrTool == 0
-              ? L.of(context).borrow_request_title_hint_place
+              ? S.of(context).borrow_request_title_hint_place
               : S.of(context).borrow_request_title_hint_item),
           hintStyle: requestUtils.hintTextStyle,
         ),
@@ -229,23 +229,23 @@ class _BorrowRequestState extends State<BorrowRequest> {
       SizedBox(height: 15),
       (widget.requestModel.requestType == RequestType.BORROW && roomOrTool == 1)
           ? Text(
-        S.of(context).request_description,
-        style: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-          fontFamily: 'Europa',
-          color: Colors.black,
-        ),
-      )
+              S.of(context).request_description,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Europa',
+                color: Colors.black,
+              ),
+            )
           : Text(
-        "${S.of(context).request_description}",
-        style: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-          fontFamily: 'Europa',
-          color: Colors.black,
-        ),
-      ),
+              "${S.of(context).request_description}",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Europa',
+                color: Colors.black,
+              ),
+            ),
       TextFormField(
         autovalidateMode: AutovalidateMode.onUserInteraction,
         onChanged: (value) {
@@ -267,7 +267,7 @@ class _BorrowRequestState extends State<BorrowRequest> {
         ),
         initialValue: widget.formType == RequestFormType.CREATE
             ? requestUtils.getInitialDescription(
-            widget.offer, widget.isOfferRequest)
+                widget.offer, widget.isOfferRequest)
             : widget.requestModel.description,
         keyboardType: TextInputType.multiline,
         maxLines: 2,
@@ -352,7 +352,7 @@ class _BorrowRequestState extends State<BorrowRequest> {
           HideWidget(
             hide: roomOrTool == 0,
             child: Text(
-              L.of(context).select_a_item_lending,
+              S.of(context).select_a_item_lending,
               style: TextStyle(
                 fontSize: 16,
                 //fontWeight: FontWeight.bold,

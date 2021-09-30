@@ -419,7 +419,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                               _bloc.onTypeChanged(data);
                               offerType = data;
                               title_hint = (_bloc.lendingOfferType == 0
-                                  ? L.of(context).lending_offer_title_hint_place
+                                  ? S.of(context).lending_offer_title_hint_place
                                   : S
                                       .of(context)
                                       .lending_offer_title_hint_item);
@@ -915,7 +915,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                     ? title_hint
                                     : offerType == RequestType.LENDING_OFFER
                                         ? (_bloc.lendingOfferType == 0
-                                            ? L
+                                            ? S
                                                 .of(context)
                                                 .lending_offer_title_hint_place
                                             : S
@@ -1902,7 +1902,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                         selectedLendingModel = null;
                       });
                       title_hint = (_bloc.lendingOfferType == 0
-                          ? L.of(context).lending_offer_title_hint_place
+                          ? S.of(context).lending_offer_title_hint_place
                           : S.of(context).lending_offer_title_hint_item);
                       description_hint = (_bloc.lendingOfferType == 0
                           ? S.of(context).lending_offer_description_hint_place
@@ -2299,14 +2299,14 @@ class _IndividualOfferState extends State<IndividualOffer> {
         SizedBox(height: 6),
         Text(
           _bloc.lendingOfferType == 0
-              ? L.of(context).lending_offer_location_hint_place
-              : L.of(context).lending_offer_location_hint_item,
+              ? S.of(context).lending_offer_location_hint_place
+              : S.of(context).lending_offer_location_hint_item,
           style: TextStyle(fontSize: 15),
           softWrap: true,
         ),
         SizedBox(height: 5),
         Text(
-          L.of(context).location_safety_disclaimer,
+          S.of(context).location_safety_disclaimer,
           style: TextStyle(fontSize: 13),
           softWrap: true,
         ),

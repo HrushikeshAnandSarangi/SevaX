@@ -218,7 +218,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                         },
                       ),
                       _optionRadioButtonMain<String>(
-                        title: L.of(context).choose_previous_agreement,
+                        title: S.of(context).choose_previous_agreement,
                         value: AgreementDocumentType.TEMPLATE.readable,
                         groupvalue: agreementDocumentType,
                         onChanged: (value) {
@@ -629,7 +629,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                                 text: TextSpan(
                                   style: TextStyle(
                                       color: Colors.black45, fontSize: 14),
-                                  text: L.of(context).seva_exchange_text_new,
+                                  text: S.of(context).seva_exchange_text_new,
                                   children: <TextSpan>[
                                     emptyTextSpan(),
                                     TextSpan(
@@ -646,7 +646,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                                     // emptyTextSpan(),
                                     TextSpan(
                                       text: ' ' +
-                                          L
+                                          S
                                               .of(context)
                                               .agree_to_signature_legal_text +
                                           S
@@ -709,8 +709,8 @@ class _OfferAgreementFormState extends State<AgreementForm> {
           // initialValue: documentName,
           decoration: InputDecoration(
             hintText: widget.placeOrItem == LendingType.PLACE.readable
-                ? L.of(context).place_agreement_name_hint_place
-                : L.of(context).place_agreement_name_hint_item,
+                ? S.of(context).place_agreement_name_hint_place
+                : S.of(context).place_agreement_name_hint_item,
             hintStyle: TextStyle(fontSize: 13, color: Colors.grey),
             // labelText: 'No. of volunteers',
           ),
@@ -755,7 +755,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
               },
             ),
             _optionRadioButtonMain<String>(
-              title: L.of(context).choose_previous_agreement,
+              title: S.of(context).choose_previous_agreement,
               value: AgreementDocumentType.TEMPLATE.readable,
               groupvalue: agreementDocumentType,
               onChanged: (value) {

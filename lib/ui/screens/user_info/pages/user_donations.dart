@@ -116,7 +116,7 @@ class _GoodsAndAmountDonationsState extends State<GoodsAndAmountDonations> {
                           ),
                         )
                       : Text(
-                          ' ${snapshot.data ?? 0} ${widget.isTimeBank ? ' ${L.of(context).items_collected}' : ' ${S.of(context).items_donated}'}',
+                          ' ${snapshot.data ?? 0} ${widget.isTimeBank ? ' ${S.of(context).items_collected}' : ' ${S.of(context).items_donated}'}',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,

@@ -204,7 +204,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Text(
-              L.of(context).accept_borrow_agreement_item_title,
+              S.of(context).accept_borrow_agreement_item_title,
               style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 10),
@@ -369,8 +369,8 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
         SizedBox(height: 20),
         Text(
             widget.requestModel.roomOrTool == LendingType.PLACE.readable
-                ? L.of(context).approve_borrow_terms_acknowledgement_text1
-                : L.of(context).approve_borrow_terms_acknowledgement_text2,
+                ? S.of(context).approve_borrow_terms_acknowledgement_text1
+                : S.of(context).approve_borrow_terms_acknowledgement_text2,
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w600,

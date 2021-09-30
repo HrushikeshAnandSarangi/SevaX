@@ -193,7 +193,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                               _bloc.onPlaceNameChanged(value);
                               // title = value;
                             },
-                            hint: L.of(context).name_of_place_hint,
+                            hint: S.of(context).name_of_place_hint,
                             maxLength: null,
                             error: getAddPlaceValidationError(
                                 context, snapshot.error),
@@ -471,7 +471,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                                 prefixIconConstraints:
                                     BoxConstraints(minWidth: 23, maxHeight: 20),
                                 prefixIcon: Icon(Icons.attach_money),
-                                hintText: L
+                                hintText: S
                                         .of(context)
                                         .estimated_value_place_hint +
                                     S.of(context).estimated_value_hint_place,
@@ -480,7 +480,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             controller: _estimatedValueController,
                             currentNode: _estimatedValue,
                             value: snapshot.data,
-                            heading: "${L.of(context).estimated_value}",
+                            heading: "${S.of(context).estimated_value}",
                             onChanged: (String value) {
                               _bloc.onEstimatedValueChanged(value);
                               // title = value;
