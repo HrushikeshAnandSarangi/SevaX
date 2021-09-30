@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/enums/lending_borrow_enums.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/offer_model.dart';
@@ -433,10 +434,10 @@ class ToDo {
             TasksCardWrapper(
               taskCard: ToDoCard(
                 title: model.title,
-                subTitle: S.of(context).collect_items,
+                subTitle: L.of(context).collect_items,
                 timeInMilliseconds: model.requestStart,
                 onTap: () async {},
-                tag: S.of(context).borrow_request_collect_items_tag,
+                tag: L.of(context).borrow_request_collect_items_tag,
               ),
               taskTimestamp: model.requestStart,
             ),
@@ -447,10 +448,10 @@ class ToDo {
             TasksCardWrapper(
               taskCard: ToDoCard(
                 title: model.title,
-                subTitle: S.of(context).return_items,
+                subTitle: L.of(context).return_items,
                 timeInMilliseconds: model.requestEnd,
                 onTap: () async {},
-                tag: S.of(context).borrow_request_return_items_tag,
+                tag: L.of(context).borrow_request_return_items_tag,
               ),
               taskTimestamp: model.requestStart,
             ),
@@ -503,7 +504,7 @@ class ToDo {
             TasksCardWrapper(
               taskCard: ToDoCard(
                 title: model.individualOfferDataModel.title,
-                subTitle: S.of(context).collect_items + model.selectedAdrress != null
+                subTitle: L.of(context).collect_items + model.selectedAdrress != null
                     ? ' at ' + model.selectedAdrress
                     : '',
                 timeInMilliseconds: model.lendingOfferDetailsModel.approvedStartDate,
@@ -516,7 +517,7 @@ class ToDo {
                       context: context,
                       lendingOfferAcceptorModel: lendingOfferAcceptorModel);
                 },
-                tag: S.of(context).lending_offer_collect_items_tag,
+                tag: L.of(context).lending_offer_collect_items_tag,
               ),
               taskTimestamp: model.lendingOfferDetailsModel.approvedStartDate ??
                   DateTime.now().millisecondsSinceEpoch,
@@ -528,7 +529,7 @@ class ToDo {
             TasksCardWrapper(
               taskCard: ToDoCard(
                 title: model.individualOfferDataModel.title,
-                subTitle: S.of(context).return_items + model.selectedAdrress != null
+                subTitle: L.of(context).return_items + model.selectedAdrress != null
                     ? ' at ' + model.selectedAdrress
                     : '',
                 timeInMilliseconds: model.lendingOfferDetailsModel.approvedEndDate ??
@@ -544,7 +545,7 @@ class ToDo {
                       context: context,
                       lendingOfferAcceptorModel: lendingOfferAcceptorModel);
                 },
-                tag: S.of(context).lending_offer_return_items_tag,
+                tag: L.of(context).lending_offer_return_items_tag,
               ),
               taskTimestamp: model.lendingOfferDetailsModel.approvedStartDate ??
                   DateTime.now().millisecondsSinceEpoch,

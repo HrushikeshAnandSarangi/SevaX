@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/components/common_help_icon.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
@@ -2297,11 +2298,18 @@ class _IndividualOfferState extends State<IndividualOffer> {
         ),
         SizedBox(height: 6),
         Text(
-          S.of(context).lending_offer_location_hint,
+          _bloc.lendingOfferType == 0
+              ? L.of(context).lending_offer_location_hint_place
+              : L.of(context).lending_offer_location_hint_item,
           style: TextStyle(fontSize: 15),
           softWrap: true,
         ),
         SizedBox(height: 5),
+        Text(
+          L.of(context).location_safety_disclaimer,
+          style: TextStyle(fontSize: 13),
+          softWrap: true,
+        ),
       ],
     );
   }

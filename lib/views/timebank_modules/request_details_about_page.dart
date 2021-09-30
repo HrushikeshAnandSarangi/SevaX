@@ -10,6 +10,7 @@ import 'package:sevaexchange/components/calendar_events/module/index.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/basic_user_details.dart';
 import 'package:sevaexchange/models/enums/lending_borrow_enums.dart';
 import 'package:sevaexchange/models/request_model.dart';
@@ -2416,7 +2417,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                       ),
                 Text(
                   (widget.requestItem.roomOrTool == LendingType.ITEM.readable
-                          ? S.of(context).collect_and_return_items
+                          ? L.of(context).collect_and_return_items
                           : S.of(context).length_of_stay) +
                       DateFormat('dd MMM,\nhh:mm a', Locale(getLangTag()).toLanguageTag()).format(
                         getDateTimeAccToUserTimezone(
@@ -3217,7 +3218,7 @@ Widget borrowActionsWidget(RequestModel requestItem, BuildContext context, bool 
                           : S.of(context).check_in_text
                       : requestItem.borrowModel.itemsCollected
                           ? S.of(context).items_returned
-                          : S.of(context).items_collected,
+                          : L.of(context).items_collected,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.white,
