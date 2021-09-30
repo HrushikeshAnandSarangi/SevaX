@@ -273,19 +273,26 @@ class NewsImageState extends State<NewsImage>
                             Stack(
                               children: [
                                 Center(
-                                  child: Container(
-                                    height: 200,
-                                    width: 200,
-                                    child: FadeInImage(
-                                      image: NetworkImage(globals.newsImageURL),
-                                      placeholder: AssetImage(
-                                        'lib/assets/images/noimagefound.png',
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                      top: 20,
+                                    ),
+                                    child: Container(
+                                      height: 200,
+                                      width: 200,
+                                      child: FadeInImage(
+                                        image:
+                                            NetworkImage(globals.newsImageURL),
+                                        placeholder: AssetImage(
+                                          'lib/assets/images/noimagefound.png',
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.all(5.0),
+                                  padding:
+                                      const EdgeInsets.fromLTRB(5, 20, 5, 5),
                                   child: Align(
                                     alignment: Alignment.topRight,
                                     child: InkWell(
