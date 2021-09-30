@@ -78,7 +78,7 @@ class SearchManager {
     @required queryString,
   }) async* {
     String url =
-        '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/sevaxcommunities/_doc/_search';
+        '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/sevaxcommunities/_doc/_search?size=400';
     dynamic body = json.encode({
       "query": {
         "bool": {
