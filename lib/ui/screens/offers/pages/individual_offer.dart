@@ -801,19 +801,27 @@ class _IndividualOfferState extends State<IndividualOffer> {
 
   Widget GoodsRequest() {
     return StreamBuilder<GoodsDonationDetails>(
-        stream: _bloc.goodsDonationDetails,
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return Container();
-          }
-
+      stream: _bloc.goodsDonationDetails,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
           return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                SizedBox(height: 20),
-                RequestGoodsDescriptionData(snapshot.data),
-              ]);
-        });
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              SizedBox(height: 20),
+              RequestGoodsDescriptionData(GoodsDonationDetails()),
+            ],
+          );
+        } else {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              SizedBox(height: 20),
+              RequestGoodsDescriptionData(snapshot.data),
+            ],
+          );
+        }
+      },
+    );
   }
 
   @override
