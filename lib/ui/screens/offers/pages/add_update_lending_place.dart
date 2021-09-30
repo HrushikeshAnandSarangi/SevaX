@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:connectivity/connectivity.dart';
+import 'package:doseform/doseform.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
@@ -10,6 +11,7 @@ import 'package:sevaexchange/new_baseline/models/lending_model.dart';
 import 'package:sevaexchange/ui/screens/image_picker/image_picker_dialog_mobile.dart';
 import 'package:sevaexchange/ui/screens/offers/bloc/add_update_place_bloc.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/selecrt_amenities.dart';
+import 'package:sevaexchange/ui/screens/offers/widgets/custom_dose_text_field.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/custom_textfield.dart';
 import 'package:sevaexchange/ui/utils/offer_utility.dart';
 import 'package:sevaexchange/ui/utils/validators.dart';
@@ -30,7 +32,7 @@ class AddUpdateLendingPlace extends StatefulWidget {
 }
 
 class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
-  final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<DoseFormState>();
   List<AmenitiesModel> amenitiesList = [];
   List<String> imagesList = [];
   AddUpdatePlaceBloc _bloc = AddUpdatePlaceBloc();
@@ -174,7 +176,10 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
             return SingleChildScrollView(
               child: Container(
                 padding: EdgeInsets.all(30.0),
-                child: Form(
+                child: DoseForm(
+                  primary: true,
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
                   key: _formKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -182,7 +187,8 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                       StreamBuilder<String>(
                         stream: _bloc.placeName,
                         builder: (context, snapshot) {
-                          return CustomTextField(
+                          return CustomDoseTextField(
+                            isRequired: true,
                             controller: _placeNameController,
                             currentNode: _placeName,
                             nextNode: _guests,
@@ -342,7 +348,8 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                       StreamBuilder<String>(
                         stream: _bloc.noOfGuests,
                         builder: (context, snapshot) {
-                          return CustomTextField(
+                          return CustomDoseTextField(
+                            isRequired: true,
                             controller: _guestsController,
                             currentNode: _guests,
                             nextNode: _rooms,
@@ -367,7 +374,8 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                       StreamBuilder<String>(
                         stream: _bloc.noOfRooms,
                         builder: (context, snapshot) {
-                          return CustomTextField(
+                          return CustomDoseTextField(
+                            isRequired: true,
                             controller: _roomsController,
                             currentNode: _rooms,
                             nextNode: _bathrooms,
@@ -392,7 +400,8 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                       StreamBuilder<String>(
                         stream: _bloc.bathRooms,
                         builder: (context, snapshot) {
-                          return CustomTextField(
+                          return CustomDoseTextField(
+                            isRequired: true,
                             controller: _bathroomsController,
                             currentNode: _bathrooms,
                             nextNode: _commonSPace,
@@ -417,7 +426,8 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                       StreamBuilder<String>(
                         stream: _bloc.commonSpaces,
                         builder: (context, snapshot) {
-                          return CustomTextField(
+                          return CustomDoseTextField(
+                            isRequired: true,
                             controller: _commonSpaceController,
                             currentNode: _commonSPace,
                             nextNode: _houseRules,
@@ -438,7 +448,8 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                       StreamBuilder<String>(
                         stream: _bloc.houseRules,
                         builder: (context, snapshot) {
-                          return CustomTextField(
+                          return CustomDoseTextField(
+                            isRequired: true,
                             controller: _houseRulesController,
                             currentNode: _houseRules,
                             value: snapshot.data,
@@ -461,7 +472,8 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                       StreamBuilder<String>(
                         stream: _bloc.estimatedValue,
                         builder: (context, snapshot) {
-                          return CustomTextField(
+                          return CustomDoseTextField(
+                            isRequired: true,
                             keyboardType: TextInputType.number,
                             decoration: InputDecoration(
                                 prefixIconConstraints:
@@ -496,7 +508,8 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                       StreamBuilder<String>(
                         stream: _bloc.contactInformation,
                         builder: (context, snapshot) {
-                          return CustomTextField(
+                          return CustomDoseTextField(
+                            isRequired: true,
                             hint: S.of(context).email +
                                 ' / ' +
                                 S.of(context).phone_number,

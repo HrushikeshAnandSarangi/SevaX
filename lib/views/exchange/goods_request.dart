@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:doseform/doseform.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
@@ -37,6 +38,7 @@ class GoodsRequest extends StatefulWidget {
   bool instructorAdded;
   final Function onCreateEventChanged;
   final RequestFormType formType;
+  final formKey;
 
   GoodsRequest(
       {this.requestModel,
@@ -50,7 +52,8 @@ class GoodsRequest extends StatefulWidget {
       this.createEvent,
       this.instructorAdded,
       this.projectModelList,
-      @required this.formType});
+      @required this.formType,
+      @required this.formKey});
 
   @override
   _GoodsRequestState createState() => _GoodsRequestState();
@@ -63,6 +66,9 @@ class _GoodsRequestState extends State<GoodsRequest> {
   final _debouncer = Debouncer(milliseconds: 500);
   List<CategoryModel> selectedCategoryModels = [];
   String categoryMode;
+  TextEditingController titleController = TextEditingController(),
+      descriptionController = TextEditingController(),
+      addressController = TextEditingController();
 
   Widget addToProjectContainer() {
     if (requestUtils.isFromRequest(projectId: widget.projectId)) {
@@ -145,6 +151,15 @@ class _GoodsRequestState extends State<GoodsRequest> {
   @override
   void initState() {
     super.initState();
+
+    titleController.text = widget.formType == RequestFormType.CREATE
+        ? requestUtils.getInitialTitle(widget.offer, widget.isOfferRequest)
+        : widget.requestModel.title;
+    descriptionController.text = widget.formType == RequestFormType.CREATE
+        ? requestUtils.getInitialDescription(widget.offer, widget.isOfferRequest)
+        : widget.requestModel.description;
+    addressController.text = widget.requestModel.goodsDonationDetails?.address ?? '';
+
     if (widget.formType == RequestFormType.EDIT) {
       getCategoryModels(widget.requestModel.categories).then((value) {
         selectedCategoryModels = value;
@@ -155,230 +170,248 @@ class _GoodsRequestState extends State<GoodsRequest> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
-      Text(
-        "${S.of(context).request_title}",
-        style: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-          fontFamily: 'Europa',
-          color: Colors.black,
-        ),
-      ),
-      TextFormField(
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        onChanged: (value) {
-          requestUtils.updateExitWithConfirmationValue(context, 1, value);
-        },
-        decoration: InputDecoration(
-          errorMaxLines: 2,
-          hintText: S.of(context).request_goods_title_hint,
-          hintStyle: requestUtils.hintTextStyle,
-        ),
-        textInputAction: TextInputAction.next,
-        keyboardType: TextInputType.text,
-        initialValue: widget.formType == RequestFormType.CREATE
-            ? requestUtils.getInitialTitle(widget.offer, widget.isOfferRequest)
-            : widget.requestModel.title,
-        textCapitalization: TextCapitalization.sentences,
-        validator: (value) {
-          if (value.isEmpty) {
-            return S.of(context).request_subject;
-          } else if (profanityDetector.isProfaneString(value)) {
-            return S.of(context).profanity_text_alert;
-          } else if (value.substring(0, 1).contains('_') &&
-              !AppConfig.testingEmails.contains(AppConfig.loggedInEmail)) {
-            return S.of(context).creating_request_with_underscore_not_allowed;
-          } else {
-            widget.requestModel.title = value;
-            return null;
-          }
-        },
-      ),
-      SizedBox(height: 30),
-      OfferDurationWidget(
-        title: "${S.of(context).request_duration} *",
-        startTime: widget.formType == RequestFormType.EDIT
-            ? getUpdatedDateTimeAccToUserTimezone(
-                timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
-                dateTime: DateTime.fromMillisecondsSinceEpoch(widget.requestModel.requestStart))
-            : null,
-        endTime: widget.formType == RequestFormType.EDIT
-            ? getUpdatedDateTimeAccToUserTimezone(
-                timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
-                dateTime: DateTime.fromMillisecondsSinceEpoch(widget.requestModel.requestEnd))
-            : null,
-      ),
-      SizedBox(height: 20),
-      Text(
-        "${S.of(context).request_description}",
-        style: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-          fontFamily: 'Europa',
-          color: Colors.black,
-        ),
-      ),
-      TextFormField(
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        onChanged: (value) {
-          if (value != null && value.length > 5) {
-            _debouncer.run(() async {
-              selectedCategoryModels = await getCategoriesFromApi(value);
-              categoryMode = S.of(context).suggested_categories;
-              setState(() {});
-            });
-          }
-          requestUtils.updateExitWithConfirmationValue(context, 9, value);
-        },
-        textInputAction: TextInputAction.next,
-        decoration: InputDecoration(
-          errorMaxLines: 2,
-          hintText: S.of(context).goods_request_data_hint_text,
-          hintStyle: requestUtils.hintTextStyle,
-        ),
-        initialValue: widget.formType == RequestFormType.CREATE
-            ? requestUtils.getInitialDescription(widget.offer, widget.isOfferRequest)
-            : widget.requestModel.description,
-        keyboardType: TextInputType.multiline,
-        maxLines: 1,
-        // ignore: missing_return
-        validator: (value) {
-          if (value.isEmpty) {
-            return S.of(context).validation_error_general_text;
-          }
-          if (profanityDetector.isProfaneString(value)) {
-            return S.of(context).profanity_text_alert;
-          }
-          widget.requestModel.description = value;
-        },
-      ),
-      SizedBox(height: 20),
-      CategoryWidget(
-        requestModel: widget.requestModel,
-        selectedCategoryModels: selectedCategoryModels,
-        categoryMode: categoryMode,
-      ),
-      SizedBox(height: 10),
-      AddImagesForRequest(
-        onLinksCreated: (List<String> imageUrls) {
-          widget.requestModel.imageUrls = imageUrls;
-        },
-        selectedList: widget.requestModel.imageUrls ?? [],
-      ),
-      SizedBox(height: 20),
-      addToProjectContainer(),
-      SizedBox(height: 20),
-      Text(
-        S.of(context).request_goods_description,
-        style: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-          fontFamily: 'Europa',
-          color: Colors.black,
-        ),
-      ),
-      //TODO NOTE: 2 different [GoodsDynamicSelection] for edit and create
-      GoodsDynamicSelection(
-        selectedGoods: widget.requestModel.goodsDonationDetails.requiredGoods,
-        onSelectedGoods: (goods) =>
-            {widget.requestModel.goodsDonationDetails.requiredGoods = goods},
-      ),
-      SizedBox(height: 20),
-      Text(
-        S.of(context).request_goods_address,
-        style: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-          fontFamily: 'Europa',
-          color: Colors.black,
-        ),
-      ),
-      Text(
-        S.of(context).request_goods_address_hint,
-        style: TextStyle(
-          fontSize: 12,
-          color: Colors.grey,
-        ),
-      ),
-      TextFormField(
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        initialValue: widget.requestModel.goodsDonationDetails?.address ?? '',
-        onChanged: (value) {
-          requestUtils.updateExitWithConfirmationValue(context, 2, value);
-        },
-        textInputAction: TextInputAction.next,
-        decoration: InputDecoration(
-          errorMaxLines: 2,
-          hintText: S.of(context).request_goods_address_inputhint,
-          hintStyle: requestUtils.hintTextStyle,
-        ),
-        keyboardType: TextInputType.multiline,
-        maxLines: 3,
-        validator: (value) {
-          if (value.isEmpty) {
-            return S.of(context).validation_error_general_text;
-          } else {
-            widget.requestModel.goodsDonationDetails.address = value;
-          }
-          return null;
-        },
-      ),
-      HideWidget(
-        hide: AppConfig.isTestCommunity,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          child: ConfigurationCheck(
-            actionType: 'create_virtual_request',
-            role: memberType(widget.timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
-            child: OpenScopeCheckBox(
-                infoType: InfoType.VirtualRequest,
-                isChecked: widget.requestModel.virtualRequest,
-                checkBoxTypeLabel: CheckBoxType.type_VirtualRequest,
-                onChangedCB: (bool val) {
-                  if (widget.requestModel.virtualRequest != val) {
-                    widget.requestModel.virtualRequest = val;
-
-                    if (!val) {
-                      widget.requestModel.public = false;
-                      isPublicCheckboxVisible = false;
-                    } else {
-                      isPublicCheckboxVisible = true;
-                    }
-
-                    setState(() {});
-                  }
-                }),
+    return DoseForm(
+      key: widget.formKey,
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      primary: true,
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
+        Text(
+          "${S.of(context).request_title}",
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Europa',
+            color: Colors.black,
           ),
         ),
-      ),
-      HideWidget(
-        hide: !isPublicCheckboxVisible ||
-            widget.requestModel.requestMode == RequestMode.PERSONAL_REQUEST ||
-            widget.timebankId == FlavorConfig.values.timebankId,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          child: TransactionsMatrixCheck(
-            comingFrom: widget.comingFrom,
-            upgradeDetails: AppConfig.upgradePlanBannerModel.public_to_sevax_global,
-            transaction_matrix_type: 'create_public_request',
+        DoseTextField(
+          isRequired: true,
+          textEditingController: titleController,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          onChanged: (value) {
+            requestUtils.updateExitWithConfirmationValue(context, 1, value);
+          },
+          decoration: InputDecoration(
+            errorMaxLines: 2,
+            hintText: S.of(context).request_goods_title_hint,
+            hintStyle: requestUtils.hintTextStyle,
+          ),
+          textInputAction: TextInputAction.next,
+          keyboardType: TextInputType.text,
+          textCapitalization: TextCapitalization.sentences,
+          validator: (value) {
+            if (value.isEmpty) {
+              return S.of(context).request_subject;
+            } else if (profanityDetector.isProfaneString(value)) {
+              return S.of(context).profanity_text_alert;
+            } else if (value.substring(0, 1).contains('_') &&
+                !AppConfig.testingEmails.contains(AppConfig.loggedInEmail)) {
+              return S.of(context).creating_request_with_underscore_not_allowed;
+            } else {
+              widget.requestModel.title = value;
+              return null;
+            }
+          },
+        ),
+        SizedBox(height: 30),
+        OfferDurationWidget(
+          title: "${S.of(context).request_duration} *",
+          startTime: widget.formType == RequestFormType.EDIT
+              ? getUpdatedDateTimeAccToUserTimezone(
+                  timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
+                  dateTime: DateTime.fromMillisecondsSinceEpoch(widget.requestModel.requestStart))
+              : null,
+          endTime: widget.formType == RequestFormType.EDIT
+              ? getUpdatedDateTimeAccToUserTimezone(
+                  timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
+                  dateTime: DateTime.fromMillisecondsSinceEpoch(widget.requestModel.requestEnd))
+              : null,
+        ),
+        SizedBox(height: 20),
+        Text(
+          "${S.of(context).request_description}",
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Europa',
+            color: Colors.black,
+          ),
+        ),
+        DoseTextField(
+          isRequired: true,
+          textEditingController: descriptionController,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          onChanged: (value) {
+            if (value != null && value.length > 5) {
+              _debouncer.run(() async {
+                selectedCategoryModels = await getCategoriesFromApi(value);
+                categoryMode = S.of(context).suggested_categories;
+                setState(() {});
+              });
+            }
+            requestUtils.updateExitWithConfirmationValue(context, 9, value);
+          },
+          textInputAction: TextInputAction.next,
+          decoration: InputDecoration(
+            errorMaxLines: 2,
+            hintText: S.of(context).goods_request_data_hint_text,
+            hintStyle: requestUtils.hintTextStyle,
+          ),
+
+          keyboardType: TextInputType.multiline,
+          maxLines: 1,
+          // ignore: missing_return
+          validator: (value) {
+            if (value.isEmpty) {
+              return S.of(context).validation_error_general_text;
+            }
+            if (profanityDetector.isProfaneString(value)) {
+              return S.of(context).profanity_text_alert;
+            }
+            widget.requestModel.description = value;
+          },
+        ),
+        SizedBox(height: 20),
+        CategoryWidget(
+          requestModel: widget.requestModel,
+          selectedCategoryModels: selectedCategoryModels,
+          categoryMode: categoryMode,
+        ),
+        SizedBox(height: 10),
+        AddImagesForRequest(
+          onLinksCreated: (List<String> imageUrls) {
+            widget.requestModel.imageUrls = imageUrls;
+          },
+          selectedList: widget.requestModel.imageUrls ?? [],
+        ),
+        SizedBox(height: 20),
+        addToProjectContainer(),
+        SizedBox(height: 20),
+        Text(
+          S.of(context).request_goods_description,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Europa',
+            color: Colors.black,
+          ),
+        ),
+        //TODO NOTE: 2 different [GoodsDynamicSelection] for edit and create
+        GoodsDynamicSelection(
+          selectedGoods: widget.requestModel.goodsDonationDetails.requiredGoods,
+          onSelectedGoods: (goods) =>
+              {widget.requestModel.goodsDonationDetails.requiredGoods = goods},
+        ),
+        SizedBox(height: 20),
+        Text(
+          S.of(context).request_goods_address,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Europa',
+            color: Colors.black,
+          ),
+        ),
+        Text(
+          S.of(context).request_goods_address_hint,
+          style: TextStyle(
+            fontSize: 12,
+            color: Colors.grey,
+          ),
+        ),
+        DoseTextField(
+          isRequired: true,
+          textEditingController: addressController,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          // initialValue: ,
+          onChanged: (value) {
+            requestUtils.updateExitWithConfirmationValue(context, 2, value);
+          },
+          textInputAction: TextInputAction.next,
+          decoration: InputDecoration(
+            errorMaxLines: 2,
+            hintText: S.of(context).request_goods_address_inputhint,
+            hintStyle: requestUtils.hintTextStyle,
+          ),
+          keyboardType: TextInputType.multiline,
+          maxLines: 3,
+          validator: (value) {
+            if (value.isEmpty) {
+              return S.of(context).validation_error_general_text;
+            } else {
+              widget.requestModel.goodsDonationDetails.address = value;
+            }
+            return null;
+          },
+        ),
+        HideWidget(
+          hide: AppConfig.isTestCommunity,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
             child: ConfigurationCheck(
-              actionType: 'create_public_request',
+              actionType: 'create_virtual_request',
               role: memberType(widget.timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
               child: OpenScopeCheckBox(
-                  infoType: InfoType.OpenScopeEvent,
-                  isChecked: widget.requestModel.public,
-                  checkBoxTypeLabel: CheckBoxType.type_Requests,
+                  infoType: InfoType.VirtualRequest,
+                  isChecked: widget.requestModel.virtualRequest,
+                  checkBoxTypeLabel: CheckBoxType.type_VirtualRequest,
                   onChangedCB: (bool val) {
-                    if (widget.requestModel.public != val) {
-                      widget.requestModel.public = val;
+                    if (widget.requestModel.virtualRequest != val) {
+                      widget.requestModel.virtualRequest = val;
+
+                      if (!val) {
+                        widget.requestModel.public = false;
+                        isPublicCheckboxVisible = false;
+                      } else {
+                        isPublicCheckboxVisible = true;
+                      }
+
                       setState(() {});
                     }
                   }),
             ),
           ),
         ),
-      ),
-    ]);
+        HideWidget(
+          hide: !isPublicCheckboxVisible ||
+              widget.requestModel.requestMode == RequestMode.PERSONAL_REQUEST ||
+              widget.timebankId == FlavorConfig.values.timebankId,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            child: TransactionsMatrixCheck(
+              comingFrom: widget.comingFrom,
+              upgradeDetails: AppConfig.upgradePlanBannerModel.public_to_sevax_global,
+              transaction_matrix_type: 'create_public_request',
+              child: ConfigurationCheck(
+                actionType: 'create_public_request',
+                role:
+                    memberType(widget.timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
+                child: OpenScopeCheckBox(
+                    infoType: InfoType.OpenScopeEvent,
+                    isChecked: widget.requestModel.public,
+                    checkBoxTypeLabel: CheckBoxType.type_Requests,
+                    onChangedCB: (bool val) {
+                      if (widget.requestModel.public != val) {
+                        widget.requestModel.public = val;
+                        setState(() {});
+                      }
+                    }),
+              ),
+            ),
+          ),
+        ),
+      ]),
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    titleController.dispose();
+    descriptionController.dispose();
+    addressController.dispose();
   }
 }
+
+

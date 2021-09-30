@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:doseform/doseform.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
@@ -31,7 +32,7 @@ class _ApproveLendingOfferState extends State<ApproveLendingOffer> {
   String additionalInstructionsText = '';
   String agreementId = '';
 
-  final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<DoseFormState>();
   final GlobalKey<ScaffoldState> _key = GlobalKey();
 
   @override
@@ -59,10 +60,12 @@ class _ApproveLendingOfferState extends State<ApproveLendingOffer> {
   }
 
   Widget get approveForm {
-    return Form(
-      key: _formKey,
-      child: Padding(
-        padding: const EdgeInsets.only(top: 10.0, left: 35, right: 35),
+    return Padding(
+      padding: const EdgeInsets.only(top: 10.0, left: 35, right: 35),
+      child: DoseForm(
+        shrinkWrap: true,
+        primary: true,
+        key: _formKey,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,

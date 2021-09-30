@@ -1,10 +1,12 @@
 import 'dart:developer';
 
 import 'package:connectivity/connectivity.dart';
+import 'package:doseform/doseform.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/ui/screens/offers/widgets/custom_dose_text_field.dart';
 import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/components/common_help_icon.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
@@ -474,7 +476,8 @@ class _IndividualOfferState extends State<IndividualOffer> {
           StreamBuilder<String>(
             stream: _bloc.availability,
             builder: (context, snapshot) {
-              return CustomTextField(
+              return CustomDoseTextField(
+                isRequired: true,
                 controller: _availabilityController,
                 currentNode: _availability,
                 value: snapshot.data,
@@ -489,7 +492,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
           StreamBuilder<String>(
             stream: _bloc.minimumCredits,
             builder: (context, snapshot) {
-              return CustomTextField(
+              return CustomDoseTextField(
                 controller: _minimumCreditsController,
                 currentNode: _minimumCredits,
                 value: snapshot.data,
@@ -560,8 +563,8 @@ class _IndividualOfferState extends State<IndividualOffer> {
         builder: (context, snapshot) {
           return Container(
               constraints: BoxConstraints(minHeight: 26, maxHeight: 30),
-              child: TextFormField(
-                focusNode: _availability,
+              child: DoseTextField(
+                currentNode: _availability,
                 onChanged: (String data) =>
                     _bloc.onDonationAmountChanged(int.tryParse(data)),
                 textCapitalization: TextCapitalization.sentences,
@@ -748,15 +751,15 @@ class _IndividualOfferState extends State<IndividualOffer> {
                     ),
                   ),
                 ),
-                inputFormatters: [
+                formatters: [
                   FilteringTextInputFormatter.allow(
                     (RegExp("[0-9]")),
                   ),
                 ],
                 keyboardType: TextInputType.number,
-                initialValue: widget.offerModel != null
-                    ? widget.offerModel.cashModel.targetAmount.toString()
-                    : '',
+                // initialValue: widget.offerModel != null
+                //     ? widget.offerModel.cashModel.targetAmount.toString()
+                //     : '',
                 onFieldSubmitted: (v) {
                   _availability.unfocus();
                   _bloc.onDonationAmountChanged(int.tryParse(v));
@@ -892,7 +895,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                           child: StreamBuilder<String>(
                             stream: _bloc.title,
                             builder: (context, snapshot) {
-                              return CustomTextField(
+                              return CustomDoseTextField(
                                 controller: _titleController,
                                 currentNode: _title,
                                 nextNode: _description,
@@ -930,7 +933,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                           child: StreamBuilder<String>(
                             stream: _bloc.offerDescription,
                             builder: (context, snapshot) {
-                              return CustomTextField(
+                              return CustomDoseTextField(
                                 controller: _descriptionController,
                                 currentNode: _description,
                                 nextNode: _availability,
@@ -1562,7 +1565,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
         StreamBuilder<String>(
           stream: _one_to_many_bloc.title,
           builder: (_, snapshot) {
-            return CustomTextField(
+            return CustomDoseTextField(
               controller: _one_to_many_titleController,
               currentNode: oneToManyFocusNodes[0],
               nextNode: oneToManyFocusNodes[1],
@@ -1607,7 +1610,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
         StreamBuilder<String>(
           stream: _one_to_many_bloc.preparationHours,
           builder: (_, snapshot) {
-            return CustomTextField(
+            return CustomDoseTextField(
               controller: _preparationController,
               currentNode: oneToManyFocusNodes[1],
               nextNode: oneToManyFocusNodes[2],
@@ -1624,7 +1627,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
         StreamBuilder<String>(
           stream: _one_to_many_bloc.classHours,
           builder: (_, snapshot) {
-            return CustomTextField(
+            return CustomDoseTextField(
               controller: _classHourController,
               currentNode: oneToManyFocusNodes[2],
               nextNode: oneToManyFocusNodes[3],
@@ -1641,7 +1644,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
         StreamBuilder<String>(
           stream: _one_to_many_bloc.classSize,
           builder: (_, snapshot) {
-            return CustomTextField(
+            return CustomDoseTextField(
               controller: _sizeClassController,
               currentNode: oneToManyFocusNodes[3],
               nextNode: oneToManyFocusNodes[4],
@@ -1658,7 +1661,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
         StreamBuilder<String>(
           stream: _one_to_many_bloc.classDescription,
           builder: (_, snapshot) {
-            return CustomTextField(
+            return CustomDoseTextField(
               controller: _classDescriptionController,
               currentNode: oneToManyFocusNodes[4],
               value: snapshot.data != null ? snapshot.data : null,
@@ -1820,7 +1823,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
         StreamBuilder<String>(
           stream: _bloc.offerDescription,
           builder: (context, snapshot) {
-            return CustomTextField(
+            return CustomDoseTextField(
               controller: _descriptionController,
               currentNode: _description,
               nextNode: _availability,

@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:doseform/doseform.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -76,7 +77,9 @@ class RequestCreateEditForm extends StatefulWidget {
 }
 
 class RequestCreateEditFormState extends State<RequestCreateEditForm> with WidgetsBindingObserver {
-  final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<DoseFormState>();
+
+  // final _formKey = GlobalKey<FormState>();
   final hoursTextFocus = FocusNode();
   final volunteersTextFocus = FocusNode();
   ProjectModel selectedProjectModel = null;
@@ -118,6 +121,7 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm> with Widge
   final profanityDetector = ProfanityDetector();
   CommunityModel communityModel;
   Location location = Location();
+
   @override
   void initState() {
     super.initState();
@@ -303,140 +307,142 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm> with Widge
                 } else if (snapshot.hasError) {
                   return Text(S.of(context).error_loading_data);
                 } else {
-                  return Form(
-                    key: _formKey,
-                    child: Container(
-                      padding: EdgeInsets.all(20.0),
-                      child: SingleChildScrollView(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              headerContainer(snapshot),
-                              RequestTypeWidgetCommunityRequests(),
-                              RequestTypeWidgetPersonalRequests(),
-                              SizedBox(height: 14),
-                              Builder(
-                                builder: (_) {
-                                  switch (requestModel.requestType) {
-                                    case RequestType.TIME:
-                                      return TimeRequest(
-                                        formType: widget.formType,
-                                        requestModel: requestModel,
-                                        offer: widget.offer,
-                                        isOfferRequest: widget.isOfferRequest,
-                                        isAdmin: isAdmin,
-                                        createEvent: createEvent,
-                                        instructorAdded: instructorAdded,
-                                        timebankModel: snapshot.data,
-                                        projectModelList: projectModelList,
-                                        projectId: widget.projectId,
-                                        selectedInstructorModel: selectedInstructorModel,
-                                        timebankId: widget.timebankId,
-                                        comingFrom: widget.comingFrom,
-                                        onCreateEventChanged: (value) => createEvent = value,
-                                      );
-                                      break;
-                                    case RequestType.CASH:
-                                      return CashRequest(
-                                        formType: widget.formType,
-                                        isOfferRequest: widget.isOfferRequest,
-                                        offer: widget.offer,
-                                        projectModelList: projectModelList,
-                                        requestModel: requestModel,
-                                        comingFrom: widget.comingFrom,
-                                        timebankId: widget.timebankId,
-                                        timebankModel: snapshot.data,
-                                        createEvent: createEvent,
-                                        onCreateEventChanged: (value) => createEvent = value,
-                                        projectId: widget.projectId,
-                                        instructorAdded: instructorAdded,
-                                      );
-                                      break;
-                                    case RequestType.GOODS:
-                                      return GoodsRequest(
-                                        formType: widget.formType,
-                                        requestModel: requestModel,
-                                        timebankModel: snapshot.data,
-                                        timebankId: widget.timebankId,
-                                        comingFrom: widget.comingFrom,
-                                        isOfferRequest: widget.isOfferRequest,
-                                        offer: widget.offer,
-                                        instructorAdded: instructorAdded,
-                                        projectId: widget.projectId,
-                                        createEvent: createEvent,
-                                        onCreateEventChanged: (value) => createEvent = value,
-                                        projectModelList: projectModelList,
-                                      );
-                                      break;
-                                    case RequestType.BORROW:
-                                      return BorrowRequest(
-                                        formType: widget.formType,
-                                        requestModel: requestModel,
-                                        offer: widget.offer,
-                                        createEvent: createEvent,
-                                        projectId: widget.projectId,
-                                        instructorAdded: instructorAdded,
-                                        onCreateEventChanged: (value) => createEvent = value,
-                                        projectModelList: projectModelList,
-                                        timebankModel: snapshot.data,
-                                        comingFrom: widget.comingFrom,
-                                        timebankId: widget.timebankId,
-                                        isOfferRequest: widget.isOfferRequest,
-                                      );
-                                      break;
-                                    case RequestType.ONE_TO_MANY_REQUEST:
-                                      return TimeRequest(
-                                        formType: widget.formType,
-                                        requestModel: requestModel,
-                                        offer: widget.offer,
-                                        isOfferRequest: widget.isOfferRequest,
-                                        isAdmin: isAdmin,
-                                        createEvent: createEvent,
-                                        instructorAdded: instructorAdded,
-                                        timebankModel: snapshot.data,
-                                        projectId: widget.projectId,
-                                        projectModelList: projectModelList,
-                                        selectedInstructorModel: selectedInstructorModel,
-                                        selectedInstructorModelChanged: (value) {
-                                          selectedInstructorModel = value;
-                                        },
-                                        timebankId: widget.timebankId,
-                                        comingFrom: widget.comingFrom,
-                                        onCreateEventChanged: (value) => createEvent = value,
-                                      );
-                                      break;
-                                    case RequestType.LENDING_OFFER:
-                                      return Container();
-                                      break;
-                                    case RequestType.ONE_TO_MANY_OFFER:
-                                      return Container();
-                                      break;
-                                  }
-                                  return Container();
-                                },
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 30.0),
-                                child: Center(
-                                  child: Container(
-                                    child: CustomElevatedButton(
-                                      onPressed: widget.formType == RequestFormType.EDIT
-                                          ? editRequest
-                                          : createRequest,
-                                      child: Text(
-                                        widget.formType == RequestFormType.EDIT
-                                            ? S.of(context).update_request.padLeft(10).padRight(10)
-                                            : S.of(context).create_request.padLeft(10).padRight(10),
-                                        style: Theme.of(context).primaryTextTheme.button,
-                                      ),
+                  return Container(
+                    padding: EdgeInsets.all(20.0),
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            headerContainer(snapshot),
+                            RequestTypeWidgetCommunityRequests(),
+                            RequestTypeWidgetPersonalRequests(),
+                            SizedBox(height: 14),
+                            Builder(
+                              builder: (_) {
+                                switch (requestModel.requestType) {
+                                  case RequestType.TIME:
+                                    return TimeRequest(
+                                      formKey: _formKey,
+                                      formType: widget.formType,
+                                      requestModel: requestModel,
+                                      offer: widget.offer,
+                                      isOfferRequest: widget.isOfferRequest,
+                                      isAdmin: isAdmin,
+                                      createEvent: createEvent,
+                                      instructorAdded: instructorAdded,
+                                      timebankModel: snapshot.data,
+                                      projectModelList: projectModelList,
+                                      projectId: widget.projectId,
+                                      selectedInstructorModel: selectedInstructorModel,
+                                      timebankId: widget.timebankId,
+                                      comingFrom: widget.comingFrom,
+                                      onCreateEventChanged: (value) => createEvent = value,
+                                    );
+                                    break;
+                                  case RequestType.CASH:
+                                    return CashRequest(
+                                      formKey: _formKey,
+                                      formType: widget.formType,
+                                      isOfferRequest: widget.isOfferRequest,
+                                      offer: widget.offer,
+                                      projectModelList: projectModelList,
+                                      requestModel: requestModel,
+                                      comingFrom: widget.comingFrom,
+                                      timebankId: widget.timebankId,
+                                      timebankModel: snapshot.data,
+                                      createEvent: createEvent,
+                                      onCreateEventChanged: (value) => createEvent = value,
+                                      projectId: widget.projectId,
+                                      instructorAdded: instructorAdded,
+                                    );
+                                    break;
+                                  case RequestType.GOODS:
+                                    return GoodsRequest(
+                                      formKey: _formKey,
+                                      formType: widget.formType,
+                                      requestModel: requestModel,
+                                      timebankModel: snapshot.data,
+                                      timebankId: widget.timebankId,
+                                      comingFrom: widget.comingFrom,
+                                      isOfferRequest: widget.isOfferRequest,
+                                      offer: widget.offer,
+                                      instructorAdded: instructorAdded,
+                                      projectId: widget.projectId,
+                                      createEvent: createEvent,
+                                      onCreateEventChanged: (value) => createEvent = value,
+                                      projectModelList: projectModelList,
+                                    );
+                                    break;
+                                  case RequestType.BORROW:
+                                    return BorrowRequest(
+                                      formKey: _formKey,
+                                      formType: widget.formType,
+                                      requestModel: requestModel,
+                                      offer: widget.offer,
+                                      createEvent: createEvent,
+                                      projectId: widget.projectId,
+                                      instructorAdded: instructorAdded,
+                                      onCreateEventChanged: (value) => createEvent = value,
+                                      projectModelList: projectModelList,
+                                      timebankModel: snapshot.data,
+                                      comingFrom: widget.comingFrom,
+                                      timebankId: widget.timebankId,
+                                      isOfferRequest: widget.isOfferRequest,
+                                    );
+                                    break;
+                                  case RequestType.ONE_TO_MANY_REQUEST:
+                                    return TimeRequest(
+                                      formKey: _formKey,
+                                      formType: widget.formType,
+                                      requestModel: requestModel,
+                                      offer: widget.offer,
+                                      isOfferRequest: widget.isOfferRequest,
+                                      isAdmin: isAdmin,
+                                      createEvent: createEvent,
+                                      instructorAdded: instructorAdded,
+                                      timebankModel: snapshot.data,
+                                      projectId: widget.projectId,
+                                      projectModelList: projectModelList,
+                                      selectedInstructorModel: selectedInstructorModel,
+                                      selectedInstructorModelChanged: (value) {
+                                        selectedInstructorModel = value;
+                                      },
+                                      timebankId: widget.timebankId,
+                                      comingFrom: widget.comingFrom,
+                                      onCreateEventChanged: (value) => createEvent = value,
+                                    );
+                                    break;
+                                  case RequestType.LENDING_OFFER:
+                                    return Container();
+                                    break;
+                                  case RequestType.ONE_TO_MANY_OFFER:
+                                    return Container();
+                                    break;
+                                }
+                                return Container();
+                              },
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 30.0),
+                              child: Center(
+                                child: Container(
+                                  child: CustomElevatedButton(
+                                    onPressed: widget.formType == RequestFormType.EDIT
+                                        ? editRequest
+                                        : createRequest,
+                                    child: Text(
+                                      widget.formType == RequestFormType.EDIT
+                                          ? S.of(context).update_request.padLeft(10).padRight(10)
+                                          : S.of(context).create_request.padLeft(10).padRight(10),
+                                      style: Theme.of(context).primaryTextTheme.button,
                                     ),
                                   ),
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
@@ -999,7 +1005,8 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm> with Widge
 
           //Sending only if instructor is not part of the community of the request
           await sendMailToInstructor(
-              senderEmail: 'noreply@sevaexchange.com', //requestModel.email,
+              senderEmail: 'noreply@sevaexchange.com',
+              //requestModel.email,
               receiverEmail: selectedInstructorModel.email,
               communityName: timebankModel.name,
               requestName: requestModel.title,
