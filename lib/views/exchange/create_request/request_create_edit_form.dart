@@ -801,7 +801,7 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm> with Widge
       }
 
       if (requestModel.requestType == RequestType.GOODS &&
-          (requestModel.goodsDonationDetails.requiredGoods.values == null ||
+          (requestModel.goodsDonationDetails.requiredGoods?.values == null ||
               requestModel.goodsDonationDetails.requiredGoods.isEmpty)) {
         requestUtils.showDialogForTitle(
             dialogTitle: S.of(context).goods_validation, context: context);

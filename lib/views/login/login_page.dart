@@ -55,6 +55,7 @@ class _LoginPageState extends State<LoginPage> {
   Color enabled = Colors.white.withAlpha(120);
   BuildContext parentContext;
   GeoFirePoint location;
+  TextEditingController emailController = TextEditingController(), passwordController = TextEditingController();
 
   void initState() {
     super.initState();
@@ -553,6 +554,7 @@ class _LoginPageState extends State<LoginPage> {
                   currentNode: emailFocus,
                   style: textStyle,
                   // cursorColor: Colors.black54,
+                    controller: emailController,
                   validator: _validateEmailId,
                   onSaved: _saveEmail,
                   onFieldSubmitted: (v) {
@@ -570,6 +572,7 @@ class _LoginPageState extends State<LoginPage> {
                   )
                 ),
                 DoseTextField(
+                  controller: passwordController,
                   isRequired: true,
                   currentNode: pwdFocus,
                   obscureText: _shouldObscurePassword,
@@ -588,8 +591,9 @@ class _LoginPageState extends State<LoginPage> {
                       labelStyle: textStyle,
                       suffix: GestureDetector(
                         onTap: () {
-                          _shouldObscurePassword = !_shouldObscurePassword;
-                          setState(() {});
+                          setState(() {
+                            _shouldObscurePassword = !_shouldObscurePassword;
+                          });
                         },
                         child: Icon(
                           _shouldObscurePassword ? Icons.visibility_off : Icons.visibility,

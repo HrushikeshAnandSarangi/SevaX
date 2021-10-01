@@ -294,7 +294,6 @@ class _GoodsRequestState extends State<GoodsRequest> {
             color: Colors.black,
           ),
         ),
-        //TODO NOTE: 2 different [GoodsDynamicSelection] for edit and create
         GoodsDynamicSelection(
           selectedGoods: widget.requestModel.goodsDonationDetails.requiredGoods,
           onSelectedGoods: (goods) =>
@@ -325,7 +324,7 @@ class _GoodsRequestState extends State<GoodsRequest> {
           onChanged: (value) {
             requestUtils.updateExitWithConfirmationValue(context, 2, value);
           },
-          textInputAction: TextInputAction.next,
+          textInputAction: TextInputAction.done,
           decoration: InputDecoration(
             errorMaxLines: 2,
             hintText: S.of(context).request_goods_address_inputhint,

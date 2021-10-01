@@ -698,13 +698,8 @@ class _TimeRequestState extends State<TimeRequest> {
                 ),
               ),
         DoseTextField(
-          currentNode: FocusNode(),
           isRequired: true,
           controller: volunteersController,
-          // initialValue: widget.formType == RequestFormType.EDIT
-          //     ? widget.requestModel.numberOfApprovals.toString()
-          //     : '',
-          // autovalidateMode: AutovalidateMode.onUserInteraction,
           onChanged: (v) {
             requestUtils.updateExitWithConfirmationValue(context, 11, v);
             if (v.isNotEmpty && int.parse(v) >= 0) {

@@ -73,6 +73,7 @@ class _BorrowRequestState extends State<BorrowRequest> {
   String categoryMode;
   TextEditingController titleController = TextEditingController(),
       descriptionController = TextEditingController();
+  List<FocusNode> focusNodeList = List.generate(2, (_) => FocusNode());
 
   Widget addToProjectContainer() {
     if (requestUtils.isFromRequest(projectId: widget.projectId)) {
@@ -201,6 +202,7 @@ class _BorrowRequestState extends State<BorrowRequest> {
         DoseTextField(
           isRequired: true,
           controller: titleController,
+          currentNode: focusNodeList[0],
           autovalidateMode: AutovalidateMode.onUserInteraction,
           onChanged: (value) {
             requestUtils.updateExitWithConfirmationValue(context, 1, value);
@@ -253,6 +255,7 @@ class _BorrowRequestState extends State<BorrowRequest> {
         DoseTextField(
           isRequired: true,
           controller: descriptionController,
+          currentNode: focusNodeList[1],
           autovalidateMode: AutovalidateMode.onUserInteraction,
           onChanged: (value) {
             if (value != null && value.length > 5) {

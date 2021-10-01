@@ -85,7 +85,7 @@ class _CashRequestState extends State<CashRequest> {
       descriptionController = TextEditingController(),
       targetDonationController = TextEditingController(),
       minimumAmountController = TextEditingController();
-
+  FocusNode _titleNode = FocusNode(), _descriptionNode = FocusNode(), _targetDonationNode = FocusNode(),minimumNode = FocusNode();
   Widget addToProjectContainer() {
     if (requestUtils.isFromRequest(projectId: widget.projectId)) {
       if (isAccessAvailable(widget.timebankModel, SevaCore.of(context).loggedInUser.sevaUserID) &&
@@ -210,6 +210,7 @@ class _CashRequestState extends State<CashRequest> {
         DoseTextField(
           isRequired: true,
           controller: titleController,
+          currentNode: _titleNode,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           onChanged: (value) {
             requestUtils.updateExitWithConfirmationValue(context, 1, value);
@@ -263,6 +264,7 @@ class _CashRequestState extends State<CashRequest> {
         DoseTextField(
           isRequired: true,
           controller: descriptionController,
+          currentNode: _descriptionNode,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           onChanged: (value) {
             if (value != null && value.length > 5) {
@@ -441,6 +443,7 @@ class _CashRequestState extends State<CashRequest> {
               ),
             ),
           ),
+          currentNode: _targetDonationNode,
           // inputFormatters: [FilteringTextInputFormatter.allow((RegExp("[0-9]")))],
           onChanged: (v) {
             requestUtils.updateExitWithConfirmationValue(context, 12, v);
@@ -478,6 +481,7 @@ class _CashRequestState extends State<CashRequest> {
         DoseTextField(
           isRequired: true,
           controller: minimumAmountController,
+          currentNode: minimumNode,
           decoration: InputDecoration(
             hintText: 'Ex: $currencyCode 10',
             hintStyle: requestUtils.hintTextStyle,
