@@ -132,10 +132,7 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
               child: Container(
                 padding: EdgeInsets.all(30.0),
                 child: DoseForm(
-                  primary: true,
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  key: _formKey,
+                  formKey: _formKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

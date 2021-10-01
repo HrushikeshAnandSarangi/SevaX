@@ -63,9 +63,7 @@ class _ApproveLendingOfferState extends State<ApproveLendingOffer> {
     return Padding(
       padding: const EdgeInsets.only(top: 10.0, left: 35, right: 35),
       child: DoseForm(
-        shrinkWrap: true,
-        primary: true,
-        key: _formKey,
+        formKey: _formKey,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,

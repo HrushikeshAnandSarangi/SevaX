@@ -44,7 +44,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final GlobalKey<DoseFormState> _formKey = GlobalKey();
   final GlobalKey<FormState> _formKeyDialog = GlobalKey();
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+  // final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   Alignment childAlignment = Alignment.center;
   bool _isLoading = false;
   final pwdFocus = FocusNode();
@@ -318,7 +318,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       resizeToAvoidBottomInset: true,
-      key: _scaffoldKey,
+      // key: _scaffoldKey,
       body: Stack(
         fit: StackFit.expand,
         children: <Widget>[
@@ -543,10 +543,7 @@ class _LoginPageState extends State<LoginPage> {
         child: Padding(
           padding: EdgeInsets.only(top: 8.0, bottom: 0.0),
           child: DoseForm(
-            key: _formKey,
-            physics: NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            primary: true,
+            formKey: _formKey,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -570,13 +567,14 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     labelText: S.of(context).email.toUpperCase(),
                     labelStyle: textStyle,
-                  ),
+                  )
                 ),
                 DoseTextField(
                   isRequired: true,
                   currentNode: pwdFocus,
                   obscureText: _shouldObscurePassword,
                   style: textStyle,
+                  maxLines: 1,
                   // cursorColor: Colors.black54,
                   validator: _validatePassword,
                   onSaved: _savePassword,

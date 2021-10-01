@@ -171,10 +171,7 @@ class _GoodsRequestState extends State<GoodsRequest> {
   @override
   Widget build(BuildContext context) {
     return DoseForm(
-      key: widget.formKey,
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      primary: true,
+      formKey: widget.formKey,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
         Text(
           "${S.of(context).request_title}",
@@ -187,7 +184,7 @@ class _GoodsRequestState extends State<GoodsRequest> {
         ),
         DoseTextField(
           isRequired: true,
-          textEditingController: titleController,
+          controller: titleController,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           onChanged: (value) {
             requestUtils.updateExitWithConfirmationValue(context, 1, value);
@@ -240,7 +237,7 @@ class _GoodsRequestState extends State<GoodsRequest> {
         ),
         DoseTextField(
           isRequired: true,
-          textEditingController: descriptionController,
+          controller: descriptionController,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           onChanged: (value) {
             if (value != null && value.length > 5) {
@@ -322,7 +319,7 @@ class _GoodsRequestState extends State<GoodsRequest> {
         ),
         DoseTextField(
           isRequired: true,
-          textEditingController: addressController,
+          controller: addressController,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           // initialValue: ,
           onChanged: (value) {

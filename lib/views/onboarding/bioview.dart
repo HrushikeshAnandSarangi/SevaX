@@ -79,10 +79,7 @@ class _BioViewState extends State<BioView> {
                       ),
                       SizedBox(height: 20),
                       DoseForm(
-                        physics: NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        primary: true,
-                        key: _formKey,
+                        formKey: _formKey,
                         child: Container(
                           height: 200,
                           child: DoseTextField(

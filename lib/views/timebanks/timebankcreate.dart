@@ -241,10 +241,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
   Widget build(BuildContext context) {
     memberAssignment = "+ ${S.of(context).add_members}";
     return DoseForm(
-      key: _formKey,
-      primary: true,
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
+      formKey: _formKey,
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
         child: SingleChildScrollView(child: FadeAnimation(1.4, createSevaX)),
@@ -298,7 +295,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           onFieldSubmitted: (v) {
             FocusScope.of(context).requestFocus(aboutNode);
           },
-          textEditingController: searchTextController,
+          controller: searchTextController,
           onChanged: (value) {
             ExitWithConfirmation.of(context).fieldValues[1] = value;
           },

@@ -391,10 +391,7 @@ class _RegisterPageState extends State<RegisterPage>
 
   Widget get _formFields {
     return DoseForm(
-      key: _formKey,
-      primary: true,
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
+      formKey: _formKey,
       child: Column(
         children: <Widget>[
           getFormField(

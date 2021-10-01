@@ -123,12 +123,9 @@ class _AddNewRequestCategoryState extends State<AddNewRequestCategory> {
                             onTap: () {},
                             // leading: Icon(Icons.add_circle_outline, size: 16),
                             title: DoseForm(
-                              physics: NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              primary: true,
                               // autovalidateMode:
                               //     AutovalidateMode.onUserInteraction,
-                              key: formKey,
+                              formKey: formKey,
                               child: Container(
                                 height:
                                     MediaQuery.of(context).size.width * 0.08,
@@ -136,7 +133,7 @@ class _AddNewRequestCategoryState extends State<AddNewRequestCategory> {
                                   isRequired: true,
                                   autovalidateMode:
                                       AutovalidateMode.onUserInteraction,
-                                  textEditingController: searchTextController,
+                                  controller: searchTextController,
                                   onChanged: (val) {
                                     subcategorytitle = val;
                                     _subcategorytitleStream.add(val);

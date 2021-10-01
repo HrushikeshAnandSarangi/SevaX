@@ -272,7 +272,7 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
   Widget build(BuildContext context) {
     this.parentContext = context;
 
-    return DoseForm(primary: true,shrinkWrap: true, key: _formKey, child: createSevaX);
+    return DoseForm( formKey: _formKey, child: createSevaX);
   }
 
   void moveToTop() {
@@ -380,7 +380,7 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
                           onFieldSubmitted: (v) {
                             FocusScope.of(context).requestFocus(aboutFocus);
                           },
-                          textEditingController: searchTextController,
+                          controller: searchTextController,
                           onChanged: (value) {
                             updateExitWithConfirmationValue(context, 1, value);
                           },
@@ -423,7 +423,7 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
                         headingText('${S.of(context).about} *'),
                         DoseTextField(
                           isRequired: true,
-                          textEditingController: descriptionTextController,
+                          controller: descriptionTextController,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           currentNode: aboutFocus,
                           decoration: InputDecoration(
@@ -1145,7 +1145,7 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
                                         Navigator.pop(dialogContext);
                                         UserModel user = SevaCore.of(context).loggedInUser;
                                         //TODO reset
-                                        // _formKey.currentState.reset();
+                                        _formKey.currentState.reset();
                                         Navigator.of(context).pushAndRemoveUntil(
                                           MaterialPageRoute(
                                             builder: (context) => SevaCore(
@@ -1216,7 +1216,7 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
                                       Navigator.pop(dialogContext);
                                     }
                                     //TODO reset
-                                    // _formKey.currentState.reset();
+                                    _formKey.currentState.reset();
                                     if (widget.isFromFind) {
                                       Navigator.of(context).pop();
                                     } else {
@@ -1870,10 +1870,7 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
       margin: const EdgeInsets.only(top: 15.0),
       color: Colors.white,
       child: DoseForm(
-        primary: true,
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        key: _billingInformationKey,
+        formKey: _billingInformationKey,
         child: Column(
           children: [
             StreamBuilder(

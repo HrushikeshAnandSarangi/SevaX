@@ -192,10 +192,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
               padding:
                     const EdgeInsets.only(top: 15.0, left: 30, right: 30),
               child: DoseForm(
-                shrinkWrap: true,
-                primary: true,
-                physics: NeverScrollableScrollPhysics(),
-                key: _formKey,
+                formKey: _formKey,
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
@@ -542,7 +539,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                               setState(() {});
                             },
                             // initialValue: specificConditions,
-                            textEditingController: specificConditionsController,
+                            controller: specificConditionsController,
                             decoration: InputDecoration(
                               hintText: widget.placeOrItem ==
                                       LendingType.PLACE.readable
@@ -703,7 +700,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
           ),
         ),
         DoseTextField(
-          textEditingController: documentNameController,
+          controller: documentNameController,
           onFieldSubmitted: (v) {
             FocusScope.of(context).unfocus();
           },

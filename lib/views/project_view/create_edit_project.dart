@@ -210,18 +210,12 @@ class _CreateEditProjectState extends State<CreateEditProject> {
         ),
         body: widget.isCreateProject
             ? DoseForm(
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                primary: true,
-                key: _formKey,
+          formKey: _formKey,
                 child: createProjectForm,
               )
             : isDataLoaded
                 ? DoseForm(
-                    physics: NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    primary: true,
-                    key: _formKey,
+          formKey: _formKey,
                     child: createProjectForm,
                   )
                 : LoadingIndicator(),
@@ -870,7 +864,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                                 Navigator.pop(dialogContext);
                               }
                               //TODO rest
-                              // _formKey.currentState.reset();
+                              _formKey.currentState.reset();
 
                               KloudlessWidgetManager<CreateMode, ProjectModel>().syncCalendar(
                                 context: context,
@@ -992,7 +986,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                                 Navigator.pop(dialogContext);
                               }
                               //TODO reset
-                              // _formKey.currentState.reset();
+                              _formKey.currentState.reset();
                               Navigator.of(context).pop();
                               Navigator.of(context).pop();
                             }

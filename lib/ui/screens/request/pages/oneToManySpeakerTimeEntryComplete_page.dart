@@ -84,10 +84,7 @@ class OneToManySpeakerTimeEntryCompleteState extends State<OneToManySpeakerTimeE
                   Container(
                     width: constraints.maxWidth * 0.9,
                     child: DoseForm(
-                      primary: true,
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      key: _formKey,
+                      formKey: _formKey,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
@@ -118,7 +115,7 @@ class OneToManySpeakerTimeEntryCompleteState extends State<OneToManySpeakerTimeE
                                     children: <Widget>[
                                       DoseTextField(
                                         isRequired: true,
-                                        textEditingController: selectedHoursPrepTimeController,
+                                        controller: selectedHoursPrepTimeController,
                                         keyboardType: TextInputType.number,
                                         formatters: [FilteringTextInputFormatter.digitsOnly],
                                         decoration: InputDecoration(

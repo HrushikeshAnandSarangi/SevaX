@@ -478,16 +478,13 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
       margin: EdgeInsets.all(10),
       child: SingleChildScrollView(
         child: DoseForm(
-          physics: NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          primary: true,
-          key: _formKey,
+          formKey: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               DoseTextField(
                 textCapitalization: TextCapitalization.sentences,
-                textEditingController: myCommentsController,
+                controller: myCommentsController,
                 style: TextStyle(fontSize: 14.0, color: Colors.black87),
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 onChanged: (value) {},

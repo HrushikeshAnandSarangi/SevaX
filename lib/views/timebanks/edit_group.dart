@@ -166,10 +166,7 @@ class EditGroupFormState extends State<EditGroupForm> {
   Widget build(BuildContext context) {
     memberAssignment = "+ ${S.of(context).add_members}";
     return DoseForm(
-      key: _formKey,
-      physics: NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      primary: true,
+      formKey: _formKey,
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
         child: SingleChildScrollView(child: createSevaX
@@ -217,7 +214,7 @@ class EditGroupFormState extends State<EditGroupForm> {
       DoseTextField(
         isRequired: true,
         textInputAction: TextInputAction.done,
-        textEditingController: searchTextController,
+        controller: searchTextController,
         autovalidateMode: AutovalidateMode.onUserInteraction,
         decoration: InputDecoration(
           errorMaxLines: 2,
@@ -241,7 +238,7 @@ class EditGroupFormState extends State<EditGroupForm> {
       DoseTextField(
         isRequired: true,
         autovalidateMode: AutovalidateMode.onUserInteraction,
-        textEditingController: aboutController,
+        controller: aboutController,
         // initialValue: widget.timebankModel.missionStatement ?? "",
         decoration: InputDecoration(
           errorMaxLines: 2,

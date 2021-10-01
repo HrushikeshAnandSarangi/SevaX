@@ -196,10 +196,7 @@ class _CashRequestState extends State<CashRequest> {
   @override
   Widget build(BuildContext context) {
     return DoseForm(
-      key: widget.formKey,
-      physics: NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      primary: true,
+      formKey: widget.formKey,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
         Text(
           "${S.of(context).request_title}",
@@ -212,7 +209,7 @@ class _CashRequestState extends State<CashRequest> {
         ),
         DoseTextField(
           isRequired: true,
-          textEditingController: titleController,
+          controller: titleController,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           onChanged: (value) {
             requestUtils.updateExitWithConfirmationValue(context, 1, value);
@@ -265,7 +262,7 @@ class _CashRequestState extends State<CashRequest> {
         ),
         DoseTextField(
           isRequired: true,
-          textEditingController: descriptionController,
+          controller: descriptionController,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           onChanged: (value) {
             if (value != null && value.length > 5) {
@@ -321,7 +318,7 @@ class _CashRequestState extends State<CashRequest> {
         ),
         DoseTextField(
           isRequired: true,
-          textEditingController: targetDonationController,
+          controller: targetDonationController,
           decoration: InputDecoration(
             hintText: 'Ex: $currencyCode 100',
             hintStyle: requestUtils.hintTextStyle,
@@ -480,7 +477,7 @@ class _CashRequestState extends State<CashRequest> {
         ),
         DoseTextField(
           isRequired: true,
-          textEditingController: minimumAmountController,
+          controller: minimumAmountController,
           decoration: InputDecoration(
             hintText: 'Ex: $currencyCode 10',
             hintStyle: requestUtils.hintTextStyle,

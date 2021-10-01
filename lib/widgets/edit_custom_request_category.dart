@@ -118,16 +118,13 @@ class _EditRequestCustomCategoryState extends State<EditRequestCustomCategory> {
                     leading: Icon(Icons.add_circle_outline, size: 16),
                     title: DoseForm(
                       // autovalidateMode: AutovalidateMode.onUserInteraction,
-                      key: formKey,
-                      primary: true,
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
+                      formKey: formKey,
                       child: Container(
                         height: MediaQuery.of(context).size.width * 0.1,
                         child: DoseTextField(
                           isRequired: true,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
-                          textEditingController: subcategoryController,
+                          controller: subcategoryController,
                           onChanged: (val) {
                             subcategorytitle = val;
                             _subcategorytitleStream.add(val);

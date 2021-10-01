@@ -171,10 +171,7 @@ class _DonationViewState extends State<DonationView> {
           centerTitle: true,
         ),
         body: DoseForm(
-          primary: true,
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          key: _formKey,
+          formKey: _formKey,
           child: Column(
             children: [
               Container(

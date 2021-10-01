@@ -185,10 +185,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     textStyle = Theme.of(context).textTheme.headline6;
     // Build a Form widget using the formKey we created above
     return DoseForm(
-      key: formKey,
-      physics: NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      primary: true,
+      formKey: formKey,
       child: Column(
         children: [
           FadeAnimation(
@@ -216,7 +213,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                                     isRequired: true,
                                     textCapitalization:
                                         TextCapitalization.sentences,
-                                    textEditingController: subheadingController,
+                                    controller: subheadingController,
                                     textAlign: TextAlign.start,
                                     decoration: InputDecoration(
                                       errorMaxLines: 2,

@@ -157,10 +157,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     textStyle = Theme.of(context).textTheme.headline6;
     // Build a Form widget using the formKey we created above
     return DoseForm(
-        key: formKey,
-        primary: true,
-        shrinkWrap: true,
-        physics: prefix0.NeverScrollableScrollPhysics(),
+        formKey: formKey,
         child: prefix0.Column(
           children: [
             Container(
@@ -183,7 +180,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                               padding: EdgeInsets.only(bottom: 0.0),
                               child: DoseTextField(
                                 isRequired: true,
-                                textEditingController: subheadingController,
+                                controller: subheadingController,
                                 // initialValue: newsObject.subheading,
                                 textInputAction: TextInputAction.newline,
                                 // autofocus: true,

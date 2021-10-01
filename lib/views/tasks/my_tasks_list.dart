@@ -626,10 +626,7 @@ class TaskCardViewState extends State<TaskCardView> {
                             requestModel.selectedInstructor.sevaUserID ==
                                 SevaCore.of(context).loggedInUser.sevaUserID)
                         ? DoseForm(
-                            physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            primary: true,
-                            key: _formKey,
+                      formKey: _formKey,
                             child: Column(
                               children: [
                                 Row(
@@ -651,7 +648,7 @@ class TaskCardViewState extends State<TaskCardView> {
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: <Widget>[
                                           DoseTextField(
-                                            textEditingController: selectedHoursPrepTimeController,
+                                            controller: selectedHoursPrepTimeController,
                                             keyboardType: TextInputType.number,
                                             formatters: [
                                               BlacklistingTextInputFormatter(
@@ -737,7 +734,7 @@ class TaskCardViewState extends State<TaskCardView> {
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: <Widget>[
                                           DoseTextField(
-                                            textEditingController:
+                                            controller:
                                                 selectedHoursDeliveryTimeController,
                                             keyboardType: TextInputType.number,
                                             formatters: [
@@ -809,10 +806,7 @@ class TaskCardViewState extends State<TaskCardView> {
                             ),
                           )
                         : DoseForm(
-                            primary: true,
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            key: _formKey,
+                      formKey: _formKey,
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: <Widget>[
@@ -822,7 +816,7 @@ class TaskCardViewState extends State<TaskCardView> {
                                     children: <Widget>[
                                       DoseTextField(
                                         isRequired: true,
-                                        textEditingController: hoursController,
+                                        controller: hoursController,
                                         keyboardType: TextInputType.number,
                                         formatters: [
                                           BlacklistingTextInputFormatter(

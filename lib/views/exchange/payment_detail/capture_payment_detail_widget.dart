@@ -211,7 +211,7 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
       DoseTextField(
         // key: UniqueKey(),
         isRequired: true,
-        textEditingController: bankNameController,
+        controller: bankNameController,
         formatters: [FilteringTextInputFormatter.allow(RegExp(r'^\S.*$'))],
         autovalidateMode: AutovalidateMode.onUserInteraction,
         onChanged: (value) {
@@ -245,7 +245,7 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
       ),
       DoseTextField(
         isRequired: true,
-        textEditingController: bankAddressController,
+        controller: bankAddressController,
         // key: UniqueKey(),
         formatters: [FilteringTextInputFormatter.allow(RegExp(r'^\S.*$'))],
         autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -280,7 +280,7 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
       ),
       DoseTextField(
         isRequired: true,
-        textEditingController: routingController,
+        controller: routingController,
         // key: UniqueKey(),
         maxLength: 30,
         formatters: _formatters,
@@ -316,7 +316,7 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
       ),
       DoseTextField(
         isRequired: true,
-        textEditingController: accountController,
+        controller: accountController,
         // key: UniqueKey(),
         maxLength: 30,
         formatters: _formatters,
@@ -347,7 +347,7 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
       DoseTextField(
         isRequired: true,
-        textEditingController: zelleController,
+        controller: zelleController,
         // key: UniqueKey(),
         formatters: _formatters,
         autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -384,7 +384,7 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
       DoseTextField(
         isRequired: true,
-        textEditingController: paypalController,
+        controller: paypalController,
         // key: UniqueKey(),
         formatters: _formatters,
         autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -428,7 +428,7 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
       DoseTextField(
         isRequired: true,
-        textEditingController: venmoController,
+        controller: venmoController,
         // key: UniqueKey(),
         formatters: _formatters,
         autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -469,7 +469,7 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
       DoseTextField(
         isRequired: true,
-        textEditingController: swiftController,
+        controller: swiftController,
         // key: UniqueKey(),
         formatters: _formatters,
         autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -523,7 +523,7 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
       ),
       DoseTextField(
         isRequired: true,
-        textEditingController: othersController,
+        controller: othersController,
         // key: UniqueKey(),
         formatters: [FilteringTextInputFormatter.allow(RegExp(r'^\S.*$'))],
         autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -574,7 +574,7 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
       ),
       DoseTextField(
         isRequired: true,
-        textEditingController: otherDetailController,
+        controller: otherDetailController,
         // key: UniqueKey(),
         formatters: [FilteringTextInputFormatter.allow(RegExp(r'^\S.*$'))],
         autovalidateMode: AutovalidateMode.onUserInteraction,

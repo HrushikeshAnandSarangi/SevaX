@@ -193,10 +193,7 @@ class _TimeRequestState extends State<TimeRequest> {
   @override
   Widget build(BuildContext context) {
     return DoseForm(
-      key: widget.formKey,
-      shrinkWrap: true,
-      primary: true,
-      physics: NeverScrollableScrollPhysics(),
+      formKey: widget.formKey,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
         Text(
           "${S.of(context).request_title}",
@@ -209,7 +206,7 @@ class _TimeRequestState extends State<TimeRequest> {
         ),
         DoseTextField(
           isRequired: true,
-          textEditingController: titleController,
+          controller: titleController,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           onChanged: (value) {
             requestUtils.updateExitWithConfirmationValue(context, 1, value);
@@ -549,7 +546,7 @@ class _TimeRequestState extends State<TimeRequest> {
         ),
         DoseTextField(
           isRequired: true,
-          textEditingController: descriptionController,
+          controller: descriptionController,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           onChanged: (value) {
             if (value != null && value.length > 5) {
@@ -636,7 +633,7 @@ class _TimeRequestState extends State<TimeRequest> {
             Expanded(
               child: DoseTextField(
                 // isRequired: true,
-                textEditingController: creditsController,
+                controller: creditsController,
                 onChanged: (v) {
                   requestUtils.updateExitWithConfirmationValue(context, 10, v);
                   if (v.isNotEmpty && int.parse(v) >= 0) {
@@ -703,7 +700,7 @@ class _TimeRequestState extends State<TimeRequest> {
         DoseTextField(
           currentNode: FocusNode(),
           isRequired: true,
-          textEditingController: volunteersController,
+          controller: volunteersController,
           // initialValue: widget.formType == RequestFormType.EDIT
           //     ? widget.requestModel.numberOfApprovals.toString()
           //     : '',

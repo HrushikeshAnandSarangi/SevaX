@@ -79,7 +79,7 @@ class CustomDoseTextField extends DoseTextField {
         DoseTextField(
           isRequired: isRequired,
           currentNode: currentNode,
-          textEditingController: controller,
+          controller: controller,
           onChanged: (value) {
             onChanged?.call(value);
             if (ExitWithConfirmation.of(context)?.fieldValues != null) {

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:intl/intl.dart';
@@ -20,6 +22,7 @@ import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/create_request/createrequest.dart';
@@ -297,6 +300,7 @@ class RequestListBuilder extends StatelessWidget {
     return StreamBuilder<RequestLists>(
       stream: Provider.of<RequestBloc>(context).requests,
       builder: (context, AsyncSnapshot<RequestLists> snapshot) {
+        logger.d("@@ ${(snapshot.data.communityRequests[0].id)}");
         if (snapshot.hasError) {
           return Center(
             child: Text('${S.of(context).general_stream_error}'),
