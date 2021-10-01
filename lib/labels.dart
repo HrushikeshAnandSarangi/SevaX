@@ -1417,10 +1417,10 @@ class L {
 //       "The Borrower will provide a refundable deposit as defined within the agreement with the Lender. The criteria established regarding the condition of the item(s) or property upon return will also be defined in the agreement.";
 //   String get agreement_maintain_and_clean =>
 //       "All item(s) or property borrowed must be returned in a condition similar to the condition it is received by the Borrower, unless otherwise noted in the agreement. Specific details related to the item(s) or property and the Lender's requirements upon return should be noted in the contract and agreed upon prior to the Borrower's receipt.";
-// //Above Finalised by Anitha 
-//   String get estimated_value_item_hint => "Ex: \$100"; 
-//   String get estimated_value_place_hint => "Ex: \$2000"; 
-//   String get place_agreement_name_hint_place => "Ex: Room in New York"; 
+// //Above Finalised by Anitha
+//   String get estimated_value_item_hint => "Ex: \$100";
+//   String get estimated_value_place_hint => "Ex: \$2000";
+//   String get place_agreement_name_hint_place => "Ex: Room in New York";
 //   String get place_agreement_name_hint_item =>
 //       "Ex: Lawnmower for the weekend"; //done
 //   String get seva_exchange_text_new =>
@@ -1432,8 +1432,7 @@ class L {
 //       'You returned item(s). Tap to leave a feedback.';
 //   String get cannot_approve_multiple_borrowers_item =>
 //       "You cannot approve multiple borrowers at once. Currently the item(s) are with **name. Once returned you can approve this request.";
-//   String get select_a_item_lending =>
-//       "Select list of related item(s) for Borrow*";
+
 //   String get items_validation =>
 //       "You have not selected any Item(s). Please select one or more before creating the Borrow request.";
 //   String get accept_borrow_agreement_item_title =>
@@ -1479,5 +1478,9 @@ class L {
 //   String get approve_borrow_terms_acknowledgement_text2 =>
 //       "I acknowledge that this Borrower can use the item(s) on the mentioned dates";
 //   String get lending_offer_title_hint_place => "Ex: Offering to lend a room.";
+  
+//! Label Updates
+  String get select_a_item_lending =>
+      "Select list of related item(s) to Borrow*";
 
 }
