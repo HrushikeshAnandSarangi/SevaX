@@ -3,6 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
 
+/// Creates a [DoseTextField] that contains a [heading].
+///
+///  [initialValue] must be null since [TextEditingController] is being used implicitly
+///
+///
 class CustomDoseTextField extends DoseTextField {
   final bool isRequired;
   final String heading;
@@ -26,28 +31,28 @@ class CustomDoseTextField extends DoseTextField {
   final void Function(String) onSaved;
   final InputDecoration decoration;
 
-  CustomDoseTextField({
-    this.isRequired,
-    this.heading,
-    this.onChanged,
-    this.hint,
-    this.maxLength,
-    this.error,
-    this.keyboardType = TextInputType.text,
-    this.value,
-    this.currentNode,
-    this.nextNode,
-    this.formatters,
-    this.validator,
-    this.autovalidate,
-    this.textInputAction,
-    this.textCapitalization,
-    this.maxLines = 1,
-    this.minLines = 1,
-    this.errorMaxLines,
-    this.onSaved,
-    this.controller,
-    this.decoration});
+  CustomDoseTextField(
+      {this.isRequired,
+      this.heading,
+      this.onChanged,
+      this.hint,
+      this.maxLength,
+      this.error,
+      this.keyboardType = TextInputType.text,
+      this.value,
+      this.currentNode,
+      this.nextNode,
+      this.formatters,
+      this.validator,
+      this.autovalidate,
+      this.textInputAction,
+      this.textCapitalization,
+      this.maxLines = 1,
+      this.minLines = 1,
+      this.errorMaxLines,
+      this.onSaved,
+      this.controller,
+      this.decoration});
 
   final TextStyle titleStyle = TextStyle(
     fontSize: 16,
@@ -67,9 +72,9 @@ class CustomDoseTextField extends DoseTextField {
       children: <Widget>[
         heading != null
             ? Text(
-          heading,
-          style: titleStyle,
-        )
+                heading,
+                style: titleStyle,
+              )
             : Container(),
         DoseTextField(
           isRequired: isRequired,
@@ -78,13 +83,11 @@ class CustomDoseTextField extends DoseTextField {
           onChanged: (value) {
             onChanged?.call(value);
             if (ExitWithConfirmation.of(context)?.fieldValues != null) {
-              ExitWithConfirmation.of(context)?.fieldValues[context.hashCode] =
-                  value;
+              ExitWithConfirmation.of(context)?.fieldValues[context.hashCode] = value;
             }
           },
           formatters: formatters,
-          textCapitalization:
-          textCapitalization ?? TextCapitalization.sentences,
+          textCapitalization: textCapitalization ?? TextCapitalization.sentences,
           decoration: decoration ??
               InputDecoration(
                 hintText: hint ?? '',
@@ -93,14 +96,11 @@ class CustomDoseTextField extends DoseTextField {
               ),
           maxLength: maxLength,
           keyboardType: keyboardType,
-          textInputAction:
-          nextNode != null ? TextInputAction.next : TextInputAction.done,
+          textInputAction: nextNode != null ? TextInputAction.next : TextInputAction.done,
           style: subTitleStyle,
           onSaved: (v) {
             currentNode.unfocus();
-            nextNode != null
-                ? nextNode.requestFocus()
-                : FocusScope.of(context).unfocus();
+            nextNode != null ? nextNode.requestFocus() : FocusScope.of(context).unfocus();
           },
           validator: validator,
           // onSaved: onSaved,
