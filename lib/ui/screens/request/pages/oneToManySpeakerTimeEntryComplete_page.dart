@@ -51,6 +51,7 @@ class OneToManySpeakerTimeEntryCompleteState extends State<OneToManySpeakerTimeE
   TextEditingController hoursController = TextEditingController();
   TextEditingController selectedHoursPrepTimeController = TextEditingController();
   TextEditingController selectedHoursDeliveryTimeController = TextEditingController();
+  FocusNode HoursPrepTimeNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -117,6 +118,7 @@ class OneToManySpeakerTimeEntryCompleteState extends State<OneToManySpeakerTimeE
                                         isRequired: true,
                                         controller: selectedHoursPrepTimeController,
                                         keyboardType: TextInputType.number,
+                                        currentNode: HoursPrepTimeNode,
                                         formatters: [FilteringTextInputFormatter.digitsOnly],
                                         decoration: InputDecoration(
                                           //errorText: S.of(context).enter_hours,

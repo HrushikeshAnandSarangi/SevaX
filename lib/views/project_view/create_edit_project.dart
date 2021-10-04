@@ -97,6 +97,12 @@ class _CreateEditProjectState extends State<CreateEditProject> {
   bool wasCreatedFromRecurring = false;
 
   final _debouncer = Debouncer(milliseconds: 400);
+  TextEditingController projectNameController = TextEditingController(),
+      projectStatementController = TextEditingController(),
+      registrationLinkController = TextEditingController(),
+      emailIdController = TextEditingController();
+
+  FocusNode projectFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -117,6 +123,21 @@ class _CreateEditProjectState extends State<CreateEditProject> {
         projectModel.public = false;
       });
     }
+    projectNameController.text = widget.isCreateProject
+        ? widget.projectTemplateModel != null
+            ? widget.projectTemplateModel.name
+            : ""
+        : projectTemplateModel.name ?? '';
+    projectStatementController.text = widget.isCreateProject
+        ? widget.projectTemplateModel != null
+            ? widget.projectTemplateModel.description
+            : ""
+        : projectModel.description ?? "";
+    registrationLinkController.text = widget.isCreateProject
+        ? widget.projectTemplateModel != null
+            ? widget.projectTemplateModel.registrationLink
+            : ""
+        : projectModel.registrationLink ?? "";
 
     getCommunity();
     setState(() {});
@@ -186,6 +207,11 @@ class _CreateEditProjectState extends State<CreateEditProject> {
       endDate = getUpdatedDateTimeAccToUserTimezone(
           timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
           dateTime: DateTime.fromMillisecondsSinceEpoch(projectModel.endTime));
+      emailIdController.text = widget.isCreateProject
+          ? widget.projectTemplateModel != null
+              ? widget.projectTemplateModel.emailId ?? SevaCore.of(context).loggedInUser.email
+              : projectModel.emailId ?? SevaCore.of(context).loggedInUser.email
+          : SevaCore.of(context).loggedInUser.email;
     }
 
     return ExitWithConfirmation(
@@ -210,12 +236,12 @@ class _CreateEditProjectState extends State<CreateEditProject> {
         ),
         body: widget.isCreateProject
             ? DoseForm(
-          formKey: _formKey,
+                formKey: _formKey,
                 child: createProjectForm,
               )
             : isDataLoaded
                 ? DoseForm(
-          formKey: _formKey,
+                    formKey: _formKey,
                     child: createProjectForm,
                   )
                 : LoadingIndicator(),
@@ -353,6 +379,8 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   DoseTextField(
                     isRequired: true,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
+                    controller: projectNameController,
+                    currentNode: projectFocusNode,
                     onChanged: (value) {
                       ExitWithConfirmation.of(context).fieldValues[1] = value;
                       projectModel.name = value;
@@ -361,11 +389,6 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                     // inputFormatters: <TextInputFormatter>[
                     //   WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9_ ]*"))
                     // ],
-                    initialValue: widget.isCreateProject
-                        ? widget.projectTemplateModel != null
-                            ? widget.projectTemplateModel.name
-                            : ""
-                        : projectModel.name ?? "",
                     decoration: InputDecoration(
                       errorMaxLines: 2,
                       errorText: errTxt,
@@ -432,6 +455,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   headingText(S.of(context).event_description + " *"),
                   DoseTextField(
                     isRequired: true,
+                    controller: projectStatementController,
                     decoration: InputDecoration(
                       errorMaxLines: 2,
                       hintText: S.of(context).project_mission_statement_hint,
@@ -441,11 +465,6 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                     },
                     textInputAction: TextInputAction.next,
                     currentNode: focusNodes[1],
-                    initialValue: widget.isCreateProject
-                        ? widget.projectTemplateModel != null
-                            ? widget.projectTemplateModel.description
-                            : ""
-                        : projectModel.description ?? "",
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
                     textCapitalization: TextCapitalization.sentences,
@@ -475,6 +494,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
 
                   headingText(S.of(context).registration_link),
                   DoseTextField(
+                    controller: registrationLinkController,
                     decoration: InputDecoration(
                       errorMaxLines: 2,
                       hintText: S.of(context).registration_link_hint,
@@ -484,11 +504,6 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                     },
                     textInputAction: TextInputAction.next,
                     currentNode: focusNodes[2],
-                    initialValue: widget.isCreateProject
-                        ? widget.projectTemplateModel != null
-                            ? widget.projectTemplateModel.registrationLink
-                            : ""
-                        : projectModel.registrationLink ?? "",
                     keyboardType: TextInputType.text,
                     maxLines: null,
                     textCapitalization: TextCapitalization.sentences,
@@ -524,6 +539,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   ),
                   DoseTextField(
                     isRequired: true,
+                    controller: emailIdController,
                     onFieldSubmitted: (_) {
                       FocusScope.of(context).requestFocus(focusNodes[4]);
                     },
@@ -538,12 +554,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                     onChanged: (value) {
                       projectModel.emailId = value;
                     },
-                    initialValue: widget.isCreateProject
-                        ? widget.projectTemplateModel != null
-                            ? widget.projectTemplateModel.emailId ??
-                                SevaCore.of(context).loggedInUser.email
-                            : projectModel.emailId ?? SevaCore.of(context).loggedInUser.email
-                        : SevaCore.of(context).loggedInUser.email,
+
                     decoration: InputDecoration(
                       enabledBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.black54),
@@ -985,7 +996,6 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                               if (dialogContext != null) {
                                 Navigator.pop(dialogContext);
                               }
-                              //TODO reset
                               _formKey.currentState.reset();
                               Navigator.of(context).pop();
                               Navigator.of(context).pop();

@@ -49,6 +49,7 @@ class TimeRequest extends StatefulWidget {
   bool instructorAdded;
   bool createEvent;
   final formKey;
+  final RequestType requestType;
 
   TimeRequest(
       {this.requestModel,
@@ -66,7 +67,8 @@ class TimeRequest extends StatefulWidget {
       this.createEvent,
       this.formType,
       this.selectedInstructorModelChanged,
-      @required this.formKey});
+      @required this.formKey,
+      @required this.requestType});
 
   @override
   _TimeRequestState createState() => _TimeRequestState();
@@ -86,6 +88,7 @@ class _TimeRequestState extends State<TimeRequest> {
       descriptionController = TextEditingController(),
       creditsController = TextEditingController(),
       volunteersController = TextEditingController();
+  List<FocusNode> focusNodeList = List.generate(4, (_) => FocusNode());
 
   Widget addToProjectContainer() {
     if (requestUtils.isFromRequest(projectId: widget.projectId)) {
@@ -207,13 +210,16 @@ class _TimeRequestState extends State<TimeRequest> {
         DoseTextField(
           isRequired: true,
           controller: titleController,
+          currentNode: focusNodeList[0],
           autovalidateMode: AutovalidateMode.onUserInteraction,
           onChanged: (value) {
             requestUtils.updateExitWithConfirmationValue(context, 1, value);
           },
           decoration: InputDecoration(
             errorMaxLines: 2,
-            hintText: S.of(context).request_title_hint,
+            hintText: widget.requestType == RequestType.TIME
+                ? S.of(context).request_title_hint
+                : S.of(context).onetomanyrequest_title_hint,
             hintStyle: requestUtils.hintTextStyle,
           ),
           textInputAction: TextInputAction.next,
@@ -547,6 +553,7 @@ class _TimeRequestState extends State<TimeRequest> {
         DoseTextField(
           isRequired: true,
           controller: descriptionController,
+          currentNode: focusNodeList[1],
           autovalidateMode: AutovalidateMode.onUserInteraction,
           onChanged: (value) {
             if (value != null && value.length > 5) {
@@ -632,13 +639,15 @@ class _TimeRequestState extends State<TimeRequest> {
           children: [
             Expanded(
               child: DoseTextField(
-                // isRequired: true,
+                isRequired: true,
                 controller: creditsController,
+                currentNode: focusNodeList[2],
                 onChanged: (v) {
                   requestUtils.updateExitWithConfirmationValue(context, 10, v);
                   if (v.isNotEmpty && int.parse(v) >= 0) {
                     widget.requestModel.maxCredits = int.parse(v);
                     setState(() {});
+
                   }
                 },
                 decoration: InputDecoration(
@@ -700,6 +709,7 @@ class _TimeRequestState extends State<TimeRequest> {
         DoseTextField(
           isRequired: true,
           controller: volunteersController,
+          currentNode: focusNodeList[3],
           onChanged: (v) {
             requestUtils.updateExitWithConfirmationValue(context, 11, v);
             if (v.isNotEmpty && int.parse(v) >= 0) {

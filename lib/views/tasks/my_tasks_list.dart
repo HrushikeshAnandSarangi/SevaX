@@ -525,6 +525,7 @@ class TaskCardViewState extends State<TaskCardView> {
   TextEditingController hoursController = TextEditingController();
   TextEditingController selectedHoursPrepTimeController = TextEditingController();
   TextEditingController selectedHoursDeliveryTimeController = TextEditingController();
+  List<FocusNode> focusNodeList = List.generate(3, (_) => FocusNode());
 
   @override
   Widget build(BuildContext context) {
@@ -649,6 +650,7 @@ class TaskCardViewState extends State<TaskCardView> {
                                         children: <Widget>[
                                           DoseTextField(
                                             controller: selectedHoursPrepTimeController,
+                                            currentNode: focusNodeList[0],
                                             keyboardType: TextInputType.number,
                                             formatters: [
                                               BlacklistingTextInputFormatter(
@@ -736,6 +738,7 @@ class TaskCardViewState extends State<TaskCardView> {
                                           DoseTextField(
                                             controller:
                                                 selectedHoursDeliveryTimeController,
+                                            currentNode: focusNodeList[1],
                                             keyboardType: TextInputType.number,
                                             formatters: [
                                               BlacklistingTextInputFormatter(
@@ -817,6 +820,7 @@ class TaskCardViewState extends State<TaskCardView> {
                                       DoseTextField(
                                         isRequired: true,
                                         controller: hoursController,
+                                        currentNode: focusNodeList[2],
                                         keyboardType: TextInputType.number,
                                         formatters: [
                                           BlacklistingTextInputFormatter(

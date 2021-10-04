@@ -39,6 +39,7 @@ class _EditRequestCustomCategoryState extends State<EditRequestCustomCategory> {
   final _subcategorytitleStream = StreamController<String>();
   TextEditingController searchTextController = TextEditingController();
   TextEditingController subcategoryController = TextEditingController();
+  FocusNode subcategoryFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -124,6 +125,7 @@ class _EditRequestCustomCategoryState extends State<EditRequestCustomCategory> {
                         child: DoseTextField(
                           isRequired: true,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
+                          currentNode: subcategoryFocusNode,
                           controller: subcategoryController,
                           onChanged: (val) {
                             subcategorytitle = val;

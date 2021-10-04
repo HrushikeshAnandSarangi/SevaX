@@ -31,6 +31,7 @@ class _ApproveLendingOfferState extends State<ApproveLendingOffer> {
   GeoFirePoint location;
   String additionalInstructionsText = '';
   String agreementId = '';
+  TextEditingController instructionController =   TextEditingController();
 
   final _formKey = GlobalKey<DoseFormState>();
   final GlobalKey<ScaffoldState> _key = GlobalKey();
@@ -86,6 +87,7 @@ class _ApproveLendingOfferState extends State<ApproveLendingOffer> {
             SizedBox(height: 2),
             DoseTextField(
               isRequired: true,
+              controller: instructionController,
               onFieldSubmitted: (v) {
                 FocusScope.of(context).unfocus();
               },

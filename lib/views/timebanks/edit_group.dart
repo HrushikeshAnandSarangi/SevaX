@@ -66,7 +66,8 @@ class EditGroupFormState extends State<EditGroupForm> {
   TextEditingController searchTextController;
   TextEditingController aboutController = TextEditingController();
   TimebankModel parentTimebankModel = TimebankModel({});
-
+  FocusNode nameFocusNode = FocusNode();
+  FocusNode aboutFocusNode = FocusNode();
   var _searchText = "";
   String errTxt;
   final _textUpdates = StreamController<String>();
@@ -215,6 +216,7 @@ class EditGroupFormState extends State<EditGroupForm> {
         isRequired: true,
         textInputAction: TextInputAction.done,
         controller: searchTextController,
+        currentNode: nameFocusNode,
         autovalidateMode: AutovalidateMode.onUserInteraction,
         decoration: InputDecoration(
           errorMaxLines: 2,
@@ -239,6 +241,7 @@ class EditGroupFormState extends State<EditGroupForm> {
         isRequired: true,
         autovalidateMode: AutovalidateMode.onUserInteraction,
         controller: aboutController,
+        currentNode: aboutFocusNode,
         // initialValue: widget.timebankModel.missionStatement ?? "",
         decoration: InputDecoration(
           errorMaxLines: 2,

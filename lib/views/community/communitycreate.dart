@@ -159,6 +159,11 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
   bool canTestCommunity = false;
   bool testCommunity = false;
   final _debouncer = Debouncer(milliseconds: 600);
+  TextEditingController cityController = TextEditingController(),
+      stateController = TextEditingController(),
+      countryController = TextEditingController(),
+      streetAddress1Controller = TextEditingController(),
+      pincodeController = TextEditingController();
 
   void initState() {
     if (widget.isCreateTimebank == false) {
@@ -272,7 +277,7 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
   Widget build(BuildContext context) {
     this.parentContext = context;
 
-    return DoseForm( formKey: _formKey, child: createSevaX);
+    return DoseForm(formKey: _formKey, child: createSevaX);
   }
 
   void moveToTop() {
@@ -1571,6 +1576,8 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: DoseTextField(
           isRequired: true,
+
+          controller: stateController,
           textCapitalization: TextCapitalization.sentences,
           onFieldSubmitted: (input) {
             FocusScope.of(context).requestFocus(focusNodes[2]);
@@ -1582,7 +1589,7 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
             controller.community.billing_address.updateValueByKey('state', value);
             createEditCommunityBloc.onChange(controller);
           },
-         /* initialValue: controller.community.billing_address.state != null
+          /* initialValue: controller.community.billing_address.state != null
               ? '${controller.community.billing_address.state}'
               : '',*/
           validator: (value) {
@@ -1606,6 +1613,7 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: DoseTextField(
           isRequired: true,
+          controller: cityController,
           textCapitalization: TextCapitalization.sentences,
           onFieldSubmitted: (input) {
             FocusScope.of(context).requestFocus(focusNodes[1]);
@@ -1617,7 +1625,7 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
             controller.community.billing_address.updateValueByKey('city', value);
             createEditCommunityBloc.onChange(controller);
           },
-         /* initialValue: controller.community.billing_address.city != null
+          /* initialValue: controller.community.billing_address.city != null
               ? '${controller.community.billing_address.city}'
               : '',*/
           validator: (value) {
@@ -1641,6 +1649,7 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
         margin: EdgeInsets.fromLTRB(20, 10, 20, 0),
         child: DoseTextField(
           isRequired: true,
+          controller: pincodeController,
           onFieldSubmitted: (input) {
             FocusScope.of(context).requestFocus(focusNodes[4]);
           },
@@ -1649,7 +1658,7 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
             controller.community.billing_address.updateValueByKey('pincode', value);
             createEditCommunityBloc.onChange(controller);
           },
-         /* initialValue: controller.community.billing_address.pincode != null
+          /* initialValue: controller.community.billing_address.pincode != null
               ? '${controller.community.billing_address.pincode.toString()}'
               : '',*/
           validator: (value) {
@@ -1709,6 +1718,7 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
         margin: EdgeInsets.fromLTRB(20, 0, 20, 10),
         child: DoseTextField(
           isRequired: true,
+          controller: streetAddress1Controller,
           textCapitalization: TextCapitalization.sentences,
           onFieldSubmitted: (input) {
             // FocusScope.of(context).requestFocus(focusNodes[5]);
@@ -1810,6 +1820,7 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: DoseTextField(
           isRequired: true,
+          controller: countryController,
           textCapitalization: TextCapitalization.sentences,
           onFieldSubmitted: (input) {
             FocusScope.of(context).requestFocus(focusNodes[3]);
@@ -1820,7 +1831,7 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
             controller.community.billing_address.updateValueByKey('country', value);
             createEditCommunityBloc.onChange(controller);
           },
-         /*   initialValue: controller.community.billing_address.country != null
+          /*   initialValue: controller.community.billing_address.country != null
                 ? '${controller.community.billing_address.country}'
                 : '',*/
           validator: (value) {

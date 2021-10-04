@@ -61,6 +61,10 @@ class _RegisterPageState extends State<RegisterPage>
   final emailFocus = FocusNode();
   final pwdFocus = FocusNode();
   final confirmPwdFocus = FocusNode();
+  TextEditingController nameController = TextEditingController(),
+      emailController = TextEditingController(),
+      passwordController = TextEditingController(),
+      confirmPasswordController = TextEditingController();
 
   bool _shouldObscurePassword = true;
   bool _shouldObscureConfirmPassword = true;
@@ -396,6 +400,7 @@ class _RegisterPageState extends State<RegisterPage>
         children: <Widget>[
           getFormField(
             focusNode: fullnameFocus,
+            controller: nameController,
             onFieldSubmittedCB: (v) {
               FocusScope.of(context).requestFocus(emailFocus);
             },
@@ -415,6 +420,7 @@ class _RegisterPageState extends State<RegisterPage>
           ),
           getFormField(
             focusNode: emailFocus,
+            controller: emailController,
             onFieldSubmittedCB: (v) {
               FocusScope.of(context).requestFocus(pwdFocus);
             },
@@ -431,6 +437,7 @@ class _RegisterPageState extends State<RegisterPage>
           ),
           getPasswordFormField(
             focusNode: pwdFocus,
+            controller: passwordController,
             onFieldSubmittedCB: (v) {
               FocusScope.of(context).requestFocus(confirmPwdFocus);
             },
@@ -462,6 +469,7 @@ class _RegisterPageState extends State<RegisterPage>
           ),
           getPasswordFormField(
             focusNode: confirmPwdFocus,
+            controller: confirmPasswordController,
             onFieldSubmittedCB: (v) {
               FocusScope.of(context).requestFocus(FocusNode());
             },
@@ -506,6 +514,7 @@ class _RegisterPageState extends State<RegisterPage>
     bool shouldObscure = false,
     Widget suffix,
     TextCapitalization capitalization = TextCapitalization.none,
+    TextEditingController controller
   }) {
     var size = shouldRestrictLength ? 20 : 150;
     return Padding(
@@ -513,6 +522,7 @@ class _RegisterPageState extends State<RegisterPage>
       child: DoseTextField(
         isRequired: true,
         autovalidateMode: AutovalidateMode.onUserInteraction,
+        controller: controller,
         currentNode: focusNode,
         onFieldSubmitted: onFieldSubmittedCB,
         // enabled: !isLoading,
@@ -552,6 +562,7 @@ class _RegisterPageState extends State<RegisterPage>
     bool shouldObscure = false,
     Widget suffix,
     TextCapitalization capitalization = TextCapitalization.none,
+    TextEditingController controller
   }) {
     var size = shouldRestrictLength ? 20 : 150;
     return Padding(
@@ -560,6 +571,8 @@ class _RegisterPageState extends State<RegisterPage>
         isRequired: true,
         currentNode: focusNode,
         onFieldSubmitted: onFieldSubmittedCB,
+        controller: controller,
+        maxLines: 1,
         // enabled: !isLoading,
         decoration: InputDecoration(
           labelText: hint,

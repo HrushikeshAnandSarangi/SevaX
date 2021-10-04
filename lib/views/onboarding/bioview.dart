@@ -13,11 +13,7 @@ class BioView extends StatefulWidget {
   final VoidCallback onBacked;
   final VoidCallback onPrevious;
 
-  BioView(
-      {@required this.onSkipped,
-      @required this.onSave,
-      this.onBacked,
-      this.onPrevious});
+  BioView({@required this.onSkipped, @required this.onSave, this.onBacked, this.onPrevious});
 
   @override
   _BioViewState createState() => _BioViewState();
@@ -31,6 +27,8 @@ class _BioViewState extends State<BioView> {
   );
   String bio = '';
   final profanityDetector = ProfanityDetector();
+  TextEditingController bioController = TextEditingController();
+  FocusNode bioFocusNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -66,8 +64,7 @@ class _BioViewState extends State<BioView> {
                     shrinkWrap: true,
                     children: <Widget>[
                       Padding(
-                        padding: const EdgeInsets.only(
-                            left: 0.0, top: 0.0, bottom: 10.0),
+                        padding: const EdgeInsets.only(left: 0.0, top: 0.0, bottom: 10.0),
                         child: Text(
                           S.of(context).bio_description,
                           style: TextStyle(
@@ -83,10 +80,11 @@ class _BioViewState extends State<BioView> {
                         child: Container(
                           height: 200,
                           child: DoseTextField(
-                            isRequired: true,
+                              isRequired: true,
+                              controller: bioController,
+                              currentNode: bioFocusNode,
                               textCapitalization: TextCapitalization.sentences,
-                              style: TextStyle(
-                                  fontSize: 16.0, color: Colors.black54),
+                              style: TextStyle(fontSize: 16.0, color: Colors.black54),
                               decoration: InputDecoration(
                                 errorMaxLines: 2,
                                 fillColor: Colors.grey[300],
@@ -97,29 +95,21 @@ class _BioViewState extends State<BioView> {
                                 focusedBorder: textFieldBorder,
                               ),
                               keyboardType: TextInputType.multiline,
-                              autovalidateMode:
-                                  AutovalidateMode.onUserInteraction,
+                              autovalidateMode: AutovalidateMode.onUserInteraction,
                               minLines: 6,
                               maxLines: null,
                               maxLength: 5000,
                               validator: (value) {
                                 if (value.trim().isEmpty) {
-                                  return S
-                                      .of(context)
-                                      .validation_error_bio_empty;
-                                } else if (profanityDetector
-                                    .isProfaneString(value)) {
+                                  return S.of(context).validation_error_bio_empty;
+                                } else if (profanityDetector.isProfaneString(value)) {
                                   return S.of(context).profanity_text_alert;
                                 } else if (value.length < 50) {
                                   this.bio = value;
-                                  return S
-                                      .of(context)
-                                      .validation_error_bio_min_characters;
+                                  return S.of(context).validation_error_bio_min_characters;
                                 } else if (value.length > 5000) {
                                   this.bio = value;
-                                  return S
-                                      .of(context)
-                                      .validation_error_bio_max_characters;
+                                  return S.of(context).validation_error_bio_max_characters;
                                 }
                                 this.bio = value;
                                 return null;

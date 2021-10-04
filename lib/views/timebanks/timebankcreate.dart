@@ -4,6 +4,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:doseform/doseform.dart';
+
 // import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -39,7 +40,9 @@ import 'package:sevaexchange/components/sevaavatar/timebankcoverphoto.dart';
 class TimebankCreate extends StatelessWidget {
   final String timebankId;
   final String communityCreatorId;
+
   TimebankCreate({@required this.timebankId, this.communityCreatorId});
+
   @override
   Widget build(BuildContext context) {
     return ExitWithConfirmation(
@@ -69,7 +72,9 @@ class TimebankCreate extends StatelessWidget {
 class TimebankCreateForm extends StatefulWidget {
   final String timebankId;
   final String communityCreatorId;
+
   TimebankCreateForm({@required this.timebankId, this.communityCreatorId});
+
   @override
   TimebankCreateFormState createState() {
     return TimebankCreateFormState();
@@ -91,7 +96,8 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
   bool sponsored = false;
   GeoFirePoint location;
   String selectedAddress;
-  TextEditingController searchTextController = TextEditingController();
+  TextEditingController searchTextController = TextEditingController(),
+      aboutTextController = TextEditingController();
   String errTxt;
   final nameNode = FocusNode();
   final aboutNode = FocusNode();
@@ -124,8 +130,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           duplicateGroupCheck = 'not_done';
           SearchManager.searchGroupForDuplicate(
                   queryString: s.trim(),
-                  communityId:
-                      SevaCore.of(context).loggedInUser.currentCommunity)
+                  communityId: SevaCore.of(context).loggedInUser.currentCommunity)
               .then((groupFound) {
             if (groupFound) {
               setState(() {
@@ -149,8 +154,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
 
   Future<void> getParentTimebank() async {
     Future.delayed(Duration.zero, () async {
-      parentTimebankModel = await FirestoreManager.getTimeBankForId(
-          timebankId: widget.timebankId);
+      parentTimebankModel = await FirestoreManager.getTimeBankForId(timebankId: widget.timebankId);
       location = parentTimebankModel.location;
       selectedAddress = parentTimebankModel.address;
       setState(() {});
@@ -172,8 +176,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     Set<String> membersSet = members.toList().toSet();
     String id = Utils.getUuid();
     timebankModel.id = id;
-    timebankModel.communityId =
-        SevaCore.of(context).loggedInUser.currentCommunity;
+    timebankModel.communityId = SevaCore.of(context).loggedInUser.currentCommunity;
     timebankModel.managedCreatorIds = [
       widget.communityCreatorId,
     ];
@@ -193,16 +196,12 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     timebankModel.rootTimebankId = FlavorConfig.values.timebankId;
     timebankModel.address = selectedAddress;
     timebankModel.liveMode = !AppConfig.isTestCommunity;
-    timebankModel.location =
-        location == null ? GeoFirePoint(40.754387, -73.984291) : location;
+    timebankModel.location = location == null ? GeoFirePoint(40.754387, -73.984291) : location;
     timebankModel.timebankConfigurations =
-        parentTimebankModel.timebankConfigurations ??
-            getNeighbourhoodPlanConfigurationModel();
+        parentTimebankModel.timebankConfigurations ?? getNeighbourhoodPlanConfigurationModel();
     if (sponsored == true &&
-        !isAccessAvailable(parentTimebankModel,
-            SevaCore.of(context).loggedInUser.sevaUserID) &&
-        parentTimebankModel.creatorId !=
-            SevaCore.of(context).loggedInUser.sevaUserID) {
+        !isAccessAvailable(parentTimebankModel, SevaCore.of(context).loggedInUser.sevaUserID) &&
+        parentTimebankModel.creatorId != SevaCore.of(context).loggedInUser.sevaUserID) {
       timebankModel.sponsored = false;
 
       assembleAndSendRequest(
@@ -220,9 +219,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     }
     createTimebank(timebankModel: timebankModel);
 
-    CollectionRef.communities
-        .doc(SevaCore.of(context).loggedInUser.currentCommunity)
-        .update(
+    CollectionRef.communities.doc(SevaCore.of(context).loggedInUser.currentCommunity).update(
       {
         "timebanks": FieldValue.arrayUnion([id]),
       },
@@ -325,14 +322,13 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
         DoseTextField(
           isRequired: true,
           textCapitalization: TextCapitalization.sentences,
-
+          controller: aboutTextController,
           currentNode: aboutNode,
           onFieldSubmitted: (v) {
             FocusScope.of(context).requestFocus(FocusNode());
           },
           textInputAction: TextInputAction.done,
-          decoration:
-              InputDecoration(hintText: S.of(context).bit_more_about_group),
+          decoration: InputDecoration(hintText: S.of(context).bit_more_about_group),
           // keyboardType: TextInputType.multiline,
           maxLines: 1,
           onChanged: (value) {
@@ -363,8 +359,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
               transaction_matrix_type: "private_groups",
               child: ConfigurationCheck(
                 actionType: 'create_private_group',
-                role: memberType(parentTimebankModel,
-                    SevaCore.of(context).loggedInUser.sevaUserID),
+                role: memberType(parentTimebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
                   child: Checkbox(
@@ -430,14 +425,13 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
               children: <Widget>[
                 Divider(),
                 TransactionsMatrixCheck(
-                  upgradeDetails:
-                      AppConfig.upgradePlanBannerModel.sponsored_groups,
+                  upgradeDetails: AppConfig.upgradePlanBannerModel.sponsored_groups,
                   transaction_matrix_type: "sponsored_groups",
                   comingFrom: ComingFrom.Groups,
                   child: ConfigurationCheck(
                     actionType: 'create_endorsed_group',
-                    role: memberType(parentTimebankModel,
-                        SevaCore.of(context).loggedInUser.sevaUserID),
+                    role: memberType(
+                        parentTimebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
                     child: Checkbox(
                       value: sponsored,
                       onChanged: (bool value) {
@@ -459,17 +453,13 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
             child: FutureBuilder<Object>(
               future: getTimeBankForId(timebankId: widget.timebankId),
               builder: (context, snapshot) {
-                if (snapshot.hasError)
-                  return Text(S.of(context).general_stream_error);
-                if (snapshot.connectionState == ConnectionState.waiting)
-                  return Offstage();
+                if (snapshot.hasError) return Text(S.of(context).general_stream_error);
+                if (snapshot.connectionState == ConnectionState.waiting) return Offstage();
                 TimebankModel parentTimebank = snapshot.data;
                 return CustomElevatedButton(
                   // color: Colors.blue,
                   onPressed: () {
-                    if (errTxt != null ||
-                        errTxt != "" ||
-                        duplicateGroupCheck == 'not_done') {}
+                    if (errTxt != null || errTxt != "" || duplicateGroupCheck == 'not_done') {}
                     // Validate will return true if the form is valid, or false if
                     // the form is invalid.
                     //if (location != null) {
@@ -564,16 +554,14 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
       MaterialPageRoute(
         builder: (context) => SelectMembersInGroup(
           timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
-          userSelected:
-              selectedUsers == null ? selectedUsers = HashMap() : selectedUsers,
+          userSelected: selectedUsers == null ? selectedUsers = HashMap() : selectedUsers,
           userEmail: SevaCore.of(context).loggedInUser.email,
           listOfalreadyExistingMembers: [],
         ),
       ),
     );
 
-    if (onActivityResult != null &&
-        onActivityResult.containsKey("membersSelected")) {
+    if (onActivityResult != null && onActivityResult.containsKey("membersSelected")) {
       selectedUsers = onActivityResult['membersSelected'];
       log("$selectedUsers");
       setState(() {
@@ -602,8 +590,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
   }
 
   Widget get tappableInviteMembers {
-    return (FlavorConfig.appFlavor == Flavor.APP ||
-            FlavorConfig.appFlavor == Flavor.SEVA_DEV)
+    return (FlavorConfig.appFlavor == Flavor.APP || FlavorConfig.appFlavor == Flavor.SEVA_DEV)
         ? GestureDetector(
             onTap: () async {
               addVolunteers();

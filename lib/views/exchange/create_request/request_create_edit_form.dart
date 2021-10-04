@@ -324,6 +324,7 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm> with Widge
                                 switch (requestModel.requestType) {
                                   case RequestType.TIME:
                                     return TimeRequest(
+                                      requestType: requestModel.requestType,
                                       formKey: _formKey,
                                       formType: widget.formType,
                                       requestModel: requestModel,
@@ -394,6 +395,7 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm> with Widge
                                     break;
                                   case RequestType.ONE_TO_MANY_REQUEST:
                                     return TimeRequest(
+                                      requestType: requestModel.requestType,
                                       formKey: _formKey,
                                       formType: widget.formType,
                                       requestModel: requestModel,
