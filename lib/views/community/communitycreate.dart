@@ -1269,11 +1269,7 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
       padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
       child: colums,
     );
-    return Column(
-      children: [
-        contain,
-      ],
-    );
+    return contain;
   }
 
   getInfoWidget({
@@ -1576,7 +1572,6 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: DoseTextField(
           isRequired: true,
-
           controller: stateController,
           textCapitalization: TextCapitalization.sentences,
           onFieldSubmitted: (input) {

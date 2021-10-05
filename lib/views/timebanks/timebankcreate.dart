@@ -289,9 +289,6 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           isRequired: true,
           textCapitalization: TextCapitalization.sentences,
           currentNode: nameNode,
-          onFieldSubmitted: (v) {
-            FocusScope.of(context).requestFocus(aboutNode);
-          },
           controller: searchTextController,
           onChanged: (value) {
             ExitWithConfirmation.of(context).fieldValues[1] = value;
@@ -324,9 +321,6 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           textCapitalization: TextCapitalization.sentences,
           controller: aboutTextController,
           currentNode: aboutNode,
-          onFieldSubmitted: (v) {
-            FocusScope.of(context).requestFocus(FocusNode());
-          },
           textInputAction: TextInputAction.done,
           decoration: InputDecoration(hintText: S.of(context).bit_more_about_group),
           // keyboardType: TextInputType.multiline,
