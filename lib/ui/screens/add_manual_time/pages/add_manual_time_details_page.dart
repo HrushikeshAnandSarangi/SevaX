@@ -42,6 +42,7 @@ class _AddMnualTimeDetailsPageState extends State<AddMnualTimeDetailsPage> {
     return Scaffold(
       key: _key,
       appBar: AppBar(
+        backgroundColor: Theme.of(context).primaryColor,
         title: Text(
           S.of(context).manual_time_add,
           style: TextStyle(fontSize: 18),

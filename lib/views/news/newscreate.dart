@@ -21,6 +21,7 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
 
@@ -633,7 +634,7 @@ class SearchSiblingTimebanksViewState extends State<SearchSiblingTimebanks> {
         builder: (context, AsyncSnapshot<TimebankListModel> snapshot) {
           if (snapshot.hasData) {
             if (!snapshot.hasData) {
-              return Center(child: CircularProgressIndicator());
+              return Center(child: LoadingIndicator());
             } else {
               if (snapshot.data.timebanks.length != 0) {
                 List<TimebankModel> timebanks = snapshot.data.timebanks;

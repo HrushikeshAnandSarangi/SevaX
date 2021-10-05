@@ -97,10 +97,11 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
           CommunityModel communityModel =
               await FirestoreManager.getCommunityDetailsByCommunityId(
                   communityId: user.currentCommunity);
-          Provider.of<ThemeBloc>(context, listen: false)
-              .changeColor(HexColor(communityModel.theme_color));
-          logger.e(communityModel.toString()); 
-                       
+          Provider.of<ThemeBloc>(context, listen: false).changeColor(HexColor(
+              communityModel.theme_color == ''
+                  ? '766FE0'
+                  : communityModel.theme_color));
+          logger.e(communityModel.toString());
         });
       },
     );
@@ -112,6 +113,7 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
     _messageBloc.dispose();
     super.dispose();
     _notificationsBloc.dispose();
+    
   }
 
   @override
@@ -125,7 +127,7 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
                 initialData: Color(0xFF766FE0),
                 stream: Provider.of<ThemeBloc>(context).color,
                 builder: (context, snapshot) {
-                  logger.e(snapshot.data);
+                  logger.e("Here is the color " + snapshot.data.toString());
                   return MaterialApp(
                     builder: (context, child) {
                       return GestureDetector(
@@ -146,7 +148,7 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
                     title: AppConfig.appName,
                     debugShowCheckedModeBanner: false,
                     theme: FlavorConfig.values.theme.copyWith(
-                        primaryColor:snapshot.data,
+                        primaryColor: snapshot.data,
                         buttonTheme:
                             ButtonThemeData(buttonColor: snapshot.data)),
                     home: BlocProvider<UserDataBloc>(

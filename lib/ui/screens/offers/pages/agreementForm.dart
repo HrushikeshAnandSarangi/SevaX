@@ -27,6 +27,7 @@ import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/empty_text_span.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
@@ -1178,7 +1179,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
               child: SizedBox(
                 height: 25,
                 width: 25,
-                child: CircularProgressIndicator(),
+                child: LoadingIndicator(),
               ),
             );
           }
@@ -1270,7 +1271,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                   Container(
                     height: 50,
                     width: double.infinity,
-                    color: FlavorConfig.values.theme.primaryColor,
+                    color:  Theme.of(context).primaryColor,
                     child: Center(
                       child: Text(
                         S.of(context).template_title,
@@ -1353,7 +1354,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontFamily: 'Europa')),
-                        textColor: FlavorConfig.values.theme.primaryColor,
+                        textColor: Theme.of(context).primaryColor,
                         onPressed: () async {
                           if (!_formDialogKey.currentState.validate()) {
                             return;

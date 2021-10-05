@@ -67,6 +67,7 @@ class CreateEditCommunityView extends StatelessWidget {
         ? ExitWithConfirmation(
             child: Scaffold(
               appBar: AppBar(
+                backgroundColor:Theme.of(context).primaryColor,
                 elevation: 0.5,
                 automaticallyImplyLeading: true,
                 title: Text(
@@ -737,6 +738,7 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
                             upgradeDetails: AppConfig.upgradePlanBannerModel.community_sponsors,
                             transaction_matrix_type: 'community_sponsors',
                             child: SponsorsWidget(
+                              textColor: Theme.of(context).primaryColor,
                               sponsorsMode:
                                   widget.isCreateTimebank ? SponsorsMode.CREATE : SponsorsMode.EDIT,
                               sponsors: timebankModel.sponsors,
@@ -1284,7 +1286,7 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
       key: infoKey,
       icon: Image.asset(
         'lib/assets/images/info.png',
-        color: FlavorConfig.values.theme.primaryColor,
+        color:Theme.of(context).primaryColor,
         height: 16,
         width: 16,
       ),
@@ -1518,7 +1520,7 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
                 Text(
                   S.of(context).account_information,
                   style: TextStyle(
-                      color: FlavorConfig.values.theme.primaryColor,
+                      color:Theme.of(context).primaryColor,
                       fontSize: 20,
                       fontWeight: FontWeight.bold),
                 ),

@@ -30,6 +30,7 @@ class _LanguageViewState extends State<LanguageView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).primaryColor,
         title: Text(
           S.of(context).my_language,
           style: TextStyle(fontSize: 18),

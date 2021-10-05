@@ -330,7 +330,7 @@ class MyTasksListState extends State<MyTaskList> {
                             height: 35,
                             child: CustomElevatedButton(
                               padding: EdgeInsets.zero,
-                              color: FlavorConfig.values.theme.primaryColor,
+                              color: Theme.of(context).primaryColor,
                               child: Text(
                                 S.of(context).speaker_claim_credits,
                                 style: TextStyle(

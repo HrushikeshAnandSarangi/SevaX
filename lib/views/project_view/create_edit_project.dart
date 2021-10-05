@@ -570,6 +570,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                     height: 10,
                   ),
                   SponsorsWidget(
+                    textColor: Theme.of(context).primaryColor,
                     title: S.of(context).add_event_sponsors_text,
                     sponsorsMode: widget.isCreateProject ? SponsorsMode.CREATE : SponsorsMode.EDIT,
                     sponsors: projectModel.sponsors,
@@ -1140,7 +1141,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   Container(
                     height: 50,
                     width: double.infinity,
-                    color: FlavorConfig.values.theme.primaryColor,
+                    color: Theme.of(context).primaryColor,
                     child: Center(
                       child: Text(
                         S.of(context).template_title,

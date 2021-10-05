@@ -299,7 +299,7 @@ class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
   Widget imagePickerOption({String title, IconData icon, Function onTap}) {
     return Container(
       decoration: BoxDecoration(
-        color: FlavorConfig.values.theme.primaryColor,
+        color: Theme.of(context).primaryColor,
         borderRadius: BorderRadius.circular(10),
       ),
       height: 50,

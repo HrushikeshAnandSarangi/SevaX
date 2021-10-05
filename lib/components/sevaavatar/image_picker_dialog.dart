@@ -101,7 +101,7 @@ class ImagePickerDialog extends StatelessWidget {
                   child: roundedButton(
                       S.of(context).camera,
                       EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
-                      const Color(0xFF673AB7),
+                     Theme.of(context).primaryColor,
                       const Color(0xFFFFFFFF)),
                 ),
                 GestureDetector(
@@ -109,7 +109,7 @@ class ImagePickerDialog extends StatelessWidget {
                   child: roundedButton(
                       S.of(context).gallery,
                       EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
-                      const Color(0xFF673AB7),
+                     Theme.of(context).primaryColor,
                       const Color(0xFFFFFFFF)),
                 ),
                 GestureDetector(
@@ -138,7 +138,7 @@ class ImagePickerDialog extends StatelessWidget {
                   child: roundedButton(
                       S.of(context).stock_images,
                       EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
-                      const Color(0xFF673AB7),
+                     Theme.of(context).primaryColor,
                       const Color(0xFFFFFFFF)),
                 ),
                 GestureDetector(
@@ -157,7 +157,7 @@ class ImagePickerDialog extends StatelessWidget {
                   child: roundedButton(
                     S.of(context).add_image_url,
                     EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
-                    const Color(0xFF673AB7),
+                   Theme.of(context).primaryColor,
                     const Color(0xFFFFFFFF),
                   ),
                 ),
@@ -169,7 +169,7 @@ class ImagePickerDialog extends StatelessWidget {
                     child: roundedButton(
                         S.of(context).cancel,
                         EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
-                        const Color(0xFF673AB7),
+                       Theme.of(context).primaryColor,
                         const Color(0xFFFFFFFF)),
                   ),
                 ),

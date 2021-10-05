@@ -12,6 +12,7 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/auth/bloc/user_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class UpgradePlanBanner extends StatefulWidget {
   final BannerDetails details;
@@ -96,7 +97,7 @@ class _UpgradePlanBannerState extends State<UpgradePlanBanner> {
               child: SizedBox(
                 height: 50,
                 width: 50,
-                child: CircularProgressIndicator(),
+                child: LoadingIndicator(),
               ),
             );
           }

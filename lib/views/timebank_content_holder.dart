@@ -441,6 +441,7 @@ Widget createNormalUserTabBar(
 ) {
   return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).primaryColor,
         leading: BackButton(
           color: Colors.black,
           onPressed: () {
@@ -572,7 +573,7 @@ class DiscussionListState extends State<DiscussionList> {
                 child: DropdownButton<String>(
                   style: TextStyle(color: Colors.white),
                   focusColor: Colors.white,
-                  iconEnabledColor: FlavorConfig.values.theme.primaryColor,
+                  iconEnabledColor: Theme.of(context).primaryColor,
                   value: sortOrderVal,
                   onChanged: (val) {
                     if (val != sortOrderVal) {
@@ -590,7 +591,7 @@ class DiscussionListState extends State<DiscussionList> {
                           fontWeight: FontWeight.w500,
                           fontSize: 16,
                           fontFamily: 'Europa',
-                          color: FlavorConfig.values.theme.primaryColor,
+                          color: Theme.of(context).primaryColor,
                         ),
                       ),
                     ),

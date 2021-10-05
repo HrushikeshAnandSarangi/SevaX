@@ -188,7 +188,7 @@ void showDialogForMakingAnOffer({
                     height: 30,
                     width: 30,
                     child: AspectRatio(
-                        aspectRatio: 1, child: CircularProgressIndicator()),
+                        aspectRatio: 1, child: LoadingIndicator()),
                   ),
                 ],
               ),

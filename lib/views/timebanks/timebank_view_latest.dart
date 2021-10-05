@@ -402,6 +402,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
               child: Padding(
                 padding: const EdgeInsets.only(left: 20),
                 child: SponsorsWidget(
+                  textColor: Theme.of(context).primaryColor,
                   sponsorsMode: SponsorsMode.ABOUT,
                   sponsors: widget.timebankModel.sponsors,
                   isAdminVerified: GetUserVerified<bool>().verify(

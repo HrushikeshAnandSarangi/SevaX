@@ -11,6 +11,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/new_baseline/models/device_model.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/views/qna-module/FeedbackConstants.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 
@@ -362,7 +363,7 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
       widgettype = getQuestionsWidget(widget, questionIndex);
     }
     return this.isLoading
-        ? Center(child: CircularProgressIndicator())
+        ? Center(child: LoadingIndicator())
         : Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,

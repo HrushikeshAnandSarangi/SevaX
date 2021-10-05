@@ -105,6 +105,7 @@ class _HomeDashBoardState extends State<HomeDashBoard>
         resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
         appBar: AppBar(
+          backgroundColor:Theme.of(context).primaryColor,
           centerTitle: false,
           title: StreamBuilder<List<CommunityModel>>(
             stream: _homeDashBoardBloc.communities,

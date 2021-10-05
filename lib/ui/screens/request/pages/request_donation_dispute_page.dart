@@ -16,6 +16,7 @@ import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/donations/accept_modified_acknowlegement.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/custom_list_tile.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
@@ -78,7 +79,7 @@ class _RequestDonationDisputePageState
     progressDialog.style(
       progressWidget: Container(
         padding: EdgeInsets.all(8.0),
-        child: CircularProgressIndicator(),
+        child: LoadingIndicator(),
       ),
       message: message,
     );
@@ -159,7 +160,7 @@ class _RequestDonationDisputePageState
       progressDialogNew.style(
         progressWidget: Container(
           padding: EdgeInsets.all(8.0),
-          child: CircularProgressIndicator(),
+          child: LoadingIndicator(),
         ),
         message: S.of(context).please_wait,
       );

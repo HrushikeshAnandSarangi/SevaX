@@ -76,7 +76,7 @@ Widget infoButton({
     visualDensity: VisualDensity.standard,
     icon: Image.asset(
       'lib/assets/images/info.png',
-      color: FlavorConfig.values.theme.primaryColor,
+      color: Theme.of(context).primaryColor,
       height: 16,
       width: 16,
     ),

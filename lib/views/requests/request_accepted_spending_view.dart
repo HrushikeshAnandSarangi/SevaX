@@ -666,7 +666,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                       Container(
                         width: double.infinity,
                         child: CustomElevatedButton(
-                          color: FlavorConfig.values.theme.primaryColor,
+                          color: Theme.of(context).primaryColor,
                           child: Text(
                             S.of(context).approve,
                             style: TextStyle(

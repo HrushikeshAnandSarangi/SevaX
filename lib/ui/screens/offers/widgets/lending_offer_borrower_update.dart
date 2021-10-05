@@ -112,7 +112,7 @@ class _LendingOfferBorrowerUpdateWidgetState extends State<LendingOfferBorrowerU
                 Container(
                   width: double.infinity,
                   child: CustomElevatedButton(
-                    color: FlavorConfig.values.theme.primaryColor,
+                    color: Theme.of(context).primaryColor,
                     child: Text(
                       getButtonLabel(),
                       style: TextStyle(color: Colors.white, fontFamily: 'Europa'),

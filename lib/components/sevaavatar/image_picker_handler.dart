@@ -162,6 +162,7 @@ class SearchStockImagesViewState extends State<SearchStockImages>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).primaryColor,
         elevation: 0.5,
         automaticallyImplyLeading: true,
         title: Text(

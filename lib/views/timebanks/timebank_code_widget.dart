@@ -201,7 +201,7 @@ class _TimebankCodeWidgetState extends State<TimebankCodeWidget> {
                             ),
                           );
                         },
-                        color: FlavorConfig.values.theme.primaryColor,
+                        color: Theme.of(context).primaryColor,
                         textColor: Colors.white,
                         child: Text(S.of(context).share_code),
                       ),

@@ -381,7 +381,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                     'lib/assets/images/cv.png',
                     height: 50,
                     width: 50,
-                    color: FlavorConfig.values.theme.primaryColor,
+                    color: Theme.of(context).primaryColor,
                   ),
                   Text(
                     S.of(context).choose_pdf_file,

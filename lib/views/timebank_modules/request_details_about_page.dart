@@ -463,7 +463,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                 child: Container(
                   height: 50,
                   width: double.infinity,
-                  color: FlavorConfig.values.theme.primaryColor,
+                  color:Theme.of(context).primaryColor,
                   child: Center(
                     child: Text(
                       S.of(context).close + ' ' + S.of(context).request,
@@ -668,7 +668,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           borderRadius: BorderRadius.circular(20),
         ),
         padding: EdgeInsets.all(0),
-        color: FlavorConfig.values.theme.primaryColor,
+        color:Theme.of(context).primaryColor,
         child: Row(
           children: <Widget>[
             SizedBox(width: 1),
@@ -872,7 +872,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           borderRadius: BorderRadius.circular(20),
         ),
         padding: EdgeInsets.all(0),
-        color: FlavorConfig.values.theme.primaryColor,
+        color:Theme.of(context).primaryColor,
         child: Row(
           children: <Widget>[
             SizedBox(width: 1),
@@ -1348,7 +1348,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     padding: EdgeInsets.all(0),
-                    color: FlavorConfig.values.theme.primaryColor,
+                    color:Theme.of(context).primaryColor,
                     child: Row(
                       children: <Widget>[
                         SizedBox(width: 1),
@@ -3027,7 +3027,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                     CustomTextButton(
                         shape: StadiumBorder(),
                         padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                        color: FlavorConfig.values.theme.primaryColor,
+                        color:Theme.of(context).primaryColor,
                         child: Text(
                           S.of(context).skip_for_now,
                           style: TextStyle(color: Colors.white, fontFamily: 'Europa'),

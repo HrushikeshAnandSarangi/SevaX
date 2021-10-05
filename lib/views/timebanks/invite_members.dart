@@ -175,6 +175,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
+        backgroundColor:Theme.of(context).primaryColor,
         title: Text(
           S.of(context).invite_members,
           style: TextStyle(
@@ -371,7 +372,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                                 child: Container(
                                   height: 50,
                                   width: 50,
-                                  child: CircularProgressIndicator(),
+                                  child: LoadingIndicator(),
                                 ),
                               ),
                             )
@@ -637,7 +638,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
               child: SizedBox(
                 height: 48,
                 width: 48,
-                child: CircularProgressIndicator(),
+                child: LoadingIndicator(),
               ),
             );
           }
@@ -933,7 +934,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                         child: Text(
                           isJoined ? S.of(context).joined : S.of(context).add,
                         ),
-                        color: FlavorConfig.values.theme.primaryColor,
+                        color: Theme.of(context).primaryColor,
                         textColor: Colors.white,
                         shape: StadiumBorder(),
                       ),

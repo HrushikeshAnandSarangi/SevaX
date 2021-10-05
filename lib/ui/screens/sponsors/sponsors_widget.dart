@@ -246,7 +246,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                     : CustomAvatar(
                         name: name,
                         radius: 18,
-                        color: FlavorConfig.values.theme.primaryColor,
+                        color: Theme.of(context).primaryColor,
                         foregroundColor: Colors.black,
                         onTap: onTap,
                       ),
@@ -387,7 +387,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
       child: IconButton(
         icon: Icon(
           Icons.add_circle,
-          color: FlavorConfig.values.theme.primaryColor,
+          color: Theme.of(context).primaryColor,
         ),
         onPressed: () async {
           showEnterNameDialog(context);
