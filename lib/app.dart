@@ -21,8 +21,8 @@ import 'package:sevaexchange/ui/screens/members/bloc/members_bloc.dart';
 import 'package:sevaexchange/ui/utils/connectivity.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/views/splash_view.dart';
+import 'package:sevaexchange/widgets/customise_community/theme_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 
 Future<void> fetchRemoteConfig() async {
   AppConfig.remoteConfig = await RemoteConfig.instance;
@@ -41,7 +41,8 @@ Future<void> initApp(Flavor flavor) async {
     sound: true,
   );
 
-  ConnectionStatusSingleton connectionStatus = ConnectionStatusSingleton.getInstance();
+  ConnectionStatusSingleton connectionStatus =
+      ConnectionStatusSingleton.getInstance();
   connectionStatus.initialize();
 
   //Initialize app details
@@ -101,6 +102,9 @@ class MainApplication extends StatelessWidget {
           create: (context) => HomePageBaseBloc(),
           dispose: (_, b) => b.dispose(),
         ),
+        Provider(
+          create: (context) => ThemeBloc(),
+        ),
         // StreamProvider<UserModel>.value(
         //   initialData: null,
         //   value: userBloc.user,
@@ -115,30 +119,38 @@ class MainApplication extends StatelessWidget {
               child: Consumer<AppTimeZone>(
                 builder: (context, timezone, child) => AuthProvider(
                   auth: Auth(),
-                  child: MaterialApp(
-                    locale: model.appLocal,
-                    supportedLocales: S.delegate.supportedLocales,
-                    localizationsDelegates: [
-                      S.delegate,
-                      GlobalMaterialLocalizations.delegate,
-                      GlobalWidgetsLocalizations.delegate,
-                      GlobalCupertinoLocalizations.delegate,
-                    ],
-                    debugShowCheckedModeBanner: false,
-                    theme: FlavorConfig.values.theme,
-                    title: AppConfig.appName,
-                    builder: (context, child) {
-                      return GestureDetector(
-                        child: child,
-                        onTap: () {
-                          FocusScope.of(context).unfocus();
-                        },
-                      );
-                    },
-                    home: SplashView(
-                      skipToHomePage: skipToHomePage,
-                    ),
-                  ),
+                  child: StreamBuilder<Color>(
+                      initialData: const Color(0x0FF766FE0),
+                      stream: Provider.of<ThemeBloc>(context).color,
+                      builder: (context, snapshot) {
+                        return MaterialApp(
+                          locale: model.appLocal,
+                          supportedLocales: S.delegate.supportedLocales,
+                          localizationsDelegates: [
+                            S.delegate,
+                            GlobalMaterialLocalizations.delegate,
+                            GlobalWidgetsLocalizations.delegate,
+                            GlobalCupertinoLocalizations.delegate,
+                          ],
+                          debugShowCheckedModeBanner: false,
+                          theme: FlavorConfig.values.theme.copyWith(
+                              primaryColor:  Color(0x0FF766FE0),
+                              buttonTheme:
+                                  ButtonThemeData(buttonColor:  Color(0x0FF766FE0))),
+                          title: AppConfig.appName,
+                          builder: (context, child) {
+                            return GestureDetector(
+                              child: child,
+                              onTap: () {
+                                FocusScope.of(context).unfocus();
+                              },
+                            );
+                          },
+                          home: SplashView(
+                            skipToHomePage: skipToHomePage,
+                          ),
+                        );
+                      }),
                 ),
               ),
             );

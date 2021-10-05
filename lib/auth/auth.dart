@@ -203,6 +203,8 @@ class Auth {
         await FirestoreManager.getCommunityDetailsByCommunityId(
       communityId: FlavorConfig.values.timebankId,
     );
+  
+  
     List<String> cmembers = cmodel.members;
     if (!cmembers.contains(signedInUser.sevaUserID)) {
       List<String> tbMembers = cmembers.map((m) => m).toList();
@@ -212,7 +214,7 @@ class Auth {
       cmodel.members = tbMembers;
       await FirestoreManager.updateCommunity(communityModel: cmodel);
     }
-
+   
     // updating the sevaX global timebank with user Id;
     TimebankModel model = await FirestoreManager.getTimeBankForId(
       timebankId: FlavorConfig.values.timebankId,
@@ -236,4 +238,5 @@ class Auth {
   Future _createUserDoc(UserModel userModel) async {
     await FirestoreManager.createUser(user: userModel);
   }
+
 }
