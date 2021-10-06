@@ -194,7 +194,9 @@ class _LoginPageState extends State<LoginPage> {
                                       if (value.isEmpty) {
                                         return S.of(context).enter_email;
                                       } else if (!validateEmail(value.trim())) {
-                                        return S.of(context).validation_error_invalid_email;
+                                        return S
+                                            .of(context)
+                                            .validation_error_invalid_email;
                                       }
                                       _textFieldControllerResetEmail = value;
                                       return null;
@@ -229,7 +231,10 @@ class _LoginPageState extends State<LoginPage> {
                                         ),
                                         onPressed: () {
                                           Navigator.of(_context).pop(
-                                            {"sendResetLink": false, "userEmail": null},
+                                            {
+                                              "sendResetLink": false,
+                                              "userEmail": null
+                                            },
                                           );
                                         },
                                       ),
@@ -237,7 +242,8 @@ class _LoginPageState extends State<LoginPage> {
                                       CustomTextButton(
                                         shape: StadiumBorder(),
                                         color: Theme.of(context).accentColor,
-                                        textColor: FlavorConfig.values.buttonTextColor,
+                                        textColor:
+                                            FlavorConfig.values.buttonTextColor,
                                         child: Text(
                                           S.of(context).reset_password,
                                           style: TextStyle(
@@ -247,13 +253,16 @@ class _LoginPageState extends State<LoginPage> {
                                           ),
                                         ),
                                         onPressed: () {
-                                          if (!_formKeyDialog.currentState.validate()) {
+                                          if (!_formKeyDialog.currentState
+                                              .validate()) {
                                             return;
                                           }
                                           Navigator.of(_context).pop(
                                             {
                                               "sendResetLink": true,
-                                              "userEmail": _textFieldControllerResetEmail.trim()
+                                              "userEmail":
+                                                  _textFieldControllerResetEmail
+                                                      .trim()
                                             },
                                           );
                                         },
@@ -347,7 +356,8 @@ class _LoginPageState extends State<LoginPage> {
                       alignment: Alignment.topLeft,
                       padding: EdgeInsets.only(top: 35, bottom: 50.0),
                       child: TextButton.icon(
-                        icon: Icon(Icons.arrow_back_ios, color: Theme.of(context).accentColor),
+                        icon: Icon(Icons.arrow_back_ios,
+                            color: Theme.of(context).accentColor),
                         onPressed: () {
                           if (Navigator.of(context).canPop()) {
                             Navigator.of(context).pop();
@@ -385,8 +395,10 @@ class _LoginPageState extends State<LoginPage> {
                           emptyTextSpan(),
                           TextSpan(
                             text: S.of(context).login_agreement_terms_link,
-                            style: TextStyle(color: Theme.of(context).accentColor),
-                            recognizer: TapGestureRecognizer()..onTap = showTermsPage,
+                            style:
+                                TextStyle(color: Theme.of(context).accentColor),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = showTermsPage,
                           ),
                           emptyTextSpan(),
                           TextSpan(
@@ -395,8 +407,10 @@ class _LoginPageState extends State<LoginPage> {
                           emptyTextSpan(),
                           TextSpan(
                             text: S.of(context).login_agreement_privacy_link,
-                            style: TextStyle(color: Theme.of(context).accentColor),
-                            recognizer: TapGestureRecognizer()..onTap = showPrivacyPolicyPage,
+                            style:
+                                TextStyle(color: Theme.of(context).accentColor),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = showPrivacyPolicyPage,
                           ),
                           emptyTextSpan(),
                           TextSpan(
@@ -405,8 +419,10 @@ class _LoginPageState extends State<LoginPage> {
                           emptyTextSpan(),
                           TextSpan(
                             text: S.of(context).login_agreement_payment_link,
-                            style: TextStyle(color: Theme.of(context).accentColor),
-                            recognizer: TapGestureRecognizer()..onTap = showPaymentPolicyPage,
+                            style:
+                                TextStyle(color: Theme.of(context).accentColor),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = showPaymentPolicyPage,
                           ),
                           emptyTextSpan(placeHolder: '.'),
                         ],
@@ -433,7 +449,8 @@ class _LoginPageState extends State<LoginPage> {
                                 children: signUpAndForgotPassword,
                               )
                             : Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: signUpAndForgotPassword,
                               );
                       },
@@ -456,15 +473,18 @@ class _LoginPageState extends State<LoginPage> {
                         onPressed: isLoading
                             ? null
                             : () async {
-                                var connResult = await Connectivity().checkConnectivity();
+                                var connResult =
+                                    await Connectivity().checkConnectivity();
                                 if (connResult == ConnectivityResult.none) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
-                                      content: Text(S.of(context).check_internet),
+                                      content:
+                                          Text(S.of(context).check_internet),
                                       action: SnackBarAction(
                                         label: S.of(context).dismiss,
                                         onPressed: () =>
-                                            ScaffoldMessenger.of(context).hideCurrentSnackBar(),
+                                            ScaffoldMessenger.of(context)
+                                                .hideCurrentSnackBar(),
                                       ),
                                     ),
                                   );
@@ -575,8 +595,8 @@ class _LoginPageState extends State<LoginPage> {
                   validator: _validatePassword,
                   onSaved: _savePassword,
                   decoration: InputDecoration(
-                      enabledBorder:
-                          UnderlineInputBorder(borderSide: BorderSide(color: Colors.black54)),
+                      enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black54)),
                       focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.black54),
                       ),
@@ -588,7 +608,9 @@ class _LoginPageState extends State<LoginPage> {
                           setState(() {});
                         },
                         child: Icon(
-                          _shouldObscurePassword ? Icons.visibility_off : Icons.visibility,
+                          _shouldObscurePassword
+                              ? Icons.visibility_off
+                              : Icons.visibility,
                         ),
                       )),
                 ),
@@ -635,13 +657,16 @@ class _LoginPageState extends State<LoginPage> {
           height: 20,
         ),
         socialMediaLogin,
-        FlavorConfig.appFlavor == Flavor.SEVA_DEV ? directDevLogin : Container(),
+        FlavorConfig.appFlavor == Flavor.SEVA_DEV
+            ? directDevLogin
+            : Container(),
       ],
     );
   }
 
   List<String> emails = [
     'barney@yopmail.com',
+    'umesha@uipep.com',
     'tony@yopmail.com',
     'robert@yopmail.com',
     'howard@yopmail.com',
@@ -827,7 +852,8 @@ class _LoginPageState extends State<LoginPage> {
           content: Text(S.of(context).check_internet),
           action: SnackBarAction(
             label: S.of(context).dismiss,
-            onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
+            onPressed: () =>
+                ScaffoldMessenger.of(context).hideCurrentSnackBar(),
           ),
         ),
       );
@@ -838,7 +864,8 @@ class _LoginPageState extends State<LoginPage> {
     UserModel user;
     try {
       user = await auth.signInWithApple();
-      await getAndUpdateDeviceDetailsOfUser(locationVal: location, userEmailId: user.email);
+      await getAndUpdateDeviceDetailsOfUser(
+          locationVal: location, userEmailId: user.email);
     } on FirebaseAuthException catch (erorr) {
       handlePlatformException(erorr);
     } on Exception catch (error) {
@@ -862,7 +889,8 @@ class _LoginPageState extends State<LoginPage> {
           content: Text(S.of(context).check_internet),
           action: SnackBarAction(
             label: S.of(context).dismiss,
-            onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
+            onPressed: () =>
+                ScaffoldMessenger.of(context).hideCurrentSnackBar(),
           ),
         ),
       );
@@ -873,7 +901,8 @@ class _LoginPageState extends State<LoginPage> {
     UserModel user;
     try {
       user = await auth.handleGoogleSignIn();
-      await getAndUpdateDeviceDetailsOfUser(locationVal: location, userEmailId: user.email);
+      await getAndUpdateDeviceDetailsOfUser(
+          locationVal: location, userEmailId: user.email);
     } on FirebaseAuthException catch (erorr) {
       handlePlatformException(erorr);
     } on Exception catch (error) {
@@ -892,10 +921,11 @@ class _LoginPageState extends State<LoginPage> {
     isLoading = true;
     try {
       user = await auth.signInWithEmailAndPassword(
-        email: emailId.trim(),
+        email: emailId.trim().toLowerCase(),
         password: password,
       );
-      await getAndUpdateDeviceDetailsOfUser(locationVal: location, userEmailId: user.email)
+      await getAndUpdateDeviceDetailsOfUser(
+              locationVal: location, userEmailId: user.email)
           .timeout(Duration(seconds: 3));
       logger.i('device details fixed');
     } on TimeoutException catch (e) {
@@ -961,21 +991,23 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   String _validateEmailId(String value) {
-    RegExp emailPattern =
-        RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+    RegExp emailPattern = RegExp(
+        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
     if (value.isEmpty) return S.of(context).enter_email;
-    if (!emailPattern.hasMatch(value)) return S.of(context).validation_error_invalid_email;
+    if (!emailPattern.hasMatch(value))
+      return S.of(context).validation_error_invalid_email;
     return null;
   }
 
   String _validatePassword(String value) {
     if (value.isEmpty) return S.of(context).enter_password;
-    if (value.length < 6) return S.of(context).validation_error_invalid_password;
+    if (value.length < 6)
+      return S.of(context).validation_error_invalid_password;
     return null;
   }
 
   void _saveEmail(String value) {
-    this.emailId = value;
+    this.emailId = value.toLowerCase();
   }
 
   void _savePassword(String value) {
@@ -997,7 +1029,9 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> resetPassword(String email) async {
-    await FirebaseAuth.instance.sendPasswordResetEmail(email: email).then((onValue) {
+    await FirebaseAuth.instance
+        .sendPasswordResetEmail(email: email)
+        .then((onValue) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(S.of(context).reset_password_message),
         action: SnackBarAction(
@@ -1094,7 +1128,9 @@ class _LoginPageState extends State<LoginPage> {
   void resetDynamicLinkPassword(
     String email,
   ) async {
-    await FirebaseAuth.instance.sendPasswordResetEmail(email: email).then((onValue) {
+    await FirebaseAuth.instance
+        .sendPasswordResetEmail(email: email)
+        .then((onValue) {
       showDialog(
         context: parentContext,
         builder: (BuildContext context) {
