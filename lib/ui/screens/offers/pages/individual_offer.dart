@@ -1645,6 +1645,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
               currentNode: _description,
               nextNode: _availability,
               value: snapshot.data,
+              validator: _bloc.validateDescription,
               heading: "${S.of(context).offer_description}*",
               onChanged: _bloc.onOfferDescriptionChanged,
               hint: description_hint != null
