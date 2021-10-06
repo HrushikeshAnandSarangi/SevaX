@@ -207,12 +207,12 @@ class _CreateEditProjectState extends State<CreateEditProject> {
       endDate = getUpdatedDateTimeAccToUserTimezone(
           timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
           dateTime: DateTime.fromMillisecondsSinceEpoch(projectModel.endTime));
-      emailIdController.text = widget.isCreateProject
-          ? widget.projectTemplateModel != null
-              ? widget.projectTemplateModel.emailId ?? SevaCore.of(context).loggedInUser.email
-              : projectModel.emailId ?? SevaCore.of(context).loggedInUser.email
-          : SevaCore.of(context).loggedInUser.email;
     }
+    emailIdController.text = widget.isCreateProject
+        ? widget.projectTemplateModel != null
+            ? widget.projectTemplateModel.emailId ?? SevaCore.of(context).loggedInUser.email
+            : projectModel.emailId ?? SevaCore.of(context).loggedInUser.email
+        : SevaCore.of(context).loggedInUser.email;
 
     return ExitWithConfirmation(
       child: Scaffold(
@@ -306,727 +306,712 @@ class _CreateEditProjectState extends State<CreateEditProject> {
   }
 
   Widget get createProjectForm {
-    return Column(
-      children: [
-        Builder(
-          builder: (context) => SingleChildScrollView(
-            controller: _controller,
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  // widget.isCreateProject ? projectSwitch : Container(),
-                  Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(5.0),
-                      child: Column(
-                        children: <Widget>[
-                          widget.isCreateProject
-                              ? widget.projectTemplateModel != null
-                                  ? ProjectCoverPhoto(
-                                      cover_url: widget.projectTemplateModel.cover_url ??
-                                          defaultProjectImageURL)
-                                  : ProjectCoverPhoto()
-                              : ProjectCoverPhoto(
-                                  cover_url: projectModel.cover_url != null
-                                      ? projectModel.cover_url ?? defaultProjectImageURL
-                                      : defaultProjectImageURL,
-                                ),
-                          Text(''),
-                          !widget.isCreateProject
-                              ? Text(
-                                  "${S.of(context).cover_picture_label_event}",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.grey,
-                                  ),
-                                )
-                              : Container(),
-                          SizedBox(height: 25),
-                          widget.isCreateProject
-                              ? widget.projectTemplateModel != null
-                                  ? ProjectAvtaar(
-                                      photoUrl: widget.projectTemplateModel.photoUrl ??
-                                          defaultProjectImageURL)
-                                  : ProjectAvtaar()
-                              : ProjectAvtaar(
-                                  photoUrl: projectModel.photoUrl != null
-                                      ? projectModel.photoUrl ?? defaultProjectImageURL
-                                      : defaultProjectImageURL,
-                                ),
-                          Text(''),
-                          Text(
-                            S.of(context).project_logo,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey,
+    return Builder(
+      builder: (context) => SingleChildScrollView(
+        controller: _controller,
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              // widget.isCreateProject ? projectSwitch : Container(),
+              Center(
+                child: Padding(
+                  padding: EdgeInsets.all(5.0),
+                  child: Column(
+                    children: <Widget>[
+                      widget.isCreateProject
+                          ? widget.projectTemplateModel != null
+                              ? ProjectCoverPhoto(
+                                  cover_url: widget.projectTemplateModel.cover_url ??
+                                      defaultProjectImageURL)
+                              : ProjectCoverPhoto()
+                          : ProjectCoverPhoto(
+                              cover_url: projectModel.cover_url != null
+                                  ? projectModel.cover_url ?? defaultProjectImageURL
+                                  : defaultProjectImageURL,
                             ),
-                          ),
-                          Text(
-                            communityImageError,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.red,
-                              fontSize: 12,
+                      Text(''),
+                      !widget.isCreateProject
+                          ? Text(
+                              "${S.of(context).cover_picture_label_event}",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey,
+                              ),
+                            )
+                          : Container(),
+                      SizedBox(height: 25),
+                      widget.isCreateProject
+                          ? widget.projectTemplateModel != null
+                              ? ProjectAvtaar(
+                                  photoUrl: widget.projectTemplateModel.photoUrl ??
+                                      defaultProjectImageURL)
+                              : ProjectAvtaar()
+                          : ProjectAvtaar(
+                              photoUrl: projectModel.photoUrl != null
+                                  ? projectModel.photoUrl ?? defaultProjectImageURL
+                                  : defaultProjectImageURL,
                             ),
-                          ),
-                        ],
+                      Text(''),
+                      Text(
+                        S.of(context).project_logo,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey,
+                        ),
                       ),
-                    ),
+                      Text(
+                        communityImageError,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.red,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
                   ),
-                  headingText("${S.of(context).project_name} *"),
-                  DoseTextField(
-                    isRequired: true,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    controller: projectNameController,
-                    currentNode: projectFocusNode,
-                    onChanged: (value) {
-                      ExitWithConfirmation.of(context).fieldValues[1] = value;
-                      projectModel.name = value;
-                    },
-                    textCapitalization: TextCapitalization.sentences,
-                    // inputFormatters: <TextInputFormatter>[
-                    //   WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9_ ]*"))
-                    // ],
-                    decoration: InputDecoration(
-                      errorMaxLines: 2,
-                      errorText: errTxt,
-                      hintText: S.of(context).name_hint,
-                    ),
-                    keyboardType: TextInputType.multiline,
-                    maxLines: 1,
-                    //initialValue: snapshot.data.community.name ?? '',
-                    textInputAction: TextInputAction.next,
-                    onFieldSubmitted: (_) {
-                      FocusScope.of(context).requestFocus(focusNodes[1]);
-                    },
-                    onSaved: (value) {
-                      projectModel.name = value;
-                    },
-                    // onSaved: (value) => enteredName = value,
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return S.of(context).validation_error_project_name_empty;
-                      } else if (profanityDetector.isProfaneString(value)) {
-                        return S.of(context).profanity_text_alert;
-                      } else if (value.substring(0, 1).contains('_') &&
-                          !AppConfig.testingEmails.contains(AppConfig.loggedInEmail)) {
-                        return 'Creating event with "_" is not allowed';
-                      } else {
-                        projectModel.name = value;
-                      }
+                ),
+              ),
+              headingText("${S.of(context).project_name} *"),
+              DoseTextField(
+                isRequired: true,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                controller: projectNameController,
+                currentNode: projectFocusNode,
+                onChanged: (value) {
+                  ExitWithConfirmation.of(context).fieldValues[1] = value;
+                  projectModel.name = value;
+                },
+                textCapitalization: TextCapitalization.sentences,
+                // inputFormatters: <TextInputFormatter>[
+                //   WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9_ ]*"))
+                // ],
+                decoration: InputDecoration(
+                  errorMaxLines: 2,
+                  errorText: errTxt,
+                  hintText: S.of(context).name_hint,
+                ),
+                keyboardType: TextInputType.multiline,
+                maxLines: 1,
+                //initialValue: snapshot.data.community.name ?? '',
+                textInputAction: TextInputAction.next,
+                onFieldSubmitted: (_) {
+                  FocusScope.of(context).requestFocus(focusNodes[1]);
+                },
+                onSaved: (value) {
+                  projectModel.name = value;
+                },
+                // onSaved: (value) => enteredName = value,
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return S.of(context).validation_error_project_name_empty;
+                  } else if (profanityDetector.isProfaneString(value)) {
+                    return S.of(context).profanity_text_alert;
+                  } else if (value.substring(0, 1).contains('_') &&
+                      !AppConfig.testingEmails.contains(AppConfig.loggedInEmail)) {
+                    return 'Creating event with "_" is not allowed';
+                  } else {
+                    projectModel.name = value;
+                  }
 
-                      return null;
-                    },
-                  ),
-                  widget.isCreateProject
-                      ? widget.projectTemplateModel != null
-                          ? OfferDurationWidget(
-                              title: ' ${S.of(context).project_duration} *',
-                              startTime: startDate,
-                              endTime: endDate,
-                            )
-                          : OfferDurationWidget(
-                              title: ' ${S.of(context).project_duration} *',
-                              //startTime: CalendarWidgetState.startDate,
-                              //endTime: CalendarWidgetState.endDate
-                            )
-                      : OfferDurationWidget(
-                          title: ' ${S.of(context).project_duration}',
+                  return null;
+                },
+              ),
+              widget.isCreateProject
+                  ? widget.projectTemplateModel != null
+                      ? OfferDurationWidget(
+                          title: ' ${S.of(context).project_duration} *',
                           startTime: startDate,
                           endTime: endDate,
-                        ),
-
-                  widget.isCreateProject
-                      ? RepeatWidget()
-                      : projectModel.isRecurring || projectModel.autoGenerated
-                          ? Container()
-                          : RepeatWidget(),
-
-                  Text(
-                    dateTimeEroor,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.red,
-                      fontSize: 12,
+                        )
+                      : OfferDurationWidget(
+                          title: ' ${S.of(context).project_duration} *',
+                          //startTime: CalendarWidgetState.startDate,
+                          //endTime: CalendarWidgetState.endDate
+                        )
+                  : OfferDurationWidget(
+                      title: ' ${S.of(context).project_duration}',
+                      startTime: startDate,
+                      endTime: endDate,
                     ),
-                  ),
-                  headingText(S.of(context).event_description + " *"),
-                  DoseTextField(
-                    isRequired: true,
-                    controller: projectStatementController,
-                    decoration: InputDecoration(
-                      errorMaxLines: 2,
-                      hintText: S.of(context).project_mission_statement_hint,
-                    ),
-                    onFieldSubmitted: (_) {
-                      FocusScope.of(context).requestFocus(focusNodes[2]);
-                    },
-                    textInputAction: TextInputAction.next,
-                    currentNode: focusNodes[1],
-                    keyboardType: TextInputType.multiline,
-                    maxLines: null,
-                    textCapitalization: TextCapitalization.sentences,
-                    //  initialValue: timebankModel.missionStatement,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    onChanged: (value) {
-                      ExitWithConfirmation.of(context).fieldValues[2] = value;
 
-                      projectModel.description = value;
-                    },
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return S.of(context).validation_error_mission_empty;
-                      } else if (profanityDetector.isProfaneString(value)) {
-                        return S.of(context).profanity_text_alert;
-                      } else {
-                        projectModel.description = value;
-                      }
+              widget.isCreateProject
+                  ? RepeatWidget()
+                  : projectModel.isRecurring || projectModel.autoGenerated
+                      ? Container()
+                      : RepeatWidget(),
 
-                      return null;
-                    },
-                  ),
+              Text(
+                dateTimeEroor,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.red,
+                  fontSize: 12,
+                ),
+              ),
+              headingText(S.of(context).event_description + " *"),
+              DoseTextField(
+                isRequired: true,
+                controller: projectStatementController,
+                decoration: InputDecoration(
+                  errorMaxLines: 2,
+                  hintText: S.of(context).project_mission_statement_hint,
+                ),
+                onFieldSubmitted: (_) {
+                  FocusScope.of(context).requestFocus(focusNodes[2]);
+                },
+                textInputAction: TextInputAction.next,
+                currentNode: focusNodes[1],
+                keyboardType: TextInputType.multiline,
+                maxLines: null,
+                textCapitalization: TextCapitalization.sentences,
+                //  initialValue: timebankModel.missionStatement,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                onChanged: (value) {
+                  ExitWithConfirmation.of(context).fieldValues[2] = value;
 
-                  Padding(
-                    padding: EdgeInsets.all(8),
-                  ),
+                  projectModel.description = value;
+                },
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return S.of(context).validation_error_mission_empty;
+                  } else if (profanityDetector.isProfaneString(value)) {
+                    return S.of(context).profanity_text_alert;
+                  } else {
+                    projectModel.description = value;
+                  }
 
-                  headingText(S.of(context).registration_link),
-                  DoseTextField(
-                    controller: registrationLinkController,
-                    decoration: InputDecoration(
-                      errorMaxLines: 2,
-                      hintText: S.of(context).registration_link_hint,
-                    ),
-                    onFieldSubmitted: (_) {
-                      FocusScope.of(context).requestFocus(focusNodes[3]);
-                    },
-                    textInputAction: TextInputAction.next,
-                    currentNode: focusNodes[2],
-                    keyboardType: TextInputType.text,
-                    maxLines: null,
-                    textCapitalization: TextCapitalization.sentences,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    onSaved: (value) {
-                      projectModel.registrationLink = value;
-                    },
-                    onChanged: (value) {
-                      ExitWithConfirmation.of(context).fieldValues[3] = value;
+                  return null;
+                },
+              ),
 
-                      projectModel.registrationLink = value;
-                    },
-                    validator: (value) {
-                      RegExp regExp = RegExp(
-                        r'(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])',
-                        caseSensitive: false,
-                        multiLine: false,
-                      );
-                      if (value.isNotEmpty && !regExp.hasMatch(value)) {
-                        return 'Add valid registration url';
-                      } else {
-                        projectModel.registrationLink = value;
-                      }
-                      return null;
-                    },
-                  ),
+              Padding(
+                padding: EdgeInsets.all(8),
+              ),
 
-                  Padding(
-                    padding: EdgeInsets.all(8),
-                  ),
-                  headingText(
-                    S.of(context).email.firstWordUpperCase(),
-                  ),
-                  DoseTextField(
-                    isRequired: true,
-                    controller: emailIdController,
-                    onFieldSubmitted: (_) {
-                      FocusScope.of(context).requestFocus(focusNodes[4]);
-                    },
-                    textInputAction: TextInputAction.next,
-                    currentNode: focusNodes[3],
-                    // cursorColor: Colors.black54,
-                    validator: _validateEmailId,
-                    onSaved: (value) {
-                      ExitWithConfirmation.of(context).fieldValues[4] = value;
-                      projectModel.emailId = value;
-                    },
-                    onChanged: (value) {
-                      projectModel.emailId = value;
-                    },
+              headingText(S.of(context).registration_link),
+              DoseTextField(
+                controller: registrationLinkController,
+                decoration: InputDecoration(
+                  errorMaxLines: 2,
+                  hintText: S.of(context).registration_link_hint,
+                ),
+                onFieldSubmitted: (_) {
+                  FocusScope.of(context).requestFocus(focusNodes[3]);
+                },
+                textInputAction: TextInputAction.next,
+                currentNode: focusNodes[2],
+                keyboardType: TextInputType.text,
+                maxLines: null,
+                textCapitalization: TextCapitalization.sentences,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                onSaved: (value) {
+                  projectModel.registrationLink = value;
+                },
+                onChanged: (value) {
+                  ExitWithConfirmation.of(context).fieldValues[3] = value;
 
-                    decoration: InputDecoration(
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black54),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black54),
-                      ),
-                      hintText: S.of(context).email_hint,
-                      hintStyle: textStyle,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  SponsorsWidget(
-                    title: S.of(context).add_event_sponsors_text,
-                    sponsorsMode: widget.isCreateProject ? SponsorsMode.CREATE : SponsorsMode.EDIT,
-                    sponsors: projectModel.sponsors,
-                    isAdminVerified: false,
-                    onSponsorsAdded: (
-                      List<SponsorDataModel> sponsorsData,
-                      SponsorDataModel addedSponsors,
-                    ) {
-                      setState(() {
-                        projectModel.sponsors = sponsorsData;
-                      });
-                      logger.i(
-                          'Added Sponsors in Event:\n Name:${addedSponsors.name}\nLogo:${addedSponsors.logo}\nCreatedBy:${addedSponsors.createdBy}\nCreatedAt:${addedSponsors.createdAt}\n----------------------------------------------------------\n');
-                    },
-                    onSponsorsRemoved: (
-                      List<SponsorDataModel> sponsorsData,
-                      SponsorDataModel removedSponsors,
-                    ) {
-                      setState(() {
-                        projectModel.sponsors = sponsorsData;
-                      });
+                  projectModel.registrationLink = value;
+                },
+                validator: (value) {
+                  RegExp regExp = RegExp(
+                    r'(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])',
+                    caseSensitive: false,
+                    multiLine: false,
+                  );
+                  if (value.isNotEmpty && !regExp.hasMatch(value)) {
+                    return 'Add valid registration url';
+                  } else {
+                    projectModel.registrationLink = value;
+                  }
+                  return null;
+                },
+              ),
 
-                      logger.i(
-                          'Remove Sponsors from Event:\n Name:${removedSponsors.name}\nLogo:${removedSponsors.logo}\nCreatedBy:${removedSponsors.createdBy}\nCreatedAt:${removedSponsors.createdAt}\n----------------------------------------------------------\n');
-                    },
-                    onError: (error) {
-                      logger.e(error);
-                    },
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  headingText(
-                    S.of(context).project_location,
-                  ),
-                  Text(
-                    S.of(context).project_location_hint,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0),
-                  ),
-                  Center(
-                    child: LocationPickerWidget(
-                      selectedAddress: widget.isCreateProject ? selectedAddress : selectedAddress,
-                      location: widget.isCreateProject ? location : location,
-                      onChanged: (LocationDataModel dataModel) {
-                        log("received data model");
-                        setState(() {
-                          location = dataModel.geoPoint;
-                          this.selectedAddress = dataModel.location;
-                        });
-                      },
-                    ),
-                  ),
+              Padding(
+                padding: EdgeInsets.all(8),
+              ),
+              headingText(
+                S.of(context).email.firstWordUpperCase(),
+              ),
+              DoseTextField(
+                isRequired: true,
+                controller: emailIdController,
+                onFieldSubmitted: (_) {
+                  FocusScope.of(context).requestFocus(focusNodes[4]);
+                },
+                textInputAction: TextInputAction.next,
+                currentNode: focusNodes[3],
+                // cursorColor: Colors.black54,
+                validator: _validateEmailId,
+                onSaved: (value) {
+                  ExitWithConfirmation.of(context).fieldValues[4] = value;
+                  projectModel.emailId = value;
+                },
+                onChanged: (value) {
+                  projectModel.emailId = value;
+                },
 
-                  Text(
-                    locationError,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.red,
-                      fontSize: 12,
-                    ),
+                decoration: InputDecoration(
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black54),
                   ),
-                  widget.isCreateProject
-                      ? Row(
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.only(top: 15),
-                              child: Checkbox(
-                                value: saveAsTemplate,
-                                onChanged: (bool value) {
-                                  if (saveAsTemplate) {
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black54),
+                  ),
+                  hintText: S.of(context).email_hint,
+                  hintStyle: textStyle,
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              SponsorsWidget(
+                title: S.of(context).add_event_sponsors_text,
+                sponsorsMode: widget.isCreateProject ? SponsorsMode.CREATE : SponsorsMode.EDIT,
+                sponsors: projectModel.sponsors,
+                isAdminVerified: false,
+                onSponsorsAdded: (
+                  List<SponsorDataModel> sponsorsData,
+                  SponsorDataModel addedSponsors,
+                ) {
+                  setState(() {
+                    projectModel.sponsors = sponsorsData;
+                  });
+                  logger.i(
+                      'Added Sponsors in Event:\n Name:${addedSponsors.name}\nLogo:${addedSponsors.logo}\nCreatedBy:${addedSponsors.createdBy}\nCreatedAt:${addedSponsors.createdAt}\n----------------------------------------------------------\n');
+                },
+                onSponsorsRemoved: (
+                  List<SponsorDataModel> sponsorsData,
+                  SponsorDataModel removedSponsors,
+                ) {
+                  setState(() {
+                    projectModel.sponsors = sponsorsData;
+                  });
+
+                  logger.i(
+                      'Remove Sponsors from Event:\n Name:${removedSponsors.name}\nLogo:${removedSponsors.logo}\nCreatedBy:${removedSponsors.createdBy}\nCreatedAt:${removedSponsors.createdAt}\n----------------------------------------------------------\n');
+                },
+                onError: (error) {
+                  logger.e(error);
+                },
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              headingText(
+                S.of(context).project_location,
+              ),
+              Text(
+                S.of(context).project_location_hint,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10.0),
+              ),
+              Center(
+                child: LocationPickerWidget(
+                  selectedAddress: widget.isCreateProject ? selectedAddress : selectedAddress,
+                  location: widget.isCreateProject ? location : location,
+                  onChanged: (LocationDataModel dataModel) {
+                    log("received data model");
+                    setState(() {
+                      location = dataModel.geoPoint;
+                      this.selectedAddress = dataModel.location;
+                    });
+                  },
+                ),
+              ),
+
+              Text(
+                locationError,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.red,
+                  fontSize: 12,
+                ),
+              ),
+              widget.isCreateProject
+                  ? Row(
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(top: 15),
+                          child: Checkbox(
+                            value: saveAsTemplate,
+                            onChanged: (bool value) {
+                              if (saveAsTemplate) {
+                                setState(() {
+                                  saveAsTemplate = false;
+                                });
+                              } else {
+                                _showSaveAsTemplateDialog().then((templateName) {
+                                  if (templateName != null) {
+                                    setState(() {
+                                      saveAsTemplate = true;
+                                    });
+                                  } else {
                                     setState(() {
                                       saveAsTemplate = false;
                                     });
-                                  } else {
-                                    _showSaveAsTemplateDialog().then((templateName) {
-                                      if (templateName != null) {
-                                        setState(() {
-                                          saveAsTemplate = true;
-                                        });
-                                      } else {
-                                        setState(() {
-                                          saveAsTemplate = false;
-                                        });
-                                      }
-                                    });
                                   }
-                                },
-                              ),
+                                });
+                              }
+                            },
+                          ),
+                        ),
+                        headingText(S.of(context).save_as_template),
+                      ],
+                    )
+                  : Offstage(),
+              HideWidget(
+                hide: AppConfig.isTestCommunity,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 2),
+                  child: ConfigurationCheck(
+                    actionType: 'create_virtual_event',
+                    role: memberType(timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
+                    child: OpenScopeCheckBox(
+                        infoType: InfoType.VirtualRequest,
+                        isChecked: projectModel.virtualProject,
+                        checkBoxTypeLabel: CheckBoxType.type_VirtualRequest,
+                        onChangedCB: (bool val) {
+                          if (projectModel.virtualProject != val) {
+                            this.projectModel.virtualProject = val;
+
+                            // if (!val) {
+                            //   projectModel.public = false;
+                            //   isPulicCheckboxVisible = false;
+                            // } else {
+                            //   isPulicCheckboxVisible = true;
+                            // }
+
+                            setState(() {});
+                          }
+                        }),
+                  ),
+                ),
+              ),
+
+              // HideWidget(
+              //   hide: !isPulicCheckboxVisible,
+              //   child:
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 3),
+                child: TransactionsMatrixCheck(
+                  comingFrom: ComingFrom.Projects,
+                  upgradeDetails: AppConfig.upgradePlanBannerModel.public_to_sevax_global,
+                  transaction_matrix_type: 'create_public_event',
+                  child: ConfigurationCheck(
+                    actionType: 'create_public_event',
+                    role: memberType(timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
+                    child: OpenScopeCheckBox(
+                        infoType: InfoType.OpenScopeEvent,
+                        isChecked: projectModel.public,
+                        checkBoxTypeLabel: CheckBoxType.type_Events,
+                        onChangedCB: (bool val) {
+                          if (projectModel.public != val) {
+                            this.projectModel.public = val;
+                            log('value ${projectModel.public}');
+                            setState(() {});
+                          }
+                        }),
+                  ),
+                ),
+              ),
+              // ),
+
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(vertical: 8),
+              //   child: OpenScopeCheckBox(
+              //       infoType: InfoType.VirtualRequest,
+              //       isChecked: projectModel.virtualProject,
+              //       checkBoxTypeLabel: CheckBoxType.type_VirtualRequest,
+              //       onChangedCB: (bool val) {
+              //         if (projectModel.virtualProject != val) {
+              //           this.projectModel.virtualProject = val;
+              //           setState(() {});
+              //         }
+              //       }),
+              // ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 5.0),
+                child: Container(
+                  alignment: Alignment.center,
+                  child: CustomElevatedButton(
+                    onPressed: () async {
+                      var connResult = await Connectivity().checkConnectivity();
+                      if (connResult == ConnectivityResult.none) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(S.of(context).check_internet),
+                            action: SnackBarAction(
+                              label: S.of(context).dismiss,
+                              onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
                             ),
-                            headingText(S.of(context).save_as_template),
-                          ],
-                        )
-                      : Offstage(),
-                  HideWidget(
-                    hide: AppConfig.isTestCommunity,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 2),
-                      child: ConfigurationCheck(
-                        actionType: 'create_virtual_event',
-                        role:
-                            memberType(timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
-                        child: OpenScopeCheckBox(
-                            infoType: InfoType.VirtualRequest,
-                            isChecked: projectModel.virtualProject,
-                            checkBoxTypeLabel: CheckBoxType.type_VirtualRequest,
-                            onChangedCB: (bool val) {
-                              if (projectModel.virtualProject != val) {
-                                this.projectModel.virtualProject = val;
+                          ),
+                        );
+                        return;
+                      }
 
-                                // if (!val) {
-                                //   projectModel.public = false;
-                                //   isPulicCheckboxVisible = false;
-                                // } else {
-                                //   isPulicCheckboxVisible = true;
-                                // }
+                      FocusScope.of(context).requestFocus(FocusNode());
+                      // show a dialog
+                      projectModel.startTime = OfferDurationWidgetState.starttimestamp;
+                      projectModel.endTime = OfferDurationWidgetState.endtimestamp;
+                      if (widget.isCreateProject) {
+                        if (_formKey.currentState.validate()) {
+                          if (projectModel.startTime == 0 || projectModel.endTime == 0) {
+                            showDialogForTitle(
+                              dialogTitle: S.of(context).validation_error_no_date,
+                            );
+                            return;
+                          }
+                          projectModel.liveMode = !AppConfig.isTestCommunity;
+                          if (projectModel.public) {
+                            projectModel.timebanksPosted = [
+                              widget.timebankId,
+                              FlavorConfig.values.timebankId
+                            ];
+                          } else {
+                            projectModel.timebanksPosted = [
+                              widget.timebankId,
+                            ];
+                          }
 
-                                setState(() {});
-                              }
-                            }),
-                      ),
-                    ),
-                  ),
+                          projectModel.communityId =
+                              SevaCore.of(context).loggedInUser.currentCommunity;
+                          projectModel.completedRequests = [];
+                          projectModel.pendingRequests = [];
+                          projectModel.timebankId = widget.timebankId;
+                          projectModel.photoUrl = globals.projectsAvtaarURL;
+                          projectModel.cover_url = globals.projectsCoverURL;
+                          projectModel.emailId =
+                              projectModel.emailId ?? SevaCore.of(context).loggedInUser.email;
+                          projectModel.location = location;
+                          int timestamp = DateTime.now().millisecondsSinceEpoch;
+                          projectModel.createdAt = timestamp;
 
-                  // HideWidget(
-                  //   hide: !isPulicCheckboxVisible,
-                  //   child:
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 3),
-                    child: TransactionsMatrixCheck(
-                      comingFrom: ComingFrom.Projects,
-                      upgradeDetails: AppConfig.upgradePlanBannerModel.public_to_sevax_global,
-                      transaction_matrix_type: 'create_public_event',
-                      child: ConfigurationCheck(
-                        actionType: 'create_public_event',
-                        role:
-                            memberType(timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
-                        child: OpenScopeCheckBox(
-                            infoType: InfoType.OpenScopeEvent,
-                            isChecked: projectModel.public,
-                            checkBoxTypeLabel: CheckBoxType.type_Events,
-                            onChangedCB: (bool val) {
-                              if (projectModel.public != val) {
-                                this.projectModel.public = val;
-                                log('value ${projectModel.public}');
-                                setState(() {});
-                              }
-                            }),
-                      ),
-                    ),
-                  ),
-                  // ),
+                          projectModel.creatorId = SevaCore.of(context).loggedInUser.sevaUserID;
+                          projectModel.members = [];
+                          projectModel.address = selectedAddress;
+                          projectModel.id = Utils.getUuid();
+                          projectModel.softDelete = false;
+                          projectModel.communityName = communityModel.name ?? timebankModel.name;
+                          projectModel.parentEventId = projectModel.id;
 
-                  // Padding(
-                  //   padding: const EdgeInsets.symmetric(vertical: 8),
-                  //   child: OpenScopeCheckBox(
-                  //       infoType: InfoType.VirtualRequest,
-                  //       isChecked: projectModel.virtualProject,
-                  //       checkBoxTypeLabel: CheckBoxType.type_VirtualRequest,
-                  //       onChangedCB: (bool val) {
-                  //         if (projectModel.virtualProject != val) {
-                  //           this.projectModel.virtualProject = val;
-                  //           setState(() {});
-                  //         }
-                  //       }),
-                  // ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 5.0),
-                    child: Container(
-                      alignment: Alignment.center,
-                      child: CustomElevatedButton(
-                        onPressed: () async {
-                          var connResult = await Connectivity().checkConnectivity();
-                          if (connResult == ConnectivityResult.none) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(S.of(context).check_internet),
-                                action: SnackBarAction(
-                                  label: S.of(context).dismiss,
-                                  onPressed: () =>
-                                      ScaffoldMessenger.of(context).hideCurrentSnackBar(),
-                                ),
-                              ),
+                          if (saveAsTemplate) {
+                            projectTemplateModel.communityId = projectModel.communityId;
+                            projectTemplateModel.timebankId = projectModel.timebankId;
+                            projectTemplateModel.id = Utils.getUuid();
+                            projectTemplateModel.name = projectModel.name;
+                            projectTemplateModel.templateName = templateName;
+                            projectTemplateModel.photoUrl = projectModel.photoUrl;
+                            projectTemplateModel.cover_url = projectModel.cover_url;
+                            projectTemplateModel.description = projectModel.description;
+                            projectTemplateModel.registrationLink = projectModel.registrationLink;
+                            projectTemplateModel.creatorId = projectModel.creatorId;
+                            projectTemplateModel.createdAt = projectModel.createdAt;
+                            projectTemplateModel.mode = projectModel.mode;
+                            projectTemplateModel.softDelete = false;
+                            projectTemplateModel.emailId = projectModel.emailId;
+
+                            await FirestoreManager.createProjectTemplate(
+                                projectTemplateModel: projectTemplateModel);
+                          }
+
+                          if (RepeatWidgetState.isRecurring) {
+                            projectModel.isRecurring = true;
+                            projectModel.recurringDays = RepeatWidgetState.getRecurringdays();
+                            projectModel.occurenceCount = 1;
+                            end.endType = RepeatWidgetState.endType == 0 ? "on" : "after";
+                            end.on = end.endType == "on"
+                                ? RepeatWidgetState.selectedDate.millisecondsSinceEpoch
+                                : null;
+                            end.after = (end.endType == "after"
+                                ? int.parse(RepeatWidgetState.after)
+                                : null);
+                            projectModel.end = end;
+
+                            String messagingRoomId =
+                                await ProjectMessagingRoomHelper.createMessagingRoomForEvent(
+                              projectModel: projectModel,
+                              projectCreator: SevaCore.of(context).loggedInUser,
+                            );
+
+                            projectModel.associatedMessaginfRoomId = messagingRoomId;
+
+                            if (projectModel.isRecurring &&
+                                projectModel.recurringDays.length == 0) {
+                              showDialogForTitle(
+                                  dialogTitle: S.of(context).validation_error_empty_recurring_days);
+                              return;
+                            }
+                            showProgressDialog(S.of(context).creating_project);
+
+                            await WatchDog.createRecurringEvents(projectModel: projectModel);
+                          } else {
+                            await ProjectMessagingRoomHelper.createProjectWithMessaging(
+                              projectModel: projectModel,
+                              projectCreator: SevaCore.of(context).loggedInUser,
+                            );
+                          }
+
+                          globals.projectsAvtaarURL = null;
+                          globals.projectsCoverURL = null;
+                          globals.webImageUrl = null;
+
+                          if (dialogContext != null) {
+                            Navigator.pop(dialogContext);
+                          }
+                          //TODO rest
+                          _formKey.currentState.reset();
+
+                          KloudlessWidgetManager<CreateMode, ProjectModel>().syncCalendar(
+                            context: context,
+                            builder: KloudlessWidgetBuilder().fromContext<CreateMode, ProjectModel>(
+                              context: context,
+                              model: projectModel,
+                              id: projectModel.id,
+                            ),
+                          );
+
+                          // Stay Adding calendar Integration
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pop();
+                        } else {}
+                      } else {
+                        // return;
+
+                        if (_formKey.currentState.validate()) {
+                          projectModel.startTime = OfferDurationWidgetState.starttimestamp;
+                          projectModel.endTime = OfferDurationWidgetState.endtimestamp;
+                          projectModel.address = selectedAddress;
+                          projectModel.location = location;
+                          if (projectModel.public) {
+                            projectModel.timebanksPosted = [
+                              projectModel.timebankId,
+                              FlavorConfig.values.timebankId
+                            ];
+                          } else {
+                            projectModel.timebanksPosted = [projectModel.timebankId];
+                          }
+
+                          if (globals.projectsAvtaarURL != null) {
+                            projectModel.photoUrl = globals.projectsAvtaarURL;
+                          }
+
+                          if (globals.projectsCoverURL != null) {
+                            projectModel.cover_url = globals.projectsCoverURL;
+                          }
+
+                          if (projectModel.startTime == 0 || projectModel.endTime == 0) {
+                            showDialogForTitle(dialogTitle: S.of(context).validation_error_no_date);
+                            return;
+                          }
+
+                          if (projectModel.address == null || this.selectedAddress == null) {
+                            this.locationError = S.of(context).validation_error_location_mandatory;
+                            showDialogForTitle(
+                              dialogTitle: S.of(context).validation_error_add_project_location,
                             );
                             return;
                           }
 
-                          FocusScope.of(context).requestFocus(FocusNode());
-                          // show a dialog
-                          projectModel.startTime = OfferDurationWidgetState.starttimestamp;
-                          projectModel.endTime = OfferDurationWidgetState.endtimestamp;
-                          if (widget.isCreateProject) {
-                            if (_formKey.currentState.validate()) {
-                              if (projectModel.startTime == 0 || projectModel.endTime == 0) {
-                                showDialogForTitle(
-                                  dialogTitle: S.of(context).validation_error_no_date,
-                                );
-                                return;
-                              }
-                              projectModel.liveMode = !AppConfig.isTestCommunity;
-                              if (projectModel.public) {
-                                projectModel.timebanksPosted = [
-                                  widget.timebankId,
-                                  FlavorConfig.values.timebankId
-                                ];
-                              } else {
-                                projectModel.timebanksPosted = [
-                                  widget.timebankId,
-                                ];
-                              }
+                          // showProgressDialog(S.of(context).updating_project);
+                          //THIS CONDITION CHECKS IF THE EVENT WAS PREVIOUS NON RECURRING AND IS NOW MADE AS RECURRING
+                          if (!wasCreatedFromRecurring && RepeatWidgetState.isRecurring) {
+                            projectModel.isRecurring = true;
+                            projectModel.recurringDays = RepeatWidgetState.getRecurringdays();
+                            projectModel.occurenceCount = 1;
+                            end.endType = RepeatWidgetState.endType == 0 ? "on" : "after";
+                            end.on = end.endType == "on"
+                                ? RepeatWidgetState.selectedDate.millisecondsSinceEpoch
+                                : null;
+                            end.after = (end.endType == "after"
+                                ? int.parse(RepeatWidgetState.after)
+                                : null);
+                            projectModel.end = end;
 
-                              projectModel.communityId =
-                                  SevaCore.of(context).loggedInUser.currentCommunity;
-                              projectModel.completedRequests = [];
-                              projectModel.pendingRequests = [];
-                              projectModel.timebankId = widget.timebankId;
-                              projectModel.photoUrl = globals.projectsAvtaarURL;
-                              projectModel.cover_url = globals.projectsCoverURL;
-                              projectModel.emailId =
-                                  projectModel.emailId ?? SevaCore.of(context).loggedInUser.email;
-                              projectModel.location = location;
-                              int timestamp = DateTime.now().millisecondsSinceEpoch;
-                              projectModel.createdAt = timestamp;
+                            //CHECK TO SEE IF ADMIN WANTS TO CLONE ALL THE REQUESTS INSIDE OR JUST CREATE EMPTY
 
-                              projectModel.creatorId = SevaCore.of(context).loggedInUser.sevaUserID;
-                              projectModel.members = [];
-                              projectModel.address = selectedAddress;
-                              projectModel.id = Utils.getUuid();
-                              projectModel.softDelete = false;
-                              projectModel.communityName =
-                                  communityModel.name ?? timebankModel.name;
-                              projectModel.parentEventId = projectModel.id;
-
-                              if (saveAsTemplate) {
-                                projectTemplateModel.communityId = projectModel.communityId;
-                                projectTemplateModel.timebankId = projectModel.timebankId;
-                                projectTemplateModel.id = Utils.getUuid();
-                                projectTemplateModel.name = projectModel.name;
-                                projectTemplateModel.templateName = templateName;
-                                projectTemplateModel.photoUrl = projectModel.photoUrl;
-                                projectTemplateModel.cover_url = projectModel.cover_url;
-                                projectTemplateModel.description = projectModel.description;
-                                projectTemplateModel.registrationLink =
-                                    projectModel.registrationLink;
-                                projectTemplateModel.creatorId = projectModel.creatorId;
-                                projectTemplateModel.createdAt = projectModel.createdAt;
-                                projectTemplateModel.mode = projectModel.mode;
-                                projectTemplateModel.softDelete = false;
-                                projectTemplateModel.emailId = projectModel.emailId;
-
-                                await FirestoreManager.createProjectTemplate(
-                                    projectTemplateModel: projectTemplateModel);
-                              }
-
-                              if (RepeatWidgetState.isRecurring) {
-                                projectModel.isRecurring = true;
-                                projectModel.recurringDays = RepeatWidgetState.getRecurringdays();
-                                projectModel.occurenceCount = 1;
-                                end.endType = RepeatWidgetState.endType == 0 ? "on" : "after";
-                                end.on = end.endType == "on"
-                                    ? RepeatWidgetState.selectedDate.millisecondsSinceEpoch
-                                    : null;
-                                end.after = (end.endType == "after"
-                                    ? int.parse(RepeatWidgetState.after)
-                                    : null);
-                                projectModel.end = end;
-
-                                String messagingRoomId =
-                                    await ProjectMessagingRoomHelper.createMessagingRoomForEvent(
-                                  projectModel: projectModel,
-                                  projectCreator: SevaCore.of(context).loggedInUser,
-                                );
-
-                                projectModel.associatedMessaginfRoomId = messagingRoomId;
-
-                                if (projectModel.isRecurring &&
-                                    projectModel.recurringDays.length == 0) {
-                                  showDialogForTitle(
-                                      dialogTitle:
-                                          S.of(context).validation_error_empty_recurring_days);
-                                  return;
-                                }
-                                showProgressDialog(S.of(context).creating_project);
-
-                                await WatchDog.createRecurringEvents(projectModel: projectModel);
-                              } else {
-                                await ProjectMessagingRoomHelper.createProjectWithMessaging(
-                                  projectModel: projectModel,
-                                  projectCreator: SevaCore.of(context).loggedInUser,
-                                );
-                              }
-
-                              globals.projectsAvtaarURL = null;
-                              globals.projectsCoverURL = null;
-                              globals.webImageUrl = null;
-
-                              if (dialogContext != null) {
-                                Navigator.pop(dialogContext);
-                              }
-                              //TODO rest
-                              _formKey.currentState.reset();
-
-                              KloudlessWidgetManager<CreateMode, ProjectModel>().syncCalendar(
-                                context: context,
-                                builder:
-                                    KloudlessWidgetBuilder().fromContext<CreateMode, ProjectModel>(
-                                  context: context,
-                                  model: projectModel,
-                                  id: projectModel.id,
-                                ),
-                              );
-
-                              // Stay Adding calendar Integration
-                              Navigator.of(context).pop();
-                              Navigator.of(context).pop();
-                            } else {}
+                            await DialogsManager.showDilaogWithTitle(
+                              negativeTitle: S.of(context).do_not_copy,
+                              positiveTitle: S.of(context).proceed_with_copying,
+                              context: context,
+                              title: S.of(context).copy_requests_in_events,
+                            ).then((value) async {
+                              if (value)
+                                await WatchDog.cloneAndCreateRecurringEventsFromExisting(
+                                        eventModel: projectModel)
+                                    .then((value) => logger.d(""))
+                                    .catchError((onError) => {
+                                          logger.d(onError.toString()),
+                                        });
+                              else
+                                await WatchDog.createRecurringEventsFromExisting(projectModel);
+                            }).catchError((onError) {
+                              logger.e("Error " + onError.toString());
+                            });
                           } else {
-                            // return;
-
-                            if (_formKey.currentState.validate()) {
-                              projectModel.startTime = OfferDurationWidgetState.starttimestamp;
-                              projectModel.endTime = OfferDurationWidgetState.endtimestamp;
-                              projectModel.address = selectedAddress;
-                              projectModel.location = location;
-                              if (projectModel.public) {
-                                projectModel.timebanksPosted = [
-                                  projectModel.timebankId,
-                                  FlavorConfig.values.timebankId
-                                ];
-                              } else {
-                                projectModel.timebanksPosted = [projectModel.timebankId];
-                              }
-
-                              if (globals.projectsAvtaarURL != null) {
-                                projectModel.photoUrl = globals.projectsAvtaarURL;
-                              }
-
-                              if (globals.projectsCoverURL != null) {
-                                projectModel.cover_url = globals.projectsCoverURL;
-                              }
-
-                              if (projectModel.startTime == 0 || projectModel.endTime == 0) {
-                                showDialogForTitle(
-                                    dialogTitle: S.of(context).validation_error_no_date);
-                                return;
-                              }
-
-                              if (projectModel.address == null || this.selectedAddress == null) {
-                                this.locationError =
-                                    S.of(context).validation_error_location_mandatory;
-                                showDialogForTitle(
-                                  dialogTitle: S.of(context).validation_error_add_project_location,
-                                );
-                                return;
-                              }
-
-                              // showProgressDialog(S.of(context).updating_project);
-                              //THIS CONDITION CHECKS IF THE EVENT WAS PREVIOUS NON RECURRING AND IS NOW MADE AS RECURRING
-                              if (!wasCreatedFromRecurring && RepeatWidgetState.isRecurring) {
-                                projectModel.isRecurring = true;
-                                projectModel.recurringDays = RepeatWidgetState.getRecurringdays();
-                                projectModel.occurenceCount = 1;
-                                end.endType = RepeatWidgetState.endType == 0 ? "on" : "after";
-                                end.on = end.endType == "on"
-                                    ? RepeatWidgetState.selectedDate.millisecondsSinceEpoch
-                                    : null;
-                                end.after = (end.endType == "after"
-                                    ? int.parse(RepeatWidgetState.after)
-                                    : null);
-                                projectModel.end = end;
-
-                                //CHECK TO SEE IF ADMIN WANTS TO CLONE ALL THE REQUESTS INSIDE OR JUST CREATE EMPTY
-
-                                await DialogsManager.showDilaogWithTitle(
-                                  negativeTitle: S.of(context).do_not_copy,
-                                  positiveTitle: S.of(context).proceed_with_copying,
+                            //FOLLOW NORMAL PROCEDURE
+                            //This segment updates events
+                            if (projectModel.isRecurring || projectModel.autoGenerated) {
+                              WatchDog.showDialogForUpdation(
                                   context: context,
-                                  title: S.of(context).copy_requests_in_events,
-                                ).then((value) async {
-                                  if (value)
-                                    await WatchDog.cloneAndCreateRecurringEventsFromExisting(
-                                            eventModel: projectModel)
-                                        .then((value) => logger.d(""))
-                                        .catchError((onError) => {
-                                              logger.d(onError.toString()),
-                                            });
-                                  else
-                                    await WatchDog.createRecurringEventsFromExisting(projectModel);
-                                }).catchError((onError) {
-                                  logger.e("Error " + onError.toString());
-                                });
-                              } else {
-                                //FOLLOW NORMAL PROCEDURE
-                                //This segment updates events
-                                if (projectModel.isRecurring || projectModel.autoGenerated) {
-                                  WatchDog.showDialogForUpdation(
-                                      context: context,
-                                      updateSingleEvent: () async {
-                                        await FirestoreManager.updateProject(
-                                          projectModel: projectModel,
-                                        );
-                                      },
-                                      updateSubsequentEvents: () async {
-                                        WatchDog.updateSubsequentEvents(projectModel);
-                                      });
-                                } else {
-                                  await FirestoreManager.updateProject(
-                                    projectModel: projectModel,
-                                  );
-                                }
-                              }
-                              // return;
-                              //ENDS HERE
-
-                              globals.projectsAvtaarURL = null;
-                              globals.projectsCoverURL = null;
-                              globals.webImageUrl = null;
-
-                              if (dialogContext != null) {
-                                Navigator.pop(dialogContext);
-                              }
-                              _formKey.currentState.reset();
-                              Navigator.of(context).pop();
-                              Navigator.of(context).pop();
+                                  updateSingleEvent: () async {
+                                    await FirestoreManager.updateProject(
+                                      projectModel: projectModel,
+                                    );
+                                  },
+                                  updateSubsequentEvents: () async {
+                                    WatchDog.updateSubsequentEvents(projectModel);
+                                  });
+                            } else {
+                              await FirestoreManager.updateProject(
+                                projectModel: projectModel,
+                              );
                             }
                           }
-                        },
-                        shape: StadiumBorder(),
-                        child: Text(
-                          widget.isCreateProject
-                              ? S.of(context).create_project
-                              : S.of(context).save,
-                          style: TextStyle(fontSize: 16.0, color: Colors.white),
-                        ),
-                        textColor: FlavorConfig.values.buttonTextColor,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 100),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 50),
+                          // return;
+                          //ENDS HERE
+
+                          globals.projectsAvtaarURL = null;
+                          globals.projectsCoverURL = null;
+                          globals.webImageUrl = null;
+
+                          if (dialogContext != null) {
+                            Navigator.pop(dialogContext);
+                          }
+                          _formKey.currentState.reset();
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pop();
+                        }
+                      }
+                    },
+                    shape: StadiumBorder(),
                     child: Text(
-                      '',
-                      textAlign: TextAlign.center,
+                      widget.isCreateProject ? S.of(context).create_project : S.of(context).save,
+                      style: TextStyle(fontSize: 16.0, color: Colors.white),
                     ),
+                    textColor: FlavorConfig.values.buttonTextColor,
                   ),
-                ],
+                ),
               ),
-            ),
+              SizedBox(height: 100),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 50),
+                child: Text(
+                  '',
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ],
           ),
         ),
-      ],
+      ),
     );
   }
 
