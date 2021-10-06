@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
@@ -429,9 +430,12 @@ class _TransferGroupOwnerShipState extends State<TransferGroupOwnerShip> {
         timebankId: tbmodel.id,
         data: changeOwnershipModel.toMap(),
         isRead: false,
-        type: NotificationType.TypeChangeOwnership,
+        type: NotificationType.TypeChangeGroupOwnership,
         communityId: tbmodel.communityId,
         senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+        isTimebankNotification: false,
+        senderPhotoUrl:
+            SevaCore.of(context).loggedInUser.photoURL ?? defaultUserImageURL,
         targetUserId: selectedNewOwner.sevaUserID);
     await CollectionRef.userNotification(selectedNewOwner.email)
         .doc(notification.id)
