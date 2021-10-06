@@ -145,6 +145,7 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                             currentNode: _itemName,
                             nextNode: null,
                             value: snapshot.data,
+                            validator: _bloc.validateName,
                             heading: "${S.of(context).name_of_item}*",
                             onChanged: (String value) {
                               _bloc.onPlaceNameChanged(value);
@@ -170,6 +171,7 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                                     S.of(context).estimated_value_hint_item),
                             controller: _estimatedValueController,
                             currentNode: _estimatedValue,
+                            validator: _bloc.validateEstimatedVal,
                             value: snapshot.data.toString(),
                             heading: "${S.of(context).estimated_value}",
                             onChanged: (String value) {
@@ -288,29 +290,31 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                           width: 200,
                           child: CustomElevatedButton(
                             onPressed: () async {
-                              var connResult = await Connectivity().checkConnectivity();
-                              if (connResult == ConnectivityResult.none) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(S.of(context).check_internet),
-                                    action: SnackBarAction(
-                                      label: S.of(context).dismiss,
-                                      onPressed: () =>
-                                          ScaffoldMessenger.of(context).hideCurrentSnackBar(),
+                              if (_formKey.currentState.validate()) {
+                                var connResult = await Connectivity().checkConnectivity();
+                                if (connResult == ConnectivityResult.none) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(S.of(context).check_internet),
+                                      action: SnackBarAction(
+                                        label: S.of(context).dismiss,
+                                        onPressed: () =>
+                                            ScaffoldMessenger.of(context).hideCurrentSnackBar(),
+                                      ),
                                     ),
-                                  ),
-                                );
-                                return;
-                              }
+                                  );
+                                  return;
+                                }
 
-                              if (imagesList == null || imagesList.length == 0) {
-                                showAlertMessage(context: context, message: 'Add images to item');
-                              } else {
-                                if (widget.lendingModel == null) {
-                                  _bloc.createLendingOfferPlace(
-                                      creator: SevaCore.of(context).loggedInUser);
+                                if (imagesList == null || imagesList.length == 0) {
+                                  showAlertMessage(context: context, message: 'Add images to item');
                                 } else {
-                                  _bloc.updateLendingOfferPlace(model: widget.lendingModel);
+                                  if (widget.lendingModel == null) {
+                                    _bloc.createLendingOfferPlace(
+                                        creator: SevaCore.of(context).loggedInUser);
+                                  } else {
+                                    _bloc.updateLendingOfferPlace(model: widget.lendingModel);
+                                  }
                                 }
                               }
                             },
