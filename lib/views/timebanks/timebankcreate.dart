@@ -287,6 +287,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
         headingText(S.of(context).name_your_group, true),
         DoseTextField(
           isRequired: true,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           textCapitalization: TextCapitalization.sentences,
           currentNode: nameNode,
           controller: searchTextController,
@@ -298,11 +299,6 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
             errorText: errTxt,
             hintText: S.of(context).timebank_name_hint,
           ),
-          // keyboardType: TextInputType.multiline,
-          // maxLines: 1,
-          // inputFormatters: <TextInputFormatter>[
-          //   WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9_ ]*"))
-          // ],
           validator: (value) {
             if (value.isEmpty) {
               return S.of(context).validation_error_general_text;
@@ -318,6 +314,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
         headingText(S.of(context).about, true),
         DoseTextField(
           isRequired: true,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           textCapitalization: TextCapitalization.sentences,
           controller: aboutTextController,
           currentNode: aboutNode,
@@ -333,6 +330,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
               return S.of(context).validation_error_general_text;
             }
             timebankModel.missionStatement = value;
+            return null;
           },
         ),
         Row(
@@ -453,7 +451,9 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                 return CustomElevatedButton(
                   // color: Colors.blue,
                   onPressed: () {
-                    if (errTxt != null || errTxt != "" || duplicateGroupCheck == 'not_done') {}
+                    if (errTxt != null || errTxt != "" || duplicateGroupCheck == 'not_done') {
+
+                    }
                     // Validate will return true if the form is valid, or false if
                     // the form is invalid.
                     //if (location != null) {
@@ -472,7 +472,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                       updateTimebank(timebankModel: parentTimebank);
                       Navigator.pop(context);
                     } else {
-                      FocusScope.of(context).requestFocus(nameNode);
+                      // FocusScope.of(context).requestFocus(nameNode);
                     }
                   },
 
