@@ -172,61 +172,57 @@ class _DonationViewState extends State<DonationView> {
         ),
         body: DoseForm(
           formKey: _formKey,
-          child: Column(
-            children: [
-              Container(
-                padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                child: Card(
-                  margin: EdgeInsets.only(bottom: 10, top: 20),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  shadowColor: Color.fromRGBO(0, 0, 0, 0.4),
-                  elevation: 2,
-                  child: Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      children: <Widget>[
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            S.of(context).donations,
-                            // textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 32,
-                              color: Colors.black54,
-                              fontWeight: FontWeight.bold,
+          child: Container(
+            padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+            child: Card(
+              margin: EdgeInsets.only(bottom: 10, top: 20),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              shadowColor: Color.fromRGBO(0, 0, 0, 0.4),
+              elevation: 2,
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: <Widget>[
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        S.of(context).donations,
+                        // textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 32,
+                          color: Colors.black54,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    new Expanded(
+                      child: PageView(
+                        physics: NeverScrollableScrollPhysics(),
+                        controller: pageController,
+                        scrollDirection: Axis.horizontal,
+                        pageSnapping: true,
+                        onPageChanged: (number) {},
+                        children: [
+                          donatedItems(),
+                          amountWidget(),
+                          donationDetails(),
+                          donationOfferAt(),
+                          SingleChildScrollView(
+                            // physics: NeverScrollableScrollPhysics(),
+                            child: RequestPaymentDescriptionData(
+                              widget.offerModel,
                             ),
                           ),
-                        ),
-                        new Expanded(
-                          child: PageView(
-                            physics: NeverScrollableScrollPhysics(),
-                            controller: pageController,
-                            scrollDirection: Axis.horizontal,
-                            pageSnapping: true,
-                            onPageChanged: (number) {},
-                            children: [
-                              donatedItems(),
-                              amountWidget(),
-                              donationDetails(),
-                              donationOfferAt(),
-                              SingleChildScrollView(
-                                // physics: NeverScrollableScrollPhysics(),
-                                child: RequestPaymentDescriptionData(
-                                  widget.offerModel,
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
+                        ],
+                      ),
+                    )
+                  ],
                 ),
               ),
-            ],
+            ),
           ),
         ),
       ),
