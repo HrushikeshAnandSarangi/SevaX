@@ -521,20 +521,20 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
 
                               if (_bloc.getSelectedAmenities() == {} ||
                                   _bloc.getSelectedAmenities() == null) {
+                                showAlertMessage(
+                                    context: context, message: S.of(context).please_add_amenities);
                                 FocusScope.of(context).unfocus();
                                 Scrollable.ensureVisible(
                                     _searchKey.currentContext);
-                                showAlertMessage(
-                                    context: context, message: S.of(context).please_add_amenities);
                                 return;
                               }
 
                               if (imagesList == null || imagesList.length == 0) {
+                                showAlertMessage(
+                                    context: context, message: S.of(context).add_images_to_place);
                                 FocusScope.of(context).unfocus();
                                 Scrollable.ensureVisible(
                                     _imageKey.currentContext);
-                                showAlertMessage(
-                                    context: context, message: S.of(context).add_images_to_place);
                               } else {
                                 if (widget.lendingModel == null) {
                                   _bloc.createLendingOfferPlace(
