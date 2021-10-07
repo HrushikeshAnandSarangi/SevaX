@@ -72,6 +72,7 @@ class IndividualOffer extends StatefulWidget {
 class _IndividualOfferState extends State<IndividualOffer> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   final GlobalKey<DoseFormState> _formKey = GlobalKey();
+  final _timeKey = GlobalKey();
   final IndividualOfferBloc _bloc = IndividualOfferBloc();
   final OneToManyOfferBloc _one_to_many_bloc = OneToManyOfferBloc();
 
@@ -564,8 +565,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                         child: Image.network(
                                           widget.offerModel == null
                                               ? defaultImage
-                                              : widget
-                                                  .offerModel.cashModel.offerCurrencyFlag,
+                                              : widget.offerModel.cashModel.offerCurrencyFlag,
                                           fit: BoxFit.cover,
                                         ),
                                       );
@@ -595,13 +595,10 @@ class _IndividualOfferState extends State<IndividualOffer> {
 
                                 if (widget.offerModel == null) {
                                   setState(() {
-                                    defaultOfferCurrenyType =
-                                        currencyList[indexSelected].code;
-                                    _bloc.offeredCurrencyType(
-                                        currencyList[indexSelected].code);
+                                    defaultOfferCurrenyType = currencyList[indexSelected].code;
+                                    _bloc.offeredCurrencyType(currencyList[indexSelected].code);
                                     defaultImage = currencyList[indexSelected].imagePath;
-                                    _bloc.offerCurrencyflag(
-                                        currencyList[indexSelected].imagePath);
+                                    _bloc.offerCurrencyflag(currencyList[indexSelected].imagePath);
                                   });
                                 }
                                 setState(() {
@@ -609,8 +606,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                       currencyList[indexSelected].code;
                                   widget.offerModel.cashModel.offerCurrencyFlag =
                                       currencyList[indexSelected].imagePath;
-                                  _bloc.offeredCurrencyType(
-                                      currencyList[indexSelected].code);
+                                  _bloc.offeredCurrencyType(currencyList[indexSelected].code);
                                 });
                               },
                               child: Container(
@@ -621,9 +617,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                         ? Radius.circular(4)
                                         : Radius.zero,
                                   ),
-                                  color: indexSelected == index
-                                      ? Color(0xFFE8EFFF)
-                                      : Colors.white,
+                                  color: indexSelected == index ? Color(0xFFE8EFFF) : Colors.white,
                                 ),
                                 padding: EdgeInsets.symmetric(horizontal: 16),
                                 child: Container(
@@ -1022,6 +1016,8 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                                 OfferDurationWidgetState.endtimestamp;
                                             if (_one_to_many_bloc.endTime <=
                                                 _one_to_many_bloc.startTime) {
+                                              Scrollable.ensureVisible(_timeKey.currentContext);
+
                                               errorDialog(
                                                 context: context,
                                                 error:
@@ -1032,6 +1028,8 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                             if (DateTime.fromMillisecondsSinceEpoch(
                                                     OfferDurationWidgetState.starttimestamp)
                                                 .isBefore(DateTime.now())) {
+                                              Scrollable.ensureVisible(_timeKey.currentContext);
+
                                               errorDialog(
                                                   context: context,
                                                   error: S.of(context).past_time_selected);
@@ -1122,6 +1120,8 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                               }
                                             }
                                           } else {
+                                            FocusScope.of(context).unfocus();
+                                            Scrollable.ensureVisible(_timeKey.currentContext);
                                             errorDialog(
                                               context: context,
                                               error: S.of(context).offer_start_end_date,
@@ -1387,6 +1387,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
         ),
         SizedBox(height: 20),
         OfferDurationWidget(
+          key: _timeKey,
           title: S.of(context).offer_duration,
           startTime: widget.offerModel != null
               ? DateTime.fromMillisecondsSinceEpoch(
@@ -1860,6 +1861,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
             }),
         SizedBox(height: 20),
         OfferDurationWidget(
+          key: _timeKey,
           hideEndDate: _bloc.lendingOfferTypeMode != 1,
           title: S.of(context).offer_duration,
           startTime: widget.offerModel != null

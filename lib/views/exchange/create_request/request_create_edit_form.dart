@@ -79,7 +79,7 @@ class RequestCreateEditForm extends StatefulWidget {
 class RequestCreateEditFormState extends State<RequestCreateEditForm> with WidgetsBindingObserver {
   final _formKey = GlobalKey<DoseFormState>();
 
-  // final _formKey = GlobalKey<FormState>();
+  final _dateKey = GlobalKey();
   final hoursTextFocus = FocusNode();
   final volunteersTextFocus = FocusNode();
   ProjectModel selectedProjectModel = null;
@@ -324,6 +324,7 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm> with Widge
                                 switch (requestModel.requestType) {
                                   case RequestType.TIME:
                                     return TimeRequest(
+                                      dateKey: _dateKey,
                                       requestType: requestModel.requestType,
                                       formKey: _formKey,
                                       formType: widget.formType,
@@ -344,6 +345,7 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm> with Widge
                                     break;
                                   case RequestType.CASH:
                                     return CashRequest(
+                                      dateKey: _dateKey,
                                       formKey: _formKey,
                                       formType: widget.formType,
                                       isOfferRequest: widget.isOfferRequest,
@@ -361,6 +363,7 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm> with Widge
                                     break;
                                   case RequestType.GOODS:
                                     return GoodsRequest(
+                                      dateKey: _dateKey,
                                       formKey: _formKey,
                                       formType: widget.formType,
                                       requestModel: requestModel,
@@ -378,6 +381,7 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm> with Widge
                                     break;
                                   case RequestType.BORROW:
                                     return BorrowRequest(
+                                      dateKey: _dateKey,
                                       formKey: _formKey,
                                       formType: widget.formType,
                                       requestModel: requestModel,
@@ -395,6 +399,7 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm> with Widge
                                     break;
                                   case RequestType.ONE_TO_MANY_REQUEST:
                                     return TimeRequest(
+                                      dateKey: _dateKey,
                                       requestType: requestModel.requestType,
                                       formKey: _formKey,
                                       formType: widget.formType,
@@ -778,18 +783,21 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm> with Widge
       // validate request start and end date
 
       if (requestModel.requestStart == 0 || requestModel.requestEnd == 0) {
+        Scrollable.ensureVisible(_dateKey.currentContext);
         requestUtils.showDialogForTitle(
             dialogTitle: S.of(context).validation_error_no_date, context: context);
         return;
       }
 
       if (OfferDurationWidgetState.starttimestamp == OfferDurationWidgetState.endtimestamp) {
+        Scrollable.ensureVisible(_dateKey.currentContext);
         requestUtils.showDialogForTitle(
             dialogTitle: S.of(context).validation_error_same_start_date_end_date, context: context);
         return;
       }
 
       if (OfferDurationWidgetState.starttimestamp > OfferDurationWidgetState.endtimestamp) {
+        Scrollable.ensureVisible(_dateKey.currentContext);
         requestUtils.showDialogForTitle(
             dialogTitle: S.of(context).validation_error_end_date_greater, context: context);
         return;
@@ -797,6 +805,7 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm> with Widge
 
       if (DateTime.fromMillisecondsSinceEpoch(OfferDurationWidgetState.starttimestamp)
           .isBefore(DateTime.now())) {
+        Scrollable.ensureVisible(_dateKey.currentContext);
         requestUtils.showDialogForTitle(
             context: context, dialogTitle: S.of(context).past_time_selected);
         return;

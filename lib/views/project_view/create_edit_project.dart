@@ -65,6 +65,7 @@ class CreateEditProject extends StatefulWidget {
 class _CreateEditProjectState extends State<CreateEditProject> {
   final _formKey = GlobalKey<DoseFormState>();
   final _formDialogKey = GlobalKey<FormState>();
+  final _timeKey = GlobalKey();
   String communityImageError = '';
   TextEditingController searchTextController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
@@ -784,6 +785,8 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                       if (widget.isCreateProject) {
                         if (_formKey.currentState.validate()) {
                           if (projectModel.startTime == 0 || projectModel.endTime == 0) {
+                            Scrollable.ensureVisible(_timeKey.currentContext);
+                            FocusScope.of(context).unfocus();
                             showDialogForTitle(
                               dialogTitle: S.of(context).validation_error_no_date,
                             );

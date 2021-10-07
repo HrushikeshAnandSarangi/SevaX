@@ -32,6 +32,8 @@ class AddUpdateLendingPlace extends StatefulWidget {
 
 class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
   final _formKey = GlobalKey<DoseFormState>();
+  final _imageKey = GlobalKey();
+  final _searchKey = GlobalKey();
   List<AmenitiesModel> amenitiesList = [];
   List<String> imagesList = [];
   AddUpdatePlaceBloc _bloc = AddUpdatePlaceBloc();
@@ -208,6 +210,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             width: 100,
                             height: 100,
                             child: Container(
+                              key: _imageKey,
                               decoration: BoxDecoration(
                                   image: DecorationImage(
                                       image: NetworkImage(
@@ -304,16 +307,19 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                         style: TextStyle(fontSize: 18),
                       ),
                       SizedBox(height: 8),
-                      SelectAmenities(
-                        languageCode: SevaCore.of(context).loggedInUser.language ?? 'en',
-                        selectedAmenities: _bloc.getSelectedAmenities() ?? {},
-                        onSelectedAmenitiesMap: (amenitiesMap) {
-                          if (amenitiesMap.values != null && amenitiesMap.values.length > 0) {
-                            _bloc.amenitiesChanged(amenitiesMap);
-                            log('amenit ${amenitiesMap.values}');
-                            //setState(() {});
-                          }
-                        },
+                      Container(
+                        key: _searchKey,
+                        child: SelectAmenities(
+                          languageCode: SevaCore.of(context).loggedInUser.language ?? 'en',
+                          selectedAmenities: _bloc.getSelectedAmenities() ?? {},
+                          onSelectedAmenitiesMap: (amenitiesMap) {
+                            if (amenitiesMap.values != null && amenitiesMap.values.length > 0) {
+                              _bloc.amenitiesChanged(amenitiesMap);
+                              log('amenit ${amenitiesMap.values}');
+                              //setState(() {});
+                            }
+                          },
+                        ),
                       ),
                       SizedBox(height: 20),
                       StreamBuilder<String>(
@@ -515,12 +521,18 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
 
                               if (_bloc.getSelectedAmenities() == {} ||
                                   _bloc.getSelectedAmenities() == null) {
+                                FocusScope.of(context).unfocus();
+                                Scrollable.ensureVisible(
+                                    _searchKey.currentContext);
                                 showAlertMessage(
                                     context: context, message: S.of(context).please_add_amenities);
                                 return;
                               }
 
                               if (imagesList == null || imagesList.length == 0) {
+                                FocusScope.of(context).unfocus();
+                                Scrollable.ensureVisible(
+                                    _imageKey.currentContext);
                                 showAlertMessage(
                                     context: context, message: S.of(context).add_images_to_place);
                               } else {

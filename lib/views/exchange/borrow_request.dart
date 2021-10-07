@@ -43,6 +43,7 @@ class BorrowRequest extends StatefulWidget {
   bool createEvent;
   final RequestFormType formType;
   final formKey;
+  final dateKey;
 
   BorrowRequest(
       {this.isOfferRequest,
@@ -57,7 +58,7 @@ class BorrowRequest extends StatefulWidget {
       this.createEvent,
       this.instructorAdded,
       @required this.formType,
-  @required this.formKey});
+  @required this.formKey, this.dateKey});
 
   @override
   _BorrowRequestState createState() => _BorrowRequestState();
@@ -378,6 +379,7 @@ class _BorrowRequestState extends State<BorrowRequest> {
         ),
         SizedBox(height: 10),
         OfferDurationWidget(
+          key: widget.dateKey,
           title: "${S.of(context).request_duration} *",
           startTime: widget.formType == RequestFormType.EDIT
               ? getUpdatedDateTimeAccToUserTimezone(

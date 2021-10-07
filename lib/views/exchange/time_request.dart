@@ -50,6 +50,7 @@ class TimeRequest extends StatefulWidget {
   bool createEvent;
   final formKey;
   final RequestType requestType;
+  final dateKey;
 
   TimeRequest(
       {this.requestModel,
@@ -68,7 +69,8 @@ class TimeRequest extends StatefulWidget {
       this.formType,
       this.selectedInstructorModelChanged,
       @required this.formKey,
-      @required this.requestType});
+      @required this.requestType,
+      this.dateKey});
 
   @override
   _TimeRequestState createState() => _TimeRequestState();
@@ -526,6 +528,7 @@ class _TimeRequestState extends State<TimeRequest> {
                 : Container(height: 0, width: 0),
         SizedBox(height: 30),
         OfferDurationWidget(
+          key: widget.dateKey,
           title: "${S.of(context).request_duration} *",
           startTime: widget.formType == RequestFormType.EDIT
               ? getUpdatedDateTimeAccToUserTimezone(
@@ -647,7 +650,6 @@ class _TimeRequestState extends State<TimeRequest> {
                   if (v.isNotEmpty && int.parse(v) >= 0) {
                     widget.requestModel.maxCredits = int.parse(v);
                     setState(() {});
-
                   }
                 },
                 decoration: InputDecoration(
