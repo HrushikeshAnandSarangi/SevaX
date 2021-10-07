@@ -73,6 +73,7 @@ void _parentSelectionBottomsheet(
           return Scaffold(
               resizeToAvoidBottomInset: false,
               appBar: AppBar(
+                backgroundColor: Theme.of(context).primaryColor,
                 elevation: 0.5,
                 automaticallyImplyLeading: true,
                 title: Text(

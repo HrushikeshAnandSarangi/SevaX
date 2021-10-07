@@ -1271,11 +1271,7 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
       padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
       child: colums,
     );
-    return Column(
-      children: [
-        contain,
-      ],
-    );
+    return contain;
   }
 
   getInfoWidget({
@@ -1884,36 +1880,32 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
       color: Colors.white,
       child: DoseForm(
         formKey: _billingInformationKey,
-        child: Column(
-          children: [
-            StreamBuilder(
-              stream: createEditCommunityBloc.createEditCommunity,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return ListView(
-                    shrinkWrap: true,
-                    controller: scollContainer,
-                    padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-                    children: <Widget>[
-                      _billingDetailsTitle,
-                      _cityWidget(snapshot.data),
-                      _stateWidget(snapshot.data),
-                      _countryNameWidget(snapshot.data),
-                      _pinCodeWidget(snapshot.data),
-                      _streetAddressWidget(snapshot.data),
-                      _streetAddressTwoWidget(snapshot.data),
-                      _companyNameWidget(snapshot.data),
-                      _additionalNotesWidget(snapshot.data),
-                      _continueBtn(snapshot.data),
-                    ],
-                  );
-                } else if (snapshot.hasError) {
-                  return Text(snapshot.error.toString());
-                }
-                return Text("");
-              },
-            ),
-          ],
+        child: StreamBuilder(
+          stream: createEditCommunityBloc.createEditCommunity,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return ListView(
+                shrinkWrap: true,
+                controller: scollContainer,
+                padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                children: <Widget>[
+                  _billingDetailsTitle,
+                  _cityWidget(snapshot.data),
+                  _stateWidget(snapshot.data),
+                  _countryNameWidget(snapshot.data),
+                  _pinCodeWidget(snapshot.data),
+                  _streetAddressWidget(snapshot.data),
+                  _streetAddressTwoWidget(snapshot.data),
+                  _companyNameWidget(snapshot.data),
+                  _additionalNotesWidget(snapshot.data),
+                  _continueBtn(snapshot.data),
+                ],
+              );
+            } else if (snapshot.hasError) {
+              return Text(snapshot.error.toString());
+            }
+            return Text("");
+          },
         ),
       ),
     );

@@ -82,6 +82,7 @@ class _InterestViewNewState extends State<InterestViewNew> {
       resizeToAvoidBottomInset: false,
       key: _scaffoldKey,
       appBar: AppBar(
+        backgroundColor: Theme.of(context).primaryColor,
         automaticallyImplyLeading: widget.automaticallyImplyLeading,
         leading: widget.automaticallyImplyLeading
             ? null

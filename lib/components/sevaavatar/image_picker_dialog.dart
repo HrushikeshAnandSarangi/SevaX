@@ -117,14 +117,15 @@ class ImagePickerDialog extends StatelessWidget {
                     Navigator.of(_context)
                         .push(
                       MaterialPageRoute(
-                        builder: (context) => SearchStockImages(
+                        builder: (mContext) => SearchStockImages(
                           // keepOnBackPress: false,
                           // showBackBtn: false,
                           // isFromHome: false,
+                          themeColor: Theme.of(context).primaryColor,
                           onChanged: (image) async {
                             await _listener.addStockImageUrl(
                                 _context, image, isCover);
-                            Navigator.pop(context);
+                            Navigator.pop(mContext);
                           },
                         ),
                       ),
@@ -146,7 +147,9 @@ class ImagePickerDialog extends StatelessWidget {
                     Navigator.of(_context).push(
                       MaterialPageRoute(
                         builder: (context) {
-                          return ImageUrlView(isCover: isCover);
+                          return ImageUrlView(isCover: isCover,
+                            themeColor: Theme.of(context).primaryColor,
+                          );
                         },
                       ),
                     ).then((value) {

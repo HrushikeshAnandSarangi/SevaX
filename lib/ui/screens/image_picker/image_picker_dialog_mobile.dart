@@ -198,6 +198,7 @@ class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (mcontext) => SearchStockImages(
+                themeColor: Theme.of(context).primaryColor,
                 onChanged: (stockImage) {
                   // progress
                   widget.onLinkCreated(stockImage);
@@ -219,6 +220,7 @@ class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
               context: context,
               builder: (BuildContext dialogContext) {
                 return ImageUrlView(
+                  themeColor: Theme.of(context).primaryColor,
                   onLinkCreated: (String link) {
                     widget.onLinkCreated(link);
                     Navigator.of(context).pop();

@@ -39,6 +39,7 @@ class UpdateNewsFeed extends StatelessWidget {
         child: Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
+            backgroundColor: Theme.of(context).primaryColor,
             title: Text(
               S.of(context).update_feed,
               style: TextStyle(fontSize: 18),

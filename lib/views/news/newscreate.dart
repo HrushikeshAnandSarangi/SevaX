@@ -45,6 +45,7 @@ class NewsCreate extends StatelessWidget {
         child: Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
+            backgroundColor: Theme.of(context).primaryColor,
             title: Text(
               S.of(context).create_feed,
               style: TextStyle(fontSize: 18),
@@ -541,6 +542,7 @@ void _silblingTimebankSelectionBottomsheet(
         child: Builder(builder: (context) {
           return Scaffold(
               appBar: AppBar(
+                backgroundColor: Theme.of(context).primaryColor,
                 elevation: 0.5,
                 automaticallyImplyLeading: true,
                 title: Text(

@@ -99,6 +99,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
       resizeToAvoidBottomInset: false,
       key: _scaffoldKey,
       appBar: AppBar(
+        backgroundColor: Theme.of(context).primaryColor,
         automaticallyImplyLeading: widget.automaticallyImplyLeading,
         title: Text(
           S.of(context).your_skills,

@@ -106,6 +106,7 @@ class RequestsState extends State<ProjectRequests>
         length: isProjectMember ? 3 : 2,
         child: Scaffold(
           appBar: AppBar(
+            backgroundColor: Theme.of(context).primaryColor,
             centerTitle: true,
             elevation: 0.5,
             title: Text(
