@@ -1456,4 +1456,7 @@ class L {
 //   String get agreement_accepted => 'Accepted without agreement';
 //   String get items_collected => 'Item(s) Collected';
 
+//change ownership nlabels
+  String get change_ownership_successful =>
+      'You have successfully transferred ownership of **groupName to **newOwnerName.';
 }

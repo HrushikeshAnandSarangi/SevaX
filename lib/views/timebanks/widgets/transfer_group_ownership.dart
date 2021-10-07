@@ -9,6 +9,7 @@ import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/change_ownership_model.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/user_exit_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
@@ -21,6 +22,7 @@ import 'package:sevaexchange/views/switch_timebank.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 
+import '../../../labels.dart';
 import '../../core.dart';
 
 class TransferGroupOwnerShip extends StatefulWidget {
@@ -186,7 +188,7 @@ class _TransferGroupOwnerShipState extends State<TransferGroupOwnerShip> {
           textColor: Colors.grey,
         ),
         CustomTextButton(
-          child: Text(S.of(context).send_invitation,
+          child: Text(S.of(context).change,
               style:
                   TextStyle(fontWeight: FontWeight.bold, fontFamily: 'Europa')),
           textColor: FlavorConfig.values.theme.primaryColor,
@@ -195,22 +197,46 @@ class _TransferGroupOwnerShipState extends State<TransferGroupOwnerShip> {
               setState(() {
                 user_error = S.of(context).select_user;
               });
-            } else if (invtitedUsers.contains(selectedNewOwner.email)) {
-              dialogBox(
-                  message: S.of(context).change_ownership_already_invited);
-            } else {
-              showProgressDialog(S.of(context).sending_invitation);
+            }
+            {
+              showProgressDialog(S.of(context).changing_ownership_of +
+                  ' ' +
+                  S.of(context).please_wait);
               Map<String, dynamic> responseObj =
                   await checkChangeOwnershipStatus(
                 sevauserid: SevaCore.of(context).loggedInUser.sevaUserID,
                 timebankId: tbmodel.id,
               );
 
-              log("====> " + responseObj.toString());
-
               if (responseObj['transferable'] == true) {
-                invtitedUsers.add(selectedNewOwner.email);
-                sendNotificationToAdmin();
+                if (tbmodel.admins != null &&
+                    (tbmodel.admins.contains(
+                            SevaCore.of(context).loggedInUser.sevaUserID) ||
+                        tbmodel.organizers.contains(
+                            SevaCore.of(context).loggedInUser.sevaUserID))) {
+                  await CollectionRef.timebank.doc(tbmodel.id).update(
+                    {
+                      "admins":
+                          FieldValue.arrayRemove([selectedNewOwner.sevaUserID]),
+                      "organizers":
+                          FieldValue.arrayRemove([selectedNewOwner.sevaUserID]),
+                    },
+                  );
+                }
+
+                await CollectionRef.timebank.doc(tbmodel.id).update(
+                  {
+                    "creator_id": selectedNewOwner.sevaUserID,
+                    "email_id": selectedNewOwner.email,
+                    "admins":
+                        FieldValue.arrayUnion([selectedNewOwner.sevaUserID]),
+                    "organizers":
+                        FieldValue.arrayUnion([selectedNewOwner.sevaUserID]),
+                    "members":
+                        FieldValue.arrayUnion([selectedNewOwner.sevaUserID]),
+                  },
+                );
+                sendNotifications();
               } else if (responseObj['tasksCheck'] == false) {
                 if (progressContext != null) {
                   Navigator.pop(progressContext);
@@ -374,7 +400,7 @@ class _TransferGroupOwnerShipState extends State<TransferGroupOwnerShip> {
         // return object of type Dialog
         return AlertDialog(
           content: Text(
-            '${S.of(context).invitation_sent1} $timebankName ${S.of(context).invitation_sent2} $admin ${S.of(context).invitation_sent3}',
+            '${L.of(context).change_ownership_successful.replaceAll('**groupName', timebankName).replaceAll('**newOwnerName', admin)}',
           ),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
@@ -413,17 +439,23 @@ class _TransferGroupOwnerShipState extends State<TransferGroupOwnerShip> {
     );
   }
 
-  void sendNotificationToAdmin() async {
+  void sendNotifications() async {
+    CommunityModel communityModel =
+        await FirestoreManager.getCommunityDetailsByCommunityId(
+            communityId: tbmodel.communityId);
     ChangeOwnershipModel changeOwnershipModel = ChangeOwnershipModel(
         creatorPhotoUrl: SevaCore.of(context).loggedInUser.photoURL,
         creatorEmail: SevaCore.of(context).loggedInUser.email,
         timebank: tbmodel.name,
-        message: S.of(context).change_ownership_message1 +
-            ' ' +
-            tbmodel.name +
-            ' ' +
-            S.of(context).change_ownership_message2,
+        message: S.of(context).change_ownership_message1 + ' ' + tbmodel.name,
         creatorName: SevaCore.of(context).loggedInUser.fullname);
+
+    Map<String, dynamic> notificationsData = {
+      'new_owner_name': selectedNewOwner.fullname,
+      'old_owner_name': SevaCore.of(context).loggedInUser.fullname,
+      'group_name': tbmodel.name,
+      'group_photourl': tbmodel.photoUrl,
+    };
 
     NotificationsModel notification = NotificationsModel(
         id: utils.Utils.getUuid(),
@@ -437,9 +469,25 @@ class _TransferGroupOwnerShipState extends State<TransferGroupOwnerShip> {
         senderPhotoUrl:
             SevaCore.of(context).loggedInUser.photoURL ?? defaultUserImageURL,
         targetUserId: selectedNewOwner.sevaUserID);
+    NotificationsModel notificationToCommunityCreator = NotificationsModel(
+        id: utils.Utils.getUuid(),
+        timebankId: communityModel.primary_timebank,
+        data: notificationsData,
+        isRead: false,
+        type: NotificationType
+            .TYPE_CHANGE_GROUP_OWNERSHIP_UPDATE_TO_COMMUNITY_OWNER,
+        communityId: tbmodel.communityId,
+        senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+        isTimebankNotification: false,
+        senderPhotoUrl:
+            SevaCore.of(context).loggedInUser.photoURL ?? defaultUserImageURL,
+        targetUserId: communityModel.created_by);
     await CollectionRef.userNotification(selectedNewOwner.email)
         .doc(notification.id)
         .set(notification.toMap());
+    await CollectionRef.userNotification(communityModel.primary_email)
+        .doc(notificationToCommunityCreator.id)
+        .set(notificationToCommunityCreator.toMap());
     if (progressContext != null) {
       Navigator.pop(progressContext);
     }

@@ -149,6 +149,7 @@ enum NotificationType {
   TypeMemberExitTimebank,
   TypeChangeOwnership,
   TypeChangeGroupOwnership,
+  TYPE_CHANGE_GROUP_OWNERSHIP_UPDATE_TO_COMMUNITY_OWNER,
   TypeMemberAdded,
   TypeMemberJoinViaCode,
   GroupJoinInvite,
@@ -280,6 +281,8 @@ Map<String, NotificationType> typeMapper = {
   "TypeMemberJoinViaCode": NotificationType.TypeMemberJoinViaCode,
   "TypeChangeOwnership": NotificationType.TypeChangeOwnership,
   "TypeChangeGroupOwnership": NotificationType.TypeChangeGroupOwnership,
+  "TYPE_CHANGE_GROUP_OWNERSHIP_UPDATE_TO_COMMUNITY_OWNER":
+      NotificationType.TYPE_CHANGE_GROUP_OWNERSHIP_UPDATE_TO_COMMUNITY_OWNER,
   "GroupJoinInvite": NotificationType.GroupJoinInvite,
   "ACKNOWLEDGE_DONOR_DONATION": NotificationType.ACKNOWLEDGE_DONOR_DONATION,
   "GOODS_DONATION_REQUEST": NotificationType.GOODS_DONATION_REQUEST,
