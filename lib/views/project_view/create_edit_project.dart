@@ -122,8 +122,9 @@ class _CreateEditProjectState extends State<CreateEditProject> {
         }
         projectModel.public = false;
       });
+      _initializeFields();
     }
-    projectNameController.text = widget.isCreateProject
+    /*  projectNameController.text = widget.isCreateProject
         ? widget.projectTemplateModel != null
             ? widget.projectTemplateModel.name
             : ""
@@ -137,7 +138,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
         ? widget.projectTemplateModel != null
             ? widget.projectTemplateModel.registrationLink
             : ""
-        : projectModel.registrationLink ?? "";
+        : projectModel.registrationLink ?? "";*/
 
     getCommunity();
     setState(() {});
@@ -186,6 +187,24 @@ class _CreateEditProjectState extends State<CreateEditProject> {
     setState(() {});
   }
 
+  _initializeFields() {
+    projectNameController.text = widget.isCreateProject
+        ? widget.projectTemplateModel != null
+        ? widget.projectTemplateModel.name
+        : ""
+        : projectModel.name ?? "";
+    projectStatementController.text = widget.isCreateProject
+        ? widget.projectTemplateModel != null
+            ? widget.projectTemplateModel.description
+            : ""
+        : projectModel.description ?? "";
+    registrationLinkController.text = widget.isCreateProject
+        ? widget.projectTemplateModel != null
+            ? widget.projectTemplateModel.registrationLink
+            : ""
+        : projectModel.registrationLink ?? "";
+  }
+
   void getData() async {
     await FirestoreManager.getProjectFutureById(projectId: widget.projectId).then((onValue) {
       projectModel = onValue;
@@ -195,6 +214,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
       location = projectModel.location;
       isDataLoaded = true;
       setState(() {});
+      _initializeFields();
     });
   }
 
