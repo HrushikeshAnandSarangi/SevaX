@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/custom_dose_text_field.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/components/common_help_icon.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
@@ -715,17 +716,25 @@ class _IndividualOfferState extends State<IndividualOffer> {
 
   Widget GoodsRequest() {
     return StreamBuilder<GoodsDonationDetails>(
-        stream: _bloc.goodsDonationDetails,
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return Container();
-          }
-
+      stream: _bloc.goodsDonationDetails,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              SizedBox(height: 20),
+              RequestGoodsDescriptionData(GoodsDonationDetails()),
+            ],
+          );
+        } else {
           return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
             SizedBox(height: 20),
             RequestGoodsDescriptionData(snapshot.data),
-          ]);
-        });
+            ],
+          );
+        }
+      },
+    );
   }
 
   @override
@@ -2082,11 +2091,18 @@ class _IndividualOfferState extends State<IndividualOffer> {
         ),
         SizedBox(height: 6),
         Text(
-          S.of(context).lending_offer_location_hint,
+          _bloc.lendingOfferType == 0
+              ? S.of(context).lending_offer_location_hint_place
+              : S.of(context).lending_offer_location_hint_item,
           style: TextStyle(fontSize: 15),
           softWrap: true,
         ),
         SizedBox(height: 5),
+        Text(
+          S.of(context).location_safety_disclaimer,
+          style: TextStyle(fontSize: 13),
+          softWrap: true,
+        ),
       ],
     );
   }

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/new_baseline/models/amenities_model.dart';
 import 'package:sevaexchange/new_baseline/models/lending_model.dart';
 import 'package:sevaexchange/ui/screens/image_picker/image_picker_dialog_mobile.dart';
@@ -338,8 +339,9 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                               // title = value;
                             },
                             hint: 'Ex: 3',
-                            maxLength: 1,
+                            maxLength: 4,
                             error: getAddPlaceValidationError(context, snapshot.error),
+                            keyboardType: TextInputType.number,
                             formatters: [FilteringTextInputFormatter.allow(Regex.numericRegex)],
                           );
                         },
@@ -361,8 +363,9 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                               // title = value;
                             },
                             hint: 'Ex: 2',
-                            maxLength: 1,
+                            maxLength: 4,
                             error: getAddPlaceValidationError(context, snapshot.error),
+                            keyboardType: TextInputType.number,
                             formatters: [FilteringTextInputFormatter.allow(Regex.numericRegex)],
                           );
                         },
@@ -384,8 +387,9 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                               // title = value;
                             },
                             hint: 'Ex: 1',
-                            maxLength: 1,
+                            maxLength: 4,
                             error: getAddPlaceValidationError(context, snapshot.error),
+                            keyboardType: TextInputType.number,
                             formatters: [FilteringTextInputFormatter.allow(Regex.numericRegex)],
                           );
                         },
@@ -446,7 +450,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             decoration: InputDecoration(
                                 prefixIconConstraints: BoxConstraints(minWidth: 23, maxHeight: 20),
                                 prefixIcon: Icon(Icons.attach_money),
-                                hintText: S.of(context).request_min_donation_hint +
+                                hintText: S.of(context).estimated_value_place_hint +
                                     S.of(context).estimated_value_hint_place,
                                 errorText: getAddPlaceValidationError(context, snapshot.error)),
                             controller: _estimatedValueController,
@@ -475,17 +479,20 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             controller: _contactInformationController,
                             currentNode: _contactInformation,
                             value: snapshot.data,
-                            heading: "${S.of(context).contact_information}*",
+                            heading: S
+                                .of(context)
+                                .contact_information, // not mandatory field now as told by anitha
                             onChanged: (String value) {
                               _bloc.onContactInformationChanged(value);
                             },
                             keyboardType: TextInputType.text,
                             error: getAddPlaceValidationError(context, snapshot.error),
                             validator: (String value) {
-                              if (value.isEmpty) {
-                                return null;
-                              }
-                              else if (!Regex.emailAndPhoneRegex.hasMatch(value)) {
+                              // if (value.isEmpty) {
+                              //   return null;   // not mandatory field now as told by anitha
+                              // }
+                              else if (!Regex.emailAndPhoneRegex.hasMatch(value) &&
+                                  value.isNotEmpty) {
                                 return 'Please enter a valid Email or Phone Number';
                               }
                               return null;

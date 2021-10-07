@@ -970,7 +970,7 @@ class _DonationViewState extends State<DonationView> {
             stream: donationBloc.amountPledged,
             builder: (context, snapshot) {
               return Container(
-                constraints: BoxConstraints(maxHeight: 55, minHeight: 50),
+                // constraints: BoxConstraints(maxHeight: 55, minHeight: 50),
                 child: DoseTextField(
                   isRequired: true,
                   controller: amountController,
@@ -983,9 +983,11 @@ class _DonationViewState extends State<DonationView> {
                       });
                     }
                   },
+                  textAlign: TextAlign.start,
                   maxLines: 1,
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
+                    contentPadding: EdgeInsets.only(top: 10),
                     filled: true,
                     focusColor: Colors.grey[200],
                     focusedErrorBorder: customTextFieldBorder(),
@@ -1006,6 +1008,7 @@ class _DonationViewState extends State<DonationView> {
                             : '',
                     hintStyle: subTitleStyle,
                     hintText: S.of(context).add_amount_donated,
+                    alignLabelWithHint: true,
                     prefixIcon: Container(
                       width: 90,
                       child: CompositedTransformTarget(
@@ -1018,7 +1021,7 @@ class _DonationViewState extends State<DonationView> {
                             borderRadius: BorderRadius.circular(8),
                           ),
                           defaultWidget: Container(
-                            height: 50,
+                            height: 51,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(4),
                             ),
@@ -1026,7 +1029,7 @@ class _DonationViewState extends State<DonationView> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                SizedBox(width: 5),
+                                SizedBox(width: 4),
                                 Text(
                                   indexSelected != -1
                                       ? "${currencyList[indexSelected].code}"

@@ -23,7 +23,7 @@ class SearchCommunityViaZIPCode {
         .then((location) => _getNearCommunitiesListStream(location))
         .then((nearbyCommunitiesList) => nearbyCommunitiesList)
         .catchError((onError) {
-      return [] as List<CommunityModel>;
+      return <CommunityModel>[];
     }).whenComplete(() {
       logger.i("Completed Search for $searchTerm.");
     });
@@ -39,7 +39,8 @@ class SearchCommunityViaZIPCode {
 
       var resultsBody = jsonDecode(response.body);
 
-      Map<String, dynamic> finalResult = resultsBody['results'][0]['geometry']['location'];
+      Map<String, dynamic> finalResult =
+          resultsBody['results'][0]['geometry']['location'];
 
       return Location(
         lat: double.parse(finalResult['lat'].toString()), //40.7127753,
@@ -57,7 +58,8 @@ class SearchCommunityViaZIPCode {
   static Future<Location> _searchViaZipCodeAPI(
     String zipCode,
   ) async {
-    Response response = await SearchManager.makeGetRequest(url: _getZipCodeURL(zipCode));
+    Response response =
+        await SearchManager.makeGetRequest(url: _getZipCodeURL(zipCode));
     var latLngFromZip = latLngFromZipCodeFromJson(response.body);
 
     if (response.statusCode != 200 || latLngFromZip == null) {
@@ -119,7 +121,8 @@ class SearchCommunityViaZIPCode {
             communityList.add(model);
           }
         } else {
-          if ((model.softDelete == false) && (model.private == false)) communityList.add(model);
+          if ((model.softDelete == false) && (model.private == false))
+            communityList.add(model);
         }
       },
     );
@@ -134,5 +137,6 @@ class SearchCommunityViaZIPCode {
 
 class NoNearByCommunitesFoundException implements Exception {
   String message;
-  NoNearByCommunitesFoundException({this.message = "No Nearby communities found with ZIP."});
+  NoNearByCommunitesFoundException(
+      {this.message = "No Nearby communities found with ZIP."});
 }
