@@ -126,23 +126,36 @@ class SearchParentTimebanksViewState extends State<SearchParentTimebanks> {
   static String JOIN;
   static String JOINED;
   final _debouncer = Debouncer(milliseconds: 500);
-
+  Timer _debounce;
   @override
   void initState() {
     super.initState();
     final _textUpdates = StreamController<String>();
-    searchTextController.addListener(() {
-      _debouncer.run(() {
-        String s = searchTextController.text;
-
-        if (s.isEmpty) {
+    searchTextController
+        .addListener(() => _textUpdates.add(searchTextController.text));
+    _textUpdates.stream.listen((String event) {
+      if (_debounce?.isActive ?? false) _debounce.cancel();
+      _debounce = Timer(const Duration(milliseconds: 500), () {
+        if (event.isEmpty) {
           setState(() {});
         } else {
-          communityBloc.fetchCommunities(s);
+          communityBloc.fetchCommunities(event);
           setState(() {});
         }
       });
     });
+    // searchTextController.addListener(() {
+    //   _debouncer.run(() {
+    //     String s = searchTextController.text;
+
+    //     if (s.isEmpty) {
+    //       setState(() {});
+    //     } else {
+    //       communityBloc.fetchCommunities(s);
+    //       setState(() {});
+    //     }
+    //   });
+    // });
   }
 
   @override
@@ -252,7 +265,7 @@ class SearchParentTimebanksViewState extends State<SearchParentTimebanks> {
               }
             }
           } else if (snapshot.hasError) {
-            return Text(S.of(context).try_later);
+            return Text("${S.of(context).try_later}");
           }
           /*else if(snapshot.data==null){
             return Expanded(

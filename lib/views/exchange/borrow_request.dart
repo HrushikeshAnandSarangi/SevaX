@@ -7,6 +7,7 @@ import 'package:sevaexchange/components/duration_picker/offer_duration_widget.da
 import 'package:sevaexchange/components/repeat_availability/repeat_widget.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/enums/lending_borrow_enums.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
@@ -228,23 +229,23 @@ class _BorrowRequestState extends State<BorrowRequest> {
       SizedBox(height: 15),
       (widget.requestModel.requestType == RequestType.BORROW && roomOrTool == 1)
           ? Text(
-        S.of(context).request_description,
-        style: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-          fontFamily: 'Europa',
-          color: Colors.black,
-        ),
-      )
+              S.of(context).request_description,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Europa',
+                color: Colors.black,
+              ),
+            )
           : Text(
-        "${S.of(context).request_description}",
-        style: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-          fontFamily: 'Europa',
-          color: Colors.black,
-        ),
-      ),
+              "${S.of(context).request_description}",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Europa',
+                color: Colors.black,
+              ),
+            ),
       TextFormField(
         autovalidateMode: AutovalidateMode.onUserInteraction,
         onChanged: (value) {
@@ -266,7 +267,7 @@ class _BorrowRequestState extends State<BorrowRequest> {
         ),
         initialValue: widget.formType == RequestFormType.CREATE
             ? requestUtils.getInitialDescription(
-            widget.offer, widget.isOfferRequest)
+                widget.offer, widget.isOfferRequest)
             : widget.requestModel.description,
         keyboardType: TextInputType.multiline,
         maxLines: 2,
@@ -351,7 +352,7 @@ class _BorrowRequestState extends State<BorrowRequest> {
           HideWidget(
             hide: roomOrTool == 0,
             child: Text(
-              S.of(context).select_a_item_lending,
+              L.of(context).select_a_item_lending,
               style: TextStyle(
                 fontSize: 16,
                 //fontWeight: FontWeight.bold,

@@ -399,7 +399,6 @@ Future<TimebankModel> getTimeBankForId({@required String timebankId}) async {
   return timeBankModel;
 }
 
-/// Get a particular Timebank by it's ID
 Future<OfferModel> getOfferFromId({@required String offerId}) async {
   OfferModel offerModel;
   await CollectionRef.offers.doc(offerId).get().then(

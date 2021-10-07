@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/new_baseline/models/amenities_model.dart';
 import 'package:sevaexchange/new_baseline/models/lending_model.dart';
 import 'package:sevaexchange/ui/screens/image_picker/image_picker_dialog_mobile.dart';
@@ -187,7 +188,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             currentNode: _placeName,
                             nextNode: _guests,
                             value: snapshot.data,
-                            heading: "${S.of(context).name_of_place }*",
+                            heading: "${S.of(context).name_of_place}*",
                             onChanged: (String value) {
                               _bloc.onPlaceNameChanged(value);
                               // title = value;
@@ -311,7 +312,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                       ),
                       SizedBox(height: 20),
                       Text(
-                        S.of(context).amenities_text+'*',
+                        S.of(context).amenities_text + '*',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
@@ -353,9 +354,10 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                               // title = value;
                             },
                             hint: 'Ex: 3',
-                            maxLength: 1,
+                            maxLength: 4,
                             error: getAddPlaceValidationError(
                                 context, snapshot.error),
+                            keyboardType: TextInputType.number,
                             formatters: [
                               FilteringTextInputFormatter.allow(
                                   Regex.numericRegex)
@@ -378,9 +380,10 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                               // title = value;
                             },
                             hint: 'Ex: 2',
-                            maxLength: 1,
+                            maxLength: 4,
                             error: getAddPlaceValidationError(
                                 context, snapshot.error),
+                            keyboardType: TextInputType.number,
                             formatters: [
                               FilteringTextInputFormatter.allow(
                                   Regex.numericRegex)
@@ -403,9 +406,10 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                               // title = value;
                             },
                             hint: 'Ex: 1',
-                            maxLength: 1,
+                            maxLength: 4,
                             error: getAddPlaceValidationError(
                                 context, snapshot.error),
+                            keyboardType: TextInputType.number,
                             formatters: [
                               FilteringTextInputFormatter.allow(
                                   Regex.numericRegex)
@@ -469,7 +473,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                                 prefixIcon: Icon(Icons.attach_money),
                                 hintText: S
                                         .of(context)
-                                        .request_min_donation_hint +
+                                        .estimated_value_place_hint +
                                     S.of(context).estimated_value_hint_place,
                                 errorText: getAddPlaceValidationError(
                                     context, snapshot.error)),
@@ -503,7 +507,9 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             controller: _contactInformationController,
                             currentNode: _contactInformation,
                             value: snapshot.data,
-                            heading: "${S.of(context).contact_information}*",
+                            heading: S
+                                .of(context)
+                                .contact_information, // not mandatory field now as told by anitha
                             onChanged: (String value) {
                               _bloc.onContactInformationChanged(value);
                             },
@@ -511,10 +517,11 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             error: getAddPlaceValidationError(
                                 context, snapshot.error),
                             validator: (String value) {
-                              if (value.isEmpty) {
-                                return 'Email or Phone Number is required';
-                              }
-                              if (!Regex.emailAndPhoneRegex.hasMatch(value)) {
+                              // if (value.isEmpty) {
+                              //   return 'Email or Phone Number is required';   // not mandatory field now as told by anitha
+                              // }
+                              if (!Regex.emailAndPhoneRegex.hasMatch(value) &&
+                                  value.isNotEmpty) {
                                 return 'Please enter a valid Email or Phone Number';
                               }
                               return null;

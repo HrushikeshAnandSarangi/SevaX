@@ -629,7 +629,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                                 text: TextSpan(
                                   style: TextStyle(
                                       color: Colors.black45, fontSize: 14),
-                                  text: S.of(context).login_agreement_message1,
+                                  text: S.of(context).seva_exchange_text_new,
                                   children: <TextSpan>[
                                     emptyTextSpan(),
                                     TextSpan(
