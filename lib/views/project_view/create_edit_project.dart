@@ -191,8 +191,8 @@ class _CreateEditProjectState extends State<CreateEditProject> {
   _initializeFields() {
     projectNameController.text = widget.isCreateProject
         ? widget.projectTemplateModel != null
-        ? widget.projectTemplateModel.name
-        : ""
+            ? widget.projectTemplateModel.name
+            : ""
         : projectModel.name ?? "";
     projectStatementController.text = widget.isCreateProject
         ? widget.projectTemplateModel != null
@@ -442,16 +442,19 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               widget.isCreateProject
                   ? widget.projectTemplateModel != null
                       ? OfferDurationWidget(
+                          key: _timeKey,
                           title: ' ${S.of(context).project_duration} *',
                           startTime: startDate,
                           endTime: endDate,
                         )
                       : OfferDurationWidget(
+                          key: _timeKey,
                           title: ' ${S.of(context).project_duration} *',
                           //startTime: CalendarWidgetState.startDate,
                           //endTime: CalendarWidgetState.endDate
                         )
                   : OfferDurationWidget(
+                      key: _timeKey,
                       title: ' ${S.of(context).project_duration}',
                       startTime: startDate,
                       endTime: endDate,
