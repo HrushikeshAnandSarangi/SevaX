@@ -30,6 +30,7 @@ import 'package:sevaexchange/views/timebanks/timbank_admin_request_list.dart';
 import 'package:sevaexchange/views/timebanks/transfer_ownership_view.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/custom_dialogs/custom_dialog.dart';
+import 'package:usage/uuid/uuid.dart';
 
 class MemberSectionBuilder extends StatelessWidget {
   const MemberSectionBuilder(
@@ -636,17 +637,44 @@ class MemberSectionBuilder extends StatelessWidget {
 
       //from, to, timestamp, credits, isApproved, type, typeid, timebankid
       await TransactionBloc().createNewTransaction(
-          model.id,
-          user.sevaUserID,
-          DateTime.now().millisecondsSinceEpoch,
-          donateAmount,
-          true,
-          "ADMIN_DONATE_TOUSER",
-          null,
-          model.id,
-          communityId: model.communityId,
-          fromEmailORId: model.id,
-          toEmailORId: user.email);
+        model.id,
+        user.sevaUserID,
+        DateTime.now().millisecondsSinceEpoch,
+        donateAmount,
+        true,
+        "ADMIN_DONATE_TOUSER",
+        null,
+        model.id,
+        communityId: model.communityId,
+        fromEmailORId: model.id,
+        toEmailORId: user.email,
+      );
+      //SEND DONATION NOTIFICATION TO MEMBER
+
+      NotificationsModel notification = NotificationsModel(
+        communityId: model.communityId,
+        id: Uuid().generateV4(),
+        isRead: false,
+        isTimebankNotification: false,
+        senderUserId: model.id,
+        targetUserId: user.sevaUserID,
+        timebankId: model.id,
+        timestamp: DateTime.now().millisecondsSinceEpoch,
+        type: NotificationType.MEMBER_RECEIVED_CREDITS_DONATION,
+        data: {
+          'credits': donateAmount,
+          'donorName': SevaCore.of(context).loggedInUser.fullname,
+          'donorId': SevaCore.of(context).loggedInUser.sevaUserID,
+          'communityName': model.name,
+        },
+      );
+
+      await CollectionRef.users
+          .doc(user.email)
+          .collection("notifications")
+          .doc(notification.id)
+          .set(notification.toMap());
+
       await showDialog<double>(
         context: context,
         builder: (context) => InputDonateSuccessDialog(
