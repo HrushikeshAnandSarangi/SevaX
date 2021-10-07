@@ -517,190 +517,175 @@ class _IndividualOfferState extends State<IndividualOffer> {
       StreamBuilder<int>(
         stream: _bloc.donationAmount,
         builder: (context, snapshot) {
-          return Container(
-              constraints: BoxConstraints(minHeight: 26, maxHeight: 30),
-              child: DoseTextField(
-                isRequired: true,
-                controller: _donationAmountController,
-                currentNode: _donationFocusNode,
-                validator: _bloc.validateAmount,
-                onChanged: (String data) => _bloc.onDonationAmountChanged(int.tryParse(data)),
-                textCapitalization: TextCapitalization.sentences,
-                decoration: InputDecoration(
-                  hintText: S.of(context).add_amount_donate ?? '',
-                  errorText: getValidationError(context, snapshot.error),
-                  prefixIcon: Padding(
-                    padding: const EdgeInsets.only(bottom: 1, right: 5),
-                    child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 3),
-                      // decoration: BoxDecoration(
-                      //   borderRadius: BorderRadius.only(
-                      //     topLeft: Radius.circular(6),
-                      //     bottomLeft: Radius.circular(6),
-                      //   ),
-                      //   color: Colors.grey[200],
-                      // ),
-                      child: StreamBuilder<String>(
-                          stream: _bloc.offeredCurrency,
-                          builder: (context, snapshot) {
-                            return Container(
-                              width: 90,
-                              child: CompositedTransformTarget(
-                                link: _layerLink,
-                                child: CustomDropdownView(
-                                  layerLink: _layerLink,
-                                  isNeedCloseDropdown: isNeedCloseDropDown,
-                                  elevationShadow: 20,
-                                  decorationDropdown: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  defaultWidget: Padding(
-                                    padding: const EdgeInsets.only(bottom: 8.0),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          indexSelected != -1
-                                              ? "${currencyList[indexSelected].code}"
-                                              : widget.offerModel == null
-                                                  ? defaultOfferCurrenyType
-                                                  : widget.offerModel.cashModel.offerCurrencyType,
-                                          style: kDropDownChildCurrencyCode,
+          return DoseTextField(
+            isRequired: true,
+            controller: _donationAmountController,
+            currentNode: _donationFocusNode,
+            validator: _bloc.validateAmount,
+            onChanged: (String data) => _bloc.onDonationAmountChanged(int.tryParse(data)),
+            textCapitalization: TextCapitalization.sentences,
+            decoration: InputDecoration(
+              hintText: S.of(context).add_amount_donate ?? '',
+              errorText: getValidationError(context, snapshot.error),
+              prefixIcon: StreamBuilder<String>(
+                  stream: _bloc.offeredCurrency,
+                  builder: (context, snapshot) {
+                    return Container(
+                      width: 90,
+                      child: CompositedTransformTarget(
+                        link: _layerLink,
+                        child: CustomDropdownView(
+                          layerLink: _layerLink,
+                          isNeedCloseDropdown: isNeedCloseDropDown,
+                          elevationShadow: 20,
+                          decorationDropdown: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          defaultWidget: Padding(
+                            padding: const EdgeInsets.only(bottom: 8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  indexSelected != -1
+                                      ? "${currencyList[indexSelected].code}"
+                                      : widget.offerModel == null
+                                          ? defaultOfferCurrenyType
+                                          : widget.offerModel.cashModel.offerCurrencyType,
+                                  style: kDropDownChildCurrencyCode,
+                                ),
+                                SizedBox(width: 8),
+                                StreamBuilder<String>(
+                                    stream: _bloc.offerFlag,
+                                    builder: (context, snapshot) {
+                                      return Container(
+                                        height: kFlagImageContainerHeight,
+                                        width: kFlagImageContainerWidth,
+                                        child: Image.network(
+                                          widget.offerModel == null
+                                              ? defaultImage
+                                              : widget
+                                                  .offerModel.cashModel.offerCurrencyFlag,
+                                          fit: BoxFit.cover,
                                         ),
-                                        SizedBox(width: 8),
-                                        StreamBuilder<String>(
-                                            stream: _bloc.offerFlag,
-                                            builder: (context, snapshot) {
-                                              return Container(
-                                                height: kFlagImageContainerHeight,
-                                                width: kFlagImageContainerWidth,
-                                                child: Image.network(
-                                                  widget.offerModel == null
-                                                      ? defaultImage
-                                                      : widget
-                                                          .offerModel.cashModel.offerCurrencyFlag,
-                                                  fit: BoxFit.cover,
-                                                ),
-                                              );
-                                            }),
-                                        SizedBox(width: 8),
-                                        isDropdownOpened
-                                            ? Icon(
-                                                Icons.keyboard_arrow_up,
-                                                color: Color(0xFF737579),
-                                              )
-                                            : kDropDownArrowIcon,
-                                      ],
-                                    ),
-                                  ),
-                                  onTapDropdown: (bool _isDropdownOpened) async {
-                                    await Future.delayed(Duration.zero);
-                                    setState(() {
-                                      isDropdownOpened = _isDropdownOpened;
-                                      if (_isDropdownOpened == false) isNeedCloseDropDown = false;
-                                    });
-                                  },
-                                  listWidgetItem: List.generate(currencyList.length, (index) {
-                                    return GestureDetector(
-                                      onTap: () {
-                                        indexSelected = index;
-                                        isNeedCloseDropDown = true;
+                                      );
+                                    }),
+                                SizedBox(width: 8),
+                                isDropdownOpened
+                                    ? Icon(
+                                        Icons.keyboard_arrow_up,
+                                        color: Color(0xFF737579),
+                                      )
+                                    : kDropDownArrowIcon,
+                              ],
+                            ),
+                          ),
+                          onTapDropdown: (bool _isDropdownOpened) async {
+                            await Future.delayed(Duration.zero);
+                            setState(() {
+                              isDropdownOpened = _isDropdownOpened;
+                              if (_isDropdownOpened == false) isNeedCloseDropDown = false;
+                            });
+                          },
+                          listWidgetItem: List.generate(currencyList.length, (index) {
+                            return GestureDetector(
+                              onTap: () {
+                                indexSelected = index;
+                                isNeedCloseDropDown = true;
 
-                                        if (widget.offerModel == null) {
-                                          setState(() {
-                                            defaultOfferCurrenyType =
-                                                currencyList[indexSelected].code;
-                                            _bloc.offeredCurrencyType(
-                                                currencyList[indexSelected].code);
-                                            defaultImage = currencyList[indexSelected].imagePath;
-                                            _bloc.offerCurrencyflag(
-                                                currencyList[indexSelected].imagePath);
-                                          });
-                                        }
-                                        setState(() {
-                                          widget.offerModel.cashModel.offerCurrencyType =
-                                              currencyList[indexSelected].code;
-                                          widget.offerModel.cashModel.offerCurrencyFlag =
-                                              currencyList[indexSelected].imagePath;
-                                          _bloc.offeredCurrencyType(
-                                              currencyList[indexSelected].code);
-                                        });
-                                      },
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.vertical(
-                                            top: index == 0 ? Radius.circular(4) : Radius.zero,
-                                            bottom: index == currencyList.length - 1
-                                                ? Radius.circular(4)
-                                                : Radius.zero,
-                                          ),
-                                          color: indexSelected == index
-                                              ? Color(0xFFE8EFFF)
-                                              : Colors.white,
-                                        ),
-                                        padding: EdgeInsets.symmetric(horizontal: 16),
-                                        child: Container(
-                                          child: Column(
-                                            children: [
-                                              SizedBox(
-                                                height: 10,
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Container(
-                                                    height: 12,
-                                                    width: 16,
-                                                    child: Image.network(
-                                                      "${currencyList[index].imagePath}",
-                                                      fit: BoxFit.cover,
-                                                    ),
-                                                  ),
-                                                  SizedBox(
-                                                    width: 8,
-                                                  ),
-                                                  Text(
-                                                    "${currencyList[index].code}",
-                                                    style: kDropDownChildCurrencyCode,
-                                                  ),
-                                                  SizedBox(
-                                                    width: 8,
-                                                  ),
-                                                  Text(
-                                                    "${currencyList[index].name}",
-                                                    style: kDropDownChildCurrencyName,
-                                                  ),
-                                                ],
-                                              ),
-                                              SizedBox(
-                                                height: 9,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
+                                if (widget.offerModel == null) {
+                                  setState(() {
+                                    defaultOfferCurrenyType =
+                                        currencyList[indexSelected].code;
+                                    _bloc.offeredCurrencyType(
+                                        currencyList[indexSelected].code);
+                                    defaultImage = currencyList[indexSelected].imagePath;
+                                    _bloc.offerCurrencyflag(
+                                        currencyList[indexSelected].imagePath);
+                                  });
+                                }
+                                setState(() {
+                                  widget.offerModel.cashModel.offerCurrencyType =
+                                      currencyList[indexSelected].code;
+                                  widget.offerModel.cashModel.offerCurrencyFlag =
+                                      currencyList[indexSelected].imagePath;
+                                  _bloc.offeredCurrencyType(
+                                      currencyList[indexSelected].code);
+                                });
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.vertical(
+                                    top: index == 0 ? Radius.circular(4) : Radius.zero,
+                                    bottom: index == currencyList.length - 1
+                                        ? Radius.circular(4)
+                                        : Radius.zero,
+                                  ),
+                                  color: indexSelected == index
+                                      ? Color(0xFFE8EFFF)
+                                      : Colors.white,
+                                ),
+                                padding: EdgeInsets.symmetric(horizontal: 16),
+                                child: Container(
+                                  child: Column(
+                                    children: [
+                                      SizedBox(
+                                        height: 10,
                                       ),
-                                    );
-                                  }),
+                                      Row(
+                                        children: [
+                                          Container(
+                                            height: 12,
+                                            width: 16,
+                                            child: Image.network(
+                                              "${currencyList[index].imagePath}",
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 8,
+                                          ),
+                                          Text(
+                                            "${currencyList[index].code}",
+                                            style: kDropDownChildCurrencyCode,
+                                          ),
+                                          SizedBox(
+                                            width: 8,
+                                          ),
+                                          Text(
+                                            "${currencyList[index].name}",
+                                            style: kDropDownChildCurrencyName,
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 9,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             );
                           }),
-                    ),
-                  ),
-                ),
-                formatters: [
-                  FilteringTextInputFormatter.allow(
-                    (RegExp("[0-9]")),
-                  ),
-                ],
-                keyboardType: TextInputType.number,
-                // initialValue: widget.offerModel != null
-                //     ? widget.offerModel.cashModel.targetAmount.toString()
-                //     : '',
-                onFieldSubmitted: (v) {
-                  _availability.unfocus();
-                  _bloc.onDonationAmountChanged(int.tryParse(v));
-                },
-              ));
+                        ),
+                      ),
+                    );
+                  }),
+            ),
+            formatters: [
+              FilteringTextInputFormatter.allow(
+                (RegExp("[0-9]")),
+              ),
+            ],
+            keyboardType: TextInputType.number,
+            // initialValue: widget.offerModel != null
+            //     ? widget.offerModel.cashModel.targetAmount.toString()
+            //     : '',
+            onFieldSubmitted: (v) {
+              _availability.unfocus();
+              _bloc.onDonationAmountChanged(int.tryParse(v));
+            },
+          );
         },
       ),
     ]);
