@@ -491,7 +491,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                               // if (value.isEmpty) {
                               //   return null;   // not mandatory field now as told by anitha
                               // }
-                              else if (!Regex.emailAndPhoneRegex.hasMatch(value) &&
+                               if (!Regex.emailAndPhoneRegex.hasMatch(value) &&
                                   value.isNotEmpty) {
                                 return 'Please enter a valid Email or Phone Number';
                               }
