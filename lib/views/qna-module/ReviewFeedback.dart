@@ -409,7 +409,7 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
         width: double.infinity,
         child: CustomElevatedButton(
           shape: StadiumBorder(),
-          color: Color(0x0FF766FE0),
+          color: Theme.of(context).primaryColor,
           child: Text(
             answerModel[FeedbackConstants.ANSWER_TEXT],
             style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),

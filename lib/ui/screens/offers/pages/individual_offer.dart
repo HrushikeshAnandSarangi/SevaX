@@ -755,6 +755,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
       key: _scaffoldKey,
       appBar: widget.offerModel != null
           ? AppBar(
+        backgroundColor: Theme.of(context).primaryColor,
               title: Text(
                 S.of(context).edit,
                 style: TextStyle(fontSize: 18),
