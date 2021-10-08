@@ -1176,8 +1176,8 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 break;
 
 //! NEW NOTIFICATION BELOW ---------------------------------------------------------->
-//Feature name: Create Notification for member/timebank receiving donation //1.9 Release Feature
-              case NotificationType.MEMBER_RECEIVED_CREDITS_DONATION:
+//Feature name: Create Notification for community receiving donation //1.9 Release Feature
+              case NotificationType.COMMUNITY_RECEIVED_CREDITS_DONATION:
                 return NotificationCard(
                   timestamp: notification.timestamp,
                   entityName: "CR",

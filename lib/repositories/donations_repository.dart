@@ -273,8 +273,9 @@ class DonationsRepository {
       targetUserId: toMember ? user.sevaUserID : model.id,
       timebankId: model.id,
       timestamp: DateTime.now().millisecondsSinceEpoch,
-      type: NotificationType
-          .MEMBER_RECEIVED_CREDITS_DONATION, //Using same key/type for both when a member receives credits and when a timebank receives credits donation
+      type: toMember
+          ? NotificationType.MEMBER_RECEIVED_CREDITS_DONATION
+          : NotificationType.COMMUNITY_RECEIVED_CREDITS_DONATION,
       data: {
         'credits': donateAmount,
         'donorName': SevaCore.of(context).loggedInUser.fullname,
