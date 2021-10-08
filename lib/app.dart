@@ -104,6 +104,7 @@ class MainApplication extends StatelessWidget {
         ),
         Provider(
           create: (context) => ThemeBloc(),
+          dispose: (_, b)  => b.dispose(),
         ),
         // StreamProvider<UserModel>.value(
         //   initialData: null,
