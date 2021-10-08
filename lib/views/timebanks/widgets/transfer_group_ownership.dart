@@ -13,14 +13,17 @@ import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/user_exit_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
+import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
+import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/switch_timebank.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
+import 'package:sevaexchange/widgets/user_profile_image.dart';
 
 import '../../../labels.dart';
 import '../../core.dart';
@@ -44,7 +47,7 @@ class _TransferGroupOwnerShipState extends State<TransferGroupOwnerShip> {
   List<String> groupMembersList = [];
   UserModel selectedNewOwner = null;
   List<String> allItems = [];
-  List<String> admins, coordinators, members;
+  List<String> admins, organizers, members;
   TimebankModel tbmodel;
   List<Future> futures = [];
   BuildContext parentContext;
@@ -67,10 +70,10 @@ class _TransferGroupOwnerShipState extends State<TransferGroupOwnerShip> {
         dataLoaded = true;
         tbmodel = onValue;
         admins = onValue.admins;
-        coordinators = onValue.coordinators;
+        organizers = onValue.organizers;
         members = onValue.members;
         allItems.addAll(admins);
-        allItems.addAll(coordinators);
+        allItems.addAll(organizers);
         allItems.addAll(members);
         groupMembersList = allItems;
         logger.d(groupMembersList);
@@ -115,15 +118,33 @@ class _TransferGroupOwnerShipState extends State<TransferGroupOwnerShip> {
                     SizedBox(
                       height: 15,
                     ),
-                    Text(
-                      S.of(context).changing_ownership_of +
-                          ' ' +
-                          tbmodel.name +
-                          ' ' +
-                          S.of(context).to_other_admin,
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontFamily: 'Europa',
+                    RichText(
+                      text: TextSpan(
+                        style: TextStyle(color: Colors.black),
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: S.of(context).changing_ownership_of + ' of ',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontFamily: 'Europa',
+                            ),
+                          ),
+                          TextSpan(
+                            text: tbmodel.name,
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Europa',
+                            ),
+                          ),
+                          TextSpan(
+                            text: S.of(context).to_other_admin,
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontFamily: 'Europa',
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     SizedBox(
@@ -146,7 +167,7 @@ class _TransferGroupOwnerShipState extends State<TransferGroupOwnerShip> {
                       height: 10,
                     ),
                     Text(
-                      S.of(context).search_user,
+                      S.of(context).search_by_email_name,
                       style: TextStyle(
                         fontSize: 14,
                         fontFamily: 'Europa',
@@ -159,9 +180,19 @@ class _TransferGroupOwnerShipState extends State<TransferGroupOwnerShip> {
                     SizedBox(
                       height: 15,
                     ),
-                    selectedNewOwner == null
-                        ? Container()
-                        : ListTile(title: Text(selectedNewOwner.fullname)),
+                    if (selectedNewOwner == null)
+                      Container()
+                    else
+                      ListTile(
+                          leading: UserProfileImage(
+                            photoUrl: selectedNewOwner.photoURL,
+                            email: selectedNewOwner.email,
+                            userId: selectedNewOwner.sevaUserID,
+                            height: 50,
+                            width: 50,
+                            timebankModel: tbmodel,
+                          ),
+                          title: Text(selectedNewOwner.fullname)),
                     SizedBox(
                       height: 15,
                     ),
@@ -216,10 +247,10 @@ class _TransferGroupOwnerShipState extends State<TransferGroupOwnerShip> {
                             SevaCore.of(context).loggedInUser.sevaUserID))) {
                   await CollectionRef.timebank.doc(tbmodel.id).update(
                     {
-                      "admins":
-                          FieldValue.arrayRemove([selectedNewOwner.sevaUserID]),
-                      "organizers":
-                          FieldValue.arrayRemove([selectedNewOwner.sevaUserID]),
+                      "admins": FieldValue.arrayRemove(
+                          [SevaCore.of(context).loggedInUser.sevaUserID]),
+                      "organizers": FieldValue.arrayRemove(
+                          [SevaCore.of(context).loggedInUser.sevaUserID]),
                     },
                   );
                 }
