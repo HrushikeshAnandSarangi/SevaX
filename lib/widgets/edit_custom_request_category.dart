@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:doseform/doseform.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
@@ -17,6 +18,7 @@ class EditRequestCustomCategory extends StatefulWidget {
   final VoidCallback onCategoryEdited;
   final Color primaryColor;
   final UserModel userModel;
+
   const EditRequestCustomCategory({
     Key key,
     this.categoryModel,
@@ -24,36 +26,36 @@ class EditRequestCustomCategory extends StatefulWidget {
     this.primaryColor,
     this.userModel,
   }) : super(key: key);
+
   @override
-  _EditRequestCustomCategoryState createState() =>
-      _EditRequestCustomCategoryState();
+  _EditRequestCustomCategoryState createState() => _EditRequestCustomCategoryState();
 }
 
 class _EditRequestCustomCategoryState extends State<EditRequestCustomCategory> {
   String subcategorytitle = '';
   String newRequestCategoryLogo;
-  final formKey = GlobalKey<FormState>();
+  final formKey = GlobalKey<DoseFormState>();
   String errTxt = '';
   final _subcategorytitleStream = StreamController<String>();
   TextEditingController searchTextController = TextEditingController();
+  TextEditingController subcategoryController = TextEditingController();
+  FocusNode subcategoryFocusNode = FocusNode();
+
   @override
   void initState() {
     super.initState();
     Future.delayed(Duration.zero, () async {
       subcategorytitle = widget.categoryModel.getCategoryName(context);
     });
+    subcategoryController.text = widget.categoryModel.getCategoryName(context).toString();
     //For Checking Duplicate request subcategory When creating new one
-    searchTextController.addListener(
-        () => _subcategorytitleStream.add(searchTextController.text));
-    _subcategorytitleStream.stream
-        .debounceTime(Duration(milliseconds: 400))
-        .forEach((s) {
+    searchTextController.addListener(() => _subcategorytitleStream.add(searchTextController.text));
+    _subcategorytitleStream.stream.debounceTime(Duration(milliseconds: 400)).forEach((s) {
       logger.e("Text updates============ $s");
       if (s.isEmpty) {
         setState(() {});
       } else {
-        SearchManager.searchRequestCategoriesForDuplicate(
-                queryString: s.trim(), context: context)
+        SearchManager.searchRequestCategoriesForDuplicate(queryString: s.trim(), context: context)
             .then((categoryFound) {
           if (categoryFound) {
             setState(() {
@@ -112,21 +114,19 @@ class _EditRequestCustomCategoryState extends State<EditRequestCustomCategory> {
                   ),
                   // height: 45,
                   child: ListTile(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                     onTap: () {},
                     leading: Icon(Icons.add_circle_outline, size: 16),
-                    title: Form(
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      key: formKey,
+                    title: DoseForm(
+                      // autovalidateMode: AutovalidateMode.onUserInteraction,
+                      formKey: formKey,
                       child: Container(
                         height: MediaQuery.of(context).size.width * 0.1,
-                        child: TextFormField(
-                          initialValue: widget.categoryModel
-                              .getCategoryName(context)
-                              .toString(),
+                        child: DoseTextField(
+                          isRequired: true,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
-                          // controller: searchTextController,
+                          currentNode: subcategoryFocusNode,
+                          controller: subcategoryController,
                           onChanged: (val) {
                             subcategorytitle = val;
                             _subcategorytitleStream.add(val);
@@ -134,11 +134,9 @@ class _EditRequestCustomCategoryState extends State<EditRequestCustomCategory> {
                             setState(() {});
                           },
                           decoration: InputDecoration(
-                            contentPadding: EdgeInsets.only(
-                                left: 0.0, right: 8.0, bottom: 10.0),
+                            contentPadding: EdgeInsets.only(left: 0.0, right: 8.0, bottom: 10.0),
                             border: InputBorder.none,
-                            hintText:
-                                S.of(context).add_new_subcategory_hint + '*',
+                            hintText: S.of(context).add_new_subcategory_hint + '*',
                             hintStyle: TextStyle(color: Colors.grey),
                             errorStyle: TextStyle(height: 0.85),
                             // errorText: errTxt,
@@ -171,8 +169,7 @@ class _EditRequestCustomCategoryState extends State<EditRequestCustomCategory> {
                   ),
                   // height: 45,
                   child: ListTile(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                     onTap: () {
                       showDialog(
                           context: context,
@@ -185,8 +182,7 @@ class _EditRequestCustomCategoryState extends State<EditRequestCustomCategory> {
                                   setState(() {});
                                 }
                                 ;
-                                logger.e('NEW LOGO CHECK: ' +
-                                    newRequestCategoryLogo.toString());
+                                logger.e('NEW LOGO CHECK: ' + newRequestCategoryLogo.toString());
                               },
                             );
                           });
@@ -221,24 +217,21 @@ class _EditRequestCustomCategoryState extends State<EditRequestCustomCategory> {
                           'typeId': widget.categoryModel.typeId,
                           'creatorId': widget.userModel.sevaUserID,
                           'creatorEmail': widget.userModel.email,
-                          'title_' + widget.userModel.language ??
-                              S.of(context).localeName: subcategorytitle
+                          'title_' + widget.userModel.language ?? S.of(context).localeName:
+                              subcategorytitle
                         };
-                        if (newRequestCategoryLogo !=
-                                widget.categoryModel.logo &&
-                            subcategorytitle ==
-                                widget.categoryModel.getCategoryName(context)) {
-                          await editRequestCategory(newRequestCategoryModel,
-                              widget.categoryModel.typeId);
+                        if (newRequestCategoryLogo != widget.categoryModel.logo &&
+                            subcategorytitle == widget.categoryModel.getCategoryName(context)) {
+                          await editRequestCategory(
+                              newRequestCategoryModel, widget.categoryModel.typeId);
 
                           Navigator.of(context1).pop();
                         }
-                        if (formKey.currentState.validate() &&
-                            (errTxt == null || errTxt == "")) {
+                        if (formKey.currentState.validate() && (errTxt == null || errTxt == "")) {
                           formKey.currentState.save();
                           //validate title is not empty
-                          await editRequestCategory(newRequestCategoryModel,
-                              widget.categoryModel.typeId);
+                          await editRequestCategory(
+                              newRequestCategoryModel, widget.categoryModel.typeId);
                           Navigator.of(context1).pop();
                           // widget.onCategoryEdited();
                         }

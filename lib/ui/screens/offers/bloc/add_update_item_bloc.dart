@@ -43,7 +43,7 @@ class AddUpdateItemBloc extends BlocBase {
 
   void createLendingOfferPlace({UserModel creator}) {
     LendingModel lendingModel;
-    if (!errorCheck()) {
+    if (!validateForm()) {
       _message.add('create');
       var timestamp = DateTime.now().millisecondsSinceEpoch;
 
@@ -68,7 +68,7 @@ class AddUpdateItemBloc extends BlocBase {
 
   void updateLendingOfferPlace({LendingModel model}) async {
     LendingModel lendingModel = model;
-    if (!errorCheck()) {
+    if (!validateForm()) {
       lendingModel.lendingItemModel.itemName = _itemName.value;
       lendingModel.lendingItemModel.estimatedValue = int.parse(_estimated_value.value);
       lendingModel.lendingItemModel.itemImages = _item_images.value.toList();
@@ -78,6 +78,29 @@ class AddUpdateItemBloc extends BlocBase {
         _status.add(Status.COMPLETE);
       }).catchError((e) => _status.add(Status.ERROR));
     }
+  }
+
+  String validateName(String val) {
+    if (_itemName.value == null || _itemName.value == '') {
+      _itemName.addError(AddItemValidationErrors.itemNameError);
+    } else if (_itemName.value.substring(0, 1).contains('_') &&
+        !AppConfig.testingEmails.contains(AppConfig.loggedInEmail)) {
+      _itemName.addError(AddItemValidationErrors.underscore_error);
+    } else if (profanityDetector.isProfaneString(_itemName.value)) {
+      _itemName.addError(AddItemValidationErrors.profanityError);
+    }
+  }
+
+  String validateEstimatedVal(String val) {
+    if (_estimated_value.value == null || _estimated_value.value == '') {
+      //check if validator working now
+      _estimated_value.addError(AddItemValidationErrors.estimated_value_error);
+    }
+  }
+
+  bool validateForm() {
+    return !(validateName(_itemName.value) == null &&
+        validateEstimatedVal(_estimated_value.value.toString()) == null);
   }
 
   ///[ERROR CHECKS] TO Validate input
