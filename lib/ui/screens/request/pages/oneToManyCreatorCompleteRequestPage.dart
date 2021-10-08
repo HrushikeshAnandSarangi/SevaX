@@ -362,7 +362,12 @@ class OneToManyCreatorCompleteRequestPageState extends State<OneToManyCreatorCom
                                                   viewContext = createDialogContext;
                                                   return AlertDialog(
                                                     title: Text(S.of(context).loading),
-                                                    content: LinearProgressIndicator(),
+                                                    content: LinearProgressIndicator(
+ backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+        valueColor: AlwaysStoppedAnimation<Color>(
+          Theme.of(context).primaryColor,
+        ),
+),
                                                   );
                                                 });
 
@@ -576,7 +581,12 @@ class OneToManyCreatorCompleteRequestPageState extends State<OneToManyCreatorCom
           creditRequestDialogContext = context;
           return AlertDialog(
             title: Text(S.of(context).please_wait),
-            content: LinearProgressIndicator(),
+            content: LinearProgressIndicator(
+ backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+        valueColor: AlwaysStoppedAnimation<Color>(
+          Theme.of(context).primaryColor,
+        ),
+),
           );
         });
   }

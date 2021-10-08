@@ -40,7 +40,7 @@ class SponsorsWidget extends StatefulWidget {
     @required this.sponsorsMode,
     this.title,
     this.onSponsorsAdded,
-    this.textColor = const Color(0xFFF766FE0),
+    this.textColor = const Color(0x0FF766FE0),
     this.textSize = 18.0,
     this.onSponsorsRemoved,
     this.isAdminVerified = false,

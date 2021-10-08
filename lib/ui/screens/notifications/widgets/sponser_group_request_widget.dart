@@ -196,7 +196,12 @@ class SponsorGroupRequestWidget extends StatelessWidget {
           title: Text(
             S.of(context).updating_timebank,
           ),
-          content: LinearProgressIndicator(),
+          content: LinearProgressIndicator(
+ backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+        valueColor: AlwaysStoppedAnimation<Color>(
+          Theme.of(context).primaryColor,
+        ),
+),
         );
       },
     );

@@ -341,7 +341,7 @@ Widget createJoinedUserTabBar(
           controller: controller,
           labelColor: Theme.of(context).primaryColor,
           unselectedLabelColor: Colors.black,
-          indicatorColor: Color(0xFFF766FE0),
+          indicatorColor: Color(0x0FF766FE0),
           indicatorSize: TabBarIndicatorSize.label,
           isScrollable: true,
           onTap: (index) {
@@ -465,7 +465,7 @@ Widget createNormalUserTabBar(
             controller: controller,
             labelColor: Theme.of(context).primaryColor,
             unselectedLabelColor: Colors.black,
-            indicatorColor: Color(0xFFF766FE0),
+            indicatorColor: Color(0x0FF766FE0),
             indicatorSize: TabBarIndicatorSize.label,
             isScrollable: false,
             tabs: [

@@ -124,7 +124,7 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
         child: Consumer<AppLanguage>(
           builder: (context, model, child) {
             return StreamBuilder<Color>(
-                initialData: Color(0xFF766FE0),
+                initialData: Color(0x0F766FE0),
                 stream: Provider.of<ThemeBloc>(context).color,
                 builder: (context, snapshot) {
                   logger.e("Here is the color " + snapshot.data.toString());

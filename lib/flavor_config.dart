@@ -199,7 +199,7 @@ class FlavorConfig {
               ),
             ),
             buttonTheme: ButtonThemeData(
-              buttonColor: Color(0xFF766FE0),
+              buttonColor: Color(0x0FF766FE0),
               textTheme: ButtonTextTheme.primary,
               height: 39,
               shape: StadiumBorder(),

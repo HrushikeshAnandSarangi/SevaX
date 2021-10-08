@@ -393,7 +393,12 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                                   dialogContext = createDialogContext;
                                   return AlertDialog(
                                     title: Text(S.of(context).creating_feed),
-                                    content: LinearProgressIndicator(),
+                                    content: LinearProgressIndicator(
+ backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+        valueColor: AlwaysStoppedAnimation<Color>(
+          Theme.of(context).primaryColor,
+        ),
+),
                                   );
                                 });
                             scrapeURLFromSubheading(subheadingController.text);

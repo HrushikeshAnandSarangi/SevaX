@@ -1822,7 +1822,11 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
           creditRequestDialogContext = context;
           return AlertDialog(
             title: Text(S.of(context).please_wait),
-            content: LinearProgressIndicator(),
+            content: LinearProgressIndicator( backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+        valueColor: AlwaysStoppedAnimation<Color>(
+          Theme.of(context).primaryColor,
+        ),
+),
           );
         });
   }
@@ -1904,7 +1908,12 @@ Future oneToManySpeakerInviteAcceptedPersonalNotifications(
         dialogContext = createDialogContext;
         return AlertDialog(
           title: Text(S.of(context).loading),
-          content: LinearProgressIndicator(),
+          content: LinearProgressIndicator(
+ backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+        valueColor: AlwaysStoppedAnimation<Color>(
+          Theme.of(context).primaryColor,
+        ),
+),
         );
       });
 
@@ -1953,7 +1962,12 @@ Future oneToManySpeakerInviteRejectedPersonalNotifications(
         dialogContext = createDialogContext;
         return AlertDialog(
           title: Text(S.of(context).loading),
-          content: LinearProgressIndicator(),
+          content: LinearProgressIndicator(
+ backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+        valueColor: AlwaysStoppedAnimation<Color>(
+          Theme.of(context).primaryColor,
+        ),
+),
         );
       });
 
@@ -2005,7 +2019,12 @@ Future oneToManySpeakerInviteAccepted(RequestModel requestModel, BuildContext co
         dialogContext = createDialogContext;
         return AlertDialog(
           title: Text(S.of(context).loading),
-          content: LinearProgressIndicator(),
+          content: LinearProgressIndicator(
+ backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+        valueColor: AlwaysStoppedAnimation<Color>(
+          Theme.of(context).primaryColor,
+        ),
+),
         );
       });
 
@@ -2062,7 +2081,12 @@ Future oneToManySpeakerInviteRejected(RequestModel requestModel, BuildContext co
         dialogContext = createDialogContext;
         return AlertDialog(
           title: Text(S.of(context).loading),
-          content: LinearProgressIndicator(),
+          content: LinearProgressIndicator(
+ backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+        valueColor: AlwaysStoppedAnimation<Color>(
+          Theme.of(context).primaryColor,
+        ),
+),
         );
       });
 
@@ -2133,7 +2157,12 @@ Future oneToManySpeakerRequestCompleted(RequestModel requestModel, BuildContext 
         dialogContext = createDialogContext;
         return AlertDialog(
           title: Text(S.of(context).loading),
-          content: LinearProgressIndicator(),
+          content: LinearProgressIndicator(
+ backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+        valueColor: AlwaysStoppedAnimation<Color>(
+          Theme.of(context).primaryColor,
+        ),
+),
         );
       });
 

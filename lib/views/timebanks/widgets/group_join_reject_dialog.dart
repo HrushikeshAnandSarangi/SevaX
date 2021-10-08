@@ -170,7 +170,12 @@ class _GroupJoinRejectDialogViewState extends State<GroupJoinRejectDialogView> {
           progressContext = createDialogContext;
           return AlertDialog(
             title: Text(message),
-            content: LinearProgressIndicator(),
+            content: LinearProgressIndicator(
+ backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+        valueColor: AlwaysStoppedAnimation<Color>(
+          Theme.of(context).primaryColor,
+        ),
+),
           );
         });
   }

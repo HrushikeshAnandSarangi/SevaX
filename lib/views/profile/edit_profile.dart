@@ -493,7 +493,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                   },
                   padding: EdgeInsets.all(3),
                   color: cvUrl == null
-                      ? Colors.grey[300]
+                      ? Theme.of(context).primaryColor
                       : Theme.of(context).accentColor,
                   child: Text(
                     S.of(context).upload,
@@ -503,7 +503,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                       color: Colors.white,
                     ),
                   ),
-                  // color: Colors.grey[300],
+                  // color: ,
                   shape: StadiumBorder(),
                 ),
               ),
@@ -657,7 +657,12 @@ class _EditProfilePageState extends State<EditProfilePage>
           dialogContext = createDialogContext;
           return AlertDialog(
             title: Text(message),
-            content: LinearProgressIndicator(),
+            content: LinearProgressIndicator(
+ backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+        valueColor: AlwaysStoppedAnimation<Color>(
+          Theme.of(context).primaryColor,
+        ),
+),
           );
         });
   }

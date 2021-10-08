@@ -788,7 +788,12 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
           dialogLoadingContext = createDialogContext;
           return AlertDialog(
             title: Text(S.of(context).creating_join_request),
-            content: LinearProgressIndicator(),
+            content: LinearProgressIndicator(
+ backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+        valueColor: AlwaysStoppedAnimation<Color>(
+          Theme.of(context).primaryColor,
+        ),
+),
           );
         });
   }

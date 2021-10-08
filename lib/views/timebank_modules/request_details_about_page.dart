@@ -2816,7 +2816,12 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               textColor: Colors.white,
               onPressed: () async {
                 if (requestItem.parent_request_id == requestItem.id) {
-                  LinearProgressIndicator();
+                  LinearProgressIndicator(
+ backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+        valueColor: AlwaysStoppedAnimation<Color>(
+          Theme.of(context).primaryColor,
+        ),
+);
                   await fetchRecurringRequestsDocs(requestItem);
                   deleteParentRequest(requestItem).commit();
                   Navigator.of(dialogContext).pop();
@@ -3106,7 +3111,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(10)),
                   child: LinearProgressIndicator(
-                    backgroundColor: Colors.grey[200],
+                  backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
                     valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
                     minHeight: 25,
                     value: (widget.requestItem.cashModel.amountRaised /
