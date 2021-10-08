@@ -1485,4 +1485,6 @@ class L {
 
   //! October 7th 2021
   String get you_have_recieved => "You have received ";
+  String get adminNotificationInsufficientCredits =>
+      ' has insufficient credits to create requests';
 }

@@ -278,6 +278,9 @@ class DonationsRepository {
       data: {
         'credits': donateAmount,
         'donorName': SevaCore.of(context).loggedInUser.fullname,
+        'donorPhotoUrl': toMember
+            ? model.photoUrl
+            : SevaCore.of(context).loggedInUser.photoURL,
         'donorId': SevaCore.of(context).loggedInUser.sevaUserID,
         'communityName': model.name,
       },

@@ -142,7 +142,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 return NotificationCard(
                   timestamp: notification.timestamp,
                   title: "${userInsufficientModel.senderName}" +
-                      S.of(context).adminNotificationInsufficientCredits,
+                      L.of(context).adminNotificationInsufficientCredits,
                   subTitle: S
                           .of(context)
                           .adminNotificationInsufficientCreditsNeeded +
@@ -1181,7 +1181,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 return NotificationCard(
                   timestamp: notification.timestamp,
                   entityName: "CR",
-                  photoUrl: null,
+                  photoUrl: notification.data['donorPhotoUrl'] ?? null,
                   title: S.of(context).credits_credited,
                   subTitle: L.of(context).you_have_recieved +
                       notification.data['credits'].toString() +

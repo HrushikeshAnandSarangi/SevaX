@@ -1052,7 +1052,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       return NotificationCard(
                         timestamp: notification.timestamp,
                         entityName: "CR",
-                        photoUrl: null,
+                        photoUrl: notification.data['donorPhotoUrl'] ?? null,
                         title: S.of(context).credits_credited,
                         subTitle: L.of(context).you_have_recieved +
                             notification.data['credits'].toString() +
