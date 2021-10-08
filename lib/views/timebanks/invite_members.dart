@@ -1018,7 +1018,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                                   margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
                                   child: Text(
                                     S.of(context).share_code,
-                                    style: TextStyle(color: Colors.blue),
+                                    style: TextStyle(color: Theme.of(context).primaryColor),
                                   ),
                                 ),
                               ),

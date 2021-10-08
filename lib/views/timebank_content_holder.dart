@@ -161,6 +161,7 @@ Widget createAdminTabBar(
 ) {
   return Scaffold(
     appBar: AppBar(
+      backgroundColor: Theme.of(context).primaryColor,
       leading: BackButton(
         onPressed: () {
           AppConfig.helpIconContextMember =

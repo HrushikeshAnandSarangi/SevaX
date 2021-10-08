@@ -16,6 +16,7 @@ class UserImagePickerDialog extends StatelessWidget {
   Animation<double> _drawerContentsOpacity;
   Animation<Offset> _drawerDetailsPosition;
   bool isShowWebImageUrl = false;
+
 //yghghgbygy  yg
   void initState(bool isAspectRatioFixed) {
     isShowWebImageUrl = isAspectRatioFixed;
@@ -34,9 +35,7 @@ class UserImagePickerDialog extends StatelessWidget {
 
   void getImage(BuildContext context) {
     this.context = context;
-    if (_controller == null ||
-        _drawerDetailsPosition == null ||
-        _drawerContentsOpacity == null) {
+    if (_controller == null || _drawerDetailsPosition == null || _drawerContentsOpacity == null) {
     } else {
       _controller.forward();
       showDialog(
@@ -94,7 +93,7 @@ class UserImagePickerDialog extends StatelessWidget {
                   child: roundedButton(
                       S.of(context).camera,
                       EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
-                      const Color(0x0FF766FE0),
+                      Theme.of(context).primaryColor,
                       const Color(0xFFFFFFFF),
                       Icon(
                         Icons.camera_alt,
@@ -106,7 +105,7 @@ class UserImagePickerDialog extends StatelessWidget {
                   child: roundedButton(
                       S.of(context).gallery,
                       EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
-                      const Color(0x0FF766FE0),
+                      Theme.of(context).primaryColor,
                       const Color(0xFFFFFFFF),
                       Icon(
                         Icons.image,
@@ -121,7 +120,7 @@ class UserImagePickerDialog extends StatelessWidget {
                         child: roundedButton(
                             S.of(context).stock_images,
                             EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
-                            const Color(0x0FF766FE0),
+                            Theme.of(context).primaryColor,
                             const Color(0xFFFFFFFF),
                             Icon(
                               Icons.dashboard,
@@ -149,7 +148,7 @@ class UserImagePickerDialog extends StatelessWidget {
                         child: roundedButton(
                             S.of(context).add_image_url,
                             EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
-                            const Color(0x0FF766FE0),
+                            Theme.of(context).primaryColor,
                             const Color(0xFFFFFFFF),
                             Icon(
                               Icons.language,
@@ -165,7 +164,7 @@ class UserImagePickerDialog extends StatelessWidget {
                     child: roundedButton(
                         S.of(context).cancel,
                         EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
-                        const Color(0x0FF766FE0),
+                        Theme.of(context).primaryColor,
                         const Color(0xFFFFFFFF),
                         Offstage()),
                   ),
@@ -176,8 +175,8 @@ class UserImagePickerDialog extends StatelessWidget {
         ));
   }
 
-  Widget roundedButton(String buttonLabel, EdgeInsets margin, Color bgColor,
-      Color textColor, Widget widget) {
+  Widget roundedButton(
+      String buttonLabel, EdgeInsets margin, Color bgColor, Color textColor, Widget widget) {
     var loginBtn = Container(
       margin: margin,
       padding: EdgeInsets.all(15.0),
@@ -202,8 +201,7 @@ class UserImagePickerDialog extends StatelessWidget {
           ),
           Text(
             buttonLabel,
-            style: TextStyle(
-                color: textColor, fontSize: 15.0, fontWeight: FontWeight.w500),
+            style: TextStyle(color: textColor, fontSize: 15.0, fontWeight: FontWeight.w500),
           ),
         ],
       ),

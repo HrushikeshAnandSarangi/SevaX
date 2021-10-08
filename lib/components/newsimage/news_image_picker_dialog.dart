@@ -90,7 +90,7 @@ class NewsImagePickerDialog extends StatelessWidget {
                   child: roundedButton(
                       S.of(context).camera,
                       EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
-                      const Color(0x0FF766FE0),
+                      Theme.of(context).primaryColor,
                       const Color(0xFFFFFFFF),
                       Icon(
                         Icons.camera_alt,
@@ -102,7 +102,8 @@ class NewsImagePickerDialog extends StatelessWidget {
                   child: roundedButton(
                       S.of(context).gallery,
                       EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
-                      const Color(0x0FF766FE0),
+                      Theme.of(context).primaryColor,
+
                       const Color(0xFFFFFFFF),
                       Icon(
                         Icons.image,
@@ -127,7 +128,8 @@ class NewsImagePickerDialog extends StatelessWidget {
                   child: roundedButton(
                       S.of(context).add_image_url,
                       EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
-                      const Color(0x0FF766FE0),
+                      Theme.of(context).primaryColor,
+
                       const Color(0xFFFFFFFF),
                       Icon(
                         Icons.language,
@@ -139,7 +141,8 @@ class NewsImagePickerDialog extends StatelessWidget {
                   child: roundedButton(
                       S.of(context).pdf_document,
                       EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
-                      const Color(0x0FF766FE0),
+                      Theme.of(context).primaryColor,
+
                       const Color(0xFFFFFFFF),
                       Icon(
                         Icons.assignment,
@@ -154,7 +157,7 @@ class NewsImagePickerDialog extends StatelessWidget {
                     child: roundedButton(
                         S.of(context).cancel,
                         EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
-                        const Color(0x0FF766FE0),
+                        Theme.of(context).primaryColor,
                         const Color(0xFFFFFFFF),
                         Offstage()),
                   ),

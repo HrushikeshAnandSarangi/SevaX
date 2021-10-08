@@ -146,7 +146,7 @@ class ImagePickerDialog extends StatelessWidget {
                   onTap: () {
                     Navigator.of(_context).push(
                       MaterialPageRoute(
-                        builder: (context) {
+                        builder: (mContext) {
                           return ImageUrlView(isCover: isCover,
                             themeColor: Theme.of(context).primaryColor,
                           );

@@ -75,7 +75,7 @@ class FlavorConfig {
           theme: ThemeData(
             appBarTheme: AppBarTheme(
               brightness: Brightness.light,
-              color: Color(0x0FF766FE0),
+              // color: Color(0x0FF766FE0),
               textTheme: TextTheme(
                 headline6: TextStyle(color: Colors.white),
               ),
@@ -156,7 +156,7 @@ class FlavorConfig {
           theme: ThemeData(
             appBarTheme: AppBarTheme(
               brightness: Brightness.light,
-              color: Color(0x0FF766FE0),
+              // color: Color(0x0FF766FE0),
               textTheme: TextTheme(
                 headline6: TextStyle(color: Colors.white),
               ),
@@ -199,7 +199,7 @@ class FlavorConfig {
               ),
             ),
             buttonTheme: ButtonThemeData(
-              buttonColor: Color(0x0FF766FE0),
+              buttonColor: Color(0xFF766FE0),
               textTheme: ButtonTextTheme.primary,
               height: 39,
               shape: StadiumBorder(),
