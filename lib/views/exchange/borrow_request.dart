@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:doseform/doseform.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
@@ -39,10 +40,11 @@ class BorrowRequest extends StatefulWidget {
   final Function onCreateEventChanged;
   final List<ProjectModel> projectModelList;
   final String projectId;
-  final Function onDescriptionChanged;
   bool instructorAdded;
   bool createEvent;
   final RequestFormType formType;
+  final formKey;
+  final dateKey;
 
   BorrowRequest(
       {this.isOfferRequest,
@@ -54,10 +56,10 @@ class BorrowRequest extends StatefulWidget {
       this.onCreateEventChanged,
       this.projectModelList,
       this.projectId,
-      this.onDescriptionChanged,
       this.createEvent,
       this.instructorAdded,
-      @required this.formType});
+      @required this.formType,
+  @required this.formKey, this.dateKey});
 
   @override
   _BorrowRequestState createState() => _BorrowRequestState();
@@ -71,17 +73,18 @@ class _BorrowRequestState extends State<BorrowRequest> {
   final _debouncer = Debouncer(milliseconds: 500);
   List<CategoryModel> selectedCategoryModels = [];
   String categoryMode;
+  TextEditingController titleController = TextEditingController(),
+      descriptionController = TextEditingController();
+  List<FocusNode> focusNodeList = List.generate(2, (_) => FocusNode());
 
   Widget addToProjectContainer() {
     if (requestUtils.isFromRequest(projectId: widget.projectId)) {
-      if (isAccessAvailable(widget.timebankModel,
-              SevaCore.of(context).loggedInUser.sevaUserID) &&
+      if (isAccessAvailable(widget.timebankModel, SevaCore.of(context).loggedInUser.sevaUserID) &&
           widget.requestModel.requestMode == RequestMode.TIMEBANK_REQUEST) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            (widget.requestModel.requestType ==
-                        RequestType.ONE_TO_MANY_REQUEST &&
+            (widget.requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST &&
                     widget.createEvent)
                 ? Container()
                 : Row(
@@ -94,23 +97,19 @@ class _BorrowRequestState extends State<BorrowRequest> {
                               setState(() {});
                               widget.onCreateEventChanged(widget.createEvent);
                             },
-                            createEvent:
-                                widget.formType == RequestFormType.CREATE
-                                    ? widget.createEvent
-                                    : false,
-                            selectedProject: (widget.requestModel.projectId !=
-                                        null &&
+                            createEvent: widget.formType == RequestFormType.CREATE
+                                ? widget.createEvent
+                                : false,
+                            selectedProject: (widget.requestModel.projectId != null &&
                                     widget.requestModel.projectId.isNotEmpty)
                                 ? widget.projectModelList.firstWhere(
-                                    (element) =>
-                                        element.id ==
-                                        widget.requestModel.projectId,
+                                    (element) => element.id == widget.requestModel.projectId,
                                     orElse: () => null)
                                 : null,
                             requestModel: widget.requestModel,
                             projectModelList: widget.projectModelList,
-                            admin: isAccessAvailable(widget.timebankModel,
-                                SevaCore.of(context).loggedInUser.sevaUserID),
+                            admin: isAccessAvailable(
+                                widget.timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
                             updateProjectIdCallback: (String projectid) {
                               widget.requestModel.projectId = projectid;
                               setState(() {});
@@ -124,8 +123,7 @@ class _BorrowRequestState extends State<BorrowRequest> {
                       setState(() {
                         widget.createEvent = !widget.createEvent;
                         widget.requestModel.projectId = '';
-                        log('projectId2:  ' +
-                            widget.requestModel.projectId.toString());
+                        log('projectId2:  ' + widget.requestModel.projectId.toString());
                         log('createEvent2:  ' + widget.createEvent.toString());
                       });
                     },
@@ -159,6 +157,14 @@ class _BorrowRequestState extends State<BorrowRequest> {
   @override
   void initState() {
     super.initState();
+
+    titleController.text = widget.formType == RequestFormType.CREATE
+        ? requestUtils.getInitialTitle(widget.offer, widget.isOfferRequest)
+        : widget.requestModel.title;
+    descriptionController.text = widget.formType == RequestFormType.CREATE
+        ? requestUtils.getInitialDescription(widget.offer, widget.isOfferRequest)
+        : widget.requestModel.description;
+
     if (widget.formType == RequestFormType.EDIT) {
       if (widget.requestModel.roomOrTool == LendingType.ITEM.readable) {
         if (widget.requestModel.virtualRequest == true) {
@@ -183,116 +189,64 @@ class _BorrowRequestState extends State<BorrowRequest> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
-        Widget>[
-      Text(
-        "${S.of(context).request_title}",
-        style: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-          fontFamily: 'Europa',
-          color: Colors.black,
+    return DoseForm(
+      formKey: widget.formKey,
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
+        Text(
+          "${S.of(context).request_title}",
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Europa',
+            color: Colors.black,
+          ),
         ),
-      ),
-      TextFormField(
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        onChanged: (value) {
-          requestUtils.updateExitWithConfirmationValue(context, 1, value);
-        },
-        decoration: InputDecoration(
-          errorMaxLines: 2,
-          hintText: (roomOrTool == 0
-              ? S.of(context).borrow_request_title_hint_place
-              : S.of(context).borrow_request_title_hint_item),
-          hintStyle: requestUtils.hintTextStyle,
+        DoseTextField(
+          isRequired: true,
+          controller: titleController,
+          currentNode: focusNodeList[0],
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          onChanged: (value) {
+            requestUtils.updateExitWithConfirmationValue(context, 1, value);
+          },
+          decoration: InputDecoration(
+            errorMaxLines: 2,
+            hintText: (roomOrTool == 0
+                ? S.of(context).borrow_request_title_hint_place
+                : S.of(context).borrow_request_title_hint_item),
+            hintStyle: requestUtils.hintTextStyle,
+          ),
+          textInputAction: TextInputAction.next,
+          keyboardType: TextInputType.text,
+          // initialValue: ,
+          textCapitalization: TextCapitalization.sentences,
+          validator: (value) {
+            if (value.isEmpty) {
+              return S.of(context).request_subject;
+            } else if (profanityDetector.isProfaneString(value)) {
+              return S.of(context).profanity_text_alert;
+            } else if (value.substring(0, 1).contains('_') &&
+                !AppConfig.testingEmails.contains(AppConfig.loggedInEmail)) {
+              return S.of(context).creating_request_with_underscore_not_allowed;
+            } else {
+              widget.requestModel.title = value;
+              return null;
+            }
+          },
         ),
-        textInputAction: TextInputAction.next,
-        keyboardType: TextInputType.text,
-        initialValue: widget.formType == RequestFormType.CREATE
-            ? requestUtils.getInitialTitle(widget.offer, widget.isOfferRequest)
-            : widget.requestModel.title,
-        textCapitalization: TextCapitalization.sentences,
-        validator: (value) {
-          if (value.isEmpty) {
-            return S.of(context).request_subject;
-          } else if (profanityDetector.isProfaneString(value)) {
-            return S.of(context).profanity_text_alert;
-          } else if (value.substring(0, 1).contains('_') &&
-              !AppConfig.testingEmails.contains(AppConfig.loggedInEmail)) {
-            return S.of(context).creating_request_with_underscore_not_allowed;
-          } else {
-            widget.requestModel.title = value;
-            return null;
-          }
-        },
-      ),
-      SizedBox(height: 15),
-      (widget.requestModel.requestType == RequestType.BORROW && roomOrTool == 1)
-          ? Text(
-              S.of(context).request_description,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Europa',
-                color: Colors.black,
-              ),
-            )
-          : Text(
-              "${S.of(context).request_description}",
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Europa',
-                color: Colors.black,
-              ),
-            ),
-      TextFormField(
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        onChanged: (value) {
-          if (value != null && value.length > 5) {
-            _debouncer.run(() async {
-              selectedCategoryModels = await getCategoriesFromApi(value);
-              categoryMode = S.of(context).suggested_categories;
-            });
-          }
-          requestUtils.updateExitWithConfirmationValue(context, 9, value);
-        },
-        textInputAction: TextInputAction.next,
-        decoration: InputDecoration(
-          errorMaxLines: 2,
-          hintText: (roomOrTool == 0
-              ? S.of(context).borrow_request_description_hint_place
-              : S.of(context).borrow_request_description_hint_item),
-          hintStyle: requestUtils.hintTextStyle,
-        ),
-        initialValue: widget.formType == RequestFormType.CREATE
-            ? requestUtils.getInitialDescription(
-                widget.offer, widget.isOfferRequest)
-            : widget.requestModel.description,
-        keyboardType: TextInputType.multiline,
-        maxLines: 2,
-        minLines: 2,
-        // ignore: missing_return
-        validator: (value) {
-          if (value.isEmpty) {
-            return S.of(context).validation_error_general_text;
-          }
-          if (profanityDetector.isProfaneString(value)) {
-            return S.of(context).profanity_text_alert;
-          }
-          widget.requestModel.description = value;
-        },
-      ),
-      SizedBox(height: 15),
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          HideWidget(
-            hide: widget.formType == RequestFormType.EDIT,
-            child: Container(
-              margin: EdgeInsets.symmetric(vertical: 12),
-              child: Text(
-                S.of(context).borrow,
+        SizedBox(height: 15),
+        (widget.requestModel.requestType == RequestType.BORROW && roomOrTool == 1)
+            ? Text(
+                S.of(context).request_description,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Europa',
+                  color: Colors.black,
+                ),
+              )
+            : Text(
+                "${S.of(context).request_description}",
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -300,199 +254,245 @@ class _BorrowRequestState extends State<BorrowRequest> {
                   color: Colors.black,
                 ),
               ),
-            ),
+        DoseTextField(
+          isRequired: true,
+          controller: descriptionController,
+          currentNode: focusNodeList[1],
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          onChanged: (value) {
+            if (value != null && value.length > 5) {
+              _debouncer.run(() async {
+                selectedCategoryModels = await getCategoriesFromApi(value);
+                categoryMode = S.of(context).suggested_categories;
+              });
+            }
+            requestUtils.updateExitWithConfirmationValue(context, 9, value);
+          },
+          textInputAction: TextInputAction.next,
+          decoration: InputDecoration(
+            errorMaxLines: 2,
+            hintText: (roomOrTool == 0
+                ? S.of(context).borrow_request_description_hint_place
+                : S.of(context).borrow_request_description_hint_item),
+            hintStyle: requestUtils.hintTextStyle,
           ),
-          HideWidget(
-            hide: widget.formType == RequestFormType.EDIT,
-            child: Container(
-              margin: EdgeInsets.only(top: 10, bottom: 10),
-              child: CupertinoSegmentedControl<int>(
-                unselectedColor: Colors.grey[200],
-                selectedColor: Theme.of(context).primaryColor,
-                children: {
-                  0: Padding(
-                    padding: EdgeInsets.only(left: 14, right: 14),
-                    child: Text(
-                      S.of(context).place_text,
-                      style: TextStyle(fontSize: 12.0),
-                    ),
-                  ),
-                  1: Padding(
-                    padding: EdgeInsets.only(left: 14, right: 14),
-                    child: Text(
-                      S.of(context).items,
-                      style: TextStyle(fontSize: 12.0),
-                    ),
-                  ),
-                },
-                borderColor: Colors.grey,
-                padding: EdgeInsets.only(left: 0.0, right: 0.0),
-                groupValue: roomOrTool,
-                onValueChanged: (int val) {
-                  if (val != roomOrTool) {
-                    setState(() {
-                      if (val == 0) {
-                        widget.requestModel.roomOrTool =
-                            LendingType.PLACE.readable;
-                        isPublicCheckboxVisible = true;
-                      } else {
-                        isPublicCheckboxVisible = false;
-                        widget.requestModel.roomOrTool =
-                            LendingType.ITEM.readable;
-                      }
-                      roomOrTool = val;
-                    });
-                    log('Room or Tool: ' + roomOrTool.toString());
-                  }
-                },
-                //groupValue: sharedValue,
-              ),
-            ),
-          ),
-          HideWidget(
-            hide: roomOrTool == 0,
-            child: Text(
-              L.of(context).select_a_item_lending,
-              style: TextStyle(
-                fontSize: 16,
-                //fontWeight: FontWeight.bold,
-                fontFamily: 'Europa',
-                color: Colors.black,
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          HideWidget(
-            hide: roomOrTool == 0,
-            child: SelectBorrowItem(
-              selectedItems:
-                  widget.requestModel.borrowModel.requiredItems ?? {},
-              onSelectedItems: (items) =>
-                  {widget.requestModel.borrowModel.requiredItems = items},
-            ),
-          ),
-        ],
-      ),
-      SizedBox(height: 10),
-      OfferDurationWidget(
-        title: "${S.of(context).request_duration} *",
-        startTime: widget.formType == RequestFormType.EDIT
-            ? getUpdatedDateTimeAccToUserTimezone(
-                timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
-                dateTime: DateTime.fromMillisecondsSinceEpoch(
-                    widget.requestModel.requestStart))
-            : null,
-        endTime: widget.formType == RequestFormType.EDIT
-            ? getUpdatedDateTimeAccToUserTimezone(
-                timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
-                dateTime: DateTime.fromMillisecondsSinceEpoch(
-                    widget.requestModel.requestEnd))
-            : null,
-      ),
-      HideWidget(
-          hide: widget.formType == RequestFormType.EDIT, child: RepeatWidget()),
-      SizedBox(height: 20),
-      CategoryWidget(
-        requestModel: widget.requestModel,
-        selectedCategoryModels: selectedCategoryModels,
-        categoryMode: categoryMode,
-      ),
-      SizedBox(height: 20),
-      addToProjectContainer(),
-      SizedBox(height: 15),
-      Text(
-        S.of(context).city + '/' + S.of(context).state,
-        style: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-          fontFamily: 'Europa',
-          color: Colors.black,
-        ),
-      ),
-      SizedBox(height: 10),
-      Text(
-        S.of(context).provide_address,
-        style: TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.bold,
-          fontFamily: 'Europa',
-          color: Colors.grey,
-        ),
-      ),
-      SizedBox(height: 10),
-      Center(
-        child: LocationPickerWidget(
-          selectedAddress: widget.requestModel.address,
-          location: widget.requestModel.location,
-          onChanged: (LocationDataModel dataModel) {
-            log("received data model");
-            setState(() {
-              widget.requestModel.location = dataModel.geoPoint;
-              widget.requestModel.address = dataModel.location;
-            });
+          keyboardType: TextInputType.multiline,
+          maxLines: 2,
+          minLines: 2,
+          // ignore: missing_return
+          validator: (value) {
+            if (value.isEmpty) {
+              return S.of(context).validation_error_general_text;
+            }
+            if (profanityDetector.isProfaneString(value)) {
+              return S.of(context).profanity_text_alert;
+            }
+            widget.requestModel.description = value;
           },
         ),
-      ),
-      HideWidget(
-        hide: AppConfig.isTestCommunity || roomOrTool == 0,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          child: ConfigurationCheck(
-            actionType: 'create_virtual_request',
-            role: memberType(widget.timebankModel,
-                SevaCore.of(context).loggedInUser.sevaUserID),
-            child: OpenScopeCheckBox(
-                infoType: InfoType.VirtualRequest,
-                isChecked: widget.requestModel.virtualRequest,
-                checkBoxTypeLabel: CheckBoxType.type_VirtualRequest,
-                onChangedCB: (bool val) {
-                  if (widget.requestModel.virtualRequest != val) {
-                    widget.requestModel.virtualRequest = val;
-
-                    if (!val) {
-                      widget.requestModel.public = false;
-                      isPublicCheckboxVisible = false;
-                    } else {
-                      isPublicCheckboxVisible = true;
+        SizedBox(height: 15),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            HideWidget(
+              hide: widget.formType == RequestFormType.EDIT,
+              child: Container(
+                margin: EdgeInsets.symmetric(vertical: 12),
+                child: Text(
+                  S.of(context).borrow,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Europa',
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+            ),
+            HideWidget(
+              hide: widget.formType == RequestFormType.EDIT,
+              child: Container(
+                margin: EdgeInsets.only(top: 10, bottom: 10),
+                child: CupertinoSegmentedControl<int>(
+                  unselectedColor: Colors.grey[200],
+                  selectedColor: Theme.of(context).primaryColor,
+                  children: {
+                    0: Padding(
+                      padding: EdgeInsets.only(left: 14, right: 14),
+                      child: Text(
+                        S.of(context).place_text,
+                        style: TextStyle(fontSize: 12.0),
+                      ),
+                    ),
+                    1: Padding(
+                      padding: EdgeInsets.only(left: 14, right: 14),
+                      child: Text(
+                        S.of(context).items,
+                        style: TextStyle(fontSize: 12.0),
+                      ),
+                    ),
+                  },
+                  borderColor: Colors.grey,
+                  padding: EdgeInsets.only(left: 0.0, right: 0.0),
+                  groupValue: roomOrTool,
+                  onValueChanged: (int val) {
+                    if (val != roomOrTool) {
+                      setState(() {
+                        if (val == 0) {
+                          widget.requestModel.roomOrTool = LendingType.PLACE.readable;
+                          isPublicCheckboxVisible = true;
+                        } else {
+                          isPublicCheckboxVisible = false;
+                          widget.requestModel.roomOrTool = LendingType.ITEM.readable;
+                        }
+                        roomOrTool = val;
+                      });
+                      log('Room or Tool: ' + roomOrTool.toString());
                     }
-
-                    setState(() {});
-                  }
-                }),
+                  },
+                  //groupValue: sharedValue,
+                ),
+              ),
+            ),
+            HideWidget(
+              hide: roomOrTool == 0,
+              child: Text(
+              L.of(context).select_a_item_lending,
+                style: TextStyle(
+                  fontSize: 16,
+                  //fontWeight: FontWeight.bold,
+                  fontFamily: 'Europa',
+                  color: Colors.black,
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            HideWidget(
+              hide: roomOrTool == 0,
+              child: SelectBorrowItem(
+                selectedItems: widget.requestModel.borrowModel.requiredItems ?? {},
+                onSelectedItems: (items) => {widget.requestModel.borrowModel.requiredItems = items},
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 10),
+        OfferDurationWidget(
+          key: widget.dateKey,
+          title: "${S.of(context).request_duration} *",
+          startTime: widget.formType == RequestFormType.EDIT
+              ? getUpdatedDateTimeAccToUserTimezone(
+                  timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
+                  dateTime: DateTime.fromMillisecondsSinceEpoch(widget.requestModel.requestStart))
+              : null,
+          endTime: widget.formType == RequestFormType.EDIT
+              ? getUpdatedDateTimeAccToUserTimezone(
+                  timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
+                  dateTime: DateTime.fromMillisecondsSinceEpoch(widget.requestModel.requestEnd))
+              : null,
+        ),
+        HideWidget(hide: widget.formType == RequestFormType.EDIT, child: RepeatWidget()),
+        SizedBox(height: 20),
+        CategoryWidget(
+          requestModel: widget.requestModel,
+          selectedCategoryModels: selectedCategoryModels,
+          categoryMode: categoryMode,
+        ),
+        SizedBox(height: 20),
+        addToProjectContainer(),
+        SizedBox(height: 15),
+        Text(
+          S.of(context).city + '/' + S.of(context).state,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Europa',
+            color: Colors.black,
           ),
         ),
-      ),
-      HideWidget(
-        hide: !isPublicCheckboxVisible ||
-            widget.requestModel.requestMode == RequestMode.PERSONAL_REQUEST ||
-            widget.timebankId == FlavorConfig.values.timebankId,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          child: TransactionsMatrixCheck(
-            comingFrom: widget.comingFrom,
-            upgradeDetails:
-                AppConfig.upgradePlanBannerModel.public_to_sevax_global,
-            transaction_matrix_type: 'create_public_request',
+        SizedBox(height: 10),
+        Text(
+          S.of(context).provide_address,
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Europa',
+            color: Colors.grey,
+          ),
+        ),
+        SizedBox(height: 10),
+        Center(
+          child: LocationPickerWidget(
+            selectedAddress: widget.requestModel.address,
+            location: widget.requestModel.location,
+            onChanged: (LocationDataModel dataModel) {
+              log("received data model");
+              setState(() {
+                widget.requestModel.location = dataModel.geoPoint;
+                widget.requestModel.address = dataModel.location;
+              });
+            },
+          ),
+        ),
+        HideWidget(
+          hide: AppConfig.isTestCommunity || roomOrTool == 0,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
             child: ConfigurationCheck(
-              actionType: 'create_public_request',
-              role: memberType(widget.timebankModel,
-                  SevaCore.of(context).loggedInUser.sevaUserID),
+              actionType: 'create_virtual_request',
+              role: memberType(widget.timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
               child: OpenScopeCheckBox(
-                  infoType: InfoType.OpenScopeEvent,
-                  isChecked: widget.requestModel.public,
-                  checkBoxTypeLabel: CheckBoxType.type_Requests,
+                  infoType: InfoType.VirtualRequest,
+                  isChecked: widget.requestModel.virtualRequest,
+                  checkBoxTypeLabel: CheckBoxType.type_VirtualRequest,
                   onChangedCB: (bool val) {
-                    if (widget.requestModel.public != val) {
-                      widget.requestModel.public = val;
+                    if (widget.requestModel.virtualRequest != val) {
+                      widget.requestModel.virtualRequest = val;
+
+                      if (!val) {
+                        widget.requestModel.public = false;
+                        isPublicCheckboxVisible = false;
+                      } else {
+                        isPublicCheckboxVisible = true;
+                      }
+
                       setState(() {});
                     }
                   }),
             ),
           ),
         ),
-      ),
-    ]);
+        HideWidget(
+          hide: !isPublicCheckboxVisible ||
+              widget.requestModel.requestMode == RequestMode.PERSONAL_REQUEST ||
+              widget.timebankId == FlavorConfig.values.timebankId,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            child: TransactionsMatrixCheck(
+              comingFrom: widget.comingFrom,
+              upgradeDetails: AppConfig.upgradePlanBannerModel.public_to_sevax_global,
+              transaction_matrix_type: 'create_public_request',
+              child: ConfigurationCheck(
+                actionType: 'create_public_request',
+                role:
+                    memberType(widget.timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
+                child: OpenScopeCheckBox(
+                    infoType: InfoType.OpenScopeEvent,
+                    isChecked: widget.requestModel.public,
+                    checkBoxTypeLabel: CheckBoxType.type_Requests,
+                    onChangedCB: (bool val) {
+                      if (widget.requestModel.public != val) {
+                        widget.requestModel.public = val;
+                        setState(() {});
+                      }
+                    }),
+              ),
+            ),
+          ),
+        ),
+      ]),
+    );
   }
 }

@@ -89,6 +89,10 @@ dependencies:
   url_launcher: ^5.4.11
   usage: ^4.0.2
   webview_flutter: ^2.0.8
+  doseform:
+    git:
+      url: git://github.com/Drabu/DoseForm.git
+      path: 'packages/doseform'
 
 dependency_overrides:
   intl: ^0.17.0-nullsafety.2

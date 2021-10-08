@@ -1,4 +1,5 @@
 import 'package:connectivity/connectivity.dart';
+import 'package:doseform/doseform.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
@@ -10,6 +11,7 @@ import 'package:sevaexchange/new_baseline/models/lending_model.dart';
 
 import 'package:sevaexchange/ui/screens/image_picker/image_picker_dialog_mobile.dart';
 import 'package:sevaexchange/ui/screens/offers/bloc/add_update_item_bloc.dart';
+import 'package:sevaexchange/ui/screens/offers/widgets/custom_dose_text_field.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/custom_textfield.dart';
 import 'package:sevaexchange/ui/utils/offer_utility.dart';
 import 'package:sevaexchange/ui/utils/validators.dart';
@@ -31,7 +33,7 @@ class AddUpdateLendingItem extends StatefulWidget {
 }
 
 class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
-  final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<DoseFormState>();
   List<AmenitiesModel> amenitiesList = [];
   List<String> imagesList = [];
   AddUpdateItemBloc _bloc = AddUpdateItemBloc();
@@ -131,19 +133,21 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
             return SingleChildScrollView(
               child: Container(
                 padding: EdgeInsets.all(30.0),
-                child: Form(
-                  key: _formKey,
+                child: DoseForm(
+                  formKey: _formKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       StreamBuilder<String>(
                         stream: _bloc.itemName,
                         builder: (context, snapshot) {
-                          return CustomTextField(
+                          return CustomDoseTextField(
+                            isRequired: true,
                             controller: _itemNameController,
                             currentNode: _itemName,
                             nextNode: null,
                             value: snapshot.data,
+                            validator: _bloc.validateName,
                             heading: "${S.of(context).name_of_item}*",
                             onChanged: (String value) {
                               _bloc.onPlaceNameChanged(value);
@@ -161,7 +165,8 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                       StreamBuilder<String>(
                         stream: _bloc.estimatedValue,
                         builder: (context, snapshot) {
-                          return CustomTextField(
+                          return CustomDoseTextField(
+                            isRequired: true,
                             decoration: InputDecoration(
                                 prefixIcon: Icon(Icons.attach_money),
                                 errorText: getAddItemValidationError(
@@ -172,6 +177,7 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                                     S.of(context).estimated_value_hint_item),
                             controller: _estimatedValueController,
                             currentNode: _estimatedValue,
+                            validator: _bloc.validateEstimatedVal,
                             value: snapshot.data.toString(),
                             heading: "${S.of(context).estimated_value}",
                             onChanged: (String value) {
@@ -304,36 +310,38 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                           width: 200,
                           child: CustomElevatedButton(
                             onPressed: () async {
-                              var connResult =
+                              if (_formKey.currentState.validate()) {
+                                var connResult =
                                   await Connectivity().checkConnectivity();
-                              if (connResult == ConnectivityResult.none) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(S.of(context).check_internet),
-                                    action: SnackBarAction(
-                                      label: S.of(context).dismiss,
-                                      onPressed: () =>
+                                if (connResult == ConnectivityResult.none) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(S.of(context).check_internet),
+                                      action: SnackBarAction(
+                                        label: S.of(context).dismiss,
+                                        onPressed: () =>
                                           ScaffoldMessenger.of(context)
                                               .hideCurrentSnackBar(),
+                                      ),
                                     ),
-                                  ),
-                                );
-                                return;
-                              }
+                                  );
+                                  return;
+                                }
 
                               if (imagesList == null ||
                                   imagesList.length == 0) {
                                 showAlertMessage(
                                     context: context,
                                     message: 'Add images to item');
-                              } else {
-                                if (widget.lendingModel == null) {
-                                  _bloc.createLendingOfferPlace(
+                                } else {
+                                  if (widget.lendingModel == null) {
+                                    _bloc.createLendingOfferPlace(
                                       creator:
                                           SevaCore.of(context).loggedInUser);
-                                } else {
+                                  } else {
                                   _bloc.updateLendingOfferPlace(
                                       model: widget.lendingModel);
+                                  }
                                 }
                               }
                             },

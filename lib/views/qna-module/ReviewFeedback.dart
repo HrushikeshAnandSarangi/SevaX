@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:device_info/device_info.dart';
+import 'package:doseform/doseform.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
@@ -39,7 +40,7 @@ class ReviewFeedback extends StatefulWidget {
 class ReviewFeedbackState extends State<ReviewFeedback> {
   // var forVolunteer;
   // ReviewFeedbackState({this.forVolunteer});
-  final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<DoseFormState>();
 
   bool _validate = false;
   bool _profane = false;
@@ -47,6 +48,7 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
   num questionIndex = 0;
   num totalScore = 0;
   TextEditingController myCommentsController = TextEditingController();
+  FocusNode commentsFocusNode  = FocusNode();
   final _debouncer = Debouncer(milliseconds: 500);
   final _debouncerIng = Debouncer(milliseconds: 1500);
   bool isLoading = false;
@@ -476,14 +478,15 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
     return Container(
       margin: EdgeInsets.all(10),
       child: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
+        child: DoseForm(
+          formKey: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              TextFormField(
+              DoseTextField(
                 textCapitalization: TextCapitalization.sentences,
                 controller: myCommentsController,
+                currentNode: commentsFocusNode,
                 style: TextStyle(fontSize: 14.0, color: Colors.black87),
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 onChanged: (value) {},
@@ -505,7 +508,7 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
                     borderRadius: BorderRadius.circular(5.0),
                   ),
                 ),
-                enabled: true,
+                // enabled: true,
                 keyboardType: TextInputType.multiline,
                 maxLines: 5,
               ),
