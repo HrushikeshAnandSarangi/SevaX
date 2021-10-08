@@ -8,6 +8,7 @@ import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_exit_community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/repositories/donations_repository.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/repositories/notifications_repository.dart';
 import 'package:sevaexchange/ui/screens/members/bloc/members_bloc.dart';
@@ -30,7 +31,6 @@ import 'package:sevaexchange/views/timebanks/timbank_admin_request_list.dart';
 import 'package:sevaexchange/views/timebanks/transfer_ownership_view.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/custom_dialogs/custom_dialog.dart';
-import 'package:usage/uuid/uuid.dart';
 
 class MemberSectionBuilder extends StatelessWidget {
   const MemberSectionBuilder(
@@ -649,31 +649,16 @@ class MemberSectionBuilder extends StatelessWidget {
         fromEmailORId: model.id,
         toEmailORId: user.email,
       );
+
       //SEND DONATION NOTIFICATION TO MEMBER
-
-      NotificationsModel notification = NotificationsModel(
-        communityId: model.communityId,
-        id: Uuid().generateV4(),
-        isRead: false,
-        isTimebankNotification: false,
-        senderUserId: model.id,
-        targetUserId: user.sevaUserID,
-        timebankId: model.id,
-        timestamp: DateTime.now().millisecondsSinceEpoch,
-        type: NotificationType.MEMBER_RECEIVED_CREDITS_DONATION,
-        data: {
-          'credits': donateAmount,
-          'donorName': SevaCore.of(context).loggedInUser.fullname,
-          'donorId': SevaCore.of(context).loggedInUser.sevaUserID,
-          'communityName': model.name,
-        },
+      final DonationsRepository _donationsRepository = DonationsRepository();
+      await _donationsRepository.donationCreditedNotificationToMember(
+        context: context,
+        donateAmount: donateAmount,
+        model: model,
+        user: user,
+        toMember: true,
       );
-
-      await CollectionRef.users
-          .doc(user.email)
-          .collection("notifications")
-          .doc(notification.id)
-          .set(notification.toMap());
 
       await showDialog<double>(
         context: context,
