@@ -10,11 +10,12 @@ import 'package:share/share.dart';
 import '../../flavor_config.dart';
 
 class TimebankCodeWidget extends StatefulWidget {
+  final Color buttonColor;
   final TimebankCodeModel timebankCodeModel;
   final String timebankName;
   final UserModel user;
 
-  TimebankCodeWidget(
+  TimebankCodeWidget(this.buttonColor,
       {this.timebankCodeModel, this.timebankName, @required this.user});
 
   @override
@@ -155,8 +156,8 @@ class _TimebankCodeWidgetState extends State<TimebankCodeWidget> {
                                       child: Text(
                                         S.of(context).copy_code,
                                         style: TextStyle(
-                                          color: FlavorConfig
-                                              .values.theme.primaryColor,
+                                          color: widget.buttonColor ??
+                                              Theme.of(context).primaryColor,
                                           fontSize: 16,
                                         ),
                                       ),
@@ -201,7 +202,9 @@ class _TimebankCodeWidgetState extends State<TimebankCodeWidget> {
                             ),
                           );
                         },
-                        color: Theme.of(context).primaryColor,
+                        // color: Colors.red,
+                        color: widget.buttonColor ??
+                            Theme.of(context).primaryColor,
                         textColor: Colors.white,
                         child: Text(S.of(context).share_code),
                       ),

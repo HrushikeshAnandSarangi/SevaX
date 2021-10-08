@@ -835,11 +835,11 @@ class InviteAddMembersState extends State<InviteAddMembers> {
           return AlertDialog(
             title: Text(message),
             content: LinearProgressIndicator(
- backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
-        valueColor: AlwaysStoppedAnimation<Color>(
-          Theme.of(context).primaryColor,
-        ),
-),
+              backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+              valueColor: AlwaysStoppedAnimation<Color>(
+                Theme.of(context).primaryColor,
+              ),
+            ),
           );
         });
   }
@@ -1126,7 +1126,8 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => TimebankCodeWidget(
+                    builder: (builderContext) => TimebankCodeWidget(
+                      Theme.of(context).primaryColor,
                       timebankCodeModel: codeModel,
                       timebankName: widget.timebankModel.name,
                       user: user,

@@ -99,7 +99,7 @@ class LanguageListState extends State<LanguageList> {
                 trailing: Text(
                   '${model.languageName}',
                   style: TextStyle(
-                    color: Colors.blue,
+                    color: Theme.of(context).primaryColor,
                     fontSize: 18,
                     fontWeight: FontWeight.w500,
                   ),
