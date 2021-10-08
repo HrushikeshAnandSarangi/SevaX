@@ -25,7 +25,8 @@ class AddUpdateLendingItem extends StatefulWidget {
   final String enteredTitle;
   final Function(LendingModel lendingModel) onItemCreateUpdate;
 
-  AddUpdateLendingItem({this.lendingModel, this.onItemCreateUpdate, this.enteredTitle});
+  AddUpdateLendingItem(
+      {this.lendingModel, this.onItemCreateUpdate, this.enteredTitle});
 
   @override
   _AddUpdateLendingItemState createState() => _AddUpdateLendingItemState();
@@ -51,7 +52,8 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
 
       _estimatedValueController.text =
           widget.lendingModel.lendingItemModel.estimatedValue.toString();
-      _bloc.onEstimatedValueChanged(widget.lendingModel.lendingItemModel.estimatedValue.toString());
+      _bloc.onEstimatedValueChanged(
+          widget.lendingModel.lendingItemModel.estimatedValue.toString());
     } else {
       if (widget.enteredTitle != null) {
         _itemNameController.text = widget.enteredTitle;
@@ -146,6 +148,7 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                             currentNode: _itemName,
                             nextNode: null,
                             value: snapshot.data,
+                            validator: _bloc.validateName,
                             heading: "${S.of(context).name_of_item}*",
                             onChanged: (String value) {
                               _bloc.onPlaceNameChanged(value);
@@ -153,7 +156,8 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                             },
                             hint: S.of(context).name_of_item_hint,
                             maxLength: null,
-                            error: getAddItemValidationError(context, snapshot.error),
+                            error: getAddItemValidationError(
+                                context, snapshot.error),
                           );
                         },
                       ),
@@ -166,19 +170,27 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                             isRequired: true,
                             decoration: InputDecoration(
                                 prefixIcon: Icon(Icons.attach_money),
-                                errorText: getAddItemValidationError(context, snapshot.error),
-                                hintText: S.of(context).request_min_donation_hint +
+                                errorText: getAddItemValidationError(
+                                    context, snapshot.error),
+                                hintText: S
+                                        .of(context)
+                                        .estimated_value_item_hint +
                                     S.of(context).estimated_value_hint_item),
                             controller: _estimatedValueController,
                             currentNode: _estimatedValue,
+                            validator: _bloc.validateEstimatedVal,
                             value: snapshot.data.toString(),
                             heading: "${S.of(context).estimated_value}",
                             onChanged: (String value) {
                               _bloc.onEstimatedValueChanged(value);
                               // title = value;
                             },
-                            formatters: [FilteringTextInputFormatter.allow(Regex.numericRegex)],
-                            error: getAddItemValidationError(context, snapshot.error),
+                            formatters: [
+                              FilteringTextInputFormatter.allow(
+                                  Regex.numericRegex)
+                            ],
+                            error: getAddItemValidationError(
+                                context, snapshot.error),
                           );
                         },
                       ),
@@ -190,7 +202,8 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                                 context: context,
                                 builder: (BuildContext dialogContext) {
                                   return ImagePickerDialogMobile(
-                                    imagePickerType: ImagePickerType.LENDING_OFFER,
+                                    imagePickerType:
+                                        ImagePickerType.LENDING_OFFER,
                                     onLinkCreated: (link) {
                                       imagesList.add(link);
                                       _bloc.onItemImageAdded(imagesList);
@@ -208,8 +221,12 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                                         defaultCameraImageURL,
                                       ),
                                       fit: BoxFit.cover),
-                                  borderRadius: BorderRadius.all(Radius.circular(75.0)),
-                                  boxShadow: [BoxShadow(blurRadius: 7.0, color: Colors.black12)]),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(75.0)),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        blurRadius: 7.0, color: Colors.black12)
+                                  ]),
                             ),
                           ),
                         ),
@@ -221,7 +238,9 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                           // if (snapshot.connectionState == ConnectionState.waiting) {
                           //   return LoadingIndicator();
                           // }
-                          if (snapshot.hasError || snapshot.data == null || !snapshot.hasData) {
+                          if (snapshot.hasError ||
+                              snapshot.data == null ||
+                              !snapshot.hasData) {
                             return Container();
                           }
                           imagesList = snapshot.data;
@@ -242,7 +261,8 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                                         onTap: () {
                                           showDialog(
                                               context: context,
-                                              builder: (BuildContext dialogContext) {
+                                              builder:
+                                                  (BuildContext dialogContext) {
                                                 return FullScreenImage(
                                                   imageUrl: imagesList[index],
                                                 );
@@ -250,8 +270,10 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                                         },
                                         child: Container(
                                           child: ClipRRect(
-                                              borderRadius: BorderRadius.circular(10),
-                                              child: Image.network(imagesList[index])),
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              child: Image.network(
+                                                  imagesList[index])),
                                         ),
                                       ),
                                       Align(
@@ -289,29 +311,38 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                           width: 200,
                           child: CustomElevatedButton(
                             onPressed: () async {
-                              var connResult = await Connectivity().checkConnectivity();
-                              if (connResult == ConnectivityResult.none) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(S.of(context).check_internet),
-                                    action: SnackBarAction(
-                                      label: S.of(context).dismiss,
-                                      onPressed: () =>
-                                          ScaffoldMessenger.of(context).hideCurrentSnackBar(),
+                              if (_formKey.currentState.validate()) {
+                                var connResult =
+                                  await Connectivity().checkConnectivity();
+                                if (connResult == ConnectivityResult.none) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(S.of(context).check_internet),
+                                      action: SnackBarAction(
+                                        label: S.of(context).dismiss,
+                                        onPressed: () =>
+                                          ScaffoldMessenger.of(context)
+                                              .hideCurrentSnackBar(),
+                                      ),
                                     ),
-                                  ),
-                                );
-                                return;
-                              }
+                                  );
+                                  return;
+                                }
 
-                              if (imagesList == null || imagesList.length == 0) {
-                                showAlertMessage(context: context, message: 'Add images to item');
-                              } else {
-                                if (widget.lendingModel == null) {
-                                  _bloc.createLendingOfferPlace(
-                                      creator: SevaCore.of(context).loggedInUser);
+                              if (imagesList == null ||
+                                  imagesList.length == 0) {
+                                showAlertMessage(
+                                    context: context,
+                                    message: 'Add images to item');
                                 } else {
-                                  _bloc.updateLendingOfferPlace(model: widget.lendingModel);
+                                  if (widget.lendingModel == null) {
+                                    _bloc.createLendingOfferPlace(
+                                      creator:
+                                          SevaCore.of(context).loggedInUser);
+                                  } else {
+                                  _bloc.updateLendingOfferPlace(
+                                      model: widget.lendingModel);
+                                  }
                                 }
                               }
                             },

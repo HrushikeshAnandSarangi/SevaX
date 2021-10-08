@@ -1579,7 +1579,6 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: DoseTextField(
           isRequired: true,
-
           controller: stateController,
           textCapitalization: TextCapitalization.sentences,
           onFieldSubmitted: (input) {

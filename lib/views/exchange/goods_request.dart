@@ -39,6 +39,8 @@ class GoodsRequest extends StatefulWidget {
   final Function onCreateEventChanged;
   final RequestFormType formType;
   final formKey;
+  final dateKey;
+
 
   GoodsRequest(
       {this.requestModel,
@@ -53,7 +55,7 @@ class GoodsRequest extends StatefulWidget {
       this.instructorAdded,
       this.projectModelList,
       @required this.formType,
-      @required this.formKey});
+      @required this.formKey, this.dateKey});
 
   @override
   _GoodsRequestState createState() => _GoodsRequestState();
@@ -213,6 +215,7 @@ class _GoodsRequestState extends State<GoodsRequest> {
         ),
         SizedBox(height: 30),
         OfferDurationWidget(
+          key: widget.dateKey,
           title: "${S.of(context).request_duration} *",
           startTime: widget.formType == RequestFormType.EDIT
               ? getUpdatedDateTimeAccToUserTimezone(

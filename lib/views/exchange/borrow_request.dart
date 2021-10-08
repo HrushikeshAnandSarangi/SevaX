@@ -8,6 +8,7 @@ import 'package:sevaexchange/components/duration_picker/offer_duration_widget.da
 import 'package:sevaexchange/components/repeat_availability/repeat_widget.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/enums/lending_borrow_enums.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
@@ -43,6 +44,7 @@ class BorrowRequest extends StatefulWidget {
   bool createEvent;
   final RequestFormType formType;
   final formKey;
+  final dateKey;
 
   BorrowRequest(
       {this.isOfferRequest,
@@ -57,7 +59,7 @@ class BorrowRequest extends StatefulWidget {
       this.createEvent,
       this.instructorAdded,
       @required this.formType,
-  @required this.formKey});
+  @required this.formKey, this.dateKey});
 
   @override
   _BorrowRequestState createState() => _BorrowRequestState();
@@ -355,7 +357,7 @@ class _BorrowRequestState extends State<BorrowRequest> {
             HideWidget(
               hide: roomOrTool == 0,
               child: Text(
-                S.of(context).select_a_item_lending,
+              L.of(context).select_a_item_lending,
                 style: TextStyle(
                   fontSize: 16,
                   //fontWeight: FontWeight.bold,
@@ -378,6 +380,7 @@ class _BorrowRequestState extends State<BorrowRequest> {
         ),
         SizedBox(height: 10),
         OfferDurationWidget(
+          key: widget.dateKey,
           title: "${S.of(context).request_duration} *",
           startTime: widget.formType == RequestFormType.EDIT
               ? getUpdatedDateTimeAccToUserTimezone(

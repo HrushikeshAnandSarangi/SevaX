@@ -12,17 +12,23 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/ui/utils/feeds_web_scrapper.dart';
+import 'package:sevaexchange/ui/utils/helpers.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/news/newscreate.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
 
 class UpdateNewsFeed extends StatelessWidget {
   final String timebankId;
   final NewsModel newsMmodel;
+  final TimebankModel timebankModel;
   String photoCredits;
 
-  UpdateNewsFeed({this.timebankId, this.newsMmodel});
+  UpdateNewsFeed({this.timebankId, this.newsMmodel, this.timebankModel});
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +54,7 @@ class UpdateNewsFeed extends StatelessWidget {
           body: NewsCreateForm(
             timebankId: timebankId,
             newsModel: newsMmodel,
+            timebankModel: timebankModel,
           ),
         ),
       ),
@@ -59,9 +66,10 @@ class UpdateNewsFeed extends StatelessWidget {
 class NewsCreateForm extends StatefulWidget {
   final String timebankId;
   NewsModel newsModel;
+  final TimebankModel timebankModel;
 
-  NewsCreateForm({Key key, this.timebankId, this.newsModel}) : super(key: key);
-
+  NewsCreateForm({Key key, this.timebankId, this.newsModel, this.timebankModel})
+      : super(key: key);
   @override
   NewsCreateFormState createState() {
     return NewsCreateFormState();
@@ -86,7 +94,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
   DataModel selectedEntity;
   GeoFirePoint location;
   String selectedAddress;
-
+  List<String> selectedTimebanks = [];
   Future<void> writeToDB() async {
     log('url  ${globals.newsImageURL}');
     newsObject.placeAddress = selectedAddress;
@@ -99,6 +107,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     newsObject.photoCredits = photoCredits != null ? photoCredits : '';
     newsObject.newsDocumentUrl = globals.newsDocumentURL;
     newsObject.newsDocumentName = globals.newsDocumentName;
+    newsObject.timebanksPosted = selectedTimebanks;
 
     await FirestoreManager.updateNews(newsObject: newsObject);
     globals.newsImageURL = null;
@@ -117,6 +126,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     globals.newsImageURL = newsObject.newsImageUrl;
     globals.newsDocumentURL = newsObject.newsDocumentUrl;
     globals.newsDocumentName = newsObject.newsDocumentName;
+       selectedTimebanks.add(this.widget.timebankModel.id);
     super.initState();
 
     selectedAddress = newsObject.placeAddress;
@@ -269,6 +279,60 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                       //   ),
                       // ),
                       // Text(""),
+                  Offstage(
+                    offstage: !isAccessAvailable(widget.timebankModel,
+                            SevaCore.of(context).loggedInUser.sevaUserID) ||
+                        !isPrimaryTimebank(
+                            parentTimebankId:
+                                widget.timebankModel.parentTimebankId),
+                    child: Center(
+                      child: TransactionsMatrixCheck(
+                        comingFrom: ComingFrom.Home,
+                        upgradeDetails:
+                            AppConfig.upgradePlanBannerModel.parent_timebanks,
+                        transaction_matrix_type: "parent_timebanks",
+                        child: CustomElevatedButton(
+                          textColor: Colors.green,
+                          elevation: 0,
+                          child: Container(
+                            constraints: BoxConstraints.loose(
+                              Size(
+                                MediaQuery.of(context).size.width - 200,
+                                50,
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Expanded(
+                                  child: Text(
+                                    "${S.of(context).posting_to_text} ${((this.selectedTimebanks.length > 1) ? this.selectedTimebanks.length.toString() + ' Seva Communities' : this.widget.timebankModel.name)}",
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                  ),
+                                ),
+                                Icon(Icons.arrow_drop_down)
+                              ],
+                            ),
+                          ),
+                          // color: Colors.grey[200],
+                          onPressed: () async {
+                            FocusScope.of(context).unfocus();
+                            _silblingTimebankSelectionBottomsheet(
+                              context,
+                              this.widget.timebankModel,
+                              selectedTimebanks,
+                              (selectedTimebanks) => {
+                                setState(
+                                  () => {selectedTimebanks = selectedTimebanks},
+                                )
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
                       Padding(
                         padding: const EdgeInsets.only(top: 0),
                         child: Center(
@@ -407,5 +471,42 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     } on Exception catch (e) {
       return;
     }
+  }
+
+  void _silblingTimebankSelectionBottomsheet(BuildContext mcontext,
+      TimebankModel timebank, List<String> selectedTimebanks, onChanged) {
+    showModalBottomSheet(
+      context: mcontext,
+      builder: (BuildContext bc) {
+        return Container(
+          child: Builder(builder: (context) {
+            return Scaffold(
+                appBar: AppBar(
+                  elevation: 0.5,
+                  automaticallyImplyLeading: true,
+                  title: Text(
+                    S.of(context).select_parent_timebank,
+                    style: TextStyle(
+                      fontSize: 18,
+                    ),
+                  ),
+                ),
+                body: Padding(
+                  padding: EdgeInsets.only(
+                      bottom: MediaQuery.of(context).viewInsets.bottom),
+                  child: SearchSiblingTimebanks(
+                    keepOnBackPress: false,
+                    loggedInUser: SevaCore.of(context).loggedInUser,
+                    selectedTimebank: timebank,
+                    selectedTimebanks: selectedTimebanks,
+                    showBackBtn: false,
+                    isFromHome: false,
+                    onChanged: onChanged,
+                  ),
+                ));
+          }),
+        );
+      },
+    );
   }
 }

@@ -45,6 +45,8 @@ class CashRequest extends StatefulWidget {
   final Function onCreateEventChanged;
   final RequestFormType formType;
   final formKey;
+  final dateKey;
+
 
   CashRequest({
     this.projectModelList,
@@ -59,7 +61,7 @@ class CashRequest extends StatefulWidget {
     this.instructorAdded,
     this.onCreateEventChanged,
     @required this.formType,
-    @required this.formKey,
+    @required this.formKey, this.dateKey,
   });
 
   @override
@@ -239,6 +241,7 @@ class _CashRequestState extends State<CashRequest> {
         ),
         SizedBox(height: 30),
         OfferDurationWidget(
+          key: widget.dateKey,
           title: "${S.of(context).request_duration} *",
           startTime: widget.formType == RequestFormType.EDIT
               ? getUpdatedDateTimeAccToUserTimezone(

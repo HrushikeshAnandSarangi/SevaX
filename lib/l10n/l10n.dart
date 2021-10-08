@@ -4046,7 +4046,7 @@ class S {
       );
 
   String get items_collected => Intl.message(
-        'Item(s) Collected',
+        'Item(s) Picked-up',
         name: 'items_collected',
       );
 
@@ -6536,7 +6536,7 @@ class S {
       );
 
   String get action_restricted_by_owner => Intl.message(
-        'This action is Restricted for you by the owner of the seva Community.',
+        'This action is restricted for you by the owner of the Seva Community.',
         name: 'action_restricted_by_owner',
       );
 
@@ -7076,7 +7076,7 @@ class S {
       );
 
   String get choose_previous_agreement => Intl.message(
-        'Choose previous agreement',
+        'Choose Previous Agreement',
         name: 'choose_previous_agreement',
       );
 
@@ -7176,12 +7176,12 @@ class S {
       );
 
   String get approve_borrow_terms_acknowledgement_text1 => Intl.message(
-        'I acknowledge that you can use the property on the mentioned dates',
+        'I acknowledge that this Borrower can use the place on the mentioned dates',
         name: 'approve_borrow_terms_acknowledgement_text1',
       );
 
   String get approve_borrow_terms_acknowledgement_text2 => Intl.message(
-        'I acknowledge that you can use the item(s) on the mentioned dates',
+        'I acknowledge that this Borrower can use the item(s) on the mentioned dates',
         name: 'approve_borrow_terms_acknowledgement_text2',
       );
 
@@ -8431,7 +8431,7 @@ class S {
       );
 
   String get date_to_borrow_and_return => Intl.message(
-        'Date to Collect and Return item(s)',
+        'Date to Pick-up and Return item(s)',
         name: 'date_to_borrow_and_return',
       );
 
@@ -8456,7 +8456,7 @@ class S {
       );
 
   String get additional_instructions_hint_place => Intl.message(
-        'Ex: Keys are available next door',
+        'Ex: Keys are available in the lockbox\'',
         name: 'additional_instructions_hint_place',
       );
 
@@ -8476,7 +8476,7 @@ class S {
       );
 
   String get cannot_approve_multiple_borrowers_item => Intl.message(
-        'You cannot approve multiple borrowers at once. Currently the items are with  **name. Once returned you can approve this request.',
+        'You cannot approve multiple borrowers at once. Currently the item(s) are with **name. Once returned you can approve this request.',
         name: 'cannot_approve_multiple_borrowers_item',
       );
 
@@ -8551,7 +8551,7 @@ class S {
       );
 
   String get name_of_place_hint => Intl.message(
-        'Ex: Apartment Bathed in Sunshine.',
+        'Ex: Room near downtown',
         name: 'name_of_place_hint',
       );
 
@@ -8591,7 +8591,7 @@ class S {
       );
 
   String get estimated_value => Intl.message(
-        'Estimated value*',
+        'Estimated Value*',
         name: 'estimated_value',
       );
 
@@ -8806,7 +8806,7 @@ class S {
       );
 
   String get select_a_item_lending => Intl.message(
-        'Select from the list of items to borrow*',
+        'Select list of related item(s) for Borrow*',
         name: 'select_a_item_lending',
       );
 
@@ -8816,7 +8816,7 @@ class S {
       );
 
   String get items_validation => Intl.message(
-        'You have not selected any Items. Please select one or more before creating the request to borrow.',
+        'You have not selected any Item(s). Please select one or more before creating the Borrow request.',
         name: 'items_validation',
       );
 
@@ -8831,7 +8831,7 @@ class S {
       );
 
   String get accept_borrow_agreement_item_title => Intl.message(
-        'You are about to give Items to the borrower',
+        'You are about to give item(s) to the borrower',
         name: 'accept_borrow_agreement_item_title',
       );
 
@@ -8891,7 +8891,7 @@ class S {
       );
 
   String get agree_to_signature_legal_text => Intl.message(
-        'By accepting the conditions on this page, your electronic signature is assumed and you are responsible for all terms included within.',
+        'By accepting the conditions, your electronic signature is assumed and you are responsible for all terms within this agreement.',
         name: 'agree_to_signature_legal_text',
       );
 
@@ -8956,32 +8956,32 @@ class S {
       );
 
   String get agreement_damage_liability => Intl.message(
-        'The Borrower is responsible for the full cost of repair or replacement of any or all of the item(s) or properties that are damaged, lost, or stolen from the time Borrower assumes custody until it is returned to the lender unless otherwise agreed at the time the agreement is finalized. If the item(s) or property(s) is lost, stolen or damaged, Borrower agrees to promptly notify the Lender Representative designated above.',
+        'The Borrower is responsible for the full cost of repair or replacement of any or all of the item(s) or properties that are damaged, lost, or stolen from the time the Borrower assumes custody until it is returned to the Lender, unless otherwise agreed at the time the agreement is finalized. If the item(s) or property(s) is lost, stolen or damaged, Borrower agrees to promptly notify the Lender Representative designated above.',
         name: 'agreement_damage_liability',
       );
 
   String get agreement_user_disclaimer => Intl.message(
-        'The Borrower shall be responsible for the proper use and deployment of the item(s) or properties. The Borrower shall be responsible for training anyone using the item(s) on the proper use of the item(s) in accordance with any item(s) use procedures.',
+        'The Borrower shall be responsible for the proper use and deployment of the item(s) or property. The Borrower shall be responsible for training anyone using the item(s) on the proper use of the item(s) in accordance with any item(s) use procedures.',
         name: 'agreement_user_disclaimer',
       );
 
   String get agreement_refund_deposit => Intl.message(
-        'The borrower will provide a refundable deposit as defined within the agreement with the lender. The Criteria established regarding the condition of the item(s) or property upon return will also be defined in the agreement.',
+        'The Borrower will provide a refundable deposit as defined within the agreement with the Lender. The criteria established regarding the condition of the item(s) or property upon return will also be defined in the agreement.',
         name: 'agreement_refund_deposit',
       );
 
   String get agreement_maintain_and_clean => Intl.message(
-        'All item(s) or properties borrowed must be returned in a condition similar to the condition it is received by the borrower unless otherwise noted in the agreement. Specific details related to the item(s) or properties and the lender\'s requirements upon return should be noted in the contract and agreed upon prior to the borrower\'s receipt.',
+        'All item(s) or property borrowed must be returned in a condition similar to the condition it is received by the Borrower, unless otherwise noted in the agreement. Specific details related to the item(s) or property and the Lender\'s requirements upon return should be noted in the contract and agreed upon prior to the Borrower\'s receipt.',
         name: 'agreement_maintain_and_clean',
       );
 
   String get agreement_delivery_return => Intl.message(
-        'Title to the item(s) the subject of this Agreement shall remain with Lender. The Borrower shall be responsible for the safe packaging, proper import, export, shipping and receiving of the item(s). The item(s) shall be returned within a reasonable amount of time after the Loan Period end date identified.',
+        'The item(s) subject to this Agreement shall remain with Lender. The Borrower shall be responsible for the safe packaging, proper import, export, shipping and receiving of the item(s). The item(s) shall be returned within a reasonable amount of time after the loan duration end date identified.',
         name: 'agreement_delivery_return',
       );
 
   String get agreement_maintain_and_repair => Intl.message(
-        'Except for reasonable wear and tear, \"Item(s) shall be returned to Lender in as good condition as when received by the Borrower. During the Loan Period and prior to return, the Borrower agrees to assume all responsibility for maintenance and repair.\"',
+        'Except for reasonable wear and tear, Item(s) shall be returned to Lender in as good condition as when received by the Borrower. During the loan duration and prior to return, the Borrower agrees to assume all responsibility for maintenance and repair.',
         name: 'agreement_maintain_and_repair',
       );
 
@@ -9001,7 +9001,7 @@ class S {
       );
 
   String get borrow_request_seva_disclaimer => Intl.message(
-        'However, if you cannot, please understand that SevaExchange is not responsible for the actions of its members, each member is responsible for their own actions and behavior, whether using SevaExchange or chatting over the back fence. Accordingly, to the maximum extent permitted by applicable law, you release us (and our officers, directors, agents, subsidiaries, joint ventures and employees) from claims, demands and damages (actual and consequential) of every kind and nature, known and unknown, arising out of or in any way connected with such disputes. If you are a California resident, you hereby waive California Civil Code §1542, which says: \"A general release does not extend to claims that the creditor or releasing party does not know or suspect to exist in his or her favor at the time of executing the release, and that, if known by him or her, would have materially affected his or her settlement with the debtor or releasing party.\"',
+        'However, if you cannot, please understand that Seva Exchange is not responsible for the actions of its members, each member is responsible for their own actions and behavior, whether using Seva Exchange or chatting over the back fence. Accordingly, to the maximum extent permitted by applicable law, you release us (and our officers, directors, agents, subsidiaries, joint ventures and employees) from claims, demands and damages (actual and consequential) of every kind and nature, known and unknown, arising out of or in any way connected with such disputes. If you are a California resident, you hereby waive California Civil Code §1542, which says: \"A general release does not extend to claims that the creditor or releasing party does not know or suspect to exist in his or her favor at the time of executing the release, and that, if known by him or her, would have materially affected his or her settlement with the debtor or releasing party.\" ',
         name: 'borrow_request_seva_disclaimer',
       );
 
@@ -9011,12 +9011,12 @@ class S {
       );
 
   String get agreement_final_acknowledgement => Intl.message(
-        'It is hereby acknowledged that while SevaExchange is furnishing this agreement and securely managing in their digital vault, SevaExchange is only providing this as a convenience to the two parties in this agreement. SevaExchange is indemnified from any loss or damage that occurs as a result of this transaction. Neither party will hold SevaExchange accountable and agree to completely absolve SevaExchange should there be any litigation arising from this transaction.',
+        'It is hereby acknowledged that while Seva Exchange is furnishing this agreement and securely managing in their digital vault, Seva Exchange is only providing this as a convenience to the two parties in this agreement. Seva Exchange is indemnified from any loss or damage that occurs as a result of this transaction. Neither party will hold Seva Exchange accountable and agree to completely absolve Seva Exchange should there be any litigation arising from this transaction.',
         name: 'agreement_final_acknowledgement',
       );
 
   String get agreement_prior_to_signing_disclaimer => Intl.message(
-        'The borrower should inspect the item or property being taken to ensure the description and operability of the borrowed item or property is represented properly in the agreement and request modifications as necessary prior to executing the agreement. Any adjustments to the defined provisions need to be made prior to signing the agreement. Any actions taken to resolve the issues outside the agreement will be the responsibility of the lender and/or borrower, example is Small Claims Court. SevaExchange will have no responsibility in the negotiation, management or collection related to the violations of the agreement.',
+        'The Borrower should inspect the item or property being taken to ensure the description and operability of the borrowed item or property is represented properly in the agreement and request modifications as necessary prior to executing the agreement. Any adjustments to the defined provisions need to be made prior to signing the agreement. Any actions taken to resolve the issues outside the agreement will be the responsibility of the lender and/or borrower, example is Small Claims Court. Seva Exchange will have no responsibility in the negotiation, management or collection related to the violations of the agreement.',
         name: 'agreement_prior_to_signing_disclaimer',
       );
 
@@ -9031,7 +9031,7 @@ class S {
       );
 
   String get agreement_date => Intl.message(
-        'Agreement Date',
+        'Agreement Date and Time',
         name: 'agreement_date',
       );
 
@@ -9056,7 +9056,7 @@ class S {
       );
 
   String get collect_and_return_items => Intl.message(
-        'Collect and Return items:  ',
+        'Pick-up and Return item(s):  ',
         name: 'collect_and_return_items',
       );
 
@@ -9091,27 +9091,27 @@ class S {
       );
 
   String get borrow_request_collect_items_tag => Intl.message(
-        'Borrow Request - Collect Items',
+        'Borrow Request - Pick-up Item(s)',
         name: 'borrow_request_collect_items_tag',
       );
 
   String get borrow_request_return_items_tag => Intl.message(
-        'Borrow Request - Return Items',
+        'Borrow Request - Return Item(s)',
         name: 'borrow_request_return_items_tag',
       );
 
   String get collect_items => Intl.message(
-        'Collect Items',
+        'Pick-up Item(s)',
         name: 'collect_items',
       );
 
   String get return_items => Intl.message(
-        'Return Items',
+        'Return Item(s)',
         name: 'return_items',
       );
 
   String get collected_items => Intl.message(
-        'Collected Item(s)',
+        'Picked-up Item(s)',
         name: 'collected_items',
       );
 
@@ -9206,12 +9206,12 @@ class S {
       );
 
   String get items_collected_alert => Intl.message(
-        'Items to be collected and returned on:  ',
+        'Item(s) to be picked-up and returned on:  ',
         name: 'items_collected_alert',
       );
 
   String get items_collected_alert_two => Intl.message(
-        'You have collected item(s) from',
+        'You have picked-up item(s) from',
         name: 'items_collected_alert_two',
       );
 
@@ -9311,12 +9311,12 @@ class S {
       );
 
   String get lending_offer_collect_items_tag => Intl.message(
-        'Lending Offer - Collect Items',
+        'Lending Offer - Pick-up Item(s)',
         name: 'lending_offer_collect_items_tag',
       );
 
   String get lending_offer_return_items_tag => Intl.message(
-        'Lending Offer - Return Items',
+        'Lending Offer - Return Item(s)',
         name: 'lending_offer_return_items_tag',
       );
 
@@ -9351,7 +9351,7 @@ class S {
       );
 
   String get borrower_returned_items_feedback => Intl.message(
-        'You returned items. Tap to leave a feedback.',
+        'You returned item(s). Tap to leave a feedback.',
         name: 'borrower_returned_items_feedback',
       );
 
@@ -9366,7 +9366,7 @@ class S {
       );
 
   String get return_items_alert => Intl.message(
-        'Are you sure you want to return item(s)',
+        'Are you sure you want to return item(s)?',
         name: 'return_items_alert',
       );
 
@@ -9551,7 +9551,7 @@ class S {
       );
 
   String get receipt_number => Intl.message(
-        'Receipt  Number:',
+        'Receipt Number:',
         name: 'receipt_number',
       );
 
@@ -9976,7 +9976,7 @@ class S {
       );
 
   String get lending_offer_title_hint_place => Intl.message(
-        'Ex: Offering to lend an apartment.',
+        'Ex: Offering to lend a room.',
         name: 'lending_offer_title_hint_place',
       );
 
@@ -10001,7 +10001,7 @@ class S {
       );
 
   String get borrow_request_title_hint_place => Intl.message(
-        'Ex: Apartment',
+        'Ex: Room',
         name: 'borrow_request_title_hint_place',
       );
 
@@ -10076,12 +10076,12 @@ class S {
       );
 
   String get place_agreement_name_hint_place => Intl.message(
-        'Ex: House for the weekend..',
+        'Ex: Room in New York',
         name: 'place_agreement_name_hint_place',
       );
 
   String get place_agreement_name_hint_item => Intl.message(
-        'Ex: Lawnmower for the weekend..',
+        'Ex: Lawnmower for the weekend',
         name: 'place_agreement_name_hint_item',
       );
 
@@ -10174,6 +10174,51 @@ class S {
         'Accordingly, to the maximum extent permitted by applicable law, you release us (and our officers, directors, agents, subsidiaries, joint ventures and employees) from claims, demands and damages (actual and consequential) of every kind and nature, known and unknown, arising out of or in any way connected with such disputes. If you are a California resident, you hereby waive California Civil Code §1542, which says: \"A general release does not extend to claims that the creditor or releasing party does not know or suspect to exist in his or her favor at the time of executing the release, and that, if known by him or her, would have materially affected his or her settlement with the debtor or releasing party.\" ',
         name: 'civil_code_dispute',
       );
+
+  String get total_caps_text => Intl.message(
+        ' TOTAL',
+        name: 'total_caps_text',
+      );
+
+  String get total_items_text => Intl.message(
+        'TOTAL ITEMS',
+        name: 'total_items_text',
+      );
+
+  String get money_pledged_by_donor_tag => Intl.message(
+        'Money pledged by donor',
+        name: 'money_pledged_by_donor_tag',
+      );
+
+  String get estimated_value_item_hint => Intl.message(
+        'Ex: \$100',
+        name: 'estimated_value_item_hint',
+      );
+
+  String get estimated_value_place_hint => Intl.message(
+        'Ex: \$2000',
+        name: 'estimated_value_place_hint',
+      );
+
+  String get seva_exchange_text_new => Intl.message(
+        'By continuing, you agree to Seva Exchange\'s',
+        name: 'seva_exchange_text_new',
+      );
+
+  String get lending_offer_location_hint_item => Intl.message(
+        'Provide general vicinity of pick-up location',
+        name: 'lending_offer_location_hint_item',
+      );
+
+  String get lending_offer_location_hint_place => Intl.message(
+        'Provide general vicinity of where the accommodation is',
+        name: 'lending_offer_location_hint_place',
+      );
+
+  String get location_safety_disclaimer => Intl.message(
+        'Note: For safety precautions, do not list the exact location.',
+        name: 'location_safety_disclaimer',
+      );
 }
 
 class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {
@@ -10187,8 +10232,8 @@ class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {
         Locale.fromSubtags(languageCode: 'pt'),
         Locale.fromSubtags(languageCode: 'sn'),
         Locale.fromSubtags(languageCode: 'sw'),
-        Locale.fromSubtags(languageCode: 'zh'),
-        Locale.fromSubtags(languageCode: 'zh'),
+        Locale.fromSubtags(languageCode: 'zh', countryCode: 'CN'),
+        Locale.fromSubtags(languageCode: 'zh', countryCode: 'TW'),
   ];
 
   @override

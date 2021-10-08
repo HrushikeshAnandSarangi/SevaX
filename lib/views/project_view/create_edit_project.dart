@@ -65,6 +65,7 @@ class CreateEditProject extends StatefulWidget {
 class _CreateEditProjectState extends State<CreateEditProject> {
   final _formKey = GlobalKey<DoseFormState>();
   final _formDialogKey = GlobalKey<FormState>();
+  final _timeKey = GlobalKey();
   String communityImageError = '';
   TextEditingController searchTextController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
@@ -122,8 +123,9 @@ class _CreateEditProjectState extends State<CreateEditProject> {
         }
         projectModel.public = false;
       });
+      _initializeFields();
     }
-    projectNameController.text = widget.isCreateProject
+    /*  projectNameController.text = widget.isCreateProject
         ? widget.projectTemplateModel != null
             ? widget.projectTemplateModel.name
             : ""
@@ -137,7 +139,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
         ? widget.projectTemplateModel != null
             ? widget.projectTemplateModel.registrationLink
             : ""
-        : projectModel.registrationLink ?? "";
+        : projectModel.registrationLink ?? "";*/
 
     getCommunity();
     setState(() {});
@@ -186,6 +188,24 @@ class _CreateEditProjectState extends State<CreateEditProject> {
     setState(() {});
   }
 
+  _initializeFields() {
+    projectNameController.text = widget.isCreateProject
+        ? widget.projectTemplateModel != null
+            ? widget.projectTemplateModel.name
+            : ""
+        : projectModel.name ?? "";
+    projectStatementController.text = widget.isCreateProject
+        ? widget.projectTemplateModel != null
+            ? widget.projectTemplateModel.description
+            : ""
+        : projectModel.description ?? "";
+    registrationLinkController.text = widget.isCreateProject
+        ? widget.projectTemplateModel != null
+            ? widget.projectTemplateModel.registrationLink
+            : ""
+        : projectModel.registrationLink ?? "";
+  }
+
   void getData() async {
     await FirestoreManager.getProjectFutureById(projectId: widget.projectId).then((onValue) {
       projectModel = onValue;
@@ -195,6 +215,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
       location = projectModel.location;
       isDataLoaded = true;
       setState(() {});
+      _initializeFields();
     });
   }
 
@@ -207,12 +228,12 @@ class _CreateEditProjectState extends State<CreateEditProject> {
       endDate = getUpdatedDateTimeAccToUserTimezone(
           timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
           dateTime: DateTime.fromMillisecondsSinceEpoch(projectModel.endTime));
-      emailIdController.text = widget.isCreateProject
-          ? widget.projectTemplateModel != null
-              ? widget.projectTemplateModel.emailId ?? SevaCore.of(context).loggedInUser.email
-              : projectModel.emailId ?? SevaCore.of(context).loggedInUser.email
-          : SevaCore.of(context).loggedInUser.email;
     }
+    emailIdController.text = widget.isCreateProject
+        ? widget.projectTemplateModel != null
+            ? widget.projectTemplateModel.emailId ?? SevaCore.of(context).loggedInUser.email
+            : projectModel.emailId ?? SevaCore.of(context).loggedInUser.email
+        : SevaCore.of(context).loggedInUser.email;
 
     return ExitWithConfirmation(
       child: Scaffold(
@@ -422,16 +443,19 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               widget.isCreateProject
                   ? widget.projectTemplateModel != null
                       ? OfferDurationWidget(
+                          key: _timeKey,
                           title: ' ${S.of(context).project_duration} *',
                           startTime: startDate,
                           endTime: endDate,
                         )
                       : OfferDurationWidget(
+                          key: _timeKey,
                           title: ' ${S.of(context).project_duration} *',
                           //startTime: CalendarWidgetState.startDate,
                           //endTime: CalendarWidgetState.endDate
                         )
                   : OfferDurationWidget(
+                      key: _timeKey,
                       title: ' ${S.of(context).project_duration}',
                       startTime: startDate,
                       endTime: endDate,
@@ -710,8 +734,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   transaction_matrix_type: 'create_public_event',
                   child: ConfigurationCheck(
                     actionType: 'create_public_event',
-                    role:
-                        memberType(timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
+                    role: memberType(timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
                     child: OpenScopeCheckBox(
                         infoType: InfoType.OpenScopeEvent,
                         isChecked: projectModel.public,
@@ -754,8 +777,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                             content: Text(S.of(context).check_internet),
                             action: SnackBarAction(
                               label: S.of(context).dismiss,
-                              onPressed: () =>
-                                  ScaffoldMessenger.of(context).hideCurrentSnackBar(),
+                              onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
                             ),
                           ),
                         );
@@ -769,6 +791,8 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                       if (widget.isCreateProject) {
                         if (_formKey.currentState.validate()) {
                           if (projectModel.startTime == 0 || projectModel.endTime == 0) {
+                            Scrollable.ensureVisible(_timeKey.currentContext);
+                            FocusScope.of(context).unfocus();
                             showDialogForTitle(
                               dialogTitle: S.of(context).validation_error_no_date,
                             );
@@ -804,8 +828,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                           projectModel.address = selectedAddress;
                           projectModel.id = Utils.getUuid();
                           projectModel.softDelete = false;
-                          projectModel.communityName =
-                              communityModel.name ?? timebankModel.name;
+                          projectModel.communityName = communityModel.name ?? timebankModel.name;
                           projectModel.parentEventId = projectModel.id;
 
                           if (saveAsTemplate) {
@@ -817,8 +840,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                             projectTemplateModel.photoUrl = projectModel.photoUrl;
                             projectTemplateModel.cover_url = projectModel.cover_url;
                             projectTemplateModel.description = projectModel.description;
-                            projectTemplateModel.registrationLink =
-                                projectModel.registrationLink;
+                            projectTemplateModel.registrationLink = projectModel.registrationLink;
                             projectTemplateModel.creatorId = projectModel.creatorId;
                             projectTemplateModel.createdAt = projectModel.createdAt;
                             projectTemplateModel.mode = projectModel.mode;
@@ -853,8 +875,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                             if (projectModel.isRecurring &&
                                 projectModel.recurringDays.length == 0) {
                               showDialogForTitle(
-                                  dialogTitle:
-                                      S.of(context).validation_error_empty_recurring_days);
+                                  dialogTitle: S.of(context).validation_error_empty_recurring_days);
                               return;
                             }
                             showProgressDialog(S.of(context).creating_project);
@@ -879,8 +900,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
 
                           KloudlessWidgetManager<CreateMode, ProjectModel>().syncCalendar(
                             context: context,
-                            builder:
-                                KloudlessWidgetBuilder().fromContext<CreateMode, ProjectModel>(
+                            builder: KloudlessWidgetBuilder().fromContext<CreateMode, ProjectModel>(
                               context: context,
                               model: projectModel,
                               id: projectModel.id,
@@ -917,14 +937,12 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                           }
 
                           if (projectModel.startTime == 0 || projectModel.endTime == 0) {
-                            showDialogForTitle(
-                                dialogTitle: S.of(context).validation_error_no_date);
+                            showDialogForTitle(dialogTitle: S.of(context).validation_error_no_date);
                             return;
                           }
 
                           if (projectModel.address == null || this.selectedAddress == null) {
-                            this.locationError =
-                                S.of(context).validation_error_location_mandatory;
+                            this.locationError = S.of(context).validation_error_location_mandatory;
                             showDialogForTitle(
                               dialogTitle: S.of(context).validation_error_add_project_location,
                             );

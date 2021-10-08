@@ -570,6 +570,7 @@ class _RegisterPageState extends State<RegisterPage>
       child: DoseTextField(
         isRequired: true,
         currentNode: focusNode,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
         onFieldSubmitted: onFieldSubmittedCB,
         controller: controller,
         maxLines: 1,

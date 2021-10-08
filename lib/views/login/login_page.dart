@@ -552,6 +552,7 @@ class _LoginPageState extends State<LoginPage> {
                 DoseTextField(
                   isRequired: true,
                   currentNode: emailFocus,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   style: textStyle,
                   // cursorColor: Colors.black54,
                     controller: emailController,
@@ -576,6 +577,7 @@ class _LoginPageState extends State<LoginPage> {
                   isRequired: true,
                   currentNode: pwdFocus,
                   obscureText: _shouldObscurePassword,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   style: textStyle,
                   maxLines: 1,
                   // cursorColor: Colors.black54,

@@ -79,6 +79,8 @@ class _OfferAgreementFormState extends State<AgreementForm> {
   String templateName = '';
   bool templateFound = false;
   int value;
+  FocusNode documentNameNode = FocusNode();
+  FocusNode specificConditionNode = FocusNode();
 
 // Form Related Values
   String documentName = '';
@@ -531,6 +533,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                           ),
                           DoseTextField(
                             isRequired: true,
+                            currentNode: specificConditionNode,
                             maxLines: 3,
                             onFieldSubmitted: (v) {
                               FocusScope.of(context).unfocus();
@@ -632,7 +635,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                                 text: TextSpan(
                                   style: TextStyle(
                                       color: Colors.black45, fontSize: 14),
-                                  text: S.of(context).login_agreement_message1,
+                                  text: S.of(context).seva_exchange_text_new,
                                   children: <TextSpan>[
                                     emptyTextSpan(),
                                     TextSpan(
@@ -701,6 +704,9 @@ class _OfferAgreementFormState extends State<AgreementForm> {
           ),
         ),
         DoseTextField(
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          isRequired: true,
+          currentNode:documentNameNode ,
           controller: documentNameController,
           onFieldSubmitted: (v) {
             FocusScope.of(context).unfocus();
