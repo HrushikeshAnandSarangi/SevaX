@@ -1478,9 +1478,13 @@ class L {
 //   String get approve_borrow_terms_acknowledgement_text2 =>
 //       "I acknowledge that this Borrower can use the item(s) on the mentioned dates";
 //   String get lending_offer_title_hint_place => "Ex: Offering to lend a room.";
-  
+
 //! Label Updates
   String get select_a_item_lending =>
       "Select list of related item(s) to Borrow*";
 
+  //! October 7th 2021
+  String get you_have_recieved => "You have received ";
+  String get adminNotificationInsufficientCredits =>
+      ' has insufficient credits to create requests';
 }

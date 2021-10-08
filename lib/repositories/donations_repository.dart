@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
@@ -10,6 +11,8 @@ import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/request/pages/request_donation_dispute_page.dart';
 import 'package:sevaexchange/utils/helpers/mailer.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
+import 'package:sevaexchange/views/core.dart';
+import 'package:usage/uuid/uuid.dart';
 
 class DonationsRepository {
   Stream<QuerySnapshot> getDonationsOfRequest(String requestId) {
@@ -251,5 +254,50 @@ class DonationsRepository {
       disputedNotification.toMap(),
     );
     batch.commit();
+  }
+
+  Future<void> donationCreditedNotificationToMember({
+    @required TimebankModel model,
+    @required UserModel user,
+    @required double donateAmount,
+    @required BuildContext context,
+    @required bool toMember,
+  }) async {
+    NotificationsModel notification = NotificationsModel(
+      communityId: model.communityId,
+      id: Uuid().generateV4(),
+      isRead: false,
+      isTimebankNotification: toMember ? false : true,
+      senderUserId:
+          toMember ? model.id : SevaCore.of(context).loggedInUser.sevaUserID,
+      targetUserId: toMember ? user.sevaUserID : model.id,
+      timebankId: model.id,
+      timestamp: DateTime.now().millisecondsSinceEpoch,
+      type: toMember
+          ? NotificationType.MEMBER_RECEIVED_CREDITS_DONATION
+          : NotificationType.COMMUNITY_RECEIVED_CREDITS_DONATION,
+      data: {
+        'credits': donateAmount,
+        'donorName': SevaCore.of(context).loggedInUser.fullname,
+        'donorPhotoUrl': toMember
+            ? model.photoUrl
+            : SevaCore.of(context).loggedInUser.photoURL,
+        'donorId': SevaCore.of(context).loggedInUser.sevaUserID,
+        'communityName': model.name,
+      },
+    );
+
+    logger.e('TIMEBANK ID:  ' + model.id);
+    toMember
+        ? await CollectionRef.users
+            .doc(user.email)
+            .collection("notifications")
+            .doc(notification.id)
+            .set(notification.toMap())
+        : await CollectionRef.timebank
+            .doc(model.id)
+            .collection("notifications")
+            .doc(notification.id)
+            .set(notification.toMap());
   }
 }

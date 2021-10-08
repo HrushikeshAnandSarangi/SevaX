@@ -1046,6 +1046,29 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         onDismissed: onDismissed,
                       );
 
+//! NEW NOTIFICATION BELOW ---------------------------------------------------------->
+//Feature name: Create Notification for member receiving donation //1.9 Release Feature
+                    case NotificationType.MEMBER_RECEIVED_CREDITS_DONATION:
+                      return NotificationCard(
+                        timestamp: notification.timestamp,
+                        entityName: "CR",
+                        photoUrl: notification.data['donorPhotoUrl'] ?? null,
+                        title: S.of(context).credits_credited,
+                        subTitle: L.of(context).you_have_recieved +
+                            notification.data['credits'].toString() +
+                            " " +
+                            S.of(context).seva_credits +
+                            " " +
+                            (notification.data['donorName'] != null
+                                ? (S.of(context).from +
+                                    " " +
+                                    notification.data[
+                                        'communityName']) //or can use notification.data['donorName']
+                                : ''),
+                        onDismissed: onDismissed,
+                      );
+//! NEW NOTIFICATION ABOVE ---------------------------------------------------------->
+
                     case NotificationType.SEVA_COINS_DEBITED:
                       return NotificationCard(
                         timestamp: notification.timestamp,
