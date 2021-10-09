@@ -12,6 +12,7 @@ import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 import './image_picker_handler.dart';
 import '../../globals.dart' as globals;
@@ -142,7 +143,7 @@ class _TimebankCoverPhotoState extends State<TimebankCoverPhoto>
                   height: 180,
                   child: Center(
                     child: Container(
-                      child: CircularProgressIndicator(),
+                      child: LoadingIndicator(),
                     ),
                   ),
                 ),

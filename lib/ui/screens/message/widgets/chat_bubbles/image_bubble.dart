@@ -6,6 +6,7 @@ import 'package:sevaexchange/ui/screens/search/widgets/network_image.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/decorations.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class ImageBubble extends StatelessWidget {
   final bool isSent;
@@ -92,7 +93,7 @@ class ImageUploading extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        CircularProgressIndicator(),
+        LoadingIndicator(),
         SizedBox(height: 4),
         Text(
           isSending ? S.of(context).sending : S.of(context).loading + '...',

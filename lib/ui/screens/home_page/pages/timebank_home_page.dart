@@ -194,7 +194,7 @@ class _TimebankHomePageState extends State<TimebankHomePage>
                                 SevaCore.of(context).loggedInUser.sevaUserID),
                             child: IconButton(
                               icon: Icon(Icons.add_circle),
-                              color: FlavorConfig.values.theme.primaryColor,
+                              color: Theme.of(context).primaryColor,
                               onPressed: widget.primaryTimebankModel.protected
                                   ? isAccessAvailable(
                                           widget.primaryTimebankModel,

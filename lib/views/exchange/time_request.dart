@@ -25,6 +25,7 @@ import 'package:sevaexchange/views/exchange/widgets/project_selection.dart';
 import 'package:sevaexchange/views/exchange/widgets/request_enums.dart';
 import 'package:sevaexchange/views/exchange/widgets/request_utils.dart';
 import 'package:sevaexchange/views/requests/onetomany_request_instructor_card.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/add_images_for_request.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
@@ -389,7 +390,7 @@ class _TimeRequestState extends State<TimeRequest> {
                                 width: 40,
                                 child: Container(
                                   margin: const EdgeInsets.only(top: 12.0),
-                                  child: CircularProgressIndicator(),
+                                  child: LoadingIndicator(),
                                 ),
                               ),
                             );

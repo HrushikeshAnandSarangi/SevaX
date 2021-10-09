@@ -48,6 +48,7 @@ class TimebankCreate extends StatelessWidget {
     return ExitWithConfirmation(
       child: Scaffold(
         appBar: AppBar(
+          backgroundColor: Theme.of(context).primaryColor,
           centerTitle: true,
           elevation: 0.5,
           // leading: BackButton(color: Colors.black54),

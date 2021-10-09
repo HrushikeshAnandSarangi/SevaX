@@ -248,7 +248,7 @@ class AddToCalendarState extends State<AddToCalendar> {
                     child: CustomTextButton(
                       shape: StadiumBorder(),
                       padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                      color: FlavorConfig.values.theme.primaryColor,
+                      color: Theme.of(context).primaryColor,
                       onPressed: () {
                         Navigator.of(context).pop();
                       },

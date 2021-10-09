@@ -76,6 +76,7 @@ class _CategoryState extends State<Category> {
     var color = Theme.of(context).primaryColor;
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).primaryColor,
         title: Text(S.of(context).select_category),
         leading: IconButton(
           onPressed: () {

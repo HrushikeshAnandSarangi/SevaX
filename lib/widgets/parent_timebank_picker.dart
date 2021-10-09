@@ -10,6 +10,7 @@ import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class ParentTimebankPickerWidget extends StatelessWidget {
@@ -72,6 +73,7 @@ void _parentSelectionBottomsheet(
           return Scaffold(
               resizeToAvoidBottomInset: false,
               appBar: AppBar(
+                backgroundColor: Theme.of(context).primaryColor,
                 elevation: 0.5,
                 automaticallyImplyLeading: true,
                 title: Text(
@@ -236,7 +238,7 @@ class SearchParentTimebanksViewState extends State<SearchParentTimebanks> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             if (!snapshot.hasData) {
-              return Center(child: CircularProgressIndicator());
+              return Center(child: LoadingIndicator());
             } else {
               if (snapshot.data.length != 0) {
                 List<CommunityModel> communityList = snapshot.data;

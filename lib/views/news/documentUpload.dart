@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 import '../../globals.dart' as globals;
 import '../core.dart';
@@ -91,7 +92,7 @@ class _DocumentUploadState extends State<DocumentUpload> {
                     child: Container(
                       height: 50,
                       width: 50,
-                      child: CircularProgressIndicator(),
+                      child: LoadingIndicator(),
                     ),
                   ),
                 )

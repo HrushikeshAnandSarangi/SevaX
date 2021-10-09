@@ -161,6 +161,7 @@ class _DonationViewState extends State<DonationView> {
       onTap: () {},
       child: Scaffold(
         appBar: AppBar(
+          backgroundColor: Theme.of(context).primaryColor,
           leading: BackButton(
             onPressed: () => Navigator.of(context).pop(),
           ),
@@ -580,7 +581,7 @@ class _DonationViewState extends State<DonationView> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
                       CustomTextButton(
-                          color: Theme.of(context).accentColor,
+                          color: Theme.of(context).primaryColor,
                           textColor: Colors.white,
                           child: Text(S.of(context).submit),
                           onPressed: () async {
@@ -884,7 +885,7 @@ class _DonationViewState extends State<DonationView> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
                 actionButton(
-                    buttonColor: Color.fromRGBO(246, 147, 72, 1.0),
+                  buttonColor: Theme.of(context).primaryColor,
                     textColor: Colors.white,
                     buttonTitle: S.of(context).submit,
                     onPressed: () async {

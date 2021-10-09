@@ -209,6 +209,7 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                           height: 10,
                         ),
                         SponsorsWidget(
+                          textColor: Theme.of(context).primaryColor,
                           sponsorsMode: SponsorsMode.ABOUT,
                           sponsors: projectModel.sponsors,
                           isAdminVerified: false,
@@ -347,7 +348,7 @@ class _AboutProjectViewState extends State<AboutProjectView> {
         name,
         style: TextStyle(
           fontWeight: FontWeight.bold,
-          color: FlavorConfig.values.theme.primaryColor,
+          color: Theme.of(context).primaryColor,
         ),
       ),
     );

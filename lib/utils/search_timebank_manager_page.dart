@@ -14,6 +14,7 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/members_of_timebank.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class SearchTimebankMemberElastic extends StatefulWidget {
   String timebankId;
@@ -289,7 +290,7 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
             child: SizedBox(
               height: 48,
               width: 48,
-              child: CircularProgressIndicator(),
+              child: LoadingIndicator(),
             ),
           );
         }

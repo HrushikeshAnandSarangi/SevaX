@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/ui/screens/timezone/widgets/timezone_card.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/profile/timezone.dart';
 
 class TimezoneSearchDelegate extends SearchDelegate<TimeZoneModel> {
@@ -18,6 +19,7 @@ class TimezoneSearchDelegate extends SearchDelegate<TimeZoneModel> {
     assert(context != null);
     final ThemeData theme = Theme.of(context);
     assert(theme != null);
+    logger.e("#appTHEME ${theme.primaryColor}");
     return theme;
   }
 

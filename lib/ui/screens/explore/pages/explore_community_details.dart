@@ -78,7 +78,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
-              child: CircularProgressIndicator(),
+              child: LoadingIndicator(),
             );
           }
 
@@ -112,7 +112,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(
-                    child: CircularProgressIndicator(),
+                    child: LoadingIndicator(),
                   );
                 }
 
@@ -285,6 +285,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
                         child: SponsorsWidget(
+                          textColor: Theme.of(context).primaryColor,
                           sponsorsMode: SponsorsMode.ABOUT,
                           sponsors: timebankModel.sponsors,
                           isAdminVerified: GetUserVerified<bool>().verify(
@@ -309,7 +310,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
                             return Center(
-                              child: CircularProgressIndicator(),
+                              child: LoadingIndicator(),
                             );
                           }
 
@@ -429,7 +430,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
                             return Center(
-                              child: CircularProgressIndicator(),
+                              child: LoadingIndicator(),
                             );
                           }
 

@@ -53,6 +53,7 @@ class _ReportedMembersPageState extends State<ReportedMembersPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).primaryColor,
         title: Text(
           S.of(context).reported_members,
           style: TextStyle(fontSize: 18),

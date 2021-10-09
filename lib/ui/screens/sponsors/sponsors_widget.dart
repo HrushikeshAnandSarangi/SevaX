@@ -40,7 +40,7 @@ class SponsorsWidget extends StatefulWidget {
     @required this.sponsorsMode,
     this.title,
     this.onSponsorsAdded,
-    this.textColor = const Color(0xFFF766FE0),
+    this.textColor = const Color(0x0FF766FE0),
     this.textSize = 18.0,
     this.onSponsorsRemoved,
     this.isAdminVerified = false,
@@ -246,7 +246,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                     : CustomAvatar(
                         name: name,
                         radius: 18,
-                        color: FlavorConfig.values.theme.primaryColor,
+                        color: Theme.of(context).primaryColor,
                         foregroundColor: Colors.black,
                         onTap: onTap,
                       ),
@@ -387,7 +387,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
       child: IconButton(
         icon: Icon(
           Icons.add_circle,
-          color: FlavorConfig.values.theme.primaryColor,
+          color: Theme.of(context).primaryColor,
         ),
         onPressed: () async {
           showEnterNameDialog(context);

@@ -67,6 +67,7 @@ class CreateEditCommunityView extends StatelessWidget {
         ? ExitWithConfirmation(
             child: Scaffold(
               appBar: AppBar(
+                backgroundColor:Theme.of(context).primaryColor,
                 elevation: 0.5,
                 automaticallyImplyLeading: true,
                 title: Text(
@@ -737,6 +738,7 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
                             upgradeDetails: AppConfig.upgradePlanBannerModel.community_sponsors,
                             transaction_matrix_type: 'community_sponsors',
                             child: SponsorsWidget(
+                              textColor: Theme.of(context).primaryColor,
                               sponsorsMode:
                                   widget.isCreateTimebank ? SponsorsMode.CREATE : SponsorsMode.EDIT,
                               sponsors: timebankModel.sponsors,
@@ -1280,7 +1282,7 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
       key: infoKey,
       icon: Image.asset(
         'lib/assets/images/info.png',
-        color: FlavorConfig.values.theme.primaryColor,
+        color:Theme.of(context).primaryColor,
         height: 16,
         width: 16,
       ),
@@ -1354,7 +1356,12 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
             },
             child: AlertDialog(
               title: Text(message),
-              content: LinearProgressIndicator(),
+              content: LinearProgressIndicator(
+ backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+        valueColor: AlwaysStoppedAnimation<Color>(
+          Theme.of(context).primaryColor,
+        ),
+),
             ),
           );
         });
@@ -1514,7 +1521,7 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
                 Text(
                   S.of(context).account_information,
                   style: TextStyle(
-                      color: FlavorConfig.values.theme.primaryColor,
+                      color:Theme.of(context).primaryColor,
                       fontSize: 20,
                       fontWeight: FontWeight.bold),
                 ),
@@ -1877,36 +1884,32 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
       color: Colors.white,
       child: DoseForm(
         formKey: _billingInformationKey,
-        child: Column(
-          children: [
-            StreamBuilder(
-              stream: createEditCommunityBloc.createEditCommunity,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return ListView(
-                    shrinkWrap: true,
-                    controller: scollContainer,
-                    padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-                    children: <Widget>[
-                      _billingDetailsTitle,
-                      _cityWidget(snapshot.data),
-                      _stateWidget(snapshot.data),
-                      _countryNameWidget(snapshot.data),
-                      _pinCodeWidget(snapshot.data),
-                      _streetAddressWidget(snapshot.data),
-                      _streetAddressTwoWidget(snapshot.data),
-                      _companyNameWidget(snapshot.data),
-                      _additionalNotesWidget(snapshot.data),
-                      _continueBtn(snapshot.data),
-                    ],
-                  );
-                } else if (snapshot.hasError) {
-                  return Text(snapshot.error.toString());
-                }
-                return Text("");
-              },
-            ),
-          ],
+        child: StreamBuilder(
+          stream: createEditCommunityBloc.createEditCommunity,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return ListView(
+                shrinkWrap: true,
+                controller: scollContainer,
+                padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                children: <Widget>[
+                  _billingDetailsTitle,
+                  _cityWidget(snapshot.data),
+                  _stateWidget(snapshot.data),
+                  _countryNameWidget(snapshot.data),
+                  _pinCodeWidget(snapshot.data),
+                  _streetAddressWidget(snapshot.data),
+                  _streetAddressTwoWidget(snapshot.data),
+                  _companyNameWidget(snapshot.data),
+                  _additionalNotesWidget(snapshot.data),
+                  _continueBtn(snapshot.data),
+                ],
+              );
+            } else if (snapshot.hasError) {
+              return Text(snapshot.error.toString());
+            }
+            return Text("");
+          },
         ),
       ),
     );

@@ -51,7 +51,7 @@ class ShareDashboard extends StatelessWidget {
                 },
                 child: Icon(
                   Icons.arrow_back,
-                  color: HexColor('#766FE0'),
+                  color: Theme.of(context).primaryColor,
                   size: 24.0,
                 ),
               ),
@@ -162,7 +162,7 @@ class ShareDashboard extends StatelessWidget {
             ),
             width: double.infinity,
             child: CustomTextButton(
-              color: HexColor('#766FE0'),
+              color: Theme.of(context).primaryColor,
               onPressed: () async {
                 var listOfSelectedMembers = searchSegmentBloc.getSelectedUsersForShare();
                 if (listOfSelectedMembers.length > 0) {

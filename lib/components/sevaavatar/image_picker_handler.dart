@@ -33,7 +33,7 @@ class ImagePickerHandler {
     imagePicker.dismissDialog(context);
     final picker = ImagePicker();
     final pickedFile =
-        await picker.getImage(source: ImageSource.gallery).then((value) {
+    await picker.getImage(source: ImageSource.gallery).then((value) {
       log('open gallery image ${value.path}');
       cropImage(value.path);
     });
@@ -125,14 +125,14 @@ abstract class ImagePickerListener {
 class SearchStockImages extends StatefulWidget {
   // final bool keepOnBackPress;
   // final bool showBackBtn;
-  // final bool isFromHome;
+  final Color themeColor;
   final ValueChanged onChanged;
 
   SearchStockImages({
     // @required this.keepOnBackPress,
     // @required this.showBackBtn,
     // @required this.isFromHome,
-    this.onChanged,
+    this.onChanged, @required this.themeColor,
   });
 
   @override
@@ -162,10 +162,13 @@ class SearchStockImagesViewState extends State<SearchStockImages>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: widget.themeColor,
         elevation: 0.5,
         automaticallyImplyLeading: true,
         title: Text(
-          S.of(context).gallery,
+          S
+              .of(context)
+              .gallery,
           style: TextStyle(
             fontSize: 18,
           ),
@@ -193,10 +196,10 @@ class SearchStockImagesViewState extends State<SearchStockImages>
                     ),
                     this.catSelected > -1
                         ? Icon(
-                            Icons.arrow_forward_ios,
-                            color: HexColor('#F5A623'),
-                            size: 20,
-                          )
+                      Icons.arrow_forward_ios,
+                      color: HexColor('#F5A623'),
+                      size: 20,
+                    )
                         : Container(),
                     Text(
                       this.catSelected > -1
@@ -221,8 +224,7 @@ class SearchStockImagesViewState extends State<SearchStockImages>
 }
 
 class StockImageListingView extends StatelessWidget {
-  const StockImageListingView(
-      this.onCatSelected, this.catSelected, this.onChanged);
+  const StockImageListingView(this.onCatSelected, this.catSelected, this.onChanged);
 
   final ValueChanged onChanged;
   final int catSelected;
@@ -290,9 +292,9 @@ class _Tile extends StatelessWidget {
           SizedBox(height: 2),
           title != null
               ? Text(
-                  title,
-                  style: const TextStyle(color: Colors.grey),
-                )
+            title,
+            style: const TextStyle(color: Colors.grey),
+          )
               : Container(),
         ],
       ),

@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/ui/utils/avatar.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class CustomNetworkImage extends StatelessWidget {
   final String imageUrl;
@@ -35,7 +36,7 @@ class CustomNetworkImage extends StatelessWidget {
           imageUrl: imageUrl ?? (entityName != null ? '' : defaultUserImageURL),
           fit: fit ?? BoxFit.fitWidth,
           placeholder: (context, url) => Center(
-            child: placeholder ?? CircularProgressIndicator(),
+            child: placeholder ?? LoadingIndicator(),
           ),
           errorWidget: (context, url, error) => entityName != null
               ? CustomAvatar(
