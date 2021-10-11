@@ -72,11 +72,9 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
           email: SevaCore.of(context).loggedInUser.email,
           communityId: SevaCore.of(context).loggedInUser.currentCommunity,
         );
-        Provider.of<HomePageBaseBloc>(context, listen: false)
-            .init(SevaCore.of(context).loggedInUser);
+        Provider.of<HomePageBaseBloc>(context, listen: false).init(SevaCore.of(context).loggedInUser);
         _userBloc.userStream.listen((UserModel user) async {
-          Provider.of<MembersBloc>(context, listen: false)
-              .init(user.currentCommunity);
+          Provider.of<MembersBloc>(context, listen: false).init(user.currentCommunity);
 
           _notificationsBloc.init(
             user.email,
@@ -95,12 +93,9 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
             // membersList,
           );
           CommunityModel communityModel =
-              await FirestoreManager.getCommunityDetailsByCommunityId(
-                  communityId: user.currentCommunity);
-          Provider.of<ThemeBloc>(context, listen: false).changeColor(HexColor(
-              communityModel.theme_color == ''
-                  ? '766FE0'
-                  : communityModel.theme_color));
+              await FirestoreManager.getCommunityDetailsByCommunityId(communityId: user.currentCommunity);
+          Provider.of<ThemeBloc>(context, listen: false)
+              .changeColor(HexColor(communityModel.theme_color == '' ? '766FE0' : communityModel.theme_color));
           logger.e(communityModel.toString());
         });
       },
@@ -113,7 +108,6 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
     _messageBloc.dispose();
     super.dispose();
     _notificationsBloc.dispose();
-    
   }
 
   @override
@@ -124,7 +118,7 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
         child: Consumer<AppLanguage>(
           builder: (context, model, child) {
             return StreamBuilder<Color>(
-                initialData: Color(0x0F766FE0),
+                initialData: Color(0x0FF766FE0),
                 stream: Provider.of<ThemeBloc>(context).color,
                 builder: (context, snapshot) {
                   logger.e("Here is the color " + snapshot.data.toString());
@@ -148,35 +142,26 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
                     title: AppConfig.appName,
                     debugShowCheckedModeBanner: false,
                     theme: FlavorConfig.values.theme.copyWith(
-                        primaryColor: snapshot.data,
-                        buttonTheme:
-                            ButtonThemeData(buttonColor: snapshot.data)),
+                        primaryColor: snapshot.data, buttonTheme: ButtonThemeData(buttonColor: snapshot.data)),
                     home: BlocProvider<UserDataBloc>(
                       bloc: _userBloc,
                       child: Scaffold(
                         resizeToAvoidBottomInset: false,
                         body: StreamBuilder(
                           stream: CombineLatestStream.combine2(
-                              _userBloc.userStream,
-                              _userBloc.comunityStream,
-                              (u, c) => true),
+                              _userBloc.userStream, _userBloc.comunityStream, (u, c) => true),
                           builder: (context, AsyncSnapshot<bool> snapshot) {
                             if (snapshot.hasData && snapshot.data != null) {
                               UserModel loggedInUser = _userBloc.user;
-                              loggedInUser.currentTimebank =
-                                  _userBloc.community.primary_timebank;
-                              loggedInUser.associatedWithTimebanks =
-                                  _userBloc.user.communities.length;
+                              loggedInUser.currentTimebank = _userBloc.community.primary_timebank;
+                              loggedInUser.associatedWithTimebanks = _userBloc.user.communities.length;
 
                               SevaCore.of(context).loggedInUser = loggedInUser;
 
-                              if (_userBloc.user.communities == null ||
-                                  _userBloc.user.communities.isEmpty) {
-                                WidgetsBinding.instance
-                                    .addPostFrameCallback((_) {
+                              if (_userBloc.user.communities == null || _userBloc.user.communities.isEmpty) {
+                                WidgetsBinding.instance.addPostFrameCallback((_) {
                                   Navigator.of(context).pushAndRemoveUntil(
-                                      MaterialPageRoute(
-                                          builder: (context) => SplashView()),
+                                      MaterialPageRoute(builder: (context) => SplashView()),
                                       ((Route<dynamic> route) => false));
                                 });
                               }
@@ -187,9 +172,7 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
                                     child: BlocProvider<MessageBloc>(
                                       bloc: _messageBloc,
                                       child: Container(
-                                        height:
-                                            MediaQuery.of(context).size.height -
-                                                65,
+                                        height: MediaQuery.of(context).size.height - 65,
                                         child: pages[selected],
                                       ),
                                     ),
