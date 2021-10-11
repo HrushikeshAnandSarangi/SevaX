@@ -2047,7 +2047,7 @@
     "you_have_recieved": "Wagamuchira",
     "seva_credits_donated_text": "Seva Zvikwereti zvakapihwa",
     "seva_credits_from_text": "Seva chikwereti (s) kubva",
-    "String get as_a_donation_text": "semupiro.",
+    "as_a_donation_text": "semupiro.",
     "change_ownership_successful": "Iwe wabudirira kuendesa muridzi we ** groupname to ** nyowani nyowani.",
     "changed_ownership_of_text": "yakachinja muridzi we",
     "transfer_ownership_text": "Transgership",

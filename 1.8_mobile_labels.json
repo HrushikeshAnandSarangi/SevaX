@@ -106,7 +106,7 @@
 		"adminNotificationInsufficientCredits": " has insufficient credits to create requests",
 		"seva_credits_donated_text": "Seva Credits Donated",
 		"seva_credits_from_text": "Seva Credit(s) from",
-		"String get as_a_donation_text": "as a donation.",
+		"as_a_donation_text": "as a donation.",
 		"change_ownership_successful": "You have successfully transferred ownership of **groupName to **newOwnerName.",
 		"changed_ownership_of_text": "changed ownership of",
 		"to_text": "to",

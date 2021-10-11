@@ -2047,7 +2047,7 @@
     "you_have_recieved": "Vous avez reçu",
     "seva_credits_donated_text": "Seva crédits donnés",
     "seva_credits_from_text": "Seva Crédit (s) de",
-    "String get as_a_donation_text": "comme un don.",
+    "as_a_donation_text": "comme un don.",
     "change_ownership_successful": "Vous avez transféré avec succès la propriété de ** nom de groupe à ** New Nomnername.",
     "changed_ownership_of_text": "Changement de propriété de",
     "transfer_ownership_text": "Transfert de propriété",

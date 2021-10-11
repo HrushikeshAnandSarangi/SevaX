@@ -2047,7 +2047,7 @@
     "you_have_recieved": "Umepokea",
     "seva_credits_donated_text": "Mikopo ya Seva iliyotolewa",
     "seva_credits_from_text": "Seva Mikopo (s) kutoka",
-    "String get as_a_donation_text": "kama mchango.",
+    "as_a_donation_text": "kama mchango.",
     "change_ownership_successful": "Umefanikiwa kuhamisha umiliki wa ** Kikundi cha Kikundi cha ** Jina la NEWOWNERNAME.",
     "changed_ownership_of_text": "iliyopita umiliki wa umiliki",
     "transfer_ownership_text": "Kuhamisha umiliki.",

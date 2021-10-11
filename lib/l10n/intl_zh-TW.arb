@@ -2048,7 +2048,7 @@
     "you_have_recieved": "你收到了",
     "seva_credits_donated_text": "捐贈的塞維斯信用額",
     "seva_credits_from_text": "Seva Credit（s）來自",
-    "String get as_a_donation_text": "作為捐款。",
+    "as_a_donation_text": "作為捐款。",
     "change_ownership_successful": "您已成功轉移** GroupName的所有權至** newownername。",
     "changed_ownership_of_text": "改變了所有權",
     "transfer_ownership_text": "所有權轉讓",
