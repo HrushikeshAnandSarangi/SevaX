@@ -422,7 +422,7 @@ class _TransferGroupOwnerShipState extends State<TransferGroupOwnerShip> {
         // return object of type Dialog
         return AlertDialog(
           content: Text(
-            '${L.of(context).change_ownership_successful.replaceAll('**groupName', timebankName).replaceAll('**newOwnerName', admin)}',
+            '${S.of(context).change_ownership_successful.replaceAll('**groupName', timebankName).replaceAll('**newOwnerName', admin)}',
           ),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
@@ -468,7 +468,7 @@ class _TransferGroupOwnerShipState extends State<TransferGroupOwnerShip> {
       creatorPhotoUrl: SevaCore.of(context).loggedInUser.photoURL,
       creatorEmail: SevaCore.of(context).loggedInUser.email,
       timebank: tbmodel.name,
-      message: L.of(context).you_have_been_made_the_new_owner_of_group_name_subtitle + ' ' + tbmodel.name,
+      message: S.of(context).you_have_been_made_the_new_owner_of_group_name_subtitle + ' ' + tbmodel.name,
       creatorName: SevaCore.of(context).loggedInUser.fullname,
     );
 

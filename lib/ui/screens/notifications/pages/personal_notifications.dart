@@ -597,7 +597,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications> with Auto
                           showDialog(
                             context: context,
                             builder: (_) => AlertDialog(
-                              title: Text('${L.of(context).directions_text}:'),
+                              title: Text('${S.of(context).directions_text}:'),
                               content: InkWell(
                                 onTap: () => Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) => SevaWebView(
@@ -605,14 +605,14 @@ class _PersonalNotificationsState extends State<PersonalNotifications> with Auto
                                 child: Column(
                                   children: [
                                     Text(
-                                      "${L.of(context).link_for_demo_video_text}",
+                                      "${S.of(context).link_for_demo_video_text}",
                                     ),
                                     Text(
                                       'https://training.sevaxapp.com/',
                                       style: TextStyle(color: Colors.blue),
                                     ),
                                     Text(
-                                      "${L.of(context).direction_for_manage_transfer_ownership}\n${L.of(context).be_sure_message_text}",
+                                      "${S.of(context).direction_for_manage_transfer_ownership}\n${S.of(context).be_sure_message_text}",
                                     ),
                                   ],
                                 ),
@@ -623,7 +623,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications> with Auto
                         photoUrl: creatorDetails.photoUrl ?? defaultUserImageURL,
                         title: S.of(context).message_room_join,
                         subTitle:
-                            '${creatorDetails.name.toLowerCase()} ${S.of(context).notifications_added_you} ${data['messageRoomName']} ${S.of(context).messaging_room}.\n\n${L.of(context).note_for_transfer_ownership_notification}',
+                            '${creatorDetails.name.toLowerCase()} ${S.of(context).notifications_added_you} ${data['messageRoomName']} ${S.of(context).messaging_room}.\n\n${S.of(context).note_for_transfer_ownership_notification}',
                       );
                       break;
                     case NotificationType.MEMBER_REMOVED_FROM_MESSAGE_ROOM:
@@ -644,7 +644,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications> with Auto
                         photoUrl: creatorDetails.photoUrl,
                         title: S.of(context).message_room_remove,
                         subTitle:
-                            '${creatorDetails.name.toLowerCase()} ${L.of(context).removed_you_from_text} ${data['messageRoomName']}.',
+                            '${creatorDetails.name.toLowerCase()} ${S.of(context).removed_you_from_text} ${data['messageRoomName']}.',
                       );
                       break;
                     case NotificationType.MEMBER_DEMOTED_FROM_ADMIN:
@@ -945,7 +945,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications> with Auto
                         timestamp: notification.timestamp,
                         entityName: "CR",
                         photoUrl: null,
-                        title: L.of(context).credits_credited,
+                        title: S.of(context).credits_credited,
                         subTitle: notification.data['credits'].toString() +
                             " " +
                             S.of(context).credits_have_been_credited_to_your_account,
@@ -1462,7 +1462,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications> with Auto
                         },
                         onPressed: () {},
                         photoUrl: ownershipModel.creatorPhotoUrl,
-                        title: L.of(context).transfer_ownership_text,
+                        title: S.of(context).transfer_ownership_text,
                         subTitle: ownershipModel.message,
                       );
                       break;
@@ -1480,9 +1480,9 @@ class _PersonalNotificationsState extends State<PersonalNotifications> with Auto
                         },
                         onPressed: () {},
                         photoUrl: data['group_photourl'] ?? defaultGroupImageURL,
-                        title: L.of(context).transfer_of_group_ownership_update,
+                        title: S.of(context).transfer_of_group_ownership_update,
                         subTitle:
-                            '${data['old_owner_name']} ${L.of(context).changed_ownership_of_text} ${data['group_name']} ${L.of(context).to_text} ${data['new_owner_name']}',
+                            '${data['old_owner_name']} ${S.of(context).changed_ownership_of_text} ${data['group_name']} ${S.of(context).to_text} ${data['new_owner_name']}',
                       );
                       break;
                     default:
