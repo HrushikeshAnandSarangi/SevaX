@@ -1483,8 +1483,11 @@ class L {
   String get select_a_item_lending =>
       "Select list of related item(s) to Borrow*";
 
-  //! October 7th 2021
+//! October 7th 2021
   String get you_have_recieved => "You have received ";
   String get adminNotificationInsufficientCredits =>
       ' has insufficient credits to create requests';
+  String get seva_credits_donated_text => "Seva Credits Donated";
+  String get seva_credits_from_text => "Seva Credit(s) from";
+  String get as_a_donation_text => "as a donation.";
 }

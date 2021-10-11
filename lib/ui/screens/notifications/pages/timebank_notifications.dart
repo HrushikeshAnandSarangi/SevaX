@@ -1182,18 +1182,18 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   timestamp: notification.timestamp,
                   entityName: "CR",
                   photoUrl: notification.data['donorPhotoUrl'] ?? null,
-                  title: S.of(context).credits_credited,
+                  title: L.of(context).seva_credits_donated_text,
                   subTitle: L.of(context).you_have_recieved +
-                      notification.data['credits'].toString() +
+                      notification.data['credits'].toStringAsFixed(1) +
                       " " +
-                      S.of(context).seva_credits +
+                      L.of(context).seva_credits_from_text +
                       " " +
                       (notification.data['donorName'] != null
-                          ? (S.of(context).from +
-                              " " +
-                              notification.data[
-                                  'donorName']) //or can use notification.data['communityName']
-                          : ''),
+                          ? (notification.data[
+                              'donorName']) //or can use notification.data['communityName']
+                          : '') +
+                      " " +
+                      L.of(context).as_a_donation_text,
                   onDismissed: () async {
                     await FirestoreManager.readTimeBankNotification(
                       notificationId: notification.id,
