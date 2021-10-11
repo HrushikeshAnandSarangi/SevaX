@@ -334,7 +334,7 @@ class _BorrowRequestState extends State<BorrowRequest> {
                       if (val == 0) {
                         widget.requestModel.roomOrTool =
                             LendingType.PLACE.readable;
-                        isPublicCheckboxVisible = true;
+                        isPublicCheckboxVisible = false;
                       } else {
                         isPublicCheckboxVisible = false;
                         widget.requestModel.roomOrTool =
