@@ -1,4 +1,4 @@
-import 'package:doseform/doseform.dart';
+import 'package:doseform/main.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
@@ -82,7 +82,7 @@ class _BioViewState extends State<BioView> {
                           child: DoseTextField(
                               isRequired: true,
                               controller: bioController,
-                              currentNode: bioFocusNode,
+                              focusNode: bioFocusNode,
                               textCapitalization: TextCapitalization.sentences,
                               style: TextStyle(fontSize: 16.0, color: Colors.black54),
                               decoration: InputDecoration(

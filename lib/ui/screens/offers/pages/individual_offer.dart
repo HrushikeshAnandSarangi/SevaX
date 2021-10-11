@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:connectivity/connectivity.dart';
-import 'package:doseform/doseform.dart';
+import 'package:doseform/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -437,7 +437,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
           return CustomDoseTextField(
             isRequired: true,
             controller: _availabilityController,
-            currentNode: _availability,
+            focusNode: _availability,
             validator: _bloc.validateAvailabilityField,
             value: snapshot.data,
             heading: S.of(context).availablity,
@@ -454,7 +454,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
           return CustomDoseTextField(
             isRequired: true,
             controller: _minimumCreditsController,
-            currentNode: _minimumCredits,
+            focusNode: _minimumCredits,
             validator: _bloc.validateMinimumCredits,
             value: snapshot.data,
             heading: S.of(context).minimum_credit_title,
@@ -522,7 +522,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
           return DoseTextField(
             isRequired: true,
             controller: _donationAmountController,
-            currentNode: _donationFocusNode,
+            focusNode: _donationFocusNode,
             validator: _bloc.validateAmount,
             onChanged: (String data) => _bloc.onDonationAmountChanged(int.tryParse(data)),
             textCapitalization: TextCapitalization.sentences,
@@ -818,7 +818,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                   isRequired: true,
                                   controller: _titleController,
                                   validator: _bloc.validateTitle,
-                                  currentNode: _title,
+                                  focusNode: _title,
                                   nextNode: _description,
                                   value: snapshot.data,
                                   heading: "${S.of(context).title}*",
@@ -852,7 +852,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                 return CustomDoseTextField(
                                   isRequired: true,
                                   controller: _descriptionController,
-                                  currentNode: _description,
+                                  focusNode: _description,
                                   validator: _bloc.validateDescription,
                                   nextNode: _availability,
                                   value: snapshot.data,
@@ -1378,7 +1378,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
             return CustomDoseTextField(
               isRequired: true,
               controller: _one_to_many_titleController,
-              currentNode: oneToManyFocusNodes[0],
+              focusNode: oneToManyFocusNodes[0],
               nextNode: oneToManyFocusNodes[1],
               validator: _one_to_many_bloc.validateTitle,
               // formatters: <TextInputFormatter>[
@@ -1426,7 +1426,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
             return CustomDoseTextField(
               isRequired: true,
               controller: _preparationController,
-              currentNode: oneToManyFocusNodes[1],
+              focusNode: oneToManyFocusNodes[1],
               nextNode: oneToManyFocusNodes[2],
               validator: _one_to_many_bloc.validatePrepHours,
               value: snapshot.data != null ? snapshot.data : null,
@@ -1445,7 +1445,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
             return CustomDoseTextField(
               isRequired: true,
               controller: _classHourController,
-              currentNode: oneToManyFocusNodes[2],
+              focusNode: oneToManyFocusNodes[2],
               nextNode: oneToManyFocusNodes[3],
               validator: _one_to_many_bloc.validateClassHours,
               value: snapshot.data != null ? snapshot.data : null,
@@ -1464,7 +1464,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
             return CustomDoseTextField(
               isRequired: true,
               controller: _sizeClassController,
-              currentNode: oneToManyFocusNodes[3],
+              focusNode: oneToManyFocusNodes[3],
               nextNode: oneToManyFocusNodes[4],
               validator: _one_to_many_bloc.validateClassSize,
               value: snapshot.data != null ? snapshot.data : null,
@@ -1483,7 +1483,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
             return CustomDoseTextField(
               isRequired: true,
               controller: _classDescriptionController,
-              currentNode: oneToManyFocusNodes[4],
+              focusNode: oneToManyFocusNodes[4],
               validator: _one_to_many_bloc.validateDescription,
               value: snapshot.data != null ? snapshot.data : null,
               heading: "${S.of(context).offer_class_description} *",
@@ -1637,7 +1637,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
             return CustomDoseTextField(
               isRequired: true,
               controller: _descriptionController,
-              currentNode: _description,
+              focusNode: _description,
               nextNode: _availability,
               value: snapshot.data,
               validator: _bloc.validateDescription,

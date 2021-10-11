@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:doseform/doseform.dart';
+import 'package:doseform/main.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
@@ -212,7 +212,7 @@ class _TimeRequestState extends State<TimeRequest> {
         DoseTextField(
           isRequired: true,
           controller: titleController,
-          currentNode: focusNodeList[0],
+          focusNode: focusNodeList[0],
           autovalidateMode: AutovalidateMode.onUserInteraction,
           onChanged: (value) {
             requestUtils.updateExitWithConfirmationValue(context, 1, value);
@@ -556,7 +556,7 @@ class _TimeRequestState extends State<TimeRequest> {
         DoseTextField(
           isRequired: true,
           controller: descriptionController,
-          currentNode: focusNodeList[1],
+          focusNode: focusNodeList[1],
           autovalidateMode: AutovalidateMode.onUserInteraction,
           onChanged: (value) {
             if (value != null && value.length > 5) {
@@ -644,7 +644,7 @@ class _TimeRequestState extends State<TimeRequest> {
               child: DoseTextField(
                 isRequired: true,
                 controller: creditsController,
-                currentNode: focusNodeList[2],
+                focusNode: focusNodeList[2],
                 onChanged: (v) {
                   requestUtils.updateExitWithConfirmationValue(context, 10, v);
                   if (v.isNotEmpty && int.parse(v) >= 0) {
@@ -711,7 +711,7 @@ class _TimeRequestState extends State<TimeRequest> {
         DoseTextField(
           isRequired: true,
           controller: volunteersController,
-          currentNode: focusNodeList[3],
+          focusNode: focusNodeList[3],
           onChanged: (v) {
             requestUtils.updateExitWithConfirmationValue(context, 11, v);
             if (v.isNotEmpty && int.parse(v) >= 0) {

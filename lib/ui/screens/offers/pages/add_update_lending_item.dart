@@ -1,5 +1,5 @@
 import 'package:connectivity/connectivity.dart';
-import 'package:doseform/doseform.dart';
+import 'package:doseform/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
@@ -144,7 +144,7 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                           return CustomDoseTextField(
                             isRequired: true,
                             controller: _itemNameController,
-                            currentNode: _itemName,
+                            focusNode: _itemName,
                             nextNode: null,
                             value: snapshot.data,
                             validator: _bloc.validateName,
@@ -176,7 +176,7 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                                         .estimated_value_item_hint +
                                     S.of(context).estimated_value_hint_item),
                             controller: _estimatedValueController,
-                            currentNode: _estimatedValue,
+                            focusNode: _estimatedValue,
                             validator: _bloc.validateEstimatedVal,
                             value: snapshot.data.toString(),
                             heading: "${S.of(context).estimated_value}",

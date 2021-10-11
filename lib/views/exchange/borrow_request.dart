@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:doseform/doseform.dart';
+import 'package:doseform/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
@@ -204,7 +204,7 @@ class _BorrowRequestState extends State<BorrowRequest> {
         DoseTextField(
           isRequired: true,
           controller: titleController,
-          currentNode: focusNodeList[0],
+          focusNode: focusNodeList[0],
           autovalidateMode: AutovalidateMode.onUserInteraction,
           onChanged: (value) {
             requestUtils.updateExitWithConfirmationValue(context, 1, value);
@@ -257,7 +257,7 @@ class _BorrowRequestState extends State<BorrowRequest> {
         DoseTextField(
           isRequired: true,
           controller: descriptionController,
-          currentNode: focusNodeList[1],
+          focusNode: focusNodeList[1],
           autovalidateMode: AutovalidateMode.onUserInteraction,
           onChanged: (value) {
             if (value != null && value.length > 5) {

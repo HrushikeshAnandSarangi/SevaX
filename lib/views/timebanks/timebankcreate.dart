@@ -3,7 +3,7 @@ import 'dart:collection';
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:doseform/doseform.dart';
+import 'package:doseform/main.dart';
 
 // import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
@@ -289,7 +289,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           isRequired: true,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           textCapitalization: TextCapitalization.sentences,
-          currentNode: nameNode,
+          focusNode: nameNode,
           controller: searchTextController,
           onChanged: (value) {
             ExitWithConfirmation.of(context).fieldValues[1] = value;
@@ -317,7 +317,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           autovalidateMode: AutovalidateMode.onUserInteraction,
           textCapitalization: TextCapitalization.sentences,
           controller: aboutTextController,
-          currentNode: aboutNode,
+          focusNode: aboutNode,
           textInputAction: TextInputAction.done,
           decoration: InputDecoration(hintText: S.of(context).bit_more_about_group),
           // keyboardType: TextInputType.multiline,

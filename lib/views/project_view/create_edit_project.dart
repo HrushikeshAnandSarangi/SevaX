@@ -4,7 +4,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:connectivity/connectivity.dart';
-import 'package:doseform/doseform.dart';
+import 'package:doseform/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -399,7 +399,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 isRequired: true,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 controller: projectNameController,
-                currentNode: projectFocusNode,
+                focusNode: projectFocusNode,
                 onChanged: (value) {
                   ExitWithConfirmation.of(context).fieldValues[1] = value;
                   projectModel.name = value;
@@ -486,7 +486,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   FocusScope.of(context).requestFocus(focusNodes[2]);
                 },
                 textInputAction: TextInputAction.next,
-                currentNode: focusNodes[1],
+                focusNode: focusNodes[1],
                 keyboardType: TextInputType.multiline,
                 maxLines: null,
                 textCapitalization: TextCapitalization.sentences,
@@ -525,7 +525,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   FocusScope.of(context).requestFocus(focusNodes[3]);
                 },
                 textInputAction: TextInputAction.next,
-                currentNode: focusNodes[2],
+                focusNode: focusNodes[2],
                 keyboardType: TextInputType.text,
                 maxLines: null,
                 textCapitalization: TextCapitalization.sentences,
@@ -566,7 +566,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   FocusScope.of(context).requestFocus(focusNodes[4]);
                 },
                 textInputAction: TextInputAction.next,
-                currentNode: focusNodes[3],
+                focusNode: focusNodes[3],
                 // cursorColor: Colors.black54,
                 validator: _validateEmailId,
                 onSaved: (value) {

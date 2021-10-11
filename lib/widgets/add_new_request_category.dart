@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:doseform/doseform.dart';
+import 'package:doseform/main.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
@@ -129,7 +129,7 @@ class _AddNewRequestCategoryState extends State<AddNewRequestCategory> {
                                 height: MediaQuery.of(context).size.width * 0.08,
                                 child: DoseTextField(
                                   isRequired: true,
-                                  currentNode: subcategoryFocusNode,
+                                  focusNode: subcategoryFocusNode,
                                   autovalidateMode: AutovalidateMode.onUserInteraction,
                                   controller: searchTextController,
                                   onChanged: (val) {

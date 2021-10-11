@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:doseform/doseform.dart';
+import 'package:doseform/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -650,7 +650,7 @@ class TaskCardViewState extends State<TaskCardView> {
                                         children: <Widget>[
                                           DoseTextField(
                                             controller: selectedHoursPrepTimeController,
-                                            currentNode: focusNodeList[0],
+                                            focusNode: focusNodeList[0],
                                             keyboardType: TextInputType.number,
                                             formatters: [
                                               BlacklistingTextInputFormatter(
@@ -738,7 +738,7 @@ class TaskCardViewState extends State<TaskCardView> {
                                           DoseTextField(
                                             controller:
                                                 selectedHoursDeliveryTimeController,
-                                            currentNode: focusNodeList[1],
+                                            focusNode: focusNodeList[1],
                                             keyboardType: TextInputType.number,
                                             formatters: [
                                               BlacklistingTextInputFormatter(
@@ -820,7 +820,7 @@ class TaskCardViewState extends State<TaskCardView> {
                                       DoseTextField(
                                         isRequired: true,
                                         controller: hoursController,
-                                        currentNode: focusNodeList[2],
+                                        focusNode: focusNodeList[2],
                                         keyboardType: TextInputType.number,
                                         formatters: [
                                           BlacklistingTextInputFormatter(

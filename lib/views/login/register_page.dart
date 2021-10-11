@@ -5,7 +5,7 @@ import 'dart:ui' as ui;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
-import 'package:doseform/doseform.dart';
+import 'package:doseform/main.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -523,7 +523,7 @@ class _RegisterPageState extends State<RegisterPage>
         isRequired: true,
         autovalidateMode: AutovalidateMode.onUserInteraction,
         controller: controller,
-        currentNode: focusNode,
+        focusNode: focusNode,
         onFieldSubmitted: onFieldSubmittedCB,
         // enabled: !isLoading,
         decoration: InputDecoration(
@@ -569,7 +569,7 @@ class _RegisterPageState extends State<RegisterPage>
       padding: const EdgeInsets.only(left: 16.0, right: 16.0),
       child: DoseTextField(
         isRequired: true,
-        currentNode: focusNode,
+        focusNode: focusNode,
         autovalidateMode: AutovalidateMode.onUserInteraction,
         onFieldSubmitted: onFieldSubmittedCB,
         controller: controller,

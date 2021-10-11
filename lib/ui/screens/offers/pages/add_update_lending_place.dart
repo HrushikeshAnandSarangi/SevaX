@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:connectivity/connectivity.dart';
-import 'package:doseform/doseform.dart';
+import 'package:doseform/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
@@ -176,7 +176,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                           return CustomDoseTextField(
                             isRequired: true,
                             controller: _placeNameController,
-                            currentNode: _placeName,
+                            focusNode: _placeName,
                             nextNode: _guests,
                             value: snapshot.data,
                             validator: _bloc.validatePlaceName,
@@ -329,7 +329,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                           return CustomDoseTextField(
                             isRequired: true,
                             controller: _guestsController,
-                            currentNode: _guests,
+                            focusNode: _guests,
                             nextNode: _rooms,
                             value: snapshot.data,
                             validator: _bloc.validateGuest,
@@ -353,7 +353,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                           return CustomDoseTextField(
                             isRequired: true,
                             controller: _roomsController,
-                            currentNode: _rooms,
+                            focusNode: _rooms,
                             nextNode: _bathrooms,
                             value: snapshot.data,
                             validator: _bloc.validateRooms,
@@ -377,7 +377,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                           return CustomDoseTextField(
                             isRequired: true,
                             controller: _bathroomsController,
-                            currentNode: _bathrooms,
+                            focusNode: _bathrooms,
                             nextNode: _commonSPace,
                             value: snapshot.data,
                             validator: _bloc.validateBathroom,
@@ -401,7 +401,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                           return CustomDoseTextField(
                             isRequired: true,
                             controller: _commonSpaceController,
-                            currentNode: _commonSPace,
+                            focusNode: _commonSPace,
                             nextNode: _houseRules,
                             value: snapshot.data,
                             validator: _bloc.validateCommonSpace,
@@ -423,7 +423,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                           return CustomDoseTextField(
                             isRequired: true,
                             controller: _houseRulesController,
-                            currentNode: _houseRules,
+                            focusNode: _houseRules,
                             value: snapshot.data,
                             validator: _bloc.validateHouseRule,
                             heading: "${S.of(context).house_rules}*",
@@ -454,7 +454,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                                     S.of(context).estimated_value_hint_place,
                                 errorText: getAddPlaceValidationError(context, snapshot.error)),
                             controller: _estimatedValueController,
-                            currentNode: _estimatedValue,
+                            focusNode: _estimatedValue,
                             value: snapshot.data,
                             validator: _bloc.validateEstimatedValue,
                             heading: "${S.of(context).estimated_value}",
@@ -477,7 +477,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             isRequired: false,
                             hint: S.of(context).email + ' / ' + S.of(context).phone_number,
                             controller: _contactInformationController,
-                            currentNode: _contactInformation,
+                            focusNode: _contactInformation,
                             value: snapshot.data,
                             heading: S
                                 .of(context)

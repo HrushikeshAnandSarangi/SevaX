@@ -1,4 +1,4 @@
-import 'package:doseform/doseform.dart';
+import 'package:doseform/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
@@ -18,7 +18,7 @@ class CustomDoseTextField extends DoseTextField {
   final String error;
   final TextInputType keyboardType;
   final TextInputAction textInputAction;
-  final FocusNode currentNode;
+  final FocusNode focusNode;
   final FocusNode nextNode;
   final List<TextInputFormatter> formatters;
   final TextEditingController controller;
@@ -40,7 +40,7 @@ class CustomDoseTextField extends DoseTextField {
       this.error,
       this.keyboardType = TextInputType.text,
       this.value,
-      this.currentNode,
+      this.focusNode,
       this.nextNode,
       this.formatters,
       this.validator,
@@ -78,7 +78,7 @@ class CustomDoseTextField extends DoseTextField {
             : Container(),
         DoseTextField(
           isRequired: isRequired,
-          currentNode: currentNode,
+          focusNode: focusNode,
           controller: controller,
           onChanged: (value) {
             onChanged?.call(value);
@@ -99,7 +99,7 @@ class CustomDoseTextField extends DoseTextField {
           textInputAction: nextNode != null ? TextInputAction.next : TextInputAction.done,
           style: subTitleStyle,
           onSaved: (v) {
-            currentNode.unfocus();
+            focusNode.unfocus();
             nextNode != null ? nextNode.requestFocus() : FocusScope.of(context).unfocus();
           },
           validator: validator,
