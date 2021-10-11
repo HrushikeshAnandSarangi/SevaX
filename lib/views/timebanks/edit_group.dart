@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:collection';
 
-import 'package:doseform/doseform.dart';
+import 'package:doseform/main.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
@@ -216,7 +216,7 @@ class EditGroupFormState extends State<EditGroupForm> {
         isRequired: true,
         textInputAction: TextInputAction.done,
         controller: searchTextController,
-        currentNode: nameFocusNode,
+        focusNode: nameFocusNode,
         autovalidateMode: AutovalidateMode.onUserInteraction,
         decoration: InputDecoration(
           errorMaxLines: 2,
@@ -241,7 +241,7 @@ class EditGroupFormState extends State<EditGroupForm> {
         isRequired: true,
         autovalidateMode: AutovalidateMode.onUserInteraction,
         controller: aboutController,
-        currentNode: aboutFocusNode,
+        focusNode: aboutFocusNode,
         // initialValue: widget.timebankModel.missionStatement ?? "",
         decoration: InputDecoration(
           errorMaxLines: 2,

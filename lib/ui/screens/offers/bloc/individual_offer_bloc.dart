@@ -289,20 +289,27 @@ class IndividualOfferBloc extends BlocBase with Validators {
   String validateTitle(String value) {
     if (value == null || value == '') {
       _title.addError(ValidationErrors.titleError);
+      return ValidationErrors.titleError;
     } else if (value.substring(0, 1).contains('_') &&
         !AppConfig.testingEmails.contains(AppConfig.loggedInEmail)) {
       _title.addError(ValidationErrors.char_error);
+      return ValidationErrors.char_error;
     } else if (profanityDetector.isProfaneString(value)) {
       _title.addError(ValidationErrors.profanityError);
+      return ValidationErrors.profanityError;
     }
+    return null;
   }
 
   String validateDescription(String value) {
     if (value == null || value == '') {
       _offerDescription.addError(ValidationErrors.genericError);
+      return ValidationErrors.genericError;
     } else if (profanityDetector.isProfaneString(value)) {
       _offerDescription.addError(ValidationErrors.profanityError);
+      return ValidationErrors.profanityError;
     }
+    return null;
   }
 
   String validateAvailabilityField(String value) {
@@ -310,10 +317,13 @@ class IndividualOfferBloc extends BlocBase with Validators {
     if (_type.value == RequestType.TIME || _type.value == null) {
       if (value == null || value == '') {
         _availabilty.addError(ValidationErrors.genericError);
+        return ValidationErrors.genericError;
       } else if (profanityDetector.isProfaneString(value)) {
         _availabilty.addError(ValidationErrors.profanityError);
+        return ValidationErrors.profanityError;
       }
     }
+    return null;
   }
 
   String validateMinimumCredits(String value) {
@@ -321,8 +331,10 @@ class IndividualOfferBloc extends BlocBase with Validators {
     if (_type.value == RequestType.TIME || _type.value == null) {
       if (value == null || value.isEmpty) {
         _minimumCredits.addError(ValidationErrors.minimumCreditsError);
+        return ValidationErrors.minimumCreditsError;
       }
     }
+    return null;
   }
 
   String validateAmount(String value) {
@@ -330,19 +342,23 @@ class IndividualOfferBloc extends BlocBase with Validators {
     if (_type.value == RequestType.CASH) {
       if (value.isEmpty || int.tryParse(value) == null || int.parse(value) == 0) {
         _donationAmount.addError(ValidationErrors.emptyErrorCash);
-      }else{
+        return ValidationErrors.emptyErrorCash;
+      } else {
         logger.d("validateAmount ELSE");
       }
     }
+    return null;
   }
 
   String validateGoods() {
     if (_type.value == RequestType.GOODS) {
-      if (_goodsDonationDetails.value.requiredGoods == null ||
+      if (_goodsDonationDetails?.value?.requiredGoods == null ||
           _goodsDonationDetails.value.requiredGoods.length == 0) {
         _goodsDonationDetails.addError(ValidationErrors.emptyErrorGoods);
+        return ValidationErrors.emptyErrorGoods;
       }
     }
+    return null;
   }
 
   bool validateForm() {

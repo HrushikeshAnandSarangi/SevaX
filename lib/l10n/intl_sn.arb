@@ -1,6 +1,10 @@
 {
     "@@locale": "sn",
+<<<<<<< HEAD
+    "@@last_modified": "2021-10-11T12:01:41+00:00",
+=======
     "@@last_modified": "2021-09-30T11:17:53+00:00",
+>>>>>>> e411889ce518abca7faa2b0ac9e037134b4f0257
     "check_met": "Kuongorora, kana takasangana zvisati zvaitika",
     "we_met": "Takasangana zvisati zvaitika",
     "hang_on": "Ramba wakasimba",
@@ -2037,5 +2041,26 @@
     "seva_exchange_text_new": "Nekuenderera mberi, iwe unobvuma kuna Seva exch",
     "lending_offer_location_hint_item": "Ipa nzvimbo yakavanzika yeanotora nzvimbo",
     "lending_offer_location_hint_place": "Ipa nzvimbo yakavanzika yekwaigara kupi",
-    "location_safety_disclaimer": "Ongorora: Zvekuchengetedza kuchengetedza, usanyora nzvimbo chaiyo."
+    "location_safety_disclaimer": "Ongorora: Zvekuchengetedza kuchengetedza, usanyora nzvimbo chaiyo.",
+    "customise_community": "GADZIRA YENYAYA YAKO",
+    "community_logo": "Logo Logo",
+    "replace_logo": "Iyi logo ichatsiva iyo Sevax logo pamusoro kuruboshwe kuruboshwe peji",
+    "choose_theme_color": "Sarudza iyo Meteme Ruvara",
+    "long_press_to_reset": "Tara tete kugadzirisa",
+    "tap_to_add_colors": "Tinya kuti uwedzere mavara",
+    "you_have_recieved": "Wagamuchira",
+    "seva_credits_donated_text": "Seva Zvikwereti zvakapihwa",
+    "seva_credits_from_text": "Seva chikwereti (s) kubva",
+    "as_a_donation_text": "semupiro.",
+    "change_ownership_successful": "Iwe wabudirira kuendesa muridzi we ** groupname to ** nyowani nyowani.",
+    "changed_ownership_of_text": "yakachinja muridzi we",
+    "transfer_ownership_text": "Transgership",
+    "you_have_been_made_the_new_owner_of_group_name_subtitle": "Iwe waitwa muridzi mutsva we",
+    "direction_for_manage_transfer_ownership": "Enda kune yako boka reboka tabu uye wobva wasarudza nhengo nyowani yeboka kuti uende kumuridzi.",
+    "be_sure_message_text": "Ive neshuwa yekutarisa nenhengo yekutanga nekuvanyudza.",
+    "removed_you_from_text": "akakubvisa kubva",
+    "note_for_transfer_ownership_notification": "Ongorora: Kana iwe usingakwanise kuita basa iri kana kana uchitenda izvi zvakaitwa mukukanganisa ndapota tinya apa.",
+    "transfer_of_group_ownership_update": "Kuendesa kweboka revaridzi veboka.",
+    "directions_text": "Mafambiro",
+    "link_for_demo_video_text": "Batanidza kweDemo vhidhiyo:"
 }

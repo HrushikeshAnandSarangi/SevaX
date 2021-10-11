@@ -1,6 +1,10 @@
 {
     "@@locale": "es",
+<<<<<<< HEAD
+    "@@last_modified": "2021-10-11T12:01:42+00:00",
+=======
     "@@last_modified": "2021-09-30T11:17:56+00:00",
+>>>>>>> e411889ce518abca7faa2b0ac9e037134b4f0257
     "check_met": "Comprobando, si nos conocimos antes",
     "we_met": "Nos conocimos antes",
     "hang_on": "Agárrate fuerte",
@@ -2037,5 +2041,26 @@
     "seva_exchange_text_new": "Al continuar, usted acepta el cambio de divisas.",
     "lending_offer_location_hint_item": "Proporcionar la vecindad general de la ubicaci�n de recogida",
     "lending_offer_location_hint_place": "Proporcionar vecindad de donde se encuentra el alojamiento.",
-    "location_safety_disclaimer": "Nota: Para precauciones de seguridad, no enumere la ubicaci�n exacta."
+    "location_safety_disclaimer": "Nota: Para precauciones de seguridad, no enumere la ubicaci�n exacta.",
+    "customise_community": "Personaliza tu comunidad",
+    "community_logo": "Logotipo de la comunidad",
+    "replace_logo": "Este logo reemplazar� el logotipo de SEVAX en el lado superior izquierdo de la p�gina",
+    "choose_theme_color": "Elige el color del tema",
+    "long_press_to_reset": "Pulsaci�n larga para reiniciar",
+    "tap_to_add_colors": "Toque para agregar colores",
+    "you_have_recieved": "Has recibido",
+    "seva_credits_donated_text": "Seva créditos donados",
+    "seva_credits_from_text": "Seva Credit (s) de",
+    "as_a_donation_text": "como una donación.",
+    "change_ownership_successful": "Ha transferido con éxito la propiedad de ** GroupName a ** NewownNombre.",
+    "changed_ownership_of_text": "Cambio de propiedad de",
+    "transfer_ownership_text": "Transferir propiedad",
+    "you_have_been_made_the_new_owner_of_group_name_subtitle": "Has sido hecho al nuevo propietario de",
+    "direction_for_manage_transfer_ownership": "Vaya a la pestaña Administrar su grupo y luego seleccione un nuevo miembro del grupo para transferir la propiedad.",
+    "be_sure_message_text": "Asegúrese de consultar con el miembro primero enviando mensajes.",
+    "removed_you_from_text": "quitado de",
+    "note_for_transfer_ownership_notification": "Nota: Si no puede cumplir este rol o si cree que esto se hizo en un error, haga clic aquí.",
+    "transfer_of_group_ownership_update": "Transferencia de actualización de propiedad de grupo.",
+    "directions_text": "Direcciones",
+    "link_for_demo_video_text": "Enlace para video de demostración:"
 }

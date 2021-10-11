@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:connectivity/connectivity.dart';
-import 'package:doseform/doseform.dart';
+import 'package:doseform/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
@@ -177,18 +177,22 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                           return CustomDoseTextField(
                             isRequired: true,
                             controller: _placeNameController,
-                            currentNode: _placeName,
+                            focusNode: _placeName,
                             nextNode: _guests,
                             value: snapshot.data,
-                            validator: _bloc.validatePlaceName,
+                            validator: (val) {
+                              var validate = _bloc.validatePlaceName(val);
+                              return validate == null
+                                  ? null
+                                  : getAddPlaceValidationError(context, validate);
+                            },
                             heading: "${S.of(context).name_of_place}*",
                             onChanged: (String value) {
                               _bloc.onPlaceNameChanged(value);
                               // title = value;
                             },
                             hint: S.of(context).name_of_place_hint,
-                            maxLength: null,
-                            error: getAddPlaceValidationError(context, snapshot.error),
+                            maxLength: 30,
                           );
                         },
                       ),
@@ -330,10 +334,15 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                           return CustomDoseTextField(
                             isRequired: true,
                             controller: _guestsController,
-                            currentNode: _guests,
+                            focusNode: _guests,
                             nextNode: _rooms,
                             value: snapshot.data,
-                            validator: _bloc.validateGuest,
+                            validator: (val) {
+                              var validate = _bloc.validateGuest(val);
+                              return validate == null
+                                  ? null
+                                  : getAddPlaceValidationError(context, validate);
+                            },
                             heading: "${S.of(context).no_of_guests}*",
                             onChanged: (String value) {
                               _bloc.onNoOfGuestsChanged(value);
@@ -341,7 +350,6 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             },
                             hint: 'Ex: 3',
                             maxLength: 4,
-                            error: getAddPlaceValidationError(context, snapshot.error),
                             keyboardType: TextInputType.number,
                             formatters: [FilteringTextInputFormatter.allow(Regex.numericRegex)],
                           );
@@ -354,10 +362,15 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                           return CustomDoseTextField(
                             isRequired: true,
                             controller: _roomsController,
-                            currentNode: _rooms,
+                            focusNode: _rooms,
                             nextNode: _bathrooms,
                             value: snapshot.data,
-                            validator: _bloc.validateRooms,
+                            validator: (val) {
+                              var validate = _bloc.validateRooms(val);
+                              return validate == null
+                                  ? null
+                                  : getAddPlaceValidationError(context, validate);
+                            },
                             heading: "${S.of(context).bed_roooms_text}*",
                             onChanged: (String value) {
                               _bloc.onNoOfRoomsChanged(value);
@@ -365,7 +378,6 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             },
                             hint: 'Ex: 2',
                             maxLength: 4,
-                            error: getAddPlaceValidationError(context, snapshot.error),
                             keyboardType: TextInputType.number,
                             formatters: [FilteringTextInputFormatter.allow(Regex.numericRegex)],
                           );
@@ -378,10 +390,15 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                           return CustomDoseTextField(
                             isRequired: true,
                             controller: _bathroomsController,
-                            currentNode: _bathrooms,
+                            focusNode: _bathrooms,
                             nextNode: _commonSPace,
                             value: snapshot.data,
-                            validator: _bloc.validateBathroom,
+                            validator: (val) {
+                              var validate = _bloc.validateBathroom(val);
+                              return validate == null
+                                  ? null
+                                  : getAddPlaceValidationError(context, validate);
+                            },
                             heading: "${S.of(context).bath_rooms}*",
                             onChanged: (String value) {
                               _bloc.onBathRoomsChanged(value);
@@ -389,7 +406,6 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             },
                             hint: 'Ex: 1',
                             maxLength: 4,
-                            error: getAddPlaceValidationError(context, snapshot.error),
                             keyboardType: TextInputType.number,
                             formatters: [FilteringTextInputFormatter.allow(Regex.numericRegex)],
                           );
@@ -402,10 +418,15 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                           return CustomDoseTextField(
                             isRequired: true,
                             controller: _commonSpaceController,
-                            currentNode: _commonSPace,
+                            focusNode: _commonSPace,
                             nextNode: _houseRules,
                             value: snapshot.data,
-                            validator: _bloc.validateCommonSpace,
+                            validator: (val) {
+                              var validate = _bloc.validateCommonSpace(val);
+                              return validate == null
+                                  ? null
+                                  : getAddPlaceValidationError(context, validate);
+                            },
                             heading: "${S.of(context).common_spaces}*",
                             onChanged: (String value) {
                               _bloc.onCommonSpacesChanged(value);
@@ -413,7 +434,6 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             },
                             hint: S.of(context).common_spaces_hint,
                             maxLength: null,
-                            error: getAddPlaceValidationError(context, snapshot.error),
                           );
                         },
                       ),
@@ -424,9 +444,14 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                           return CustomDoseTextField(
                             isRequired: true,
                             controller: _houseRulesController,
-                            currentNode: _houseRules,
+                            focusNode: _houseRules,
                             value: snapshot.data,
-                            validator: _bloc.validateHouseRule,
+                            validator: (val) {
+                              var validate = _bloc.validateHouseRule(val);
+                              return validate == null
+                                  ? null
+                                  : getAddPlaceValidationError(context, validate);
+                            },
                             heading: "${S.of(context).house_rules}*",
                             onChanged: (String value) {
                               _bloc.onHouseRulesChanged(value);
@@ -436,7 +461,6 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             minLines: 2,
                             maxLines: 2,
                             maxLength: null,
-                            error: getAddPlaceValidationError(context, snapshot.error),
                           );
                         },
                       ),
@@ -455,9 +479,14 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                                     S.of(context).estimated_value_hint_place,
                                 errorText: getAddPlaceValidationError(context, snapshot.error)),
                             controller: _estimatedValueController,
-                            currentNode: _estimatedValue,
+                            focusNode: _estimatedValue,
                             value: snapshot.data,
-                            validator: _bloc.validateEstimatedValue,
+                            validator: (val) {
+                              var validate = _bloc.validateEstimatedValue(val);
+                              return validate == null
+                                  ? null
+                                  : getAddPlaceValidationError(context, validate);
+                            },
                             heading: "${S.of(context).estimated_value}",
                             onChanged: (String value) {
                               _bloc.onEstimatedValueChanged(value);
@@ -465,7 +494,6 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             },
                             // hint: S.of(context).request_min_donation_hint,
                             formatters: [FilteringTextInputFormatter.allow(Regex.numericRegex)],
-                            error: getAddPlaceValidationError(context, snapshot.error),
                           );
                         },
                       ),
@@ -478,7 +506,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             isRequired: false,
                             hint: S.of(context).email + ' / ' + S.of(context).phone_number,
                             controller: _contactInformationController,
-                            currentNode: _contactInformation,
+                            focusNode: _contactInformation,
                             value: snapshot.data,
                             heading: S
                                 .of(context)

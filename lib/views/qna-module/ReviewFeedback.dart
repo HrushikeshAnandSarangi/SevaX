@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:device_info/device_info.dart';
-import 'package:doseform/doseform.dart';
+import 'package:doseform/main.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
@@ -487,7 +487,7 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
               DoseTextField(
                 textCapitalization: TextCapitalization.sentences,
                 controller: myCommentsController,
-                currentNode: commentsFocusNode,
+                focusNode: commentsFocusNode,
                 style: TextStyle(fontSize: 14.0, color: Colors.black87),
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 onChanged: (value) {},

@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:doseform/doseform.dart';
+import 'package:doseform/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
@@ -59,7 +59,8 @@ class BorrowRequest extends StatefulWidget {
       this.createEvent,
       this.instructorAdded,
       @required this.formType,
-  @required this.formKey, this.dateKey});
+      @required this.formKey,
+      this.dateKey});
 
   @override
   _BorrowRequestState createState() => _BorrowRequestState();
@@ -73,8 +74,7 @@ class _BorrowRequestState extends State<BorrowRequest> {
   final _debouncer = Debouncer(milliseconds: 500);
   List<CategoryModel> selectedCategoryModels = [];
   String categoryMode;
-  TextEditingController titleController = TextEditingController(),
-      descriptionController = TextEditingController();
+  TextEditingController titleController = TextEditingController(), descriptionController = TextEditingController();
   List<FocusNode> focusNodeList = List.generate(2, (_) => FocusNode());
 
   Widget addToProjectContainer() {
@@ -84,8 +84,7 @@ class _BorrowRequestState extends State<BorrowRequest> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            (widget.requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST &&
-                    widget.createEvent)
+            (widget.requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST && widget.createEvent)
                 ? Container()
                 : Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -97,19 +96,17 @@ class _BorrowRequestState extends State<BorrowRequest> {
                               setState(() {});
                               widget.onCreateEventChanged(widget.createEvent);
                             },
-                            createEvent: widget.formType == RequestFormType.CREATE
-                                ? widget.createEvent
-                                : false,
-                            selectedProject: (widget.requestModel.projectId != null &&
-                                    widget.requestModel.projectId.isNotEmpty)
-                                ? widget.projectModelList.firstWhere(
-                                    (element) => element.id == widget.requestModel.projectId,
-                                    orElse: () => null)
-                                : null,
+                            createEvent: widget.formType == RequestFormType.CREATE ? widget.createEvent : false,
+                            selectedProject:
+                                (widget.requestModel.projectId != null && widget.requestModel.projectId.isNotEmpty)
+                                    ? widget.projectModelList.firstWhere(
+                                        (element) => element.id == widget.requestModel.projectId,
+                                        orElse: () => null)
+                                    : null,
                             requestModel: widget.requestModel,
                             projectModelList: widget.projectModelList,
-                            admin: isAccessAvailable(
-                                widget.timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
+                            admin:
+                                isAccessAvailable(widget.timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
                             updateProjectIdCallback: (String projectid) {
                               widget.requestModel.projectId = projectid;
                               setState(() {});
@@ -204,7 +201,7 @@ class _BorrowRequestState extends State<BorrowRequest> {
         DoseTextField(
           isRequired: true,
           controller: titleController,
-          currentNode: focusNodeList[0],
+          focusNode: focusNodeList[0],
           autovalidateMode: AutovalidateMode.onUserInteraction,
           onChanged: (value) {
             requestUtils.updateExitWithConfirmationValue(context, 1, value);
@@ -257,7 +254,7 @@ class _BorrowRequestState extends State<BorrowRequest> {
         DoseTextField(
           isRequired: true,
           controller: descriptionController,
-          currentNode: focusNodeList[1],
+          focusNode: focusNodeList[1],
           autovalidateMode: AutovalidateMode.onUserInteraction,
           onChanged: (value) {
             if (value != null && value.length > 5) {
@@ -357,7 +354,7 @@ class _BorrowRequestState extends State<BorrowRequest> {
             HideWidget(
               hide: roomOrTool == 0,
               child: Text(
-              L.of(context).select_a_item_lending,
+                S.of(context).select_a_item_lending,
                 style: TextStyle(
                   fontSize: 16,
                   //fontWeight: FontWeight.bold,
@@ -476,8 +473,7 @@ class _BorrowRequestState extends State<BorrowRequest> {
               transaction_matrix_type: 'create_public_request',
               child: ConfigurationCheck(
                 actionType: 'create_public_request',
-                role:
-                    memberType(widget.timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
+                role: memberType(widget.timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
                 child: OpenScopeCheckBox(
                     infoType: InfoType.OpenScopeEvent,
                     isChecked: widget.requestModel.public,

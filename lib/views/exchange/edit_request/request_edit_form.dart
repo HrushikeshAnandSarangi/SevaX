@@ -1962,7 +1962,7 @@ class RequestEditFormState extends State<RequestEditForm> {
       SizedBox(height: 15),
 
       Text(
-        S.of(context).city + '/' + S.of(context).state,
+        S.of(context).location,
         style: TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.bold,

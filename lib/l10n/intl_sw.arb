@@ -1,6 +1,10 @@
 {
     "@@locale": "sw",
+<<<<<<< HEAD
+    "@@last_modified": "2021-10-11T12:01:40+00:00",
+=======
     "@@last_modified": "2021-09-30T11:17:52+00:00",
+>>>>>>> e411889ce518abca7faa2b0ac9e037134b4f0257
     "check_met": "Kuangalia, ikiwa tulikutana hapo awali",
     "we_met": "Tulikutana hapo awali",
     "hang_on": "Kaa sana",
@@ -2037,5 +2041,26 @@
     "seva_exchange_text_new": "Kwa kuendelea, unakubaliana na Seva Exchange",
     "lending_offer_location_hint_item": "Kutoa maeneo ya karibu ya eneo la kuchukua",
     "lending_offer_location_hint_place": "Kutoa maeneo ya karibu ambapo malazi ni",
-    "location_safety_disclaimer": "Kumbuka: Kwa tahadhari za usalama, usiseme mahali halisi."
+    "location_safety_disclaimer": "Kumbuka: Kwa tahadhari za usalama, usiseme mahali halisi.",
+    "customise_community": "Customize jamii yako.",
+    "community_logo": "Rangi ya Jumuiya.",
+    "replace_logo": "Alama hii itachukua nafasi ya alama ya Sevax kwenye upande wa kushoto wa ukurasa",
+    "choose_theme_color": "Chagua rangi ya mandhari",
+    "long_press_to_reset": "Waandishi wa habari wa muda mrefu wa upya",
+    "tap_to_add_colors": "Gonga ili kuongeza rangi",
+    "you_have_recieved": "Umepokea",
+    "seva_credits_donated_text": "Mikopo ya Seva iliyotolewa",
+    "seva_credits_from_text": "Seva Mikopo (s) kutoka",
+    "as_a_donation_text": "kama mchango.",
+    "change_ownership_successful": "Umefanikiwa kuhamisha umiliki wa ** Kikundi cha Kikundi cha ** Jina la NEWOWNERNAME.",
+    "changed_ownership_of_text": "iliyopita umiliki wa umiliki",
+    "transfer_ownership_text": "Kuhamisha umiliki.",
+    "you_have_been_made_the_new_owner_of_group_name_subtitle": "Umefanya mmiliki mpya wa",
+    "direction_for_manage_transfer_ownership": "Nenda kwenye kikundi chako cha kusimamia kichupo na kisha chagua mwanachama wa kikundi kipya kuhamisha umiliki.",
+    "be_sure_message_text": "Hakikisha kuangalia na mwanachama kwanza kwa kuwaambia.",
+    "removed_you_from_text": "ilikuondoa kutoka",
+    "note_for_transfer_ownership_notification": "Kumbuka: Ikiwa huwezi kutimiza jukumu hili au ikiwa unaamini hii ilifanyika kwa kosa tafadhali bonyeza hapa.",
+    "transfer_of_group_ownership_update": "Uhamisho wa sasisho la umiliki wa kikundi.",
+    "directions_text": "Maelekezo",
+    "link_for_demo_video_text": "Unganisha Video ya Demo:"
 }

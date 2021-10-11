@@ -47,9 +47,13 @@ class UserProfileImage extends StatelessWidget {
                         'https://upload.wikimedia.org/wikipedia/commons/f/fc/No_picture_available.png')),
               ),
             )
-          : CircleAvatar(
-              backgroundImage: NetworkImage(defaultUserImageURL),
-              minRadius: 25.0),
+          : Container(
+              height: height != null ? height : 50,
+              width: width != null ? width : 50,
+              child: CircleAvatar(
+                  backgroundImage: NetworkImage(defaultUserImageURL),
+                  minRadius: 25.0),
+            ),
     );
   }
 }

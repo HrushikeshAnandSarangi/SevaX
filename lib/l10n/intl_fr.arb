@@ -1,6 +1,10 @@
 {
     "@@locale": "fr",
+<<<<<<< HEAD
+    "@@last_modified": "2021-10-11T12:01:41+00:00",
+=======
     "@@last_modified": "2021-09-30T11:17:55+00:00",
+>>>>>>> e411889ce518abca7faa2b0ac9e037134b4f0257
     "check_met": "Checking, if we met before",
     "we_met": "We met before",
     "hang_on": "Accrochez-vous bien",
@@ -2037,5 +2041,26 @@
     "seva_exchange_text_new": "En continuant, vous acceptez de Seva Exchange",
     "lending_offer_location_hint_item": "Fournir le g�n�ral proximit� de la localisation de ramassage",
     "lending_offer_location_hint_place": "Fournir des proximit� g�n�rale de l'endroit o� l'h�bergement est",
-    "location_safety_disclaimer": "Remarque: Pour les pr�cautions de s�curit�, ne r�pertoriez pas l'emplacement exact."
+    "location_safety_disclaimer": "Remarque: Pour les pr�cautions de s�curit�, ne r�pertoriez pas l'emplacement exact.",
+    "customise_community": "Personnalisez votre communaut�",
+    "community_logo": "Logo communautaire",
+    "replace_logo": "Ce logo remplacera le logo SEVAX en haut � gauche de la page.",
+    "choose_theme_color": "Choisissez la couleur du th�me",
+    "long_press_to_reset": "Appuyez longuement pour r�initialiser",
+    "tap_to_add_colors": "Appuyez sur pour ajouter des couleurs",
+    "you_have_recieved": "Vous avez reçu",
+    "seva_credits_donated_text": "Seva crédits donnés",
+    "seva_credits_from_text": "Seva Crédit (s) de",
+    "as_a_donation_text": "comme un don.",
+    "change_ownership_successful": "Vous avez transféré avec succès la propriété de ** nom de groupe à ** New Nomnername.",
+    "changed_ownership_of_text": "Changement de propriété de",
+    "transfer_ownership_text": "Transfert de propriété",
+    "you_have_been_made_the_new_owner_of_group_name_subtitle": "Vous avez été fait le nouveau propriétaire de",
+    "direction_for_manage_transfer_ownership": "Accédez à l'onglet Gérer votre groupe, puis sélectionnez un nouveau membre du groupe pour transférer la propriété.",
+    "be_sure_message_text": "Assurez-vous de vérifier d'abord avec le membre en les saluant.",
+    "removed_you_from_text": "vous enlevé de",
+    "note_for_transfer_ownership_notification": "Remarque: Si vous ne pouvez pas remplir ce rôle ou si vous croyez que cela a été fait par erreur, veuillez cliquer ici.",
+    "transfer_of_group_ownership_update": "Transfert de la mise à jour de la propriété du groupe.",
+    "directions_text": "instructions",
+    "link_for_demo_video_text": "Lien pour la démo Video:"
 }

@@ -1433,61 +1433,21 @@ class L {
 //   String get cannot_approve_multiple_borrowers_item =>
 //       "You cannot approve multiple borrowers at once. Currently the item(s) are with **name. Once returned you can approve this request.";
 
-//   String get items_validation =>
-//       "You have not selected any Item(s). Please select one or more before creating the Borrow request.";
-//   String get accept_borrow_agreement_item_title =>
-//       "You are about to give item(s) to the borrower";
-//   String get borrow_request_return_items_tag =>
-//       'Borrow Request - Return Item(s)';
-//   String get return_items => 'Return Item(s)';
-//   String get lending_offer_return_items_tag => 'Lending Offer - Return Item(s)';
-//   String get return_items_alert => 'Are you sure you want to return item(s)?';
-//   String get lending_offer_location_hint_item =>
-//       'Provide general vicinity of pick-up location';
-//   String get lending_offer_location_hint_place =>
-//       'Provide general vicinity of where the accommodation is';
-// //added new label below
-//   String get location_safety_disclaimer =>
-//       "Note: For safety precautions, do not list the exact location.";
-//   String get items_collected => 'Item(s) Picked-up';
-//   String get date_to_borrow_and_return => "Date to Pick-up and Return item(s)";
-//   String get collected_items => 'Picked-up Item(s)';
-//   String get items_collected_alert_two => "You have picked-up item(s) from";
-//   String get lending_offer_collect_items_tag =>
-//       'Lending Offer - Pick-up Item(s)';
-//   String get items_collected_alert =>
-//       "Item(s) to be picked-up and returned on:  ";
-//   String get collect_items => 'Pick-up Item(s)';
-//   String get borrow_request_collect_items_tag =>
-//       'Borrow Request - Pick-up Item(s)';
-//   String get collect_and_return_items => 'Pick-up and Return item(s):  ';
-//   String get borrow_request_title_hint_place => "Ex: Room";
-//   String get name_of_place_hint => "Ex: Room near downtown";
-//   String get agreement_prior_to_signing_disclaimer =>
-//       "The Borrower should inspect the item or property being taken to ensure the description and operability of the borrowed item or property is represented properly in the agreement and request modifications as necessary prior to executing the agreement. Any adjustments to the defined provisions need to be made prior to signing the agreement. Any actions taken to resolve the issues outside the agreement will be the responsibility of the lender and/or borrower; example is Small Claims Court. Seva Exchange will have no responsibility in the negotiation, management or collection related to the violations of the agreement.";
-//   String get agreement_final_acknowledgement =>
-//       'It is hereby acknowledged that while Seva Exchange is furnishing this agreement and securely managing in their digital vault, Seva Exchange is only providing this as a convenience to the two parties in this agreement. Seva Exchange is indemnified from any loss or damage that occurs as a result of this transaction. Neither party will hold Seva Exchange accountable and agree to completely absolve Seva Exchange should there be any litigation arising from this transaction.';
-//   String get borrow_request_seva_disclaimer =>
-//       'However, if you cannot, please understand that Seva Exchange is not responsible for the actions of its members; each member is responsible for their own actions and behavior, whether using Seva Exchange or chatting over the back fence. Accordingly, to the maximum extent permitted by applicable law, you release us (and our officers, directors, agents, subsidiaries, joint ventures and employees) from claims, demands and damages (actual and consequential) of every kind and nature, known and unknown, arising out of or in any way connected with such disputes. If you are a California resident, you hereby waive California Civil Code §1542, which says: "A general release does not extend to claims that the creditor or releasing party does not know or suspect to exist in his or her favor at the time of executing the release, and that, if known by him or her, would have materially affected his or her settlement with the debtor or releasing party." ';
-//   String get agreement_date => 'Agreement Date and Time';
-//   String get estimated_value => "Estimated Value*";
-//   String get additional_instructions_hint_place =>
-//       "Ex: Keys are available in the lockbox'";
-//   String get approve_borrow_terms_acknowledgement_text1 =>
-//       "I acknowledge that this Borrower can use the place on the mentioned dates";
-//   String get approve_borrow_terms_acknowledgement_text2 =>
-//       "I acknowledge that this Borrower can use the item(s) on the mentioned dates";
-//   String get lending_offer_title_hint_place => "Ex: Offering to lend a room.";
-
-//! Label Updates
-  String get select_a_item_lending =>
-      "Select list of related item(s) to Borrow*";
-
-//! October 7th 2021
-  String get you_have_recieved => "You have received ";
-  String get adminNotificationInsufficientCredits =>
-      ' has insufficient credits to create requests';
-  String get seva_credits_donated_text => "Seva Credits Donated";
-  String get seva_credits_from_text => "Seva Credit(s) from";
-  String get as_a_donation_text => "as a donation.";
+//change ownership nlabels
+  // String get change_ownership_successful =>
+  //     "You have successfully transferred ownership of **groupName to **newOwnerName.";
+  // String get changed_ownership_of_text => "changed ownership of";
+  // String get to_text => "to";
+  // String get credits_credited => "Seva Credits Earned";
+  // String get transfer_ownership_text => "Transfer Ownership";
+  // String get you_have_been_made_the_new_owner_of_group_name_subtitle => "You have been made the new owner of";
+  // String get direction_for_manage_transfer_ownership =>
+  //     "Go to your group Manage tab and then select a new group member to transfer ownership.";
+  // String get be_sure_message_text => "Be sure to check with the member first by messaging them.";
+  // String get removed_you_from_text => "removed you from";
+  // String get note_for_transfer_ownership_notification =>
+  //     "Note: If you cannot fulfil this role or if you believe this was done in error please click here.";
+  // String get transfer_of_group_ownership_update => "Transfer of group ownership update.";
+  // String get directions_text => "Directions";
+  // String get link_for_demo_video_text => "Link for demo video:";
 }

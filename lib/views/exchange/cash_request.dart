@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:doseform/doseform.dart';
+import 'package:doseform/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
@@ -212,7 +212,7 @@ class _CashRequestState extends State<CashRequest> {
         DoseTextField(
           isRequired: true,
           controller: titleController,
-          currentNode: _titleNode,
+          focusNode: _titleNode,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           onChanged: (value) {
             requestUtils.updateExitWithConfirmationValue(context, 1, value);
@@ -267,7 +267,7 @@ class _CashRequestState extends State<CashRequest> {
         DoseTextField(
           isRequired: true,
           controller: descriptionController,
-          currentNode: _descriptionNode,
+          focusNode: _descriptionNode,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           onChanged: (value) {
             if (value != null && value.length > 5) {
@@ -446,7 +446,7 @@ class _CashRequestState extends State<CashRequest> {
               ),
             ),
           ),
-          currentNode: _targetDonationNode,
+          focusNode: _targetDonationNode,
           // inputFormatters: [FilteringTextInputFormatter.allow((RegExp("[0-9]")))],
           onChanged: (v) {
             requestUtils.updateExitWithConfirmationValue(context, 12, v);
@@ -484,7 +484,7 @@ class _CashRequestState extends State<CashRequest> {
         DoseTextField(
           isRequired: true,
           controller: minimumAmountController,
-          currentNode: minimumNode,
+          focusNode: minimumNode,
           decoration: InputDecoration(
             hintText: 'Ex: $currencyCode 10',
             hintStyle: requestUtils.hintTextStyle,

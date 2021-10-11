@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:doseform/doseform.dart';
+import 'package:doseform/main.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
@@ -125,7 +125,7 @@ class _EditRequestCustomCategoryState extends State<EditRequestCustomCategory> {
                         child: DoseTextField(
                           isRequired: true,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
-                          currentNode: subcategoryFocusNode,
+                          focusNode: subcategoryFocusNode,
                           controller: subcategoryController,
                           onChanged: (val) {
                             subcategorytitle = val;
