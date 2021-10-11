@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:connectivity/connectivity.dart';
-import 'package:doseform/doseform.dart';
+import 'package:doseform/main.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
@@ -220,7 +220,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                                     isRequired: true,
                                     textCapitalization: TextCapitalization.sentences,
                                     controller: subheadingController,
-                                    currentNode: focusNode,
+                                    focusNode: focusNode,
                                     textAlign: TextAlign.start,
                                     decoration: InputDecoration(
                                       errorMaxLines: 2,

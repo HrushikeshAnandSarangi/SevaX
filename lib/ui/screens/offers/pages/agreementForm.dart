@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:doseform/doseform.dart';
+import 'package:doseform/main.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -533,7 +533,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                           ),
                           DoseTextField(
                             isRequired: true,
-                            currentNode: specificConditionNode,
+                            focusNode: specificConditionNode,
                             maxLines: 3,
                             onFieldSubmitted: (v) {
                               FocusScope.of(context).unfocus();
@@ -706,7 +706,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
         DoseTextField(
           autovalidateMode: AutovalidateMode.onUserInteraction,
           isRequired: true,
-          currentNode:documentNameNode ,
+          focusNode:documentNameNode ,
           controller: documentNameController,
           onFieldSubmitted: (v) {
             FocusScope.of(context).unfocus();

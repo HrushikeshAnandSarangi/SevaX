@@ -5,7 +5,7 @@ import 'dart:ui' as ui;
 
 import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:connectivity/connectivity.dart';
-import 'package:doseform/doseform.dart';
+import 'package:doseform/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
@@ -571,7 +571,7 @@ class _LoginPageState extends State<LoginPage> {
               children: <Widget>[
                 DoseTextField(
                   isRequired: true,
-                  currentNode: emailFocus,
+                  focusNode: emailFocus,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   style: textStyle,
                   // cursorColor: Colors.black54,
@@ -595,7 +595,7 @@ class _LoginPageState extends State<LoginPage> {
                 DoseTextField(
                   controller: passwordController,
                   isRequired: true,
-                  currentNode: pwdFocus,
+                  focusNode: pwdFocus,
                   obscureText: _shouldObscurePassword,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   style: textStyle,

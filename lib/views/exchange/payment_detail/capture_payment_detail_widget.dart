@@ -1,4 +1,4 @@
-import 'package:doseform/doseform.dart';
+import 'package:doseform/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
@@ -214,7 +214,7 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
         // key: UniqueKey(),
         isRequired: true,
         controller: bankNameController,
-        currentNode: focusNodeList[0],
+        focusNode: focusNodeList[0],
         formatters: [FilteringTextInputFormatter.allow(RegExp(r'^\S.*$'))],
         autovalidateMode: AutovalidateMode.onUserInteraction,
         onChanged: (value) {
@@ -250,7 +250,7 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
         isRequired: true,
         controller: bankAddressController,
         // key: UniqueKey(),
-        currentNode: focusNodeList[1],
+        focusNode: focusNodeList[1],
         formatters: [FilteringTextInputFormatter.allow(RegExp(r'^\S.*$'))],
         autovalidateMode: AutovalidateMode.onUserInteraction,
         onChanged: (value) {
@@ -286,7 +286,7 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
         isRequired: true,
         controller: routingController,
         // key: UniqueKey(),
-        currentNode: focusNodeList[2],
+        focusNode: focusNodeList[2],
         maxLength: 30,
         formatters: _formatters,
         autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -322,7 +322,7 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
       DoseTextField(
         isRequired: true,
         controller: accountController,
-        currentNode: focusNodeList[3],
+        focusNode: focusNodeList[3],
         // key: UniqueKey(),
         maxLength: 30,
         formatters: _formatters,
@@ -354,7 +354,7 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
       DoseTextField(
         isRequired: true,
         controller: zelleController,
-        currentNode: focusNodeList[4],
+        focusNode: focusNodeList[4],
         // key: UniqueKey(),
         formatters: _formatters,
         autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -392,7 +392,7 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
       DoseTextField(
         isRequired: true,
         controller: paypalController,
-        currentNode: focusNodeList[5],
+        focusNode: focusNodeList[5],
         // key: UniqueKey(),
         formatters: _formatters,
         autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -437,7 +437,7 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
       DoseTextField(
         isRequired: true,
         controller: venmoController,
-        currentNode: focusNodeList[6],
+        focusNode: focusNodeList[6],
         // key: UniqueKey(),
         formatters: _formatters,
         autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -479,7 +479,7 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
       DoseTextField(
         isRequired: true,
         controller: swiftController,
-        currentNode: focusNodeList[7],
+        focusNode: focusNodeList[7],
         // key: UniqueKey(),
         formatters: _formatters,
         autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -534,7 +534,7 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
       DoseTextField(
         isRequired: true,
         controller: othersController,
-        currentNode: focusNodeList[8],
+        focusNode: focusNodeList[8],
         // key: UniqueKey(),
         formatters: [FilteringTextInputFormatter.allow(RegExp(r'^\S.*$'))],
         autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -586,7 +586,7 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
       DoseTextField(
         isRequired: true,
         controller: otherDetailController,
-        currentNode: focusNodeList[9],
+        focusNode: focusNodeList[9],
         // key: UniqueKey(),
         formatters: [FilteringTextInputFormatter.allow(RegExp(r'^\S.*$'))],
         autovalidateMode: AutovalidateMode.onUserInteraction,

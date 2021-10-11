@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:doseform/doseform.dart';
+import 'package:doseform/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -118,7 +118,7 @@ class OneToManySpeakerTimeEntryCompleteState extends State<OneToManySpeakerTimeE
                                         isRequired: true,
                                         controller: selectedHoursPrepTimeController,
                                         keyboardType: TextInputType.number,
-                                        currentNode: HoursPrepTimeNode,
+                                        focusNode: HoursPrepTimeNode,
                                         formatters: [FilteringTextInputFormatter.digitsOnly],
                                         decoration: InputDecoration(
                                           //errorText: S.of(context).enter_hours,

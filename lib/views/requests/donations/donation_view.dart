@@ -1,5 +1,5 @@
 import 'package:connectivity/connectivity.dart';
-import 'package:doseform/doseform.dart';
+import 'package:doseform/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:progress_dialog/progress_dialog.dart';
@@ -332,7 +332,7 @@ class _DonationViewState extends State<DonationView> {
                       FilteringTextInputFormatter.allow(RegExp("[0-9]")),
                     ],
                     autovalidateMode: AutovalidateMode.onUserInteraction,
-                    currentNode: focusNodes[0],
+                    focusNode: focusNodes[0],
                     onFieldSubmitted: (v) {
                       FocusScope.of(context).requestFocus(focusNodes[1]);
                     },
@@ -653,7 +653,7 @@ class _DonationViewState extends State<DonationView> {
                 return DoseTextField(
                   controller: commentController,
                   keyboardType: TextInputType.text,
-                  currentNode: focusNodes[3],
+                  focusNode: focusNodes[3],
                   textCapitalization: TextCapitalization.sentences,
                   textInputAction: TextInputAction.done,
                   maxLines: 2,
@@ -810,7 +810,7 @@ class _DonationViewState extends State<DonationView> {
               onChanged: (value) {
                 donationsModel.goodsDetails.toAddress = value;
               },
-              currentNode: focusNodes[1],
+              focusNode: focusNodes[1],
               onFieldSubmitted: (v) {
                 FocusScope.of(context).requestFocus(focusNodes[1]);
               },
@@ -975,7 +975,7 @@ class _DonationViewState extends State<DonationView> {
                 child: DoseTextField(
                   isRequired: true,
                   controller: amountController,
-                  currentNode: focusNodes[2],
+                  focusNode: focusNodes[2],
                   onChanged: (value) {
                     if (value.isNotEmpty) {
                       donationBloc.onAmountChange(value);

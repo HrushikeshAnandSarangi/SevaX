@@ -4,7 +4,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
-import 'package:doseform/doseform.dart';
+import 'package:doseform/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -381,7 +381,7 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
                         DoseTextField(
                           isRequired: true,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
-                          currentNode: nameFocus,
+                          focusNode: nameFocus,
                           textCapitalization: TextCapitalization.sentences,
                           onFieldSubmitted: (v) {
                             FocusScope.of(context).requestFocus(aboutFocus);
@@ -431,7 +431,7 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
                           isRequired: true,
                           controller: descriptionTextController,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
-                          currentNode: aboutFocus,
+                          focusNode: aboutFocus,
                           decoration: InputDecoration(
                             errorMaxLines: 2,
                             hintText: S.of(context).timbank_about_hint,
@@ -1601,7 +1601,7 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
                     ? S.of(context).profanity_text_alert
                     : null;
           },
-          currentNode: focusNodes[1],
+          focusNode: focusNodes[1],
           textInputAction: TextInputAction.next,
           decoration: getInputDecoration(
             fieldTitle: '${S.of(context).state} *',
@@ -1637,7 +1637,7 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
                     ? S.of(context).profanity_text_alert
                     : null;
           },
-          currentNode: focusNodes[0],
+          focusNode: focusNodes[0],
           textInputAction: TextInputAction.next,
           decoration: getInputDecoration(
             fieldTitle: '${S.of(context).city} *',
@@ -1670,7 +1670,7 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
                     ? S.of(context).profanity_text_alert
                     : null;
           },
-          currentNode: focusNodes[3],
+          focusNode: focusNodes[3],
           keyboardType: TextInputType.text,
           textInputAction: TextInputAction.next,
           maxLength: 15,
@@ -1740,7 +1740,7 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
                     ? S.of(context).profanity_text_alert
                     : null;
           },
-          currentNode: focusNodes[4],
+          focusNode: focusNodes[4],
           textInputAction: TextInputAction.done,
 /*          initialValue: controller.community.billing_address.street_address1 != null
               ? '${controller.community.billing_address.street_address1}'
@@ -1843,7 +1843,7 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
                     ? S.of(context).profanity_text_alert
                     : null;
           },
-          currentNode: focusNodes[2],
+          focusNode: focusNodes[2],
           textInputAction: TextInputAction.next,
           decoration: getInputDecoration(
             fieldTitle: '${S.of(context).country} *',
