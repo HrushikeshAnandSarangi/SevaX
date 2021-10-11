@@ -1913,7 +1913,9 @@ class _IndividualOfferState extends State<IndividualOffer> {
                 )
               : null,
           endTime: widget.offerModel != null &&
-                  widget.offerModel.individualOfferDataModel.timeOfferType == 'ONE_TIME'
+                  widget.offerModel.lendingOfferDetailsModel
+                          .lendingOfferTypeMode ==
+                      'ONE_TIME'
               ? DateTime.fromMillisecondsSinceEpoch(
                   widget.offerModel.lendingOfferDetailsModel.endDate,
                 )
@@ -2022,8 +2024,12 @@ class _IndividualOfferState extends State<IndividualOffer> {
                           );
                     return;
                   }
-                  if (OfferDurationWidgetState.starttimestamp != 0 &&
-                      OfferDurationWidgetState.endtimestamp != 0) {
+                  if (widget.offerModel.individualOfferDataModel
+                              .timeOfferType ==
+                          'ONE_TIME'
+                      ? (OfferDurationWidgetState.starttimestamp != 0 &&
+                          OfferDurationWidgetState.endtimestamp != 0)
+                      : OfferDurationWidgetState.starttimestamp != 0) {
                     _bloc.startTime = OfferDurationWidgetState.starttimestamp;
                     _bloc.endTime = OfferDurationWidgetState.endtimestamp;
                     if (_bloc.endTime <= _bloc.startTime && _bloc.timeOfferType == 1) {
