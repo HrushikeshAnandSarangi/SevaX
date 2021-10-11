@@ -84,6 +84,7 @@ class _MemberPermissionsState extends State<MemberPermissions> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
+        backgroundColor: Theme.of(context).primaryColor,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
@@ -400,7 +401,7 @@ class _MemberPermissionsState extends State<MemberPermissions> {
     return Text(
       title,
       style: TextStyle(
-          fontSize: 18, color: FlavorConfig.values.theme.primaryColor),
+          fontSize: 18, color:  Theme.of(context).primaryColor),
     );
   }
 

@@ -72,7 +72,7 @@ class AddUpdatePlaceBloc extends BlocBase {
 
   void createLendingOfferPlace({UserModel creator}) {
     LendingModel lendingModel;
-    if (!errorCheck()) {
+    if (!validateForm()) {
       if (_amenities.value.values == null ||
           _amenities.value.values.length < 1) {
         _message.add('amenities');
@@ -107,7 +107,7 @@ class AddUpdatePlaceBloc extends BlocBase {
 
   void updateLendingOfferPlace({LendingModel model}) async {
     LendingModel lendingModel = model;
-    if (!errorCheck()) {
+    if (!validateForm()) {
       if (_amenities.value.values == null ||
           _amenities.value.values.length < 1) {
         _message.add('amenities');
@@ -135,6 +135,82 @@ class AddUpdatePlaceBloc extends BlocBase {
         }).catchError((e) => _status.add(Status.ERROR));
       }
     }
+  }
+
+  String validatePlaceName(String val) {
+    if (_placeName.value == null || _placeName.value == '') {
+      _placeName.addError(AddPlaceValidationErrors.placeNameError);
+      return AddPlaceValidationErrors.placeNameError;
+    } else if (_placeName.value.substring(0, 1).contains('_') &&
+        !AppConfig.testingEmails.contains(AppConfig.loggedInEmail)) {
+      _placeName.addError(AddPlaceValidationErrors.underscore_error);
+      return AddPlaceValidationErrors.underscore_error;
+    } else if (profanityDetector.isProfaneString(_placeName.value)) {
+      _placeName.addError(AddPlaceValidationErrors.profanityError);
+      return AddPlaceValidationErrors.profanityError;
+    }
+    return null;
+  }
+
+  String validateGuest(String val) {
+    if (_no_of_guests.value == null || _no_of_guests.value == 0) {
+      _no_of_guests.addError(AddPlaceValidationErrors.no_guests_error);
+      return AddPlaceValidationErrors.no_guests_error;
+    }
+    return null;
+  }
+
+  String validateRooms(String val) {
+    if (_no_of_rooms.value == null || _no_of_rooms.value == 0) {
+      _no_of_rooms.addError(AddPlaceValidationErrors.no_rooms_error);
+      return AddPlaceValidationErrors.no_rooms_error;
+    }
+    return null;
+  }
+
+  String validateBathroom(String val) {
+    if (_no_of_bathRooms.value == null || _no_of_bathRooms.value == 0) {
+      _no_of_bathRooms.addError(AddPlaceValidationErrors.bath_rooms_error);
+      return AddPlaceValidationErrors.bath_rooms_error;
+    }
+    return null;
+  }
+
+  String validateCommonSpace(String val) {
+    if (_commonSpaces.value == null || _commonSpaces.value == '') {
+      _commonSpaces.addError(AddPlaceValidationErrors.commonSpaces_error);
+      return AddPlaceValidationErrors.commonSpaces_error;
+    }
+    return null;
+  }
+
+  String validateHouseRule(String val) {
+    if (_house_rules.value == null || _house_rules.value == '') {
+      _house_rules.addError(AddPlaceValidationErrors.house_rules_error);
+      return AddPlaceValidationErrors.house_rules_error;
+    } /*else if (_amenities.value == null || _amenities.value.length == 0) {
+      _amenities.addError(AddPlaceValidationErrors.amenities_error);
+      return AddPlaceValidationErrors.amenities_error;
+    }*/
+    return null;
+  }
+
+  String validateEstimatedValue(String val) {
+    if (_estimated_value.value == null || _estimated_value.value == 0 || _estimated_value == '') {
+      _estimated_value.addError(AddPlaceValidationErrors.estimated_value_error);
+      return AddPlaceValidationErrors.estimated_value_error;
+    }
+    return null;
+  }
+
+  bool validateForm() {
+    return !(validatePlaceName(_placeName.value) == null &&
+        validateGuest(_no_of_guests.value.toString()) == null &&
+        validateRooms(_no_of_rooms.value.toString()) == null &&
+        validateBathroom(_no_of_bathRooms.value.toString()) == null &&
+        validateCommonSpace(_commonSpaces.value.toString()) == null &&
+        validateHouseRule(_house_rules.value.toString()) == null &&
+        validateEstimatedValue(_estimated_value.value.toString()) == null);
   }
 
   ///[ERROR CHECKS] TO Validate input

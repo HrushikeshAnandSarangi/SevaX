@@ -1,6 +1,10 @@
 {
     "@@locale": "en",
+<<<<<<< HEAD
+    "@@last_modified": "2021-10-11T12:01:42+00:00",
+=======
     "@@last_modified": "2021-09-30T11:17:56+00:00",
+>>>>>>> e411889ce518abca7faa2b0ac9e037134b4f0257
     "check_met": "Checking, if we met before",
     "we_met": "We met before",
     "hang_on": "Hang on tight",
@@ -2037,5 +2041,26 @@
     "seva_exchange_text_new": "By continuing, you agree to Seva Exchange's",
     "lending_offer_location_hint_item": "Provide general vicinity of pick-up location",
     "lending_offer_location_hint_place": "Provide general vicinity of where the accommodation is",
-    "location_safety_disclaimer": "Note: For safety precautions, do not list the exact location."
+    "location_safety_disclaimer": "Note: For safety precautions, do not list the exact location.",
+    "customise_community": "Customise your Community",
+    "community_logo": "Commumity Logo",
+    "replace_logo": "This logo will replace the SevaX Logo on the top left side of the page",
+    "choose_theme_color": "Choose theme color",
+    "long_press_to_reset": "Long press to reset",
+    "tap_to_add_colors": "Tap to add colors",
+    "you_have_recieved": "You have received ",
+    "seva_credits_donated_text": "Seva Credits Donated",
+    "seva_credits_from_text": "Seva Credit(s) from",
+    "as_a_donation_text": "as a donation.",
+    "change_ownership_successful": "You have successfully transferred ownership of **groupName to **newOwnerName.",
+    "changed_ownership_of_text": "changed ownership of",
+    "transfer_ownership_text": "Transfer Ownership",
+    "you_have_been_made_the_new_owner_of_group_name_subtitle": "You have been made the new owner of",
+    "direction_for_manage_transfer_ownership": "Go to your group Manage tab and then select a new group member to transfer ownership.",
+    "be_sure_message_text": "Be sure to check with the member first by messaging them.",
+    "removed_you_from_text": "removed you from",
+    "note_for_transfer_ownership_notification": "Note: If you cannot fulfil this role or if you believe this was done in error please click here.",
+    "transfer_of_group_ownership_update": "Transfer of group ownership update.",
+    "directions_text": "Directions",
+    "link_for_demo_video_text": "Link for demo video:"
 }

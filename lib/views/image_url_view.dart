@@ -23,8 +23,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 class ImageUrlView extends StatefulWidget {
   final Function(String link) onLinkCreated;
   final bool isCover;
+  final Color themeColor;
 
-  ImageUrlView({this.onLinkCreated, this.isCover});
+  ImageUrlView({this.onLinkCreated, this.isCover,@required this.themeColor});
 
   @override
   _ImageUrlViewState createState() => _ImageUrlViewState();
@@ -53,6 +54,7 @@ class _ImageUrlViewState extends State<ImageUrlView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: widget.themeColor,
         leading: GestureDetector(
           onTap: () => Navigator.of(context).pop(),
           child: Padding(
@@ -282,7 +284,12 @@ class _ImageUrlViewState extends State<ImageUrlView> {
           loaderDialogContext = context;
           return AlertDialog(
             title: Text(S.of(context).loading),
-            content: LinearProgressIndicator(),
+            content: LinearProgressIndicator(
+ backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+        valueColor: AlwaysStoppedAnimation<Color>(
+          Theme.of(context).primaryColor,
+        ),
+),
           );
         });
   }

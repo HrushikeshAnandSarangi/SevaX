@@ -123,6 +123,7 @@ class _TransactionDetailsViewState extends State<TransactionDetailsView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).primaryColor,
         title: Text(
           S.of(context).review_earnings,
           style: TextStyle(fontSize: 18),

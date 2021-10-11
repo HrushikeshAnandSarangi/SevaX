@@ -117,6 +117,7 @@ class _EditProfilePageState extends State<EditProfilePage>
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
+        backgroundColor: Theme.of(context).primaryColor,
         title: Text(
           S.of(context).bottom_nav_profile,
           style: TextStyle(fontSize: 18),
@@ -381,7 +382,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                     'lib/assets/images/cv.png',
                     height: 50,
                     width: 50,
-                    color: FlavorConfig.values.theme.primaryColor,
+                    color: Theme.of(context).primaryColor,
                   ),
                   Text(
                     S.of(context).choose_pdf_file,
@@ -492,7 +493,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                   },
                   padding: EdgeInsets.all(3),
                   color: cvUrl == null
-                      ? Colors.grey[300]
+                      ? Theme.of(context).primaryColor
                       : Theme.of(context).accentColor,
                   child: Text(
                     S.of(context).upload,
@@ -502,7 +503,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                       color: Colors.white,
                     ),
                   ),
-                  // color: Colors.grey[300],
+                  // color: ,
                   shape: StadiumBorder(),
                 ),
               ),
@@ -656,7 +657,12 @@ class _EditProfilePageState extends State<EditProfilePage>
           dialogContext = createDialogContext;
           return AlertDialog(
             title: Text(message),
-            content: LinearProgressIndicator(),
+            content: LinearProgressIndicator(
+ backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+        valueColor: AlwaysStoppedAnimation<Color>(
+          Theme.of(context).primaryColor,
+        ),
+),
           );
         });
   }

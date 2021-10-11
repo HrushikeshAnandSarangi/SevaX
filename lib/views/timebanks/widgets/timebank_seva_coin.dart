@@ -8,6 +8,7 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/manual_time_model.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/repositories/donations_repository.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/add_manual_time/widgets/add_manual_time_button.dart';
 import 'package:sevaexchange/ui/screens/transaction_details/view/transaction_details_view.dart';
@@ -216,6 +217,17 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
         fromEmailORId: this.widget.loggedInUser.email,
         toEmailORId: this.widget.timebankData.id,
       );
+
+      //SEND DONATION NOTIFICATION TO MEMBER
+      final DonationsRepository _donationsRepository = DonationsRepository();
+      await _donationsRepository.donationCreditedNotificationToMember(
+        context: context,
+        donateAmount: donateAmount,
+        model: widget.timebankData,
+        user: null,
+        toMember: false,
+      );
+
       await showDialog<double>(
         context: context,
         builder: (context) => InputDonateSuccessDialog(

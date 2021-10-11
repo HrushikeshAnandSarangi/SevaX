@@ -23,6 +23,7 @@ import 'package:sevaexchange/new_baseline/models/soft_delete_request.dart';
 import 'package:sevaexchange/new_baseline/models/user_added_model.dart';
 import 'package:sevaexchange/new_baseline/models/user_exit_model.dart';
 import 'package:sevaexchange/new_baseline/models/user_insufficient_credits_model.dart';
+import 'package:sevaexchange/repositories/donations_repository.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/repositories/notifications_repository.dart';
 import 'package:sevaexchange/ui/screens/notifications/bloc/notifications_bloc.dart';
@@ -71,8 +72,7 @@ class TimebankNotifications extends StatefulWidget {
   final ScrollPhysics physics;
   final UserModel userModel;
 
-  const TimebankNotifications({Key key, this.timebankModel, this.physics, this.userModel})
-      : super(key: key);
+  const TimebankNotifications({Key key, this.timebankModel, this.physics, this.userModel}) : super(key: key);
 
   @override
   _TimebankNotificationsState createState() => _TimebankNotificationsState();
@@ -113,8 +113,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
           return LoadingIndicator();
         }
 
-        List<NotificationsModel> notifications =
-            snapshot.data.notifications[widget.timebankModel.id] ?? [];
+        List<NotificationsModel> notifications = snapshot.data.notifications[widget.timebankModel.id] ?? [];
 
         if (notifications.isEmpty) {
           return Center(
@@ -138,8 +137,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                     UserInsufficentCreditsModel.fromMap(notification.data);
                 return NotificationCard(
                   timestamp: notification.timestamp,
-                  title: "${userInsufficientModel.senderName}" +
-                      S.of(context).adminNotificationInsufficientCredits,
+                  title: "${userInsufficientModel.senderName}" + S.of(context).adminNotificationInsufficientCredits,
                   subTitle: S.of(context).adminNotificationInsufficientCreditsNeeded +
                       "${(userInsufficientModel.creditsNeeded ?? 10).truncate()} \n${S.of(context).tap_to_view_details}",
                   photoUrl: userInsufficientModel.senderPhotoUrl,
@@ -186,8 +184,8 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                           },
                           onDonateClick: () async {
                             Navigator.pop(_context);
-                            await _showFontSizePickerDialog(context, notification.senderUserId,
-                                widget.timebankModel, userInsufficientModel.creditsNeeded);
+                            await _showFontSizePickerDialog(
+                                context, notification.senderUserId, widget.timebankModel, userInsufficientModel);
                           },
                         );
                       },
@@ -448,8 +446,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                               //Update request to complete it
                               //requestModelNew.approvedUsers = [];
                               requestModelNew.acceptors = [];
-                              requestModelNew.accepted =
-                                  true; //so that we can know that this request has completed
+                              requestModelNew.accepted = true; //so that we can know that this request has completed
                               if (requestModelNew.roomOrTool == LendingType.ITEM.readable) {
                                 requestModelNew.borrowModel.itemsReturned = true;
                               } else {
@@ -493,8 +490,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   },
                   photoUrl: model.photoUrl,
                   title: '${model.title}',
-                  subTitle:
-                      "The request has completed and an email has been sent to you. Tap to leave a feedback.",
+                  subTitle: "The request has completed and an email has been sent to you. Tap to leave a feedback.",
                 );
                 break;
 
@@ -647,8 +643,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 break;
 
               case NotificationType.JoinRequest:
-                return TimebankJoinRequestWidget(
-                    notification: notification, timebankModel: widget.timebankModel);
+                return TimebankJoinRequestWidget(notification: notification, timebankModel: widget.timebankModel);
 
               case NotificationType.APPROVE_SPONSORED_GROUP_REQUEST:
                 return SponsorGroupRequestWidget(notification: notification);
@@ -728,17 +723,14 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 break;
 
               case NotificationType.TYPE_DEBIT_FULFILMENT_FROM_TIMEBANK:
-                OneToManyNotificationDataModel data =
-                    OneToManyNotificationDataModel.fromJson(notification.data);
+                OneToManyNotificationDataModel data = OneToManyNotificationDataModel.fromJson(notification.data);
                 return NotificationCard(
                   timestamp: notification.timestamp,
                   title: S.of(context).notifications_debited,
                   subTitle: TimebankNotificationMessage.DEBIT_FULFILMENT_FROM_TIMEBANK
                       .replaceFirst(
                         '*n',
-                        (data.classDetails.numberOfClassHours +
-                                data.classDetails.numberOfPreperationHours)
-                            .toString(),
+                        (data.classDetails.numberOfClassHours + data.classDetails.numberOfPreperationHours).toString(),
                       )
                       .replaceFirst('*name', data.classDetails.classHost)
                       .replaceFirst('*class', data.classDetails.classTitle),
@@ -753,8 +745,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 break;
 
               case NotificationType.TYPE_CREDIT_FROM_OFFER_APPROVED:
-                OneToManyNotificationDataModel data =
-                    OneToManyNotificationDataModel.fromJson(notification.data);
+                OneToManyNotificationDataModel data = OneToManyNotificationDataModel.fromJson(notification.data);
                 return NotificationCard(
                   timestamp: notification.timestamp,
                   title: S.of(context).notifications_credited,
@@ -782,10 +773,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                       ? "${requestData.entityTitle} ${S.of(context).notifications_was_deleted}"
                       : "${requestData.entityTitle} ${S.of(context).cannot_be_deleted}",
                   subTitle: requestData.requestAccepted
-                      ? S
-                          .of(context)
-                          .delete_request_success
-                          .replaceAll('**requestTitle', requestData.entityTitle)
+                      ? S.of(context).delete_request_success.replaceAll('**requestTitle', requestData.entityTitle)
                       : S
                           .of(context)
                           .cannot_be_deleted_desc
@@ -805,18 +793,15 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 );
 
               case NotificationType.TYPE_REPORT_MEMBER:
-                ReportedMemberNotificationModel data =
-                    ReportedMemberNotificationModel.fromMap(notification.data);
+                ReportedMemberNotificationModel data = ReportedMemberNotificationModel.fromMap(notification.data);
                 return NotificationCard(
                   timestamp: notification.timestamp,
                   title: S.of(context).member_reported_title,
-                  subTitle: TimebankNotificationMessage.MEMBER_REPORT
-                      .replaceFirst('*name', data.reportedUserName),
+                  subTitle: TimebankNotificationMessage.MEMBER_REPORT.replaceFirst('*name', data.reportedUserName),
                   photoUrl: data.reportedUserImage,
                   entityName: data.reportedUserName,
                   onDismissed: () {
-                    dismissTimebankNotification(
-                        timebankId: notification.timebankId, notificationId: notification.id);
+                    dismissTimebankNotification(timebankId: notification.timebankId, notificationId: notification.id);
                   },
                 );
 
@@ -830,8 +815,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   subTitle:
                       "${body.fullName} ${S.of(context).notifications_approved_withdrawn_subtitle} ${body.requestTite}.  ",
                   onDismissed: () {
-                    dismissTimebankNotification(
-                        timebankId: notification.timebankId, notificationId: notification.id);
+                    dismissTimebankNotification(timebankId: notification.timebankId, notificationId: notification.id);
                   },
                 );
               case NotificationType.CASH_DONATION_MODIFIED_BY_DONOR:
@@ -839,8 +823,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 return PersonalNotificationsRedcerForDonations.getWidgetForDonationsModifiedByDonor(
                   context: context,
                   onDismissed: () {
-                    dismissTimebankNotification(
-                        timebankId: notification.timebankId, notificationId: notification.id);
+                    dismissTimebankNotification(timebankId: notification.timebankId, notificationId: notification.id);
                   },
                   notificationsModel: notification,
                 );
@@ -853,8 +836,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   photoUrl: null,
                   entityName: S.of(context).debited,
                   onDismissed: () {
-                    dismissTimebankNotification(
-                        timebankId: notification.timebankId, notificationId: notification.id);
+                    dismissTimebankNotification(timebankId: notification.timebankId, notificationId: notification.id);
                   },
                 );
 
@@ -870,8 +852,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                       ' ' +
                       S.of(context).notifications_credited_to,
                   onDismissed: () {
-                    dismissTimebankNotification(
-                        timebankId: notification.timebankId, notificationId: notification.id);
+                    dismissTimebankNotification(timebankId: notification.timebankId, notificationId: notification.id);
                   },
                 );
 
@@ -881,12 +862,9 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   entityName: "CR",
                   photoUrl: null,
                   title: S.of(context).credits_debited,
-                  subTitle: notification.data['credits'].toString() +
-                      " " +
-                      S.of(context).credits_debited_msg,
+                  subTitle: notification.data['credits'].toString() + " " + S.of(context).credits_debited_msg,
                   onDismissed: () {
-                    dismissTimebankNotification(
-                        timebankId: notification.timebankId, notificationId: notification.id);
+                    dismissTimebankNotification(timebankId: notification.timebankId, notificationId: notification.id);
                   },
                 );
               case NotificationType.MANUAL_TIME_CLAIM:
@@ -951,8 +929,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   onPressed: null,
                   photoUrl: creatorDetails.photoUrl,
                   title: 'Community chat remove',
-                  subTitle:
-                      '${creatorDetails.name.toLowerCase()} removed you from ${data['messageRoomName']}.',
+                  subTitle: '${creatorDetails.name.toLowerCase()} removed you from ${data['messageRoomName']}.',
                 );
                 break;
 
@@ -1073,12 +1050,37 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   },
                   onPressed: () {},
                   photoUrl: model.photoUrl,
-                  title: model.title +
-                      ' ' +
-                      S.of(context).notifications_was_deleted.replaceAll('!', ''),
+                  title: model.title + ' ' + S.of(context).notifications_was_deleted.replaceAll('!', ''),
                   subTitle: S.of(context).idle_borrow_request_third_warning_deleted,
                 );
                 break;
+
+//! NEW NOTIFICATION BELOW ---------------------------------------------------------->
+//Feature name: Create Notification for community receiving donation //1.9 Release Feature
+              case NotificationType.COMMUNITY_RECEIVED_CREDITS_DONATION:
+                return NotificationCard(
+                  timestamp: notification.timestamp,
+                  entityName: "CR",
+                  photoUrl: notification.data['donorPhotoUrl'] ?? null,
+                  title: S.of(context).seva_credits_donated_text,
+                  subTitle: S.of(context).you_have_recieved +
+                      notification.data['credits'].toStringAsFixed(1) +
+                      " " +
+                      S.of(context).seva_credits_from_text +
+                      " " +
+                      (notification.data['donorName'] != null
+                          ? (notification.data['donorName']) //or can use notification.data['communityName']
+                          : '') +
+                      " " +
+                      S.of(context).as_a_donation_text,
+                  onDismissed: () async {
+                    await FirestoreManager.readTimeBankNotification(
+                      notificationId: notification.id,
+                      timebankId: notification.timebankId,
+                    );
+                  },
+                );
+//! NEW NOTIFICATION ABOVE ---------------------------------------------------------->
 
               default:
                 log("Unhandled timebank notification type ${notification.type} ${notification.id}");
@@ -1093,8 +1095,8 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
     );
   }
 
-  void _showFontSizePickerDialog(
-      BuildContext context, String userId, TimebankModel model, double creditsNeeded) async {
+  void _showFontSizePickerDialog(BuildContext context, String userId, TimebankModel model,
+      UserInsufficentCreditsModel userInsufficientModel) async {
     var connResult = await Connectivity().checkConnectivity();
     if (connResult == ConnectivityResult.none) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -1130,7 +1132,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
       builder: (context) => InputDonateDialog(
           donateAmount: donateAmount,
           maxAmount: widget.timebankModel.balance.toDouble(),
-          creditsNeeded: creditsNeeded),
+          creditsNeeded: userInsufficientModel.creditsNeeded),
     );
 
     // execution of this code continues when the dialog was closed (popped)
@@ -1155,6 +1157,18 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
         toEmailORId: userId,
         fromEmailORId: model.id,
       );
+
+      //SEND DONATION NOTIFICATION TO MEMBER
+      UserModel userModel = await FirestoreManager.getUserForId(sevaUserId: userInsufficientModel.senderId);
+      final DonationsRepository _donationsRepository = DonationsRepository();
+      await _donationsRepository.donationCreditedNotificationToMember(
+        context: context,
+        donateAmount: donateAmount,
+        model: model,
+        user: userModel,
+        toMember: true,
+      );
+
       await showDialog<double>(
         context: context,
         builder: (context) => InputDonateSuccessDialog(onComplete: () => {Navigator.pop(context)}),
@@ -1241,8 +1255,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
       logger.i('here 2');
 
       await sendMessageToMember(
-          message: results['didComment'] ? results['comment'] : "No comments",
-          loggedInUser: loggedInUser);
+          message: results['didComment'] ? results['comment'] : "No comments", loggedInUser: loggedInUser);
 
       logger.i('here 3');
       // TODO needs flow correction to tasks model (currently reliying on requests collection for changes which will be huge instead tasks have to be individual to users)
@@ -1302,19 +1315,15 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
     String message,
   }) async {
     TimebankModel timebankModel = await getTimeBankForId(timebankId: requestModelNew.timebankId);
-    UserModel userModel =
-        await FirestoreManager.getUserForId(sevaUserId: requestModelNew.sevaUserId);
+    UserModel userModel = await FirestoreManager.getUserForId(sevaUserId: requestModelNew.sevaUserId);
     if (userModel != null && timebankModel != null) {
       ParticipantInfo receiver = ParticipantInfo(
         id: requestModelNew.requestMode == RequestMode.PERSONAL_REQUEST
             ? userModel.sevaUserID
             : requestModelNew.timebankId,
-        photoUrl: requestModelNew.requestMode == RequestMode.PERSONAL_REQUEST
-            ? userModel.photoURL
-            : timebankModel.photoUrl,
-        name: requestModelNew.requestMode == RequestMode.PERSONAL_REQUEST
-            ? userModel.fullname
-            : timebankModel.name,
+        photoUrl:
+            requestModelNew.requestMode == RequestMode.PERSONAL_REQUEST ? userModel.photoURL : timebankModel.photoUrl,
+        name: requestModelNew.requestMode == RequestMode.PERSONAL_REQUEST ? userModel.fullname : timebankModel.name,
         type: requestModelNew.requestMode == RequestMode.PERSONAL_REQUEST
             ? ChatType.TYPE_PERSONAL
             : timebankModel.parentTimebankId == FlavorConfig.values.timebankId
@@ -1341,8 +1350,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
             reviewMessage: message,
           ),
           reciever: receiver,
-          isTimebankMessage:
-              requestModelNew.requestMode == RequestMode.PERSONAL_REQUEST ? false : true,
+          isTimebankMessage: requestModelNew.requestMode == RequestMode.PERSONAL_REQUEST ? false : true,
           timebankId: requestModelNew.timebankId,
           communityId: loggedInUser.currentCommunity,
           sender: sender);
@@ -1359,7 +1367,12 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
           creditRequestDialogContext = context;
           return AlertDialog(
             title: Text(S.of(context).please_wait),
-            content: LinearProgressIndicator(),
+            content: LinearProgressIndicator(
+              backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+              valueColor: AlwaysStoppedAnimation<Color>(
+                Theme.of(context).primaryColor,
+              ),
+            ),
           );
         });
   }
@@ -1384,11 +1397,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
   }
 
   Future<void> sendNotificationLenderReceipt(
-      {String communityId,
-      String sevaUserId,
-      String timebankId,
-      String userEmail,
-      RequestModel requestModel}) async {
+      {String communityId, String sevaUserId, String timebankId, String userEmail, RequestModel requestModel}) async {
     NotificationsModel notification = NotificationsModel(
         isTimebankNotification: requestModel.requestMode == RequestMode.TIMEBANK_REQUEST,
         id: Utils.getUuid(),
@@ -1400,21 +1409,13 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
         senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
         targetUserId: sevaUserId);
 
-    await CollectionRef.users
-        .doc(userEmail)
-        .collection("notifications")
-        .doc(notification.id)
-        .set(notification.toMap());
+    await CollectionRef.users.doc(userEmail).collection("notifications").doc(notification.id).set(notification.toMap());
 
     log('WRITTEN TO DB--------------------->>');
   }
 
   Future<void> sendNotificationBorrowerRequestCompletedFeedback(
-      {String communityId,
-      String sevaUserId,
-      String timebankId,
-      String userEmail,
-      RequestModel requestModel}) async {
+      {String communityId, String sevaUserId, String timebankId, String userEmail, RequestModel requestModel}) async {
     NotificationsModel notification = NotificationsModel(
         isTimebankNotification: requestModel.requestMode == RequestMode.TIMEBANK_REQUEST,
         id: Utils.getUuid(),
@@ -1426,11 +1427,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
         senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
         targetUserId: sevaUserId);
 
-    await CollectionRef.users
-        .doc(userEmail)
-        .collection("notifications")
-        .doc(notification.id)
-        .set(notification.toMap());
+    await CollectionRef.users.doc(userEmail).collection("notifications").doc(notification.id).set(notification.toMap());
 
     log('WRITTEN TO DB--------------------->>');
   }
@@ -1442,8 +1439,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
     Map results = await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => ReviewFeedback(
-          feedbackType: FeedbackType
-              .FOR_BORROW_REQUEST_BORROWER, //if new questions then have to change this and update
+          feedbackType: FeedbackType.FOR_BORROW_REQUEST_BORROWER, //if new questions then have to change this and update
         ),
       ),
     );
@@ -1465,10 +1461,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
       logger.e("INSIDE IF 2 handleFeedBackNotificationBorrowRequest");
 
       await handleVolunterFeedbackForTrustWorthynessNRealiablityScore(
-          FeedbackType.FOR_BORROW_REQUEST_BORROWER,
-          results,
-          requestModel,
-          SevaCore.of(context).loggedInUser);
+          FeedbackType.FOR_BORROW_REQUEST_BORROWER, results, requestModel, SevaCore.of(context).loggedInUser);
 
       /*await sendMessageOfferCreator(
           loggedInUser: SevaCore.of(context).loggedInUser,

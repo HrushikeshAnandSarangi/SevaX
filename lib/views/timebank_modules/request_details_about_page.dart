@@ -502,7 +502,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                 child: Container(
                   height: 50,
                   width: double.infinity,
-                  color: FlavorConfig.values.theme.primaryColor,
+                  color:Theme.of(context).primaryColor,
                   child: Center(
                     child: Text(
                       S.of(context).close + ' ' + S.of(context).request,
@@ -726,7 +726,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           borderRadius: BorderRadius.circular(20),
         ),
         padding: EdgeInsets.all(0),
-        color: FlavorConfig.values.theme.primaryColor,
+        color:Theme.of(context).primaryColor,
         child: Row(
           children: <Widget>[
             SizedBox(width: 1),
@@ -935,7 +935,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           borderRadius: BorderRadius.circular(20),
         ),
         padding: EdgeInsets.all(0),
-        color: FlavorConfig.values.theme.primaryColor,
+        color:Theme.of(context).primaryColor,
         child: Row(
           children: <Widget>[
             SizedBox(width: 1),
@@ -1429,7 +1429,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     padding: EdgeInsets.all(0),
-                    color: FlavorConfig.values.theme.primaryColor,
+                    color:Theme.of(context).primaryColor,
                     child: Row(
                       children: <Widget>[
                         SizedBox(width: 1),
@@ -2975,7 +2975,12 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               textColor: Colors.white,
               onPressed: () async {
                 if (requestItem.parent_request_id == requestItem.id) {
-                  LinearProgressIndicator();
+                  LinearProgressIndicator(
+ backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+        valueColor: AlwaysStoppedAnimation<Color>(
+          Theme.of(context).primaryColor,
+        ),
+);
                   await fetchRecurringRequestsDocs(requestItem);
                   deleteParentRequest(requestItem).commit();
                   Navigator.of(dialogContext).pop();
@@ -3201,7 +3206,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                     CustomTextButton(
                         shape: StadiumBorder(),
                         padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                        color: FlavorConfig.values.theme.primaryColor,
+                        color:Theme.of(context).primaryColor,
                         child: Text(
                           S.of(context).skip_for_now,
                           style: TextStyle(
@@ -3281,9 +3286,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(10)),
                   child: LinearProgressIndicator(
-                    backgroundColor: Colors.grey[200],
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                        Theme.of(context).primaryColor),
+                  backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+                    valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
                     minHeight: 25,
                     value: (widget.requestItem.cashModel.amountRaised /
                         widget.requestItem.cashModel.targetAmount),

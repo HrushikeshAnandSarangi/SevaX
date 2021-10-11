@@ -11,6 +11,7 @@ import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/project_view/create_edit_project.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class ProjectTemplateView extends StatefulWidget {
@@ -55,6 +56,7 @@ class _ProjectTemplateViewState extends State<ProjectTemplateView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).primaryColor,
         leading: GestureDetector(
           onTap: () => Navigator.of(context).pop(),
           child: Padding(
@@ -164,7 +166,7 @@ class _ProjectTemplateViewState extends State<ProjectTemplateView> {
               child: SizedBox(
                 height: 25,
                 width: 25,
-                child: CircularProgressIndicator(),
+                child: LoadingIndicator(),
               ),
             );
           }
@@ -184,7 +186,7 @@ class _ProjectTemplateViewState extends State<ProjectTemplateView> {
                 return RadioListTile(
                   value: index,
                   groupValue: value,
-                  activeColor: primaryColor,
+                  activeColor: Theme.of(context).primaryColor,
                   onChanged: (ind) => setState(() {
                     value = ind;
                     selectedProjectTemplate = projectTemplateList[ind];
@@ -287,11 +289,11 @@ class _ProjectTemplateViewState extends State<ProjectTemplateView> {
     return RadioListTile(
       value: value,
       groupValue: _groupValue,
-      activeColor: primaryColor,
+      activeColor: Theme.of(context).primaryColor,
       onChanged: onChanged,
       title: Text(
         title,
-        style: TextStyle(color: primaryColor),
+        style: TextStyle(color: Theme.of(context).primaryColor),
       ),
     );
   }

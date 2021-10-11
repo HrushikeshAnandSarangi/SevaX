@@ -162,14 +162,15 @@ class _DonationsDetailsViewState extends State<DonationsDetailsView> {
     return Scaffold(
       backgroundColor: HexColor('#F8F8F8'),
       appBar: AppBar(
+        
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: Icon(Icons.arrow_back, color: Colors.black,),
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
-        leadingWidth: 130,
-        titleSpacing: -40.0,
+        leadingWidth: 50.0,
+        titleSpacing: 0.0,
         title: Text(
           S.of(context).review_earnings,
           style: TextStyle(

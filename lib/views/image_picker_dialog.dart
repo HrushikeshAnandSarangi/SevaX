@@ -105,7 +105,9 @@ class ImagePickerDialog extends StatelessWidget {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) {
-                          return ImageUrlView();
+                          return ImageUrlView(
+                            themeColor: Theme.of(context).primaryColor,
+                          );
                         },
                       ),
                     ).then((value) {

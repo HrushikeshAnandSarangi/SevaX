@@ -22,6 +22,7 @@ class AboutApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).primaryColor,
         title: Text(
           S.of(context).help,
           style: TextStyle(fontSize: 18),
@@ -279,7 +280,12 @@ class AboutApp extends StatelessWidget {
         progressContext = createDialogContext;
         return AlertDialog(
           title: Text(message),
-          content: LinearProgressIndicator(),
+          content: LinearProgressIndicator(
+ backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+        valueColor: AlwaysStoppedAnimation<Color>(
+          Theme.of(context).primaryColor,
+        ),
+),
         );
       },
     );

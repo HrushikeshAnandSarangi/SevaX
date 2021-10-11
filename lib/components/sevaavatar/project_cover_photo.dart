@@ -12,6 +12,7 @@ import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 import './image_picker_handler.dart';
 import '../../flavor_config.dart';
@@ -150,7 +151,7 @@ class _ProjectCoverPhotoState extends State<ProjectCoverPhoto>
                   height: 180,
                   child: Center(
                     child: Container(
-                      child: CircularProgressIndicator(),
+                      child: LoadingIndicator(),
                     ),
                   ),
                 ),
@@ -238,7 +239,7 @@ class _ProjectCoverPhotoState extends State<ProjectCoverPhoto>
                 children: [
                   CachedNetworkImage(
                     imageUrl: addImageIcon,
-                    placeholder: (context, url) => CircularProgressIndicator(),
+                    placeholder: (context, url) => LoadingIndicator(),
                     errorWidget: (context, url, error) => new Icon(Icons.error),
                   ),
                   SizedBox(

@@ -271,7 +271,7 @@ class _CommunityAboutState extends State<CommunityAbout>
                   child: Container(
                       height: 50,
                       width: double.infinity,
-                      color: FlavorConfig.values.theme.primaryColor,
+                      color: Theme.of(context).primaryColor,
                       child: Center(
                           child: Text(
                         S.of(context).join_seva_community,
@@ -291,7 +291,7 @@ class _CommunityAboutState extends State<CommunityAbout>
             style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
-                color: FlavorConfig.values.theme.primaryColor)),
+                color: Theme.of(context).primaryColor)),
         SizedBox(
           height: 7,
         ),
@@ -331,7 +331,7 @@ class _CommunityAboutState extends State<CommunityAbout>
                   style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w700,
-                      color: FlavorConfig.values.theme.primaryColor)),
+                      color: Theme.of(context).primaryColor)),
               SizedBox(height: 15),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -397,7 +397,7 @@ class _CommunityAboutState extends State<CommunityAbout>
               style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
-                  color: FlavorConfig.values.theme.primaryColor)),
+                  color: Theme.of(context).primaryColor)),
           SizedBox(height: 15),
           RichText(
             text: TextSpan(
@@ -439,7 +439,7 @@ class _CommunityAboutState extends State<CommunityAbout>
             style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
-                color: FlavorConfig.values.theme.primaryColor)),
+                color: Theme.of(context).primaryColor)),
         SizedBox(
           height: 7,
         ),

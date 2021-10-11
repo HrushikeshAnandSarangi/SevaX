@@ -77,7 +77,7 @@ class _AddImagesForRequestState extends State<AddImagesForRequest> {
                   'lib/assets/images/cv.png',
                   height: 20,
                   width: 20,
-                  color: FlavorConfig.values.theme.primaryColor,
+                  color:Theme.of(context).primaryColor,
                 ),
                 Text(
                   S.of(context).choose_image,

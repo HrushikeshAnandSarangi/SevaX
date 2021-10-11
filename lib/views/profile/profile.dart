@@ -455,7 +455,7 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  CircularProgressIndicator(),
+                  LoadingIndicator(),
                   SizedBox(height: 5),
                   Text(S.of(context).loading + '...'),
                 ],

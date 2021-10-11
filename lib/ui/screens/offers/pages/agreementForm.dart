@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:doseform/main.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -26,6 +27,7 @@ import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/empty_text_span.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
@@ -77,6 +79,8 @@ class _OfferAgreementFormState extends State<AgreementForm> {
   String templateName = '';
   bool templateFound = false;
   int value;
+  FocusNode documentNameNode = FocusNode();
+  FocusNode specificConditionNode = FocusNode();
 
 // Form Related Values
   String documentName = '';
@@ -93,7 +97,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
   Map<String, dynamic> agreementConfig = {};
   // String otherDetails = '';
 
-  final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<DoseFormState>();
   final _formKeyElastic = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _key = GlobalKey();
   final _formDialogKey = GlobalKey<FormState>();
@@ -187,12 +191,12 @@ class _OfferAgreementFormState extends State<AgreementForm> {
         child: (agreementDocumentType ==
                 AgreementDocumentType.NO_AGREEMENT.readable)
             ? noAgreementWidget
-            : Form(
-                key: _formKey,
-                child: Padding(
-                  padding:
-                      const EdgeInsets.only(top: 15.0, left: 30, right: 30),
-                  child: Column(
+            : Padding(
+              padding:
+                    const EdgeInsets.only(top: 15.0, left: 30, right: 30),
+              child: DoseForm(
+                formKey: _formKey,
+                child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
@@ -527,7 +531,9 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                               color: Colors.black,
                             ),
                           ),
-                          TextFormField(
+                          DoseTextField(
+                            isRequired: true,
+                            focusNode: specificConditionNode,
                             maxLines: 3,
                             onFieldSubmitted: (v) {
                               FocusScope.of(context).unfocus();
@@ -678,8 +684,8 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                       SizedBox(height: width * 0.05),
                     ],
                   ),
-                ),
               ),
+            ),
       ),
     );
   }
@@ -697,7 +703,10 @@ class _OfferAgreementFormState extends State<AgreementForm> {
             color: Colors.black,
           ),
         ),
-        TextFormField(
+        DoseTextField(
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          isRequired: true,
+          focusNode:documentNameNode ,
           controller: documentNameController,
           onFieldSubmitted: (v) {
             FocusScope.of(context).unfocus();
@@ -1176,7 +1185,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
               child: SizedBox(
                 height: 25,
                 width: 25,
-                child: CircularProgressIndicator(),
+                child: LoadingIndicator(),
               ),
             );
           }
@@ -1268,7 +1277,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                   Container(
                     height: 50,
                     width: double.infinity,
-                    color: FlavorConfig.values.theme.primaryColor,
+                    color:  Theme.of(context).primaryColor,
                     child: Center(
                       child: Text(
                         S.of(context).template_title,
@@ -1351,7 +1360,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontFamily: 'Europa')),
-                        textColor: FlavorConfig.values.theme.primaryColor,
+                        textColor: Theme.of(context).primaryColor,
                         onPressed: () async {
                           if (!_formDialogKey.currentState.validate()) {
                             return;

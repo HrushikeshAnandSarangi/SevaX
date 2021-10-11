@@ -76,6 +76,7 @@ class _SearchPageState extends State<SearchPage>
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
+          backgroundColor: Theme.of(context).primaryColor,
           automaticallyImplyLeading: false,
           title: Text(
             widget.community.name,

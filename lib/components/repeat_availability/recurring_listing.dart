@@ -117,7 +117,7 @@ class _RecurringListingState extends State<RecurringListing> {
                             communityModel,
                           );
                         } else {
-                          return Center(child: CircularProgressIndicator());
+                          return Center(child: LoadingIndicator());
                         }
                       }),
                 );
@@ -151,7 +151,7 @@ class _RecurringListingState extends State<RecurringListing> {
                           return RecurringList(null, offerModelList,
                               timebankModel, communityModel);
                         } else {
-                          return Center(child: CircularProgressIndicator());
+                          return Center(child: LoadingIndicator());
                         }
                       }),
                 );
@@ -602,7 +602,7 @@ class _RecurringListState extends State<RecurringList> {
                         child: Text(
                           S.of(context).skip_for_now,
                           style: TextStyle(
-                              color: FlavorConfig.values.theme.primaryColor),
+                              color: Theme.of(context).primaryColor),
                         ),
                         onPressed: () {
                           Navigator.of(bc).pop();

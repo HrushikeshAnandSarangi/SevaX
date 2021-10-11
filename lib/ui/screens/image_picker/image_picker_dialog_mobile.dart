@@ -198,6 +198,7 @@ class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (mcontext) => SearchStockImages(
+                themeColor: Theme.of(context).primaryColor,
                 onChanged: (stockImage) {
                   // progress
                   widget.onLinkCreated(stockImage);
@@ -219,6 +220,7 @@ class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
               context: context,
               builder: (BuildContext dialogContext) {
                 return ImageUrlView(
+                  themeColor: Theme.of(context).primaryColor,
                   onLinkCreated: (String link) {
                     widget.onLinkCreated(link);
                     Navigator.of(context).pop();
@@ -299,7 +301,7 @@ class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
   Widget imagePickerOption({String title, IconData icon, Function onTap}) {
     return Container(
       decoration: BoxDecoration(
-        color: FlavorConfig.values.theme.primaryColor,
+        color: Theme.of(context).primaryColor,
         borderRadius: BorderRadius.circular(10),
       ),
       height: 50,
@@ -331,7 +333,12 @@ class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
           dialogContext = createDialogContext;
           return AlertDialog(
             title: Text(S.of(context).loading),
-            content: LinearProgressIndicator(),
+            content: LinearProgressIndicator(
+              backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+              valueColor: AlwaysStoppedAnimation<Color>(
+                Theme.of(context).primaryColor,
+              ),
+            ),
           );
         });
   }

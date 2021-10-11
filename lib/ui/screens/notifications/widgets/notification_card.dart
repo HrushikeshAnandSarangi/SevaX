@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:intl/intl.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/ui/utils/avatar.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
@@ -64,8 +65,7 @@ class NotificationCard extends StatelessWidget {
                                 shape: StadiumBorder(),
                                 color: Colors.grey,
                                 padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                                onPressed: () =>
-                                    {Navigator.of(dialogContext).pop()},
+                                onPressed: () => {Navigator.of(dialogContext).pop()},
                                 child: Text(
                                   S.of(context).cancel,
                                   style: TextStyle(
@@ -141,15 +141,24 @@ class NotificationCard extends StatelessWidget {
                   subTitle != null ? subTitle.trim() : '',
                 ),
                 SizedBox(height: 4),
-                Text(
-                  timeAgo.format(
-                    DateTime.fromMillisecondsSinceEpoch(
-                      timestamp,
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      timeAgo.format(
+                        DateTime.fromMillisecondsSinceEpoch(
+                          timestamp,
+                        ),
+                        locale: S.of(context).localeName == 'sn' ? 'en' : S.of(context).localeName,
+                      ),
                     ),
-                    locale: S.of(context).localeName == 'sn'
-                        ? 'en'
-                        : S.of(context).localeName,
-                  ),
+                    Text(
+                      "${DateFormat.yMMMMd('en_US').format(DateTime.fromMillisecondsSinceEpoch(
+                        timestamp,
+                      ))}",
+                    ),
+                  ],
                 ),
               ],
             ),

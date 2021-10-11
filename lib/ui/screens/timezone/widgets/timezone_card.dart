@@ -29,7 +29,7 @@ class TimezoneCard extends StatelessWidget {
         trailing: Text(
           code,
           style: TextStyle(
-            color: Colors.blue,
+            color: Theme.of(context).primaryColor,
             fontSize: 18,
             fontWeight: FontWeight.w500,
           ),

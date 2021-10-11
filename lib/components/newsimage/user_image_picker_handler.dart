@@ -42,6 +42,7 @@ class UserImagePickerHandler {
               // keepOnBackPress: false,
               // showBackBtn: false,
               // isFromHome: false,
+              themeColor: Theme.of(context).primaryColor,
               onChanged: (image) {
                 _listener.stockImage(image, 'stock_image');
                 Navigator.pop(context);
