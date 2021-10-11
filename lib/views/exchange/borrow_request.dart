@@ -354,7 +354,7 @@ class _BorrowRequestState extends State<BorrowRequest> {
             HideWidget(
               hide: roomOrTool == 0,
               child: Text(
-                L.of(context).select_a_item_lending,
+                S.of(context).select_a_item_lending,
                 style: TextStyle(
                   fontSize: 16,
                   //fontWeight: FontWeight.bold,
