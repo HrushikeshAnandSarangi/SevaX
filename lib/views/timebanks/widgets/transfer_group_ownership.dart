@@ -191,7 +191,7 @@ class _TransferGroupOwnerShipState extends State<TransferGroupOwnerShip> {
                             width: 50,
                             timebankModel: tbmodel,
                           ),
-                          title: Text(selectedNewOwner.fullname)),
+                          title: Text(selectedNewOwner.fullname ?? '')),
                     SizedBox(
                       height: 15,
                     ),
@@ -373,6 +373,15 @@ class _TransferGroupOwnerShipState extends State<TransferGroupOwnerShip> {
               )
             : Offstage();
       },
+      errorBuilder: (context, error) {
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            S.of(context).no_user_found,
+            style: TextStyle(fontSize: 16, color: Colors.grey),
+          ),
+        );
+      },
       noItemsFoundBuilder: (context) {
         return Padding(
           padding: const EdgeInsets.all(8.0),
@@ -503,11 +512,11 @@ class _TransferGroupOwnerShipState extends State<TransferGroupOwnerShip> {
   }
 }
 
-Widget timeBankOrGroupCard(timebankName) {
+Widget timeBankOrGroupCard(String timebankName) {
   return Card(
     elevation: 1,
     child: ListTile(
-      title: Text(timebankName),
+      title: Text(timebankName ?? ''),
     ),
   );
 }
