@@ -593,33 +593,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications> with Auto
                             user.email,
                           );
                         },
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (_) => AlertDialog(
-                              title: Text('${S.of(context).directions_text}:'),
-                              content: InkWell(
-                                onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => SevaWebView(
-                                        AboutMode(title: "Demo Vedios", urlToHit: "https://training.sevaxapp.com/")))),
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      "${S.of(context).link_for_demo_video_text}",
-                                    ),
-                                    Text(
-                                      'https://training.sevaxapp.com/',
-                                      style: TextStyle(color: Colors.blue),
-                                    ),
-                                    Text(
-                                      "${S.of(context).direction_for_manage_transfer_ownership}\n${S.of(context).be_sure_message_text}",
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
-                        },
+                        onPressed: () {},
                         photoUrl: creatorDetails.photoUrl ?? defaultUserImageURL,
                         title: S.of(context).message_room_join,
                         subTitle:
@@ -1482,7 +1456,40 @@ class _PersonalNotificationsState extends State<PersonalNotifications> with Auto
                             SevaCore.of(context).loggedInUser.email,
                           );
                         },
-                        onPressed: () {},
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (_) => AlertDialog(
+                              title: Text('${S.of(context).directions_text}:'),
+                              content: InkWell(
+                                onTap: () => Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => SevaWebView(
+                                      AboutMode(
+                                        title: "Demo Vedios",
+                                        urlToHit: "https://training.sevaxapp.com/",
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      "${S.of(context).link_for_demo_video_text}",
+                                    ),
+                                    Text(
+                                      'https://training.sevaxapp.com/',
+                                      style: TextStyle(color: Colors.blue),
+                                    ),
+                                    Text(
+                                      "${S.of(context).direction_for_manage_transfer_ownership}\n${S.of(context).be_sure_message_text}",
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
                         photoUrl: ownershipModel.creatorPhotoUrl,
                         title: S.of(context).transfer_ownership_text,
                         subTitle: ownershipModel.message,
