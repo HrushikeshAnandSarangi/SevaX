@@ -147,16 +147,19 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                             focusNode: _itemName,
                             nextNode: null,
                             value: snapshot.data,
-                            validator: _bloc.validateName,
+                            validator: (val) {
+                              var validate = _bloc.validateName(val);
+                              return validate == null
+                                  ? null
+                                  : getAddItemValidationError(context, validate);
+                            },
                             heading: "${S.of(context).name_of_item}*",
                             onChanged: (String value) {
                               _bloc.onPlaceNameChanged(value);
                               // title = value;
                             },
                             hint: S.of(context).name_of_item_hint,
-                            maxLength: null,
-                            error: getAddItemValidationError(
-                                context, snapshot.error),
+                            maxLength: 30,
                           );
                         },
                       ),
@@ -177,7 +180,12 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                                     S.of(context).estimated_value_hint_item),
                             controller: _estimatedValueController,
                             focusNode: _estimatedValue,
-                            validator: _bloc.validateEstimatedVal,
+                            validator: (val) {
+                              var validate = _bloc.validateEstimatedVal(val);
+                              return validate == null
+                                  ? null
+                                  : getAddItemValidationError(context, validate);
+                            },
                             value: snapshot.data.toString(),
                             heading: "${S.of(context).estimated_value}",
                             onChanged: (String value) {
@@ -188,8 +196,6 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                               FilteringTextInputFormatter.allow(
                                   Regex.numericRegex)
                             ],
-                            error: getAddItemValidationError(
-                                context, snapshot.error),
                           );
                         },
                       ),

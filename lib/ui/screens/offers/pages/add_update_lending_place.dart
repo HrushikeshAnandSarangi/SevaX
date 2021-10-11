@@ -179,15 +179,19 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             focusNode: _placeName,
                             nextNode: _guests,
                             value: snapshot.data,
-                            validator: _bloc.validatePlaceName,
+                            validator: (val) {
+                              var validate = _bloc.validatePlaceName(val);
+                              return validate == null
+                                  ? null
+                                  : getAddPlaceValidationError(context, validate);
+                            },
                             heading: "${S.of(context).name_of_place}*",
                             onChanged: (String value) {
                               _bloc.onPlaceNameChanged(value);
                               // title = value;
                             },
                             hint: S.of(context).name_of_place_hint,
-                            maxLength: null,
-                            error: getAddPlaceValidationError(context, snapshot.error),
+                            maxLength: 30,
                           );
                         },
                       ),
@@ -332,7 +336,12 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             focusNode: _guests,
                             nextNode: _rooms,
                             value: snapshot.data,
-                            validator: _bloc.validateGuest,
+                            validator: (val) {
+                              var validate = _bloc.validateGuest(val);
+                              return validate == null
+                                  ? null
+                                  : getAddPlaceValidationError(context, validate);
+                            },
                             heading: "${S.of(context).no_of_guests}*",
                             onChanged: (String value) {
                               _bloc.onNoOfGuestsChanged(value);
@@ -340,7 +349,6 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             },
                             hint: 'Ex: 3',
                             maxLength: 4,
-                            error: getAddPlaceValidationError(context, snapshot.error),
                             keyboardType: TextInputType.number,
                             formatters: [FilteringTextInputFormatter.allow(Regex.numericRegex)],
                           );
@@ -356,7 +364,12 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             focusNode: _rooms,
                             nextNode: _bathrooms,
                             value: snapshot.data,
-                            validator: _bloc.validateRooms,
+                            validator: (val) {
+                              var validate = _bloc.validateRooms(val);
+                              return validate == null
+                                  ? null
+                                  : getAddPlaceValidationError(context, validate);
+                            },
                             heading: "${S.of(context).bed_roooms_text}*",
                             onChanged: (String value) {
                               _bloc.onNoOfRoomsChanged(value);
@@ -364,7 +377,6 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             },
                             hint: 'Ex: 2',
                             maxLength: 4,
-                            error: getAddPlaceValidationError(context, snapshot.error),
                             keyboardType: TextInputType.number,
                             formatters: [FilteringTextInputFormatter.allow(Regex.numericRegex)],
                           );
@@ -380,7 +392,12 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             focusNode: _bathrooms,
                             nextNode: _commonSPace,
                             value: snapshot.data,
-                            validator: _bloc.validateBathroom,
+                            validator: (val) {
+                              var validate = _bloc.validateBathroom(val);
+                              return validate == null
+                                  ? null
+                                  : getAddPlaceValidationError(context, validate);
+                            },
                             heading: "${S.of(context).bath_rooms}*",
                             onChanged: (String value) {
                               _bloc.onBathRoomsChanged(value);
@@ -388,7 +405,6 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             },
                             hint: 'Ex: 1',
                             maxLength: 4,
-                            error: getAddPlaceValidationError(context, snapshot.error),
                             keyboardType: TextInputType.number,
                             formatters: [FilteringTextInputFormatter.allow(Regex.numericRegex)],
                           );
@@ -404,7 +420,12 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             focusNode: _commonSPace,
                             nextNode: _houseRules,
                             value: snapshot.data,
-                            validator: _bloc.validateCommonSpace,
+                            validator: (val) {
+                              var validate = _bloc.validateCommonSpace(val);
+                              return validate == null
+                                  ? null
+                                  : getAddPlaceValidationError(context, validate);
+                            },
                             heading: "${S.of(context).common_spaces}*",
                             onChanged: (String value) {
                               _bloc.onCommonSpacesChanged(value);
@@ -412,7 +433,6 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             },
                             hint: S.of(context).common_spaces_hint,
                             maxLength: null,
-                            error: getAddPlaceValidationError(context, snapshot.error),
                           );
                         },
                       ),
@@ -425,7 +445,12 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             controller: _houseRulesController,
                             focusNode: _houseRules,
                             value: snapshot.data,
-                            validator: _bloc.validateHouseRule,
+                            validator: (val) {
+                              var validate = _bloc.validateHouseRule(val);
+                              return validate == null
+                                  ? null
+                                  : getAddPlaceValidationError(context, validate);
+                            },
                             heading: "${S.of(context).house_rules}*",
                             onChanged: (String value) {
                               _bloc.onHouseRulesChanged(value);
@@ -435,7 +460,6 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             minLines: 2,
                             maxLines: 2,
                             maxLength: null,
-                            error: getAddPlaceValidationError(context, snapshot.error),
                           );
                         },
                       ),
@@ -456,7 +480,12 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             controller: _estimatedValueController,
                             focusNode: _estimatedValue,
                             value: snapshot.data,
-                            validator: _bloc.validateEstimatedValue,
+                            validator: (val) {
+                              var validate = _bloc.validateEstimatedValue(val);
+                              return validate == null
+                                  ? null
+                                  : getAddPlaceValidationError(context, validate);
+                            },
                             heading: "${S.of(context).estimated_value}",
                             onChanged: (String value) {
                               _bloc.onEstimatedValueChanged(value);
@@ -464,7 +493,6 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             },
                             // hint: S.of(context).request_min_donation_hint,
                             formatters: [FilteringTextInputFormatter.allow(Regex.numericRegex)],
-                            error: getAddPlaceValidationError(context, snapshot.error),
                           );
                         },
                       ),

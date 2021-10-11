@@ -24,13 +24,19 @@ class AddUpdateItemBloc extends BlocBase {
   final _model = BehaviorSubject<LendingModel>();
 
   Stream<Status> get status => _status.stream;
+
   Stream<String> get itemName => _itemName.stream;
+
   Stream<String> get estimatedValue => _estimated_value.stream;
+
   Stream<List<String>> get itemImages => _item_images.stream;
+
   Stream<String> get message => _message.stream;
 
   Function(String value) get onPlaceNameChanged => _itemName.sink.add;
+
   Function(String value) get onEstimatedValueChanged => _estimated_value.sink.add;
+
   Function(List<String> value) get onItemImageAdded => _item_images.sink.add;
 
   void loadData(LendingItemModel lendingPlaceModel) {
@@ -83,19 +89,25 @@ class AddUpdateItemBloc extends BlocBase {
   String validateName(String val) {
     if (_itemName.value == null || _itemName.value == '') {
       _itemName.addError(AddItemValidationErrors.itemNameError);
+      return AddItemValidationErrors.itemNameError;
     } else if (_itemName.value.substring(0, 1).contains('_') &&
         !AppConfig.testingEmails.contains(AppConfig.loggedInEmail)) {
       _itemName.addError(AddItemValidationErrors.underscore_error);
+      return AddItemValidationErrors.underscore_error;
     } else if (profanityDetector.isProfaneString(_itemName.value)) {
       _itemName.addError(AddItemValidationErrors.profanityError);
+      return AddItemValidationErrors.profanityError;
     }
+    return null;
   }
 
   String validateEstimatedVal(String val) {
     if (_estimated_value.value == null || _estimated_value.value == '') {
       //check if validator working now
       _estimated_value.addError(AddItemValidationErrors.estimated_value_error);
+      return AddItemValidationErrors.estimated_value_error;
     }
+    return null;
   }
 
   bool validateForm() {
@@ -143,7 +155,7 @@ class AddItemValidationErrors {
 }
 
 String getAddItemValidationError(BuildContext context, String errorCode) {
- S error = S.of(context);
+  S error = S.of(context);
   // L error = L.of(context);
   switch (errorCode) {
     case AddItemValidationErrors.itemNameError:

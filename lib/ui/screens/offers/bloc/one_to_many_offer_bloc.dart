@@ -269,20 +269,27 @@ class OneToManyOfferBloc extends BlocBase {
   String validateTitle(String value) {
     if (value == null || value == '') {
       _title.addError(ValidationErrors.titleError);
+      return ValidationErrors.titleError;
     } else if (value.substring(0, 1).contains('_') &&
         !AppConfig.testingEmails.contains(AppConfig.loggedInEmail)) {
       _title.addError(ValidationErrors.char_error);
+      return ValidationErrors.char_error;
     } else if (profanityDetector.isProfaneString(value)) {
       _title.addError(ValidationErrors.profanityError);
+      return ValidationErrors.profanityError;
     }
+    return null;
   }
 
   String validateDescription(String value) {
     if (value == null || value == '') {
       _classDescription.addError(ValidationErrors.genericError);
+      return ValidationErrors.genericError;
     } else if (profanityDetector.isProfaneString(value)) {
       _classDescription.addError(ValidationErrors.profanityError);
+      return ValidationErrors.profanityError;
     }
+    return null;
   }
 
   RegExp numberCheck = RegExp(r"^0*[1-9]\d*$");
@@ -290,13 +297,17 @@ class OneToManyOfferBloc extends BlocBase {
   String validateClassHours(String value) {
     if (_classHours.value == null || !numberCheck.hasMatch(_classHours.value)) {
       _classHours.addError(ValidationErrors.classHours);
+      return ValidationErrors.classHours;
     }
+    return null;
   }
 
   String validateClassSize(String value) {
     if (_classSize.value == null || !numberCheck.hasMatch(_classSize.value)) {
       _classSize.addError(ValidationErrors.sizeOfClassError);
+      return ValidationErrors.sizeOfClassError;
     }
+    return null;
   }
 
   RegExp numberWithZeroCheck = RegExp(r"^\d+$");
@@ -304,9 +315,10 @@ class OneToManyOfferBloc extends BlocBase {
   String validatePrepHours(String value) {
     if (_preparationHours.value == null || !numberWithZeroCheck.hasMatch(_preparationHours.value)) {
       _preparationHours.addError(
-        ValidationErrors.preprationTimeError,
-      );
+        ValidationErrors.preprationTimeError);
+      return ValidationErrors.preprationTimeError;
     }
+    return null;
   }
 
   bool validateForm() {

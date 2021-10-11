@@ -42,6 +42,7 @@ import 'package:sevaexchange/utils/helpers/configuration_check.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/custom_drop_down.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
@@ -438,13 +439,15 @@ class _IndividualOfferState extends State<IndividualOffer> {
             isRequired: true,
             controller: _availabilityController,
             focusNode: _availability,
-            validator: _bloc.validateAvailabilityField,
+            validator: (val) {
+              var validate = _bloc.validateAvailabilityField(val);
+              return getValidationError(context, validate);
+            },
             value: snapshot.data,
             heading: S.of(context).availablity,
             onChanged: _bloc.onAvailabilityChanged,
             hint: S.of(context).availablity_description,
             maxLength: 100,
-            error: getValidationError(context, snapshot.error),
           );
         },
       ),
@@ -455,13 +458,15 @@ class _IndividualOfferState extends State<IndividualOffer> {
             isRequired: true,
             controller: _minimumCreditsController,
             focusNode: _minimumCredits,
-            validator: _bloc.validateMinimumCredits,
+            validator: (val) {
+              var validate = _bloc.validateMinimumCredits(val);
+              return getValidationError(context, validate);
+            },
             value: snapshot.data,
             heading: S.of(context).minimum_credit_title,
             onChanged: _bloc.onMinimumCreditsChanged,
             hint: S.of(context).minimum_credit_hint,
             maxLength: 100,
-            error: getValidationError(context, snapshot.error),
             formatters: [FilteringTextInputFormatter.allow(Regex.numericRegex)],
             keyboardType: TextInputType.number,
           );
@@ -523,7 +528,11 @@ class _IndividualOfferState extends State<IndividualOffer> {
             isRequired: true,
             controller: _donationAmountController,
             focusNode: _donationFocusNode,
-            validator: _bloc.validateAmount,
+            validator: (val) {
+              var validate = _bloc.validateAmount(val);
+              logger.e("#validate AMT  ${getValidationError(context, validate)}");
+              return validate == null ? null : getValidationError(context, validate);
+            },
             onChanged: (String data) => _bloc.onDonationAmountChanged(int.tryParse(data)),
             textCapitalization: TextCapitalization.sentences,
             decoration: InputDecoration(
@@ -718,20 +727,29 @@ class _IndividualOfferState extends State<IndividualOffer> {
     return StreamBuilder<GoodsDonationDetails>(
       stream: _bloc.goodsDonationDetails,
       builder: (context, snapshot) {
-        if (!snapshot.hasData) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return LoadingIndicator();
+        } else if (snapshot.hasError) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              SizedBox(height: 20),
+            children: [
+              SizedBox(height: 10),
               RequestGoodsDescriptionData(GoodsDonationDetails()),
+              Center(
+                child: Text(
+                  snapshot.error == 'add_goods_donate_empty'
+                      ? S.of(context).add_goods_donate_empty
+                      : snapshot.error.toString(),
+                  style: TextStyle(color: Colors.red),
+                ),
+              ),
             ],
           );
         } else {
           return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
-            SizedBox(height: 20),
+            SizedBox(height: 10),
             RequestGoodsDescriptionData(snapshot.data),
-            ],
-          );
+          ]);
         }
       },
     );
@@ -817,7 +835,11 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                 return CustomDoseTextField(
                                   isRequired: true,
                                   controller: _titleController,
-                                  validator: _bloc.validateTitle,
+                                  validator: (val) {
+                                    // _bloc.validateTitle(val);
+                                    var titleVal = _bloc.validateTitle(val);
+                                    return titleVal == null ? null : getValidationError(context, titleVal);
+                                  },
                                   focusNode: _title,
                                   nextNode: _description,
                                   value: snapshot.data,
@@ -834,7 +856,6 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                               : S.of(context).lending_offer_title_hint_item)
                                           : S.of(context).offer_title_hint,
                                   maxLength: null,
-                                  error: getValidationError(context, snapshot.error),
                                 );
                               },
                             ),
@@ -853,7 +874,10 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                   isRequired: true,
                                   controller: _descriptionController,
                                   focusNode: _description,
-                                  validator: _bloc.validateDescription,
+                                  validator: (val) {
+                                    var validate = _bloc.validateDescription(val);
+                                    return getValidationError(context, validate);
+                                  },
                                   nextNode: _availability,
                                   value: snapshot.data,
                                   heading: "${S.of(context).offer_description}*",
@@ -862,7 +886,6 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                       ? description_hint
                                       : S.of(context).offer_description_hint,
                                   maxLength: 500,
-                                  error: getValidationError(context, snapshot.error),
                                 );
                               },
                             ),
@@ -1380,7 +1403,10 @@ class _IndividualOfferState extends State<IndividualOffer> {
               controller: _one_to_many_titleController,
               focusNode: oneToManyFocusNodes[0],
               nextNode: oneToManyFocusNodes[1],
-              validator: _one_to_many_bloc.validateTitle,
+              validator: (val) {
+                var validate = _one_to_many_bloc.validateTitle(val);
+                return validate == null ? null : getValidationError(context, validate);
+              },
               // formatters: <TextInputFormatter>[
               //   WhitelistingTextInputFormatter(
               //       RegExp("[a-zA-Z0-9_ ]*"))
@@ -1390,7 +1416,6 @@ class _IndividualOfferState extends State<IndividualOffer> {
               onChanged: _one_to_many_bloc.onTitleChanged,
               hint: S.of(context).one_to_many_offer_hint,
               maxLength: null,
-              error: getValidationError(context, snapshot.error),
             );
           },
         ),
@@ -1428,12 +1453,14 @@ class _IndividualOfferState extends State<IndividualOffer> {
               controller: _preparationController,
               focusNode: oneToManyFocusNodes[1],
               nextNode: oneToManyFocusNodes[2],
-              validator: _one_to_many_bloc.validatePrepHours,
+              validator: (val) {
+                var validate = _one_to_many_bloc.validatePrepHours(val);
+                return validate == null ? null : getValidationError(context, validate);
+              },
               value: snapshot.data != null ? snapshot.data : null,
               heading: "${S.of(context).offer_prep_hours} *",
               onChanged: _one_to_many_bloc.onPreparationHoursChanged,
               hint: S.of(context).offer_prep_hours_required,
-              error: getValidationError(context, snapshot.error),
               keyboardType: TextInputType.number,
             );
           },
@@ -1447,12 +1474,14 @@ class _IndividualOfferState extends State<IndividualOffer> {
               controller: _classHourController,
               focusNode: oneToManyFocusNodes[2],
               nextNode: oneToManyFocusNodes[3],
-              validator: _one_to_many_bloc.validateClassHours,
+              validator: (val) {
+                var validate = _one_to_many_bloc.validateClassHours(val);
+                return validate == null ? null : getValidationError(context, snapshot.error);
+              },
               value: snapshot.data != null ? snapshot.data : null,
               heading: "${S.of(context).offer_number_class_hours} *",
               onChanged: _one_to_many_bloc.onClassHoursChanged,
               hint: S.of(context).offer_number_class_hours_required,
-              error: getValidationError(context, snapshot.error),
               keyboardType: TextInputType.number,
             );
           },
@@ -1466,12 +1495,14 @@ class _IndividualOfferState extends State<IndividualOffer> {
               controller: _sizeClassController,
               focusNode: oneToManyFocusNodes[3],
               nextNode: oneToManyFocusNodes[4],
-              validator: _one_to_many_bloc.validateClassSize,
+              validator: (val) {
+                var validate = _one_to_many_bloc.validateClassSize(val);
+                return validate == null ? null : getValidationError(context, snapshot.error);
+              },
               value: snapshot.data != null ? snapshot.data : null,
               heading: "${S.of(context).offer_size_class} *",
               onChanged: _one_to_many_bloc.onClassSizeChanged,
               hint: S.of(context).offer_enter_participants,
-              error: getValidationError(context, snapshot.error),
               keyboardType: TextInputType.number,
             );
           },
@@ -1484,13 +1515,15 @@ class _IndividualOfferState extends State<IndividualOffer> {
               isRequired: true,
               controller: _classDescriptionController,
               focusNode: oneToManyFocusNodes[4],
-              validator: _one_to_many_bloc.validateDescription,
+              validator: (val) {
+                var validate = _one_to_many_bloc.validateDescription(val);
+                return validate == null ? null : getValidationError(context, validate);
+              },
               value: snapshot.data != null ? snapshot.data : null,
               heading: "${S.of(context).offer_class_description} *",
               onChanged: _one_to_many_bloc.onclassDescriptionChanged,
               hint: S.of(context).offer_description_error,
               maxLength: 500,
-              error: getValidationError(context, snapshot.error),
               keyboardType: TextInputType.multiline,
             );
           },
