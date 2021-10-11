@@ -153,6 +153,7 @@ class _SelectionModalState extends State<SelectionModal> {
 
   Widget _buildAppBar(BuildContext context) {
     return AppBar(
+      backgroundColor: Theme.of(context).primaryColor,
       leading: null,
       automaticallyImplyLeading: false,
       elevation: 0.0,

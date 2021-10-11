@@ -5,6 +5,7 @@ import 'dart:ui' as ui;
 
 import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:doseform/doseform.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
@@ -41,9 +42,9 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final GlobalKey<FormState> _formKey = GlobalKey();
+  final GlobalKey<DoseFormState> _formKey = GlobalKey();
   final GlobalKey<FormState> _formKeyDialog = GlobalKey();
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+  // final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   Alignment childAlignment = Alignment.center;
   bool _isLoading = false;
   final pwdFocus = FocusNode();
@@ -54,6 +55,7 @@ class _LoginPageState extends State<LoginPage> {
   Color enabled = Colors.white.withAlpha(120);
   BuildContext parentContext;
   GeoFirePoint location;
+  TextEditingController emailController = TextEditingController(), passwordController = TextEditingController();
 
   void initState() {
     super.initState();
@@ -326,7 +328,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       resizeToAvoidBottomInset: true,
-      key: _scaffoldKey,
+      // key: _scaffoldKey,
       body: Stack(
         fit: StackFit.expand,
         children: <Widget>[
@@ -561,16 +563,19 @@ class _LoginPageState extends State<LoginPage> {
         height: 200,
         child: Padding(
           padding: EdgeInsets.only(top: 8.0, bottom: 0.0),
-          child: Form(
-            key: _formKey,
+          child: DoseForm(
+            formKey: _formKey,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                TextFormField(
-                  focusNode: emailFocus,
+                DoseTextField(
+                  isRequired: true,
+                  currentNode: emailFocus,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   style: textStyle,
-                  cursorColor: Colors.black54,
+                  // cursorColor: Colors.black54,
+                    controller: emailController,
                   validator: _validateEmailId,
                   onSaved: _saveEmail,
                   onFieldSubmitted: (v) {
@@ -585,13 +590,17 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     labelText: S.of(context).email.toUpperCase(),
                     labelStyle: textStyle,
-                  ),
+                  )
                 ),
-                TextFormField(
-                  focusNode: pwdFocus,
+                DoseTextField(
+                  controller: passwordController,
+                  isRequired: true,
+                  currentNode: pwdFocus,
                   obscureText: _shouldObscurePassword,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   style: textStyle,
-                  cursorColor: Colors.black54,
+                  maxLines: 1,
+                  // cursorColor: Colors.black54,
                   validator: _validatePassword,
                   onSaved: _savePassword,
                   decoration: InputDecoration(
@@ -604,8 +613,9 @@ class _LoginPageState extends State<LoginPage> {
                       labelStyle: textStyle,
                       suffix: GestureDetector(
                         onTap: () {
-                          _shouldObscurePassword = !_shouldObscurePassword;
-                          setState(() {});
+                          setState(() {
+                            _shouldObscurePassword = !_shouldObscurePassword;
+                          });
                         },
                         child: Icon(
                           _shouldObscurePassword

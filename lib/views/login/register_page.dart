@@ -5,6 +5,7 @@ import 'dart:ui' as ui;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:doseform/doseform.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -54,12 +55,16 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage>
     with ImagePickerListener, SingleTickerProviderStateMixin {
-  final GlobalKey<FormState> _formKey = GlobalKey();
+  final GlobalKey<DoseFormState> _formKey = GlobalKey();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   final fullnameFocus = FocusNode();
   final emailFocus = FocusNode();
   final pwdFocus = FocusNode();
   final confirmPwdFocus = FocusNode();
+  TextEditingController nameController = TextEditingController(),
+      emailController = TextEditingController(),
+      passwordController = TextEditingController(),
+      confirmPasswordController = TextEditingController();
 
   bool _shouldObscurePassword = true;
   bool _shouldObscureConfirmPassword = true;
@@ -396,12 +401,13 @@ class _RegisterPageState extends State<RegisterPage>
   // }
 
   Widget get _formFields {
-    return Form(
-      key: _formKey,
+    return DoseForm(
+      formKey: _formKey,
       child: Column(
         children: <Widget>[
           getFormField(
             focusNode: fullnameFocus,
+            controller: nameController,
             onFieldSubmittedCB: (v) {
               FocusScope.of(context).requestFocus(emailFocus);
             },
@@ -421,6 +427,7 @@ class _RegisterPageState extends State<RegisterPage>
           ),
           getFormField(
             focusNode: emailFocus,
+            controller: emailController,
             onFieldSubmittedCB: (v) {
               FocusScope.of(context).requestFocus(pwdFocus);
             },
@@ -437,6 +444,7 @@ class _RegisterPageState extends State<RegisterPage>
           ),
           getPasswordFormField(
             focusNode: pwdFocus,
+            controller: passwordController,
             onFieldSubmittedCB: (v) {
               FocusScope.of(context).requestFocus(confirmPwdFocus);
             },
@@ -470,6 +478,7 @@ class _RegisterPageState extends State<RegisterPage>
           ),
           getPasswordFormField(
             focusNode: confirmPwdFocus,
+            controller: confirmPasswordController,
             onFieldSubmittedCB: (v) {
               FocusScope.of(context).requestFocus(FocusNode());
             },
@@ -517,15 +526,18 @@ class _RegisterPageState extends State<RegisterPage>
     bool shouldObscure = false,
     Widget suffix,
     TextCapitalization capitalization = TextCapitalization.none,
+    TextEditingController controller
   }) {
     var size = shouldRestrictLength ? 20 : 150;
     return Padding(
       padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-      child: TextFormField(
+      child: DoseTextField(
+        isRequired: true,
         autovalidateMode: AutovalidateMode.onUserInteraction,
-        focusNode: focusNode,
+        controller: controller,
+        currentNode: focusNode,
         onFieldSubmitted: onFieldSubmittedCB,
-        enabled: !isLoading,
+        // enabled: !isLoading,
         decoration: InputDecoration(
           labelText: hint,
           errorMaxLines: 2,
@@ -545,7 +557,7 @@ class _RegisterPageState extends State<RegisterPage>
         textCapitalization: capitalization,
         validator: validator,
         onSaved: onSave,
-        inputFormatters: [
+        formatters: [
           LengthLimitingTextInputFormatter(size),
         ],
         obscureText: shouldObscure,
@@ -563,14 +575,19 @@ class _RegisterPageState extends State<RegisterPage>
     bool shouldObscure = false,
     Widget suffix,
     TextCapitalization capitalization = TextCapitalization.none,
+    TextEditingController controller
   }) {
     var size = shouldRestrictLength ? 20 : 150;
     return Padding(
       padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-      child: TextFormField(
-        focusNode: focusNode,
+      child: DoseTextField(
+        isRequired: true,
+        currentNode: focusNode,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
         onFieldSubmitted: onFieldSubmittedCB,
-        enabled: !isLoading,
+        controller: controller,
+        maxLines: 1,
+        // enabled: !isLoading,
         decoration: InputDecoration(
           labelText: hint,
           errorMaxLines: 2,
@@ -590,7 +607,7 @@ class _RegisterPageState extends State<RegisterPage>
         textCapitalization: capitalization,
         validator: validator,
         onSaved: onSave,
-        inputFormatters: [
+        formatters: [
           LengthLimitingTextInputFormatter(size),
         ],
         obscureText: shouldObscure,
@@ -731,7 +748,12 @@ class _RegisterPageState extends State<RegisterPage>
           dialogContext = createDialogContext;
           return AlertDialog(
             title: Text(S.of(context).creating_account),
-            content: LinearProgressIndicator(),
+            content: LinearProgressIndicator(
+ backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+        valueColor: AlwaysStoppedAnimation<Color>(
+          Theme.of(context).primaryColor,
+        ),
+),
           );
         });
   }

@@ -125,30 +125,30 @@ class _SelectAmenitiesState extends State<SelectAmenities> {
                     ),
               );
 
-              if (pattern.length > 2 &&
-                  !dataCopy
-                      .contains(SuggestedItem()..suggesttionTitle = pattern)) {
-                var spellCheckResult =
-                    await SpellCheckManager.evaluateSpellingFor(pattern,
-                        language: widget.languageCode);
-                if (spellCheckResult.hasErros) {
-                  dataCopy.add(SuggestedItem()
-                    ..suggestionMode = SuggestionMode.USER_DEFINED
-                    ..suggesttionTitle = pattern);
-                } else if (spellCheckResult.correctSpelling != pattern) {
-                  dataCopy.add(SuggestedItem()
-                    ..suggestionMode = SuggestionMode.SUGGESTED
-                    ..suggesttionTitle = spellCheckResult.correctSpelling);
-
-                  dataCopy.add(SuggestedItem()
-                    ..suggestionMode = SuggestionMode.USER_DEFINED
-                    ..suggesttionTitle = pattern);
-                } else {
-                  dataCopy.add(SuggestedItem()
-                    ..suggestionMode = SuggestionMode.USER_DEFINED
-                    ..suggesttionTitle = pattern);
-                }
-              }
+              // if (pattern.length > 2 &&
+              //     !dataCopy
+              //         .contains(SuggestedItem()..suggesttionTitle = pattern)) {
+              //   var spellCheckResult =
+              //       await SpellCheckManager.evaluateSpellingFor(pattern,
+              //           language: widget.languageCode);
+              //   if (spellCheckResult.hasErros) {
+              //     dataCopy.add(SuggestedItem()
+              //       ..suggestionMode = SuggestionMode.USER_DEFINED
+              //       ..suggesttionTitle = pattern);
+              //   } else if (spellCheckResult.correctSpelling != pattern) {
+              //     dataCopy.add(SuggestedItem()
+              //       ..suggestionMode = SuggestionMode.SUGGESTED
+              //       ..suggesttionTitle = spellCheckResult.correctSpelling);
+// 
+              //     dataCopy.add(SuggestedItem()
+              //       ..suggestionMode = SuggestionMode.USER_DEFINED
+              //       ..suggesttionTitle = pattern);
+              //   } else {
+              //     dataCopy.add(SuggestedItem()
+              //       ..suggestionMode = SuggestionMode.USER_DEFINED
+              //       ..suggesttionTitle = pattern);
+              //   }
+              // }
 
               return await Future.value(dataCopy);
             },
@@ -165,49 +165,58 @@ class _SelectAmenitiesState extends State<SelectAmenities> {
                     ),
                   );
 
-                case SuggestionMode.SUGGESTED:
-                  if (ProfanityDetector()
-                      .isProfaneString(suggestedItem.suggesttionTitle)) {
-                    return ProfanityDetector.getProanityAdvisory(
-                      suggestion: suggestedItem.suggesttionTitle,
-                      suggestionMode: SuggestionMode.USER_DEFINED,
-                      context: context,
-                    );
-                  }
-                  return searchUserDefinedEntity(
-                    keyword: suggestedItem.suggesttionTitle,
-                    language: widget.languageCode,
-                    suggestionMode: suggestedItem.suggestionMode,
-                    showLoader: true,
-                  );
-
-                case SuggestionMode.USER_DEFINED:
-                  if (ProfanityDetector()
-                      .isProfaneString(suggestedItem.suggesttionTitle)) {
-                    return ProfanityDetector.getProanityAdvisory(
-                      suggestion: suggestedItem.suggesttionTitle,
-                      suggestionMode: SuggestionMode.USER_DEFINED,
-                      context: context,
-                    );
-                  }
-                  return searchUserDefinedEntity(
-                    keyword: suggestedItem.suggesttionTitle,
-                    language: widget.languageCode,
-                    suggestionMode: suggestedItem.suggestionMode,
-                    showLoader: false,
-                  );
-                  break;
+                // case SuggestionMode.SUGGESTED:
+                //   if (ProfanityDetector()
+                //       .isProfaneString(suggestedItem.suggesttionTitle)) {
+                //     return ProfanityDetector.getProanityAdvisory(
+                //       suggestion: suggestedItem.suggesttionTitle,
+                //       suggestionMode: SuggestionMode.USER_DEFINED,
+                //       context: context,
+                //     );
+                //   }
+                //   return searchUserDefinedEntity(
+                //     keyword: suggestedItem.suggesttionTitle,
+                //     language: widget.languageCode,
+                //     suggestionMode: suggestedItem.suggestionMode,
+                //     showLoader: true,
+                //   );
+// 
+                // case SuggestionMode.USER_DEFINED:
+                //   if (ProfanityDetector()
+                //       .isProfaneString(suggestedItem.suggesttionTitle)) {
+                //     return ProfanityDetector.getProanityAdvisory(
+                //       suggestion: suggestedItem.suggesttionTitle,
+                //       suggestionMode: SuggestionMode.USER_DEFINED,
+                //       context: context,
+                //     );
+                //   }
+                //   return searchUserDefinedEntity(
+                //     keyword: suggestedItem.suggesttionTitle,
+                //     language: widget.languageCode,
+                //     suggestionMode: suggestedItem.suggestionMode,
+                //     showLoader: false,
+                //   );
+                //   break;
 
                 default:
                   return Container();
               }
             },
             noItemsFoundBuilder: (context) {
-              return searchUserDefinedEntity(
-                keyword: _textEditingController.text,
-                language: widget.languageCode,
-                showLoader: false,
+               return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  S.of(context).no_result_found,
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
               );
+              // return searchUserDefinedEntity(
+              //   keyword: _textEditingController.text,
+              //   language: widget.languageCode,
+              //   showLoader: false,
+              // );
             },
             onSuggestionSelected: (SuggestedItem suggestion) {
               if (ProfanityDetector()
@@ -215,28 +224,28 @@ class _SelectAmenitiesState extends State<SelectAmenities> {
                 return;
               }
 
-              switch (suggestion.suggestionMode) {
-                case SuggestionMode.SUGGESTED:
-                  var amenitesId = Uuid().generateV4();
-                  LendingOffersRepo.addAmenitiesToDb(
-                      id: amenitesId,
-                      languageCode: widget.languageCode,
-                      title: suggestion.suggesttionTitle);
-                  amenities[amenitesId] = suggestion.suggesttionTitle;
-                  break;
+              // switch (suggestion.suggestionMode) {
+              //   case SuggestionMode.SUGGESTED:
+              //     var amenitesId = Uuid().generateV4();
+              //     LendingOffersRepo.addAmenitiesToDb(
+              //         id: amenitesId,
+              //         languageCode: widget.languageCode,
+              //         title: suggestion.suggesttionTitle);
+              //     amenities[amenitesId] = suggestion.suggesttionTitle;
+              //     break;
 
-                case SuggestionMode.USER_DEFINED:
-                  var amenitesId = Uuid().generateV4();
-                  LendingOffersRepo.addAmenitiesToDb(
-                      id: amenitesId,
-                      languageCode: widget.languageCode,
-                      title: suggestion.suggesttionTitle);
-                  amenities[amenitesId] = suggestion.suggesttionTitle;
-                  break;
+              //   case SuggestionMode.USER_DEFINED:
+              //     var amenitesId = Uuid().generateV4();
+              //     LendingOffersRepo.addAmenitiesToDb(
+              //         id: amenitesId,
+              //         languageCode: widget.languageCode,
+              //         title: suggestion.suggesttionTitle);
+              //     amenities[amenitesId] = suggestion.suggesttionTitle;
+              //     break;
 
-                case SuggestionMode.FROM_DB:
-                  break;
-              }
+              //   case SuggestionMode.FROM_DB:
+              //     break;
+              // }
 
               _textEditingController.clear();
               if (!_selectedAmenities
@@ -293,10 +302,16 @@ class _SelectAmenitiesState extends State<SelectAmenities> {
       ),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return showLoader ? getLoading : LinearProgressIndicator();
+          return showLoader ? getLoading : LinearProgressIndicator(
+ backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+        valueColor: AlwaysStoppedAnimation<Color>(
+          Theme.of(context).primaryColor,
+        ),
+);
         }
 
         return getSuggestionLayout(
+          context:context,
           suggestion: keyword,
           suggestionMode: suggestionMode,
           add: S.of(context).add + ' ',

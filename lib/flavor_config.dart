@@ -75,7 +75,7 @@ class FlavorConfig {
           theme: ThemeData(
             appBarTheme: AppBarTheme(
               brightness: Brightness.light,
-              color: Color(0x0FF766FE0),
+              // color: Color(0x0FF766FE0),
               textTheme: TextTheme(
                 headline6: TextStyle(color: Colors.white),
               ),
@@ -156,7 +156,7 @@ class FlavorConfig {
           theme: ThemeData(
             appBarTheme: AppBarTheme(
               brightness: Brightness.light,
-              color: Color(0x0FF766FE0),
+              // color: Color(0x0FF766FE0),
               textTheme: TextTheme(
                 headline6: TextStyle(color: Colors.white),
               ),

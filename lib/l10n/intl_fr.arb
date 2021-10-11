@@ -1,6 +1,10 @@
 {
     "@@locale": "fr",
+<<<<<<< HEAD
     "@@last_modified": "2021-10-11T12:01:41+00:00",
+=======
+    "@@last_modified": "2021-09-30T11:17:55+00:00",
+>>>>>>> e411889ce518abca7faa2b0ac9e037134b4f0257
     "check_met": "Checking, if we met before",
     "we_met": "We met before",
     "hang_on": "Accrochez-vous bien",

@@ -17,6 +17,8 @@ import 'package:sevaexchange/views/profile/language.dart';
 import 'package:sevaexchange/views/profile/timezone.dart';
 
 class SevaExploreFooter extends StatefulWidget {
+  final bool footerColor;
+  SevaExploreFooter({this.footerColor});
   @override
   _SevaExploreFooterState createState() => _SevaExploreFooterState();
 }
@@ -38,7 +40,8 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
     // TODO: implement initState
     timezoneName = DateTime.now().timeZoneName.toLowerCase();
     var exists = TimezoneListData().timezonelist.firstWhere(
-          (element) => element.timezoneName.toLowerCase() == timezoneName.toLowerCase(),
+          (element) =>
+              element.timezoneName.toLowerCase() == timezoneName.toLowerCase(),
           orElse: () => null,
         );
     if (exists == null) {
@@ -54,7 +57,8 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
 
     return Container(
       width: MediaQuery.of(context).size.width,
-      color: Theme.of(context).primaryColor,
+      color: widget.footerColor == true ? 
+      Theme.of(context).primaryColor : Color(0xFFF454684) ,
       child: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 8.0,
@@ -76,12 +80,14 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton<String>(
                       onChanged: (value) async {
-                        Provider.of<AppLanguage>(context, listen: false).changeLanguage(
+                        Provider.of<AppLanguage>(context, listen: false)
+                            .changeLanguage(
                           getLocaleFromCode(value),
                         );
                         if (SevaCore.of(context).loggedInUser != null) {
                           await updateUserLanguage(
-                            user: SevaCore.of(context).loggedInUser..language = value,
+                            user: SevaCore.of(context).loggedInUser
+                              ..language = value,
                           );
                         }
                       },
@@ -116,7 +122,8 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
                         setState(() {
                           timezoneName = value;
                         });
-                        Provider.of<AppTimeZone>(context, listen: false).changeTimeZone(value);
+                        Provider.of<AppTimeZone>(context, listen: false)
+                            .changeTimeZone(value);
                       },
                       value: timezoneName,
                       isExpanded: true,
@@ -151,15 +158,19 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
                               (data) => TableRowInkWell(
                                 child: Padding(
                                   padding: EdgeInsets.only(
-                                    bottom: footerData[0].contains(data) ? 16 : 4,
+                                    bottom:
+                                        footerData[0].contains(data) ? 16 : 4,
                                   ),
                                   child: Center(
                                     child: Text(
-                                      getFooterDataTitle(data: data, context: context),
+                                      getFooterDataTitle(
+                                          data: data, context: context),
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         color: Colors.white,
-                                        fontSize: footerData[0].contains(data) ? 16 : 14,
+                                        fontSize: footerData[0].contains(data)
+                                            ? 16
+                                            : 14,
                                         fontWeight: footerData[0].contains(data)
                                             ? FontWeight.w500
                                             : FontWeight.normal,
@@ -201,9 +212,10 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
                     'privacyPolicyLink',
                   ),
                 ),
-                button('Site Map', () {
-                  return getOnTap(context, 'Site Map', 'aboutSeva');
-                }),
+                button(
+                  'Site Map',
+                  getOnTap(context, 'Site Map', 'aboutSeva'),
+                ),
               ],
             ),
             Row(
@@ -218,7 +230,8 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
                   onPressed: () {
                     navigateToWebView(
                       aboutMode: AboutMode(
-                          title: 'Facebook', urlToHit: 'https://www.facebook.com/sevaexchange/'),
+                          title: 'Facebook',
+                          urlToHit: 'https://www.facebook.com/sevaexchange/'),
                       context: context,
                     );
                   },
@@ -231,8 +244,9 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
                   ),
                   onPressed: () {
                     navigateToWebView(
-                      aboutMode:
-                          AboutMode(title: 'Twitter', urlToHit: 'https://twitter.com/exchangeseva'),
+                      aboutMode: AboutMode(
+                          title: 'Twitter',
+                          urlToHit: 'https://twitter.com/exchangeseva'),
                       context: context,
                     );
                   },
@@ -246,7 +260,8 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
                   onPressed: () {
                     navigateToWebView(
                       aboutMode: AboutMode(
-                          title: 'Instagram', urlToHit: 'https://www.instagram.com/sevaexchange/'),
+                          title: 'Instagram',
+                          urlToHit: 'https://www.instagram.com/sevaexchange/'),
                       context: context,
                     );
                   },
@@ -296,7 +311,8 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
     };
   }
 
-  String getFooterDataTitle({@required FooterData data, @required BuildContext context}) {
+  String getFooterDataTitle(
+      {@required FooterData data, @required BuildContext context}) {
     switch (data) {
       case FooterData.About_Us:
         return S.of(context).help_about_us;
@@ -343,7 +359,8 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
     }
   }
 
-  Function openUrl({@required FooterData data, @required BuildContext context}) {
+  Function openUrl(
+      {@required FooterData data, @required BuildContext context}) {
     switch (data) {
       case FooterData.About_Us:
         return getOnTap(context, S.of(context).help_about_us, 'aboutUsLink');
@@ -351,10 +368,12 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
       case FooterData.Careers:
         return getOnTap(context, S.of(context).careers_explore, 'careersLink');
       case FooterData.Communities:
-        return getOnTap(context, S.of(context).communities_explore, 'aboutSeva');
+        return getOnTap(
+            context, S.of(context).communities_explore, 'aboutSeva');
 
       case FooterData.Diversity_Belonging:
-        return getOnTap(context, S.of(context).diversity_belonging_explore, 'diversityLink');
+        return getOnTap(context, S.of(context).diversity_belonging_explore,
+            'diversityLink');
 
       case FooterData.Events:
         return getOnTap(context, S.of(context).projects, 'projectsInfoLink');
@@ -363,13 +382,16 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
         return getOnTap(context, S.of(context).create_offer, 'offersInfoLink');
 
       case FooterData.Create_request:
-        return getOnTap(context, S.of(context).create_request, 'requestsInfoLink');
+        return getOnTap(
+            context, S.of(context).create_request, 'requestsInfoLink');
 
       case FooterData.Discover:
-        return getOnTap(context, S.of(context).discover_explore, 'trainingVideoDiscover');
+        return getOnTap(
+            context, S.of(context).discover_explore, 'trainingVideo');
 
       case FooterData.Guidebooks:
-        return getOnTap(context, S.of(context).guidebooks_explore, 'trainingVideoGuidebooks');
+        return getOnTap(
+            context, S.of(context).guidebooks_explore, 'trainingVideo');
 
       case FooterData.Help:
         return getOnTap(
@@ -379,16 +401,20 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
         );
 
       case FooterData.Hosting:
-        return getOnTap(context, S.of(context).hosting_explore, 'hostingCommunity');
+        return getOnTap(
+            context, S.of(context).hosting_explore, 'hostingCommunity');
 
       case FooterData.Host_community:
-        return getOnTap(context, S.of(context).host_a_community_explore, 'hostingCommunity');
+        return getOnTap(context, S.of(context).host_a_community_explore,
+            'hostingCommunity');
 
       case FooterData.Organize_event:
-        return getOnTap(context, S.of(context).organize_an_event_explore, 'projectsInfoLink');
+        return getOnTap(context, S.of(context).organize_an_event_explore,
+            'projectsInfoLink');
 
       case FooterData.Policies:
-        return getOnTap(context, S.of(context).policies_explore, 'privacyPolicyLink');
+        return getOnTap(
+            context, S.of(context).policies_explore, 'privacyPolicyLink');
 
       case FooterData.Press:
         return getOnTap(context, S.of(context).news_explore, 'pressLink');
@@ -397,7 +423,8 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
         return getOnTap(context, S.of(context).offers, 'offersInfoLink');
 
       case FooterData.Trust_Safety:
-        return getOnTap(context, S.of(context).trust_and_safety_explore, 'trustAndSafetyLink');
+        return getOnTap(context, S.of(context).trust_and_safety_explore,
+            'trustAndSafetyLink');
 
       case FooterData.SevaX:
         return getOnTap(context, 'SevaX', 'aboutSeva');

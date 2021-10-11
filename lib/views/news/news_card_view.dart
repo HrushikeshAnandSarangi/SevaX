@@ -128,6 +128,7 @@ class NewsCardViewState extends State<NewsCardView> {
                           newsMmodel: widget.newsModel,
                           timebankId:
                               SevaCore.of(context).loggedInUser.currentTimebank,
+                              timebankModel: widget.timebankModel,
                         ),
                       ),
                     );
@@ -730,7 +731,12 @@ class NewsCardViewState extends State<NewsCardView> {
           dialogContext = createDialogContext;
           return AlertDialog(
             title: Text(message),
-            content: LinearProgressIndicator(),
+            content: LinearProgressIndicator(
+ backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+        valueColor: AlwaysStoppedAnimation<Color>(
+          Theme.of(context).primaryColor,
+        ),
+),
           );
         });
   }

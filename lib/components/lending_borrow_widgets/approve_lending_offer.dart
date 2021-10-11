@@ -1,8 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:doseform/doseform.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/enums/lending_borrow_enums.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/repositories/lending_offer_repo.dart';
@@ -30,8 +32,9 @@ class _ApproveLendingOfferState extends State<ApproveLendingOffer> {
   GeoFirePoint location;
   String additionalInstructionsText = '';
   String agreementId = '';
+  TextEditingController instructionController =   TextEditingController();
 
-  final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<DoseFormState>();
   final GlobalKey<ScaffoldState> _key = GlobalKey();
 
   @override
@@ -49,7 +52,8 @@ class _ApproveLendingOfferState extends State<ApproveLendingOffer> {
         centerTitle: true,
         title: Text(
           S.of(context).approve_lending_offer,
-          style: TextStyle(fontFamily: "Europa", fontSize: 19, color: Colors.white),
+          style: TextStyle(
+              fontFamily: "Europa", fontSize: 19, color: Colors.white),
         ),
       ),
       body: SingleChildScrollView(
@@ -59,10 +63,10 @@ class _ApproveLendingOfferState extends State<ApproveLendingOffer> {
   }
 
   Widget get approveForm {
-    return Form(
-      key: _formKey,
-      child: Padding(
-        padding: const EdgeInsets.only(top: 10.0, left: 35, right: 35),
+    return Padding(
+      padding: const EdgeInsets.only(top: 10.0, left: 35, right: 35),
+      child: DoseForm(
+        formKey: _formKey,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
@@ -70,7 +74,8 @@ class _ApproveLendingOfferState extends State<ApproveLendingOffer> {
             requestedByWidget,
             SizedBox(height: 20),
             OfferDurationWidget(
-              title: widget.offerModel.lendingOfferDetailsModel.lendingModel.lendingType ==
+              title: widget.offerModel.lendingOfferDetailsModel.lendingModel
+                          .lendingType ==
                       LendingType.PLACE
                   ? S.of(context).date_to_check_in_out
                   : S.of(context).date_to_borrow_and_return,
@@ -83,16 +88,20 @@ class _ApproveLendingOfferState extends State<ApproveLendingOffer> {
                 ),
                 textAlign: TextAlign.start),
             SizedBox(height: 2),
-            TextFormField(
+            DoseTextField(
+              isRequired: true,
+              controller: instructionController,
               onFieldSubmitted: (v) {
                 FocusScope.of(context).unfocus();
               },
               onChanged: (enteredValue) {
                 additionalInstructionsText = enteredValue;
-                setState(() {});
+                //TODO setstate causes form to reload
+                // setState(() {});
               },
               decoration: InputDecoration(
-                hintText: widget.offerModel.lendingOfferDetailsModel.lendingModel.lendingType ==
+                hintText: widget.offerModel.lendingOfferDetailsModel
+                            .lendingModel.lendingType ==
                         LendingType.PLACE
                     ? S.of(context).additional_instructions_hint_place
                     : S.of(context).additional_instructions_hint_item,
@@ -124,7 +133,9 @@ class _ApproveLendingOfferState extends State<ApproveLendingOffer> {
       children: [
         SizedBox(height: 25),
         Text(
-            widget.offerModel.lendingOfferDetailsModel.lendingModel.lendingType == LendingType.PLACE
+            widget.offerModel.lendingOfferDetailsModel.lendingModel
+                        .lendingType ==
+                    LendingType.PLACE
                 //widget.offerModel.placeOrItem == 'PLACE'
                 ? S.of(context).lending_approve_terms_place
                 : S.of(context).lending_approve_terms_item,
@@ -189,7 +200,8 @@ class _ApproveLendingOfferState extends State<ApproveLendingOffer> {
                 //assigning dates to acceptor model
                 widget.lendingOfferAcceptorModel.startDate =
                     OfferDurationWidgetState.starttimestamp;
-                widget.lendingOfferAcceptorModel.endDate = OfferDurationWidgetState.endtimestamp;
+                widget.lendingOfferAcceptorModel.endDate =
+                    OfferDurationWidgetState.endtimestamp;
 
                 if (widget.lendingOfferAcceptorModel.endDate <=
                     widget.lendingOfferAcceptorModel.startDate) {
@@ -200,7 +212,9 @@ class _ApproveLendingOfferState extends State<ApproveLendingOffer> {
                   return;
                 }
 
-                if (widget.offerModel.lendingOfferDetailsModel.lendingOfferTypeMode == 'ONE_TIME' &&
+                if (widget.offerModel.lendingOfferDetailsModel
+                            .lendingOfferTypeMode ==
+                        'ONE_TIME' &&
                     widget.lendingOfferAcceptorModel.endDate >=
                         widget.offerModel.lendingOfferDetailsModel.endDate) {
                   // widget.offerModel.lendingOfferDetailsModel.lendingModel
@@ -215,54 +229,66 @@ class _ApproveLendingOfferState extends State<ApproveLendingOffer> {
                   return;
                 }
 
-                if (widget.offerModel.lendingOfferDetailsModel.lendingOfferAgreementLink != null ||
-                    widget.offerModel.lendingOfferDetailsModel.lendingOfferAgreementLink != '') {
+                if (widget.offerModel.lendingOfferDetailsModel
+                            .lendingOfferAgreementLink !=
+                        null ||
+                    widget.offerModel.lendingOfferDetailsModel
+                            .lendingOfferAgreementLink !=
+                        '') {
                   agreementId = createCryptoRandomString();
-                  String agreementLink = await BorrowAgreementPdf().borrowAgreementPdf(
-                      context,
-                      null,
-                      //request model
-                      widget.offerModel.lendingOfferDetailsModel.lendingModel,
-                      null,
-                      // borrow request items list
-                      widget.lendingOfferAcceptorModel.acceptorName,
-                      widget.offerModel.lendingOfferDetailsModel.lendingOfferAgreementName,
-                      true,
-                      OfferDurationWidgetState.starttimestamp,
-                      OfferDurationWidgetState.endtimestamp,
-                      widget.offerModel.lendingOfferDetailsModel.lendingModel.lendingType ==
-                              LendingType.PLACE
-                          ? LendingType.PLACE.readable
-                          : LendingType.ITEM.readable,
-                      widget.offerModel.lendingOfferDetailsModel
-                              .agreementConfig['specificConditions'] ??
-                          '' + '\n ${additionalInstructionsText ?? ''}',
-                      widget
-                          .offerModel.lendingOfferDetailsModel.agreementConfig['isDamageLiability'],
-                      widget.offerModel.lendingOfferDetailsModel.agreementConfig['isUseDisclaimer'],
-                      widget
-                          .offerModel.lendingOfferDetailsModel.agreementConfig['isDeliveryReturn'],
-                      widget
-                          .offerModel.lendingOfferDetailsModel.agreementConfig['isMaintainRepair'],
-                      widget.offerModel.lendingOfferDetailsModel
-                          .agreementConfig['isRefundDepositNeeded'],
-                      widget.offerModel.lendingOfferDetailsModel
-                          .agreementConfig['isMaintainAndclean'],
-                      agreementId);
+                  String agreementLink = await BorrowAgreementPdf()
+                      .borrowAgreementPdf(
+                          context,
+                          null,
+                          //request model
+                          widget
+                              .offerModel.lendingOfferDetailsModel.lendingModel,
+                          null,
+                          // borrow request items list
+                          widget.lendingOfferAcceptorModel.acceptorName,
+                          widget.offerModel.lendingOfferDetailsModel
+                              .lendingOfferAgreementName,
+                          true,
+                          OfferDurationWidgetState.starttimestamp,
+                          OfferDurationWidgetState.endtimestamp,
+                          widget.offerModel.lendingOfferDetailsModel.lendingModel.lendingType == LendingType.PLACE
+                              ? LendingType.PLACE.readable
+                              : LendingType.ITEM.readable,
+                          widget.offerModel.lendingOfferDetailsModel
+                                  .agreementConfig['specificConditions'] ??
+                              '' + '\n ${additionalInstructionsText ?? ''}',
+                          widget.offerModel.lendingOfferDetailsModel
+                              .agreementConfig['isDamageLiability'],
+                          widget.offerModel.lendingOfferDetailsModel
+                              .agreementConfig['isUseDisclaimer'],
+                          widget.offerModel.lendingOfferDetailsModel
+                              .agreementConfig['isDeliveryReturn'],
+                          widget.offerModel.lendingOfferDetailsModel
+                              .agreementConfig['isMaintainRepair'],
+                          widget.offerModel.lendingOfferDetailsModel
+                              .agreementConfig['isRefundDepositNeeded'],
+                          widget.offerModel.lendingOfferDetailsModel
+                              .agreementConfig['isMaintainAndclean'],
+                          agreementId);
 
                   await LendingOffersRepo.approveLendingOffer(
                           model: widget.offerModel,
-                          lendingOfferAcceptorModel: widget.lendingOfferAcceptorModel,
-                          lendingOfferApprovedAgreementLink: agreementLink ?? '',
-                          additionalInstructionsText: additionalInstructionsText,
+                          lendingOfferAcceptorModel:
+                              widget.lendingOfferAcceptorModel,
+                          lendingOfferApprovedAgreementLink:
+                              agreementLink ?? '',
+                          additionalInstructionsText:
+                              additionalInstructionsText,
                           agreementId: agreementId ?? '')
                       .then((value) => Navigator.of(context).pop());
                 } else {
                   await LendingOffersRepo.approveLendingOffer(
                           model: widget.offerModel,
-                          lendingOfferAcceptorModel: widget.lendingOfferAcceptorModel,
+                          lendingOfferAcceptorModel:
+                              widget.lendingOfferAcceptorModel,
                           lendingOfferApprovedAgreementLink: '',
-                          additionalInstructionsText: additionalInstructionsText)
+                          additionalInstructionsText:
+                              additionalInstructionsText)
                       .then((value) => Navigator.of(context).pop());
                 }
               } else {

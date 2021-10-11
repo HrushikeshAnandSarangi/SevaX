@@ -175,6 +175,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
+        backgroundColor: Theme.of(context).primaryColor,
         title: Text(
           S.of(context).invite_members,
           style: TextStyle(
@@ -371,7 +372,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                                 child: Container(
                                   height: 50,
                                   width: 50,
-                                  child: CircularProgressIndicator(),
+                                  child: LoadingIndicator(),
                                 ),
                               ),
                             )
@@ -501,7 +502,11 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                       fontSize: 12,
                     ),
                   ),
-                  color: Colors.grey[300],
+                  color: csvFileModel.csvUrl == null ||
+                          csvFileModel.csvTitle == null
+                      ? Theme.of(context).primaryColor
+                      : Theme.of(context).accentColor,
+                  // color: Theme.of(context).primaryColor,
                   shape: StadiumBorder(),
                 ),
               ),
@@ -637,7 +642,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
               child: SizedBox(
                 height: 48,
                 width: 48,
-                child: CircularProgressIndicator(),
+                child: LoadingIndicator(),
               ),
             );
           }
@@ -829,7 +834,12 @@ class InviteAddMembersState extends State<InviteAddMembers> {
           dialogContext = createDialogContext;
           return AlertDialog(
             title: Text(message),
-            content: LinearProgressIndicator(),
+            content: LinearProgressIndicator(
+              backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+              valueColor: AlwaysStoppedAnimation<Color>(
+                Theme.of(context).primaryColor,
+              ),
+            ),
           );
         });
   }
@@ -933,7 +943,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                         child: Text(
                           isJoined ? S.of(context).joined : S.of(context).add,
                         ),
-                        color: FlavorConfig.values.theme.primaryColor,
+                        color: Theme.of(context).primaryColor,
                         textColor: Colors.white,
                         shape: StadiumBorder(),
                       ),
@@ -1017,7 +1027,8 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                                   margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
                                   child: Text(
                                     S.of(context).share_code,
-                                    style: TextStyle(color: Colors.blue),
+                                    style: TextStyle(
+                                        color: Theme.of(context).primaryColor),
                                   ),
                                 ),
                               ),
@@ -1115,7 +1126,8 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => TimebankCodeWidget(
+                    builder: (builderContext) => TimebankCodeWidget(
+                      Theme.of(context).primaryColor,
                       timebankCodeModel: codeModel,
                       timebankName: widget.timebankModel.name,
                       user: user,

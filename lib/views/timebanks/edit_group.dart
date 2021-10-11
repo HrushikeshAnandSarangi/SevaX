@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:collection';
 
+import 'package:doseform/doseform.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
@@ -25,7 +26,9 @@ import 'package:sevaexchange/labels.dart';
 
 class EditGroupView extends StatelessWidget {
   final TimebankModel timebankModel;
+
   EditGroupView({@required this.timebankModel});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,7 +42,9 @@ class EditGroupView extends StatelessWidget {
 // Create a Form Widget
 class EditGroupForm extends StatefulWidget {
   final TimebankModel timebankModel;
+
   EditGroupForm({@required this.timebankModel});
+
   @override
   EditGroupFormState createState() {
     return EditGroupFormState();
@@ -53,14 +58,16 @@ class EditGroupFormState extends State<EditGroupForm> {
   // us to validate the form
   //
   // Note: This is a GlobalKey<FormState>, not a GlobalKey<NewsCreateFormState>!
-  final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<DoseFormState>();
 
   bool protectedVal = false;
   GeoFirePoint location;
   String selectedAddress;
   TextEditingController searchTextController;
+  TextEditingController aboutController = TextEditingController();
   TimebankModel parentTimebankModel = TimebankModel({});
-
+  FocusNode nameFocusNode = FocusNode();
+  FocusNode aboutFocusNode = FocusNode();
   var _searchText = "";
   String errTxt;
   final _textUpdates = StreamController<String>();
@@ -79,9 +86,8 @@ class EditGroupFormState extends State<EditGroupForm> {
       selectedAddress = parentTimebankModel.address;
     }
 
-    searchTextController =
-        TextEditingController(text: widget.timebankModel.name);
-
+    searchTextController = TextEditingController(text: widget.timebankModel.name);
+    aboutController.text = widget.timebankModel.missionStatement ?? "";
     searchTextController.addListener(() {
       _debouncer.run(() {
         String s = searchTextController.text;
@@ -94,8 +100,7 @@ class EditGroupFormState extends State<EditGroupForm> {
           if (widget.timebankModel.name != s) {
             SearchManager.searchGroupForDuplicate(
                     queryString: s.trim(),
-                    communityId:
-                        SevaCore.of(context).loggedInUser.currentCommunity)
+                    communityId: SevaCore.of(context).loggedInUser.currentCommunity)
                 .then((groupFound) {
               if (groupFound) {
                 setState(() {
@@ -124,20 +129,17 @@ class EditGroupFormState extends State<EditGroupForm> {
 
   HashMap<String, UserModel> selectedUsers = HashMap();
   String memberAssignment;
+
   void updateGroupDetails() {
-    widget.timebankModel.photoUrl =
-        globals.timebankAvatarURL ?? widget.timebankModel.photoUrl;
-    widget.timebankModel.cover_url =
-        globals.timebankCoverURL ?? widget.timebankModel.cover_url;
+    widget.timebankModel.photoUrl = globals.timebankAvatarURL ?? widget.timebankModel.photoUrl;
+    widget.timebankModel.cover_url = globals.timebankCoverURL ?? widget.timebankModel.cover_url;
     // widget.timebankModel.protected = protectedVal;
     widget.timebankModel.address = selectedAddress;
     widget.timebankModel.location =
         location == null ? GeoFirePoint(40.754387, -73.984291) : location;
     if (widget.timebankModel.sponsored == true &&
-        !isAccessAvailable(parentTimebankModel,
-            SevaCore.of(context).loggedInUser.sevaUserID) &&
-        parentTimebankModel.creatorId !=
-            SevaCore.of(context).loggedInUser.sevaUserID) {
+        !isAccessAvailable(parentTimebankModel, SevaCore.of(context).loggedInUser.sevaUserID) &&
+        parentTimebankModel.creatorId != SevaCore.of(context).loggedInUser.sevaUserID) {
       widget.timebankModel.sponsored = false;
 
       assembleAndSendRequest(
@@ -164,8 +166,8 @@ class EditGroupFormState extends State<EditGroupForm> {
   @override
   Widget build(BuildContext context) {
     memberAssignment = "+ ${S.of(context).add_members}";
-    return Form(
-      key: _formKey,
+    return DoseForm(
+      formKey: _formKey,
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
         child: SingleChildScrollView(child: createSevaX
@@ -178,210 +180,211 @@ class EditGroupFormState extends State<EditGroupForm> {
 //umesha@uipep.com
 //upnsd143 uipep
   Widget get createSevaX {
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Center(
-            child: Padding(
-              padding: EdgeInsets.all(5.0),
-              child: Column(
-                children: <Widget>[
-                  TimebankCoverPhoto(
-                      coverUrl: widget.timebankModel.cover_url ?? null),
-                  SizedBox(height: 10),
-                  Text(
-                    "${S.of(context).cover_picture_label_group}",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey,
-                    ),
-                  ),
-                  SizedBox(height: 25),
-                  TimebankAvatar(
-                    photoUrl: widget.timebankModel.photoUrl ?? null,
-                  ),
-                  SizedBox(height: 5),
-                  Text(
-                    S.of(context).group_logo,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey,
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
-          headingText(S.of(context).name_your_group, true),
-          TextFormField(
-            textInputAction: TextInputAction.done,
-            controller: searchTextController,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            decoration: InputDecoration(
-              errorMaxLines: 2,
-              errorText: errTxt,
-              hintText: S.of(context).timebank_name_hint,
-            ),
-            keyboardType: TextInputType.multiline,
-            maxLines: 1,
-            validator: (value) {
-              if (value.isEmpty) {
-                return S.of(context).validation_error_general_text;
-              } else if (profanityDetector.isProfaneString(value)) {
-                return S.of(context).profanity_text_alert;
-              } else {
-                widget.timebankModel.name = value.trim();
-                return null;
-              }
-            },
-          ),
-          headingText(S.of(context).about, true),
-          TextFormField(
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            initialValue: widget.timebankModel.missionStatement ?? "",
-            decoration: InputDecoration(
-              errorMaxLines: 2,
-              hintText: S.of(context).bit_more_about_group,
-            ),
-            textInputAction: TextInputAction.done,
-            keyboardType: TextInputType.multiline,
-            maxLines: null,
-            validator: (value) {
-              if (value.isEmpty) {
-                return S.of(context).validation_error_general_text;
-              } else if (profanityDetector.isProfaneString(value)) {
-                return S.of(context).profanity_text_alert;
-              } else {
-                widget.timebankModel.missionStatement = value;
-                return null;
-              }
-            },
-          ),
-          Row(
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
+      Center(
+        child: Padding(
+          padding: EdgeInsets.all(5.0),
+          child: Column(
             children: <Widget>[
-              headingText(
-                S.of(context).prevent_accidental_delete,
-                false,
+              TimebankCoverPhoto(coverUrl: widget.timebankModel.cover_url ?? null),
+              SizedBox(height: 10),
+              Text(
+                "${S.of(context).cover_picture_label_group}",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey,
+                ),
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
-                child: Checkbox(
-                  value: widget.timebankModel.preventAccedentalDelete,
+              SizedBox(height: 25),
+              TimebankAvatar(
+                photoUrl: widget.timebankModel.photoUrl ?? null,
+              ),
+              SizedBox(height: 5),
+              Text(
+                S.of(context).group_logo,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey,
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+      headingText(S.of(context).name_your_group, true),
+      DoseTextField(
+        isRequired: true,
+        textInputAction: TextInputAction.done,
+        controller: searchTextController,
+        currentNode: nameFocusNode,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        decoration: InputDecoration(
+          errorMaxLines: 2,
+          errorText: errTxt,
+          hintText: S.of(context).timebank_name_hint,
+        ),
+        keyboardType: TextInputType.multiline,
+        maxLines: 1,
+        validator: (value) {
+          if (value.isEmpty) {
+            return S.of(context).validation_error_general_text;
+          } else if (profanityDetector.isProfaneString(value)) {
+            return S.of(context).profanity_text_alert;
+          } else {
+            widget.timebankModel.name = value.trim();
+            return null;
+          }
+        },
+      ),
+      headingText(S.of(context).about, true),
+      DoseTextField(
+        isRequired: true,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        controller: aboutController,
+        currentNode: aboutFocusNode,
+        // initialValue: widget.timebankModel.missionStatement ?? "",
+        decoration: InputDecoration(
+          errorMaxLines: 2,
+          hintText: S.of(context).bit_more_about_group,
+        ),
+        textInputAction: TextInputAction.done,
+        keyboardType: TextInputType.multiline,
+        maxLines: null,
+        validator: (value) {
+          if (value.isEmpty) {
+            return S.of(context).validation_error_general_text;
+          } else if (profanityDetector.isProfaneString(value)) {
+            return S.of(context).profanity_text_alert;
+          } else {
+            widget.timebankModel.missionStatement = value;
+            return null;
+          }
+        },
+      ),
+      Row(
+        children: <Widget>[
+          headingText(
+            S.of(context).prevent_accidental_delete,
+            false,
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
+            child: Checkbox(
+              value: widget.timebankModel.preventAccedentalDelete,
+              onChanged: (bool value) {
+                setState(() {
+                  widget.timebankModel.preventAccedentalDelete = value;
+                });
+              },
+            ),
+          ),
+        ],
+      ),
+      TransactionsMatrixCheck(
+        comingFrom: ComingFrom.Groups,
+        upgradeDetails: AppConfig.upgradePlanBannerModel.private_groups,
+        transaction_matrix_type: "private_groups",
+        child: Row(
+          children: <Widget>[
+            headingText(S.of(context).private_group, false),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
+              child: infoButton(
+                context: context,
+                key: GlobalKey(),
+                type: InfoType.PRIVATE_GROUP,
+              ),
+            ),
+            Column(
+              children: <Widget>[
+                Divider(),
+                Checkbox(
+                  value: widget.timebankModel.private,
                   onChanged: (bool value) {
                     setState(() {
-                      widget.timebankModel.preventAccedentalDelete = value;
+                      widget.timebankModel.private = value;
                     });
                   },
                 ),
-              ),
-            ],
+              ],
+            ),
+          ],
+        ),
+      ),
+      headingText(S.of(context).is_pin_at_right_place, false),
+      Container(
+        margin: EdgeInsets.all(20),
+        child: Center(
+          child: LocationPickerWidget(
+            selectedAddress: selectedAddress,
+            location: location,
+            onChanged: (LocationDataModel dataModel) {
+              setState(() {
+                location = dataModel.geoPoint;
+                this.selectedAddress = dataModel.location;
+              });
+            },
           ),
-          TransactionsMatrixCheck(
-            comingFrom: ComingFrom.Groups,
-            upgradeDetails: AppConfig.upgradePlanBannerModel.private_groups,
-            transaction_matrix_type: "private_groups",
-            child: Row(
+        ),
+      ),
+      SizedBox(
+        height: 10,
+      ),
+      TransactionsMatrixCheck(
+        comingFrom: ComingFrom.Groups,
+        upgradeDetails: AppConfig.upgradePlanBannerModel.sponsored_groups,
+        transaction_matrix_type: "sponsored_groups",
+        child: Row(
+          children: <Widget>[
+            headingText(S.of(context).save_as_sponsored, false),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(2, 5, 0, 0),
+              child: infoButton(
+                context: context,
+                key: GlobalKey(),
+                type: InfoType.SPONSORED,
+              ),
+            ),
+            Column(
               children: <Widget>[
-                headingText(S.of(context).private_group, false),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
-                  child: infoButton(
-                    context: context,
-                    key: GlobalKey(),
-                    type: InfoType.PRIVATE_GROUP,
-                  ),
-                ),
-                Column(
-                  children: <Widget>[
-                    Divider(),
-                    Checkbox(
-                      value: widget.timebankModel.private,
-                      onChanged: (bool value) {
-                        setState(() {
-                          widget.timebankModel.private = value;
-                        });
-                      },
-                    ),
-                  ],
+                Divider(),
+                Checkbox(
+                  value: widget.timebankModel.sponsored,
+                  onChanged: (bool value) {
+                    // if (!widget.timebankModel.sponsored) {
+                    setState(() {
+                      widget.timebankModel.sponsored = value;
+                    });
+                    // }
+                  },
                 ),
               ],
             ),
-          ),
-          headingText(S.of(context).is_pin_at_right_place, false),
-          Container(
-            margin: EdgeInsets.all(20),
-            child: Center(
-              child: LocationPickerWidget(
-                selectedAddress: selectedAddress,
-                location: location,
-                onChanged: (LocationDataModel dataModel) {
-                  setState(() {
-                    location = dataModel.geoPoint;
-                    this.selectedAddress = dataModel.location;
-                  });
-                },
+          ],
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 5.0),
+        child: Container(
+          alignment: Alignment.center,
+          child: CustomElevatedButton(
+            onPressed: () {
+              if (_formKey.currentState.validate() && (errTxt == null || errTxt == "")) {
+                updateGroupDetails();
+              }
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Text(
+                S.of(context).update,
+                style: Theme.of(context).primaryTextTheme.button,
               ),
             ),
+            textColor: Colors.blue,
           ),
-          SizedBox(
-            height: 10,
-          ),
-          TransactionsMatrixCheck(
-            comingFrom: ComingFrom.Groups,
-            upgradeDetails: AppConfig.upgradePlanBannerModel.sponsored_groups,
-            transaction_matrix_type: "sponsored_groups",
-            child: Row(
-              children: <Widget>[
-                headingText(S.of(context).save_as_sponsored, false),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(2, 5, 0, 0),
-                  child: infoButton(
-                    context: context,
-                    key: GlobalKey(),
-                    type: InfoType.SPONSORED,
-                  ),
-                ),
-                Column(
-                  children: <Widget>[
-                    Divider(),
-                    Checkbox(
-                      value: widget.timebankModel.sponsored,
-                      onChanged: (bool value) {
-                        // if (!widget.timebankModel.sponsored) {
-                        setState(() {
-                          widget.timebankModel.sponsored = value;
-                        });
-                        // }
-                      },
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 5.0),
-            child: Container(
-              alignment: Alignment.center,
-              child: CustomElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState.validate() &&
-                      (errTxt == null || errTxt == "")) {
-                    updateGroupDetails();
-                  }
-                },
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Text(
-                    S.of(context).update,
-                    style: Theme.of(context).primaryTextTheme.button,
-                  ),
-                ),
-                textColor: Colors.blue,
-              ),
-            ),
-          ),
-        ]);
+        ),
+      ),
+    ]);
   }
 
   Widget headingText(String name, bool isMandatory) {

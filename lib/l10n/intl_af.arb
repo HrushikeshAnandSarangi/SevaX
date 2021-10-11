@@ -1,6 +1,10 @@
 {
     "@@locale": "af",
+<<<<<<< HEAD
     "@@last_modified": "2021-10-11T12:01:43+00:00",
+=======
+    "@@last_modified": "2021-09-30T11:17:57+00:00",
+>>>>>>> e411889ce518abca7faa2b0ac9e037134b4f0257
     "check_met": "Kyk of ons van te vore al ontmoet het",
     "we_met": "Ons het van te vore al ontmoet",
     "hang_on": "Net 'n oomblik",

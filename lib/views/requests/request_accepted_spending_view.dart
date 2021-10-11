@@ -83,7 +83,12 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
               ? S.of(context).redirecting_to_messages
               : S.of(context).updating_users,
         ),
-        content: LinearProgressIndicator(),
+        content: LinearProgressIndicator(
+ backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+        valueColor: AlwaysStoppedAnimation<Color>(
+          Theme.of(context).primaryColor,
+        ),
+),
       );
     }
     return Scaffold(
@@ -426,9 +431,10 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
               ),
               trailing: Container(
                 height: 40,
-                padding: EdgeInsets.only(bottom: 10),
+               // padding: EdgeInsets.only(bottom: 10),
                 child: CustomElevatedButton(
                   shape: StadiumBorder(),
+                //  padding: EdgeInsets.only(top:5,bottom:5),
                   color: Colors.indigo,
                   textColor: Colors.white,
                   elevation: 5,
@@ -488,7 +494,12 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
           linearProgressForBalanceCheck = createDialogContext;
           return AlertDialog(
             title: Text(S.of(context).hang_on),
-            content: LinearProgressIndicator(),
+            content: LinearProgressIndicator(
+ backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+        valueColor: AlwaysStoppedAnimation<Color>(
+          Theme.of(context).primaryColor,
+        ),
+),
           );
         });
   }
@@ -666,7 +677,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                       Container(
                         width: double.infinity,
                         child: CustomElevatedButton(
-                          color: FlavorConfig.values.theme.primaryColor,
+                          color: Theme.of(context).primaryColor,
                           child: Text(
                             S.of(context).approve,
                             style: TextStyle(
@@ -955,8 +966,8 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
     }
     var hired = user2.sevaUserID.trim();
     if (!user1.pastHires.contains(hired)) {
-      var reportedUsersList = [];
-      for (var i = 0; i < user1.pastHires.length; i++) {
+      List<String> reportedUsersList = [];
+      for (int i = 0; i < user1.pastHires.length; i++) {
         reportedUsersList.add(user1.pastHires[i]);
       }
       reportedUsersList.add(hired);

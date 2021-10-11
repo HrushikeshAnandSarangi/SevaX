@@ -33,6 +33,7 @@ class _WebViewExampleState extends State<SevaWebView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).primaryColor,
         title: Text(
           widget.aboutMode.title,
           style: TextStyle(fontSize: 18),

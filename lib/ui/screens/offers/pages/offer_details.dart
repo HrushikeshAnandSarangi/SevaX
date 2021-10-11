@@ -888,7 +888,7 @@ class OfferDetails extends StatelessWidget {
                     CustomTextButton(
                         shape: StadiumBorder(),
                         padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                        color: FlavorConfig.values.theme.primaryColor,
+                        color: Theme.of(context).primaryColor,
                         child: Text(
                           S.of(context).skip_for_now,
                           style: TextStyle(

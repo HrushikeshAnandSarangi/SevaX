@@ -52,6 +52,7 @@ class _BlockedMembersPageState extends State<BlockedMembersPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor:Theme.of(context).primaryColor,
         title: Text(
           S.of(context).blocked_members,
           style: TextStyle(fontSize: 18),

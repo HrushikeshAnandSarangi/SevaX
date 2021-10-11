@@ -64,10 +64,7 @@ class ExplorePageViewHolder extends StatelessWidget {
             SizedBox(
               height: 30,
             ),
-            HideWidget(
-              hide: hideFooter,
-              child: SevaExploreFooter(),
-            ),
+            SevaExploreFooter(footerColor: hideFooter,),
           ],
         ),
       ),

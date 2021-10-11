@@ -143,7 +143,7 @@ class NotificationCardOneToManyCompletedApproval extends StatelessWidget {
                     height: MediaQuery.of(context).size.width * 0.07,
                     child: CustomElevatedButton(
                       padding: EdgeInsets.zero,
-                      color: FlavorConfig.values.theme.primaryColor,
+                      color: Theme.of(context).primaryColor,
                       child: Text(
                         S.of(context).approve,
                         style: TextStyle(

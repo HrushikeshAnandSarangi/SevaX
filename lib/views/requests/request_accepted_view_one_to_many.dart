@@ -83,7 +83,12 @@ class _RequestAcceptedSpendingViewOneToManyState
               ? S.of(context).redirecting_to_messages
               : S.of(context).updating_users,
         ),
-        content: LinearProgressIndicator(),
+        content: LinearProgressIndicator(
+ backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+        valueColor: AlwaysStoppedAnimation<Color>(
+          Theme.of(context).primaryColor,
+        ),
+),
       );
     }
     return Scaffold(
@@ -432,7 +437,12 @@ class _RequestAcceptedSpendingViewOneToManyState
           linearProgressForBalanceCheck = createDialogContext;
           return AlertDialog(
             title: Text(S.of(context).hang_on),
-            content: LinearProgressIndicator(),
+            content: LinearProgressIndicator(
+ backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+        valueColor: AlwaysStoppedAnimation<Color>(
+          Theme.of(context).primaryColor,
+        ),
+),
           );
         });
   }
@@ -613,7 +623,7 @@ class _RequestAcceptedSpendingViewOneToManyState
                         Container(
                           width: double.infinity,
                           child: CustomElevatedButton(
-                            color: FlavorConfig.values.theme.primaryColor,
+                            color: Theme.of(context).primaryColor,
                             child: Text(
                               S.of(context).approve,
                               style: TextStyle(

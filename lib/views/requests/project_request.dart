@@ -106,6 +106,7 @@ class RequestsState extends State<ProjectRequests>
         length: isProjectMember ? 3 : 2,
         child: Scaffold(
           appBar: AppBar(
+            backgroundColor: Theme.of(context).primaryColor,
             centerTitle: true,
             elevation: 0.5,
             title: Text(
@@ -372,7 +373,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                     CustomTextButton(
                         shape: StadiumBorder(),
                         padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                        color: FlavorConfig.values.theme.primaryColor,
+                        color:Theme.of(context).primaryColor,
                         child: Text(
                           S.of(context).skip_for_now,
                           style: TextStyle(
@@ -504,7 +505,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                   radius: 10,
                   child: Icon(
                     Icons.add_circle_outline,
-                    color: FlavorConfig.values.theme.primaryColor,
+                    color:Theme.of(context).primaryColor,
                   ),
                 ),
               ),
@@ -534,7 +535,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
           //     icon: Image.asset(
           //       'lib/assets/images/help.png',
           //     ),
-          //     color: FlavorConfig.values.theme.primaryColor,
+          //     color:Theme.of(context).primaryColor,
           //     //iconSize: 16,
           //     onPressed: showRequestsWebPage,
           //   ),
