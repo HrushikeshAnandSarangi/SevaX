@@ -17,6 +17,8 @@ import 'package:sevaexchange/views/profile/language.dart';
 import 'package:sevaexchange/views/profile/timezone.dart';
 
 class SevaExploreFooter extends StatefulWidget {
+  final bool footerColor;
+  SevaExploreFooter({this.footerColor});
   @override
   _SevaExploreFooterState createState() => _SevaExploreFooterState();
 }
@@ -55,7 +57,8 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
 
     return Container(
       width: MediaQuery.of(context).size.width,
-      color: Theme.of(context).primaryColor,
+      color: widget.footerColor == true ? 
+      Theme.of(context).primaryColor : Color(0xFFF454684) ,
       child: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 8.0,
