@@ -67,7 +67,8 @@ Future<int> getUserDonatedGoodsAndAmount({
             DonationModel.fromMap(documentSnapshot.data());
         if (donationModel.donationStatus == DonationStatus.ACKNOWLEDGED) {
           if (donationModel.donationType == RequestType.CASH) {
-            totalGoodsOrAmount += donationModel.cashDetails.pledgedAmount.toInt();
+            totalGoodsOrAmount +=
+                donationModel.cashDetails.pledgedAmount.toInt();
           } else {
             totalGoodsOrAmount +=
                 donationModel.goodsDetails.donatedGoods.values.length;
@@ -101,7 +102,8 @@ Future<int> getTimebankRaisedAmountAndGoods({
         if (donationModel.donatedToTimebank &&
             donationModel.donationStatus == DonationStatus.ACKNOWLEDGED) {
           if (donationModel.donationType == RequestType.CASH) {
-            totalGoodsOrAmount += donationModel.cashDetails.pledgedAmount.toInt();
+            totalGoodsOrAmount +=
+                donationModel.cashDetails.pledgedAmount.toInt();
           } else if (donationModel.donationType == RequestType.GOODS) {
             totalGoodsOrAmount +=
                 donationModel.goodsDetails.donatedGoods.length;
@@ -186,7 +188,7 @@ Future<DeviceDetails> addCreationSourceOfUser(
   }
   deviceDetails.location = location;
   deviceDetails.timestamp = DateTime.now().millisecondsSinceEpoch;
-  await CollectionRef.users.doc(userEmail).update({
+  await CollectionRef.users.doc(userEmail.toLowerCase()).update({
     'creationSource': deviceDetails.toMap(),
   });
   return deviceDetails;

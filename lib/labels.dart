@@ -1483,4 +1483,7 @@ class L {
   String get select_a_item_lending =>
       "Select list of related item(s) to Borrow*";
 
+//change ownership nlabels
+  String get change_ownership_successful =>
+      'You have successfully transferred ownership of **groupName to **newOwnerName.';
 }

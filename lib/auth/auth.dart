@@ -98,7 +98,7 @@ class Auth {
     UserCredential result;
     try {
       result = await _firebaseAuth.signInWithEmailAndPassword(
-        email: email,
+        email: email.toLowerCase(),
         password: password,
       );
     } on Exception catch (error) {
@@ -119,7 +119,7 @@ class Auth {
     try {
       UserCredential result =
           await _firebaseAuth.createUserWithEmailAndPassword(
-        email: email,
+        email: email.toLowerCase(),
         password: password,
       );
       return _processEmailPasswordUser(result.user, displayName);
@@ -128,7 +128,7 @@ class Auth {
           "${error.code} ==================================================");
       if (error.code == 'ERROR_EMAIL_ALREADY_IN_USE')
         // FirebaseCrashlytics.instance.log(error.toString());
-      throw EmailAlreadyInUseException(error.message);
+        throw EmailAlreadyInUseException(error.message);
     } catch (error) {
       log('createUserWithEmailAndPassword: error: ${error.toString()}');
       return null;
@@ -165,7 +165,7 @@ class Auth {
 
     UserModel userModel = UserModel(
       photoURL: user.photoURL,
-      email: user.email,
+      email: user.email.toLowerCase(),
       fullname: displayName,
       sevaUserID: user.uid,
     );
@@ -182,7 +182,7 @@ class Auth {
     UserModel userModel = UserModel(
       photoURL: user.photoURL,
       fullname: (name != null && name.isNotEmpty) ? name : user.displayName,
-      email: user.email,
+      email: user.email.toLowerCase(),
       sevaUserID: user.uid,
     );
     await _saveSignedInUser(userModel);

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 // import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -9,6 +10,7 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/basic_user_details.dart';
+import 'package:sevaexchange/models/change_ownership_model.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/enums/lending_borrow_enums.dart';
 import 'package:sevaexchange/models/donation_model.dart';
@@ -421,19 +423,6 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       //NOT SURE WHEATHER TO ADD THIS OR NOT
                       return Container();
                       break;
-
-                    // case NotificationType.TypeChangeOwnership:
-                    //   ChangeOwnershipModel ownershipModel =
-                    //       ChangeOwnershipModel.fromMap(notification.data);
-                    //   return ChangeOwnershipWidget(
-                    //     timestamp: notification.timestamp,
-                    //     notificationId: notification.id,
-                    //     communityId: notification.communityId,
-                    //     changeOwnershipModel: ownershipModel,
-                    //     timebankId: notification.timebankId,
-                    //     notificationsModel: notification,
-                    //   );
-                    //   break;
 
                     case NotificationType.OneToManyRequestAccept:
                       // Map oneToManyRequestModel = notification.data;
@@ -1668,7 +1657,46 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                             .idle_borrow_request_third_warning_deleted,
                       );
                       break;
-
+                    case NotificationType.TypeChangeGroupOwnership:
+                      ChangeOwnershipModel ownershipModel =
+                          ChangeOwnershipModel.fromMap(notification.data);
+                      return NotificationCard(
+                        timestamp: notification.timestamp,
+                        entityName: ownershipModel.creatorName,
+                        isDissmissible: true,
+                        onDismissed: () {
+                          FirestoreManager.readUserNotification(
+                            notification.id,
+                            SevaCore.of(context).loggedInUser.email,
+                          );
+                        },
+                        onPressed: () {},
+                        photoUrl: ownershipModel.creatorPhotoUrl,
+                        title: S.of(context).change_ownership,
+                        subTitle: ownershipModel.message,
+                      );
+                      break;
+                    case NotificationType
+                        .TYPE_CHANGE_GROUP_OWNERSHIP_UPDATE_TO_COMMUNITY_OWNER:
+                      Map<String, dynamic> data = notification.data;
+                      return NotificationCard(
+                        timestamp: notification.timestamp,
+                        entityName: data['group_name'],
+                        isDissmissible: true,
+                        onDismissed: () {
+                          FirestoreManager.readUserNotification(
+                            notification.id,
+                            SevaCore.of(context).loggedInUser.email,
+                          );
+                        },
+                        onPressed: () {},
+                        photoUrl:
+                            data['group_photourl'] ?? defaultGroupImageURL,
+                        title: S.of(context).change_ownership,
+                        subTitle:
+                            '${data['old_owner_name']} changed ownership of ${data['group_name']} to ${data['new_owner_name']}',
+                      );
+                      break;
                     default:
                       log("Unhandled user notification type ${notification.type} ${notification.id}");
                       // FirebaseCrashlytics.instance.log(
