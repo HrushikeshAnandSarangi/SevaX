@@ -44,6 +44,7 @@ class _CreateRequestState extends State<CreateRequest> {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
+          backgroundColor: Theme.of(context).primaryColor,
           title: Text(
             _title,
             style: TextStyle(fontSize: 18),

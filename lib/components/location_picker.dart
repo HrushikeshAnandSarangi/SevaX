@@ -143,6 +143,7 @@ class _LocationPickerState extends State<LocationPicker> {
   Widget build(context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).primaryColor,
         // iconTheme: IconThemeData(color: Colors.black),
         // backgroundColor: Colors.white,
         title: Text(

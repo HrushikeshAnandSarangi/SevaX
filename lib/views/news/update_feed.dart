@@ -45,6 +45,7 @@ class UpdateNewsFeed extends StatelessWidget {
         child: Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
+            backgroundColor: Theme.of(context).primaryColor,
             title: Text(
               S.of(context).update_feed,
               style: TextStyle(fontSize: 18),
@@ -384,7 +385,12 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                                 dialogContext = createDialogContext;
                                 return AlertDialog(
                                   title: Text(S.of(context).updating_feed),
-                                  content: LinearProgressIndicator(),
+                                  content: LinearProgressIndicator(
+ backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+        valueColor: AlwaysStoppedAnimation<Color>(
+          Theme.of(context).primaryColor,
+        ),
+),
                                 );
                               });
                           scrapeURLFromSubheading(newsObject.subheading);

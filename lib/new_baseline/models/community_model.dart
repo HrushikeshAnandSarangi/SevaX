@@ -121,6 +121,8 @@ class CommunityModel extends DataModel {
   List<PaymentRecord> payment_records;
   String logo_url;
   String cover_url;
+  String theme_avatar_url;
+  String theme_color;
   String creator_email;
   String created_by;
   String created_at;
@@ -198,6 +200,9 @@ class CommunityModel extends DataModel {
         : [PaymentRecord.fromMap({})];
     this.logo_url = map.containsKey('logo_url') ? map['logo_url'] : '';
     this.cover_url = map.containsKey('cover_url') ? map['cover_url'] : '';
+    this.theme_avatar_url =
+        map.containsKey('theme_avatar_url') ? map['theme_avatar_url'] : '';
+    this.theme_color = map.containsKey('theme_color') ? map['theme_color'] : '';
     this.creator_email =
         map.containsKey('creator_email') ? map['creator_email'] : '';
     this.created_by = map.containsKey('created_by') ? map['created_by'] : '';
@@ -301,6 +306,12 @@ class CommunityModel extends DataModel {
     if (key == 'cover_url') {
       this.cover_url = value;
     }
+    if (key == 'theme_avatar_url') {
+      this.theme_avatar_url = value;
+    }
+    if (key == 'theme_color') {
+      this.theme_color = value;
+    }
     if (key == 'creator_email') {
       this.creator_email = value;
     }
@@ -377,6 +388,12 @@ class CommunityModel extends DataModel {
     }
     if (this.cover_url != null && this.cover_url.isNotEmpty) {
       object['cover_url'] = this.cover_url;
+    }
+    if (this.theme_avatar_url != null && this.theme_avatar_url.isNotEmpty) {
+      object['theme_avatar_url'] = this.theme_avatar_url;
+    }
+    if (this.theme_color != null && this.theme_color.isNotEmpty) {
+      object['theme_color'] = this.theme_color;
     }
     if (this.creator_email != null && this.creator_email.isNotEmpty) {
       object['creator_email'] = this.creator_email;
@@ -461,6 +478,8 @@ class CommunityModel extends DataModel {
         ' payment_records: $payment_records, '
         ' logo_url: $logo_url, '
         ' cover_url: $cover_url,'
+        ' theme_avatar_url: $theme_avatar_url,'
+        '  theme_color: $theme_color,'
         ' creator_email: $creator_email,'
         ' created_by: $created_by, '
         ' isCreatedFromWeb: $isCreatedFromWeb, '

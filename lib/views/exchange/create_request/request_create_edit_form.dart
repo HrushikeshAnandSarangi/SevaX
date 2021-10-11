@@ -315,7 +315,7 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
                     child: SizedBox(
                       height: 48,
                       width: 48,
-                      child: CircularProgressIndicator(),
+                      child: LoadingIndicator(),
                     ),
                   );
                 } else if (snapshot.hasError) {

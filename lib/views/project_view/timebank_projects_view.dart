@@ -91,7 +91,7 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                           margin: EdgeInsets.only(left: 0),
                           child: Icon(
                             Icons.add_circle,
-                            color: FlavorConfig.values.theme.primaryColor,
+                            color: Theme.of(context).primaryColor,
                           ),
                         ),
                         onTap: () {

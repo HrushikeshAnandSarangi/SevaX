@@ -130,7 +130,7 @@ class RequestsState extends State<RequestsModule> {
                                 margin: EdgeInsets.only(left: 6),
                                 child: Icon(
                                   Icons.add_circle,
-                                  color: FlavorConfig.values.theme.primaryColor,
+                                  color: Theme.of(context).primaryColor,
                                 ),
                               ),
                               onTap: () {

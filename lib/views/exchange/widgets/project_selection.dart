@@ -55,6 +55,7 @@ class ProjectSelectionState extends State<ProjectSelection> {
       });
     }
     return MultiSelect(
+      
       timebankModel: widget.timebankModel,
       userModel: widget.userModel,
       autovalidate: true,

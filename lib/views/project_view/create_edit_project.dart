@@ -239,6 +239,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
       child: Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
+          backgroundColor: Theme.of(context).primaryColor,
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
@@ -592,6 +593,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 height: 10,
               ),
               SponsorsWidget(
+                textColor: Theme.of(context).primaryColor,
                 title: S.of(context).add_event_sponsors_text,
                 sponsorsMode: widget.isCreateProject ? SponsorsMode.CREATE : SponsorsMode.EDIT,
                 sponsors: projectModel.sponsors,
@@ -697,7 +699,8 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   padding: const EdgeInsets.symmetric(vertical: 2),
                   child: ConfigurationCheck(
                     actionType: 'create_virtual_event',
-                    role: memberType(timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
+                    role:
+                        memberType(timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
                     child: OpenScopeCheckBox(
                         infoType: InfoType.VirtualRequest,
                         isChecked: projectModel.virtualProject,
@@ -1019,7 +1022,9 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                     },
                     shape: StadiumBorder(),
                     child: Text(
-                      widget.isCreateProject ? S.of(context).create_project : S.of(context).save,
+                      widget.isCreateProject
+                          ? S.of(context).create_project
+                          : S.of(context).save,
                       style: TextStyle(fontSize: 16.0, color: Colors.white),
                     ),
                     textColor: FlavorConfig.values.buttonTextColor,
@@ -1088,7 +1093,12 @@ class _CreateEditProjectState extends State<CreateEditProject> {
           dialogContext = createDialogContext;
           return AlertDialog(
             title: Text(message),
-            content: LinearProgressIndicator(),
+            content: LinearProgressIndicator(
+ backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+        valueColor: AlwaysStoppedAnimation<Color>(
+          Theme.of(context).primaryColor,
+        ),
+),
           );
         });
   }
@@ -1151,7 +1161,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   Container(
                     height: 50,
                     width: double.infinity,
-                    color: FlavorConfig.values.theme.primaryColor,
+                    color: Theme.of(context).primaryColor,
                     child: Center(
                       child: Text(
                         S.of(context).template_title,

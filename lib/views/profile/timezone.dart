@@ -1529,6 +1529,7 @@ class _TimezoneViewState extends State<TimezoneView> {
     // TimezoneListData().printData();
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).primaryColor,
         title: Text(
           S.of(context).my_timezone,
           style: TextStyle(fontSize: 18),

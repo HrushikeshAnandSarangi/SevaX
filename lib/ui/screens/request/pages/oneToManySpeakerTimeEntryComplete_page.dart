@@ -270,7 +270,12 @@ class OneToManySpeakerTimeEntryCompleteState extends State<OneToManySpeakerTimeE
                                       dialogContext = createDialogContext;
                                       return AlertDialog(
                                         title: Text(S.of(context).loading),
-                                        content: LinearProgressIndicator(),
+                                        content: LinearProgressIndicator(
+ backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+        valueColor: AlwaysStoppedAnimation<Color>(
+          Theme.of(context).primaryColor,
+        ),
+),
                                       );
                                     });
 
@@ -383,7 +388,12 @@ class OneToManySpeakerTimeEntryCompleteState extends State<OneToManySpeakerTimeE
           creditRequestDialogContext = context;
           return AlertDialog(
             title: Text(S.of(context).please_wait),
-            content: LinearProgressIndicator(),
+            content: LinearProgressIndicator(
+ backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+        valueColor: AlwaysStoppedAnimation<Color>(
+          Theme.of(context).primaryColor,
+        ),
+),
           );
         });
   }

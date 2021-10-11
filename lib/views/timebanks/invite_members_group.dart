@@ -427,7 +427,7 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
         },
         child: Text(S.of(context).resend_invite,
             style: TextStyle(fontFamily: 'Europa')),
-        color: FlavorConfig.values.theme.primaryColor,
+        color:Theme.of(context).primaryColor,
         textColor: Colors.white,
         shape: StadiumBorder(),
       );
@@ -440,7 +440,7 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
         },
         child:
             Text(S.of(context).invite, style: TextStyle(fontFamily: 'Europa')),
-        color: FlavorConfig.values.theme.primaryColor,
+        color:Theme.of(context).primaryColor,
         textColor: Colors.white,
         shape: StadiumBorder(),
       );

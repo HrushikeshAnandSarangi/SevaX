@@ -211,7 +211,7 @@ class SearchComponent extends StatelessWidget {
           ),
           Center(
             child: CustomElevatedButton(
-                color: FlavorConfig.values.theme.primaryColor,
+                color: Theme.of(context).primaryColor,
                 onPressed: () {
                   var listOfSelectedMembers =
                       searchSegmentBloc.getSelectedUsersForShare();
@@ -249,7 +249,7 @@ class SearchComponent extends StatelessWidget {
               },
               child: Text(
                 S.of(context).ok,
-                style: TextStyle(color: FlavorConfig.values.theme.primaryColor),
+                style: TextStyle(color: Theme.of(context).primaryColor),
               ),
             ),
           ],

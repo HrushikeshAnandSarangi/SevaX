@@ -106,7 +106,7 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
                     fontSize: 18,
                     fontFamily: 'Europa',
                     fontWeight: FontWeight.bold,
-                    color: FlavorConfig.values.theme.primaryColor),
+                    color: Theme.of(context).primaryColor),
               ),
               SizedBox(
                 height: 15,
@@ -185,7 +185,7 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
                   : S.of(context).remove,
               style:
                   TextStyle(fontWeight: FontWeight.bold, fontFamily: 'Europa')),
-          textColor: FlavorConfig.values.theme.primaryColor,
+          textColor:Theme.of(context).primaryColor,
           onPressed: () async {
             if (selectedNewOwner == null) {
               // print("reporter timebank creator id is ${tbmodel.creatorId}");
@@ -375,7 +375,7 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
       child: ListTile(
         leading: Image.asset(
           'lib/assets/images/info.png',
-          color: FlavorConfig.values.theme.primaryColor,
+          color:Theme.of(context).primaryColor,
           height: 30,
           width: 30,
         ),
