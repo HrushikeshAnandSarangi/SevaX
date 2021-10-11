@@ -1463,12 +1463,14 @@ class L {
   String get to_text => "to";
   String get credits_credited => "Seva Credits Earned";
   String get transfer_ownership_text => "Transfer Ownership";
-  String get you_have_been_made_the_new_owner_of_group_name_subtitle =>
-      "You have been made the new owner of *Group Name*.";
+  String get you_have_been_made_the_new_owner_of_group_name_subtitle => "You have been made the new owner of";
   String get direction_for_manage_transfer_ownership =>
       "Go to your group Manage tab and then select a new group member to transfer ownership.";
   String get be_sure_message_text => "Be sure to check with the member first by messaging them.";
   String get removed_you_from_text => "removed you from";
-
+  String get note_for_transfer_ownership_notification =>
+      "Note: If you cannot fulfil this role or if you believe this was done in error please click here.";
   String get transfer_of_group_ownership_update => "Transfer of group ownership update.";
+  String get directions_text => "Directions";
+  String get link_for_demo_video_text => "Link for demo video:";
 }

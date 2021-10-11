@@ -47,6 +47,7 @@ import 'package:sevaexchange/utils/helpers/mailer.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
+import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 import 'package:sevaexchange/views/requests/approveBorrowRequest.dart';
@@ -592,11 +593,37 @@ class _PersonalNotificationsState extends State<PersonalNotifications> with Auto
                             user.email,
                           );
                         },
-                        onPressed: null,
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (_) => AlertDialog(
+                              title: Text('${L.of(context).directions_text}:'),
+                              content: InkWell(
+                                onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => SevaWebView(
+                                        AboutMode(title: "Demo Vedios", urlToHit: "https://training.sevaxapp.com/")))),
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      "${L.of(context).link_for_demo_video_text}",
+                                    ),
+                                    Text(
+                                      'https://training.sevaxapp.com/',
+                                      style: TextStyle(color: Colors.blue),
+                                    ),
+                                    Text(
+                                      "${L.of(context).direction_for_manage_transfer_ownership}\n${L.of(context).be_sure_message_text}",
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
                         photoUrl: creatorDetails.photoUrl ?? defaultUserImageURL,
                         title: S.of(context).message_room_join,
                         subTitle:
-                            '${creatorDetails.name.toLowerCase()} ${S.of(context).notifications_added_you} ${data['messageRoomName']} ${S.of(context).messaging_room}.',
+                            '${creatorDetails.name.toLowerCase()} ${S.of(context).notifications_added_you} ${data['messageRoomName']} ${S.of(context).messaging_room}.\n\n${L.of(context).note_for_transfer_ownership_notification}',
                       );
                       break;
                     case NotificationType.MEMBER_REMOVED_FROM_MESSAGE_ROOM:
