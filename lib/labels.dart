@@ -1458,5 +1458,17 @@ class L {
 
 //change ownership nlabels
   String get change_ownership_successful =>
-      'You have successfully transferred ownership of **groupName to **newOwnerName.';
+      "You have successfully transferred ownership of **groupName to **newOwnerName.";
+  String get changed_ownership_of_text => "changed ownership of";
+  String get to_text => "to";
+  String get credits_credited => "Seva Credits Earned";
+  String get transfer_ownership_text => "Transfer Ownership";
+  String get you_have_been_made_the_new_owner_of_group_name_subtitle =>
+      "You have been made the new owner of *Group Name*.";
+  String get direction_for_manage_transfer_ownership =>
+      "Go to your group Manage tab and then select a new group member to transfer ownership.";
+  String get be_sure_message_text => "Be sure to check with the member first by messaging them.";
+  String get removed_you_from_text => "removed you from";
+
+  String get transfer_of_group_ownership_update => "Transfer of group ownership update.";
 }
