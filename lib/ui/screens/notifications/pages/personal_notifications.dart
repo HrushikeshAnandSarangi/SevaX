@@ -1053,18 +1053,18 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         timestamp: notification.timestamp,
                         entityName: "CR",
                         photoUrl: notification.data['donorPhotoUrl'] ?? null,
-                        title: S.of(context).credits_credited,
+                        title: L.of(context).seva_credits_donated_text,
                         subTitle: L.of(context).you_have_recieved +
-                            notification.data['credits'].toString() +
+                            notification.data['credits'].toStringAsFixed(1) +
                             " " +
-                            S.of(context).seva_credits +
+                            L.of(context).seva_credits_from_text +
                             " " +
                             (notification.data['donorName'] != null
-                                ? (S.of(context).from +
-                                    " " +
-                                    notification.data[
-                                        'communityName']) //or can use notification.data['donorName']
-                                : ''),
+                                ? (notification.data[
+                                    'communityName']) //or can use notification.data['donorName']
+                                : '') +
+                            " " +
+                            L.of(context).as_a_donation_text,
                         onDismissed: onDismissed,
                       );
 //! NEW NOTIFICATION ABOVE ---------------------------------------------------------->
