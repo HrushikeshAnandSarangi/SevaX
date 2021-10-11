@@ -162,11 +162,11 @@ class _BorrowRequestState extends State<BorrowRequest> {
     if (widget.formType == RequestFormType.EDIT) {
       if (widget.requestModel.roomOrTool == LendingType.ITEM.readable) {
         if (widget.requestModel.virtualRequest == true) {
-          isPublicCheckboxVisible = true;
+          isPublicCheckboxVisible = false;
         }
         roomOrTool = 1;
       } else {
-        isPublicCheckboxVisible = true;
+        isPublicCheckboxVisible = false;
         roomOrTool = 0;
       }
 
@@ -176,7 +176,7 @@ class _BorrowRequestState extends State<BorrowRequest> {
       });
     } else {
       //When creating request and switch is not touched (initialize as place)
-      isPublicCheckboxVisible = true;
+      isPublicCheckboxVisible = false;
       widget.requestModel.roomOrTool = LendingType.PLACE.readable;
     }
   }
@@ -436,7 +436,7 @@ class _BorrowRequestState extends State<BorrowRequest> {
         ),
       ),
       HideWidget(
-        hide: AppConfig.isTestCommunity || roomOrTool == 0,
+        hide: AppConfig.isTestCommunity || roomOrTool == 0 ||  roomOrTool == 1,
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 8),
           child: ConfigurationCheck(
