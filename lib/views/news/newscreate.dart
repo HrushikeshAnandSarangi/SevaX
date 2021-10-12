@@ -183,7 +183,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
   }
 
   TextEditingController subheadingController = TextEditingController();
-  FocusNode focusNode =FocusNode();
+  FocusNode focusNode = FocusNode();
 
   BuildContext dialogContext;
 
@@ -193,236 +193,230 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     // Build a Form widget using the formKey we created above
     return DoseForm(
       formKey: formKey,
-      child: Column(
-        children: [
-          FadeAnimation(
-            1.5,
-            Container(
-              child: SingleChildScrollView(
-                  child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.center,
+      child: FadeAnimation(
+        1.5,
+        Container(
+          child: SingleChildScrollView(
+              child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.all(20),
-                        child: Column(
-                          children: <Widget>[
-                            Padding(
-                                padding: EdgeInsets.only(bottom: 0.0),
-                                child: Container(
-                                  height: 200,
-                                  child: DoseTextField(
-                                    // focusNode: postNode,
-                                    isRequired: true,
-                                    textCapitalization: TextCapitalization.sentences,
-                                    controller: subheadingController,
-                                    focusNode: focusNode,
-                                    textAlign: TextAlign.start,
-                                    decoration: InputDecoration(
-                                      errorMaxLines: 2,
-                                      labelStyle: TextStyle(color: Colors.grey),
-                                      alignLabelWithHint: false,
-                                      hintText: S.of(context).create_feed_desc_hint,
-                                      labelText: S.of(context).create_feed_placeholder,
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius: const BorderRadius.all(
-                                          const Radius.circular(12.0),
-                                        ),
-                                        borderSide: BorderSide(
-                                          color: Colors.black,
-                                          width: 0.5,
-                                        ),
-                                      ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius: const BorderRadius.all(
-                                          const Radius.circular(12.0),
-                                        ),
-                                        borderSide: BorderSide(
-                                          color: Colors.black,
-                                          width: 0.5,
-                                        ),
-                                      ),
-                                      disabledBorder: OutlineInputBorder(
-                                        borderRadius: const BorderRadius.all(
-                                          const Radius.circular(12.0),
-                                        ),
-                                        borderSide: BorderSide(
-                                          color: Colors.black,
-                                          width: 0.5,
-                                        ),
-                                      ),
-                                      border: OutlineInputBorder(
-                                        borderRadius: const BorderRadius.all(
-                                          const Radius.circular(0.0),
-                                        ),
-                                        borderSide: BorderSide(
-                                          color: Colors.black,
-                                          width: 0.5,
-                                        ),
-                                      ),
+                  Container(
+                    margin: EdgeInsets.all(20),
+                    child: Column(
+                      children: <Widget>[
+                        Padding(
+                            padding: EdgeInsets.only(bottom: 0.0),
+                            child: Container(
+                              height: 200,
+                              child: DoseTextField(
+                                // focusNode: postNode,
+                                isRequired: true,
+                                textCapitalization: TextCapitalization.sentences,
+                                controller: subheadingController,
+                                focusNode: focusNode,
+                                textAlign: TextAlign.start,
+                                decoration: InputDecoration(
+                                  errorMaxLines: 2,
+                                  labelStyle: TextStyle(color: Colors.grey),
+                                  alignLabelWithHint: false,
+                                  hintText: S.of(context).create_feed_desc_hint,
+                                  labelText: S.of(context).create_feed_placeholder,
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: const BorderRadius.all(
+                                      const Radius.circular(12.0),
                                     ),
-                                    keyboardType: TextInputType.multiline,
-                                    maxLines: 5,
-                                    textInputAction: TextInputAction.newline,
-                                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                                    onChanged: (value) {
-                                      ExitWithConfirmation.of(context).fieldValues[1] = value;
-                                    },
-                                    validator: (value) {
-                                      if (value.isEmpty) {
-                                        return S.of(context).validation_error_general_text;
-                                      }
-                                      if (profanityDetector.isProfaneString(value)) {
-                                        return S.of(context).profanity_text_alert;
-                                      }
-                                      newsObject.subheading = value;
-                                      return null;
-                                    },
+                                    borderSide: BorderSide(
+                                      color: Colors.black,
+                                      width: 0.5,
+                                    ),
                                   ),
-                                )),
-                          ],
-                        ),
-                      ),
-
-                      Offstage(
-                        offstage: !isAccessAvailable(widget.timebankModel,
-                                SevaCore.of(context).loggedInUser.sevaUserID) ||
-                            !isPrimaryTimebank(
-                                parentTimebankId: widget.timebankModel.parentTimebankId),
-                        child: Center(
-                          child: TransactionsMatrixCheck(
-                            comingFrom: ComingFrom.Home,
-                            upgradeDetails: AppConfig.upgradePlanBannerModel.parent_timebanks,
-                            transaction_matrix_type: "parent_timebanks",
-                            child: CustomElevatedButton(
-                              textColor: Colors.green,
-                              elevation: 0,
-                              child: Container(
-                                constraints: BoxConstraints.loose(
-                                  Size(
-                                    MediaQuery.of(context).size.width - 200,
-                                    50,
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: const BorderRadius.all(
+                                      const Radius.circular(12.0),
+                                    ),
+                                    borderSide: BorderSide(
+                                      color: Colors.black,
+                                      width: 0.5,
+                                    ),
+                                  ),
+                                  disabledBorder: OutlineInputBorder(
+                                    borderRadius: const BorderRadius.all(
+                                      const Radius.circular(12.0),
+                                    ),
+                                    borderSide: BorderSide(
+                                      color: Colors.black,
+                                      width: 0.5,
+                                    ),
+                                  ),
+                                  border: OutlineInputBorder(
+                                    borderRadius: const BorderRadius.all(
+                                      const Radius.circular(0.0),
+                                    ),
+                                    borderSide: BorderSide(
+                                      color: Colors.black,
+                                      width: 0.5,
+                                    ),
                                   ),
                                 ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Expanded(
-                                      child: Text(
-                                        "${S.of(context).posting_to_text} ${((this.selectedTimebanks.length > 1) ? this.selectedTimebanks.length.toString() + ' Seva Communities' : this.widget.timebankModel.name)}",
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
-                                      ),
-                                    ),
-                                    Icon(Icons.arrow_drop_down)
-                                  ],
-                                ),
+                                keyboardType: TextInputType.multiline,
+                                maxLines: 5,
+                                textInputAction: TextInputAction.newline,
+                                autovalidateMode: AutovalidateMode.onUserInteraction,
+                                onChanged: (value) {
+                                  ExitWithConfirmation.of(context).fieldValues[1] = value;
+                                },
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return S.of(context).validation_error_general_text;
+                                  }
+                                  if (profanityDetector.isProfaneString(value)) {
+                                    return S.of(context).profanity_text_alert;
+                                  }
+                                  newsObject.subheading = value;
+                                  return null;
+                                },
                               ),
-                              // color: Colors.grey[200],
-                              onPressed: () async {
-                                FocusScope.of(context).unfocus();
-                                _silblingTimebankSelectionBottomsheet(
-                                  context,
-                                  this.widget.timebankModel,
-                                  selectedTimebanks,
-                                  (selectedTimebanks) => {
-                                    setState(
-                                      () => {selectedTimebanks = selectedTimebanks},
-                                    )
-                                  },
-                                );
-                              },
+                            )),
+                      ],
+                    ),
+                  ),
+
+                  Offstage(
+                    offstage: !isAccessAvailable(widget.timebankModel, SevaCore.of(context).loggedInUser.sevaUserID) ||
+                        !isPrimaryTimebank(parentTimebankId: widget.timebankModel.parentTimebankId),
+                    child: Center(
+                      child: TransactionsMatrixCheck(
+                        comingFrom: ComingFrom.Home,
+                        upgradeDetails: AppConfig.upgradePlanBannerModel.parent_timebanks,
+                        transaction_matrix_type: "parent_timebanks",
+                        child: CustomElevatedButton(
+                          textColor: Colors.green,
+                          elevation: 0,
+                          child: Container(
+                            constraints: BoxConstraints.loose(
+                              Size(
+                                MediaQuery.of(context).size.width - 200,
+                                50,
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Expanded(
+                                  child: Text(
+                                    "${S.of(context).posting_to_text} ${((this.selectedTimebanks.length > 1) ? this.selectedTimebanks.length.toString() + ' Seva Communities' : this.widget.timebankModel.name)}",
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                  ),
+                                ),
+                                Icon(Icons.arrow_drop_down)
+                              ],
                             ),
                           ),
-                        ),
-                      ),
-                      // Text(""),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 0),
-                        child: Center(
-                          child: NewsImage(
-                            photoCredits: "",
-                            geoFirePointLocation: location,
-                            selectedAddress: selectedAddress,
-                            onLocationDataModelUpdate: (LocationDataModel dataModel) {
-                              location = dataModel.geoPoint;
-                              setState(() {
-                                this.selectedAddress = dataModel.location;
-                              });
-                            },
-                            onCreditsEntered: (photoCreditsFromNews) {
-                              photoCredits = photoCreditsFromNews;
-                            },
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 40),
-
-                  Container(
-                    child: SizedBox(
-                      width: 200,
-                      child: CustomElevatedButton(
-                        onPressed: () async {
-                          var connResult = await Connectivity().checkConnectivity();
-                          if (connResult == ConnectivityResult.none) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(S.of(context).check_internet),
-                                action: SnackBarAction(
-                                  label: S.of(context).dismiss,
-                                  onPressed: () =>
-                                      ScaffoldMessenger.of(context).hideCurrentSnackBar(),
-                                ),
-                              ),
+                          // color: Colors.grey[200],
+                          onPressed: () async {
+                            FocusScope.of(context).unfocus();
+                            _silblingTimebankSelectionBottomsheet(
+                              context,
+                              this.widget.timebankModel,
+                              selectedTimebanks,
+                              (selectedTimebanks) => {
+                                setState(
+                                  () => {selectedTimebanks = selectedTimebanks},
+                                )
+                              },
                             );
-                            return;
-                          }
-
-                          if (formKey.currentState.validate()) {
-                            // If the form is valid, we want to show a Snackbar
-                            showDialog(
-                                barrierDismissible: false,
-                                context: context,
-                                builder: (createDialogContext) {
-                                  dialogContext = createDialogContext;
-                                  return AlertDialog(
-                                    title: Text(S.of(context).creating_feed),
-                                    content: LinearProgressIndicator(
- backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
-        valueColor: AlwaysStoppedAnimation<Color>(
-          Theme.of(context).primaryColor,
-        ),
-),
-                                  );
-                                });
-                            scrapeURLFromSubheading(subheadingController.text);
-                            scrapeHashTagsFromSubHeadings(subheadingController.text);
-
-                            if (newsObject.urlsFromPost.length > 0) {
-                              await scrapeURLDetails(newsObject.urlsFromPost.first);
-                            }
-                            writeToDB();
-                          }
-                        },
-                        child: Text(
-                          S.of(context).create_feed,
-                          style: Theme.of(context).primaryTextTheme.button,
+                          },
                         ),
                       ),
                     ),
                   ),
-                  // Text(sevaUserID),
+                  // Text(""),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 0),
+                    child: Center(
+                      child: NewsImage(
+                        photoCredits: "",
+                        geoFirePointLocation: location,
+                        selectedAddress: selectedAddress,
+                        onLocationDataModelUpdate: (LocationDataModel dataModel) {
+                          location = dataModel.geoPoint;
+                          setState(() {
+                            this.selectedAddress = dataModel.location;
+                          });
+                        },
+                        onCreditsEntered: (photoCreditsFromNews) {
+                          photoCredits = photoCreditsFromNews;
+                        },
+                      ),
+                    ),
+                  ),
                 ],
-              )),
-            ),
-          ),
-        ],
+              ),
+              SizedBox(height: 40),
+
+              Container(
+                child: SizedBox(
+                  width: 200,
+                  child: CustomElevatedButton(
+                    onPressed: () async {
+                      var connResult = await Connectivity().checkConnectivity();
+                      if (connResult == ConnectivityResult.none) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(S.of(context).check_internet),
+                            action: SnackBarAction(
+                              label: S.of(context).dismiss,
+                              onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
+                            ),
+                          ),
+                        );
+                        return;
+                      }
+
+                      if (formKey.currentState.validate()) {
+                        // If the form is valid, we want to show a Snackbar
+                        showDialog(
+                            barrierDismissible: false,
+                            context: context,
+                            builder: (createDialogContext) {
+                              dialogContext = createDialogContext;
+                              return AlertDialog(
+                                title: Text(S.of(context).creating_feed),
+                                content: LinearProgressIndicator(
+                                  backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                    Theme.of(context).primaryColor,
+                                  ),
+                                ),
+                              );
+                            });
+                        scrapeURLFromSubheading(subheadingController.text);
+                        scrapeHashTagsFromSubHeadings(subheadingController.text);
+
+                        if (newsObject.urlsFromPost.length > 0) {
+                          await scrapeURLDetails(newsObject.urlsFromPost.first);
+                        }
+                        writeToDB();
+                      }
+                    },
+                    child: Text(
+                      S.of(context).create_feed,
+                      style: Theme.of(context).primaryTextTheme.button,
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 20),
+              // Text(sevaUserID),
+            ],
+          )),
+        ),
       ),
     );
   }
@@ -604,8 +598,7 @@ class SearchSiblingTimebanksViewState extends State<SearchSiblingTimebanks> {
   @override
   void initState() {
     super.initState();
-    communityBloc.searchTimebankSiblingsByParentId(
-        this.widget.selectedTimebank.id, this.widget.selectedTimebank);
+    communityBloc.searchTimebankSiblingsByParentId(this.widget.selectedTimebank.id, this.widget.selectedTimebank);
   }
 
   @override
@@ -662,8 +655,7 @@ class SearchSiblingTimebanksViewState extends State<SearchSiblingTimebanks> {
                 return Padding(
                   padding: EdgeInsets.symmetric(vertical: 100, horizontal: 60),
                   child: Center(
-                    child: Text(S.of(context).no_timebanks_found,
-                        style: TextStyle(fontFamily: "Europa", fontSize: 14)),
+                    child: Text(S.of(context).no_timebanks_found, style: TextStyle(fontFamily: "Europa", fontSize: 14)),
                   ),
                 );
               }
@@ -680,8 +672,7 @@ class SearchSiblingTimebanksViewState extends State<SearchSiblingTimebanks> {
       offstage: timebankModel.softDelete,
       child: ListTile(
         // onTap: goToNext(snapshot.data),
-        title:
-            Text(timebankModel.name, style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w700)),
+        title: Text(timebankModel.name, style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w700)),
         trailing: Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
           Checkbox(
             value: isSelected,
