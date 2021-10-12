@@ -56,13 +56,12 @@ class _InterestViewNewState extends State<InterestViewNew> {
     hasPellError = false;
     CollectionRef.interests.get().then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((DocumentSnapshot data) {
-        if (data.data().containsKey(widget.languageCode) ) {
+        if (data.data().containsKey(widget.languageCode)) {
           interests[data.id] = data[widget.languageCode];
         }
       });
 
-      if (widget.userModel.interests != null &&
-          widget.userModel.interests.length > 0) {
+      if (widget.userModel.interests != null && widget.userModel.interests.length > 0) {
         widget.userModel.interests.forEach((id) {
           _selectedInterests[id] = interests[id];
         });
@@ -168,16 +167,11 @@ class _InterestViewNewState extends State<InterestViewNew> {
                     ..suggestionMode = SuggestionMode.FROM_DB
                     ..suggesttionTitle = v),
                 );
-                dataCopy.retainWhere((s) => s.suggesttionTitle
-                    .toLowerCase()
-                    .contains(pattern.toLowerCase()));
+                dataCopy.retainWhere((s) => s.suggesttionTitle.toLowerCase().contains(pattern.toLowerCase()));
 
-                if (pattern.length > 2 &&
-                    !dataCopy.contains(
-                        SuggestedItem()..suggesttionTitle = pattern)) {
+                if (pattern.length > 2 && !dataCopy.contains(SuggestedItem()..suggesttionTitle = pattern)) {
                   var spellCheckResult =
-                      await SpellCheckManager.evaluateSpellingFor(pattern,
-                          language: widget.languageCode);
+                      await SpellCheckManager.evaluateSpellingFor(pattern, language: widget.languageCode);
                   if (spellCheckResult.hasErros) {
                     dataCopy.add(SuggestedItem()
                       ..suggestionMode = SuggestionMode.USER_DEFINED
@@ -213,8 +207,7 @@ class _InterestViewNewState extends State<InterestViewNew> {
                     );
 
                   case SuggestionMode.SUGGESTED:
-                    if (ProfanityDetector()
-                        .isProfaneString(suggestedItem.suggesttionTitle)) {
+                    if (ProfanityDetector().isProfaneString(suggestedItem.suggesttionTitle)) {
                       return ProfanityDetector.getProanityAdvisory(
                         suggestion: suggestedItem.suggesttionTitle,
                         suggestionMode: SuggestionMode.SUGGESTED,
@@ -229,8 +222,7 @@ class _InterestViewNewState extends State<InterestViewNew> {
                     );
 
                   case SuggestionMode.USER_DEFINED:
-                    if (ProfanityDetector()
-                        .isProfaneString(suggestedItem.suggesttionTitle)) {
+                    if (ProfanityDetector().isProfaneString(suggestedItem.suggesttionTitle)) {
                       return ProfanityDetector.getProanityAdvisory(
                         suggestion: suggestedItem.suggesttionTitle,
                         suggestionMode: SuggestionMode.USER_DEFINED,
@@ -257,8 +249,7 @@ class _InterestViewNewState extends State<InterestViewNew> {
                 );
               },
               onSuggestionSelected: (SuggestedItem suggestion) {
-                if (ProfanityDetector()
-                    .isProfaneString(suggestion.suggesttionTitle)) {
+                if (ProfanityDetector().isProfaneString(suggestion.suggesttionTitle)) {
                   return;
                 }
 
@@ -288,11 +279,9 @@ class _InterestViewNewState extends State<InterestViewNew> {
                 _textEditingController.clear();
                 // controller.close();
 
-                if (!_selectedInterests
-                    .containsValue(suggestion.suggesttionTitle)) {
+                if (!_selectedInterests.containsValue(suggestion.suggesttionTitle)) {
                   controller.close();
-                  String id = interests.keys.firstWhere(
-                      (k) => interests[k] == suggestion.suggesttionTitle);
+                  String id = interests.keys.firstWhere((k) => interests[k] == suggestion.suggesttionTitle);
                   _selectedInterests[id] = suggestion.suggesttionTitle;
                   setState(() {});
                 }
@@ -315,8 +304,7 @@ class _InterestViewNewState extends State<InterestViewNew> {
                                     ? CustomChip(
                                         title: value,
                                         onDelete: () {
-                                          String id = interests.keys.firstWhere(
-                                              (k) => interests[k] == value);
+                                          String id = interests.keys.firstWhere((k) => interests[k] == value);
                                           _selectedInterests.remove(id);
                                           setState(() {});
                                         },
@@ -340,8 +328,7 @@ class _InterestViewNewState extends State<InterestViewNew> {
                         content: Text(S.of(context).check_internet),
                         action: SnackBarAction(
                           label: S.of(context).dismiss,
-                          onPressed: () => ScaffoldMessenger.of(context)
-                              .hideCurrentSnackBar(),
+                          onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
                         ),
                       ),
                     );
@@ -352,23 +339,22 @@ class _InterestViewNewState extends State<InterestViewNew> {
                   widget.onSelectedInterests(selectedID);
                 },
                 child: Text(
-                  widget.isFromProfile
-                      ? S.of(context).update
-                      : S.of(context).next,
+                  widget.isFromProfile ? S.of(context).update : S.of(context).next,
                   style: Theme.of(context).primaryTextTheme.button,
                 ),
               ),
             ),
             CustomTextButton(
+              shape: StadiumBorder(),
+              padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+              color: Theme.of(context).accentColor,
               onPressed: () {
                 widget.onSkipped();
               },
               child: Text(
-                AppConfig.prefs.getBool(AppConfig.skip_interest) == null
-                    ? S.of(context).skip
-                    : S.of(context).cancel,
+                AppConfig.prefs.getBool(AppConfig.skip_interest) == null ? S.of(context).skip : S.of(context).cancel,
                 style: TextStyle(
-                  color: Theme.of(context).accentColor,
+                  color: Colors.white,
                 ),
               ),
             ),
@@ -392,19 +378,18 @@ class _InterestViewNewState extends State<InterestViewNew> {
       ),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return showLoader ? getLoading : LinearProgressIndicator(
- backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
-        valueColor: AlwaysStoppedAnimation<Color>(
-          Theme.of(context).primaryColor,
-        ),
-);
+          return showLoader
+              ? getLoading
+              : LinearProgressIndicator(
+                  backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    Theme.of(context).primaryColor,
+                  ),
+                );
         }
 
         return getSuggestionLayout(
-            suggestion: keyword,
-            suggestionMode: suggestionMode,
-            add: S.of(context).add + ' ',
-            context: context);
+            suggestion: keyword, suggestionMode: suggestionMode, add: S.of(context).add + ' ', context: context);
       },
     );
   }
@@ -465,9 +450,7 @@ Padding getSuggestionLayout({
                     ),
                   ),
                   Text(
-                    suggestionMode == SuggestionMode.SUGGESTED
-                        ? S.of(context).suggested
-                        : S.of(context).you_entered,
+                    suggestionMode == SuggestionMode.SUGGESTED ? S.of(context).suggested : S.of(context).you_entered,
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.grey,
@@ -522,8 +505,7 @@ class SuggestedItem {
   SuggestionMode suggestionMode;
 
   @override
-  bool operator ==(Object other) =>
-      other is SuggestedItem && other.suggesttionTitle == this.suggesttionTitle;
+  bool operator ==(Object other) => other is SuggestedItem && other.suggesttionTitle == this.suggesttionTitle;
 }
 
 enum SuggestionMode {
