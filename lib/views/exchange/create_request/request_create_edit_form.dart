@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -193,7 +194,8 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
   }
 
   _initializeEditRequestModel() {
-    requestModel = widget.requestModel;
+    //initialized using map to not have a copy of same hashcode value object
+    requestModel =  RequestModel.fromMap(widget.requestModel.toMap());
 
     // selectedInstructorModelTemp = widget.requestModel.selectedInstructor;
     requestModel.timebankId = _selectedTimebankId;

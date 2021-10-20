@@ -59,7 +59,7 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
     paymentDetailModel = widget.paymentDetailModel;
     selectedMode = paymentDetailModel.paymentMode;
     _initialize();
-    zelleController.text = zellePayment.zelleId ?? '';
+    zelleController.text = zellePayment?.zelleId ?? '';
     venmoController.text = venmoPayment?.venmoId ?? '';
     paypalController.text = payPalPayment?.paypalId ?? '';
     swiftController.text =swiftPayment?.swiftId ?? '';
