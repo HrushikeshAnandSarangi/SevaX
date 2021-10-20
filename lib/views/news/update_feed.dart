@@ -51,10 +51,12 @@ class UpdateNewsFeed extends StatelessWidget {
               style: TextStyle(fontSize: 18),
             ),
           ),
-          body: NewsCreateForm(
-            timebankId: timebankId,
-            newsModel: newsMmodel,
-            timebankModel: timebankModel,
+          body: SingleChildScrollView(
+            child: NewsCreateForm(
+              timebankId: timebankId,
+              newsModel: newsMmodel,
+              timebankModel: timebankModel,
+            ),
           ),
         ),
       ),
@@ -83,7 +85,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
   // us to validate the form
   //
   // Note: This is a GlobalKey<FormState>, not a GlobalKey<NewsCreateFormState>!
-  final formKey = GlobalKey<FormState>();
+  final formKey = GlobalKey<DoseFormState>();
   String imageUrl;
   String photoCredits;
 
@@ -126,7 +128,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     globals.newsImageURL = newsObject.newsImageUrl;
     globals.newsDocumentURL = newsObject.newsDocumentUrl;
     globals.newsDocumentName = newsObject.newsDocumentName;
-       selectedTimebanks.add(this.widget.timebankModel.id);
+    selectedTimebanks.add(this.widget.timebankModel.id);
     super.initState();
 
     selectedAddress = newsObject.placeAddress;
@@ -199,7 +201,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                                 decoration: InputDecoration(
                                   alignLabelWithHint: false,
                                   hintText: S.of(context).create_feed_desc_hint,
-                                  labelText: S.of(context).create_feed_placeholder,
+                                  labelText:
+                                      S.of(context).create_feed_placeholder,
                                   border: OutlineInputBorder(
                                     borderRadius: const BorderRadius.all(
                                       const Radius.circular(0.0),
@@ -213,12 +216,15 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                                 keyboardType: TextInputType.multiline,
                                 maxLines: 5,
                                 onChanged: (value) {
-                                  ExitWithConfirmation.of(context).fieldValues[1] = value;
+                                  ExitWithConfirmation.of(context)
+                                      .fieldValues[1] = value;
                                   widget.newsModel.subheading = value;
                                 },
                                 validator: (value) {
                                   if (value.isEmpty) {
-                                    return S.of(context).validation_error_general_text;
+                                    return S
+                                        .of(context)
+                                        .validation_error_general_text;
                                   }
                                   newsObject.subheading = value;
                                   return null;
@@ -279,60 +285,62 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                       //   ),
                       // ),
                       // Text(""),
-                  Offstage(
-                    offstage: !isAccessAvailable(widget.timebankModel,
-                            SevaCore.of(context).loggedInUser.sevaUserID) ||
-                        !isPrimaryTimebank(
-                            parentTimebankId:
-                                widget.timebankModel.parentTimebankId),
-                    child: Center(
-                      child: TransactionsMatrixCheck(
-                        comingFrom: ComingFrom.Home,
-                        upgradeDetails:
-                            AppConfig.upgradePlanBannerModel.parent_timebanks,
-                        transaction_matrix_type: "parent_timebanks",
-                        child: CustomElevatedButton(
-                          textColor: Colors.green,
-                          elevation: 0,
-                          child: Container(
-                            constraints: BoxConstraints.loose(
-                              Size(
-                                MediaQuery.of(context).size.width - 200,
-                                50,
-                              ),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Expanded(
-                                  child: Text(
-                                    "${S.of(context).posting_to_text} ${((this.selectedTimebanks.length > 1) ? this.selectedTimebanks.length.toString() + ' Seva Communities' : this.widget.timebankModel.name)}",
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
+                      Offstage(
+                        offstage: !isAccessAvailable(widget.timebankModel,
+                                SevaCore.of(context).loggedInUser.sevaUserID) ||
+                            !isPrimaryTimebank(
+                                parentTimebankId:
+                                    widget.timebankModel.parentTimebankId),
+                        child: Center(
+                          child: TransactionsMatrixCheck(
+                            comingFrom: ComingFrom.Home,
+                            upgradeDetails: AppConfig
+                                .upgradePlanBannerModel.parent_timebanks,
+                            transaction_matrix_type: "parent_timebanks",
+                            child: CustomElevatedButton(
+                              textColor: Colors.green,
+                              elevation: 0,
+                              child: Container(
+                                constraints: BoxConstraints.loose(
+                                  Size(
+                                    MediaQuery.of(context).size.width - 200,
+                                    50,
                                   ),
                                 ),
-                                Icon(Icons.arrow_drop_down)
-                              ],
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Expanded(
+                                      child: Text(
+                                        "${S.of(context).posting_to_text} ${((this.selectedTimebanks.length > 1) ? this.selectedTimebanks.length.toString() + ' Seva Communities' : this.widget.timebankModel.name)}",
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                      ),
+                                    ),
+                                    Icon(Icons.arrow_drop_down)
+                                  ],
+                                ),
+                              ),
+                              // color: Colors.grey[200],
+                              onPressed: () async {
+                                FocusScope.of(context).unfocus();
+                                _silblingTimebankSelectionBottomsheet(
+                                  context,
+                                  this.widget.timebankModel,
+                                  selectedTimebanks,
+                                  (selectedTimebanks) => {
+                                    setState(
+                                      () => {
+                                        selectedTimebanks = selectedTimebanks
+                                      },
+                                    )
+                                  },
+                                );
+                              },
                             ),
                           ),
-                          // color: Colors.grey[200],
-                          onPressed: () async {
-                            FocusScope.of(context).unfocus();
-                            _silblingTimebankSelectionBottomsheet(
-                              context,
-                              this.widget.timebankModel,
-                              selectedTimebanks,
-                              (selectedTimebanks) => {
-                                setState(
-                                  () => {selectedTimebanks = selectedTimebanks},
-                                )
-                              },
-                            );
-                          },
                         ),
                       ),
-                    ),
-                  ),
                       Padding(
                         padding: const EdgeInsets.only(top: 0),
                         child: Center(
@@ -340,7 +348,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                             photoCredits: newsObject.photoCredits,
                             geoFirePointLocation: location,
                             selectedAddress: selectedAddress,
-                            onLocationDataModelUpdate: (LocationDataModel dataModel) async {
+                            onLocationDataModelUpdate:
+                                (LocationDataModel dataModel) async {
                               location = dataModel.geoPoint;
                               setState(() {
                                 this.selectedAddress = dataModel.location;
@@ -363,14 +372,16 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                     child: CustomElevatedButton(
                       shape: StadiumBorder(),
                       onPressed: () async {
-                        var connResult = await Connectivity().checkConnectivity();
+                        var connResult =
+                            await Connectivity().checkConnectivity();
                         if (connResult == ConnectivityResult.none) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(S.of(context).check_internet),
                               action: SnackBarAction(
                                 label: S.of(context).dismiss,
-                                onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
+                                onPressed: () => ScaffoldMessenger.of(context)
+                                    .hideCurrentSnackBar(),
                               ),
                             ),
                           );
@@ -386,18 +397,21 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                                 return AlertDialog(
                                   title: Text(S.of(context).updating_feed),
                                   content: LinearProgressIndicator(
- backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
-        valueColor: AlwaysStoppedAnimation<Color>(
-          Theme.of(context).primaryColor,
-        ),
-),
+                                    backgroundColor: Theme.of(context)
+                                        .primaryColor
+                                        .withOpacity(0.5),
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                      Theme.of(context).primaryColor,
+                                    ),
+                                  ),
                                 );
                               });
                           scrapeURLFromSubheading(newsObject.subheading);
                           scrapeHashTagsFromSubHeadings(newsObject.subheading);
 
                           if (newsObject.urlsFromPost.length > 0) {
-                            await scrapeURLDetails(newsObject.urlsFromPost.first);
+                            await scrapeURLDetails(
+                                newsObject.urlsFromPost.first);
                           } else {
                             newsObject.title = '';
                             newsObject.imageScraped = "NoData";
@@ -434,7 +448,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
 
     regExp.allMatches(subHeadings).forEach((match) {
       var scapedUrl = subHeadings.substring(match.start, match.end);
-      scappedURLs.add(scapedUrl.contains("http") ? scapedUrl : "http://" + scapedUrl);
+      scappedURLs
+          .add(scapedUrl.contains("http") ? scapedUrl : "http://" + scapedUrl);
     });
 
     newsObject.urlsFromPost = scappedURLs;
