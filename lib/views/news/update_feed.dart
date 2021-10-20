@@ -51,10 +51,12 @@ class UpdateNewsFeed extends StatelessWidget {
               style: TextStyle(fontSize: 18),
             ),
           ),
-          body: NewsCreateForm(
-            timebankId: timebankId,
-            newsModel: newsMmodel,
-            timebankModel: timebankModel,
+          body: prefix0.SingleChildScrollView(
+            child: NewsCreateForm(
+              timebankId: timebankId,
+              newsModel: newsMmodel,
+              timebankModel: timebankModel,
+            ),
           ),
         ),
       ),
@@ -68,8 +70,7 @@ class NewsCreateForm extends StatefulWidget {
   NewsModel newsModel;
   final TimebankModel timebankModel;
 
-  NewsCreateForm({Key key, this.timebankId, this.newsModel, this.timebankModel})
-      : super(key: key);
+  NewsCreateForm({Key key, this.timebankId, this.newsModel, this.timebankModel}) : super(key: key);
   @override
   NewsCreateFormState createState() {
     return NewsCreateFormState();
@@ -83,7 +84,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
   // us to validate the form
   //
   // Note: This is a GlobalKey<FormState>, not a GlobalKey<NewsCreateFormState>!
-  final formKey = GlobalKey<FormState>();
+  final formKey = GlobalKey<DoseFormState>();
   String imageUrl;
   String photoCredits;
 
@@ -126,7 +127,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     globals.newsImageURL = newsObject.newsImageUrl;
     globals.newsDocumentURL = newsObject.newsDocumentUrl;
     globals.newsDocumentName = newsObject.newsDocumentName;
-       selectedTimebanks.add(this.widget.timebankModel.id);
+    selectedTimebanks.add(this.widget.timebankModel.id);
     super.initState();
 
     selectedAddress = newsObject.placeAddress;
@@ -279,60 +280,57 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                       //   ),
                       // ),
                       // Text(""),
-                  Offstage(
-                    offstage: !isAccessAvailable(widget.timebankModel,
-                            SevaCore.of(context).loggedInUser.sevaUserID) ||
-                        !isPrimaryTimebank(
-                            parentTimebankId:
-                                widget.timebankModel.parentTimebankId),
-                    child: Center(
-                      child: TransactionsMatrixCheck(
-                        comingFrom: ComingFrom.Home,
-                        upgradeDetails:
-                            AppConfig.upgradePlanBannerModel.parent_timebanks,
-                        transaction_matrix_type: "parent_timebanks",
-                        child: CustomElevatedButton(
-                          textColor: Colors.green,
-                          elevation: 0,
-                          child: Container(
-                            constraints: BoxConstraints.loose(
-                              Size(
-                                MediaQuery.of(context).size.width - 200,
-                                50,
-                              ),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Expanded(
-                                  child: Text(
-                                    "${S.of(context).posting_to_text} ${((this.selectedTimebanks.length > 1) ? this.selectedTimebanks.length.toString() + ' Seva Communities' : this.widget.timebankModel.name)}",
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
+                      Offstage(
+                        offstage:
+                            !isAccessAvailable(widget.timebankModel, SevaCore.of(context).loggedInUser.sevaUserID) ||
+                                !isPrimaryTimebank(parentTimebankId: widget.timebankModel.parentTimebankId),
+                        child: Center(
+                          child: TransactionsMatrixCheck(
+                            comingFrom: ComingFrom.Home,
+                            upgradeDetails: AppConfig.upgradePlanBannerModel.parent_timebanks,
+                            transaction_matrix_type: "parent_timebanks",
+                            child: CustomElevatedButton(
+                              textColor: Colors.green,
+                              elevation: 0,
+                              child: Container(
+                                constraints: BoxConstraints.loose(
+                                  Size(
+                                    MediaQuery.of(context).size.width - 200,
+                                    50,
                                   ),
                                 ),
-                                Icon(Icons.arrow_drop_down)
-                              ],
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Expanded(
+                                      child: Text(
+                                        "${S.of(context).posting_to_text} ${((this.selectedTimebanks.length > 1) ? this.selectedTimebanks.length.toString() + ' Seva Communities' : this.widget.timebankModel.name)}",
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                      ),
+                                    ),
+                                    Icon(Icons.arrow_drop_down)
+                                  ],
+                                ),
+                              ),
+                              // color: Colors.grey[200],
+                              onPressed: () async {
+                                FocusScope.of(context).unfocus();
+                                _silblingTimebankSelectionBottomsheet(
+                                  context,
+                                  this.widget.timebankModel,
+                                  selectedTimebanks,
+                                  (selectedTimebanks) => {
+                                    setState(
+                                      () => {selectedTimebanks = selectedTimebanks},
+                                    )
+                                  },
+                                );
+                              },
                             ),
                           ),
-                          // color: Colors.grey[200],
-                          onPressed: () async {
-                            FocusScope.of(context).unfocus();
-                            _silblingTimebankSelectionBottomsheet(
-                              context,
-                              this.widget.timebankModel,
-                              selectedTimebanks,
-                              (selectedTimebanks) => {
-                                setState(
-                                  () => {selectedTimebanks = selectedTimebanks},
-                                )
-                              },
-                            );
-                          },
                         ),
                       ),
-                    ),
-                  ),
                       Padding(
                         padding: const EdgeInsets.only(top: 0),
                         child: Center(
@@ -386,11 +384,11 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                                 return AlertDialog(
                                   title: Text(S.of(context).updating_feed),
                                   content: LinearProgressIndicator(
- backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
-        valueColor: AlwaysStoppedAnimation<Color>(
-          Theme.of(context).primaryColor,
-        ),
-),
+                                    backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                      Theme.of(context).primaryColor,
+                                    ),
+                                  ),
                                 );
                               });
                           scrapeURLFromSubheading(newsObject.subheading);
@@ -473,8 +471,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     }
   }
 
-  void _silblingTimebankSelectionBottomsheet(BuildContext mcontext,
-      TimebankModel timebank, List<String> selectedTimebanks, onChanged) {
+  void _silblingTimebankSelectionBottomsheet(
+      BuildContext mcontext, TimebankModel timebank, List<String> selectedTimebanks, onChanged) {
     showModalBottomSheet(
       context: mcontext,
       builder: (BuildContext bc) {
@@ -492,8 +490,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                   ),
                 ),
                 body: Padding(
-                  padding: EdgeInsets.only(
-                      bottom: MediaQuery.of(context).viewInsets.bottom),
+                  padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
                   child: SearchSiblingTimebanks(
                     keepOnBackPress: false,
                     loggedInUser: SevaCore.of(context).loggedInUser,
