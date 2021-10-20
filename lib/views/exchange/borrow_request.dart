@@ -422,7 +422,7 @@ class _BorrowRequestState extends State<BorrowRequest> {
         SizedBox(height: 10),
         Center(
           child: LocationPickerWidget(
-            selectedAddress: widget.requestModel.address,
+            selectedAddress: widget.formType == RequestFormType.CREATE ? widget.timebankModel.address : widget.requestModel.address,
             location: widget.requestModel.location,
             onChanged: (LocationDataModel dataModel) {
               log("received data model");
