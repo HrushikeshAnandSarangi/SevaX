@@ -1466,13 +1466,15 @@ class _PersonalNotificationsState extends State<PersonalNotifications> with Auto
                                   MaterialPageRoute(
                                     builder: (context) => SevaWebView(
                                       AboutMode(
-                                        title: "Demo Vedios",
+                                        title: "Demo Videos",
                                         urlToHit: "https://training.sevaxapp.com/",
                                       ),
                                     ),
                                   ),
                                 ),
                                 child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Text(
                                       "${S.of(context).link_for_demo_video_text}",
