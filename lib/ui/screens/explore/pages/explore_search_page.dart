@@ -64,7 +64,8 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
                   widget.isUserSignedIn
                       ? SevaCore.of(context).loggedInUser.sevaUserID
                       : '',
-                  context),
+                  context,
+                  widget.isUserSignedIn),
             });
     _tabIndex.add(widget.tabIndex);
     _searchController.text = widget.searchText;
