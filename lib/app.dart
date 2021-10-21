@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_core/firebase_core.dart';
 
 // import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -84,6 +86,7 @@ class MainApplication extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    log('Lang ${appLanguage.appLocal.languageCode}');
     return MultiProvider(
       providers: [
         Provider(
@@ -104,7 +107,7 @@ class MainApplication extends StatelessWidget {
         ),
         Provider(
           create: (context) => ThemeBloc(),
-          dispose: (_, b)  => b.dispose(),
+          dispose: (_, b) => b.dispose(),
         ),
         // StreamProvider<UserModel>.value(
         //   initialData: null,
@@ -135,9 +138,9 @@ class MainApplication extends StatelessWidget {
                           ],
                           debugShowCheckedModeBanner: false,
                           theme: FlavorConfig.values.theme.copyWith(
-                              primaryColor:  Color(0x0FF766FE0),
-                              buttonTheme:
-                                  ButtonThemeData(buttonColor:  Color(0x0FF766FE0))),
+                              primaryColor: Color(0x0FF766FE0),
+                              buttonTheme: ButtonThemeData(
+                                  buttonColor: Color(0x0FF766FE0))),
                           title: AppConfig.appName,
                           builder: (context, child) {
                             return GestureDetector(

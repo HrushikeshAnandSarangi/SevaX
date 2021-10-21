@@ -55,7 +55,8 @@ class _LoginPageState extends State<LoginPage> {
   Color enabled = Colors.white.withAlpha(120);
   BuildContext parentContext;
   GeoFirePoint location;
-  TextEditingController emailController = TextEditingController(), passwordController = TextEditingController();
+  TextEditingController emailController = TextEditingController(),
+      passwordController = TextEditingController();
 
   void initState() {
     super.initState();
@@ -97,10 +98,10 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     parentContext = context;
-    var appLanguage = Provider.of<AppLanguage>(context);
-    Locale _sysLng = ui.window.locale;
-    Locale _language = S.delegate.isSupported(_sysLng) ? _sysLng : Locale('en');
-    appLanguage.changeLanguage(_language);
+    // var appLanguage = Provider.of<AppLanguage>(context);
+    // Locale _sysLng = ui.window.locale;
+    // Locale _language = S.delegate.isSupported(_sysLng) ? _sysLng : Locale('en');
+    // appLanguage.changeLanguage(_language);
     //UserData.shared.isFromLogin = true;
     //Todo check this line
     // ScreenUtil.init(context);
@@ -570,28 +571,27 @@ class _LoginPageState extends State<LoginPage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 DoseTextField(
-                  isRequired: true,
-                  focusNode: emailFocus,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  style: textStyle,
-                  // cursorColor: Colors.black54,
+                    isRequired: true,
+                    focusNode: emailFocus,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    style: textStyle,
+                    // cursorColor: Colors.black54,
                     controller: emailController,
-                  validator: _validateEmailId,
-                  onSaved: _saveEmail,
-                  onFieldSubmitted: (v) {
-                    FocusScope.of(context).requestFocus(pwdFocus);
-                  },
-                  decoration: InputDecoration(
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black54),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black54),
-                    ),
-                    labelText: S.of(context).email.toUpperCase(),
-                    labelStyle: textStyle,
-                  )
-                ),
+                    validator: _validateEmailId,
+                    onSaved: _saveEmail,
+                    onFieldSubmitted: (v) {
+                      FocusScope.of(context).requestFocus(pwdFocus);
+                    },
+                    decoration: InputDecoration(
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black54),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black54),
+                      ),
+                      labelText: S.of(context).email.toUpperCase(),
+                      labelStyle: textStyle,
+                    )),
                 DoseTextField(
                   controller: passwordController,
                   isRequired: true,
