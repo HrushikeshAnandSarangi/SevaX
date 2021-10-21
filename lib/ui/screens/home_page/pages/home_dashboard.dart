@@ -234,7 +234,7 @@ class _HomeDashBoardState extends State<HomeDashBoard>
               length: isAdmin ? tabLength + 1 : tabLength,
               child: Column(
                 children: <Widget>[
-                  SendBoxBanner(title: 'Sandbox Community'),
+                  SandBoxBanner(title: S.of(context).sandbox_community),
                   // ShowLimitBadge(),
                   TabBar(
                     onTap: (int index) {

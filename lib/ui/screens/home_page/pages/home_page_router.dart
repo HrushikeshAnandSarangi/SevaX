@@ -97,6 +97,7 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
           Provider.of<ThemeBloc>(context, listen: false)
               .changeColor(HexColor(communityModel.theme_color == '' ? '766FE0' : communityModel.theme_color));
           logger.e(communityModel.toString());
+          AppConfig.isTestCommunity = communityModel.testCommunity ?? false;
         });
       },
     );

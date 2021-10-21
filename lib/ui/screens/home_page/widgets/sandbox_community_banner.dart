@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
-class SendBoxBanner extends StatelessWidget {
+class SandBoxBanner extends StatelessWidget {
   final String title;
-  const SendBoxBanner({Key key, this.title}) : super(key: key);
+  const SandBoxBanner({Key key, this.title}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    logger.e("issandbox" + AppConfig.isTestCommunity.toString());
     return AppConfig.isTestCommunity
         ? Container(
             height: 20,
