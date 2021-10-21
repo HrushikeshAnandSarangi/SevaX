@@ -51,7 +51,7 @@ class UpdateNewsFeed extends StatelessWidget {
               style: TextStyle(fontSize: 18),
             ),
           ),
-          body: prefix0.SingleChildScrollView(
+          body: SingleChildScrollView(
             child: NewsCreateForm(
               timebankId: timebankId,
               newsModel: newsMmodel,
@@ -70,7 +70,8 @@ class NewsCreateForm extends StatefulWidget {
   NewsModel newsModel;
   final TimebankModel timebankModel;
 
-  NewsCreateForm({Key key, this.timebankId, this.newsModel, this.timebankModel}) : super(key: key);
+  NewsCreateForm({Key key, this.timebankId, this.newsModel, this.timebankModel})
+      : super(key: key);
   @override
   NewsCreateFormState createState() {
     return NewsCreateFormState();
@@ -200,7 +201,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                                 decoration: InputDecoration(
                                   alignLabelWithHint: false,
                                   hintText: S.of(context).create_feed_desc_hint,
-                                  labelText: S.of(context).create_feed_placeholder,
+                                  labelText:
+                                      S.of(context).create_feed_placeholder,
                                   border: OutlineInputBorder(
                                     borderRadius: const BorderRadius.all(
                                       const Radius.circular(0.0),
@@ -214,12 +216,15 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                                 keyboardType: TextInputType.multiline,
                                 maxLines: 5,
                                 onChanged: (value) {
-                                  ExitWithConfirmation.of(context).fieldValues[1] = value;
+                                  ExitWithConfirmation.of(context)
+                                      .fieldValues[1] = value;
                                   widget.newsModel.subheading = value;
                                 },
                                 validator: (value) {
                                   if (value.isEmpty) {
-                                    return S.of(context).validation_error_general_text;
+                                    return S
+                                        .of(context)
+                                        .validation_error_general_text;
                                   }
                                   newsObject.subheading = value;
                                   return null;
@@ -281,13 +286,16 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                       // ),
                       // Text(""),
                       Offstage(
-                        offstage:
-                            !isAccessAvailable(widget.timebankModel, SevaCore.of(context).loggedInUser.sevaUserID) ||
-                                !isPrimaryTimebank(parentTimebankId: widget.timebankModel.parentTimebankId),
+                        offstage: !isAccessAvailable(widget.timebankModel,
+                                SevaCore.of(context).loggedInUser.sevaUserID) ||
+                            !isPrimaryTimebank(
+                                parentTimebankId:
+                                    widget.timebankModel.parentTimebankId),
                         child: Center(
                           child: TransactionsMatrixCheck(
                             comingFrom: ComingFrom.Home,
-                            upgradeDetails: AppConfig.upgradePlanBannerModel.parent_timebanks,
+                            upgradeDetails: AppConfig
+                                .upgradePlanBannerModel.parent_timebanks,
                             transaction_matrix_type: "parent_timebanks",
                             child: CustomElevatedButton(
                               textColor: Colors.green,
@@ -322,7 +330,9 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                                   selectedTimebanks,
                                   (selectedTimebanks) => {
                                     setState(
-                                      () => {selectedTimebanks = selectedTimebanks},
+                                      () => {
+                                        selectedTimebanks = selectedTimebanks
+                                      },
                                     )
                                   },
                                 );
@@ -338,7 +348,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                             photoCredits: newsObject.photoCredits,
                             geoFirePointLocation: location,
                             selectedAddress: selectedAddress,
-                            onLocationDataModelUpdate: (LocationDataModel dataModel) async {
+                            onLocationDataModelUpdate:
+                                (LocationDataModel dataModel) async {
                               location = dataModel.geoPoint;
                               setState(() {
                                 this.selectedAddress = dataModel.location;
@@ -361,14 +372,16 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                     child: CustomElevatedButton(
                       shape: StadiumBorder(),
                       onPressed: () async {
-                        var connResult = await Connectivity().checkConnectivity();
+                        var connResult =
+                            await Connectivity().checkConnectivity();
                         if (connResult == ConnectivityResult.none) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(S.of(context).check_internet),
                               action: SnackBarAction(
                                 label: S.of(context).dismiss,
-                                onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
+                                onPressed: () => ScaffoldMessenger.of(context)
+                                    .hideCurrentSnackBar(),
                               ),
                             ),
                           );
@@ -384,7 +397,9 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                                 return AlertDialog(
                                   title: Text(S.of(context).updating_feed),
                                   content: LinearProgressIndicator(
-                                    backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+                                    backgroundColor: Theme.of(context)
+                                        .primaryColor
+                                        .withOpacity(0.5),
                                     valueColor: AlwaysStoppedAnimation<Color>(
                                       Theme.of(context).primaryColor,
                                     ),
@@ -395,7 +410,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                           scrapeHashTagsFromSubHeadings(newsObject.subheading);
 
                           if (newsObject.urlsFromPost.length > 0) {
-                            await scrapeURLDetails(newsObject.urlsFromPost.first);
+                            await scrapeURLDetails(
+                                newsObject.urlsFromPost.first);
                           } else {
                             newsObject.title = '';
                             newsObject.imageScraped = "NoData";
@@ -432,7 +448,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
 
     regExp.allMatches(subHeadings).forEach((match) {
       var scapedUrl = subHeadings.substring(match.start, match.end);
-      scappedURLs.add(scapedUrl.contains("http") ? scapedUrl : "http://" + scapedUrl);
+      scappedURLs
+          .add(scapedUrl.contains("http") ? scapedUrl : "http://" + scapedUrl);
     });
 
     newsObject.urlsFromPost = scappedURLs;
@@ -471,8 +488,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     }
   }
 
-  void _silblingTimebankSelectionBottomsheet(
-      BuildContext mcontext, TimebankModel timebank, List<String> selectedTimebanks, onChanged) {
+  void _silblingTimebankSelectionBottomsheet(BuildContext mcontext,
+      TimebankModel timebank, List<String> selectedTimebanks, onChanged) {
     showModalBottomSheet(
       context: mcontext,
       builder: (BuildContext bc) {
@@ -490,7 +507,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                   ),
                 ),
                 body: Padding(
-                  padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                  padding: EdgeInsets.only(
+                      bottom: MediaQuery.of(context).viewInsets.bottom),
                   child: SearchSiblingTimebanks(
                     keepOnBackPress: false,
                     loggedInUser: SevaCore.of(context).loggedInUser,

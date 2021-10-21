@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:provider/provider.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/labels.dart';
@@ -57,8 +58,9 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
 
     return Container(
       width: MediaQuery.of(context).size.width,
-      color: widget.footerColor == true ? 
-      Theme.of(context).primaryColor : Color(0xFFF454684),
+      color: widget.footerColor == true
+          ? Theme.of(context).primaryColor
+          : Color(0xFFF454684),
       child: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 8.0,
@@ -90,6 +92,7 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
                               ..language = value,
                           );
                         }
+                        Phoenix.rebirth(context);
                       },
                       value: S.of(context).localeName,
                       items: languageNames.keys

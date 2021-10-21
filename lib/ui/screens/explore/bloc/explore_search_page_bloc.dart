@@ -72,7 +72,8 @@ class ExploreSearchPageBloc {
     }
   }
 
-  Future<void> load(String sevaUserID, BuildContext context) async {
+  Future<void> load(
+      String sevaUserID, BuildContext context, bool isUserSignedIn) async {
     FirestoreManager.getSubCategoriesFuture(context).then((value) {
       _requestCategory.add(value);
     });
@@ -227,6 +228,7 @@ class ExploreSearchPageBloc {
           (categoryId) {
             ElasticSearchApi.searchCommunity(
               queryString: searchText,
+              isSignedIn: isUserSignedIn,
               distanceFilterData: distanceFilterData,
             ).then((value) {
               if (categoryId == null || categoryId == '_') {
