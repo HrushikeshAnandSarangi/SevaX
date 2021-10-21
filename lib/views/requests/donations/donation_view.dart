@@ -955,6 +955,9 @@ class _DonationViewState extends State<DonationView> {
                   textAlign: TextAlign.start,
                   maxLines: 1,
                   keyboardType: TextInputType.number,
+                  validator: (value) {
+                    return null;
+                  },
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.only(top: 10),
                     filled: true,
@@ -1124,9 +1127,10 @@ class _DonationViewState extends State<DonationView> {
                 onPressed: () async {
                   // logger.d("#FROM C ${defaultDonationCurrencyType}");
                   rate = await currencyConversion(
-                      fromCurrency: widget.requestModel.cashModel.requestCurrencyType,
-                      toCurrency: donationsModel.cashDetails.cashDetails.requestDonatedCurrency,
-                      amount: widget.requestModel.cashModel.minAmount.toDouble());
+                          fromCurrency: widget?.requestModel?.cashModel?.requestCurrencyType ?? "",
+                          toCurrency: donationsModel?.cashDetails?.cashDetails?.requestDonatedCurrency ?? "",
+                          amount: widget?.requestModel?.cashModel?.minAmount?.toDouble() ?? 0.0)
+                      .then((value) => rate = value);
                   logger.d("#FROM C ${defaultDonationCurrencyType}");
 
                   donationBloc
