@@ -36,8 +36,8 @@ class TransactionModel extends DataModel {
   });
 
   //local variables
-  String get createdDate =>
-      DateFormat('MMMM dd').format(DateTime.fromMillisecondsSinceEpoch(timestamp));
+  String get createdDate => DateFormat('MMMM dd')
+      .format(DateTime.fromMillisecondsSinceEpoch(timestamp));
 
   TransactionModel.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('from')) {
@@ -66,12 +66,15 @@ class TransactionModel extends DataModel {
     }
     if (map.containsKey('typeid')) {
       this.typeid = map['typeid'];
+    } else {
+      this.typeid = '${map['fromEmail_Id']}*${map['timestamp']}';
     }
     if (map.containsKey('timebankid')) {
       this.timebankid = map['timebankid'];
     }
     if (map.containsKey('transactionbetween')) {
-      List<String> transactionbetween = List.castFrom(map['transactionbetween']);
+      List<String> transactionbetween =
+          List.castFrom(map['transactionbetween']);
       this.transactionbetween = transactionbetween;
     }
     if (map.containsKey('communityId')) {
@@ -113,6 +116,10 @@ class TransactionModel extends DataModel {
     }
     if (this.typeid != null) {
       map['typeid'] = this.typeid;
+    } else {
+      map['typeid'] = this.fromEmail_Id +
+          '*' +
+          DateTime.now().millisecondsSinceEpoch.toString();
     }
     if (this.timebankid != null) {
       map['timebankid'] = this.timebankid;
