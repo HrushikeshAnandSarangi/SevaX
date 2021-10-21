@@ -198,6 +198,7 @@ class _TimeRequestState extends State<TimeRequest> {
 
   @override
   Widget build(BuildContext context) {
+    logger.d("#OTM is speaker selected ${widget.instructorAdded}");
     return DoseForm(
       formKey: widget.formKey,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
@@ -286,7 +287,7 @@ class _TimeRequestState extends State<TimeRequest> {
                             ),
                             Expanded(
                               child: Text(
-                                widget.requestModel.selectedInstructor.fullname ??
+                                widget.requestModel.selectedInstructor?.fullname ??
                                     S.of(context).name_not_available,
                                 style: TextStyle(
                                     color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
@@ -308,7 +309,10 @@ class _TimeRequestState extends State<TimeRequest> {
                                   setState(() {
                                     widget.instructorAdded = false;
                                     widget.requestModel.selectedInstructor = null;
+                                    widget.selectedInstructorModelChanged(
+                                        null, widget.instructorAdded);
                                   });
+                                  logger.d("#OTM inside ${widget.instructorAdded}");
                                 },
                               ),
                             ),
@@ -504,8 +508,9 @@ class _TimeRequestState extends State<TimeRequest> {
                                             onAddClick: () {
                                               setState(() {
                                                 // logger.d("#111 ${user.fullname}");
-                                                widget.selectedInstructorModelChanged(user);
                                                 widget.instructorAdded = true;
+                                                widget.selectedInstructorModelChanged(
+                                                    user, widget.instructorAdded);
                                                 widget.requestModel.selectedInstructor =
                                                     BasicUserDetails(
                                                   fullname: user.fullname,
@@ -757,7 +762,9 @@ class _TimeRequestState extends State<TimeRequest> {
         ),
         Center(
           child: LocationPickerWidget(
-            selectedAddress:widget.formType ==   RequestFormType.CREATE ? widget.timebankModel.address : widget.requestModel.address,
+            selectedAddress: widget.formType == RequestFormType.CREATE
+                ? widget.timebankModel.address
+                : widget.requestModel.address,
             location: widget.requestModel.location,
             onChanged: (LocationDataModel dataModel) {
               log("received data model");
