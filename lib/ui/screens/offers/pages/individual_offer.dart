@@ -2175,7 +2175,9 @@ class _IndividualOfferState extends State<IndividualOffer> {
                 )
               : null,
           endTime: widget.offerModel != null &&
-                  widget.offerModel.lendingOfferDetailsModel.lendingOfferTypeMode == 'ONE_TIME'
+                  widget.offerModel.lendingOfferDetailsModel
+                          .lendingOfferTypeMode ==
+                      'ONE_TIME'
               ? DateTime.fromMillisecondsSinceEpoch(
                   widget.offerModel.lendingOfferDetailsModel.endDate,
                 )

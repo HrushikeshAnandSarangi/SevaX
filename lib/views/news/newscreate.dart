@@ -301,9 +301,10 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                       ),
 
                       Offstage(
-                        offstage:
-                            !isAccessAvailable(widget.timebankModel, SevaCore.of(context).loggedInUser.sevaUserID) ||
-                                !isPrimaryTimebank(parentTimebankId:
+                        offstage: !isAccessAvailable(widget.timebankModel,
+                                SevaCore.of(context).loggedInUser.sevaUserID) ||
+                            !isPrimaryTimebank(
+                                parentTimebankId:
                                     widget.timebankModel.parentTimebankId),
                         child: Center(
                           child: TransactionsMatrixCheck(
@@ -627,7 +628,8 @@ class SearchSiblingTimebanksViewState extends State<SearchSiblingTimebanks> {
   @override
   void initState() {
     super.initState();
-    communityBloc.searchTimebankSiblingsByParentId(this.widget.selectedTimebank.id, this.widget.selectedTimebank);
+    communityBloc.searchTimebankSiblingsByParentId(
+        this.widget.selectedTimebank.id, this.widget.selectedTimebank);
   }
 
   @override
@@ -688,7 +690,8 @@ class SearchSiblingTimebanksViewState extends State<SearchSiblingTimebanks> {
                 return Padding(
                   padding: EdgeInsets.symmetric(vertical: 100, horizontal: 60),
                   child: Center(
-                    child: Text(S.of(context).no_timebanks_found, style: TextStyle(fontFamily: "Europa", fontSize: 14)),
+                    child: Text(S.of(context).no_timebanks_found,
+                        style: TextStyle(fontFamily: "Europa", fontSize: 14)),
                   ),
                 );
               }

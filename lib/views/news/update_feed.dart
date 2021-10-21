@@ -70,7 +70,8 @@ class NewsCreateForm extends StatefulWidget {
   NewsModel newsModel;
   final TimebankModel timebankModel;
 
-  NewsCreateForm({Key key, this.timebankId, this.newsModel, this.timebankModel}) : super(key: key);
+  NewsCreateForm({Key key, this.timebankId, this.newsModel, this.timebankModel})
+      : super(key: key);
   @override
   NewsCreateFormState createState() {
     return NewsCreateFormState();
@@ -285,13 +286,16 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                       // ),
                       // Text(""),
                       Offstage(
-                        offstage:
-                            !isAccessAvailable(widget.timebankModel, SevaCore.of(context).loggedInUser.sevaUserID) ||
-                                !isPrimaryTimebank(parentTimebankId: widget.timebankModel.parentTimebankId),
+                        offstage: !isAccessAvailable(widget.timebankModel,
+                                SevaCore.of(context).loggedInUser.sevaUserID) ||
+                            !isPrimaryTimebank(
+                                parentTimebankId:
+                                    widget.timebankModel.parentTimebankId),
                         child: Center(
                           child: TransactionsMatrixCheck(
                             comingFrom: ComingFrom.Home,
-                            upgradeDetails: AppConfig.upgradePlanBannerModel.parent_timebanks,
+                            upgradeDetails: AppConfig
+                                .upgradePlanBannerModel.parent_timebanks,
                             transaction_matrix_type: "parent_timebanks",
                             child: CustomElevatedButton(
                               textColor: Colors.green,
@@ -325,16 +329,18 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                                   this.widget.timebankModel,
                                   selectedTimebanks,
                                   (selectedTimebanks) => {
-                                    setState(() => {
-                                      selectedTimebanks = selectedTimebanks
-                                    },
-                                  )
-                                },
-                              );
-                            },
+                                    setState(
+                                      () => {
+                                        selectedTimebanks = selectedTimebanks
+                                      },
+                                    )
+                                  },
+                                );
+                              },
+                            ),
                           ),
                         ),
-                      ),),
+                      ),
                       Padding(
                         padding: const EdgeInsets.only(top: 0),
                         child: Center(
@@ -482,8 +488,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     }
   }
 
-  void _silblingTimebankSelectionBottomsheet(
-      BuildContext mcontext, TimebankModel timebank, List<String> selectedTimebanks, onChanged) {
+  void _silblingTimebankSelectionBottomsheet(BuildContext mcontext,
+      TimebankModel timebank, List<String> selectedTimebanks, onChanged) {
     showModalBottomSheet(
       context: mcontext,
       builder: (BuildContext bc) {
@@ -501,7 +507,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                   ),
                 ),
                 body: Padding(
-                  padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                  padding: EdgeInsets.only(
+                      bottom: MediaQuery.of(context).viewInsets.bottom),
                   child: SearchSiblingTimebanks(
                     keepOnBackPress: false,
                     loggedInUser: SevaCore.of(context).loggedInUser,
