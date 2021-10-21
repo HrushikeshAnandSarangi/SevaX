@@ -444,7 +444,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
               return getValidationError(context, validate);
             },
             value: snapshot.data,
-            heading: S.of(context).availablity,
+            heading: S.of(context).availablity + '*',
             onChanged: _bloc.onAvailabilityChanged,
             hint: S.of(context).availablity_description,
             maxLength: 100,
