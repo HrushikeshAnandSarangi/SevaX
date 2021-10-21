@@ -316,6 +316,7 @@ class ElasticSearchApi {
                   "billing_address.country",
                   "billing_address.city",
                   "billing_address.state",
+                  "billing_address.pincode",
                 ],
                 "type": "phrase_prefix"
               }
