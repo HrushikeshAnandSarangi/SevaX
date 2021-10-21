@@ -167,8 +167,8 @@ class DonationBloc {
       {DonationModel donationModel, RequestModel requestModel, String notificationId, UserModel donor}) async {
     donationModel.requestIdType = 'request';
     donationModel.cashDetails.pledgedAmount = await currencyConversion(
-            fromCurrency: donationModel?.cashDetails?.cashDetails?.requestDonatedCurrency ?? "",
-            toCurrency: requestModel?.cashModel?.requestCurrencyType ?? "",
+            fromCurrency: donationModel?.cashDetails?.cashDetails?.requestDonatedCurrency ?? "USD",
+            toCurrency: requestModel?.cashModel?.requestCurrencyType ?? "USD",
             amount: double.parse(_amountPledged?.value) ?? 0.0)
         .then((value) => donationModel.cashDetails.pledgedAmount = value);
 

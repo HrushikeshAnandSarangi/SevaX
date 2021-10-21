@@ -147,21 +147,21 @@ class RequestDonationDisputeBloc {
     if (operationMode == OperatingMode.USER) {
       convertedRate = await currencyConversion(
           fromCurrency: donationModel.requestIdType == 'offer'
-              ? donationModel.cashDetails.cashDetails.offerCurrencyType
-              : donationModel.cashDetails.cashDetails.requestDonatedCurrency,
+              ? donationModel?.cashDetails?.cashDetails?.offerCurrencyType ?? "USD"
+              : donationModel?.cashDetails?.cashDetails?.requestDonatedCurrency ?? "USD",
           toCurrency: donationModel.requestIdType == 'offer'
-              ? donationModel.cashDetails.cashDetails.offerCurrencyType
-              : donationModel.cashDetails.cashDetails.requestCurrencyType,
+              ? donationModel?.cashDetails?.cashDetails?.offerCurrencyType ?? "USD"
+              : donationModel?.cashDetails?.cashDetails?.requestCurrencyType ?? "USD",
           amount: double.parse(_cashAmount.value));
     }
     if (operationMode != OperatingMode.USER) {
       convertedRate = await currencyConversion(
           fromCurrency: donationModel.requestIdType == 'request'
-              ? donationModel.cashDetails.cashDetails.requestCurrencyType
-              : donationModel.cashDetails.cashDetails.offerDonatedCurrencyType,
+              ? donationModel?.cashDetails?.cashDetails?.requestCurrencyType ?? "USD"
+              : donationModel?.cashDetails?.cashDetails?.offerDonatedCurrencyType ?? "USD",
           toCurrency: donationModel.requestIdType == 'request'
-              ? donationModel.cashDetails.cashDetails.requestCurrencyType
-              : donationModel.cashDetails.cashDetails.offerCurrencyType,
+              ? donationModel?.cashDetails?.cashDetails?.requestCurrencyType ?? "USD"
+              : donationModel?.cashDetails?.cashDetails?.offerCurrencyType ?? "USD",
           amount: double.parse(_cashAmount.value));
     }
 

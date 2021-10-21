@@ -1127,8 +1127,8 @@ class _DonationViewState extends State<DonationView> {
                 onPressed: () async {
                   // logger.d("#FROM C ${defaultDonationCurrencyType}");
                   rate = await currencyConversion(
-                          fromCurrency: widget?.requestModel?.cashModel?.requestCurrencyType ?? "",
-                          toCurrency: donationsModel?.cashDetails?.cashDetails?.requestDonatedCurrency ?? "",
+                          fromCurrency: widget?.requestModel?.cashModel?.requestCurrencyType ?? "USD",
+                          toCurrency: donationsModel?.cashDetails?.cashDetails?.requestDonatedCurrency ?? "USD",
                           amount: widget?.requestModel?.cashModel?.minAmount?.toDouble() ?? 0.0)
                       .then((value) => rate = value);
                   logger.d("#FROM C ${defaultDonationCurrencyType}");
