@@ -126,7 +126,7 @@ class Auth {
     } on FirebaseAuthException catch (error) {
       logger.i(
           "${error.code} ==================================================");
-      if (error.code == 'ERROR_EMAIL_ALREADY_IN_USE')
+      if (error.code == 'email-already-in-use')
         // FirebaseCrashlytics.instance.log(error.toString());
         throw EmailAlreadyInUseException(error.message);
     } catch (error) {
