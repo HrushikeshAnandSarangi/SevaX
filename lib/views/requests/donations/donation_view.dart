@@ -51,8 +51,7 @@ class _DonationViewState extends State<DonationView> {
   final GlobalKey<DoseFormState> _formKey = GlobalKey();
   final DonationBloc donationBloc = DonationBloc();
   ProgressDialog progressDialog;
-  RegExp emailPattern =
-      RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+  RegExp emailPattern = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
   String mobilePattern = r'^[0-9]+$';
   List<String> donationsCategories = [];
   int amountEntered = 0;
@@ -91,8 +90,7 @@ class _DonationViewState extends State<DonationView> {
   void initState() {
     donationsModel.id = Utils.getUuid();
     donationsModel.notificationId = Utils.getUuid();
-    paymentDetailModel =
-        RequestUtils().initializePaymentModel(cashModel: donationsModel.cashDetails.cashDetails);
+    paymentDetailModel = RequestUtils().initializePaymentModel(cashModel: donationsModel.cashDetails.cashDetails);
     if (widget.offerModel == null && defaultDonationCurrencyType == 'USD') {
       setState(() {
         donationsModel.cashDetails.cashDetails.requestDonatedCurrency = defaultDonationCurrencyType;
@@ -145,10 +143,7 @@ class _DonationViewState extends State<DonationView> {
 
   void getCommunity() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      CollectionRef.communities
-          .doc(SevaCore.of(context).loggedInUser.currentCommunity)
-          .get()
-          .then((value) {
+      CollectionRef.communities.doc(SevaCore.of(context).loggedInUser.currentCommunity).get().then((value) {
         logger.i(">>>>>>>>>>>" + CommunityModel(value.data()).toMap().toString());
         donationBloc.addCommunity(CommunityModel(value.data()));
       });
@@ -236,8 +231,7 @@ class _DonationViewState extends State<DonationView> {
     if (widget.requestModel != null) {
       donationsModel.timebankId = widget.requestModel.timebankId;
       donationsModel.requestId = widget.requestModel.id;
-      donationsModel.donatedToTimebank =
-          widget.requestModel.requestMode != RequestMode.PERSONAL_REQUEST;
+      donationsModel.donatedToTimebank = widget.requestModel.requestMode != RequestMode.PERSONAL_REQUEST;
       donationsModel.donationType = widget.requestModel.requestType;
       donationsModel.donatedTo = widget.requestModel.requestMode == RequestMode.PERSONAL_REQUEST
           ? widget.requestModel.sevaUserId
@@ -405,12 +399,10 @@ class _DonationViewState extends State<DonationView> {
                                         setState(() {
                                           indexSelected = index;
                                           isNeedCloseDropDown = true;
-                                          defaultOfferCurrenyType =
-                                              currencyList[indexSelected].code;
+                                          defaultOfferCurrenyType = currencyList[indexSelected].code;
                                           currencyKey = currencyList[indexSelected].code;
                                           _bloc.offerDonatedCurrencyType(currencyKey);
-                                          donationBloc.offerDonatedCurrencyType(
-                                              currencyList[indexSelected].code);
+                                          donationBloc.offerDonatedCurrencyType(currencyList[indexSelected].code);
                                           defaultFlag = currencyList[indexSelected].imagePath;
                                         });
 
@@ -425,11 +417,9 @@ class _DonationViewState extends State<DonationView> {
                                           progressDialog.show();
                                         }
                                         currencyConversion(
-                                                fromCurrency:
-                                                    offerModel.cashModel.offerCurrencyType,
+                                                fromCurrency: offerModel.cashModel.offerCurrencyType,
                                                 toCurrency: currencyList[indexSelected].code,
-                                                amount:
-                                                    offerModel.cashModel.targetAmount.toDouble())
+                                                amount: offerModel.cashModel.targetAmount.toDouble())
                                             .then((value) {
                                           amountConverted = value;
                                           setState(() {});
@@ -440,13 +430,9 @@ class _DonationViewState extends State<DonationView> {
                                         decoration: BoxDecoration(
                                           borderRadius: BorderRadius.vertical(
                                             top: index == 0 ? Radius.circular(4) : Radius.zero,
-                                            bottom: index == currencyList.length - 1
-                                                ? Radius.circular(4)
-                                                : Radius.zero,
+                                            bottom: index == currencyList.length - 1 ? Radius.circular(4) : Radius.zero,
                                           ),
-                                          color: indexSelected == index
-                                              ? Color(0xFFE8EFFF)
-                                              : Colors.white,
+                                          color: indexSelected == index ? Color(0xFFE8EFFF) : Colors.white,
                                         ),
                                         padding: EdgeInsets.symmetric(horizontal: 16),
                                         child: Container(
@@ -507,8 +493,7 @@ class _DonationViewState extends State<DonationView> {
                         /*  if (int.parse(value) > offerModel.cashModel.targetAmount) {
                       return S.of(context).request_amount_cannot_be_greater;
                     }*/
-                        donationsModel.cashDetails.cashDetails.amountRaised =
-                            double.parse(value.toString());
+                        donationsModel.cashDetails.cashDetails.amountRaised = double.parse(value.toString());
                       } else {
                         return S.of(context).enter_valid_amount;
                       }
@@ -524,28 +509,22 @@ class _DonationViewState extends State<DonationView> {
                       onDropDownChanged: (value) {
                         switch (value) {
                           case PaymentMode.ACH:
-                            donationsModel.cashDetails.cashDetails.paymentType =
-                                RequestPaymentType.ACH;
+                            donationsModel.cashDetails.cashDetails.paymentType = RequestPaymentType.ACH;
                             break;
                           case PaymentMode.ZELLEPAY:
-                            donationsModel.cashDetails.cashDetails.paymentType =
-                                RequestPaymentType.ZELLEPAY;
+                            donationsModel.cashDetails.cashDetails.paymentType = RequestPaymentType.ZELLEPAY;
                             break;
                           case PaymentMode.PAYPAL:
-                            donationsModel.cashDetails.cashDetails.paymentType =
-                                RequestPaymentType.PAYPAL;
+                            donationsModel.cashDetails.cashDetails.paymentType = RequestPaymentType.PAYPAL;
                             break;
                           case PaymentMode.VENMO:
-                            donationsModel.cashDetails.cashDetails.paymentType =
-                                RequestPaymentType.VENMO;
+                            donationsModel.cashDetails.cashDetails.paymentType = RequestPaymentType.VENMO;
                             break;
                           case PaymentMode.SWIFT:
-                            donationsModel.cashDetails.cashDetails.paymentType =
-                                RequestPaymentType.SWIFT;
+                            donationsModel.cashDetails.cashDetails.paymentType = RequestPaymentType.SWIFT;
                             break;
                           case PaymentMode.OTHER:
-                            donationsModel.cashDetails.cashDetails.paymentType =
-                                RequestPaymentType.OTHER;
+                            donationsModel.cashDetails.cashDetails.paymentType = RequestPaymentType.OTHER;
                             break;
                         }
                         // donationsModel.cashDetails.cashDetails.paymentType = value;
@@ -554,14 +533,10 @@ class _DonationViewState extends State<DonationView> {
                         if (event is ZellePayment) {
                           donationsModel.cashDetails.cashDetails.zelleId = event.zelleId;
                         } else if (event is ACHPayment) {
-                          donationsModel.cashDetails.cashDetails.achdetails.bank_name =
-                              event.bank_name;
-                          donationsModel.cashDetails.cashDetails.achdetails.bank_address =
-                              event.bank_address;
-                          donationsModel.cashDetails.cashDetails.achdetails.account_number =
-                              event.account_number;
-                          donationsModel.cashDetails.cashDetails.achdetails.routing_number =
-                              event.routing_number;
+                          donationsModel.cashDetails.cashDetails.achdetails.bank_name = event.bank_name;
+                          donationsModel.cashDetails.cashDetails.achdetails.bank_address = event.bank_address;
+                          donationsModel.cashDetails.cashDetails.achdetails.account_number = event.account_number;
+                          donationsModel.cashDetails.cashDetails.achdetails.routing_number = event.routing_number;
                         } else if (event is PayPalPayment) {
                           donationsModel.cashDetails.cashDetails.paypalId = event.paypalId;
                         } else if (event is VenmoPayment) {
@@ -570,8 +545,7 @@ class _DonationViewState extends State<DonationView> {
                           donationsModel.cashDetails.cashDetails.swiftId = event.swiftId;
                         } else if (event is OtherPayment) {
                           donationsModel.cashDetails.cashDetails.others = event.others;
-                          donationsModel.cashDetails.cashDetails.other_details =
-                              event.other_details;
+                          donationsModel.cashDetails.cashDetails.other_details = event.other_details;
                         }
                         // logger.d("*DONATIONS* CASH MODEL CHANGED ${jsonEncode(cashModel.toMap())}");
                         // donationsModel.cashDetails.cashDetails = cashModel;
@@ -607,8 +581,7 @@ class _DonationViewState extends State<DonationView> {
                                   .then((value) {
                                 if (value) {
                                   hideProgress();
-                                  getSuccessDialog(S.of(context).donations_requested.toLowerCase())
-                                      .then(
+                                  getSuccessDialog(S.of(context).donations_requested.toLowerCase()).then(
                                     //to pop the screen
                                     (_) => Navigator.of(context).pop(),
                                   );
@@ -676,8 +649,7 @@ class _DonationViewState extends State<DonationView> {
           StreamBuilder<Map<dynamic, dynamic>>(
               stream: donationBloc.selectedList,
               builder: (context, snapshot) {
-                List<String> keys =
-                    List.from(widget.requestModel.goodsDonationDetails.requiredGoods.keys);
+                List<String> keys = List.from(widget.requestModel.goodsDonationDetails.requiredGoods.keys);
                 return ListView.builder(
                   shrinkWrap: true,
                   itemCount: widget.requestModel.goodsDonationDetails.requiredGoods.length,
@@ -689,8 +661,7 @@ class _DonationViewState extends State<DonationView> {
                           checkColor: _checkColor,
                           onChanged: (bool value) {
                             donationBloc.addAddRemove(
-                              selectedValue: widget
-                                  .requestModel.goodsDonationDetails.requiredGoods[keys[index]],
+                              selectedValue: widget.requestModel.goodsDonationDetails.requiredGoods[keys[index]],
                               selectedKey: keys[index],
                             );
                           },
@@ -848,8 +819,7 @@ class _DonationViewState extends State<DonationView> {
             StreamBuilder<Map<dynamic, dynamic>>(
                 stream: donationBloc.selectedList,
                 builder: (context, snapshot) {
-                  List<String> keys =
-                      List.from(widget.offerModel.goodsDonationDetails.requiredGoods.keys);
+                  List<String> keys = List.from(widget.offerModel.goodsDonationDetails.requiredGoods.keys);
                   return ListView.builder(
                     physics: NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
@@ -862,8 +832,7 @@ class _DonationViewState extends State<DonationView> {
                             checkColor: _checkColor,
                             onChanged: (bool value) {
                               donationBloc.addAddRemove(
-                                selectedValue: widget
-                                    .offerModel.goodsDonationDetails.requiredGoods[keys[index]],
+                                selectedValue: widget.offerModel.goodsDonationDetails.requiredGoods[keys[index]],
                                 selectedKey: keys[index],
                               );
                             },
@@ -885,7 +854,7 @@ class _DonationViewState extends State<DonationView> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
                 actionButton(
-                  buttonColor: Theme.of(context).primaryColor,
+                    buttonColor: Theme.of(context).primaryColor,
                     textColor: Colors.white,
                     buttonTitle: S.of(context).submit,
                     onPressed: () async {
@@ -924,8 +893,7 @@ class _DonationViewState extends State<DonationView> {
                                 .then((value) {
                               if (value) {
                                 hideProgress();
-                                getSuccessDialog(S.of(context).donations_requested.toLowerCase())
-                                    .then(
+                                getSuccessDialog(S.of(context).donations_requested.toLowerCase()).then(
                                   //to pop the screen
                                   (_) => Navigator.of(context).pop(),
                                 );
@@ -987,6 +955,9 @@ class _DonationViewState extends State<DonationView> {
                   textAlign: TextAlign.start,
                   maxLines: 1,
                   keyboardType: TextInputType.number,
+                  validator: (value) {
+                    return null;
+                  },
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.only(top: 10),
                     filled: true,
@@ -1070,8 +1041,7 @@ class _DonationViewState extends State<DonationView> {
                                   indexSelected = index;
                                   isNeedCloseDropDown = true;
                                   defaultDonationCurrencyType = currencyList[indexSelected].code;
-                                  donationBloc
-                                      .requestDonatedCurrencyType(currencyList[indexSelected].code);
+                                  donationBloc.requestDonatedCurrencyType(currencyList[indexSelected].code);
                                   donationsModel.cashDetails.cashDetails.requestDonatedCurrency =
                                       currencyList[indexSelected].code;
                                   defaultFlag = currencyList[indexSelected].imagePath;
@@ -1081,9 +1051,7 @@ class _DonationViewState extends State<DonationView> {
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.vertical(
                                     top: index == 0 ? Radius.circular(4) : Radius.zero,
-                                    bottom: index == currencyList.length - 1
-                                        ? Radius.circular(4)
-                                        : Radius.zero,
+                                    bottom: index == currencyList.length - 1 ? Radius.circular(4) : Radius.zero,
                                   ),
                                   color: indexSelected == index ? Color(0xFFE8EFFF) : Colors.white,
                                 ),
@@ -1159,9 +1127,10 @@ class _DonationViewState extends State<DonationView> {
                 onPressed: () async {
                   // logger.d("#FROM C ${defaultDonationCurrencyType}");
                   rate = await currencyConversion(
-                      fromCurrency: widget.requestModel.cashModel.requestCurrencyType,
-                      toCurrency: donationsModel.cashDetails.cashDetails.requestDonatedCurrency,
-                      amount: widget.requestModel.cashModel.minAmount.toDouble());
+                          fromCurrency: widget?.requestModel?.cashModel?.requestCurrencyType ?? "USD",
+                          toCurrency: donationsModel?.cashDetails?.cashDetails?.requestDonatedCurrency ?? "USD",
+                          amount: widget?.requestModel?.cashModel?.minAmount?.toDouble() ?? 0.0)
+                      .then((value) => rate = value);
                   logger.d("#FROM C ${defaultDonationCurrencyType}");
 
                   donationBloc
@@ -1372,7 +1341,7 @@ class _DonationViewState extends State<DonationView> {
               fontSize: 12,
             ),
           ),
-          color: buttonColor ?? Colors.grey[200],
+          color: buttonColor ?? Colors.grey[400],
           shape: StadiumBorder(),
         ),
       ),
@@ -1404,8 +1373,7 @@ class _DonationViewState extends State<DonationView> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          content: Text(
-              S.of(context).successfully.firstWordUpperCase().replaceFirst('.', '') + ' ' + data),
+          content: Text(S.of(context).successfully.firstWordUpperCase().replaceFirst('.', '') + ' ' + data),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             CustomTextButton(
@@ -1434,7 +1402,6 @@ class _DonationViewState extends State<DonationView> {
 
   OutlineInputBorder customTextFieldBorder() {
     return OutlineInputBorder(
-        borderSide: BorderSide(color: Colors.grey[600], width: 0.5),
-        borderRadius: BorderRadius.circular(5));
+        borderSide: BorderSide(color: Colors.grey[600], width: 0.5), borderRadius: BorderRadius.circular(5));
   }
 }
