@@ -223,7 +223,7 @@ class _TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                                   ),
                                   const SizedBox(height: 12),
                                   Text(
-                                    'Transaction details',
+                                    S.of(context).trasaction_details,
                                     style: TextStyle(
                                       fontSize: 18,
                                       color: Color(0xFF9B9B9B).withOpacity(0.9),
@@ -337,7 +337,7 @@ class TitleRow extends StatelessWidget {
             Expanded(
               child: Text(
                 DateFormat('MMMM dd @ h:mm a ')
-                        .format(DateTime.fromMillisecondsSinceEpoch(timelineDoc.timestamp)) +
+                        .format(DateTime.fromMillisecondsSinceEpoch(timelineDoc.timestamp * 1000)) +
                     '- ' +
                     getTimelineLabel(
                             // requestType,

@@ -444,7 +444,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
               return getValidationError(context, validate);
             },
             value: snapshot.data,
-            heading: S.of(context).availablity,
+            heading: S.of(context).availablity + '*',
             onChanged: _bloc.onAvailabilityChanged,
             hint: S.of(context).availablity_description,
             maxLength: 100,
@@ -761,7 +761,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
       key: _scaffoldKey,
       appBar: widget.offerModel != null
           ? AppBar(
-        backgroundColor: Theme.of(context).primaryColor,
+              backgroundColor: Theme.of(context).primaryColor,
               title: Text(
                 S.of(context).edit,
                 style: TextStyle(fontSize: 18),
@@ -839,7 +839,9 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                   validator: (val) {
                                     // _bloc.validateTitle(val);
                                     var titleVal = _bloc.validateTitle(val);
-                                    return titleVal == null ? null : getValidationError(context, titleVal);
+                                    return titleVal == null
+                                        ? null
+                                        : getValidationError(context, titleVal);
                                   },
                                   focusNode: _title,
                                   nextNode: _description,
@@ -1913,9 +1915,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                 )
               : null,
           endTime: widget.offerModel != null &&
-                  widget.offerModel.lendingOfferDetailsModel
-                          .lendingOfferTypeMode ==
-                      'ONE_TIME'
+                  widget.offerModel.lendingOfferDetailsModel.lendingOfferTypeMode == 'ONE_TIME'
               ? DateTime.fromMillisecondsSinceEpoch(
                   widget.offerModel.lendingOfferDetailsModel.endDate,
                 )
@@ -2024,9 +2024,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                           );
                     return;
                   }
-                  if (widget.offerModel.individualOfferDataModel
-                              .timeOfferType ==
-                          'ONE_TIME'
+                  if (_bloc.lendingOfferTypeMode == 0
                       ? (OfferDurationWidgetState.starttimestamp != 0 &&
                           OfferDurationWidgetState.endtimestamp != 0)
                       : OfferDurationWidgetState.starttimestamp != 0) {

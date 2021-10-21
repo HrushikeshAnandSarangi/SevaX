@@ -966,17 +966,20 @@ class TaskCardViewState extends State<TaskCardView> {
       if (hoursController.text == null || hoursController.text.length == 0) {
         return;
       }
-
-      totalMinutes = int.parse(selectedMinuteValue) + (int.parse(hoursController.text) * 60);
+       String x = "${hoursController.text}.$selectedMinuteValue";
+      totalMinutes = (double.parse(x) * 60).toInt();
+      //totalMinutes = int.parse(selectedMinuteValue) + (int.parse(hoursController.text) * 60);
     } else {
       logger.i('This 3');
 
-      if (hoursController.text == null || hoursController.text.length == 0) {
-        return;
-      }
+      // if (hoursController.text == null || hoursController.text.length == 0) {
+      //   return;
+      // }
+       String x = "${hoursController.text}.$selectedMinuteValue";
+      totalMinutes = (double.parse(x) * 60).toInt();
     }
 
-    totalMinutes = int.parse(selectedMinuteValue) + (int.parse(hoursController.text) * 60);
+  //  totalMinutes = int.parse(selectedMinuteValue) + (int.parse(hoursController.text) * 60);
     creditRequest = totalMinutes / 60;
     //Just keeping 20 hours limit for previous versions of app whih did not had number of hours
     maxClaim = (requestModel.numberOfHours ?? 20) / requestModel.numberOfApprovals;
@@ -1132,7 +1135,9 @@ class TaskCardViewState extends State<TaskCardView> {
             (int.parse(selectedHoursPrepTimeController.text) * 60) +
             (int.parse(selectedHoursDeliveryTimeController.text) * 60);
       } else {
-        totalMinutes = int.parse(selectedMinuteValue) + (int.parse(selectedHourValue) * 60);
+           String x = "${hoursController.text}.$selectedMinuteValue";
+        totalMinutes = (double.parse(x) * 60).toInt();
+       // totalMinutes = int.parse(selectedMinuteValue) + (int.parse(selectedHourValue) * 60);
         // TODO needs flow correction need to be removed when tasks introduced- Eswar
       }
 

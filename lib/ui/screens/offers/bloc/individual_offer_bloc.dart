@@ -287,7 +287,7 @@ class IndividualOfferBloc extends BlocBase with Validators {
   }
 
   String validateTitle(String value) {
-    if (value == null || value == '') {
+    if (value.trimLeft() == null || value.trimLeft() == '') {
       _title.addError(ValidationErrors.titleError);
       return ValidationErrors.titleError;
     } else if (value.substring(0, 1).contains('_') &&
@@ -302,7 +302,7 @@ class IndividualOfferBloc extends BlocBase with Validators {
   }
 
   String validateDescription(String value) {
-    if (value == null || value == '') {
+    if (value.trimLeft() == null || value.trimLeft() == '') {
       _offerDescription.addError(ValidationErrors.genericError);
       return ValidationErrors.genericError;
     } else if (profanityDetector.isProfaneString(value)) {
@@ -315,7 +315,7 @@ class IndividualOfferBloc extends BlocBase with Validators {
   String validateAvailabilityField(String value) {
     logger.d("RequestType ${_type.value}");
     if (_type.value == RequestType.TIME || _type.value == null) {
-      if (value == null || value == '') {
+      if (value.trimLeft() == null || value.trimLeft() == '') {
         _availabilty.addError(ValidationErrors.genericError);
         return ValidationErrors.genericError;
       } else if (profanityDetector.isProfaneString(value)) {
