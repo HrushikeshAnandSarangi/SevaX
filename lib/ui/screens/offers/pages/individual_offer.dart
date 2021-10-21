@@ -1676,7 +1676,10 @@ class _IndividualOfferState extends State<IndividualOffer> {
               focusNode: _description,
               nextNode: _availability,
               value: snapshot.data,
-              validator: _bloc.validateDescription,
+              validator: (val) {
+                var validate = _bloc.validateDescription(val);
+                return getValidationError(context, validate);
+              },
               heading: "${S.of(context).offer_description}*",
               onChanged: _bloc.onOfferDescriptionChanged,
               hint: description_hint != null
@@ -1686,7 +1689,6 @@ class _IndividualOfferState extends State<IndividualOffer> {
                       : S.of(context).lending_offer_description_hint_item),
               maxLength: 500,
               maxLines: 2,
-              error: getValidationError(context, snapshot.error),
             );
           },
         ),
