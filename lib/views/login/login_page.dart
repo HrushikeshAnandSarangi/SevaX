@@ -186,7 +186,7 @@ class _LoginPageState extends State<LoginPage> {
                             S.of(context).enter_email,
                           ),
                           content: Container(
-                            width: 300,
+                            width: 320,
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: <Widget>[
@@ -216,85 +216,82 @@ class _LoginPageState extends State<LoginPage> {
                                 SizedBox(
                                   height: 15,
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                    left: 30.0,
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      CustomTextButton(
-                                        color: HexColor("#d2d2d2"),
-                                        child: Text(
-                                          S.of(context).cancel,
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            color: Colors.white,
-                                            fontFamily: 'Europa',
-                                          ),
+                                Row(
+                                 mainAxisAlignment: MainAxisAlignment.end,
+                                 mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    CustomTextButton(
+                                      color: HexColor("#d2d2d2"),
+                                      child: Text(
+                                        S.of(context).cancel,
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.white,
+                                          fontFamily: 'Europa',
                                         ),
-                                        onPressed: () {
-                                          Navigator.of(_context).pop(
-                                            {
-                                              "sendResetLink": false,
-                                              "userEmail": null
-                                            },
-                                          );
-                                        },
                                       ),
-                                      Spacer(),
-                                      CustomTextButton(
-                                        shape: StadiumBorder(),
-                                        color: Theme.of(context).accentColor,
-                                        textColor:
-                                            FlavorConfig.values.buttonTextColor,
-                                        child: Text(
-                                          S.of(context).reset_password,
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            color: Colors.white,
-                                            fontFamily: 'Europa',
-                                          ),
+                                      onPressed: () {
+                                        Navigator.of(_context).pop(
+                                          {
+                                            "sendResetLink": false,
+                                            "userEmail": null
+                                          },
+                                        );
+                                      },
+                                    ),
+                                    SizedBox(width: 8,),
+                                    CustomTextButton(
+                                      shape: StadiumBorder(),
+                                      color: Theme.of(context).accentColor,
+                                      textColor:
+                                          FlavorConfig.values.buttonTextColor,
+                                      child: Text(
+                                        S.of(context).reset_password,
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.white,
+                                          fontFamily: 'Europa',
                                         ),
-                                        onPressed: () {
-                                          if (!_formKeyDialog.currentState
-                                              .validate()) {
-                                            return;
-                                          }
-                                          Navigator.of(_context).pop(
-                                            {
-                                              "sendResetLink": true,
-                                              "userEmail":
-                                                  _textFieldControllerResetEmail
-                                                      .trim()
-                                            },
-                                          );
-                                        },
                                       ),
-                                    ],
-                                  ),
+                                      onPressed: () {
+                                        if (!_formKeyDialog.currentState
+                                            .validate()) {
+                                          return;
+                                        }
+                                        Navigator.of(_context).pop(
+                                          {
+                                            "sendResetLink": true,
+                                            "userEmail":
+                                                _textFieldControllerResetEmail
+                                                    .trim()
+                                          },
+                                        );
+                                      },
+                                    ),
+                                  ],
                                 ),
-//                                LayoutBuilder(
-//                                  builder: (context, size) {
-//                                    TextSpan span = TextSpan(
-//                                      text: S.of(context).reset_password +
-//                                          '${Padding(padding: const EdgeInsets.only(left: 20))}' +
-//                                          S.of(context).cancel,
-//                                    );
-//                                    return textLengthCalculator(span, size) ==
-//                                            true
-//                                        ? Wrap(
-//                                            alignment: WrapAlignment.center,
-//                                            crossAxisAlignment:
-//                                                WrapCrossAlignment.center,
-//                                            children:
-//                                                resetPasswordAndCancelButton,
-//                                          )
-//                                        : Row(
-//                                            children:
-//                                                resetPasswordAndCancelButton,
-//                                          );
-//                                  },
-//                                ),
+                          //                                LayoutBuilder(
+                          //                                  builder: (context, size) {
+                          //                                    TextSpan span = TextSpan(
+                          //                                      text: S.of(context).reset_password +
+                          //                                          '${Padding(padding: const EdgeInsets.only(left: 20))}' +
+                          //                                          S.of(context).cancel,
+                          //                                    );
+                          //                                    return textLengthCalculator(span, size) ==
+                          //                                            true
+                          //                                        ? Wrap(
+                          //                                            alignment: WrapAlignment.center,
+                          //                                            crossAxisAlignment:
+                          //                                                WrapCrossAlignment.center,
+                          //                                            children:
+                          //                                                resetPasswordAndCancelButton,
+                          //                                          )
+                          //                                        : Row(
+                          //                                            children:
+                          //                                                resetPasswordAndCancelButton,
+                          //                                          );
+                          //                                  },
+                          //                                ),
                               ],
                             ),
                           ),
@@ -911,6 +908,7 @@ class _LoginPageState extends State<LoginPage> {
     UserModel user;
     try {
       user = await auth.handleGoogleSignIn();
+      logger.d("#user ${user}");
       await getAndUpdateDeviceDetailsOfUser(
           locationVal: location, userEmailId: user.email);
     } on FirebaseAuthException catch (erorr) {

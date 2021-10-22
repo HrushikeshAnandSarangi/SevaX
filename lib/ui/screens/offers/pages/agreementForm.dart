@@ -535,7 +535,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                             ),
                           ),
                           DoseTextField(
-                            isRequired: true,
+                            isRequired: false,
                             focusNode: specificConditionNode,
                             maxLines: 3,
                             onFieldSubmitted: (v) {

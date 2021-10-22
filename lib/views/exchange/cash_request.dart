@@ -226,7 +226,7 @@ class _CashRequestState extends State<CashRequest> {
           keyboardType: TextInputType.text,
           textCapitalization: TextCapitalization.sentences,
           validator: (value) {
-            if (value.isEmpty) {
+            if (value.trimLeft().isEmpty) {
               return S.of(context).request_subject;
             } else if (profanityDetector.isProfaneString(value)) {
               return S.of(context).profanity_text_alert;
@@ -289,7 +289,7 @@ class _CashRequestState extends State<CashRequest> {
           maxLines: 1,
           // ignore: missing_return
           validator: (value) {
-            if (value.isEmpty) {
+            if (value.trimLeft().isEmpty) {
               return S.of(context).validation_error_general_text;
             }
             if (profanityDetector.isProfaneString(value)) {

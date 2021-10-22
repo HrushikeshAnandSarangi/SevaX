@@ -26,9 +26,7 @@ class TimeBankSevaCoin extends StatefulWidget {
   final bool isAdmin;
   final TimebankModel timebankData;
 
-  const TimeBankSevaCoin(
-      {Key key, this.loggedInUser, this.isAdmin, this.timebankData})
-      : super(key: key);
+  const TimeBankSevaCoin({Key key, this.loggedInUser, this.isAdmin, this.timebankData}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -50,8 +48,7 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
   Widget build(BuildContext context) {
     return StreamBuilder(
       stream: CollectionRef.timebank.doc(widget.timebankData.id).snapshots(),
-      builder:
-          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+      builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
         double balance = 0;
         if (snapshot.hasData && snapshot != null) {
           balance = AppConfig.isTestCommunity
@@ -71,12 +68,11 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
                             MaterialPageRoute(
                               builder: (context) {
                                 return TransactionDetailsView(
-                                  id: SevaCore.of(context)
-                                      .loggedInUser
-                                      .currentTimebank,
-                                  userId: SevaCore.of(context)
-                                      .loggedInUser
-                                      .sevaUserID,
+                                  id: timebankModel.id,
+                                  // SevaCore.of(context)
+                                  //     .loggedInUser
+                                  //     .currentTimebank,
+                                  userId: SevaCore.of(context).loggedInUser.sevaUserID,
                                   totalBalance: '${balance ?? 0}',
                                 );
                               },
@@ -96,24 +92,17 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
                                 ? Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: TransactionsMatrixCheck(
-                                      upgradeDetails: AppConfig
-                                          .upgradePlanBannerModel
-                                          .add_manual_time,
-                                      transaction_matrix_type:
-                                          "add_manual_time",
+                                      upgradeDetails: AppConfig.upgradePlanBannerModel.add_manual_time,
+                                      transaction_matrix_type: "add_manual_time",
                                       child: AddManualTimeButton(
                                         typeId: timebankModel.id,
-                                        timebankId: timebankModel
-                                                    .parentTimebankId ==
-                                                FlavorConfig.values.timebankId
+                                        timebankId: timebankModel.parentTimebankId == FlavorConfig.values.timebankId
                                             ? timebankModel.id
                                             : timebankModel.parentTimebankId,
                                         timeFor: ManualTimeType.Timebank,
                                         userType: getLoggedInUserRole(
                                           timebankModel,
-                                          SevaCore.of(context)
-                                              .loggedInUser
-                                              .sevaUserID,
+                                          SevaCore.of(context).loggedInUser.sevaUserID,
                                         ),
                                         communityName: timebankModel.name,
                                       ),
@@ -153,8 +142,7 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
           content: Text(S.of(context).check_internet),
           action: SnackBarAction(
             label: S.of(context).dismiss,
-            onPressed: () =>
-                ScaffoldMessenger.of(context).hideCurrentSnackBar(),
+            onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
           ),
         ),
       );
@@ -169,8 +157,7 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
           content: Text(S.of(context).insufficient_credits_to_donate),
           action: SnackBarAction(
             label: S.of(context).dismiss,
-            onPressed: () =>
-                ScaffoldMessenger.of(context).hideCurrentSnackBar(),
+            onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
           ),
         ),
       );
@@ -200,8 +187,7 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
           SevaCore.of(context).loggedInUser.sandboxCurrentBalance =
               widget.loggedInUser.sandboxCurrentBalance - donateAmount_Received;
         } else {
-          SevaCore.of(context).loggedInUser.currentBalance =
-              widget.loggedInUser.currentBalance - donateAmount_Received;
+          SevaCore.of(context).loggedInUser.currentBalance = widget.loggedInUser.currentBalance - donateAmount_Received;
         }
       });
       await TransactionBloc().createNewTransaction(
@@ -230,8 +216,7 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
 
       await showDialog<double>(
         context: context,
-        builder: (context) => InputDonateSuccessDialog(
-            onComplete: () => {Navigator.pop(context)}),
+        builder: (context) => InputDonateSuccessDialog(onComplete: () => {Navigator.pop(context)}),
       );
     }
   }
@@ -245,8 +230,7 @@ class InputDonateDialog extends StatefulWidget {
   final double donateAmount;
   final double maxAmount;
 
-  const InputDonateDialog({Key key, this.donateAmount, this.maxAmount})
-      : super(key: key);
+  const InputDonateDialog({Key key, this.donateAmount, this.maxAmount}) : super(key: key);
 
   @override
   _InputDonateDialogState createState() => _InputDonateDialogState();
@@ -273,8 +257,7 @@ class _InputDonateDialogState extends State<InputDonateDialog> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Text('${S.of(context).current_seva_credit} ' +
-                widget.maxAmount.toStringAsFixed(2).toString()),
+            Text('${S.of(context).current_seva_credit} ' + widget.maxAmount.toStringAsFixed(2).toString()),
             TextFormField(
               decoration: InputDecoration(
                 hintText: S.of(context).number_of_seva_credit,
@@ -368,8 +351,7 @@ class InputDonateSuccessDialog extends StatefulWidget {
   const InputDonateSuccessDialog({Key key, this.onComplete}) : super(key: key);
 
   @override
-  _InputDonateSuccessDialogState createState() =>
-      _InputDonateSuccessDialogState();
+  _InputDonateSuccessDialogState createState() => _InputDonateSuccessDialogState();
 }
 
 class _InputDonateSuccessDialogState extends State<InputDonateSuccessDialog> {

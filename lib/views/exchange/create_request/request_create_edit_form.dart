@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -155,6 +156,10 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
         setState(() {
           validItems = onValue.listOfElement;
           timebankModel = onValue.timebankModel;
+          if (widget.formType == RequestFormType.CREATE) {
+            requestModel.address = timebankModel.address;
+            requestModel.location = timebankModel.location;
+          }
         });
         if (isAccessAvailable(timebankModel, widget.loggedInUser.sevaUserID)) {
           isAdmin = true;
@@ -193,7 +198,8 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
   }
 
   _initializeEditRequestModel() {
-    requestModel = widget.requestModel;
+    //initialized using map to not have a copy of same hashcode value object
+    requestModel = RequestModel.fromMap(widget.requestModel.toMap());
 
     // selectedInstructorModelTemp = widget.requestModel.selectedInstructor;
     requestModel.timebankId = _selectedTimebankId;
@@ -351,12 +357,12 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
                                       timebankModel: snapshot.data,
                                       projectModelList: projectModelList,
                                       projectId: widget.projectId,
-                                        selectedInstructorModel:
-                                            selectedInstructorModel,
+                                      selectedInstructorModel:
+                                          selectedInstructorModel,
                                       timebankId: widget.timebankId,
                                       comingFrom: widget.comingFrom,
-                                        onCreateEventChanged: (value) =>
-                                            createEvent = value,
+                                      onCreateEventChanged: (value) =>
+                                          createEvent = value,
                                     );
                                     break;
                                   case RequestType.CASH:
@@ -372,8 +378,8 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
                                       timebankId: widget.timebankId,
                                       timebankModel: snapshot.data,
                                       createEvent: createEvent,
-                                        onCreateEventChanged: (value) =>
-                                            createEvent = value,
+                                      onCreateEventChanged: (value) =>
+                                          createEvent = value,
                                       projectId: widget.projectId,
                                       instructorAdded: instructorAdded,
                                     );
@@ -392,8 +398,8 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
                                       instructorAdded: instructorAdded,
                                       projectId: widget.projectId,
                                       createEvent: createEvent,
-                                        onCreateEventChanged: (value) =>
-                                            createEvent = value,
+                                      onCreateEventChanged: (value) =>
+                                          createEvent = value,
                                       projectModelList: projectModelList,
                                     );
                                     break;
@@ -407,8 +413,8 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
                                       createEvent: createEvent,
                                       projectId: widget.projectId,
                                       instructorAdded: instructorAdded,
-                                        onCreateEventChanged: (value) =>
-                                            createEvent = value,
+                                      onCreateEventChanged: (value) =>
+                                          createEvent = value,
                                       projectModelList: projectModelList,
                                       timebankModel: snapshot.data,
                                       comingFrom: widget.comingFrom,
@@ -431,16 +437,18 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
                                       timebankModel: snapshot.data,
                                       projectId: widget.projectId,
                                       projectModelList: projectModelList,
-                                        selectedInstructorModel:
-                                            selectedInstructorModel,
-                                        selectedInstructorModelChanged:
-                                            (value) {
-                                        selectedInstructorModel = value;
+                                      selectedInstructorModel:
+                                          selectedInstructorModel,
+                                      selectedInstructorModelChanged:
+                                          (instructorModel, isSelected) {
+                                        selectedInstructorModel =
+                                            instructorModel;
+                                        instructorAdded = isSelected;
                                       },
                                       timebankId: widget.timebankId,
                                       comingFrom: widget.comingFrom,
-                                        onCreateEventChanged: (value) =>
-                                            createEvent = value,
+                                      onCreateEventChanged: (value) =>
+                                          createEvent = value,
                                     );
                                     break;
                                   case RequestType.LENDING_OFFER:
@@ -454,30 +462,30 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
                               },
                             ),
                             Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 30.0),
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 30.0),
                               child: Center(
                                 child: Container(
                                   child: CustomElevatedButton(
-                                      onPressed: widget.formType ==
-                                              RequestFormType.EDIT
-                                        ? editRequest
-                                        : createRequest,
+                                    onPressed:
+                                        widget.formType == RequestFormType.EDIT
+                                            ? editRequest
+                                            : createRequest,
                                     child: Text(
                                       widget.formType == RequestFormType.EDIT
-                                            ? S
-                                                .of(context)
-                                                .update_request
-                                                .padLeft(10)
-                                                .padRight(10)
-                                            : S
-                                                .of(context)
-                                                .create_request
-                                                .padLeft(10)
-                                                .padRight(10),
-                                        style: Theme.of(context)
-                                            .primaryTextTheme
-                                            .button,
+                                          ? S
+                                              .of(context)
+                                              .update_request
+                                              .padLeft(10)
+                                              .padRight(10)
+                                          : S
+                                              .of(context)
+                                              .create_request
+                                              .padLeft(10)
+                                              .padRight(10),
+                                      style: Theme.of(context)
+                                          .primaryTextTheme
+                                          .button,
                                     ),
                                   ),
                                 ),
@@ -945,10 +953,13 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
         requestModel.borrowerReviewed = false;
       }
 
+      logger.d("#OTM ${requestModel.requestType}");
+      logger.d("#OTM  instructorAdded ${instructorAdded}");
+      logger.d("#OTM  SELETED ${requestModel.selectedInstructor ?? "NULL"}");
       if (requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST &&
-          (requestModel.selectedInstructor.toMap().isEmpty ||
-              requestModel.selectedInstructor == null ||
-              instructorAdded == false)) {
+          (requestModel.selectedInstructor == null ||
+              instructorAdded == false ||
+              requestModel.selectedInstructor.toMap().isEmpty)) {
         requestUtils.showDialogForTitle(
             dialogTitle: S.of(context).select_a_speaker_dialog,
             context: context);
@@ -1263,27 +1274,39 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
         }
       }
 
-      logger.i("=============||||||===============");
-
       if (OfferDurationWidgetState.starttimestamp ==
           OfferDurationWidgetState.endtimestamp) {
         requestUtils.showDialogForTitle(
             dialogTitle:
-                S.of(context).validation_error_same_start_date_end_date);
+                S.of(context).validation_error_same_start_date_end_date,
+            context: context);
         return;
       }
 
       if (OfferDurationWidgetState.starttimestamp == 0 ||
           OfferDurationWidgetState.endtimestamp == 0) {
         requestUtils.showDialogForTitle(
-            dialogTitle: S.of(context).validation_error_no_date);
+            dialogTitle: S.of(context).validation_error_no_date,
+            context: context);
         return;
       }
 
       if (OfferDurationWidgetState.starttimestamp >
           OfferDurationWidgetState.endtimestamp) {
         requestUtils.showDialogForTitle(
-            dialogTitle: S.of(context).validation_error_end_date_greater);
+            dialogTitle: S.of(context).validation_error_end_date_greater,
+            context: context);
+        return;
+      }
+      logger.i(
+          "${OfferDurationWidgetState.starttimestamp} |||||| ${DateTime.now().millisecondsSinceEpoch}");
+
+      if (OfferDurationWidgetState.starttimestamp <
+              DateTime.now().millisecondsSinceEpoch ||
+          OfferDurationWidgetState.endtimestamp <
+              DateTime.now().millisecondsSinceEpoch) {
+        requestUtils.showDialogForTitle(
+            dialogTitle: S.of(context).past_time_selected, context: context);
         return;
       }
 
@@ -1298,7 +1321,7 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm>
               selectedInstructorModel == null ||
               instructorAdded == false)) {
         requestUtils.showDialogForTitle(
-            dialogTitle: S.of(context).select_a_speaker);
+            dialogTitle: S.of(context).select_a_speaker, context: context);
         return;
       }
 

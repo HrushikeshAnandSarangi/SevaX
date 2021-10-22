@@ -52,24 +52,22 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
       otherDetailController = TextEditingController();
   List<FocusNode> focusNodeList = List.generate(10, (_) => FocusNode());
 
-
   @override
   void initState() {
     super.initState();
     paymentDetailModel = widget.paymentDetailModel;
     selectedMode = paymentDetailModel.paymentMode;
     _initialize();
-    zelleController.text = zellePayment.zelleId ?? '';
+    zelleController.text = zellePayment?.zelleId ?? '';
     venmoController.text = venmoPayment?.venmoId ?? '';
     paypalController.text = payPalPayment?.paypalId ?? '';
-    swiftController.text =swiftPayment?.swiftId ?? '';
+    swiftController.text = swiftPayment?.swiftId ?? '';
     bankNameController.text = achPayment?.bank_name ?? '';
     bankAddressController.text = achPayment?.bank_address;
     routingController.text = achPayment?.routing_number ?? '';
     accountController.text = achPayment?.account_number ?? '';
     othersController.text = otherPayment?.others ?? '';
     otherDetailController.text = otherPayment?.other_details ?? '';
-
   }
 
   _initialize() {
@@ -195,7 +193,8 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
   }
 
   void updateExitWithConfirmationValue(BuildContext context, int index, String value) {
-    ExitWithConfirmation.of(context).fieldValues[index] = value;
+    if (ExitWithConfirmation.of(context) != null)
+      ExitWithConfirmation.of(context).fieldValues[index] = value;
   }
 
   Widget RequestPaymentACH() {
@@ -212,7 +211,7 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
       ),
       DoseTextField(
         // key: UniqueKey(),
-        isRequired: true,
+        isRequired: selectedMode == PaymentMode.ACH,
         controller: bankNameController,
         focusNode: focusNodeList[0],
         formatters: [FilteringTextInputFormatter.allow(RegExp(r'^\S.*$'))],
@@ -224,7 +223,7 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
         textInputAction: TextInputAction.next,
         keyboardType: TextInputType.multiline,
         maxLines: 1,
-        validator: (value) {
+        validator: selectedMode == PaymentMode.ACH ?(value) {
           if (value.isEmpty) {
             return S.of(context).validation_error_general_text;
           } else if (!value.isEmpty) {
@@ -234,7 +233,7 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
             return S.of(context).enter_valid_bank_name;
           }
           return null;
-        },
+        }: null,
       ),
       SizedBox(height: 20),
       Text(
@@ -247,7 +246,7 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
         ),
       ),
       DoseTextField(
-        isRequired: true,
+        isRequired: selectedMode == PaymentMode.ACH,
         controller: bankAddressController,
         // key: UniqueKey(),
         focusNode: focusNodeList[1],
@@ -260,7 +259,7 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
         textInputAction: TextInputAction.next,
         keyboardType: TextInputType.multiline,
         maxLines: 1,
-        validator: (value) {
+        validator: selectedMode == PaymentMode.ACH ?(value) {
           if (value.isEmpty) {
             return S.of(context).validation_error_general_text;
           } else if (!value.isEmpty) {
@@ -270,7 +269,7 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
             return S.of(context).enter_valid_bank_address;
           }
           return null;
-        },
+        }: null,
       ),
       SizedBox(height: 20),
       Text(
@@ -283,7 +282,7 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
         ),
       ),
       DoseTextField(
-        isRequired: true,
+        isRequired: selectedMode == PaymentMode.ACH,
         controller: routingController,
         // key: UniqueKey(),
         focusNode: focusNodeList[2],
@@ -297,7 +296,7 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
         textInputAction: TextInputAction.next,
         keyboardType: TextInputType.multiline,
         maxLines: 1,
-        validator: (value) {
+        validator:selectedMode == PaymentMode.ACH ? (value) {
           if (value.isEmpty) {
             return S.of(context).validation_error_general_text;
           } else if (!value.isEmpty) {
@@ -307,7 +306,7 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
             return S.of(context).enter_valid_routing_number;
           }
           return null;
-        },
+        }: null,
       ),
       SizedBox(height: 20),
       Text(
@@ -320,7 +319,7 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
         ),
       ),
       DoseTextField(
-        isRequired: true,
+        isRequired: selectedMode == PaymentMode.ACH,
         controller: accountController,
         focusNode: focusNodeList[3],
         // key: UniqueKey(),
@@ -334,7 +333,7 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
         // initialValue: achPayment?.account_number ?? '',
         keyboardType: TextInputType.multiline,
         maxLines: 1,
-        validator: (value) {
+        validator: selectedMode == PaymentMode.ACH ? (value) {
           if (value.isEmpty) {
             return S.of(context).validation_error_general_text;
           } else if (!value.isEmpty) {
@@ -344,7 +343,7 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
             return S.of(context).enter_valid_account_number;
           }
           return null;
-        },
+        }: null,
       )
     ]);
   }
@@ -352,7 +351,7 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
   Widget RequestPaymentZellePay() {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
       DoseTextField(
-        isRequired: true,
+        isRequired: selectedMode == PaymentMode.ZELLEPAY,
         controller: zelleController,
         focusNode: focusNodeList[4],
         // key: UniqueKey(),
@@ -378,11 +377,11 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
           zellePayment.zelleId = value;
           widget.onPaymentEventChanged(zellePayment);
         },
-        validator: (value) {
+        validator:selectedMode == PaymentMode.ZELLEPAY? (value) {
           zellePayment.zelleId = value;
           widget.onPaymentEventChanged(zellePayment);
-          return widget.requestUtils.validateEmailAndPhone(value, context);
-        },
+          return selectedMode == PaymentMode.ZELLEPAY ? widget.requestUtils.validateEmailAndPhone(value, context): null;
+        }: null,
       )
     ]);
   }
@@ -390,7 +389,7 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
   Widget RequestPaymentPaypal() {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
       DoseTextField(
-        isRequired: true,
+        isRequired: selectedMode == PaymentMode.PAYPAL,
         controller: paypalController,
         focusNode: focusNodeList[5],
         // key: UniqueKey(),
@@ -416,7 +415,7 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
           payPalPayment.paypalId = value;
           widget.onPaymentEventChanged(payPalPayment);
         },
-        validator: (value) {
+        validator:selectedMode == PaymentMode.PAYPAL? (value) {
           RegExp regExp = RegExp(widget.requestUtils.mobilePattern);
           if (value.isEmpty) {
             return S.of(context).validation_error_general_text;
@@ -427,7 +426,7 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
           } else {
             return S.of(context).enter_valid_link;
           }
-        },
+        }: null,
       )
     ]);
   }
@@ -435,7 +434,7 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
   Widget RequestPaymentVenmo() {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
       DoseTextField(
-        isRequired: true,
+        isRequired: selectedMode == PaymentMode.VENMO,
         controller: venmoController,
         focusNode: focusNodeList[6],
         // key: UniqueKey(),
@@ -461,7 +460,7 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
           venmoPayment.venmoId = value;
           widget.onPaymentEventChanged(venmoPayment);
         },
-        validator: (value) {
+        validator:selectedMode == PaymentMode.VENMO? (value) {
           if (value == null || value.isEmpty) {
             return S.of(context).validation_error_general_text;
           } else {
@@ -469,7 +468,7 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
             widget.onPaymentEventChanged(venmoPayment);
             return null;
           }
-        },
+        }: null,
       )
     ]);
   }
@@ -477,7 +476,7 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
   Widget RequestPaymentSwift() {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
       DoseTextField(
-        isRequired: true,
+        isRequired: selectedMode == PaymentMode.SWIFT,
         controller: swiftController,
         focusNode: focusNodeList[7],
         // key: UniqueKey(),
@@ -505,7 +504,7 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
           swiftPayment.swiftId = value;
           widget.onPaymentEventChanged(swiftPayment);
         },
-        validator: (value) {
+        validator:selectedMode == PaymentMode.SWIFT? (value) {
           if (value.isEmpty) {
             return 'ID cannot be empty';
           } else if (value.length < 8) {
@@ -515,7 +514,7 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
             widget.onPaymentEventChanged(swiftPayment);
             return null;
           }
-        },
+        }: null,
       )
     ]);
   }
@@ -532,7 +531,7 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
         ),
       ),
       DoseTextField(
-        isRequired: true,
+        isRequired: selectedMode == PaymentMode.OTHER,
         controller: othersController,
         focusNode: focusNodeList[8],
         // key: UniqueKey(),
@@ -559,7 +558,7 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
           otherPayment.others = value;
           widget.onPaymentEventChanged(otherPayment);
         },
-        validator: (value) {
+        validator:selectedMode == PaymentMode.OTHER? (value) {
           if (value.isEmpty || value == null) {
             return S.of(context).validation_error_general_text;
           }
@@ -570,7 +569,7 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
             widget.onPaymentEventChanged(otherPayment);
             return null;
           }
-        },
+        }: null,
       ),
       SizedBox(
         height: 10,
@@ -584,7 +583,7 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
         ),
       ),
       DoseTextField(
-        isRequired: true,
+        isRequired: selectedMode == PaymentMode.OTHER,
         controller: otherDetailController,
         focusNode: focusNodeList[9],
         // key: UniqueKey(),
@@ -611,7 +610,7 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
             fontFamily: 'Europa',
           ),
         ),
-        validator: (value) {
+        validator: selectedMode == PaymentMode.OTHER?(value) {
           if (value.isEmpty || value == null) {
             return S.of(context).validation_error_general_text;
           }
@@ -622,7 +621,7 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
             widget.onPaymentEventChanged(otherPayment);
             return null;
           }
-        },
+        }: null,
       ),
     ]);
   }

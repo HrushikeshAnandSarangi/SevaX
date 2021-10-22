@@ -94,16 +94,12 @@ class RequestCardWidget extends StatelessWidget {
                   Expanded(
                     child: Text(
                       userModel.fullname ?? S.of(context).name_not_available,
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold),
+                      style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                   ),
 //              Spacer(),
                   requestModel.recommendedMemberIdsForRequest != null &&
-                          requestModel.recommendedMemberIdsForRequest
-                              .contains(userModel.sevaUserID)
+                          requestModel.recommendedMemberIdsForRequest.contains(userModel.sevaUserID)
                       ? Image.asset(
                           'images/icons/recommended.png',
                           height: 30,
@@ -180,7 +176,7 @@ class RequestCardWidget extends StatelessWidget {
                       width: 85,
                       child: CustomElevatedButton(
                         shape: StadiumBorder(),
-                        color: Colors.indigo,
+                        color: Theme.of(context).primaryColor,
                         textColor: Colors.white,
                         elevation: 2,
                         onPressed: reqStatus != S.of(context).invite
@@ -192,10 +188,8 @@ class RequestCardWidget extends StatelessWidget {
                                   userModel.email,
                                 );
 
-                                if (requestModel.requestType ==
-                                    RequestType.BORROW) {
-                                  requestModel.invitedUsers
-                                      .add(userModel.sevaUserID);
+                                if (requestModel.requestType == RequestType.BORROW) {
+                                  requestModel.invitedUsers.add(userModel.sevaUserID);
                                 }
 
                                 sendNotification(
@@ -253,26 +247,18 @@ class RequestCardWidget extends StatelessWidget {
   }
 
   Future<void> addToFavoriteList(
-      {String email,
-      String loggedInUserId,
-      String timebankId,
-      RequestMode requestMode}) async {
+      {String email, String loggedInUserId, String timebankId, RequestMode requestMode}) async {
     await CollectionRef.users.doc(email).update({
-      isAdmin ? 'favoriteByTimeBank' : 'favoriteByMember':
-          FieldValue.arrayUnion(
+      isAdmin ? 'favoriteByTimeBank' : 'favoriteByMember': FieldValue.arrayUnion(
         [isAdmin ? timebankId : loggedInUserId],
       )
     });
   }
 
   Future<void> removeFromFavoriteList(
-      {String email,
-      String timeBankId,
-      String loggedInUserId,
-      RequestMode requestMode}) async {
+      {String email, String timeBankId, String loggedInUserId, RequestMode requestMode}) async {
     await CollectionRef.users.doc(email).update({
-      isAdmin ? 'favoriteByTimeBank' : 'favoriteByMember':
-          FieldValue.arrayRemove(
+      isAdmin ? 'favoriteByTimeBank' : 'favoriteByMember': FieldValue.arrayRemove(
         [isAdmin ? timeBankId : loggedInUserId],
       ),
     });

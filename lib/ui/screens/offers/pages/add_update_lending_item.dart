@@ -41,6 +41,7 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
   FocusNode _estimatedValue = FocusNode();
   TextEditingController _itemNameController = TextEditingController();
   TextEditingController _estimatedValueController = TextEditingController();
+  bool shouldPop = true;
 
   @override
   void initState() {
@@ -96,7 +97,10 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
             if (status.data == Status.COMPLETE) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 widget.onItemCreateUpdate(_bloc.getLendingItemModel());
-                Navigator.pop(context);
+                if (shouldPop) {
+                  shouldPop = false;
+                  Navigator.pop(context);
+                }
               });
             }
 

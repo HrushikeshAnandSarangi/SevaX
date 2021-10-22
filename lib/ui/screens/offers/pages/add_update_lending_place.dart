@@ -54,6 +54,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
   TextEditingController _houseRulesController = TextEditingController();
   TextEditingController _estimatedValueController = TextEditingController();
   TextEditingController _contactInformationController = TextEditingController();
+  bool shouldPop = true;
 
   @override
   void initState() {
@@ -128,7 +129,10 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
             if (status.data == Status.COMPLETE) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 widget.onPlaceCreateUpdate(_bloc.getLendingPlaceModel());
-                Navigator.pop(context);
+                if (shouldPop) {
+                  shouldPop = false;
+                  Navigator.pop(context);
+                }
               });
             }
 
@@ -508,9 +512,8 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             controller: _contactInformationController,
                             focusNode: _contactInformation,
                             value: snapshot.data,
-                            heading: S
-                                .of(context)
-                                .contact_information, // not mandatory field now as told by anitha
+                            heading: S.of(context).contact_information,
+                            // not mandatory field now as told by anitha
                             onChanged: (String value) {
                               _bloc.onContactInformationChanged(value);
                             },
@@ -520,8 +523,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                               // if (value.isEmpty) {
                               //   return null;   // not mandatory field now as told by anitha
                               // }
-                               if (!Regex.emailAndPhoneRegex.hasMatch(value) &&
-                                  value.isNotEmpty) {
+                              if (!Regex.emailAndPhoneRegex.hasMatch(value) && value.isNotEmpty) {
                                 return 'Please enter a valid Email or Phone Number';
                               }
                               return null;
@@ -560,8 +562,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                                 showAlertMessage(
                                     context: context, message: S.of(context).please_add_amenities);
                                 FocusScope.of(context).unfocus();
-                                Scrollable.ensureVisible(
-                                    _searchKey.currentContext);
+                                Scrollable.ensureVisible(_searchKey.currentContext);
                                 return;
                               }
 
@@ -569,8 +570,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                                 showAlertMessage(
                                     context: context, message: S.of(context).add_images_to_place);
                                 FocusScope.of(context).unfocus();
-                                Scrollable.ensureVisible(
-                                    _imageKey.currentContext);
+                                Scrollable.ensureVisible(_imageKey.currentContext);
                               } else {
                                 if (widget.lendingModel == null) {
                                   _bloc.createLendingOfferPlace(

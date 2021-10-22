@@ -37,14 +37,10 @@ class _ManageGroupView extends State<ManageGroupView> {
   void initState() {
     super.initState();
     Future.delayed(Duration.zero, () {
-      FirestoreManager.getCommunityDetailsByCommunityId(
-              communityId: widget.timebankModel.communityId)
-          .then((onValue) {
+      FirestoreManager.getCommunityDetailsByCommunityId(communityId: widget.timebankModel.communityId).then((onValue) {
         communityModel = onValue;
-        if (SevaCore.of(context).loggedInUser.sevaUserID ==
-                communityModel.created_by ||
-            communityModel.organizers
-                .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+        if (SevaCore.of(context).loggedInUser.sevaUserID == communityModel.created_by ||
+            communityModel.organizers.contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
           isSuperAdmin = true;
           setState(() {});
         }
@@ -85,8 +81,7 @@ class _ManageGroupView extends State<ManageGroupView> {
                   NotificationManagerForAmins(
                     widget.timebankModel.id,
                     SevaCore.of(context).loggedInUser.sevaUserID,
-                    widget.timebankModel.parentTimebankId ==
-                        FlavorConfig.values.timebankId,
+                    widget.timebankModel.parentTimebankId == FlavorConfig.values.timebankId,
                   )
                 ],
               ),
@@ -121,8 +116,7 @@ class _ManageGroupView extends State<ManageGroupView> {
                   NotificationManagerForAmins(
                     widget.timebankModel.id,
                     SevaCore.of(context).loggedInUser.sevaUserID,
-                    widget.timebankModel.parentTimebankId ==
-                        FlavorConfig.values.timebankId,
+                    widget.timebankModel.parentTimebankId == FlavorConfig.values.timebankId,
                   )
                 ],
               ),
@@ -238,8 +232,7 @@ class _ManageGroupView extends State<ManageGroupView> {
           softDeleteType: SoftDelete.REQUEST_DELETE_GROUP,
           associatedContentTitle: widget.timebankModel.name,
           email: SevaCore.of(context).loggedInUser.email,
-          isAccedentalDeleteEnabled:
-              widget.timebankModel.preventAccedentalDelete,
+          isAccedentalDeleteEnabled: widget.timebankModel.preventAccedentalDelete,
         );
       },
       child: Text(
@@ -303,11 +296,13 @@ class _ManageGroupView extends State<ManageGroupView> {
             height: 30,
           ),
           Offstage(
-              offstage: SevaCore.of(context).loggedInUser.sevaUserID !=
-                  widget.timebankModel.creatorId,
+              offstage: SevaCore.of(context).loggedInUser.sevaUserID != widget.timebankModel.creatorId,
               child: transferOwnersShip(context: context)),
-          SizedBox(
-            height: 30,
+          Offstage(
+            offstage: SevaCore.of(context).loggedInUser.sevaUserID != widget.timebankModel.creatorId,
+            child: SizedBox(
+              height: 30,
+            ),
           ),
           deleteGroup,
         ],

@@ -18,6 +18,7 @@ import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/helpers/configuration_check.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/widgets/category_widget.dart';
@@ -154,7 +155,8 @@ class _BorrowRequestState extends State<BorrowRequest> {
   @override
   void initState() {
     super.initState();
-
+   logger.e("request model address " + widget.requestModel.address);
+  
     titleController.text = widget.formType == RequestFormType.CREATE
         ? requestUtils.getInitialTitle(widget.offer, widget.isOfferRequest)
         : widget.requestModel.title;
@@ -218,7 +220,7 @@ class _BorrowRequestState extends State<BorrowRequest> {
           // initialValue: ,
           textCapitalization: TextCapitalization.sentences,
           validator: (value) {
-            if (value.isEmpty) {
+            if (value.trimLeft().isEmpty) {
               return S.of(context).request_subject;
             } else if (profanityDetector.isProfaneString(value)) {
               return S.of(context).profanity_text_alert;
@@ -278,7 +280,7 @@ class _BorrowRequestState extends State<BorrowRequest> {
           minLines: 2,
           // ignore: missing_return
           validator: (value) {
-            if (value.isEmpty) {
+            if (value.trimLeft().isEmpty) {
               return S.of(context).validation_error_general_text;
             }
             if (profanityDetector.isProfaneString(value)) {

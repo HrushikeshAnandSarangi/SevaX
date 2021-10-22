@@ -18,8 +18,7 @@ class AddNewRequestCategory extends StatefulWidget {
   final VoidCallback onNewCategoryCreated;
   final Color primaryColor;
 
-  const AddNewRequestCategory(
-      {Key key, this.categoryId, this.onNewCategoryCreated, this.primaryColor})
+  const AddNewRequestCategory({Key key, this.categoryId, this.onNewCategoryCreated, this.primaryColor})
       : super(key: key);
 
   @override
@@ -107,7 +106,7 @@ class _AddNewRequestCategoryState extends State<AddNewRequestCategory> {
                     ],
                   ),
                   content: Container(
-                    height: 182, // MediaQuery.of(context).size.width * 0.120,
+                    height: 198, // MediaQuery.of(context).size.width * 0.120,
                     width: 285,
                     child: Column(
                       children: [
@@ -119,51 +118,51 @@ class _AddNewRequestCategoryState extends State<AddNewRequestCategory> {
                           // height: 45,
                           child: ListTile(
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                            onTap: () {},
+                            onTap: null,
                             // leading: Icon(Icons.add_circle_outline, size: 16),
                             title: DoseForm(
                               // autovalidateMode:
                               //     AutovalidateMode.onUserInteraction,
                               formKey: formKey,
-                              child: Container(
-                                height: MediaQuery.of(context).size.width * 0.08,
-                                child: DoseTextField(
-                                  isRequired: true,
-                                  focusNode: subcategoryFocusNode,
-                                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                                  controller: searchTextController,
-                                  onChanged: (val) {
-                                    subcategorytitle = val;
-                                    _subcategorytitleStream.add(val);
-                                    errTxt = '';
-                                    setState(() {});
-                                  },
-                                  decoration: InputDecoration(
-                                    contentPadding:
-                                        EdgeInsets.only(left: 0.0, right: 8.0, bottom: 10.0),
-                                    border: InputBorder.none,
-                                    hintText: S.of(context).add_new_subcategory_hint + '*',
-                                    hintStyle: TextStyle(color: Colors.grey),
-                                    errorStyle: TextStyle(height: 0.85),
-                                    // errorText: errTxt,
-                                  ),
-                                  validator: (value) {
-                                    final profanityDetector = ProfanityDetector();
-                                    if (value == '') {
-                                      return S.of(context).please_enter_title;
-                                    }
-                                    if (errTxt != null) {
-                                      return errTxt;
-                                    }
-                                    if (profanityDetector.isProfaneString(value)) {
-                                      return S.of(context).profanity_text_alert;
-                                    } else {
-                                      subcategorytitle = value;
-                                      return null;
-                                    }
-                                  },
+                              // child: SizedBox(
+                              //   height: MediaQuery.of(context).size.width * 0.08,
+                              child: DoseTextField(
+                                isRequired: true,
+                                focusNode: subcategoryFocusNode,
+                                autovalidateMode: AutovalidateMode.onUserInteraction,
+                                controller: searchTextController,
+                                onChanged: (val) {
+                                  subcategorytitle = val;
+                                  _subcategorytitleStream.add(val);
+                                  errTxt = '';
+                                  setState(() {});
+                                },
+                                maxLines: 1,
+                                decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.only(left: 0.0, right: 8.0, bottom: 10.0),
+                                  border: InputBorder.none,
+                                  hintText: S.of(context).add_new_subcategory_hint + '*',
+                                  hintStyle: TextStyle(color: Colors.grey),
+                                  errorStyle: TextStyle(height: 0.85),
+                                  // errorText: errTxt,
                                 ),
+                                validator: (value) {
+                                  final profanityDetector = ProfanityDetector();
+                                  if (value == '') {
+                                    return S.of(context).please_enter_title;
+                                  }
+                                  if (errTxt != null) {
+                                    return errTxt;
+                                  }
+                                  if (profanityDetector.isProfaneString(value)) {
+                                    return S.of(context).profanity_text_alert;
+                                  } else {
+                                    subcategorytitle = value;
+                                    return null;
+                                  }
+                                },
                               ),
+                              // ),
                             ),
                           ),
                         ),
@@ -188,8 +187,7 @@ class _AddNewRequestCategoryState extends State<AddNewRequestCategory> {
                                           setState(() {});
                                         }
                                         ;
-                                        logger.e(
-                                            'NEW LOGO CHECK: ' + newRequestCategoryLogo.toString());
+                                        logger.e('NEW LOGO CHECK: ' + newRequestCategoryLogo.toString());
                                       },
                                     );
                                   });
@@ -215,27 +213,24 @@ class _AddNewRequestCategoryState extends State<AddNewRequestCategory> {
                             child: CustomElevatedButton(
                               color: widget.primaryColor,
                               onPressed: () async {
-                                if (formKey.currentState.validate() &&
-                                    (errTxt == null || errTxt == "")) {
+                                if (formKey.currentState.validate() && (errTxt == null || errTxt == "")) {
                                   formKey.currentState.save();
                                   //Add new request category to db
                                   //validate title is not empty
                                   String newTypeId = utils.Utils.getUuid();
                                   Map<String, dynamic> newRequestCategoryModel = {
                                     'categoryId': widget.categoryId,
-                                    'logo': newRequestCategoryLogo == ''
-                                        ? defaultGroupImageURL
-                                        : newRequestCategoryLogo,
+                                    'logo':
+                                        newRequestCategoryLogo == '' ? defaultGroupImageURL : newRequestCategoryLogo,
                                     'type': 'subCategory',
                                     'typeId': newTypeId,
                                     'creatorId': SevaCore.of(context).loggedInUser.sevaUserID,
                                     'creatorEmail': SevaCore.of(context).loggedInUser.email,
-                                    'title_' + SevaCore.of(context).loggedInUser.language ??
-                                        S.of(context).localeName: subcategorytitle
+                                    'title_' + SevaCore.of(context).loggedInUser.language ?? S.of(context).localeName:
+                                        subcategorytitle
                                   };
 
-                                  await addNewRequestCategory(newRequestCategoryModel, newTypeId)
-                                      .then((value) {
+                                  await addNewRequestCategory(newRequestCategoryModel, newTypeId).then((value) {
                                     Navigator.of(newCategoryDialog).pop();
                                   });
 

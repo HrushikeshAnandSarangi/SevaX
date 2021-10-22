@@ -120,7 +120,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
   int indexSelected = -1;
   bool isDropdownOpened = false;
   bool isNeedCloseDropDown = false;
-
+  bool shouldPop = true;
   bool lendingitemsShowPublic = false;
 
   @override
@@ -495,7 +495,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                   return getValidationError(context, validate);
                 },
                 value: snapshot.data,
-                heading: S.of(context).availablity,
+                heading: S.of(context).availablity + '*',
                 onChanged: _bloc.onAvailabilityChanged,
                 hint: S.of(context).availablity_description,
                 maxLength: 100,
@@ -856,7 +856,10 @@ class _IndividualOfferState extends State<IndividualOffer> {
             if (status.data == Status.COMPLETE) {
               WidgetsBinding.instance.addPostFrameCallback(
                 (_) {
-                  if (Navigator.canPop(context)) Navigator.of(context).pop();
+                  if (Navigator.canPop(context) && shouldPop) {
+                    shouldPop = false;
+                    Navigator.of(context).pop();
+                  }
                 },
               );
             }
@@ -1932,7 +1935,10 @@ class _IndividualOfferState extends State<IndividualOffer> {
               focusNode: _description,
               nextNode: _availability,
               value: snapshot.data,
-              validator: _bloc.validateDescription,
+              validator: (val) {
+                var validate = _bloc.validateDescription(val);
+                return getValidationError(context, validate);
+              },
               heading: "${S.of(context).offer_description}*",
               onChanged: _bloc.onOfferDescriptionChanged,
               hint: description_hint != null
@@ -1942,7 +1948,6 @@ class _IndividualOfferState extends State<IndividualOffer> {
                       : S.of(context).lending_offer_description_hint_item),
               maxLength: 500,
               maxLines: 2,
-              error: getValidationError(context, snapshot.error),
             );
           },
         ),
@@ -2238,14 +2243,16 @@ class _IndividualOfferState extends State<IndividualOffer> {
                         softWrap: true,
                       ),
                     ),
-                    onTap: () async {
-                      if (documentName != '') {
-                        await openPdfViewer(
-                            borrowAgreementLinkFinal, documentName, context);
-                      } else {
-                        return null;
-                      }
-                    }),
+                    onTap: documentName != null
+                        ? () async {
+                            if (documentName != '') {
+                              await openPdfViewer(borrowAgreementLinkFinal,
+                                  documentName, context);
+                            } else {
+                              return null;
+                            }
+                          }
+                        : null),
               ],
             ),
             Spacer(),

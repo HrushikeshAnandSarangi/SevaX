@@ -196,13 +196,12 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     // Build a Form widget using the formKey we created above
     return DoseForm(
       formKey: formKey,
-      child: Column(
-        children: [
-          FadeAnimation(
-            1.5,
-            Container(
-              child: SingleChildScrollView(
-                  child: Column(
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            FadeAnimation(
+              1.5,
+              Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -442,10 +441,10 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                   ),
                   // Text(sevaUserID),
                 ],
-              )),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

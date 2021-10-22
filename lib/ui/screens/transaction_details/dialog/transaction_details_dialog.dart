@@ -21,6 +21,7 @@ class TransactionDetailsDialog extends StatefulWidget {
   final CommunityModel communityModel;
   final String loggedInEmail;
   final String loggedInUserId;
+
   const TransactionDetailsDialog({
     Key key,
     this.transactionModel,
@@ -107,8 +108,8 @@ class _TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                                       Expanded(
                                         flex: 9,
                                         child: Text(
-                                          widget.timebankModel?.name ??
-                                              '', //if it is a public request/offer we need to show other community
+                                          widget.timebankModel?.name ?? '',
+                                          //if it is a public request/offer we need to show other community
                                           style: TextStyle(
                                             fontSize: 18,
                                             fontWeight: FontWeight.bold,
@@ -161,7 +162,7 @@ class _TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            'Transaction amount',
+                                            S.of(context).trasaction_amount,
                                             style: TextStyle(
                                               fontSize: 16,
                                               color: Color(0xFF9B9B9B),
@@ -223,7 +224,7 @@ class _TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                                   ),
                                   const SizedBox(height: 12),
                                   Text(
-                                    'Transaction details',
+                                    S.of(context).trasaction_details,
                                     style: TextStyle(
                                       fontSize: 18,
                                       color: Color(0xFF9B9B9B).withOpacity(0.9),
@@ -252,9 +253,9 @@ class _TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                                           itemCount: timelineDocs.length,
                                           itemBuilder: (context, index) {
                                             return TitleRow(
-                                              timelineDoc: timelineDocs[index],
-                                              // requestType: requestType
-                                            );
+                                                timelineDoc: timelineDocs[index],
+                                                requestType:
+                                                    widget?.donationModel?.donationType ?? null);
                                           },
                                         ),
                                       ],
@@ -309,15 +310,17 @@ class _TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
 
 class TitleRow extends StatelessWidget {
   final TransacationsTimelineModel timelineDoc;
-  // final RequestType requestType;
+  final RequestType requestType;
+
   const TitleRow({
     Key key,
     this.timelineDoc,
-    // this.requestType,
+    this.requestType,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    logger.d("#TR ${timelineDoc.toJson()}");
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6.0),
       child: SizedBox(
@@ -337,12 +340,13 @@ class TitleRow extends StatelessWidget {
             Expanded(
               child: Text(
                 DateFormat('MMMM dd @ h:mm a ')
-                        .format(DateTime.fromMillisecondsSinceEpoch(timelineDoc.timestamp)) +
+                        .format(DateTime.fromMillisecondsSinceEpoch(timelineDoc.timestamp * 1000)) +
                     '- ' +
                     getTimelineLabel(
                             // requestType,
                             timelineDoc.type,
-                            context)
+                            context,
+                            requestType)
                         .toString(), //call handler function here to return string
                 style: TextStyle(
                   color: Color(0xFF9B9B9B).withOpacity(0.9),

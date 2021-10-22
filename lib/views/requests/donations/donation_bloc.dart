@@ -20,16 +20,14 @@ class DonationBloc {
   final _amountPledged = BehaviorSubject<String>();
   final _errorMessage = BehaviorSubject<String>();
   final _comment = BehaviorSubject<String>();
-  final _selectedList =
-      BehaviorSubject<Map<String, String>>.seeded(Map<String, String>());
+  final _selectedList = BehaviorSubject<Map<String, String>>.seeded(Map<String, String>());
   final _offerDonatedCurrency = BehaviorSubject<String>();
   final _requestDonatedCurrency = BehaviorSubject<String>();
   //Donations search bar cod
   final _donationsDetailsController = BehaviorSubject<List<DonationModel>>();
   final _searchQuery = BehaviorSubject<String>.seeded(null);
 
-  Stream<List<DonationModel>> get _donationDetailsStream =>
-      _donationsDetailsController.stream;
+  Stream<List<DonationModel>> get _donationDetailsStream => _donationsDetailsController.stream;
   Stream<String> get _query => _searchQuery.stream;
 
   Stream<String> get goodsDescription => _goodsDescription.stream;
@@ -49,10 +47,8 @@ class DonationBloc {
   Function(String) get onDescriptionChange => _goodsDescription.sink.add;
   Function(String) get onAmountChange => _amountPledged.sink.add;
   Function(String) get onCommentChanged => _comment.sink.add;
-  Function(String) get offerDonatedCurrencyType =>
-      _offerDonatedCurrency.sink.add;
-  Function(String) get requestDonatedCurrencyType =>
-      _requestDonatedCurrency.sink.add;
+  Function(String) get offerDonatedCurrencyType => _offerDonatedCurrency.sink.add;
+  Function(String) get requestDonatedCurrencyType => _requestDonatedCurrency.sink.add;
 
   void addAddRemove({
     String selectedKey,
@@ -60,18 +56,13 @@ class DonationBloc {
   }) {
     var localMap = _selectedList.value;
 
-    localMap.containsKey(selectedKey)
-        ? localMap.remove(selectedKey)
-        : localMap[selectedKey] = selectedValue;
+    localMap.containsKey(selectedKey) ? localMap.remove(selectedKey) : localMap[selectedKey] = selectedValue;
 
     _selectedList.add(localMap);
   }
 
   Future<bool> donateOfferGoods(
-      {DonationModel donationModel,
-      OfferModel offerModel,
-      String notificationId,
-      UserModel notify}) async {
+      {DonationModel donationModel, OfferModel offerModel, String notificationId, UserModel notify}) async {
     if (offerModel.type == RequestType.GOODS) {
       if (_selectedList == null || _selectedList.value.isEmpty) {
         _errorMessage.add('goods');
@@ -80,10 +71,8 @@ class DonationBloc {
         donationModel.requestIdType = 'offer';
         donationModel.goodsDetails.comments = _comment.value;
         donationModel.goodsDetails.requiredGoods = _selectedList.value;
-        donationModel.goodsDetails.toAddress =
-            donationModel.goodsDetails.toAddress;
-        var newDonors =
-            new List<String>.from(offerModel.goodsDonationDetails.donors);
+        donationModel.goodsDetails.toAddress = donationModel.goodsDetails.toAddress;
+        var newDonors = new List<String>.from(offerModel.goodsDonationDetails.donors);
         newDonors.add(donationModel.donatedTo);
         offerModel.goodsDonationDetails.donors = newDonors;
       }
@@ -94,8 +83,7 @@ class DonationBloc {
       offerModel.cashModel.donors = newDonors;
       donationModel.cashDetails.cashDetails.offerDonatedCurrencyType =
           _offerDonatedCurrency.value ?? kDefaultCurrencyType;
-      donationModel.cashDetails.cashDetails.offerCurrencyType =
-          offerModel.cashModel.offerCurrencyType;
+      donationModel.cashDetails.cashDetails.offerCurrencyType = offerModel.cashModel.offerCurrencyType;
     }
 
     //Setting the receiver Community Title
@@ -112,8 +100,7 @@ class DonationBloc {
         donor: notify,
       );
       if (notificationId != null && notificationId != '') {
-        await FirestoreManager.readUserNotification(
-            notificationId, notify.email);
+        await FirestoreManager.readUserNotification(notificationId, notify.email);
       }
       return true;
     } on Exception catch (_) {
@@ -123,21 +110,16 @@ class DonationBloc {
   }
 
   Future<bool> donateGoods(
-      {DonationModel donationModel,
-      RequestModel requestModel,
-      String notificationId,
-      UserModel donor}) async {
+      {DonationModel donationModel, RequestModel requestModel, String notificationId, UserModel donor}) async {
     if (_selectedList == null || _selectedList.value.isEmpty) {
       _errorMessage.add('goods');
     } else {
       donationModel.requestIdType = 'request';
       donationModel.goodsDetails.donatedGoods = _selectedList.value;
       donationModel.goodsDetails.comments = _comment.value;
-      donationModel.goodsDetails.requiredGoods =
-          requestModel.goodsDonationDetails.requiredGoods;
+      donationModel.goodsDetails.requiredGoods = requestModel.goodsDonationDetails.requiredGoods;
 
-      var newDonors =
-          new List<String>.from(requestModel.goodsDonationDetails.donors);
+      var newDonors = new List<String>.from(requestModel.goodsDonationDetails.donors);
       newDonors.add(donor.sevaUserID);
       requestModel.goodsDonationDetails.donors = newDonors;
       AcceptorModel acceptorModel = AcceptorModel(
@@ -159,8 +141,7 @@ class DonationBloc {
           donor: donor,
         );
         if (notificationId != null && notificationId != '') {
-          await FirestoreManager.readUserNotification(
-              notificationId, donor.email);
+          await FirestoreManager.readUserNotification(notificationId, donor.email);
         }
         return true;
       } on Exception catch (_) {
@@ -183,27 +164,21 @@ class DonationBloc {
   }
 
   Future<bool> donateAmount(
-      {DonationModel donationModel,
-      RequestModel requestModel,
-      String notificationId,
-      UserModel donor}) async {
+      {DonationModel donationModel, RequestModel requestModel, String notificationId, UserModel donor}) async {
     donationModel.requestIdType = 'request';
     donationModel.cashDetails.pledgedAmount = await currencyConversion(
-        fromCurrency:
-            donationModel.cashDetails.cashDetails.requestDonatedCurrency,
-        toCurrency: requestModel.cashModel.requestCurrencyType,
-        amount: double.parse(_amountPledged.value));
+            fromCurrency: donationModel?.cashDetails?.cashDetails?.requestDonatedCurrency ?? "USD",
+            toCurrency: requestModel?.cashModel?.requestCurrencyType ?? "USD",
+            amount: double.parse(_amountPledged?.value) ?? 0.0)
+        .then((value) => donationModel.cashDetails.pledgedAmount = value);
 
     donationModel.minimumAmount = requestModel.cashModel.minAmount;
-    donationModel.cashDetails.cashDetails.minAmount =
-        requestModel.cashModel.minAmount;
+    donationModel.cashDetails.cashDetails.minAmount = requestModel.cashModel.minAmount;
 
-    donationModel.cashDetails.cashDetails.requestCurrencyType =
-        requestModel.cashModel.requestCurrencyType;
+    donationModel.cashDetails.cashDetails.requestCurrencyType = requestModel.cashModel.requestCurrencyType;
     donationModel.cashDetails.cashDetails.requestDonatedCurrency =
         _requestDonatedCurrency.value ?? kDefaultCurrencyType;
-    requestModel.cashModel.requestDonatedCurrency =
-        _requestDonatedCurrency.value ?? kDefaultCurrencyType;
+    requestModel.cashModel.requestDonatedCurrency = _requestDonatedCurrency.value ?? kDefaultCurrencyType;
 
     requestModel.cashModel.donors.add(donor.sevaUserID);
     // requestModel.cashModel.amountRaised =
@@ -225,8 +200,7 @@ class DonationBloc {
         donor: donor,
       );
       if (notificationId != null) {
-        await FirestoreManager.readUserNotification(
-            notificationId, donor.email);
+        await FirestoreManager.readUserNotification(notificationId, donor.email);
       }
 
       return true;
@@ -238,10 +212,7 @@ class DonationBloc {
   }
 
   Future<void> sendNotification(
-      {DonationModel donationModel,
-      OfferModel offerModel,
-      RequestModel requestModel,
-      UserModel donor}) async {
+      {DonationModel donationModel, OfferModel offerModel, RequestModel requestModel, UserModel donor}) async {
     if (offerModel != null) {
       NotificationsModel notificationsModel = NotificationsModel(
         timebankId: donationModel.timebankId,
@@ -266,10 +237,7 @@ class DonationBloc {
         type: NotificationType.ACKNOWLEDGE_DONOR_DONATION,
         id: donationModel.notificationId,
         isRead: false,
-        isTimebankNotification:
-            requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-                ? false
-                : true,
+        isTimebankNotification: requestModel.requestMode == RequestMode.PERSONAL_REQUEST ? false : true,
         senderUserId: donationModel.donorSevaUserId,
         targetUserId: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
             ? requestModel.sevaUserId
@@ -298,13 +266,11 @@ class DonationBloc {
 
   /// donations for donations list
   void init({@required bool isGoods, String userId, String timebankId}) {
-    FirestoreManager.getDonationList(
-            isGoods: isGoods, timebankId: timebankId, userId: userId)
+    FirestoreManager.getDonationList(isGoods: isGoods, timebankId: timebankId, userId: userId)
         .listen((result) => _donationsDetailsController.add(result));
   }
 
-  Stream<List<DonationModel>> data(BuildContext context, bool isGoods) =>
-      CombineLatestStream.combine2(
+  Stream<List<DonationModel>> data(BuildContext context, bool isGoods) => CombineLatestStream.combine2(
         _donationDetailsStream,
         _query,
         (transactions, searchText) {
@@ -316,20 +282,12 @@ class DonationBloc {
           final searchTextLower = searchText.toLowerCase();
           _transactions.retainWhere(
             (element) =>
-                getDonationType(element.donationType, context)
-                        .toLowerCase()
-                        .contains(
+                getDonationType(element.donationType, context).toLowerCase().contains(
                           searchTextLower,
                         ) ||
-                    element.createdDate
-                        .toLowerCase()
-                        .contains(searchTextLower) ||
-                    element?.goodsDetails?.donatedGoods?.values
-                        .contains(searchTextLower) ??
-                false ||
-                    element?.cashDetails?.pledgedAmount
-                        .toString()
-                        .contains(searchTextLower),
+                    element.createdDate.toLowerCase().contains(searchTextLower) ||
+                    element?.goodsDetails?.donatedGoods?.values.contains(searchTextLower) ??
+                false || element?.cashDetails?.pledgedAmount.toString().contains(searchTextLower),
           );
           return _transactions;
         },
@@ -338,9 +296,7 @@ class DonationBloc {
   Function(String) get onSearchQueryChanged => _searchQuery.sink.add;
 
   String getDonationType(RequestType donationType, BuildContext context) =>
-      donationType == RequestType.GOODS
-          ? S.of(context).goods_donation
-          : S.of(context).cash_donation;
+      donationType == RequestType.GOODS ? S.of(context).goods_donation : S.of(context).cash_donation;
   void dispose() {
     _selectedList.close();
     _amountPledged.close();
