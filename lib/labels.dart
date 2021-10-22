@@ -1450,4 +1450,8 @@ class L {
   // String get transfer_of_group_ownership_update => "Transfer of group ownership update.";
   // String get directions_text => "Directions";
   // String get link_for_demo_video_text => "Link for demo video:";
+
+  //todo:: lables
+  //
+  String get seva_credit_s => "Seva Credit(s)";
 }
