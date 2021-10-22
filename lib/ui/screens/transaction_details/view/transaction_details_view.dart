@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/transaction_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
@@ -150,7 +151,7 @@ class _TransactionDetailsViewState extends State<TransactionDetailsView> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Transactions',
+                          '${S.of(context).transations}',
                           style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                         ),
                         SizedBox(height: 7),
@@ -158,14 +159,14 @@ class _TransactionDetailsViewState extends State<TransactionDetailsView> {
                           text: TextSpan(
                             children: [
                               TextSpan(
-                                text: S.of(context).account_balance,
+                                text: L.of(context).seva_credit_s,
                                 style: TextStyle(
                                   fontSize: 14,
                                   color: Color(0xFF9B9B9B),
                                 ),
                               ),
                               TextSpan(
-                                text: '${widget.totalBalance}',
+                                text: '\n${widget.totalBalance}',
                                 style: TextStyle(
                                   fontSize: 20,
                                   color: Colors.black,
