@@ -54,7 +54,7 @@ getTimelineLabelForRequests(
       if (requestType != null && requestType == RequestType.GOODS)
         return S.of(context).goods_pledged_by_donor_tag;
       else
-        return S.of(context).money_pledged_by_donor_tag;
+        return S.of(context).money_pledged_by_donor_tag.toLowerCase();
       break;
     case TimelineTransactionTags.ACKNOWLEDGED_GOODS_DONATION:
       return S.of(context).goods_acknowledged_donation_tag;
