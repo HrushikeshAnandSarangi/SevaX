@@ -200,7 +200,7 @@ class _GoodsRequestState extends State<GoodsRequest> {
           keyboardType: TextInputType.text,
           textCapitalization: TextCapitalization.sentences,
           validator: (value) {
-            if (value.isEmpty) {
+            if (value.trimLeft().isEmpty) {
               return S.of(context).request_subject;
             } else if (profanityDetector.isProfaneString(value)) {
               return S.of(context).profanity_text_alert;
@@ -263,7 +263,7 @@ class _GoodsRequestState extends State<GoodsRequest> {
           maxLines: 1,
           // ignore: missing_return
           validator: (value) {
-            if (value.isEmpty) {
+            if (value.trimLeft().isEmpty) {
               return S.of(context).validation_error_general_text;
             }
             if (profanityDetector.isProfaneString(value)) {
@@ -336,7 +336,7 @@ class _GoodsRequestState extends State<GoodsRequest> {
           keyboardType: TextInputType.multiline,
           maxLines: 3,
           validator: (value) {
-            if (value.isEmpty) {
+            if (value.trimLeft().isEmpty) {
               return S.of(context).validation_error_general_text;
             } else {
               widget.requestModel.goodsDonationDetails.address = value;
