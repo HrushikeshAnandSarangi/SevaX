@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 String getTimelineLabel(
-    // RequestType requestType,
     String tag,
-    BuildContext context) {
+    BuildContext context,
+    RequestType requestType) {
   logger.i(tag, 'tag 1');
   String finalLabel = '';
 
@@ -15,7 +16,7 @@ String getTimelineLabel(
   logger.e('Initial LABEL 1: ' + tag);
 
   //return label according to tag for requests
-  finalLabel = getTimelineLabelForRequests(convertedtTag, context);
+  finalLabel = getTimelineLabelForRequests(convertedtTag, context, requestType);
 
   logger.e('FINAL LABEL 1: ' + finalLabel);
 
@@ -25,7 +26,8 @@ String getTimelineLabel(
 //
 // Fetch Label Functions for Each type of request
 //
-getTimelineLabelForRequests(TimelineTransactionTags tag, BuildContext context) {
+getTimelineLabelForRequests(
+    TimelineTransactionTags tag, BuildContext context, RequestType requestType) {
   switch (tag) {
     case TimelineTransactionTags.APPLIED_REQUEST:
       return S.of(context).time_applied_request_tag;
@@ -49,7 +51,10 @@ getTimelineLabelForRequests(TimelineTransactionTags tag, BuildContext context) {
       return S.of(context).time_claim_declined_tag;
       break;
     case TimelineTransactionTags.PLEDGED_BY_DONOR:
-      return S.of(context).goods_pledged_by_donor_tag;
+      if (requestType != null && requestType == RequestType.GOODS)
+        return S.of(context).goods_pledged_by_donor_tag;
+      else
+        return S.of(context).money_pledged_by_donor_tag;
       break;
     case TimelineTransactionTags.ACKNOWLEDGED_GOODS_DONATION:
       return S.of(context).goods_acknowledged_donation_tag;

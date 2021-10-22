@@ -120,7 +120,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
   int indexSelected = -1;
   bool isDropdownOpened = false;
   bool isNeedCloseDropDown = false;
-
+  bool shouldPop = true;
   bool lendingitemsShowPublic = false;
 
   @override
@@ -856,7 +856,10 @@ class _IndividualOfferState extends State<IndividualOffer> {
             if (status.data == Status.COMPLETE) {
               WidgetsBinding.instance.addPostFrameCallback(
                 (_) {
-                  if (Navigator.canPop(context)) Navigator.of(context).pop();
+                  if (Navigator.canPop(context) && shouldPop) {
+                    shouldPop = false;
+                    Navigator.of(context).pop();
+                  }
                 },
               );
             }
@@ -2240,14 +2243,16 @@ class _IndividualOfferState extends State<IndividualOffer> {
                         softWrap: true,
                       ),
                     ),
-                    onTap: () async {
-                      if (documentName != '') {
-                        await openPdfViewer(
-                            borrowAgreementLinkFinal, documentName, context);
-                      } else {
-                        return null;
-                      }
-                    }),
+                    onTap: documentName != null
+                        ? () async {
+                            if (documentName != '') {
+                              await openPdfViewer(borrowAgreementLinkFinal,
+                                  documentName, context);
+                            } else {
+                              return null;
+                            }
+                          }
+                        : null),
               ],
             ),
             Spacer(),

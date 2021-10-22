@@ -699,8 +699,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   padding: const EdgeInsets.symmetric(vertical: 2),
                   child: ConfigurationCheck(
                     actionType: 'create_virtual_event',
-                    role:
-                        memberType(timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
+                    role: memberType(timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
                     child: OpenScopeCheckBox(
                         infoType: InfoType.VirtualRequest,
                         isChecked: projectModel.virtualProject,
@@ -795,6 +794,17 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                             FocusScope.of(context).unfocus();
                             showDialogForTitle(
                               dialogTitle: S.of(context).validation_error_no_date,
+                            );
+                            return;
+                          }
+                          if (DateTime.fromMillisecondsSinceEpoch(projectModel.startTime)
+                                  .isBefore(DateTime.now()) ||
+                              DateTime.fromMillisecondsSinceEpoch(projectModel.endTime)
+                                  .isBefore(DateTime.now())) {
+                            Scrollable.ensureVisible(_timeKey.currentContext);
+                            FocusScope.of(context).unfocus();
+                            showDialogForTitle(
+                              dialogTitle: S.of(context).past_time_selected,
                             );
                             return;
                           }
@@ -1022,9 +1032,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                     },
                     shape: StadiumBorder(),
                     child: Text(
-                      widget.isCreateProject
-                          ? S.of(context).create_project
-                          : S.of(context).save,
+                      widget.isCreateProject ? S.of(context).create_project : S.of(context).save,
                       style: TextStyle(fontSize: 16.0, color: Colors.white),
                     ),
                     textColor: FlavorConfig.values.buttonTextColor,
@@ -1094,11 +1102,11 @@ class _CreateEditProjectState extends State<CreateEditProject> {
           return AlertDialog(
             title: Text(message),
             content: LinearProgressIndicator(
- backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
-        valueColor: AlwaysStoppedAnimation<Color>(
-          Theme.of(context).primaryColor,
-        ),
-),
+              backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+              valueColor: AlwaysStoppedAnimation<Color>(
+                Theme.of(context).primaryColor,
+              ),
+            ),
           );
         });
   }
