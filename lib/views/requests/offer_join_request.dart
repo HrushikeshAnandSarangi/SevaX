@@ -78,11 +78,18 @@ class _OfferJoinRequestDialogState extends State<OfferJoinRequestDialog> {
                 ),
               ),
             ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
-              child: Text(
-                widget.timeOfferParticipantsModel.participantDetails.bio ??
-                    "${S.of(context).bio} ${S.of(context).name_not_updated_text}",
+            Container(
+              height: 70,
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
+                child:  Text(
+                    widget.timeOfferParticipantsModel.participantDetails.bio ??
+                        "${S.of(context).bio} ${S.of(context).name_not_updated_text}",
+                     textAlign: TextAlign.justify, 
+                     maxLines: 3,
+                     overflow: TextOverflow.ellipsis,
+                  ),
+                
               ),
             ),
             // Padding(
@@ -135,7 +142,7 @@ class _OfferJoinRequestDialogState extends State<OfferJoinRequestDialog> {
                         memberEmail: widget.userModel.email,
                         timebankId: communityModel.primary_timebank,
                       );
-
+        
                       approveInvitationForVolunteerRequest(
                           allowedCalender: false,
                           offerId: widget.offerId,
@@ -143,7 +150,7 @@ class _OfferJoinRequestDialogState extends State<OfferJoinRequestDialog> {
                           notificationId: widget.notificationId,
                           user: widget.userModel,
                           acceptorModel: acceptorModel);
-
+        
                       Navigator.of(context).pop();
                     },
                   ),
@@ -166,7 +173,7 @@ class _OfferJoinRequestDialogState extends State<OfferJoinRequestDialog> {
                         userModel: widget.userModel,
                         offerId: widget.offerId,
                       );
-
+        
                       if (progressContext != null) {
                         Navigator.pop(progressContext);
                       }
