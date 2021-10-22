@@ -161,13 +161,17 @@ class _BlockedMembersPageState extends State<BlockedMembersPage> {
                 child: isLoading
                     ? LoadingIndicator()
                     : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text(
-                            "${S.of(context).unblock} $name?",
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Theme.of(context).accentColor,
+                          Padding(
+                            padding: const EdgeInsets.only(left:8.0),
+                            child: Text(
+                              "${S.of(context).unblock} $name?",
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Theme.of(context).accentColor,
+                              ),
                             ),
                           ),
                           SizedBox(
