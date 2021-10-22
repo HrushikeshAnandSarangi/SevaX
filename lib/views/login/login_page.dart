@@ -908,6 +908,7 @@ class _LoginPageState extends State<LoginPage> {
     UserModel user;
     try {
       user = await auth.handleGoogleSignIn();
+      logger.d("#user ${user}");
       await getAndUpdateDeviceDetailsOfUser(
           locationVal: location, userEmailId: user.email);
     } on FirebaseAuthException catch (erorr) {
