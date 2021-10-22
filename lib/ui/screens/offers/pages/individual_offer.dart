@@ -860,7 +860,6 @@ class _IndividualOfferState extends State<IndividualOffer> {
                     shouldPop = false;
                     Navigator.of(context).pop();
                   }
-                  
                 },
               );
             }
@@ -2244,14 +2243,16 @@ class _IndividualOfferState extends State<IndividualOffer> {
                         softWrap: true,
                       ),
                     ),
-                    onTap: () async {
-                      if (documentName != '') {
-                        await openPdfViewer(
-                            borrowAgreementLinkFinal, documentName, context);
-                      } else {
-                        return null;
-                      }
-                    }),
+                    onTap: documentName != null
+                        ? () async {
+                            if (documentName != '') {
+                              await openPdfViewer(borrowAgreementLinkFinal,
+                                  documentName, context);
+                            } else {
+                              return null;
+                            }
+                          }
+                        : null),
               ],
             ),
             Spacer(),
