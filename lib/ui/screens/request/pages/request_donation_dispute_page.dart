@@ -662,6 +662,10 @@ class _CashFlow extends StatelessWidget {
           return S.of(context).request_paymenttype_paypal;
         case RequestPaymentType.VENMO:
           return S.of(context).request_paymenttype_venmo;
+        case RequestPaymentType.SWIFT:
+          return S.of(context).request_paymenttype_swift;
+        case RequestPaymentType.OTHER:
+          return S.of(context).other;
         default:
           return "";
       }
@@ -684,6 +688,10 @@ class _CashFlow extends StatelessWidget {
           return model.cashDetails.cashDetails.paypalId ?? '';
         case RequestPaymentType.VENMO:
           return model.cashDetails.cashDetails.venmoId ?? '';
+        case RequestPaymentType.SWIFT:
+          return model.cashDetails.cashDetails.swiftId ?? '';
+        case RequestPaymentType.OTHER:
+          return "${model.cashDetails.cashDetails.other ?? ''} ${model.cashDetails.cashDetails.other_details ?? ''}";
 
         default:
           return "Link not registered!";
