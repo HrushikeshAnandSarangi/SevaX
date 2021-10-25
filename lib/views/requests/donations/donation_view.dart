@@ -51,8 +51,8 @@ class _DonationViewState extends State<DonationView> {
   final GlobalKey<DoseFormState> _formKey = GlobalKey();
   final DonationBloc donationBloc = DonationBloc();
   ProgressDialog progressDialog;
-  RegExp emailPattern =
-      RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+  RegExp emailPattern = RegExp(
+      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
   String mobilePattern = r'^[0-9]+$';
   List<String> donationsCategories = [];
   int amountEntered = 0;
@@ -63,7 +63,8 @@ class _DonationViewState extends State<DonationView> {
     donorDetails: DonorDetails(),
     receiverDetails: DonorDetails(),
     cashDetails: CashDetails(
-      cashDetails: CashModel(paymentType: RequestPaymentType.ZELLEPAY, achdetails: new ACHModel()),
+      cashDetails: CashModel(
+          paymentType: RequestPaymentType.ZELLEPAY, achdetails: new ACHModel()),
     ),
     goodsDetails: GoodsDetails(),
   );
@@ -91,11 +92,12 @@ class _DonationViewState extends State<DonationView> {
   void initState() {
     donationsModel.id = Utils.getUuid();
     donationsModel.notificationId = Utils.getUuid();
-    paymentDetailModel =
-        RequestUtils().initializePaymentModel(cashModel: donationsModel.cashDetails.cashDetails);
+    paymentDetailModel = RequestUtils().initializePaymentModel(
+        cashModel: donationsModel.cashDetails.cashDetails);
     if (widget.offerModel == null && defaultDonationCurrencyType == 'USD') {
       setState(() {
-        donationsModel.cashDetails.cashDetails.requestDonatedCurrency = defaultDonationCurrencyType;
+        donationsModel.cashDetails.cashDetails.requestDonatedCurrency =
+            defaultDonationCurrencyType;
       });
     }
 
@@ -149,7 +151,8 @@ class _DonationViewState extends State<DonationView> {
           .doc(SevaCore.of(context).loggedInUser.currentCommunity)
           .get()
           .then((value) {
-        logger.i(">>>>>>>>>>>" + CommunityModel(value.data()).toMap().toString());
+        logger
+            .i(">>>>>>>>>>>" + CommunityModel(value.data()).toMap().toString());
         donationBloc.addCommunity(CommunityModel(value.data()));
       });
     });
@@ -239,12 +242,14 @@ class _DonationViewState extends State<DonationView> {
       donationsModel.donatedToTimebank =
           widget.requestModel.requestMode != RequestMode.PERSONAL_REQUEST;
       donationsModel.donationType = widget.requestModel.requestType;
-      donationsModel.donatedTo = widget.requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-          ? widget.requestModel.sevaUserId
-          : widget.requestModel.timebankId;
+      donationsModel.donatedTo =
+          widget.requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+              ? widget.requestModel.sevaUserId
+              : widget.requestModel.timebankId;
       donationsModel.requestTitle = widget.requestModel.title;
 
-      donationsModel.donationAssociatedTimebankDetails = DonationAssociatedTimebankDetails(
+      donationsModel.donationAssociatedTimebankDetails =
+          DonationAssociatedTimebankDetails(
         timebankTitle: widget.requestModel.fullName,
         timebankPhotoURL: widget.requestModel.photoUrl,
       );
@@ -259,7 +264,8 @@ class _DonationViewState extends State<DonationView> {
       donationsModel.receiverDetails.name = widget.requestModel.fullName;
       donationsModel.receiverDetails.photoUrl = widget.requestModel.photoUrl;
       donationsModel.receiverDetails.email = widget.requestModel.email;
-      donationsModel.receiverDetails.communityId = widget.requestModel.communityId;
+      donationsModel.receiverDetails.communityId =
+          widget.requestModel.communityId;
       donationsModel.communityId = widget.requestModel.communityId;
     } else if (widget.offerModel != null) {
       donationsModel.timebankId = widget.offerModel.timebankId;
@@ -267,8 +273,10 @@ class _DonationViewState extends State<DonationView> {
       donationsModel.donatedToTimebank = false;
       donationsModel.donationType = widget.offerModel.type;
       donationsModel.donatedTo = sevaUser.sevaUserID;
-      donationsModel.requestTitle = widget.offerModel.individualOfferDataModel.title;
-      donationsModel.donationAssociatedTimebankDetails = DonationAssociatedTimebankDetails();
+      donationsModel.requestTitle =
+          widget.offerModel.individualOfferDataModel.title;
+      donationsModel.donationAssociatedTimebankDetails =
+          DonationAssociatedTimebankDetails();
       donationsModel.donationStatus = DonationStatus.REQUESTED;
       donationsModel.donorSevaUserId = widget.offerModel.sevaUserId;
       donationsModel.donorDetails.name = widget.offerModel.fullName;
@@ -303,332 +311,380 @@ class _DonationViewState extends State<DonationView> {
                   minHeight: MediaQuery.of(builderCntxt).size.height * 1.8,
                   minWidth: double.infinity,
                 ),
-                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    S.of(context).donations_cash_request,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Europa',
-                      color: Colors.black,
-                    ),
-                  ),
-                  Text(
-                    S.of(context).donations_cash_request_hint,
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.normal,
-                      fontFamily: 'Europa',
-                      color: Colors.grey,
-                    ),
-                  ),
-                  DoseTextField(
-                    isRequired: true,
-                    controller: amountController,
-                    formatters: [
-                      FilteringTextInputFormatter.allow(RegExp("[0-9]")),
-                    ],
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    focusNode: focusNodes[0],
-                    onFieldSubmitted: (v) {
-                      FocusScope.of(context).requestFocus(focusNodes[1]);
-                    },
-                    textInputAction: TextInputAction.next,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      // prefixIcon: Icon(Icons.attach_money),
-                      prefixIcon: FutureBuilder<double>(
-                          future: currencyConversion(
-                              fromCurrency: offerModel.cashModel.offerCurrencyType,
-                              toCurrency: defaultOfferCurrenyType,
-                              amount: offerModel.cashModel.targetAmount.toDouble()),
-                          builder: (context, snapshot) {
-                            amountConverted = snapshot.data;
-                            return Container(
-                              width: 90,
-                              child: CompositedTransformTarget(
-                                link: _layerLink,
-                                child: CustomDropdownView(
-                                  layerLink: _layerLink,
-                                  isNeedCloseDropdown: isNeedCloseDropDown,
-                                  elevationShadow: 20,
-                                  decorationDropdown: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  defaultWidget: Container(
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(4),
-                                    ),
-                                    // padding: EdgeInsets.symmetric(horizontal: 15),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          indexSelected != -1
-                                              ? "${currencyList[indexSelected].code}"
-                                              : defaultOfferCurrenyType,
-                                          style: kDropDownChildCurrencyCode,
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        S.of(context).donations_cash_request,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Europa',
+                          color: Colors.black,
+                        ),
+                      ),
+                      Text(
+                        S.of(context).donations_cash_request_hint,
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.normal,
+                          fontFamily: 'Europa',
+                          color: Colors.grey,
+                        ),
+                      ),
+                      DoseTextField(
+                        isRequired: true,
+                        controller: amountController,
+                        formatters: [
+                          FilteringTextInputFormatter.allow(RegExp("[0-9]")),
+                        ],
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        focusNode: focusNodes[0],
+                        onFieldSubmitted: (v) {
+                          FocusScope.of(context).requestFocus(focusNodes[1]);
+                        },
+                        textInputAction: TextInputAction.next,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          // prefixIcon: Icon(Icons.attach_money),
+                          prefixIcon: FutureBuilder<double>(
+                              future: currencyConversion(
+                                  fromCurrency:
+                                      offerModel.cashModel.offerCurrencyType,
+                                  toCurrency: defaultOfferCurrenyType,
+                                  amount: offerModel.cashModel.targetAmount
+                                      .toDouble()),
+                              builder: (context, snapshot) {
+                                amountConverted = snapshot.data;
+                                return Container(
+                                  width: 90,
+                                  child: CompositedTransformTarget(
+                                    link: _layerLink,
+                                    child: CustomDropdownView(
+                                      layerLink: _layerLink,
+                                      isNeedCloseDropdown: isNeedCloseDropDown,
+                                      elevationShadow: 20,
+                                      decorationDropdown: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      defaultWidget: Container(
+                                        height: 50,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(4),
                                         ),
-                                        SizedBox(width: 8),
-                                        Container(
-                                          height: kFlagImageContainerHeight,
-                                          width: kFlagImageContainerWidth,
-                                          child: Image.network(
-                                            defaultFlag,
-                                            fit: BoxFit.cover,
-                                          ),
+                                        // padding: EdgeInsets.symmetric(horizontal: 15),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              indexSelected != -1
+                                                  ? "${currencyList[indexSelected].code}"
+                                                  : defaultOfferCurrenyType,
+                                              style: kDropDownChildCurrencyCode,
+                                            ),
+                                            SizedBox(width: 8),
+                                            Container(
+                                              height: kFlagImageContainerHeight,
+                                              width: kFlagImageContainerWidth,
+                                              child: Image.network(
+                                                defaultFlag,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                            SizedBox(width: 8),
+                                            isDropdownOpened
+                                                ? Icon(
+                                                    Icons.keyboard_arrow_up,
+                                                    color: Color(0xFF737579),
+                                                  )
+                                                : kDropDownArrowIcon,
+                                          ],
                                         ),
-                                        SizedBox(width: 8),
-                                        isDropdownOpened
-                                            ? Icon(
-                                                Icons.keyboard_arrow_up,
-                                                color: Color(0xFF737579),
-                                              )
-                                            : kDropDownArrowIcon,
-                                      ],
-                                    ),
-                                  ),
-                                  onTapDropdown: (bool _isDropdownOpened) async {
-                                    await Future.delayed(Duration.zero);
-                                    setState(() {
-                                      isDropdownOpened = _isDropdownOpened;
-                                      if (_isDropdownOpened == false) isNeedCloseDropDown = false;
-                                    });
-                                  },
-                                  listWidgetItem: List.generate(currencyList.length, (index) {
-                                    return GestureDetector(
-                                      onTap: () {
+                                      ),
+                                      onTapDropdown:
+                                          (bool _isDropdownOpened) async {
+                                        await Future.delayed(Duration.zero);
                                         setState(() {
-                                          indexSelected = index;
-                                          isNeedCloseDropDown = true;
-                                          defaultOfferCurrenyType =
-                                              currencyList[indexSelected].code;
-                                          currencyKey = currencyList[indexSelected].code;
-                                          _bloc.offerDonatedCurrencyType(currencyKey);
-                                          donationBloc.offerDonatedCurrencyType(
-                                              currencyList[indexSelected].code);
-                                          defaultFlag = currencyList[indexSelected].imagePath;
-                                        });
-
-                                        if (currencyKey != offerModel.cashModel.offerCurrencyType) {
-                                          progressDialog = ProgressDialog(context,
-                                              customBody: Container(
-                                                height: 100,
-                                                width: 100,
-                                                child: LoadingIndicator(),
-                                              ));
-
-                                          progressDialog.show();
-                                        }
-                                        currencyConversion(
-                                                fromCurrency:
-                                                    offerModel.cashModel.offerCurrencyType,
-                                                toCurrency: currencyList[indexSelected].code,
-                                                amount:
-                                                    offerModel.cashModel.targetAmount.toDouble())
-                                            .then((value) {
-                                          amountConverted = value;
-                                          setState(() {});
-                                          progressDialog.hide();
+                                          isDropdownOpened = _isDropdownOpened;
+                                          if (_isDropdownOpened == false)
+                                            isNeedCloseDropDown = false;
                                         });
                                       },
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.vertical(
-                                            top: index == 0 ? Radius.circular(4) : Radius.zero,
-                                            bottom: index == currencyList.length - 1
-                                                ? Radius.circular(4)
-                                                : Radius.zero,
-                                          ),
-                                          color: indexSelected == index
-                                              ? Color(0xFFE8EFFF)
-                                              : Colors.white,
-                                        ),
-                                        padding: EdgeInsets.symmetric(horizontal: 16),
-                                        child: Container(
-                                          child: Column(
-                                            children: [
-                                              SizedBox(
-                                                height: 10,
+                                      listWidgetItem: List.generate(
+                                          currencyList.length, (index) {
+                                        return GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              indexSelected = index;
+                                              isNeedCloseDropDown = true;
+                                              defaultOfferCurrenyType =
+                                                  currencyList[indexSelected]
+                                                      .code;
+                                              currencyKey =
+                                                  currencyList[indexSelected]
+                                                      .code;
+                                              _bloc.offerDonatedCurrencyType(
+                                                  currencyKey);
+                                              donationBloc
+                                                  .offerDonatedCurrencyType(
+                                                      currencyList[
+                                                              indexSelected]
+                                                          .code);
+                                              defaultFlag =
+                                                  currencyList[indexSelected]
+                                                      .imagePath;
+                                            });
+
+                                            if (currencyKey !=
+                                                offerModel.cashModel
+                                                    .offerCurrencyType) {
+                                              progressDialog =
+                                                  ProgressDialog(context,
+                                                      customBody: Container(
+                                                        height: 100,
+                                                        width: 100,
+                                                        child:
+                                                            LoadingIndicator(),
+                                                      ));
+
+                                              progressDialog.show();
+                                            }
+                                            currencyConversion(
+                                                    fromCurrency: offerModel
+                                                        .cashModel
+                                                        .offerCurrencyType,
+                                                    toCurrency: currencyList[
+                                                            indexSelected]
+                                                        .code,
+                                                    amount: offerModel
+                                                        .cashModel.targetAmount
+                                                        .toDouble())
+                                                .then((value) {
+                                              amountConverted = value;
+                                              setState(() {});
+                                              progressDialog.hide();
+                                            });
+                                          },
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.vertical(
+                                                top: index == 0
+                                                    ? Radius.circular(4)
+                                                    : Radius.zero,
+                                                bottom: index ==
+                                                        currencyList.length - 1
+                                                    ? Radius.circular(4)
+                                                    : Radius.zero,
                                               ),
-                                              Row(
+                                              color: indexSelected == index
+                                                  ? Color(0xFFE8EFFF)
+                                                  : Colors.white,
+                                            ),
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 16),
+                                            child: Container(
+                                              child: Column(
                                                 children: [
-                                                  Container(
-                                                    height: 12,
-                                                    width: 16,
-                                                    child: Image.network(
-                                                      "${currencyList[index].imagePath}",
-                                                      fit: BoxFit.cover,
-                                                    ),
+                                                  SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      Container(
+                                                        height: 12,
+                                                        width: 16,
+                                                        child: Image.network(
+                                                          "${currencyList[index].imagePath}",
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        width: 8,
+                                                      ),
+                                                      Text(
+                                                        "${currencyList[index].code}",
+                                                        style:
+                                                            kDropDownChildCurrencyCode,
+                                                      ),
+                                                      SizedBox(
+                                                        width: 8,
+                                                      ),
+                                                      Text(
+                                                        "${currencyList[index].name}",
+                                                        style:
+                                                            kDropDownChildCurrencyName,
+                                                      ),
+                                                    ],
                                                   ),
                                                   SizedBox(
-                                                    width: 8,
-                                                  ),
-                                                  Text(
-                                                    "${currencyList[index].code}",
-                                                    style: kDropDownChildCurrencyCode,
-                                                  ),
-                                                  SizedBox(
-                                                    width: 8,
-                                                  ),
-                                                  Text(
-                                                    "${currencyList[index].name}",
-                                                    style: kDropDownChildCurrencyName,
+                                                    height: 9,
                                                   ),
                                                 ],
                                               ),
-                                              SizedBox(
-                                                height: 9,
-                                              ),
-                                            ],
+                                            ),
                                           ),
-                                        ),
-                                      ),
-                                    );
-                                  }),
-                                ),
-                              ),
-                            );
-                          }),
-                    ),
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return S.of(context).validation_error_general_text;
-                      } else if (int.parse(value) < 1) {
-                        return S.of(context).please_enter_valid_amount;
-                      } else if (!value.isEmpty) {
-                        if (int.parse(value) > amountConverted) {
-                          return S.of(context).request_amount_cannot_be_greater;
-                        }
-                        /*  if (int.parse(value) > offerModel.cashModel.targetAmount) {
+                                        );
+                                      }),
+                                    ),
+                                  ),
+                                );
+                              }),
+                        ),
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return S.of(context).validation_error_general_text;
+                          } else if (int.parse(value) < 1) {
+                            return S.of(context).please_enter_valid_amount;
+                          } else if (!value.isEmpty) {
+                            if (int.parse(value) > amountConverted) {
+                              return S
+                                  .of(context)
+                                  .request_amount_cannot_be_greater;
+                            }
+                            /*  if (int.parse(value) > offerModel.cashModel.targetAmount) {
                       return S.of(context).request_amount_cannot_be_greater;
                     }*/
-                        donationsModel.cashDetails.cashDetails.amountRaised =
-                            double.parse(value.toString());
-                      } else {
-                        return S.of(context).enter_valid_amount;
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  CapturePaymentDetailWidget(
-                      paymentDetailModel: paymentDetailModel,
-                      capturePaymentFrom: CapturePaymentFrom.DONATION,
-                      onDropDownChanged: (value) {
-                        switch (value) {
-                          case PaymentMode.ACH:
-                            donationsModel.cashDetails.cashDetails.paymentType =
-                                RequestPaymentType.ACH;
-                            break;
-                          case PaymentMode.ZELLEPAY:
-                            donationsModel.cashDetails.cashDetails.paymentType =
-                                RequestPaymentType.ZELLEPAY;
-                            break;
-                          case PaymentMode.PAYPAL:
-                            donationsModel.cashDetails.cashDetails.paymentType =
-                                RequestPaymentType.PAYPAL;
-                            break;
-                          case PaymentMode.VENMO:
-                            donationsModel.cashDetails.cashDetails.paymentType =
-                                RequestPaymentType.VENMO;
-                            break;
-                          case PaymentMode.SWIFT:
-                            donationsModel.cashDetails.cashDetails.paymentType =
-                                RequestPaymentType.SWIFT;
-                            break;
-                          case PaymentMode.OTHER:
-                            donationsModel.cashDetails.cashDetails.paymentType =
-                                RequestPaymentType.OTHER;
-                            break;
-                        }
-                        // donationsModel.cashDetails.cashDetails.paymentType = value;
-                      },
-                      onPaymentEventChanged: (event) {
-                        if (event is ZellePayment) {
-                          donationsModel.cashDetails.cashDetails.zelleId = event.zelleId;
-                        } else if (event is ACHPayment) {
-                          donationsModel.cashDetails.cashDetails.achdetails.bank_name =
-                              event.bank_name;
-                          donationsModel.cashDetails.cashDetails.achdetails.bank_address =
-                              event.bank_address;
-                          donationsModel.cashDetails.cashDetails.achdetails.account_number =
-                              event.account_number;
-                          donationsModel.cashDetails.cashDetails.achdetails.routing_number =
-                              event.routing_number;
-                        } else if (event is PayPalPayment) {
-                          donationsModel.cashDetails.cashDetails.paypalId = event.paypalId;
-                        } else if (event is VenmoPayment) {
-                          donationsModel.cashDetails.cashDetails.venmoId = event.venmoId;
-                        } else if (event is SwiftPayment) {
-                          donationsModel.cashDetails.cashDetails.swiftId = event.swiftId;
-                        } else if (event is OtherPayment) {
-                          donationsModel.cashDetails.cashDetails.others = event.others;
-                          donationsModel.cashDetails.cashDetails.other_details =
-                              event.other_details;
-                        }
-                        // logger.d("*DONATIONS* CASH MODEL CHANGED ${jsonEncode(cashModel.toMap())}");
-                        // donationsModel.cashDetails.cashDetails = cashModel;
-                      }),
-                  SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      CustomTextButton(
-                          color: Theme.of(context).primaryColor,
-                          textColor: Colors.white,
-                          child: Text(S.of(context).submit),
-                          onPressed: () async {
-                            //check validation here
-                            if (_formKey.currentState.validate()) {
-                              var connResult = await Connectivity().checkConnectivity();
-                              if (connResult == ConnectivityResult.none) {
-                                showScaffold(S.of(context).check_internet);
-                                return;
-                              }
-
-                              showProgress(S.of(context).please_wait);
-                              donationBloc
-                                  .donateOfferGoods(
-                                      notificationId: widget.notificationId,
-                                      donationModel: donationsModel,
-                                      offerModel: widget.offerModel,
-                                      notify: UserModel(
-                                          email: donationsModel.donorDetails.email,
-                                          fullname: donationsModel.donorDetails.name,
-                                          photoURL: donationsModel.donorDetails.photoUrl,
-                                          sevaUserID: donationsModel.donorSevaUserId))
-                                  .then((value) {
-                                if (value) {
-                                  hideProgress();
-                                  getSuccessDialog(S.of(context).donations_requested.toLowerCase())
-                                      .then(
-                                    //to pop the screen
-                                    (_) => Navigator.of(context).pop(),
-                                  );
-                                }
-                              });
-                            }
-                          }),
-                      SizedBox(
-                        width: 20,
+                            donationsModel.cashDetails.cashDetails
+                                .amountRaised = double.parse(value.toString());
+                          } else {
+                            return S.of(context).enter_valid_amount;
+                          }
+                          return null;
+                        },
                       ),
-                      actionButton(
-                          buttonColor: Colors.grey,
-                          textColor: Colors.black,
-                          buttonTitle: S.of(context).do_it_later,
-                          onPressed: () {
-                            Navigator.of(context).pop();
+                      SizedBox(
+                        height: 10,
+                      ),
+                      CapturePaymentDetailWidget(
+                          paymentDetailModel: paymentDetailModel,
+                          capturePaymentFrom: CapturePaymentFrom.DONATION,
+                          onDropDownChanged: (value) {
+                            switch (value) {
+                              case PaymentMode.ACH:
+                                donationsModel.cashDetails.cashDetails
+                                    .paymentType = RequestPaymentType.ACH;
+                                break;
+                              case PaymentMode.ZELLEPAY:
+                                donationsModel.cashDetails.cashDetails
+                                    .paymentType = RequestPaymentType.ZELLEPAY;
+                                break;
+                              case PaymentMode.PAYPAL:
+                                donationsModel.cashDetails.cashDetails
+                                    .paymentType = RequestPaymentType.PAYPAL;
+                                break;
+                              case PaymentMode.VENMO:
+                                donationsModel.cashDetails.cashDetails
+                                    .paymentType = RequestPaymentType.VENMO;
+                                break;
+                              case PaymentMode.SWIFT:
+                                donationsModel.cashDetails.cashDetails
+                                    .paymentType = RequestPaymentType.SWIFT;
+                                break;
+                              case PaymentMode.OTHER:
+                                donationsModel.cashDetails.cashDetails
+                                    .paymentType = RequestPaymentType.OTHER;
+                                break;
+                            }
+                            // donationsModel.cashDetails.cashDetails.paymentType = value;
+                          },
+                          onPaymentEventChanged: (event) {
+                            if (event is ZellePayment) {
+                              donationsModel.cashDetails.cashDetails.zelleId =
+                                  event.zelleId;
+                            } else if (event is ACHPayment) {
+                              donationsModel.cashDetails.cashDetails.achdetails
+                                  .bank_name = event.bank_name;
+                              donationsModel.cashDetails.cashDetails.achdetails
+                                  .bank_address = event.bank_address;
+                              donationsModel.cashDetails.cashDetails.achdetails
+                                  .account_number = event.account_number;
+                              donationsModel.cashDetails.cashDetails.achdetails
+                                  .routing_number = event.routing_number;
+                            } else if (event is PayPalPayment) {
+                              donationsModel.cashDetails.cashDetails.paypalId =
+                                  event.paypalId;
+                            } else if (event is VenmoPayment) {
+                              donationsModel.cashDetails.cashDetails.venmoId =
+                                  event.venmoId;
+                            } else if (event is SwiftPayment) {
+                              donationsModel.cashDetails.cashDetails.swiftId =
+                                  event.swiftId;
+                            } else if (event is OtherPayment) {
+                              donationsModel.cashDetails.cashDetails.others =
+                                  event.others;
+                              donationsModel.cashDetails.cashDetails
+                                  .other_details = event.other_details;
+                            }
+                            // logger.d("*DONATIONS* CASH MODEL CHANGED ${jsonEncode(cashModel.toMap())}");
+                            // donationsModel.cashDetails.cashDetails = cashModel;
                           }),
-                    ],
-                  )
-                ]),
+                      SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          CustomTextButton(
+                              color: Theme.of(context).primaryColor,
+                              textColor: Colors.white,
+                              child: Text(S.of(context).submit),
+                              onPressed: () async {
+                                //check validation here
+                                if (_formKey.currentState.validate()) {
+                                  var connResult =
+                                      await Connectivity().checkConnectivity();
+                                  if (connResult == ConnectivityResult.none) {
+                                    showScaffold(S.of(context).check_internet);
+                                    return;
+                                  }
+
+                                  showProgress(S.of(context).please_wait);
+                                  donationBloc
+                                      .donateOfferGoods(
+                                          notificationId: widget.notificationId,
+                                          donationModel: donationsModel,
+                                          offerModel: widget.offerModel,
+                                          notify: UserModel(
+                                              email: donationsModel
+                                                  .donorDetails.email,
+                                              fullname: donationsModel
+                                                  .donorDetails.name,
+                                              photoURL: donationsModel
+                                                  .donorDetails.photoUrl,
+                                              sevaUserID: donationsModel
+                                                  .donorSevaUserId))
+                                      .then((value) {
+                                    if (value) {
+                                      hideProgress();
+                                      getSuccessDialog(S
+                                              .of(context)
+                                              .donations_requested
+                                              .toLowerCase())
+                                          .then(
+                                        //to pop the screen
+                                        (_) => Navigator.of(context).pop(),
+                                      );
+                                    }
+                                  });
+                                }
+                              }),
+                          SizedBox(
+                            width: 20,
+                          ),
+                          actionButton(
+                              buttonColor: Colors.grey,
+                              textColor: Colors.black,
+                              buttonTitle: S.of(context).do_it_later,
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              }),
+                        ],
+                      )
+                    ]),
               );
             }))
         : Container();
@@ -676,28 +732,33 @@ class _DonationViewState extends State<DonationView> {
           StreamBuilder<Map<dynamic, dynamic>>(
               stream: donationBloc.selectedList,
               builder: (context, snapshot) {
-                List<String> keys =
-                    List.from(widget.requestModel.goodsDonationDetails.requiredGoods.keys);
+                List<String> keys = List.from(widget
+                    .requestModel.goodsDonationDetails.requiredGoods.keys);
                 return ListView.builder(
                   shrinkWrap: true,
-                  itemCount: widget.requestModel.goodsDonationDetails.requiredGoods.length,
+                  itemCount: widget
+                      .requestModel.goodsDonationDetails.requiredGoods.length,
                   itemBuilder: (context, index) {
                     return Row(
                       children: [
                         Checkbox(
-                          value: snapshot.data?.containsKey(keys[index]) ?? false,
+                          value:
+                              snapshot.data?.containsKey(keys[index]) ?? false,
                           checkColor: _checkColor,
                           onChanged: (bool value) {
                             donationBloc.addAddRemove(
                               selectedValue: widget
-                                  .requestModel.goodsDonationDetails.requiredGoods[keys[index]],
+                                  .requestModel
+                                  .goodsDonationDetails
+                                  .requiredGoods[keys[index]],
                               selectedKey: keys[index],
                             );
                           },
                           activeColor: Colors.grey[200],
                         ),
                         Text(
-                          widget.requestModel.goodsDonationDetails.requiredGoods[keys[index]],
+                          widget.requestModel.goodsDonationDetails
+                              .requiredGoods[keys[index]],
                           style: subTitleStyle,
                         ),
                       ],
@@ -752,7 +813,8 @@ class _DonationViewState extends State<DonationView> {
                           .then((value) {
                         if (value) {
                           hideProgress();
-                          getSuccessDialog(S.of(context).pledged.toLowerCase()).then(
+                          getSuccessDialog(S.of(context).pledged.toLowerCase())
+                              .then(
                             //to pop the screen
                             (_) => Navigator.of(context).pop(),
                           );
@@ -848,29 +910,34 @@ class _DonationViewState extends State<DonationView> {
             StreamBuilder<Map<dynamic, dynamic>>(
                 stream: donationBloc.selectedList,
                 builder: (context, snapshot) {
-                  List<String> keys =
-                      List.from(widget.offerModel.goodsDonationDetails.requiredGoods.keys);
+                  List<String> keys = List.from(widget
+                      .offerModel.goodsDonationDetails.requiredGoods.keys);
                   return ListView.builder(
                     physics: NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
-                    itemCount: widget.offerModel.goodsDonationDetails.requiredGoods.length,
+                    itemCount: widget
+                        .offerModel.goodsDonationDetails.requiredGoods.length,
                     itemBuilder: (context, index) {
                       return Row(
                         children: [
                           Checkbox(
-                            value: snapshot.data?.containsKey(keys[index]) ?? false,
+                            value: snapshot.data?.containsKey(keys[index]) ??
+                                false,
                             checkColor: _checkColor,
                             onChanged: (bool value) {
                               donationBloc.addAddRemove(
                                 selectedValue: widget
-                                    .offerModel.goodsDonationDetails.requiredGoods[keys[index]],
+                                    .offerModel
+                                    .goodsDonationDetails
+                                    .requiredGoods[keys[index]],
                                 selectedKey: keys[index],
                               );
                             },
                             activeColor: Colors.grey[200],
                           ),
                           Text(
-                            widget.offerModel.goodsDonationDetails.requiredGoods[keys[index]],
+                            widget.offerModel.goodsDonationDetails
+                                .requiredGoods[keys[index]],
                             style: TextStyle(
                               fontSize: 12,
                               color: Colors.black,
@@ -901,7 +968,8 @@ class _DonationViewState extends State<DonationView> {
                           );
                           return;
                         } else {
-                          var connResult = await Connectivity().checkConnectivity();
+                          var connResult =
+                              await Connectivity().checkConnectivity();
                           if (connResult == ConnectivityResult.none) {
                             showScaffold(S.of(context).check_internet);
                             return;
@@ -919,12 +987,17 @@ class _DonationViewState extends State<DonationView> {
                                     notify: UserModel(
                                         email: widget.offerModel.email,
                                         fullname: widget.offerModel.fullName,
-                                        photoURL: widget.offerModel.photoUrlImage,
-                                        sevaUserID: widget.offerModel.sevaUserId))
+                                        photoURL:
+                                            widget.offerModel.photoUrlImage,
+                                        sevaUserID:
+                                            widget.offerModel.sevaUserId))
                                 .then((value) {
                               if (value) {
                                 hideProgress();
-                                getSuccessDialog(S.of(context).donations_requested.toLowerCase())
+                                getSuccessDialog(S
+                                        .of(context)
+                                        .donations_requested
+                                        .toLowerCase())
                                     .then(
                                   //to pop the screen
                                   (_) => Navigator.of(context).pop(),
@@ -973,7 +1046,7 @@ class _DonationViewState extends State<DonationView> {
               return Container(
                 // constraints: BoxConstraints(maxHeight: 55, minHeight: 50),
                 child: DoseTextField(
-                  isRequired: true,
+                  isRequired: false,
                   controller: amountController,
                   focusNode: focusNodes[2],
                   onChanged: (value) {
@@ -987,18 +1060,6 @@ class _DonationViewState extends State<DonationView> {
                   textAlign: TextAlign.start,
                   maxLines: 1,
                   keyboardType: TextInputType.number,
-                  validator: (value) {
-                    snapshot.error == 'amount1'
-                        ? S.of(context).enter_valid_amount
-                        : snapshot.error == 'amount2'
-                        ? S.of(context).minmum_amount +
-                        ' ' +
-                        rate.toInt().toString() +
-                        ' ' +
-                        donationsModel.cashDetails.cashDetails.requestDonatedCurrency
-                        : '';
-                    return null;
-                  },
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.only(top: 10),
                     filled: true,
@@ -1010,6 +1071,16 @@ class _DonationViewState extends State<DonationView> {
                     focusedBorder: customTextFieldBorder(),
                     errorBorder: customTextFieldBorder(),
                     enabledBorder: customTextFieldBorder(),
+                    errorText: snapshot.error == 'amount1'
+                        ? S.of(context).enter_valid_amount
+                        : snapshot.error == 'amount2'
+                            ? S.of(context).minmum_amount +
+                                ' ' +
+                                rate.toInt().toString() +
+                                ' ' +
+                                donationsModel.cashDetails.cashDetails
+                                    .requestDonatedCurrency
+                            : '',
                     hintStyle: subTitleStyle,
                     hintText: S.of(context).add_amount_donated,
                     alignLabelWithHint: true,
@@ -1063,32 +1134,41 @@ class _DonationViewState extends State<DonationView> {
                             await Future.delayed(Duration.zero);
                             setState(() {
                               isDropdownOpened = _isDropdownOpened;
-                              if (_isDropdownOpened == false) isNeedCloseDropDown = false;
+                              if (_isDropdownOpened == false)
+                                isNeedCloseDropDown = false;
                             });
                           },
-                          listWidgetItem: List.generate(currencyList.length, (index) {
+                          listWidgetItem:
+                              List.generate(currencyList.length, (index) {
                             return GestureDetector(
                               onTap: () {
                                 setState(() {
                                   indexSelected = index;
                                   isNeedCloseDropDown = true;
-                                  defaultDonationCurrencyType = currencyList[indexSelected].code;
-                                  donationBloc
-                                      .requestDonatedCurrencyType(currencyList[indexSelected].code);
-                                  donationsModel.cashDetails.cashDetails.requestDonatedCurrency =
+                                  defaultDonationCurrencyType =
                                       currencyList[indexSelected].code;
-                                  defaultFlag = currencyList[indexSelected].imagePath;
+                                  donationBloc.requestDonatedCurrencyType(
+                                      currencyList[indexSelected].code);
+                                  donationsModel.cashDetails.cashDetails
+                                          .requestDonatedCurrency =
+                                      currencyList[indexSelected].code;
+                                  defaultFlag =
+                                      currencyList[indexSelected].imagePath;
                                 });
                               },
                               child: Container(
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.vertical(
-                                    top: index == 0 ? Radius.circular(4) : Radius.zero,
+                                    top: index == 0
+                                        ? Radius.circular(4)
+                                        : Radius.zero,
                                     bottom: index == currencyList.length - 1
                                         ? Radius.circular(4)
                                         : Radius.zero,
                                   ),
-                                  color: indexSelected == index ? Color(0xFFE8EFFF) : Colors.white,
+                                  color: indexSelected == index
+                                      ? Color(0xFFE8EFFF)
+                                      : Colors.white,
                                 ),
                                 padding: EdgeInsets.symmetric(horizontal: 16),
                                 child: Container(
@@ -1162,14 +1242,19 @@ class _DonationViewState extends State<DonationView> {
                 onPressed: () async {
                   // logger.d("#FROM C ${defaultDonationCurrencyType}");
                   rate = await currencyConversion(
-                          fromCurrency:
-                              widget?.requestModel?.cashModel?.requestCurrencyType ?? "USD",
-                          toCurrency:
-                              donationsModel?.cashDetails?.cashDetails?.requestDonatedCurrency ??
-                                  "USD",
-                          amount: widget?.requestModel?.cashModel?.minAmount?.toDouble() ?? 0.0)
+                          fromCurrency: widget?.requestModel?.cashModel
+                                  ?.requestCurrencyType ??
+                              "USD",
+                          toCurrency: donationsModel?.cashDetails?.cashDetails
+                                  ?.requestDonatedCurrency ??
+                              "USD",
+                          amount: widget?.requestModel?.cashModel?.minAmount
+                                  ?.toDouble() ??
+                              0.0)
                       .then((value) => rate = value);
                   logger.d("#FROM C ${defaultDonationCurrencyType}");
+                  logger.d("#rate C ${rate}");
+                  //  logger.d("#FROM C ${defaultDonationCurrencyType}");
 
                   donationBloc
                       .validateAmount(
@@ -1221,14 +1306,18 @@ class _DonationViewState extends State<DonationView> {
             ),
             Text(
               S.of(context).payment_link_description,
-              style: TextStyle(fontSize: 11, color: Colors.black, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontSize: 11,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold),
             ),
             SizedBox(
               height: 20,
             ),
             InkWell(
               onLongPress: () {
-                Clipboard.setData(ClipboardData(text: widget.requestModel.donationInstructionLink));
+                Clipboard.setData(ClipboardData(
+                    text: widget.requestModel.donationInstructionLink));
                 showScaffold(S.of(context).copied_to_clipboard);
               },
               onTap: () async {
@@ -1275,7 +1364,8 @@ class _DonationViewState extends State<DonationView> {
                         .then((value) {
                       if (value) {
                         hideProgress();
-                        getSuccessDialog(S.of(context).pledged.toLowerCase()).then(
+                        getSuccessDialog(S.of(context).pledged.toLowerCase())
+                            .then(
                           //to pop the screen
                           (_) => Navigator.of(context).pop(),
                         );
@@ -1294,7 +1384,8 @@ class _DonationViewState extends State<DonationView> {
   }
 
   String getDonationLink() {
-    if (widget.requestModel != null && widget.requestModel.requestType == RequestType.CASH) {
+    if (widget.requestModel != null &&
+        widget.requestModel.requestType == RequestType.CASH) {
       switch (widget.requestModel.cashModel.paymentType) {
         case RequestPaymentType.ZELLEPAY:
           return widget.requestModel.cashModel.zelleId;
@@ -1413,8 +1504,13 @@ class _DonationViewState extends State<DonationView> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          content: Text(
-              S.of(context).successfully.firstWordUpperCase().replaceFirst('.', '') + ' ' + data),
+          content: Text(S
+                  .of(context)
+                  .successfully
+                  .firstWordUpperCase()
+                  .replaceFirst('.', '') +
+              ' ' +
+              data),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             CustomTextButton(
