@@ -206,7 +206,40 @@ class OfferDetails extends StatelessWidget {
                                 getOfferDescription(offerDataModel: offerModel),
                           ),
                         ),
-
+                        offerModel.type == RequestType.TIME
+                            ? Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(S.of(context).availablity,
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          color:
+                                              Theme.of(context).primaryColor)),
+                                  SizedBox(
+                                    height: 15,
+                                  ),
+                                  Offstage(
+                                    offstage: offerModel.offerType !=
+                                            OfferType.INDIVIDUAL_OFFER &&
+                                        offerModel.individualOfferDataModel
+                                                .schedule ==
+                                            null,
+                                    child: RichTextView(
+                                        text: offerModel
+                                                .individualOfferDataModel
+                                                .schedule ??
+                                            ''),
+                                  ),
+                                  Divider(
+                                    height: 40,
+                                    color: HexColor("#D2D2D2"),
+                                    thickness: 0.8,
+                                  ),
+                                ],
+                              )
+                            : Container(),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: UserCircleAvatarList(
