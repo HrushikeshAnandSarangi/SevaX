@@ -226,7 +226,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                                           ),
                                         ),
                                       );
-                                    } else {
+                                    } else if (!widget.isSignedUser) {
                                       showSignInAlertMessage(
                                         context: context,
                                         message: S.of(context).sign_in_alert,
