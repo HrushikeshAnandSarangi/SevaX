@@ -691,7 +691,7 @@ class _CashFlow extends StatelessWidget {
         case RequestPaymentType.SWIFT:
           return model.cashDetails.cashDetails.swiftId ?? '';
         case RequestPaymentType.OTHER:
-          return "${model.cashDetails.cashDetails.other ?? ''} ${model.cashDetails.cashDetails.other_details ?? ''}";
+          return "${model.cashDetails.cashDetails.others ?? ''} ${model.cashDetails.cashDetails.other_details ?? ''}";
 
         default:
           return "Link not registered!";
