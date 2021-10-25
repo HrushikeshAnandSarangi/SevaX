@@ -988,6 +988,15 @@ class _DonationViewState extends State<DonationView> {
                   maxLines: 1,
                   keyboardType: TextInputType.number,
                   validator: (value) {
+                    snapshot.error == 'amount1'
+                        ? S.of(context).enter_valid_amount
+                        : snapshot.error == 'amount2'
+                        ? S.of(context).minmum_amount +
+                        ' ' +
+                        rate.toInt().toString() +
+                        ' ' +
+                        donationsModel.cashDetails.cashDetails.requestDonatedCurrency
+                        : '';
                     return null;
                   },
                   decoration: InputDecoration(
@@ -1001,15 +1010,6 @@ class _DonationViewState extends State<DonationView> {
                     focusedBorder: customTextFieldBorder(),
                     errorBorder: customTextFieldBorder(),
                     enabledBorder: customTextFieldBorder(),
-                    errorText: snapshot.error == 'amount1'
-                        ? S.of(context).enter_valid_amount
-                        : snapshot.error == 'amount2'
-                            ? S.of(context).minmum_amount +
-                                ' ' +
-                                rate.toInt().toString() +
-                                ' ' +
-                                donationsModel.cashDetails.cashDetails.requestDonatedCurrency
-                            : '',
                     hintStyle: subTitleStyle,
                     hintText: S.of(context).add_amount_donated,
                     alignLabelWithHint: true,

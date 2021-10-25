@@ -85,6 +85,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
   int value;
   FocusNode documentNameNode = FocusNode();
   FocusNode specificConditionNode = FocusNode();
+  FocusNode searchFocusNode = FocusNode();
 
 // Form Related Values
   String documentName = '';
@@ -834,6 +835,11 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                 } else {
                   if (agreementDocumentType ==
                       AgreementDocumentType.TEMPLATE.readable) {
+
+                    if(selectedAgreementTemplate == null){
+                      searchFocusNode.requestFocus();
+                      return;
+                    }
                     //update on voidcallback the final model details (check also if user has edited anything from template prefilled data)
                     logger.e("MODEL 2:  " + widget.lendingModel.toString());
                     agreementLink =
@@ -918,25 +924,6 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                         log('TEMPLATE SAVED');
                       }
                       // <<<-- Second - Save Form agreementFormSelectionModel as Map in LendingOfferModel ---->>>
-
-                      // agreementFormSelectionModel.createdAt =
-                      //     DateTime.now().millisecondsSinceEpoch;
-                      // agreementFormSelectionModel.documentName = documentName;
-                      // agreementFormSelectionModel.placeOrItem =
-                      //     widget.placeOrItem;
-                      // // agreementFormSelectionModel.otherDetails = otherDetails; //not sure if needed yet
-                      // agreementFormSelectionModel.specificConditions =
-                      //     specificConditions;
-                      // agreementFormSelectionModel.isDamageLiability =
-                      //     isDamageLiability;
-                      // agreementFormSelectionModel.isDeliveryReturn =
-                      //     isDeliveryReturn;
-                      // agreementFormSelectionModel.isMaintainRepair =
-                      //     isMaintainRepair;
-                      // agreementFormSelectionModel.isUseDisclaimer =
-                      //     isUseDisclaimer;
-                      // agreementFormSelectionModel.isOffer = widget.isOffer;
-                      //agreementFormSelectionModel to be stored into LendingOfferModel
 
                       agreementLink =
                           await BorrowAgreementPdf().borrowAgreementPdf(
@@ -1155,6 +1142,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
             keyboardType: TextInputType.text,
             textCapitalization: TextCapitalization.sentences,
             style: TextStyle(fontSize: 16.0),
+            focusNode: searchFocusNode,
             inputFormatters: [
               LengthLimitingTextInputFormatter(50),
             ],
