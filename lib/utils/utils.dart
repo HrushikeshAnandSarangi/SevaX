@@ -275,7 +275,7 @@ Future<double> currencyConversion({String fromCurrency, String toCurrency, doubl
   final frankfurter = Frankfurter();
 
   // final latest = await frankfurter.latest(from: Currency('INR'));
-  logger.i("from: $fromCurrency || to: $toCurrency  || amount: $amount");
+  // logger.i("from: $fromCurrency || to: $toCurrency  || amount: $amount");
   if (fromCurrency == null || fromCurrency == "") {
     fromCurrency = "USD";
   }
@@ -292,7 +292,7 @@ Future<double> currencyConversion({String fromCurrency, String toCurrency, doubl
     from: Currency(fromCurrency),
     to: Currency(toCurrency),
   );
-  double convertedCurrency = rate?.rate ?? 1.0 * amount;
+  double convertedCurrency = rate.rate * amount;
   double convertedCurrencyTwoDecimalPoint = ((convertedCurrency * pow(10, 2)).round()) / pow(10, 2);
   return convertedCurrencyTwoDecimalPoint ?? 0.0;
 }
