@@ -181,6 +181,7 @@ class _AddNewRequestCategoryState extends State<AddNewRequestCategory> {
                                   builder: (BuildContext dialogContext) {
                                     return ImagePickerDialogMobile(
                                       imagePickerType: ImagePickerType.PROJECT,
+                                      color: widget.primaryColor,
                                       onLinkCreated: (link) {
                                         newRequestCategoryLogo = link;
                                         if (this.mounted) {

@@ -23,12 +23,13 @@ class ImagePickerDialogMobile extends StatefulWidget {
   final Function(String imageUrl) onLinkCreated;
   final Function(File imageFile) storeImageFile;
   final Function(File pdfFile) storPdfFile;
+  final Color color;
 
   ImagePickerDialogMobile(
       {this.imagePickerType,
       this.onLinkCreated,
       this.storeImageFile,
-      this.storPdfFile});
+      this.storPdfFile,  this.color });
 
   @override
   _ImagePickerDialogMobileState createState() =>
@@ -301,7 +302,7 @@ class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
   Widget imagePickerOption({String title, IconData icon, Function onTap}) {
     return Container(
       decoration: BoxDecoration(
-        color: Theme.of(context).primaryColor,
+        color: widget.color?? Theme.of(context).primaryColor,
         borderRadius: BorderRadius.circular(10),
       ),
       height: 50,
