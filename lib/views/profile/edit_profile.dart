@@ -658,11 +658,11 @@ class _EditProfilePageState extends State<EditProfilePage>
           return AlertDialog(
             title: Text(message),
             content: LinearProgressIndicator(
- backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
-        valueColor: AlwaysStoppedAnimation<Color>(
-          Theme.of(context).primaryColor,
-        ),
-),
+              backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+              valueColor: AlwaysStoppedAnimation<Color>(
+                Theme.of(context).primaryColor,
+              ),
+            ),
           );
         });
   }
@@ -1120,11 +1120,10 @@ class _EditProfilePageState extends State<EditProfilePage>
                       FCMNotificationManager.removeDeviceRegisterationForMember(
                           email: SevaCore.of(context).loggedInUser.email);
 
-                      Navigator.of(_context).pop(true);
-
                       _signOut(
                         context,
                       );
+                      Navigator.of(_context).pop(true);
                     },
                   ),
                 ],
