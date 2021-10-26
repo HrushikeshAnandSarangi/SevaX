@@ -53,16 +53,12 @@ Geoflutterfire geo = Geoflutterfire();
 BuildContext dialogContext;
 
 Future<void> createRequest({@required RequestModel requestModel}) async {
-  return await CollectionRef.requests
-      .doc(requestModel.id)
-      .set(requestModel.toMap());
+  return await CollectionRef.requests.doc(requestModel.id).set(requestModel.toMap());
 }
 
 Future<void> updateRequest({@required RequestModel requestModel}) async {
   log('RequestModel:  ' + requestModel.toMap().toString());
-  return await CollectionRef.requests
-      .doc(requestModel.id)
-      .update(requestModel.toMap());
+  return await CollectionRef.requests.doc(requestModel.id).update(requestModel.toMap());
 }
 
 Future<void> updateAcceptBorrowRequest({
@@ -80,8 +76,7 @@ Future<void> updateAcceptBorrowRequest({
   );
 }
 
-Future<void> updateRequestsByFields(
-    {List<String> requestIds, Map<String, dynamic> fields}) async {
+Future<void> updateRequestsByFields({List<String> requestIds, Map<String, dynamic> fields}) async {
   var futures = <Future>[];
   int i;
   for (i = 0; i < requestIds.length; i++) {
@@ -91,9 +86,7 @@ Future<void> updateRequestsByFields(
 }
 
 Future<void> createDonation({@required DonationModel donationModel}) async {
-  return await CollectionRef.donations
-      .doc(donationModel.id)
-      .set(donationModel.toMap());
+  return await CollectionRef.donations.doc(donationModel.id).set(donationModel.toMap());
 }
 
 Future<List<String>> createRecurringEvents({
@@ -104,17 +97,14 @@ Future<List<String>> createRecurringEvents({
   var batch = CollectionRef.batch;
   double sevaCreditsCount = 0;
   bool lastRound = false;
-  DateTime eventStartDate =
-          DateTime.fromMillisecondsSinceEpoch(requestModel.requestStart),
-      eventEndDate =
-          DateTime.fromMillisecondsSinceEpoch(requestModel.requestEnd);
+  DateTime eventStartDate = DateTime.fromMillisecondsSinceEpoch(requestModel.requestStart),
+      eventEndDate = DateTime.fromMillisecondsSinceEpoch(requestModel.requestEnd);
   double balanceVar = await SevaCreditLimitManager.getMemberBalancePerTimebank(
     communityId: communityId,
     userSevaId: requestModel.sevaUserId,
   );
 
-  double negativeThresholdTimebank =
-      await SevaCreditLimitManager.getNegativeThresholdForCommunity(
+  double negativeThresholdTimebank = await SevaCreditLimitManager.getNegativeThresholdForCommunity(
     communityId,
   );
   List<Map<String, dynamic>> temparr = [];
@@ -134,34 +124,20 @@ Future<List<String>> createRecurringEvents({
     int occurenceCount = 2;
     var numTemp = 0;
     while (lastRound == false) {
-      eventStartDate = DateTime(
-          eventStartDate.year,
-          eventStartDate.month,
-          eventStartDate.day + 1,
-          eventStartDate.hour,
-          eventStartDate.minute,
-          eventStartDate.second);
-      eventEndDate = DateTime(
-          eventEndDate.year,
-          eventEndDate.month,
-          eventEndDate.day + 1,
-          eventEndDate.hour,
-          eventEndDate.minute,
-          eventEndDate.second);
+      eventStartDate = DateTime(eventStartDate.year, eventStartDate.month, eventStartDate.day + 1,
+          eventStartDate.hour, eventStartDate.minute, eventStartDate.second);
+      eventEndDate = DateTime(eventEndDate.year, eventEndDate.month, eventEndDate.day + 1,
+          eventEndDate.hour, eventEndDate.minute, eventEndDate.second);
 
-      if (eventStartDate.millisecondsSinceEpoch <= requestModel.end.on &&
-          occurenceCount < 11) {
+      if (eventStartDate.millisecondsSinceEpoch <= requestModel.end.on && occurenceCount < 11) {
         numTemp = eventStartDate.weekday % 7;
         if (requestModel.recurringDays.contains(numTemp)) {
           RequestModel temp = requestModel;
           temp.requestStart = eventStartDate.millisecondsSinceEpoch;
           temp.requestEnd = eventEndDate.millisecondsSinceEpoch;
           temp.postTimestamp = DateTime.now().millisecondsSinceEpoch;
-          temp.id = temp.email +
-              "*" +
-              temp.postTimestamp.toString() +
-              "*" +
-              temp.requestStart.toString();
+          temp.id =
+              temp.email + "*" + temp.postTimestamp.toString() + "*" + temp.requestStart.toString();
           temp.occurenceCount = occurenceCount;
           occurenceCount++;
           temp.softDelete = false;
@@ -181,20 +157,10 @@ Future<List<String>> createRecurringEvents({
     var numTemp = 0;
     int occurenceCount = 2;
     while (occurenceCount <= requestModel.end.after) {
-      eventStartDate = DateTime(
-          eventStartDate.year,
-          eventStartDate.month,
-          eventStartDate.day + 1,
-          eventStartDate.hour,
-          eventStartDate.minute,
-          eventStartDate.second);
-      eventEndDate = DateTime(
-          eventEndDate.year,
-          eventEndDate.month,
-          eventEndDate.day + 1,
-          eventEndDate.hour,
-          eventEndDate.minute,
-          eventEndDate.second);
+      eventStartDate = DateTime(eventStartDate.year, eventStartDate.month, eventStartDate.day + 1,
+          eventStartDate.hour, eventStartDate.minute, eventStartDate.second);
+      eventEndDate = DateTime(eventEndDate.year, eventEndDate.month, eventEndDate.day + 1,
+          eventEndDate.hour, eventEndDate.minute, eventEndDate.second);
 
       numTemp = eventStartDate.weekday % 7;
       if (requestModel.recurringDays.contains(numTemp)) {
@@ -202,11 +168,8 @@ Future<List<String>> createRecurringEvents({
         temp.requestStart = eventStartDate.millisecondsSinceEpoch;
         temp.requestEnd = eventEndDate.millisecondsSinceEpoch;
         temp.postTimestamp = DateTime.now().millisecondsSinceEpoch;
-        temp.id = temp.email +
-            "*" +
-            temp.postTimestamp.toString() +
-            "*" +
-            temp.requestStart.toString();
+        temp.id =
+            temp.email + "*" + temp.postTimestamp.toString() + "*" + temp.requestStart.toString();
         temp.occurenceCount = occurenceCount;
         occurenceCount++;
         temp.softDelete = false;
@@ -252,8 +215,7 @@ Future<List<String>> createRecurringEvents({
         return [];
       }
     } else {
-      if (AppConfig.supportedRequestTypeForRecurring
-          .contains(requestModel.requestType)) {
+      if (AppConfig.supportedRequestTypeForRecurring.contains(requestModel.requestType)) {
         eventsIdsArr.add(requestModel.id);
         temparr.forEach((tempobj) {
           batch.set(CollectionRef.requests.doc(tempobj['id']), tempobj);
@@ -263,19 +225,16 @@ Future<List<String>> createRecurringEvents({
     }
   }
 
-  DocumentSnapshot timebankDoc =
-      await CollectionRef.timebank.doc(requestModel.timebankId).get();
+  DocumentSnapshot timebankDoc = await CollectionRef.timebank.doc(requestModel.timebankId).get();
   double balance = timebankDoc.data()['balance'] + sevaCreditsCount;
-  batch
-      .update(CollectionRef.timebank.doc(timebankDoc.id), {"balance": balance});
+  batch.update(CollectionRef.timebank.doc(timebankDoc.id), {"balance": balance});
 
   if (requestModel.projectId != null && requestModel.projectId != "") {
     projectData.pendingRequests.add(requestModel.id);
     temparr.forEach((tempobj) {
       projectData.pendingRequests.add(tempobj['id']);
     });
-    batch.update(
-        CollectionRef.projects.doc(projectData.id), projectData.toMap());
+    batch.update(CollectionRef.projects.doc(projectData.id), projectData.toMap());
   }
 
   await batch.commit();
@@ -304,25 +263,19 @@ Future<void> updateRecurrenceRequestsFrontEnd(
 
   logger.i("INSIDE 1");
   double negativeThresholdTimebank =
-      await SevaCreditLimitManager.getNegativeThresholdForCommunity(
-          communityId);
+      await SevaCreditLimitManager.getNegativeThresholdForCommunity(communityId);
   Set<String> usersIds = Set();
-  DateTime eventStartDate =
-          DateTime.fromMillisecondsSinceEpoch(updatedRequestModel.requestStart),
-      eventEndDate =
-          DateTime.fromMillisecondsSinceEpoch(updatedRequestModel.requestEnd);
+  DateTime eventStartDate = DateTime.fromMillisecondsSinceEpoch(updatedRequestModel.requestStart),
+      eventEndDate = DateTime.fromMillisecondsSinceEpoch(updatedRequestModel.requestEnd);
   logger.i("INSIDE 2");
 
   QuerySnapshot snapEvents = await CollectionRef.requests
-      .where("parent_request_id",
-          isEqualTo: updatedRequestModel.parent_request_id)
+      .where("parent_request_id", isEqualTo: updatedRequestModel.parent_request_id)
       .get();
   DocumentSnapshot projectDoc = null;
   ProjectModel projectData = null;
-  if (updatedRequestModel.projectId != null &&
-      updatedRequestModel.projectId != "") {
-    projectDoc =
-        await CollectionRef.projects.doc(updatedRequestModel.projectId).get();
+  if (updatedRequestModel.projectId != null && updatedRequestModel.projectId != "") {
+    projectDoc = await CollectionRef.projects.doc(updatedRequestModel.projectId).get();
     projectData = ProjectModel.fromMap(projectDoc.data());
   }
   logger.i("INSIDE 3");
@@ -350,20 +303,10 @@ Future<void> updateRecurrenceRequestsFrontEnd(
     int occurenceCount = updatedRequestModel.occurenceCount + 1;
     var numTemp = 0;
     while (lastRound == false) {
-      eventStartDate = DateTime(
-          eventStartDate.year,
-          eventStartDate.month,
-          eventStartDate.day + 1,
-          eventStartDate.hour,
-          eventStartDate.minute,
-          eventStartDate.second);
-      eventEndDate = DateTime(
-          eventEndDate.year,
-          eventEndDate.month,
-          eventEndDate.day + 1,
-          eventEndDate.hour,
-          eventEndDate.minute,
-          eventEndDate.second);
+      eventStartDate = DateTime(eventStartDate.year, eventStartDate.month, eventStartDate.day + 1,
+          eventStartDate.hour, eventStartDate.minute, eventStartDate.second);
+      eventEndDate = DateTime(eventEndDate.year, eventEndDate.month, eventEndDate.day + 1,
+          eventEndDate.hour, eventEndDate.minute, eventEndDate.second);
       if (eventStartDate.millisecondsSinceEpoch <= updatedRequestModel.end.on &&
           occurenceCount < 11) {
         numTemp = eventStartDate.weekday % 7;
@@ -372,11 +315,8 @@ Future<void> updateRecurrenceRequestsFrontEnd(
           temp.requestStart = eventStartDate.millisecondsSinceEpoch;
           temp.requestEnd = eventEndDate.millisecondsSinceEpoch;
           temp.postTimestamp = DateTime.now().millisecondsSinceEpoch;
-          temp.id = temp.email +
-              "*" +
-              temp.postTimestamp.toString() +
-              "*" +
-              temp.requestStart.toString();
+          temp.id =
+              temp.email + "*" + temp.postTimestamp.toString() + "*" + temp.requestStart.toString();
           temp.occurenceCount = occurenceCount;
           occurenceCount++;
           temp.softDelete = false;
@@ -399,31 +339,18 @@ Future<void> updateRecurrenceRequestsFrontEnd(
     var numTemp = 0;
     int occurenceCount = updatedRequestModel.occurenceCount + 1;
     while (occurenceCount <= updatedRequestModel.end.after) {
-      eventStartDate = DateTime(
-          eventStartDate.year,
-          eventStartDate.month,
-          eventStartDate.day + 1,
-          eventStartDate.hour,
-          eventStartDate.minute,
-          eventStartDate.second);
-      eventEndDate = DateTime(
-          eventEndDate.year,
-          eventEndDate.month,
-          eventEndDate.day + 1,
-          eventEndDate.hour,
-          eventEndDate.minute,
-          eventEndDate.second);
+      eventStartDate = DateTime(eventStartDate.year, eventStartDate.month, eventStartDate.day + 1,
+          eventStartDate.hour, eventStartDate.minute, eventStartDate.second);
+      eventEndDate = DateTime(eventEndDate.year, eventEndDate.month, eventEndDate.day + 1,
+          eventEndDate.hour, eventEndDate.minute, eventEndDate.second);
       numTemp = eventStartDate.weekday % 7;
       if (updatedRequestModel.recurringDays.contains(numTemp)) {
         RequestModel temp = updatedRequestModel;
         temp.requestStart = eventStartDate.millisecondsSinceEpoch;
         temp.requestEnd = eventEndDate.millisecondsSinceEpoch;
         temp.postTimestamp = DateTime.now().millisecondsSinceEpoch;
-        temp.id = temp.email +
-            "*" +
-            temp.postTimestamp.toString() +
-            "*" +
-            temp.requestStart.toString();
+        temp.id =
+            temp.email + "*" + temp.postTimestamp.toString() + "*" + temp.requestStart.toString();
         temp.occurenceCount = occurenceCount;
         occurenceCount++;
         temp.softDelete = false;
@@ -452,11 +379,8 @@ Future<void> updateRecurrenceRequestsFrontEnd(
 
   // s2 ---------- update parent request and previous events with end data of updated event model
 
-  batch.update(
-      CollectionRef.requests.doc(updatedRequestModel.parent_request_id), {
-    "end": updatedRequestModel.end.toMap(),
-    "recurringDays": updatedRequestModel.recurringDays
-  });
+  batch.update(CollectionRef.requests.doc(updatedRequestModel.parent_request_id),
+      {"end": updatedRequestModel.end.toMap(), "recurringDays": updatedRequestModel.recurringDays});
 
   // s3 ---------- delete old recurrences since the updated model
 
@@ -466,8 +390,8 @@ Future<void> updateRecurrenceRequestsFrontEnd(
         projectData.pendingRequests.remove(upcomingEvent.id);
       }
       oldCredits = oldCredits + (upcomingEvent.numberOfHours);
-      batch.delete(CollectionRef.requests
-          .doc(upcomingEvent.id)); // delete old upcoming recurrence-events
+      batch.delete(
+          CollectionRef.requests.doc(upcomingEvent.id)); // delete old upcoming recurrence-events
     });
   }
 
@@ -476,8 +400,7 @@ Future<void> updateRecurrenceRequestsFrontEnd(
   DocumentSnapshot timebankDoc =
       await CollectionRef.timebank.doc(updatedRequestModel.timebankId).get();
   double balance = timebankDoc.data()['balance'] - oldCredits + newCredits;
-  batch.update(CollectionRef.timebank.doc(updatedRequestModel.timebankId),
-      {'balance': balance});
+  batch.update(CollectionRef.timebank.doc(updatedRequestModel.timebankId), {'balance': balance});
 
   // s5 ---------- send notifications in case users have part of members
 
@@ -499,27 +422,22 @@ Future<void> updateRecurrenceRequestsFrontEnd(
       upcomingEventsArr.forEach((RequestModel upcomingEvent) {
         if (upcomingEvent.approvedUsers.contains(docUser.id)) {
           uuidvar = Uuid().generateV4();
-          batch.set(
-              CollectionRef.users
-                  .doc(docUser.id)
-                  .collection("notifications")
-                  .doc(uuidvar),
-              {
-                'communityId': timebankDoc.data()['community_id'],
-                'data': {
-                  'eventName': upcomingEvent.title,
-                  'eventDate': upcomingEvent.requestStart,
-                  'requestId': upcomingEvent.id,
-                  'photoUrl': upcomingEvent.photoUrl,
-                },
-                'id': uuidvar,
-                'isRead': false,
-                'senderUserId': upcomingEvent.sevaUserId,
-                'timebankId': upcomingEvent.timebankId,
-                'timestamp': DateTime.now().millisecondsSinceEpoch,
-                'type': "RecurringRequestUpdated",
-                'userId': docUser.data['sevauserid']
-              });
+          batch.set(CollectionRef.users.doc(docUser.id).collection("notifications").doc(uuidvar), {
+            'communityId': timebankDoc.data()['community_id'],
+            'data': {
+              'eventName': upcomingEvent.title,
+              'eventDate': upcomingEvent.requestStart,
+              'requestId': upcomingEvent.id,
+              'photoUrl': upcomingEvent.photoUrl,
+            },
+            'id': uuidvar,
+            'isRead': false,
+            'senderUserId': upcomingEvent.sevaUserId,
+            'timebankId': upcomingEvent.timebankId,
+            'timestamp': DateTime.now().millisecondsSinceEpoch,
+            'type': "RecurringRequestUpdated",
+            'userId': docUser.data['sevauserid']
+          });
         }
       });
     });
@@ -527,8 +445,7 @@ Future<void> updateRecurrenceRequestsFrontEnd(
 
   // s6 ---------- change in projects pendingrequests, and put it all into a batch and commit them
   if (projectData != null) {
-    batch.update(
-        CollectionRef.projects.doc(projectData.id), projectData.toMap());
+    batch.update(CollectionRef.projects.doc(projectData.id), projectData.toMap());
   }
   await batch.commit();
   logger.i("END 4");
@@ -576,8 +493,7 @@ Stream<List<RequestModel>> getRequestListStream({String timebankId}) async* {
           (documentSnapshot) {
             RequestModel model = RequestModel.fromMap(documentSnapshot.data());
             model.id = documentSnapshot.id;
-            if (model.approvedUsers.length <= model.numberOfApprovals)
-              requestList.add(model);
+            if (model.approvedUsers.length <= model.numberOfApprovals) requestList.add(model);
           },
         );
         requestSink.add(requestList);
@@ -600,8 +516,7 @@ Stream<List<RequestModel>> getAllRequestListStream() async* {
             RequestModel model = RequestModel.fromMap(documentSnapshot.data());
             model.id = documentSnapshot.id;
             if (model.approvedUsers != null) {
-              if (model.approvedUsers.length <= model.numberOfApprovals)
-                requestList.add(model);
+              if (model.approvedUsers.length <= model.numberOfApprovals) requestList.add(model);
             }
           },
         );
@@ -613,8 +528,7 @@ Stream<List<RequestModel>> getAllRequestListStream() async* {
 
 Stream<List<CategoryModel>> getUserCreatedRequestCategories(
     String creatorId, BuildContext context) async* {
-  var query =
-      CollectionRef.requestCategories.where('creatorId', isEqualTo: creatorId);
+  var query = CollectionRef.requestCategories.where('creatorId', isEqualTo: creatorId);
   // .orderBy('title_' + SevaCore.of(context).loggedInUser.language ??
   //     S.of(context).localeName);
 
@@ -626,14 +540,11 @@ Stream<List<CategoryModel>> getUserCreatedRequestCategories(
         List<CategoryModel> categoriesList = [];
         snapshot.docs.forEach(
           (documentSnapshot) {
-            CategoryModel model =
-                CategoryModel.fromMap(documentSnapshot.data());
+            CategoryModel model = CategoryModel.fromMap(documentSnapshot.data());
 
-            logger.e('SNAPSHOT LENGTH:  ' +
-                documentSnapshot.data().length.toString());
+            logger.e('SNAPSHOT LENGTH:  ' + documentSnapshot.data().length.toString());
 
-            if (model.data.containsKey(
-                'title_' + SevaCore.of(context).loggedInUser.language)) {
+            if (model.data.containsKey('title_' + SevaCore.of(context).loggedInUser.language)) {
               categoriesList.add(model);
             }
           },
@@ -644,8 +555,7 @@ Stream<List<CategoryModel>> getUserCreatedRequestCategories(
   );
 }
 
-Stream<List<RequestModel>> getAllVirtualRequestListStream(
-    {String timebankid}) async* {
+Stream<List<RequestModel>> getAllVirtualRequestListStream({String timebankid}) async* {
   var query = CollectionRef.requests
       .where('accepted', isEqualTo: false)
       .where('timebanksPosted', arrayContains: timebankid)
@@ -745,19 +655,16 @@ Stream<ProjectModelList> getAllProjectListStream(
             // var a = Map<String, dynamic>.from(documentSnapshot.data);
             ProjectModel model = ProjectModel.fromMap(documentSnapshot.data());
             model.id = documentSnapshot.id;
-            DateTime endDate =
-                DateTime.fromMillisecondsSinceEpoch(model.endTime);
+            DateTime endDate = DateTime.fromMillisecondsSinceEpoch(model.endTime);
 
             //filter events in a range of 12 months
             if (endDate.isAfter(DateTime.now().subtract(Duration(days: 365))) &&
                 endDate.isBefore(DateTime.now())) {
               if (isAdminOrOwner ||
-                  model.associatedmembers.containsKey(
-                      SevaCore.of(context).loggedInUser.sevaUserID) ||
-                  model.members
-                      .contains(SevaCore.of(context).loggedInUser.sevaUserID) ||
-                  model.creatorId ==
-                      SevaCore.of(context).loggedInUser.sevaUserID) {
+                  model.associatedmembers
+                      .containsKey(SevaCore.of(context).loggedInUser.sevaUserID) ||
+                  model.members.contains(SevaCore.of(context).loggedInUser.sevaUserID) ||
+                  model.creatorId == SevaCore.of(context).loggedInUser.sevaUserID) {
                 completedProjectsList.add(model);
               }
             } else if (endDate.isAfter(DateTime.now())) {
@@ -787,8 +694,7 @@ Stream<List<ProjectModel>> getPublicProjects(String sevaUserID) async* {
           (documentSnapshot) {
             ProjectModel model = ProjectModel.fromMap(documentSnapshot.data());
             model.id = documentSnapshot.id;
-            DateTime endDate =
-                DateTime.fromMillisecondsSinceEpoch(model.endTime);
+            DateTime endDate = DateTime.fromMillisecondsSinceEpoch(model.endTime);
 
             //main explore page horizontal section
             if (endDate.isBefore(DateTime.now())) {
@@ -796,16 +702,14 @@ Stream<List<ProjectModel>> getPublicProjects(String sevaUserID) async* {
                   (model.creatorId == sevaUserID ||
                       model.members.contains(sevaUserID) ||
                       model.associatedmembers.containsKey(sevaUserID))) {
-                if (AppConfig.isTestCommunity != null &&
-                    AppConfig.isTestCommunity) {
+                if (AppConfig.isTestCommunity != null && AppConfig.isTestCommunity) {
                   if (!model.liveMode) projectsList.add(model);
                 } else {
                   projectsList.add(model);
                 }
               }
             } else {
-              if (AppConfig.isTestCommunity != null &&
-                  AppConfig.isTestCommunity) {
+              if (AppConfig.isTestCommunity != null && AppConfig.isTestCommunity) {
                 if (!model.liveMode) projectsList.add(model);
               } else {
                 projectsList.add(model);
@@ -919,8 +823,7 @@ Future<List<ProjectModel>> getAllProjectListFuture({String timebankid}) async {
   return projectsList;
 }
 
-Stream<List<RequestModel>> getTimebankRequestListStream(
-    {String timebankId}) async* {
+Stream<List<RequestModel>> getTimebankRequestListStream({String timebankId}) async* {
   var query = CollectionRef.requests
       .where('timebankId', isEqualTo: timebankId)
       .where('accepted', isEqualTo: false);
@@ -936,8 +839,7 @@ Stream<List<RequestModel>> getTimebankRequestListStream(
             RequestModel model = RequestModel.fromMap(documentSnapshot.data());
             model.id = documentSnapshot.id;
             if (model.approvedUsers != null) {
-              if (model.approvedUsers.length <= model.numberOfApprovals)
-                requestList.add(model);
+              if (model.approvedUsers.length <= model.numberOfApprovals) requestList.add(model);
             }
           },
         );
@@ -948,8 +850,7 @@ Stream<List<RequestModel>> getTimebankRequestListStream(
   );
 }
 
-Stream<List<RequestModel>> getTimebankExistingRequestListStream(
-    {String timebankId}) async* {
+Stream<List<RequestModel>> getTimebankExistingRequestListStream({String timebankId}) async* {
   var query = CollectionRef.requests
       .where('timebanksPosted', arrayContains: timebankId)
       .where('accepted', isEqualTo: false)
@@ -965,10 +866,8 @@ Stream<List<RequestModel>> getTimebankExistingRequestListStream(
           (documentSnapshot) {
             RequestModel model = RequestModel.fromMap(documentSnapshot.data());
             model.id = documentSnapshot.id;
-            if (model.approvedUsers != null &&
-                model.requestType == RequestType.TIME) {
-              if (model.approvedUsers.length <= model.numberOfApprovals)
-                requestList.add(model);
+            if (model.approvedUsers != null && model.requestType == RequestType.TIME) {
+              if (model.approvedUsers.length <= model.numberOfApprovals) requestList.add(model);
             }
           },
         );
@@ -979,8 +878,7 @@ Stream<List<RequestModel>> getTimebankExistingRequestListStream(
   );
 }
 
-Stream<List<RequestModel>> getPersonalRequestListStream(
-    {String sevauserid}) async* {
+Stream<List<RequestModel>> getPersonalRequestListStream({String sevauserid}) async* {
   var query = CollectionRef.requests
       .where('sevauserid', isEqualTo: sevauserid)
       .where('accepted', isEqualTo: false)
@@ -996,8 +894,7 @@ Stream<List<RequestModel>> getPersonalRequestListStream(
             RequestModel model = RequestModel.fromMap(documentSnapshot.data());
             model.id = documentSnapshot.id;
             if (model.approvedUsers != null) {
-              if (model.approvedUsers.length <= model.numberOfApprovals)
-                requestList.add(model);
+              if (model.approvedUsers.length <= model.numberOfApprovals) requestList.add(model);
             }
           },
         );
@@ -1007,8 +904,7 @@ Stream<List<RequestModel>> getPersonalRequestListStream(
   );
 }
 
-Stream<List<RequestModel>> getProjectRequestsStream(
-    {String project_id}) async* {
+Stream<List<RequestModel>> getProjectRequestsStream({String project_id}) async* {
   var query = CollectionRef.requests
       .where('projectId', isEqualTo: project_id)
       .where('accepted', isEqualTo: false)
@@ -1026,8 +922,7 @@ Stream<List<RequestModel>> getProjectRequestsStream(
             RequestModel model = RequestModel.fromMap(documentSnapshot.data());
             model.id = documentSnapshot.id;
             if (model.approvedUsers != null) {
-              if (model.approvedUsers.length <= model.numberOfApprovals)
-                requestList.add(model);
+              if (model.approvedUsers.length <= model.numberOfApprovals) requestList.add(model);
             }
           },
         );
@@ -1071,9 +966,7 @@ Future<void> acceptRequest({
 }) async {
   assert(requestModel != null);
 
-  await CollectionRef.requests
-      .doc(requestModel.id)
-      .update(requestModel.toMap());
+  await CollectionRef.requests.doc(requestModel.id).update(requestModel.toMap());
 
   if (!fromOffer) {
     NotificationsModel model = NotificationsModel(
@@ -1106,9 +999,7 @@ Future<void> acceptRequest({
 Future<void> requestComplete({
   @required RequestModel model,
 }) async {
-  await CollectionRef.requests
-      .doc(model.id)
-      .set(model.toMap(), SetOptions(merge: true));
+  await CollectionRef.requests.doc(model.id).set(model.toMap(), SetOptions(merge: true));
 }
 
 Future<void> borrowRequestFeedbackLenderUpdate({
@@ -1128,8 +1019,7 @@ Future<void> borrowRequestFeedbackBorrowerUpdate({
 }
 
 Future<void> storeAcceptorDataBorrowRequest(
-    {@required RequestModel model,
-    @required BorrowAcceptorModel borrowAcceptorModel}) async {
+    {@required RequestModel model, @required BorrowAcceptorModel borrowAcceptorModel}) async {
   await CollectionRef.requests
       .doc(model.id)
       .collection('borrowRequestAcceptors')
@@ -1138,8 +1028,7 @@ Future<void> storeAcceptorDataBorrowRequest(
 }
 
 Future<void> removeAcceptorDataBorrowRequest(
-    {@required RequestModel requestModel,
-    @required String acceptorEmail}) async {
+    {@required RequestModel requestModel, @required String acceptorEmail}) async {
   await CollectionRef.requests
       .doc(requestModel.id)
       .collection('borrowRequestAcceptors')
@@ -1168,8 +1057,7 @@ Future<void> acceptBorrowRequest(
     memberEmail: SevaCore.of(context).loggedInUser.email,
     timebankId: timebankModel.id,
   );
-  requestModel.participantDetails[SevaCore.of(context).loggedInUser.email] =
-      acceptorModel.toMap();
+  requestModel.participantDetails[SevaCore.of(context).loggedInUser.email] = acceptorModel.toMap();
 
   acceptRequest(
     loggedInUser: SevaCore.of(context).loggedInUser,
@@ -1186,9 +1074,7 @@ Future<void> rejectRequestCompletion({
   @required String userId,
   @required String communityid,
 }) async {
-  await CollectionRef.requests
-      .doc(model.id)
-      .set(model.toMap(), SetOptions(merge: true));
+  await CollectionRef.requests.doc(model.id).set(model.toMap(), SetOptions(merge: true));
 
   NotificationsModel notification = NotificationsModel(
     timebankId: model.timebankId,
@@ -1208,8 +1094,7 @@ List<TransactionModel> updateListTransactionsCreditsAsPerTimebankTaxPolicy({
   String userIdToBeCredited,
   double userAmout,
 }) {
-  List<TransactionModel> modelTransactions =
-      originalModel.map((f) => f).toList();
+  List<TransactionModel> modelTransactions = originalModel.map((f) => f).toList();
 
   return modelTransactions.map((t) {
     if (t.to == userIdToBeCredited) {
@@ -1228,8 +1113,7 @@ Future<void> approveRequestCompletion({
   @required String memberCommunityId,
   // @required num taxPercentage,
 }) async {
-  List<TransactionModel> transactions =
-      model.transactions.map((t) => t).toList();
+  List<TransactionModel> transactions = model.transactions.map((t) => t).toList();
   TransactionModel editedTransaction;
 
   double transactionvalue = (model.durationOfRequest / 60);
@@ -1267,8 +1151,7 @@ Future<void> approveRequestCompletion({
       timestamp: FieldValue.serverTimestamp(),
     );
 
-    updatedRequestModel.transactions =
-        updateListTransactionsCreditsAsPerTimebankTaxPolicy(
+    updatedRequestModel.transactions = updateListTransactionsCreditsAsPerTimebankTaxPolicy(
       credits: transactionvalue,
       originalModel: model.transactions,
       userAmout: transactionvalue,
@@ -1276,47 +1159,47 @@ Future<void> approveRequestCompletion({
     );
 
     TransactionBloc().createNewTransaction(
-      FlavorConfig.values.timebankId,
-      model.timebankId,
-      DateTime.now().millisecondsSinceEpoch,
-      transactionvalue ?? 0,
-      true,
-      "REQUEST_CREATION_TIMEBANK_FILL_CREDITS",
-      FlavorConfig.values.timebankId,
-      model.timebankId,
-      communityId: communityId,
-      fromEmailORId: model.timebankId,
-      toEmailORId: model.timebankId,
-    );
+        FlavorConfig.values.timebankId,
+        model.timebankId,
+        DateTime.now().millisecondsSinceEpoch,
+        transactionvalue ?? 0,
+        true,
+        "REQUEST_CREATION_TIMEBANK_FILL_CREDITS",
+        FlavorConfig.values.timebankId,
+        model.timebankId,
+        communityId: communityId,
+        fromEmailORId: model.timebankId,
+        toEmailORId: model.timebankId,
+        offerId: model.offerId ?? '');
 
     TransactionBloc().createNewTransaction(
-      model.timebankId,
-      userId,
-      DateTime.now().millisecondsSinceEpoch,
-      transactionvalue,
-      true,
-      "TIME_REQUEST",
-      model.id,
-      model.timebankId,
-      communityId: communityId,
-      fromEmailORId: model.timebankId,
-      toEmailORId: model.timebankId,
-    );
+        model.timebankId,
+        userId,
+        DateTime.now().millisecondsSinceEpoch,
+        transactionvalue,
+        true,
+        "TIME_REQUEST",
+        model.id,
+        model.timebankId,
+        communityId: communityId,
+        fromEmailORId: model.timebankId,
+        toEmailORId: model.timebankId,
+        );
     // adds review to firestore
   } else if (model.requestMode == RequestMode.PERSONAL_REQUEST) {
     TransactionBloc().createNewTransaction(
-      model.sevaUserId,
-      userId,
-      DateTime.now().millisecondsSinceEpoch,
-      transactionvalue,
-      true,
-      "TIME_REQUEST",
-      model.id,
-      model.timebankId,
-      communityId: communityId,
-      fromEmailORId: model.timebankId,
-      toEmailORId: model.timebankId,
-    );
+        model.sevaUserId,
+        userId,
+        DateTime.now().millisecondsSinceEpoch,
+        transactionvalue,
+        true,
+        "TIME_REQUEST",
+        model.id,
+        model.timebankId,
+        communityId: communityId,
+        fromEmailORId: model.timebankId,
+        toEmailORId: model.timebankId,
+        );
   }
 
   NotificationsModel notification = NotificationsModel(
@@ -1331,8 +1214,7 @@ Future<void> approveRequestCompletion({
 
   Map<String, dynamic> transactionData = model.transactions
       .where((transactionModel) {
-        if (transactionModel.from == model.sevaUserId &&
-            transactionModel.to == userId) {
+        if (transactionModel.from == model.sevaUserId && transactionModel.to == userId) {
           return true;
         } else {
           return false;
@@ -1418,9 +1300,7 @@ Future<void> approveAcceptRequest({
     }
   }
   requestModel.accepted = approvalCount >= requestModel.numberOfApprovals;
-  await CollectionRef.requests
-      .doc(requestModel.id)
-      .update(requestModel.toMap());
+  await CollectionRef.requests.doc(requestModel.id).update(requestModel.toMap());
 
   var timebankModel = await fetchTimebankData(requestModel.timebankId);
   var tempRequestModel = requestModel;
@@ -1468,9 +1348,7 @@ Future<void> approveAcceptRequestForTimebank({
       ? null //requestModel.accepted = requestModel.approvedUsers.length >= requestModel.numberOfApprovals
       : requestModel.accepted = approvalCount >= requestModel.numberOfApprovals;
 
-  await CollectionRef.requests
-      .doc(requestModel.id)
-      .update(requestModel.toMap());
+  await CollectionRef.requests.doc(requestModel.id).update(requestModel.toMap());
 
   var timebankModel = await fetchTimebankData(requestModel.timebankId);
   var tempTimebankModel = requestModel;
@@ -1478,8 +1356,7 @@ Future<void> approveAcceptRequestForTimebank({
   tempTimebankModel.fullName = timebankModel.name;
 
   NotificationsModel model = NotificationsModel(
-    isTimebankNotification:
-        requestModel.requestMode == RequestMode.TIMEBANK_REQUEST,
+    isTimebankNotification: requestModel.requestMode == RequestMode.TIMEBANK_REQUEST,
     timebankId: requestModel.timebankId,
     id: utils.Utils.getUuid(),
     targetUserId: approvedUserId,
@@ -1502,9 +1379,7 @@ Future<void> rejectAcceptRequest({
   @required String notificationId,
   @required String communityId,
 }) async {
-  await CollectionRef.requests
-      .doc(requestModel.id)
-      .update(requestModel.toMap());
+  await CollectionRef.requests.doc(requestModel.id).update(requestModel.toMap());
 
   var tempRequestModel = requestModel;
   if (requestModel.requestMode == RequestMode.TIMEBANK_REQUEST) {
@@ -1676,10 +1551,8 @@ Future<ProjectModel> getProjectFutureById({
   return ProjectModel.fromMap(documentsnapshot.data());
 }
 
-Future<ProjectTemplateModel> getProjectTemplateById(
-    {@required String templateId}) async {
-  assert(templateId != null && templateId.isNotEmpty,
-      "template id cannot be null or empty");
+Future<ProjectTemplateModel> getProjectTemplateById({@required String templateId}) async {
+  assert(templateId != null && templateId.isNotEmpty, "template id cannot be null or empty");
 
   ProjectTemplateModel projectTemplateModel;
   await CollectionRef.projectTemplates
@@ -1687,8 +1560,7 @@ Future<ProjectTemplateModel> getProjectTemplateById(
       .get()
       .then((QuerySnapshot querySnapshot) {
     querySnapshot.docs.forEach((DocumentSnapshot documentSnapshot) {
-      projectTemplateModel =
-          ProjectTemplateModel.fromMap(documentSnapshot.data());
+      projectTemplateModel = ProjectTemplateModel.fromMap(documentSnapshot.data());
     });
   });
 
@@ -1728,8 +1600,7 @@ Stream<ProjectModel> getProjectStream({
   );
 }
 
-Future<void> createProjectTemplate(
-    {@required ProjectTemplateModel projectTemplateModel}) async {
+Future<void> createProjectTemplate({@required ProjectTemplateModel projectTemplateModel}) async {
   return await CollectionRef.projectTemplates
       .doc(projectTemplateModel.id)
       .set(projectTemplateModel.toMap());
@@ -1751,15 +1622,11 @@ Future<void> createBorrowAgreementTemplate(
 }
 
 Future<void> createProject({@required ProjectModel projectModel}) async {
-  return await CollectionRef.projects
-      .doc(projectModel.id)
-      .set(projectModel.toMap());
+  return await CollectionRef.projects.doc(projectModel.id).set(projectModel.toMap());
 }
 
 Future<void> updateProject({@required ProjectModel projectModel}) async {
-  return await CollectionRef.projects
-      .doc(projectModel.id)
-      .update(projectModel.toMap());
+  return await CollectionRef.projects.doc(projectModel.id).update(projectModel.toMap());
 }
 
 Future<void> updateProjectCompletedRequest(
@@ -1805,8 +1672,7 @@ Stream<List<RequestModel>> getCompletedRequestStream({
           bool isRequestCompleted = false;
 
           model.transactions?.forEach((transaction) {
-            if (transaction.isApproved && transaction.to == userId)
-              isRequestCompleted = true;
+            if (transaction.isApproved && transaction.to == userId) isRequestCompleted = true;
           });
 
           (model.accepted == true && model.requestType == RequestType.BORROW)
@@ -1955,22 +1821,17 @@ Future<CategoryModel> getCategoryForId({@required String categoryID}) async {
 }
 
 //Add new user defined request category
-Future<void> addNewRequestCategory(
-    Map<String, dynamic> newModel, String typeId) async {
+Future<void> addNewRequestCategory(Map<String, dynamic> newModel, String typeId) async {
   await CollectionRef.requestCategories.doc(typeId).set(newModel);
 }
 
 //Edit user defined request category
-Future<void> editRequestCategory(
-    Map<String, dynamic> newModel, String typeId) async {
+Future<void> editRequestCategory(Map<String, dynamic> newModel, String typeId) async {
   await CollectionRef.requestCategories.doc(typeId).update(newModel);
 }
 
 Future oneToManyCreatorRequestCompletionRejectedTimebankNotifications(
-    RequestModel requestModel,
-    context,
-    UserModel userModel,
-    bool fromNotification) async {
+    RequestModel requestModel, context, UserModel userModel, bool fromNotification) async {
   showDialog(
       barrierDismissible: false,
       context: context,
@@ -1990,8 +1851,8 @@ Future oneToManyCreatorRequestCompletionRejectedTimebankNotifications(
   //Send notification OneToManyCreatorRejectedCompletion
   //and speaker enters hours again and sends same completed notitifiation to creator
 
-  UserModel speakerModel = await FirestoreManager.getUserForId(
-      sevaUserId: requestModel.selectedInstructor.sevaUserID);
+  UserModel speakerModel =
+      await FirestoreManager.getUserForId(sevaUserId: requestModel.selectedInstructor.sevaUserID);
 
   if (speakerModel.communities.contains(requestModel.communityId)) {
     log('in community');
@@ -2038,9 +1899,8 @@ Future oneToManyCreatorRequestCompletionRejectedTimebankNotifications(
   });
 
   //make the relevant notification is read true
-  await FirestoreManager
-      .readTimeBankNotificationOneToManyCreatorRejectedCompletion(
-          requestModel: requestModel, fromNotification: fromNotification);
+  await FirestoreManager.readTimeBankNotificationOneToManyCreatorRejectedCompletion(
+      requestModel: requestModel, fromNotification: fromNotification);
 
   if (dialogContext != null) {
     Navigator.of(dialogContext).pop();
@@ -2049,15 +1909,14 @@ Future oneToManyCreatorRequestCompletionRejectedTimebankNotifications(
   log('oneToManyCreatorRequestCompletionRejected end of function');
 }
 
-Future oneToManyCreatorRequestCompletionRejected(
-    RequestModel requestModel, context) async {
+Future oneToManyCreatorRequestCompletionRejected(RequestModel requestModel, context) async {
   //Send notification OneToManyCreatorRejectedCompletion
   //and speaker enters hours again and sends same completed notitifiation to creator
 
   log('HERE HERE!');
 
-  UserModel speakerModel = await FirestoreManager.getUserForId(
-      sevaUserId: requestModel.selectedInstructor.sevaUserID);
+  UserModel speakerModel =
+      await FirestoreManager.getUserForId(sevaUserId: requestModel.selectedInstructor.sevaUserID);
 
   if (speakerModel.communities.contains(requestModel.communityId)) {
     log('in community');
@@ -2152,8 +2011,7 @@ Stream<List<RequestModel>> getBorrowRequestCreatorToCollectReturnItems({
           RequestModel model = RequestModel.fromMap(document.data());
           requestListBorrowerWaiting.add(model);
         });
-        logger.e('--------> THISS:  ' +
-            requestListBorrowerWaiting.length.toString());
+        logger.e('--------> THISS:  ' + requestListBorrowerWaiting.length.toString());
         requestSink.add(requestListBorrowerWaiting);
       },
     ),
@@ -2161,8 +2019,7 @@ Stream<List<RequestModel>> getBorrowRequestCreatorToCollectReturnItems({
 }
 
 //getALl the categories
-Stream<List<CategoryModel>> getAllCategoriesStream(
-    BuildContext context) async* {
+Stream<List<CategoryModel>> getAllCategoriesStream(BuildContext context) async* {
   var key = S.of(context).localeName;
 
   var data = CollectionRef.requestCategories
@@ -2170,8 +2027,7 @@ Stream<List<CategoryModel>> getAllCategoriesStream(
       .orderBy("title_en", descending: false)
       .snapshots();
 
-  yield* data.transform(
-      StreamTransformer<QuerySnapshot, List<CategoryModel>>.fromHandlers(
+  yield* data.transform(StreamTransformer<QuerySnapshot, List<CategoryModel>>.fromHandlers(
     handleData: (snapshot, sink) {
       List<CategoryModel> categories = [];
 
@@ -2190,9 +2046,7 @@ Stream<List<CategoryModel>> getAllCategoriesStream(
 Future<List<CategoryModel>> getSubCategoriesFuture(BuildContext context) async {
   var key = S.of(context).localeName;
 
-  var data = await CollectionRef.requestCategories
-      .where("type", isEqualTo: "subCategory")
-      .get();
+  var data = await CollectionRef.requestCategories.where("type", isEqualTo: "subCategory").get();
   List<CategoryModel> categories = [];
   data.docs.forEach((element) {
     if (element.data()["title_" + key ?? 'en'] != null) {
@@ -2213,8 +2067,7 @@ Future lenderReceivedBackCheck(
   showProgressForCreditRetrieval(context);
 
   //Send Receipt Email to Lender & Borrowr
-  await MailBorrowRequestReceipts.sendBorrowRequestReceipts(
-      requestModelUpdated);
+  await MailBorrowRequestReceipts.sendBorrowRequestReceipts(requestModelUpdated);
   log('Came to send receipts to lender and borrower api');
 
   //Send Notification To Lender to let them know it's acknowledged
@@ -2259,15 +2112,14 @@ Future<void> sendNotificationLenderReceipt(
 
   bool isOutsideCommunity = false;
 
-  List<TimebankModel> timebanks =
-      await TimebankRepository.getTimebanksWhichUserIsPartOf(
+  List<TimebankModel> timebanks = await TimebankRepository.getTimebanksWhichUserIsPartOf(
     sevaUserId,
     communityId,
   );
   log('got time banks--------------------->>');
 
-  TimebankModel finalTimebank = timebanks
-      .firstWhere((element) => element.id == timebankId, orElse: () => null);
+  TimebankModel finalTimebank =
+      timebanks.firstWhere((element) => element.id == timebankId, orElse: () => null);
   if (finalTimebank == null) {
     isOutsideCommunity = true;
   } else {
@@ -2282,8 +2134,7 @@ Future<void> sendNotificationLenderReceipt(
       data: requestModel.toMap(),
       isRead: false,
       type: NotificationType.NOTIFICATION_TO_LENDER_COMPLETION_RECEIPT,
-      communityId:
-          isOutsideCommunity ? FlavorConfig.values.timebankId : communityId,
+      communityId: isOutsideCommunity ? FlavorConfig.values.timebankId : communityId,
       senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
       targetUserId: sevaUserId);
   log('model made--------------------->>');
@@ -2306,8 +2157,7 @@ Future<void> sendNotificationBorrowerRequestCompletedFeedback(
     RequestModel requestModel,
     @required BuildContext context}) async {
   NotificationsModel notification = NotificationsModel(
-      isTimebankNotification:
-          requestModel.requestMode == RequestMode.TIMEBANK_REQUEST,
+      isTimebankNotification: requestModel.requestMode == RequestMode.TIMEBANK_REQUEST,
       id: Utils.getUuid(),
       timebankId: timebankId,
       data: requestModel.toMap(),
@@ -2356,9 +2206,8 @@ Future<BorrowAcceptorModel> getBorrowRequestAcceptorModel({
   @required String requestId,
   @required String acceptorEmail,
 }) async {
-  var documentsnapshot = await CollectionRef.borrowRequestAcceptors(requestId)
-      .doc(acceptorEmail)
-      .get();
+  var documentsnapshot =
+      await CollectionRef.borrowRequestAcceptors(requestId).doc(acceptorEmail).get();
 
   return BorrowAcceptorModel.fromMap(documentsnapshot.data());
 }
@@ -2374,8 +2223,7 @@ Stream<List<BorrowAcceptorModel>> getBorrowRequestAcceptorsModelStream({
         List<BorrowAcceptorModel> acceptorList = [];
         snapshot.docs.forEach(
           (documentSnapshot) {
-            BorrowAcceptorModel model =
-                BorrowAcceptorModel.fromMap(documentSnapshot.data());
+            BorrowAcceptorModel model = BorrowAcceptorModel.fromMap(documentSnapshot.data());
             // model.id = documentSnapshot.id;
             acceptorList.add(model);
           },
@@ -2394,8 +2242,7 @@ Stream<List<TransacationsTimelineModel>> getRequestTimelineDocs(
   var data = query.snapshots();
 
   yield* data.transform(
-    StreamTransformer<QuerySnapshot,
-        List<TransacationsTimelineModel>>.fromHandlers(
+    StreamTransformer<QuerySnapshot, List<TransacationsTimelineModel>>.fromHandlers(
       handleData: (snapshot, timelineSink) {
         List<TransacationsTimelineModel> timelineDocs = [];
         snapshot.docs.forEach(
@@ -2413,11 +2260,8 @@ Stream<List<TransacationsTimelineModel>> getRequestTimelineDocs(
 }
 
 Future<void> sendInsufficentNotificationToAdmin(
-    {double creditsNeeded,
-    TimebankModel timebankModel,
-    @required BuildContext context}) async {
-  UserInsufficentCreditsModel userInsufficientModel =
-      UserInsufficentCreditsModel(
+    {double creditsNeeded, TimebankModel timebankModel, @required BuildContext context}) async {
+  UserInsufficentCreditsModel userInsufficientModel = UserInsufficentCreditsModel(
     senderName: SevaCore.of(context).loggedInUser.fullname,
     senderId: SevaCore.of(context).loggedInUser.sevaUserID,
     senderPhotoUrl: SevaCore.of(context).loggedInUser.photoURL,
@@ -2458,8 +2302,7 @@ Future<List<String>> writeToDB(
     //create invitation if its from offer only for cash and goods
     try {
       // ignore: deprecated_member_use_from_same_package
-      await OfferInvitationManager
-          .handleInvitationNotificationForRequestCreatedFromOffer(
+      await OfferInvitationManager.handleInvitationNotificationForRequestCreatedFromOffer(
         currentCommunity: SevaCore.of(context).loggedInUser.currentCommunity,
         offerModel: offer,
         requestModel: requestModel,
@@ -2482,8 +2325,8 @@ Future<List<String>> writeToDB(
   }
 }
 
-Future updateInvitedSpeakerForRequest(String requestID, String sevaUserId,
-    String email, DocumentReference speakerNotificationDocRef) async {
+Future updateInvitedSpeakerForRequest(String requestID, String sevaUserId, String email,
+    DocumentReference speakerNotificationDocRef) async {
   var batch = CollectionRef.batch;
 
   batch.update(CollectionRef.requests.doc(requestID), {
@@ -2515,10 +2358,7 @@ Future<bool> sendMailToInstructor({
       mailContent: MailContent.createMail(
           mailSender: senderEmail,
           mailReciever: receiverEmail,
-          mailSubject: requestCreatorName +
-              ' from ' +
-              communityName +
-              ' has invited you',
+          mailSubject: requestCreatorName + ' from ' + communityName + ' has invited you',
           mailContent: getMailContentTemplate(
               requestName: requestName,
               requestCreatorName: requestCreatorName,
@@ -2563,17 +2403,13 @@ Future<DocumentReference> sendNotificationToMemberOneToManyRequest(
       .doc(notification.id)
       .set(notification.toMap());
 
-  return CollectionRef.users
-      .doc(userEmail)
-      .collection("notifications")
-      .doc(notification.id);
+  return CollectionRef.users.doc(userEmail).collection("notifications").doc(notification.id);
 }
 
 Future<List<CategoryModel>> getCategoriesFromApi(String query) async {
   try {
     var response = await post(
-      "https://proxy.sevaexchange.com/" +
-          "http://ai.api.sevaxapp.com/request_categories",
+      "https://proxy.sevaexchange.com/" + "http://ai.api.sevaxapp.com/request_categories",
       headers: {
         "Content-Type": "application/json",
         "Access-Control": "Allow-Headers",
@@ -2588,9 +2424,8 @@ Future<List<CategoryModel>> getCategoriesFromApi(String query) async {
 
     if (response.statusCode == 200) {
       Map<String, dynamic> bodyMap = json.decode(response.body);
-      List<String> categoriesList = bodyMap.containsKey('string_vec')
-          ? List.castFrom(bodyMap['string_vec'])
-          : [];
+      List<String> categoriesList =
+          bodyMap.containsKey('string_vec') ? List.castFrom(bodyMap['string_vec']) : [];
       if (categoriesList != null && categoriesList.length > 0) {
         return getCategoryModels(categoriesList);
       }
@@ -2603,8 +2438,7 @@ Future<List<CategoryModel>> getCategoriesFromApi(String query) async {
   }
 }
 
-Future<List<CategoryModel>> getCategoryModels(
-    List<String> categoriesList) async {
+Future<List<CategoryModel>> getCategoryModels(List<String> categoriesList) async {
   List<CategoryModel> modelList = [];
   for (int i = 0; i < categoriesList.length; i += 1) {
     CategoryModel categoryModel = await FirestoreManager.getCategoryForId(
