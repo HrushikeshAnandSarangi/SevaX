@@ -102,7 +102,9 @@ class AddUpdateItemBloc extends BlocBase {
   }
 
   String validateEstimatedVal(String val) {
-    if (_estimated_value.value == null || _estimated_value.value == '') {
+    if (_estimated_value.value == null ||
+        _estimated_value.value == '' ||
+        _estimated_value.value == '0') {
       //check if validator working now
       _estimated_value.addError(AddItemValidationErrors.estimated_value_error);
       return AddItemValidationErrors.estimated_value_error;
