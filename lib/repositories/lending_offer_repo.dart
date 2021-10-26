@@ -9,6 +9,7 @@ import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/new_baseline/models/amenities_model.dart';
 import 'package:sevaexchange/new_baseline/models/lending_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
+import 'package:sevaexchange/repositories/notifications_repository.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/lending_offer_participants.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/time_offer_participant.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/lending_offer_borrower_update.dart';
@@ -513,6 +514,23 @@ class LendingOffersRepo {
         feedbackNotification.toMap(),
         SetOptions(merge: true),
       );
+
+      try {
+        String notifID = await utils.getQueryOfferPersonalNotification(
+            notificationType: 'NOTIFICATION_TO_BORROWER_APPROVED_LENDING_OFFER',
+            email: lendingOfferAcceptorModel.acceptorEmail,
+            offerId: offerModel.id);
+
+        // NOTIFICATION_TO_BORROWER_APPROVED_LENDING_OFFER
+
+        logger.e('NOTIF ID $notifID');
+        NotificationsRepository.readUserNotification(
+          notifID,
+          lendingOfferAcceptorModel.acceptorEmail,
+        );
+      } catch (exception) {
+        logger.e("getQueryOfferPersonalNotification $exception");
+      }
     }
 
     await batch.commit();
