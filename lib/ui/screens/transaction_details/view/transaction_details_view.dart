@@ -228,7 +228,9 @@ class _TransactionDetailsViewState extends State<TransactionDetailsView> {
                                       ),
                                     ),
                                     SizedBox(width: 8),
-                                    Text(SevaCore.of(context).loggedInUser.fullname, style: tableCellStyle),
+                                    SizedBox(
+                                        width: MediaQuery.of(context).size.width / 8,
+                                        child: Text(SevaCore.of(context).loggedInUser.fullname, style: tableCellStyle)),
                                     SizedBox(width: 15),
                                     Expanded(
                                       flex: 3,

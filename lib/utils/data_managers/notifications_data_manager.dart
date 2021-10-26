@@ -834,3 +834,21 @@ Stream<List<NotificationsModel>> getCompletedNotificationsStream(
     ),
   );
 }
+
+Future<String> getQueryOfferPersonalNotification(
+    {String offerId, String email, String notificationType}) async {
+  String notifId = '';
+
+  await CollectionRef.userNotification(email)
+      .where('isRead', isEqualTo: false)
+      .where('type', isEqualTo: notificationType)
+      .where('data.id', isEqualTo: offerId)
+      .get()
+      .then((value) {
+    NotificationsModel nModel = NotificationsModel.fromMap(value.docs.first?.data());
+    // logger.e("${nModel.toString()}");
+    notifId = nModel?.id;
+  });
+
+  return notifId;
+}
