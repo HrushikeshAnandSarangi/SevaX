@@ -68,16 +68,13 @@ class GroupOfferDataModel {
 
     if (this.endDate != null) map['endDate'] = this.endDate;
 
-    if (this.numberOfPreperationHours != null)
-      map['numberOfPreperationHours'] = this.numberOfPreperationHours;
+    if (this.numberOfPreperationHours != null) map['numberOfPreperationHours'] = this.numberOfPreperationHours;
 
-    if (this.numberOfClassHours != null)
-      map['numberOfClassHours'] = this.numberOfClassHours;
+    if (this.numberOfClassHours != null) map['numberOfClassHours'] = this.numberOfClassHours;
 
     if (this.sizeOfClass != null) map['sizeOfClass'] = this.sizeOfClass;
 
-    if (this.classDescription != null)
-      map['classDescription'] = this.classDescription;
+    if (this.classDescription != null) map['classDescription'] = this.classDescription;
 
     map['signedUpMembers'] = this.signedUpMembers ?? [];
     map['creditsApproved'] = this.creditsApproved ?? 0;
@@ -365,8 +362,7 @@ class OfferModel extends DataModel {
       this.isRecurring = map['isRecurring'];
     }
     if (map.containsKey('allowedCalenderUsers')) {
-      List<String> allowedCalenderUsers =
-          List.castFrom(map['allowedCalenderUsers']);
+      List<String> allowedCalenderUsers = List.castFrom(map['allowedCalenderUsers']);
       this.allowedCalenderUsers = allowedCalenderUsers;
     } else {
       this.allowedCalenderUsers = [];
@@ -438,20 +434,17 @@ class OfferModel extends DataModel {
     location = getLocation(map);
 
     if (map.containsKey("individualOfferDataModel"))
-      this.individualOfferDataModel =
-          IndividualOfferDataModel.fromMap(map['individualOfferDataModel']);
+      this.individualOfferDataModel = IndividualOfferDataModel.fromMap(map['individualOfferDataModel']);
     else
       this.individualOfferDataModel = null;
 
     if (map.containsKey("groupOfferDataModel"))
-      this.groupOfferDataModel =
-          GroupOfferDataModel.fromMap(map['groupOfferDataModel']);
+      this.groupOfferDataModel = GroupOfferDataModel.fromMap(map['groupOfferDataModel']);
     else
       this.groupOfferDataModel = null;
 
     if (map.containsKey('goodsDonationDetails')) {
-      this.goodsDonationDetails =
-          GoodsDonationDetails.fromMap(map['goodsDonationDetails']);
+      this.goodsDonationDetails = GoodsDonationDetails.fromMap(map['goodsDonationDetails']);
     }
 
     if (map.containsKey('cashModeDetails')) {
@@ -478,8 +471,7 @@ class OfferModel extends DataModel {
       this.photoUrlImage = map['photoUrlImage'];
     }
     if (map.containsKey('lendingOfferDetailsModel')) {
-      this.lendingOfferDetailsModel =
-          LendingOfferDetailsModel.fromMap(map['lendingOfferDetailsModel']);
+      this.lendingOfferDetailsModel = LendingOfferDetailsModel.fromMap(map['lendingOfferDetailsModel']);
     } else {
       this.lendingOfferDetailsModel = new LendingOfferDetailsModel();
     }
@@ -499,11 +491,9 @@ class OfferModel extends DataModel {
       this.eventMetaData = EventMetaData.fromMap(
         Map<String, dynamic>.from(map["eventMetaData"]),
       );
-      log('Parsed eventMetaData =========≠ ' +
-          this.eventMetaData.eventId.toString());
+      log('Parsed eventMetaData =========≠ ' + this.eventMetaData.eventId.toString());
     } else {
-      log('No Data found eventMetaData =========≠ ' +
-          this.eventMetaData.toString());
+      log('No Data found eventMetaData =========≠ ' + this.eventMetaData.toString());
     }
 
     if (map.containsKey('participantDetails')) {
@@ -556,8 +546,7 @@ class OfferModel extends DataModel {
     }
 
     if (map.containsKey('allowedCalenderUsers')) {
-      List<String> allowedCalenderUsers =
-          List.castFrom(map['allowedCalenderUsers']);
+      List<String> allowedCalenderUsers = List.castFrom(map['allowedCalenderUsers']);
       this.allowedCalenderUsers = allowedCalenderUsers;
     } else {
       this.allowedCalenderUsers = [];
@@ -617,20 +606,17 @@ class OfferModel extends DataModel {
     location = getLocation(map);
 
     if (map.containsKey("individualOfferDataModel"))
-      this.individualOfferDataModel =
-          IndividualOfferDataModel.fromMap(map['individualOfferDataModel']);
+      this.individualOfferDataModel = IndividualOfferDataModel.fromMap(map['individualOfferDataModel']);
     else
       this.individualOfferDataModel = null;
 
     if (map.containsKey("groupOfferDataModel"))
-      this.groupOfferDataModel =
-          GroupOfferDataModel.fromMap(map['groupOfferDataModel']);
+      this.groupOfferDataModel = GroupOfferDataModel.fromMap(map['groupOfferDataModel']);
     else
       this.groupOfferDataModel = null;
 
     if (map.containsKey('goodsDonationDetails')) {
-      this.goodsDonationDetails =
-          GoodsDonationDetails.fromMap(map['goodsDonationDetails']);
+      this.goodsDonationDetails = GoodsDonationDetails.fromMap(map['goodsDonationDetails']);
     }
 
     if (map.containsKey('cashModeDetails')) {
@@ -655,8 +641,7 @@ class OfferModel extends DataModel {
       this.photoUrlImage = map['photoUrlImage'];
     }
     if (map.containsKey('lendingOfferDetailsModel')) {
-      this.lendingOfferDetailsModel =
-          LendingOfferDetailsModel.fromMap(map['lendingOfferDetailsModel']);
+      this.lendingOfferDetailsModel = LendingOfferDetailsModel.fromMap(map['lendingOfferDetailsModel']);
     } else {
       this.lendingOfferDetailsModel = new LendingOfferDetailsModel();
     }
@@ -667,8 +652,7 @@ class OfferModel extends DataModel {
     Map<String, dynamic> map = {};
 
     if (this.participantDetails != null) {
-      map['participantDetails'] =
-          Map<String, dynamic>.from(this.participantDetails);
+      map['participantDetails'] = Map<String, dynamic>.from(this.participantDetails);
     }
 
     if (this.timebanksPosted != null) {
@@ -682,8 +666,7 @@ class OfferModel extends DataModel {
     }
     map['groupOfferDataModel'] = this.groupOfferDataModel.toMap() ?? null;
 
-    map['individualOfferDataModel'] =
-        this.individualOfferDataModel.toMap() ?? null;
+    map['individualOfferDataModel'] = this.individualOfferDataModel.toMap() ?? null;
 
     if (this.offerType != null) {
       map['offerType'] = describeOfferType(this.offerType);
@@ -783,6 +766,12 @@ class OfferModel extends DataModel {
           map['requestType'] = "LENDING_OFFER";
           break;
         case RequestType.ONE_TO_MANY_OFFER:
+          map['requestType'] = "ONE_TO_MANY_OFFER";
+          break;
+        case RequestType.BORROW:
+          // TODO: Handle this case.
+          break;
+        case RequestType.ONE_TO_MANY_REQUEST:
           map['requestType'] = "ONE_TO_MANY_OFFER";
           break;
       }

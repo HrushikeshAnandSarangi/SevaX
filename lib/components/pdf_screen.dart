@@ -12,7 +12,8 @@ class PDFScreen extends StatelessWidget {
   bool isFromFeeds = false;
   bool isDownloadable = true;
   String pdfUrl = '';
-  PDFScreen({this.pathPDF, this.docName, this.isFromFeeds, this.pdfUrl, this.isDownloadable = true});
+  PDFScreen(
+      {this.pathPDF, this.docName, this.isFromFeeds, this.pdfUrl, this.isDownloadable = true});
 
   @override
   Widget build(BuildContext context) {
@@ -25,23 +26,24 @@ class PDFScreen extends StatelessWidget {
             //   overflow: TextOverflow.ellipsis,
           ),
           actions: <Widget>[
-            isDownloadable == true ? IconButton(
-              icon: Icon(isFromFeeds ? Icons.share : Icons.file_download),
-              onPressed: () async {
-                if (isFromFeeds) {
-                  ShareExtend.share(pathPDF, "file");
-                } else {
-                  if (await canLaunch(pdfUrl)) {
-                    launch(pdfUrl);
-                  } else {
-                    logger.e("could not launch");
-                  }
-                }
-              },
-            )
-            : Container(),
+            isDownloadable == true
+                ? IconButton(
+                    icon: Icon(isFromFeeds ? Icons.share : Icons.file_download),
+                    onPressed: () async {
+                      if (isFromFeeds) {
+                        ShareExtend.share(pathPDF, "file");
+                      } else {
+                        if (await canLaunch(pdfUrl)) {
+                          launch(pdfUrl);
+                        } else {
+                          logger.e("could not launch");
+                        }
+                      }
+                    },
+                  )
+                : Container(),
           ],
         ),
-      path: pathPDF);
+        path: pathPDF);
   }
 }

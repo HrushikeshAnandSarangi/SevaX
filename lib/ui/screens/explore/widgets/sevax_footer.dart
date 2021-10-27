@@ -82,16 +82,17 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton<String>(
                       onChanged: (value) async {
-                        Provider.of<AppLanguage>(context, listen: false)
-                            .changeLanguage(
-                          getLocaleFromCode(value),
-                        );
                         if (SevaCore.of(context).loggedInUser != null) {
                           await updateUserLanguage(
                             user: SevaCore.of(context).loggedInUser
                               ..language = value,
                           );
-                          Phoenix.rebirth(context);
+                          Provider.of<AppLanguage>(context, listen: false)
+                              .changeLanguage(
+                            getLocaleFromCode(value),
+                          );
+
+                          // Phoenix.rebirth(context);
                         }
                       },
                       value: S.of(context).localeName,
