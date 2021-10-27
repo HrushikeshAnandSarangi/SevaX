@@ -287,14 +287,14 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
         // key: UniqueKey(),
         focusNode: focusNodeList[2],
         maxLength: 30,
-        formatters: _formatters,
+        formatters:  [FilteringTextInputFormatter.digitsOnly],
         autovalidateMode: AutovalidateMode.onUserInteraction,
         onChanged: (value) {
           updateExitWithConfirmationValue(context, 3, value);
         },
         // initialValue: achPayment?.routing_number ?? '',
         textInputAction: TextInputAction.next,
-        keyboardType: TextInputType.multiline,
+        keyboardType: TextInputType.number,
         maxLines: 1,
         validator:selectedMode == PaymentMode.ACH ? (value) {
           if (value.isEmpty) {
@@ -324,14 +324,14 @@ class _CapturePaymentDetailWidgetState extends State<CapturePaymentDetailWidget>
         focusNode: focusNodeList[3],
         // key: UniqueKey(),
         maxLength: 30,
-        formatters: _formatters,
+        formatters:  [FilteringTextInputFormatter.digitsOnly],
         autovalidateMode: AutovalidateMode.onUserInteraction,
         onChanged: (value) {
           updateExitWithConfirmationValue(context, 4, value);
         },
         textInputAction: TextInputAction.next,
         // initialValue: achPayment?.account_number ?? '',
-        keyboardType: TextInputType.multiline,
+        keyboardType: TextInputType.number,
         maxLines: 1,
         validator: selectedMode == PaymentMode.ACH ? (value) {
           if (value.isEmpty) {

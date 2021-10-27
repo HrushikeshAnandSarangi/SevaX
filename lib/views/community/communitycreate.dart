@@ -67,7 +67,7 @@ class CreateEditCommunityView extends StatelessWidget {
         ? ExitWithConfirmation(
             child: Scaffold(
               appBar: AppBar(
-                backgroundColor:Theme.of(context).primaryColor,
+                backgroundColor: Theme.of(context).primaryColor,
                 elevation: 0.5,
                 automaticallyImplyLeading: true,
                 title: Text(
@@ -806,6 +806,8 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
                         widget.isCreateTimebank
                             ? Container()
                             : Slider(
+                                activeColor: Theme.of(context).primaryColor,
+                                inactiveColor: Theme.of(context).primaryColor.withOpacity(0.2),
                                 label: "${taxPercentage.toInt()}%",
                                 value: taxPercentage,
                                 min: 0,
@@ -889,6 +891,8 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
                                 ],
                               ),
                               Slider(
+                                activeColor: Theme.of(context).primaryColor,
+                                inactiveColor: Theme.of(context).primaryColor.withOpacity(0.2),
                                 label:
                                     "${negativeCreditsThreshold.toInt()} ${S.of(context).seva_credits}",
                                 value: negativeCreditsThreshold.abs() * -1,
@@ -1282,7 +1286,7 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
       key: infoKey,
       icon: Image.asset(
         'lib/assets/images/info.png',
-        color:Theme.of(context).primaryColor,
+        color: Theme.of(context).primaryColor,
         height: 16,
         width: 16,
       ),
@@ -1357,11 +1361,11 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
             child: AlertDialog(
               title: Text(message),
               content: LinearProgressIndicator(
- backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
-        valueColor: AlwaysStoppedAnimation<Color>(
-          Theme.of(context).primaryColor,
-        ),
-),
+                backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  Theme.of(context).primaryColor,
+                ),
+              ),
             ),
           );
         });
@@ -1521,7 +1525,7 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
                 Text(
                   S.of(context).account_information,
                   style: TextStyle(
-                      color:Theme.of(context).primaryColor,
+                      color: Theme.of(context).primaryColor,
                       fontSize: 20,
                       fontWeight: FontWeight.bold),
                 ),
