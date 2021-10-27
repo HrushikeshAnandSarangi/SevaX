@@ -126,7 +126,8 @@ class OneToManyOfferBloc extends BlocBase {
             photoUrlImage: user.photoURL ?? defaultUserImageURL,
             creatorAllowedCalender: allowedCalenderEvent,
             allowedCalenderUsers: allowedCalenderEvent ? [user.email] : [],
-            selectedAdrress: _location.value == null ? null : _location.value.address,
+            selectedAdrress:
+                _location.value == null ? null : _location.value.address,
             timestamp: timestamp,
             location: _location.value == null ? null : _location.value.location,
             liveMode: !AppConfig.isTestCommunity,
@@ -172,7 +173,8 @@ class OneToManyOfferBloc extends BlocBase {
 
           new KloudlessWidgetManager<CreateMode, OfferModel>().syncCalendar(
             context: context,
-            builder: KloudlessWidgetBuilder().fromContext<CreateMode, OfferModel>(
+            builder:
+                KloudlessWidgetBuilder().fromContext<CreateMode, OfferModel>(
               context: context,
               id: offerModel.id,
               model: offerModel,
@@ -317,9 +319,9 @@ class OneToManyOfferBloc extends BlocBase {
   RegExp numberWithZeroCheck = RegExp(r"^\d+$");
 
   String validatePrepHours(String value) {
-    if (_preparationHours.value == null || !numberWithZeroCheck.hasMatch(_preparationHours.value)) {
-      _preparationHours.addError(
-        ValidationErrors.preprationTimeError);
+    if (_preparationHours.value == null ||
+        !numberWithZeroCheck.hasMatch(_preparationHours.value)) {
+      _preparationHours.addError(ValidationErrors.preprationTimeError);
       return ValidationErrors.preprationTimeError;
     }
     return null;
@@ -371,7 +373,8 @@ class OneToManyOfferBloc extends BlocBase {
       flag = true;
     }
 
-    if (_preparationHours.value == null || !numberWithZeroCheck.hasMatch(_preparationHours.value)) {
+    if (_preparationHours.value == null ||
+        !numberWithZeroCheck.hasMatch(_preparationHours.value)) {
       _preparationHours.addError(
         ValidationErrors.preprationTimeError,
       );

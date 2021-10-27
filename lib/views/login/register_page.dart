@@ -53,8 +53,7 @@ class RegisterPage extends StatefulWidget {
   _RegisterPageState createState() => _RegisterPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage>
-    with ImagePickerListener, SingleTickerProviderStateMixin {
+class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, SingleTickerProviderStateMixin {
   final GlobalKey<DoseFormState> _formKey = GlobalKey();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   final fullnameFocus = FocusNode();
@@ -308,25 +307,22 @@ class _RegisterPageState extends State<RegisterPage>
                   width: 150.0,
                   height: 150.0,
                   decoration: BoxDecoration(
-                      image: DecorationImage(
-                          image: NetworkImage(defaultCameraImageURL), fit: BoxFit.cover),
+                      image: DecorationImage(image: NetworkImage(defaultCameraImageURL), fit: BoxFit.cover),
                       borderRadius: BorderRadius.all(Radius.circular(75.0)),
                       boxShadow: [BoxShadow(blurRadius: 7.0, color: Colors.black12)]))
               : Container(
                   decoration: BoxDecoration(
                       image: DecorationImage(
-                          image: webImageUrl == null
-                              ? FileImage(selectedImage)
-                              : CachedNetworkImageProvider(webImageUrl),
+                          image:
+                              webImageUrl == null ? FileImage(selectedImage) : CachedNetworkImageProvider(webImageUrl),
                           fit: BoxFit.cover),
                       borderRadius: BorderRadius.all(Radius.circular(75.0)),
                       boxShadow: [BoxShadow(blurRadius: 7.0, color: Colors.black12)]),
                   child: Align(
                     alignment: Alignment.bottomRight,
                     child: Container(
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(Radius.circular(50.0))),
+                      decoration:
+                          BoxDecoration(color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(50.0))),
                       child: Icon(Icons.add_a_photo),
                     ),
                   ),
@@ -474,9 +470,7 @@ class _RegisterPageState extends State<RegisterPage>
               FocusScope.of(context).requestFocus(FocusNode());
             },
             shouldRestrictLength: false,
-            hint: S.of(context).confirm.firstWordUpperCase() +
-                ' ' +
-                S.of(context).password.firstWordUpperCase(),
+            hint: S.of(context).confirm.firstWordUpperCase() + ' ' + S.of(context).password.firstWordUpperCase(),
             shouldObscure: shouldObscureConfirmPassword,
             validator: (value) {
               if (value.length < 6) {
@@ -640,59 +634,59 @@ class _RegisterPageState extends State<RegisterPage>
                           content: Text(S.of(context).add_photo_hint),
                           actions: <Widget>[
                             Padding(
-                              padding: const EdgeInsets.only(bottom: 15),
-                              child: CustomTextButton(
-                                shape: StadiumBorder(),
-                                color: Colors.grey,
-                                padding: EdgeInsets.fromLTRB(10, 5, 5, 10),
-                                child: Text(
-                                  S.of(context).skip_and_register,
-                                  style: TextStyle(
-                                    fontSize: dialogButtonSize,
-                                    color: Colors.white,
-                                    fontFamily: 'Europa',
-                                  ),
-                                ),
-                                onPressed: () async {
-                                  Navigator.pop(viewContext);
-                                  if (!_formKey.currentState.validate()) {
-                                    isLoading = false;
-                                    return;
-                                  }
-                                  _formKey.currentState.save();
+                              padding: const EdgeInsets.only(bottom: 10),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  CustomTextButton(
+                                    shape: StadiumBorder(),
+                                    color: Colors.grey,
+                                    padding: EdgeInsets.fromLTRB(10, 5, 5, 10),
+                                    child: Text(
+                                      S.of(context).skip_and_register,
+                                      style: TextStyle(
+                                        fontSize: dialogButtonSize,
+                                        color: Colors.white,
+                                        fontFamily: 'Europa',
+                                      ),
+                                    ),
+                                    onPressed: () async {
+                                      Navigator.pop(viewContext);
+                                      if (!_formKey.currentState.validate()) {
+                                        isLoading = false;
+                                        return;
+                                      }
+                                      _formKey.currentState.save();
 
-                                  await profanityCheck();
-                                  isLoading = false;
-                                },
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                bottom: 15,
-                                right: 15,
-                              ),
-                              child: CustomTextButton(
-                                shape: StadiumBorder(),
-                                padding: EdgeInsets.fromLTRB(10, 5, 5, 10),
-                                color: Theme.of(context).accentColor,
-                                textColor: FlavorConfig.values.buttonTextColor,
-                                child: Text(
-                                  S.of(context).add_photo,
-                                  style: TextStyle(
-                                    fontSize: dialogButtonSize,
-                                    fontFamily: 'Europa',
-                                    color: Colors.white,
+                                      await profanityCheck();
+                                      isLoading = false;
+                                    },
                                   ),
-                                ),
-                                onPressed: () {
-                                  Navigator.pop(viewContext);
-                                  FocusScope.of(context).requestFocus(new FocusNode());
-                                  imagePicker.showDialog(context);
-                                  isLoading = false;
-                                  return;
-                                },
+                                  CustomTextButton(
+                                    shape: StadiumBorder(),
+                                    padding: EdgeInsets.fromLTRB(10, 5, 5, 10),
+                                    color: Theme.of(context).accentColor,
+                                    textColor: FlavorConfig.values.buttonTextColor,
+                                    child: Text(
+                                      S.of(context).add_photo,
+                                      style: TextStyle(
+                                        fontSize: dialogButtonSize,
+                                        fontFamily: 'Europa',
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    onPressed: () {
+                                      Navigator.pop(viewContext);
+                                      FocusScope.of(context).requestFocus(new FocusNode());
+                                      imagePicker.showDialog(context);
+                                      isLoading = false;
+                                      return;
+                                    },
+                                  ),
+                                ],
                               ),
-                            ),
+                            )
                           ],
                         ),
                       );
@@ -776,8 +770,7 @@ class _RegisterPageState extends State<RegisterPage>
             if (dialogContext != null) {
               Navigator.pop(dialogContext);
             }
-            showProfanityImageAlert(context: context, content: profanityStatusModel.category)
-                .then((status) {
+            showProfanityImageAlert(context: context, content: profanityStatusModel.category).then((status) {
               if (status == 'Proceed') {
                 deleteFireBaseImage(imageUrl: imageUrl).then((value) {
                   if (value) {
@@ -823,17 +816,13 @@ class _RegisterPageState extends State<RegisterPage>
         user.cvName = cvName;
         user.cvUrl = cvUrl;
       }
-      await FirestoreManager.addCreationSourceOfUser(
-          locationVal: location, userEmailId: user.email);
+      await FirestoreManager.addCreationSourceOfUser(locationVal: location, userEmailId: user.email);
 
       await FirestoreManager.updateUser(user: user);
 
       logger.i('----- START OF JOINED SEVAX GLOBAL LOG CODE -------');
 
-      await CollectionRef.timebank
-          .doc(FlavorConfig.values.timebankId)
-          .collection('entryExitLogs')
-          .add({
+      await CollectionRef.timebank.doc(FlavorConfig.values.timebankId).collection('entryExitLogs').add({
         'mode': ExitJoinType.JOIN.readable,
         'modeType': JoinMode.JOINED_SEVAX_GLOBAL.readable,
         'timestamp': DateTime.now().millisecondsSinceEpoch,
@@ -971,8 +960,7 @@ class _RegisterPageState extends State<RegisterPage>
     Map<String, String> _paths;
     try {
       _paths = null;
-      FilePickerResult result =
-          await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ['pdf']);
+      FilePickerResult result = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ['pdf']);
       if (result != null) {
         _path = result.files.single.path;
       }
