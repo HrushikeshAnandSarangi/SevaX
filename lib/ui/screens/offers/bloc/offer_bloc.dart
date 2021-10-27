@@ -59,7 +59,8 @@ class OfferBloc extends BlocBase {
         offer.add(model);
         logger.d("#parID ${model.participantDetails.sevauserid}");
 
-        if (completedParticipantsFromTransactions.contains(model.participantDetails.sevauserid)) {
+        if (completedParticipantsFromTransactions.contains(model.participantDetails.sevauserid) || completedParticipantsFromTransactions
+            .contains(model.timebankId)) {
           completedParticipants.add(model);
           logger.d("#com ${model}");
         }
