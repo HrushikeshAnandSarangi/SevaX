@@ -1170,7 +1170,7 @@ Future<void> approveRequestCompletion({
         communityId: communityId,
         fromEmailORId: model.timebankId,
         toEmailORId: model.timebankId,
-        offerId: model.offerId ?? '');
+        );
 
     TransactionBloc().createNewTransaction(
         model.timebankId,
@@ -1184,6 +1184,7 @@ Future<void> approveRequestCompletion({
         communityId: communityId,
         fromEmailORId: model.timebankId,
         toEmailORId: model.timebankId,
+        offerId: model.offerId ?? ''
         );
     // adds review to firestore
   } else if (model.requestMode == RequestMode.PERSONAL_REQUEST) {
@@ -1199,6 +1200,7 @@ Future<void> approveRequestCompletion({
         communityId: communityId,
         fromEmailORId: model.timebankId,
         toEmailORId: model.timebankId,
+        offerId: model.offerId ?? ''
         );
   }
 
