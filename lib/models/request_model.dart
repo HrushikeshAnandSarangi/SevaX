@@ -223,6 +223,7 @@ class RequestModel extends DataModel {
   String communityName;
   DocumentReference speakerInviteNotificationDocRef;
   BorrowModel borrowModel = new BorrowModel();
+  String offerId;
 
   RequestModel({
     this.id,
@@ -286,6 +287,7 @@ class RequestModel extends DataModel {
     this.speakerInviteNotificationDocRef,
     this.borrowModel,
     this.eventMetaData,
+    this.offerId
   }) {
     log("===========Constructir called $communityId =======");
   }
@@ -589,6 +591,9 @@ class RequestModel extends DataModel {
       this.borrowModel = BorrowModel.fromMap(map['borrowModel']);
     } else {
       this.borrowModel = new BorrowModel();
+    }
+    if (map.containsKey('offerId')) {
+      this.offerId = map['offerId'];
     }
   }
 
@@ -894,6 +899,9 @@ class RequestModel extends DataModel {
     } else {
       this.borrowModel = new BorrowModel();
     }
+    if (map.containsKey('offerId')) {
+      this.offerId = map['offerId'];
+    }
   }
 
   @override
@@ -1165,6 +1173,9 @@ class RequestModel extends DataModel {
     }
     if (this.borrowModel != null) {
       object['borrowModel'] = this.borrowModel.toMap();
+    }
+    if(this.offerId != null){
+      object['offerId'] = this.offerId;
     }
     return object;
   }

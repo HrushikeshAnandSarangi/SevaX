@@ -74,9 +74,7 @@ class BorrowAgreementPdf {
               border: Border(bottom: BorderSide(width: 0.5, color: PdfColors.grey)),
             ),
             child: Text(
-              isOffer
-                  ? S.of(contextMain).borrow_request_agreement
-                  : S.of(contextMain).lending_offer_agreement,
+              isOffer ? S.of(contextMain).borrow_request_agreement : S.of(contextMain).lending_offer_agreement,
               style: Theme.of(context).defaultTextStyle.copyWith(color: PdfColors.grey),
             ),
           );
@@ -119,9 +117,7 @@ class BorrowAgreementPdf {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                endTime == 0 && isOffer
-                    ? S.of(contextMain).lease_start_date
-                    : S.of(contextMain).lease_duration,
+                endTime == 0 && isOffer ? S.of(contextMain).lease_start_date : S.of(contextMain).lease_duration,
                 style: TextStyle(fontSize: 16),
               ),
             ],
@@ -131,12 +127,10 @@ class BorrowAgreementPdf {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                DateFormat('MMMM dd, yyyy @ h:mm a',
-                        Locale(AppConfig.prefs.getString('language_code')).toLanguageTag())
+                DateFormat('MMMM dd, yyyy @ h:mm a', Locale(AppConfig.prefs.getString('language_code')).toLanguageTag())
                     .format(
                   getDateTimeAccToUserTimezone(
-                    dateTime: DateTime.fromMillisecondsSinceEpoch(
-                        !isOffer ? requestModel.requestStart : startTime),
+                    dateTime: DateTime.fromMillisecondsSinceEpoch(!isOffer ? requestModel.requestStart : startTime),
                     timezoneAbb: SevaCore.of(contextMain).loggedInUser.timezone,
                   ),
                 ), //start date and end date
@@ -150,8 +144,7 @@ class BorrowAgreementPdf {
                               Locale(AppConfig.prefs.getString('language_code')).toLanguageTag())
                           .format(
                         getDateTimeAccToUserTimezone(
-                          dateTime: DateTime.fromMillisecondsSinceEpoch(
-                              !isOffer ? requestModel.requestEnd : endTime),
+                          dateTime: DateTime.fromMillisecondsSinceEpoch(!isOffer ? requestModel.requestEnd : endTime),
                           timezoneAbb: SevaCore.of(contextMain).loggedInUser.timezone,
                         ),
                       ), //start date and end date
@@ -179,9 +172,7 @@ class BorrowAgreementPdf {
             (specificConditions.isNotEmpty && specificConditions != null)
                 ? Text(S.of(contextMain).agreement_details, style: TextStyle(fontSize: 16))
                 : Container(),
-            specificConditions.isNotEmpty && specificConditions != null
-                ? SizedBox(height: 15)
-                : Container(),
+            specificConditions.isNotEmpty && specificConditions != null ? SizedBox(height: 15) : Container(),
             (specificConditions.isNotEmpty && specificConditions != null)
                 ? Text(S.of(contextMain).lenders_specific_conditions + specificConditions,
                     style: TextStyle(fontSize: 14))
@@ -198,24 +189,20 @@ class BorrowAgreementPdf {
             placeOrItem == 'PLACE'
                 ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     (isRefundDepositNeeded == true)
-                        ? Text(S.of(contextMain).agreement_refund_deposit,
-                            style: TextStyle(fontSize: 14))
+                        ? Text(S.of(contextMain).agreement_refund_deposit, style: TextStyle(fontSize: 14))
                         : Container(),
                     SizedBox(height: 10),
                     (isMaintainAndclean == true)
-                        ? Text(S.of(contextMain).agreement_maintain_and_clean,
-                            style: TextStyle(fontSize: 14))
+                        ? Text(S.of(contextMain).agreement_maintain_and_clean, style: TextStyle(fontSize: 14))
                         : Container(),
                   ])
                 : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     (isDeliveryReturn == true)
-                        ? Text(S.of(contextMain).agreement_delivery_return,
-                            style: TextStyle(fontSize: 14))
+                        ? Text(S.of(contextMain).agreement_delivery_return, style: TextStyle(fontSize: 14))
                         : Container(),
                     SizedBox(height: 10),
                     (isMaintainRepair == true)
-                        ? Text(S.of(contextMain).agreement_maintain_and_repair,
-                            style: TextStyle(fontSize: 14))
+                        ? Text(S.of(contextMain).agreement_maintain_and_repair, style: TextStyle(fontSize: 14))
                         : Container(),
                   ]),
           ]),
@@ -243,8 +230,7 @@ class BorrowAgreementPdf {
             Text(S.of(contextMain).please_note_text, style: TextStyle(fontSize: 16)),
             //additional texts here
             SizedBox(height: 15),
-            Text(S.of(contextMain).agreement_prior_to_signing_disclaimer,
-                style: TextStyle(fontSize: 14)),
+            Text(S.of(contextMain).agreement_prior_to_signing_disclaimer, style: TextStyle(fontSize: 14)),
           ]),
 
           SizedBox(height: 35),
@@ -328,9 +314,7 @@ class BorrowAgreementPdf {
                 )
               :
               //FOR ITEM AGREEMENT | BORROW REQUEST
-              (lendingModelListBorrowRequest != null &&
-                      !isOffer &&
-                      placeOrItem == LendingType.ITEM.readable)
+              (lendingModelListBorrowRequest != null && !isOffer && placeOrItem == LendingType.ITEM.readable)
                   ? Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -348,17 +332,13 @@ class BorrowAgreementPdf {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  lendingModelListBorrowRequest[index].lendingItemModel.itemName +
-                                      ': ',
+                                  lendingModelListBorrowRequest[index].lendingItemModel.itemName + ': ',
                                   style: TextStyle(fontSize: 15),
                                 ),
                                 SizedBox(width: 2),
                                 Text(
                                   "\$" +
-                                      lendingModelListBorrowRequest[index]
-                                          .lendingItemModel
-                                          .estimatedValue
-                                          .toString(),
+                                      lendingModelListBorrowRequest[index].lendingItemModel.estimatedValue.toString(),
                                   style: TextStyle(fontSize: 15),
                                 ),
                               ],
@@ -390,10 +370,7 @@ class BorrowAgreementPdf {
               Text(S.of(contextMain).borrower_text, style: TextStyle(fontSize: 16)),
               SizedBox(height: 15),
               Text(
-                isOffer
-                    ? borrower
-                    : requestModel
-                        .fullName, //need to modify according to offer model or request model
+                isOffer ? borrower : requestModel.fullName, //need to modify according to offer model or request model
                 style: TextStyle(
                   decoration: TextDecoration.underline,
                 ),
@@ -407,8 +384,7 @@ class BorrowAgreementPdf {
             Text(
               DateFormat('MMMM dd, yyyy | h:mm a', Locale(getLangTag()).toLanguageTag()).format(
                 getDateTimeAccToUserTimezone(
-                    dateTime: DateTime.now(),
-                    timezoneAbb: SevaCore.of(contextMain).loggedInUser.timezone),
+                    dateTime: DateTime.now(), timezoneAbb: SevaCore.of(contextMain).loggedInUser.timezone),
               ),
               style: TextStyle(
                 decoration: TextDecoration.underline,
@@ -442,16 +418,16 @@ class BorrowAgreementPdf {
   }
 }
 
-Future openPdfViewer(String pdfURL, String documentName, material.BuildContext context) {
+Future<void> openPdfViewer(String pdfURL, String documentName, material.BuildContext context) async {
   progressDialog = ProgressDialog(
     context,
     type: ProgressDialogType.Normal,
     isDismissible: true,
   );
   progressDialog.show();
-  createFileOfPdfUrl(pdfURL, documentName).then((f) {
+  return await createFileOfPdfUrl(pdfURL, documentName).then((f) async {
     progressDialog.hide();
-    material.Navigator.push(
+    return await material.Navigator.push(
       context,
       material.MaterialPageRoute(
           builder: (context) => PDFScreen(
@@ -469,8 +445,7 @@ Future<String> uploadDocument(String requestId, File _path, String documentName)
 
   String timestampString = timestamp.toString();
 
-  String name = requestId.toString() + '_' + timestampString + '_' + documentName ??
-      'Agreement Name Not available';
+  String name = requestId.toString() + '_' + timestampString + '_' + documentName ?? 'Agreement Name Not available';
 
   Reference ref = FirebaseStorage.instance.ref().child('agreement_docs').child(name);
 

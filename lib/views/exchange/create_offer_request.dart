@@ -76,7 +76,7 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
       this.requestModel.timebankId = _selectedTimebankId;
       this.requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
       requestModel.requestType = widget.offer.type;
-
+      requestModel.offerId = widget.offer.id;
       this.requestModel.title = widget.offer.individualOfferDataModel.title;
       this.requestModel.description =
           widget.offer.individualOfferDataModel.description;

@@ -18,26 +18,27 @@ class TransactionModel extends DataModel {
   String timebankid;
   List<String> transactionbetween;
   String communityId;
+  String offerId;
 
-  TransactionModel({
-    this.from,
-    @required this.fromEmail_Id,
-    this.timestamp,
-    this.credits,
-    this.to,
-    @required this.toEmail_Id,
-    this.isApproved = false,
-    this.liveMode = false,
-    this.type,
-    this.typeid,
-    this.timebankid,
-    this.transactionbetween,
-    @required this.communityId,
-  });
+  TransactionModel(
+      {this.from,
+      @required this.fromEmail_Id,
+      this.timestamp,
+      this.credits,
+      this.to,
+      @required this.toEmail_Id,
+      this.isApproved = false,
+      this.liveMode = false,
+      this.type,
+      this.typeid,
+      this.timebankid,
+      this.transactionbetween,
+      @required this.communityId,
+      this.offerId});
 
   //local variables
-  String get createdDate => DateFormat('MMMM dd')
-      .format(DateTime.fromMillisecondsSinceEpoch(timestamp));
+  String get createdDate =>
+      DateFormat('MMMM dd').format(DateTime.fromMillisecondsSinceEpoch(timestamp));
 
   TransactionModel.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('from')) {
@@ -73,8 +74,7 @@ class TransactionModel extends DataModel {
       this.timebankid = map['timebankid'];
     }
     if (map.containsKey('transactionbetween')) {
-      List<String> transactionbetween =
-          List.castFrom(map['transactionbetween']);
+      List<String> transactionbetween = List.castFrom(map['transactionbetween']);
       this.transactionbetween = transactionbetween;
     }
     if (map.containsKey('communityId')) {
@@ -84,6 +84,9 @@ class TransactionModel extends DataModel {
       this.liveMode = map['liveMode'];
     } else {
       this.liveMode = true;
+    }
+    if (map.containsKey('offerId')) {
+      this.offerId = map['offerId'];
     }
   }
 
@@ -117,9 +120,7 @@ class TransactionModel extends DataModel {
     if (this.typeid != null) {
       map['typeid'] = this.typeid;
     } else {
-      map['typeid'] = this.fromEmail_Id +
-          '*' +
-          DateTime.now().millisecondsSinceEpoch.toString();
+      map['typeid'] = this.fromEmail_Id + '*' + DateTime.now().millisecondsSinceEpoch.toString();
     }
     if (this.timebankid != null) {
       map['timebankid'] = this.timebankid;
@@ -132,6 +133,10 @@ class TransactionModel extends DataModel {
       map['communityId'] = this.communityId;
     }
     map['liveMode'] = !AppConfig.isTestCommunity;
+
+    if (this.offerId != null) {
+      map['offerId'] = this.offerId;
+    }
 
     return map;
   }
