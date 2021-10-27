@@ -342,6 +342,7 @@ class TransactionBloc {
     @required String communityId,
     @required String fromEmailORId,
     @required String toEmailORId,
+        String offerId
   }) async {
     TransactionModel transactionModel = TransactionModel(
       communityId: communityId,
@@ -357,6 +358,7 @@ class TransactionBloc {
       toEmail_Id: toEmailORId,
       fromEmail_Id: fromEmailORId,
       liveMode: !AppConfig.isTestCommunity,
+      offerId: offerId
     );
 
     //commented because transaction and balance handling will be done in backend
