@@ -405,7 +405,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                   textColor: Theme.of(context).primaryColor,
                   sponsorsMode: SponsorsMode.ABOUT,
                   sponsors: widget.timebankModel.sponsors,
-                  isAdminVerified: GetUserVerified<bool>().verify(
+                  isAdminVerified: GetUserVerified.verify(
                     userId: SevaCore.of(context).loggedInUser.sevaUserID,
                     creatorId: widget.timebankModel.creatorId,
                     admins: widget.timebankModel.admins,

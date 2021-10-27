@@ -61,6 +61,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
   @override
   Widget build(BuildContext context) {
     userId = SevaCore.of(context).loggedInUser.sevaUserID;
+    log('verfied ${widget.isAdminVerified}');
     switch (widget.sponsorsMode) {
       case SponsorsMode.CREATE:
         return createSponsors();
@@ -83,10 +84,8 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
               width: 30,
             ),
             Offstage(
-              offstage: widget.sponsors == null ||
-                      widget.sponsors.length >= 5 ||
-                      widget.isAdminVerified
-                  ? !widget.isAdminVerified
+              offstage: widget.sponsors.length >= 5 || !widget.isAdminVerified
+                  ? true
                   : false,
               child: addIconWidget(),
             ),

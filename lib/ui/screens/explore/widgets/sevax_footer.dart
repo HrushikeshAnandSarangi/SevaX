@@ -91,8 +91,8 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
                             user: SevaCore.of(context).loggedInUser
                               ..language = value,
                           );
+                          Phoenix.rebirth(context);
                         }
-                        Phoenix.rebirth(context);
                       },
                       value: S.of(context).localeName,
                       items: languageNames.keys
