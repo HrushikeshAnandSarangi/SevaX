@@ -782,10 +782,7 @@ class OfferModel extends DataModel {
         case RequestType.LENDING_OFFER:
           map['requestType'] = "LENDING_OFFER";
           break;
-        case RequestType.BORROW:
-          // TODO: Handle this case.
-          break;
-        case RequestType.ONE_TO_MANY_REQUEST:
+        case RequestType.ONE_TO_MANY_OFFER:
           map['requestType'] = "ONE_TO_MANY_OFFER";
           break;
       }
