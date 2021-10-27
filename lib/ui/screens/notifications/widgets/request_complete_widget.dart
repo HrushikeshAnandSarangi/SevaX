@@ -105,7 +105,8 @@ class RequestCompleteWidget extends StatelessWidget {
                           text:
                               '${user.fullname} ${S.of(context).completed_task_in} ',
                           style: TextStyle(
-                            color: Colors.grey,
+                            color: Colors.grey.shade500,
+                            fontSize: 12,
                           ),
                         ),
                         TextSpan(
@@ -114,6 +115,7 @@ class RequestCompleteWidget extends StatelessWidget {
                           }(),
                           style: TextStyle(
                             color: Colors.black,
+                              fontSize: 12
                           ),
                         ),
                         TextSpan(
@@ -122,6 +124,7 @@ class RequestCompleteWidget extends StatelessWidget {
                           }(),
                           style: TextStyle(
                             color: Colors.grey,
+                              fontSize: 12
                           ),
                         )
                       ],
