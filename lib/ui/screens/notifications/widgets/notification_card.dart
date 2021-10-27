@@ -17,7 +17,7 @@ class NotificationCard extends StatelessWidget {
   final String entityName;
   final int timestamp;
 
-  const NotificationCard({
+  NotificationCard({
     Key key,
     this.onPressed,
     this.photoUrl,
@@ -31,6 +31,22 @@ class NotificationCard extends StatelessWidget {
         assert(subTitle != null),
         assert(timestamp != null),
         super(key: key);
+
+  DateTime clickTime;
+
+  bool isRedundantClick(DateTime currentTime) {
+    if (clickTime == null) {
+      clickTime = currentTime;
+      return false;
+    }
+    if (currentTime.difference(clickTime).inSeconds < 1) {
+      //set this difference time in seconds
+      return true;
+    }
+
+    clickTime = currentTime;
+    return false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -162,7 +178,11 @@ class NotificationCard extends StatelessWidget {
                 ),
               ],
             ),
-            onTap: () => onPressed != null ? onPressed() : null,
+            onTap: () => onPressed != null
+                ? isRedundantClick(DateTime.now())
+                    ? null
+                    : onPressed()
+                : null,
           ),
         ),
       ),

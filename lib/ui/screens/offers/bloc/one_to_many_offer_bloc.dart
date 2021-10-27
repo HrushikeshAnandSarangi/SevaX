@@ -12,6 +12,7 @@ import 'package:sevaexchange/ui/utils/validators.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 import '../../../../flavor_config.dart';
 
@@ -45,12 +46,15 @@ class OneToManyOfferBloc extends BlocBase {
   Function(bool value) get onOfferMadePublic => _makePublic.sink.add;
 
   void onOfferMadeVirtual(bool value) {
+    
     if (value != null) {
       if (!value) {
         onOfferMadePublic(false);
+        
       }
       _isVisible.add(value);
       _makeVirtual.add(value);
+      
     }
   }
 
@@ -122,7 +126,8 @@ class OneToManyOfferBloc extends BlocBase {
             photoUrlImage: user.photoURL ?? defaultUserImageURL,
             creatorAllowedCalender: allowedCalenderEvent,
             allowedCalenderUsers: allowedCalenderEvent ? [user.email] : [],
-            selectedAdrress: _location.value == null ? null : _location.value.address,
+            selectedAdrress:
+                _location.value == null ? null : _location.value.address,
             timestamp: timestamp,
             location: _location.value == null ? null : _location.value.location,
             liveMode: !AppConfig.isTestCommunity,
@@ -168,7 +173,8 @@ class OneToManyOfferBloc extends BlocBase {
 
           new KloudlessWidgetManager<CreateMode, OfferModel>().syncCalendar(
             context: context,
-            builder: KloudlessWidgetBuilder().fromContext<CreateMode, OfferModel>(
+            builder:
+                KloudlessWidgetBuilder().fromContext<CreateMode, OfferModel>(
               context: context,
               id: offerModel.id,
               model: offerModel,
@@ -255,7 +261,7 @@ class OneToManyOfferBloc extends BlocBase {
     _classDescription.add(
       offerModel.groupOfferDataModel.classDescription,
     );
-
+    _isVisible.add(offerModel.public);
     _makePublic.add(offerModel.public);
     _makeVirtual.add(offerModel.virtual);
     _location.add(
@@ -313,9 +319,9 @@ class OneToManyOfferBloc extends BlocBase {
   RegExp numberWithZeroCheck = RegExp(r"^\d+$");
 
   String validatePrepHours(String value) {
-    if (_preparationHours.value == null || !numberWithZeroCheck.hasMatch(_preparationHours.value)) {
-      _preparationHours.addError(
-        ValidationErrors.preprationTimeError);
+    if (_preparationHours.value == null ||
+        !numberWithZeroCheck.hasMatch(_preparationHours.value)) {
+      _preparationHours.addError(ValidationErrors.preprationTimeError);
       return ValidationErrors.preprationTimeError;
     }
     return null;
@@ -367,7 +373,8 @@ class OneToManyOfferBloc extends BlocBase {
       flag = true;
     }
 
-    if (_preparationHours.value == null || !numberWithZeroCheck.hasMatch(_preparationHours.value)) {
+    if (_preparationHours.value == null ||
+        !numberWithZeroCheck.hasMatch(_preparationHours.value)) {
       _preparationHours.addError(
         ValidationErrors.preprationTimeError,
       );

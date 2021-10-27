@@ -24,6 +24,7 @@ class RequestBloc {
       if (filter.isFilterSelected) {
         for (var model in models) {
           if (filter.timeRequest && model.requestType == RequestType.TIME) {
+            if(!model.isFromOfferRequest)
             requestLists.addRequest(userId, model);
             continue;
           }
@@ -58,6 +59,7 @@ class RequestBloc {
         }
       } else {
         models.forEach((model) {
+          if(!model.isFromOfferRequest)
           requestLists.addRequest(userId, model);
         });
       }
