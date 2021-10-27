@@ -45,7 +45,9 @@ bool isSameDay(DateTime d1, DateTime d2) {
 }
 
 bool isMemberAnAdmin(TimebankModel timebank, String userId) =>
-    timebank.creatorId == userId || timebank.admins.contains(userId) || timebank.organizers.contains(userId);
+    timebank.creatorId == userId ||
+    timebank.admins.contains(userId) ||
+    timebank.organizers.contains(userId);
 
 bool isAccessAvailable(TimebankModel timebank, String userId) =>
     timebank.creatorId == userId ||
@@ -129,9 +131,9 @@ Future<File> createFileOfPdfUrl(String documentUrl, String documentName) async {
   var response = await request.close();
   var bytes = await consolidateHttpClientResponseBytes(response);
   String dir = (await getApplicationDocumentsDirectory()).path;
-  File file = new File('$dir/$filename');
-  await file.writeAsBytes(bytes);
-  return file;
+  File file = new File('$dir/$filename.pdf');
+  return file.writeAsBytes(bytes).then((value) => value);
+  // return file;
 }
 
 String getReviewMessage(
@@ -143,7 +145,9 @@ String getReviewMessage(
     BuildContext context,
     bool isFromOfferRequest}) {
   String offerReview = '${S.of(context).offerReview} $requestTitle';
-  String body = isForCreator ? S.of(context).request_review_body_creator : S.of(context).request_review_body_user;
+  String body = isForCreator
+      ? S.of(context).request_review_body_creator
+      : S.of(context).request_review_body_user;
   String review =
       '$userName ${S.of(context).has_given_review} \n\n${isOfferReview ? offerReview : body} $requestTitle \n${S.of(context).review}:\n\n$reviewMessage';
   return review;
@@ -268,7 +272,8 @@ String getStartDateFormat(DateTime date, {BuildContext context}) {
   if (context == null)
     return new DateFormat("EEEE MMM d'$suffix',  h:mm a").format(date);
   else
-    return new DateFormat("EEEE MMM d'$suffix',  h:mm a").format(context.getDateTime(date.millisecondsSinceEpoch));
+    return new DateFormat("EEEE MMM d'$suffix',  h:mm a")
+        .format(context.getDateTime(date.millisecondsSinceEpoch));
 }
 
 Future<double> currencyConversion({String fromCurrency, String toCurrency, double amount}) async {
