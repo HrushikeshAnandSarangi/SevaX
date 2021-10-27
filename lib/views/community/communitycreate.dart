@@ -743,7 +743,7 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
                                   widget.isCreateTimebank ? SponsorsMode.CREATE : SponsorsMode.EDIT,
                               sponsors: timebankModel.sponsors,
                               isAdminVerified: GetUserVerified<bool>().verify(
-                                userId: SevaCore.of(context).loggedInUser.sevaUserID,
+                               //userId: SevaCore.of(context).loggedInUser.sevaUserID,
                                 creatorId: timebankModel.creatorId,
                                 admins: timebankModel.admins,
                                 organizers: timebankModel.organizers,
