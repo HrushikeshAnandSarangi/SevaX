@@ -41,11 +41,13 @@ class ExploreCommunityDetails extends StatefulWidget {
   final String communityId;
   final bool isSignedUser;
 
-  const ExploreCommunityDetails({Key key, this.communityId, @required this.isSignedUser})
+  const ExploreCommunityDetails(
+      {Key key, this.communityId, @required this.isSignedUser})
       : super(key: key);
 
   @override
-  _ExploreCommunityDetailsState createState() => _ExploreCommunityDetailsState();
+  _ExploreCommunityDetailsState createState() =>
+      _ExploreCommunityDetailsState();
 }
 
 class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
@@ -72,7 +74,8 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: StreamBuilder<List>(
-        stream: CombineLatestStream.combine2(_bloc.community, _bloc.groups, (a, b) => [a, b]),
+        stream: CombineLatestStream.combine2(
+            _bloc.community, _bloc.groups, (a, b) => [a, b]),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
@@ -88,7 +91,8 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
           community = snapshot.data[0];
 
           timebankModel = snapshot.data[1].firstWhere(
-            (model) => isPrimaryTimebank(parentTimebankId: model.parentTimebankId),
+            (model) =>
+                isPrimaryTimebank(parentTimebankId: model.parentTimebankId),
             orElse: () => TimebankModel({}),
           );
           templist = [
@@ -96,13 +100,15 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
             ...timebankModel.admins,
             ...timebankModel.organizers
           ];
-          isUserJoined =
-              widget.isSignedUser && templist.contains(SevaCore.of(context).loggedInUser.sevaUserID)
-                  ? true
-                  : false;
+          isUserJoined = widget.isSignedUser &&
+                  templist
+                      .contains(SevaCore.of(context).loggedInUser.sevaUserID)
+              ? true
+              : false;
           return FutureBuilder<UserModel>(
               future: widget.isSignedUser
-                  ? FirestoreManager.getUserForId(sevaUserId: community.created_by)
+                  ? FirestoreManager.getUserForId(
+                      sevaUserId: community.created_by)
                   : Searches.getUserElastic(userId: community.created_by),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -209,19 +215,23 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                                       : S.of(context).request_to_join),
                                   onPressed: () {
                                     if (widget.isSignedUser && !isUserJoined) {
-                                      createEditCommunityBloc.selectCommunity(community);
                                       createEditCommunityBloc
-                                          .updateUserDetails(SevaCore.of(context).loggedInUser);
+                                          .selectCommunity(community);
+                                      createEditCommunityBloc.updateUserDetails(
+                                          SevaCore.of(context).loggedInUser);
                                       Navigator.of(context).push(
                                         MaterialPageRoute(
                                           builder: (_context) => SevaCore(
-                                            loggedInUser: SevaCore.of(context).loggedInUser,
+                                            loggedInUser: SevaCore.of(context)
+                                                .loggedInUser,
                                             child: OnBoardWithTimebank(
-                                              user: SevaCore.of(context).loggedInUser,
+                                              user: SevaCore.of(context)
+                                                  .loggedInUser,
                                               communityModel: community,
                                               isFromExplore: true,
-                                              sevauserId:
-                                                  SevaCore.of(context).loggedInUser.sevaUserID,
+                                              sevauserId: SevaCore.of(context)
+                                                  .loggedInUser
+                                                  .sevaUserID,
                                             ),
                                           ),
                                         ),
@@ -281,7 +291,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                             textColor: Theme.of(context).primaryColor,
                             sponsorsMode: SponsorsMode.ABOUT,
                             sponsors: timebankModel.sponsors,
-                            isAdminVerified: GetUserVerified<bool>().verify(
+                            isAdminVerified: GetUserVerified.verify(
                               userId: widget.isSignedUser
                                   ? SevaCore.of(context).loggedInUser.sevaUserID
                                   : '',
@@ -302,13 +312,16 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                       StreamBuilder<List<ProjectModel>>(
                         stream: _bloc.events,
                         builder: (context, snapshot) {
-                          if (snapshot.connectionState == ConnectionState.waiting) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
                             return Center(
                               child: LoadingIndicator(),
                             );
                           }
 
-                          if (snapshot.hasError || snapshot.data == null || snapshot.data.isEmpty) {
+                          if (snapshot.hasError ||
+                              snapshot.data == null ||
+                              snapshot.data.isEmpty) {
                             return Container();
                           }
                           return Column(
@@ -337,7 +350,8 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                                         if (!widget.isSignedUser) {
                                           showSignInAlertMessage(
                                             context: context,
-                                            message: S.of(context).sign_in_alert,
+                                            message:
+                                                S.of(context).sign_in_alert,
                                             // 'Please Sign In/Sign up to access ${event.name}'
                                           );
                                         } else {
@@ -361,10 +375,12 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                                         child: Container(
                                           width: 250,
                                           child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
                                               Image.network(
-                                                event.photoUrl ?? defaultProjectImageURL,
+                                                event.photoUrl ??
+                                                    defaultProjectImageURL,
                                                 fit: BoxFit.cover,
                                                 width: 250,
                                                 height: 180,
@@ -381,17 +397,22 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                                               ),
                                               SizedBox(height: 4),
                                               MemberAvatarListWithCount(
-                                                userIds: event.associatedmembers.keys.toList(),
+                                                userIds: event
+                                                    .associatedmembers.keys
+                                                    .toList(),
                                               ),
                                               SizedBox(height: 4),
                                               Text(
-                                                DateFormat('EEEE, d MMM h:mm a').format(
-                                                  DateTime.fromMillisecondsSinceEpoch(
+                                                DateFormat('EEEE, d MMM h:mm a')
+                                                    .format(
+                                                  DateTime
+                                                      .fromMillisecondsSinceEpoch(
                                                     event.startTime,
                                                   ),
                                                 ),
                                                 style: TextStyle(
-                                                  color: Theme.of(context).accentColor,
+                                                  color: Theme.of(context)
+                                                      .accentColor,
                                                 ),
                                               ),
                                             ],
@@ -411,13 +432,16 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                       StreamBuilder<List<RequestModel>>(
                         stream: _bloc.requests,
                         builder: (context, snapshot) {
-                          if (snapshot.connectionState == ConnectionState.waiting) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
                             return Center(
                               child: LoadingIndicator(),
                             );
                           }
 
-                          if (snapshot.hasError || snapshot.data == null || snapshot.data.isEmpty) {
+                          if (snapshot.hasError ||
+                              snapshot.data == null ||
+                              snapshot.data.isEmpty) {
                             return Container();
                           }
 
@@ -447,14 +471,16 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                                         if (!widget.isSignedUser) {
                                           showSignInAlertMessage(
                                             context: context,
-                                            message: S.of(context).sign_in_alert,
+                                            message:
+                                                S.of(context).sign_in_alert,
                                             // 'Please Sign In/Sign up to access ${request.title}'
                                           );
                                         } else if (widget.isSignedUser) {
                                           //
 
                                           Navigator.push(context,
-                                              MaterialPageRoute(builder: (context) {
+                                              MaterialPageRoute(
+                                                  builder: (context) {
                                             return RequestDetailsAboutPage(
                                               requestItem: request,
                                               timebankModel: timebankModel,
@@ -469,7 +495,8 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                                         child: Container(
                                           width: 250,
                                           child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
                                               Image.network(
                                                 "https://www.adobe.com/content/dam/cc/us/en/creative-cloud/photography/discover/landscape-photography/CODERED_B1_landscape_P2d_714x348.jpg.img.jpg",
@@ -490,13 +517,16 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                                               ),
                                               SizedBox(height: 4),
                                               Text(
-                                                DateFormat('EEEE, d MMM h:mm a').format(
-                                                  DateTime.fromMillisecondsSinceEpoch(
+                                                DateFormat('EEEE, d MMM h:mm a')
+                                                    .format(
+                                                  DateTime
+                                                      .fromMillisecondsSinceEpoch(
                                                     request.requestStart,
                                                   ),
                                                 ),
                                                 style: TextStyle(
-                                                  color: Theme.of(context).accentColor,
+                                                  color: Theme.of(context)
+                                                      .accentColor,
                                                 ),
                                               ),
                                             ],
@@ -570,11 +600,15 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                     onTap: () {
                       if (!widget.isSignedUser) {
                         showSignInAlertMessage(
-                            context: context, message: S.of(context).sign_in_alert);
+                            context: context,
+                            message: S.of(context).sign_in_alert);
                         // 'Please Sign In/Sign up to access ${timabanksList[index].name}');
                       } else if (widget.isSignedUser &&
                           isUserJoined &&
-                          community.id == SevaCore.of(context).loggedInUser.currentCommunity) {
+                          community.id ==
+                              SevaCore.of(context)
+                                  .loggedInUser
+                                  .currentCommunity) {
                         try {
                           Provider.of<HomePageBaseBloc>(context, listen: false)
                               .changeTimebank(timabanksList[index]);
@@ -594,15 +628,18 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                           ),
                         ).then((_) {
                           try {
-                            Provider.of<HomePageBaseBloc>(context, listen: false)
+                            Provider.of<HomePageBaseBloc>(context,
+                                    listen: false)
                                 .switchToPreviousTimebank();
                           } on Exception catch (e) {
                             log(e.toString());
                           }
                         });
-                      } else if (SevaCore.of(context).loggedInUser != null && isUserJoined) {
+                      } else if (SevaCore.of(context).loggedInUser != null &&
+                          isUserJoined) {
                         switchCommunity(message: S.of(context).event);
-                      } else if (SevaCore.of(context).loggedInUser != null && !isUserJoined) {
+                      } else if (SevaCore.of(context).loggedInUser != null &&
+                          !isUserJoined) {
                         showAlertMessage(message: timabanksList[index].name);
                       }
                     },
@@ -632,7 +669,10 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
         context: context,
         builder: (dialogContext) {
           return AlertDialog(
-            content: Text(S.of(context).join_community_alert.replaceAll(" **CommunityName", '')),
+            content: Text(S
+                .of(context)
+                .join_community_alert
+                .replaceAll(" **CommunityName", '')),
             actions: [
               CustomTextButton(
                 color: Theme.of(context).primaryColor,

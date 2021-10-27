@@ -272,7 +272,8 @@ class _IndividualOfferState extends State<IndividualOffer> {
   }
 
   bool showVirtual(int lendingOfferType) {
-    if (offerType == RequestType.ONE_TO_MANY_OFFER) return true;
+    if (offerType == RequestType.ONE_TO_MANY_OFFER)
+    return true;
     if (offerType == RequestType.LENDING_OFFER) {
       if (lendingOfferType == 0)
         return true;
@@ -1605,7 +1606,8 @@ class _IndividualOfferState extends State<IndividualOffer> {
                         onChangedCB: (bool val) {
                           if (snapshot.data != val) {
                             _one_to_many_bloc.onOfferMadeVirtual(val);
-                            log('value ${val}');
+                            
+                            logger.e('made virtual ${val}');
                             setState(() {});
                           }
                         }),
@@ -1617,27 +1619,33 @@ class _IndividualOfferState extends State<IndividualOffer> {
             initialData: false,
             stream: _one_to_many_bloc.isVisible,
             builder: (context, snapshot) {
-              return snapshot.data
+              logger.e("is public check" +  snapshot.data.toString());
+              return snapshot.data 
                   ? Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10),
                       child: StreamBuilder<bool>(
                           stream: _one_to_many_bloc.makePublicValue,
                           builder: (context, snapshot) {
-                            return ConfigurationCheck(
-                              actionType: 'create_public_offer',
-                              role: memberType(widget.timebankModel,
-                                  SevaCore.of(context).loggedInUser.sevaUserID),
-                              child: OpenScopeCheckBox(
-                                  infoType: InfoType.OpenScopeOffer,
-                                  isChecked: snapshot.data,
-                                  checkBoxTypeLabel: CheckBoxType.type_Offers,
-                                  onChangedCB: (bool val) {
-                                    if (snapshot.data != val) {
-                                      _one_to_many_bloc.onOfferMadePublic(val);
-                                      log('value ${val}');
-                                      setState(() {});
-                                    }
-                                  }),
+                            return TransactionsMatrixCheck(
+                              comingFrom: ComingFrom.Offers,
+                              upgradeDetails: AppConfig.upgradePlanBannerModel.public_to_sevax_global,
+                              transaction_matrix_type: 'create_public_offer',
+                              child: ConfigurationCheck(
+                                actionType: 'create_public_offer',
+                                role: memberType(widget.timebankModel,
+                                    SevaCore.of(context).loggedInUser.sevaUserID),
+                                child: OpenScopeCheckBox(
+                                    infoType: InfoType.OpenScopeOffer,
+                                    isChecked: snapshot.data,
+                                    checkBoxTypeLabel: CheckBoxType.type_Offers,
+                                    onChangedCB: (bool val) {
+                                      if (snapshot.data != val) {
+                                        _one_to_many_bloc.onOfferMadePublic(val);
+                                        log('value ${val}');
+                                        setState(() {});
+                                      }
+                                    }),
+                              ),
                             );
                           }),
                     )
