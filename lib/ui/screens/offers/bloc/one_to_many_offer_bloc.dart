@@ -12,6 +12,7 @@ import 'package:sevaexchange/ui/utils/validators.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 import '../../../../flavor_config.dart';
 
@@ -45,12 +46,15 @@ class OneToManyOfferBloc extends BlocBase {
   Function(bool value) get onOfferMadePublic => _makePublic.sink.add;
 
   void onOfferMadeVirtual(bool value) {
+    
     if (value != null) {
       if (!value) {
         onOfferMadePublic(false);
+        
       }
       _isVisible.add(value);
       _makeVirtual.add(value);
+      
     }
   }
 
@@ -255,7 +259,7 @@ class OneToManyOfferBloc extends BlocBase {
     _classDescription.add(
       offerModel.groupOfferDataModel.classDescription,
     );
-
+    _isVisible.add(offerModel.public);
     _makePublic.add(offerModel.public);
     _makeVirtual.add(offerModel.virtual);
     _location.add(
