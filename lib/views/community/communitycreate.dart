@@ -776,7 +776,7 @@ class CreateEditCommunityViewFormState
                                   : SponsorsMode.EDIT,
                               sponsors: timebankModel.sponsors,
                               isAdminVerified: GetUserVerified.verify(
-                                userId: SevaCore.of(context)
+                               //userId: SevaCore.of(context)
                                     .loggedInUser
                                     .sevaUserID,
                                 creatorId: timebankModel.creatorId,

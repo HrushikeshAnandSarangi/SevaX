@@ -357,12 +357,13 @@ class IndividualOfferBloc extends BlocBase with Validators {
         _goodsDonationDetails.addError(ValidationErrors.emptyErrorGoods);
         return ValidationErrors.emptyErrorGoods;
       }
+      return null;
     }
     return null;
   }
 
   bool validateForm() {
- /*   logger.w("validateForm ${validateTitle(_title.value) == null &&
+    /*   logger.w("validateForm ${validateTitle(_title.value) == null &&
         validateDescription(_offerDescription.value) == null &&
         validateAvailabilityField(_availabilty.value) == null &&
         validateMinimumCredits(_minimumCredits.value) == null}");*/
