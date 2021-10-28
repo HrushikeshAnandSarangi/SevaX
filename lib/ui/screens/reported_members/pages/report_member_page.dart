@@ -125,6 +125,7 @@ class _ReportMemberPageState extends State<ReportMemberPage> {
                     errorText: snapshot.error.toString().contains('profanity')
                         ? S.of(context).profanity_text_alert
                         : snapshot.error,
+                                
                   ),
                   maxLines: null,
                   keyboardType: TextInputType.multiline,
