@@ -19,6 +19,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/one_to_many_notification_data_model.dart';
 import 'package:sevaexchange/models/reported_member_notification_model.dart';
+import 'package:sevaexchange/new_baseline/models/borrow_accpetor_model.dart';
 import 'package:sevaexchange/new_baseline/models/soft_delete_request.dart';
 import 'package:sevaexchange/new_baseline/models/user_added_model.dart';
 import 'package:sevaexchange/new_baseline/models/user_exit_model.dart';
@@ -1452,7 +1453,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
           "reviewer": SevaCore.of(context).loggedInUser.email,
           "reviewed": requestModel.approvedUsers.first, //TODO
           "ratings": results['selection'],
-          "requestId": "testId",
+          "requestId": requestModel.id,
           "comments": results['didComment'] ? results['comment'] : "No comments",
           'liveMode': !AppConfig.isTestCommunity,
         },
@@ -1463,13 +1464,52 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
       await handleVolunterFeedbackForTrustWorthynessNRealiablityScore(
           FeedbackType.FOR_BORROW_REQUEST_BORROWER, results, requestModel, SevaCore.of(context).loggedInUser);
 
-      /*await sendMessageOfferCreator(
-          loggedInUser: SevaCore.of(context).loggedInUser,
-          message: results['didComment'] ? results['comment'] : "No comments",
-          creatorId: requestModel.sevaUserId,
-          offerTitle: requestModel.title,
-          isFromOfferRequest: requestModel.isFromOfferRequest);*/
+      TimebankModel timebankModel = await getTimeBankForId(timebankId: requestModelNew.timebankId);
+      BorrowAcceptorModel userModel = await getBorrowRequestAcceptorModel(
+          requestId: requestModel.id, acceptorEmail: requestModel.approvedUsers.first);
+      if (userModel != null && timebankModel != null) {
+        ParticipantInfo sender = ParticipantInfo(
+          id: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+              ? loggedInUser.sevaUserID
+              : requestModel.timebankId,
+          photoUrl: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+              ? loggedInUser.photoURL
+              : timebankModel.photoUrl,
+          name: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+              ? loggedInUser.fullname
+              : timebankModel.name,
+          type: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+              ? ChatType.TYPE_PERSONAL
+              : timebankModel.parentTimebankId == FlavorConfig.values.timebankId
+              ? ChatType.TYPE_TIMEBANK
+              : ChatType.TYPE_GROUP,
+        );
 
+        ParticipantInfo reciever = ParticipantInfo(
+          id: userModel.acceptorId,
+          photoUrl: userModel.acceptorphotoURL,
+          name: userModel.acceptorName,
+          type: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+              ? ChatType.TYPE_PERSONAL
+              : timebankModel.parentTimebankId == FlavorConfig.values.timebankId
+              ? ChatType.TYPE_TIMEBANK
+              : ChatType.TYPE_GROUP,
+        );
+        await sendBackgroundMessage(
+            messageContent: getReviewMessage(
+              isForCreator: false,
+              requestTitle: requestModel.title,
+              context: context,
+              userName: loggedInUser.fullname,
+              reviewMessage: results['didComment'] ? results['comment'] : "No comments",
+            ),
+            reciever: reciever,
+            isTimebankMessage:
+            requestModel.requestMode == RequestMode.PERSONAL_REQUEST ? false : true,
+            timebankId: requestModel.timebankId,
+            communityId: loggedInUser.currentCommunity,
+            sender: sender);
+      }
       FirestoreManager.readTimeBankNotification(
         notificationId: notificationId,
         timebankId: requestModel.timebankId,
