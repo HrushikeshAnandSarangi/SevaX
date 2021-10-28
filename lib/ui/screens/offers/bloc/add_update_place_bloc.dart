@@ -216,7 +216,7 @@ class AddUpdatePlaceBloc extends BlocBase {
   }
 
   String validateEstimatedValue(String val) {
-    if (_estimated_value.value == null ||
+    if (_estimated_value.value.trimLeft() == null ||
         _estimated_value.value.isEmpty ||
         _estimated_value.value == "0") {
       _estimated_value.addError(AddPlaceValidationErrors.estimated_value_error);
