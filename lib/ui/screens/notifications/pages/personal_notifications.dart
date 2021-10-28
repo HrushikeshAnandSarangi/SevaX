@@ -68,6 +68,7 @@ class PersonalNotifications extends StatefulWidget {
   _PersonalNotificationsState createState() => _PersonalNotificationsState();
 }
 
+UserModel loggedInUser;
 BuildContext dialogContext;
 
 class _PersonalNotificationsState extends State<PersonalNotifications>
@@ -96,6 +97,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
 
   @override
   Widget build(BuildContext context) {
+    loggedInUser = SevaCore.of(context).loggedInUser;
     super.build(context);
     parentContext = context;
     final _bloc = BlocProvider.of<NotificationsBloc>(context);
@@ -1818,7 +1820,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
           "reviewer": SevaCore.of(context).loggedInUser.email,
           "reviewed": data.classDetails.classTitle,
           "ratings": results['selection'],
-          "requestId": "testId",
+          "requestId": '',
           "comments":
               results['didComment'] ? results['comment'] : "No comments",
           'liveMode': !AppConfig.isTestCommunity,
@@ -1854,7 +1856,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
           "reviewer": SevaCore.of(context).loggedInUser.email,
           "reviewed": requestModel.title,
           "ratings": results['selection'],
-          "requestId": "testId",
+          "requestId": requestModel.id,
           "comments":
               results['didComment'] ? results['comment'] : "No comments",
           'liveMode': !AppConfig.isTestCommunity,
@@ -1900,25 +1902,62 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
               ? requestModel.email
               : requestModel.approvedUsers.first,
           "ratings": results['selection'],
-          "requestId": "testId",
-          "comments":
-              results['didComment'] ? results['comment'] : "No comments",
+          "requestId": requestModel.id,
+          "comments": results['didComment'] ? results['comment'] : "No comments",
           'liveMode': !AppConfig.isTestCommunity,
         },
       );
 
       await handleVolunterFeedbackForTrustWorthynessNRealiablityScore(
-          feedbackType,
-          results,
-          requestModel,
-          SevaCore.of(context).loggedInUser);
-/*
-      await sendMessageOfferCreator(
-          loggedInUser: SevaCore.of(context).loggedInUser,
-          message: results['didComment'] ? results['comment'] : "No comments",
-          creatorId: requestModel.sevaUserId,
-          offerTitle: requestModel.title,
-          isFromOfferRequest: requestModel.isFromOfferRequest);*/
+          feedbackType, results, requestModel, loggedInUser);
+
+      TimebankModel timebankModel = await getTimeBankForId(timebankId: requestModelNew.timebankId);
+      UserModel userModel =
+          await FirestoreManager.getUserForId(sevaUserId: requestModelNew.sevaUserId);
+      if (userModel != null && timebankModel != null) {
+        ParticipantInfo sender = ParticipantInfo(
+          id: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+              ? loggedInUser.sevaUserID
+              : requestModel.timebankId,
+          photoUrl: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+              ? loggedInUser.photoURL
+              : timebankModel.photoUrl,
+          name: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+              ? loggedInUser.fullname
+              : timebankModel.name,
+          type: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+              ? ChatType.TYPE_PERSONAL
+              : timebankModel.parentTimebankId == FlavorConfig.values.timebankId
+                  ? ChatType.TYPE_TIMEBANK
+                  : ChatType.TYPE_GROUP,
+        );
+
+        ParticipantInfo reciever = ParticipantInfo(
+          id: userModel.sevaUserID,
+          photoUrl: userModel.photoURL,
+          name: userModel.fullname,
+          type: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+              ? ChatType.TYPE_PERSONAL
+              : timebankModel.parentTimebankId == FlavorConfig.values.timebankId
+                  ? ChatType.TYPE_TIMEBANK
+                  : ChatType.TYPE_GROUP,
+        );
+        await sendBackgroundMessage(
+            messageContent: getReviewMessage(
+              isForCreator: false,
+              requestTitle: requestModel.title,
+              context: context,
+              userName: loggedInUser.fullname,
+              reviewMessage: results['didComment'] ? results['comment'] : "No comments",
+            ),
+            reciever: reciever,
+            isTimebankMessage:
+                requestModel.requestMode == RequestMode.PERSONAL_REQUEST ? false : true,
+            timebankId: requestModel.timebankId,
+            communityId: loggedInUser.currentCommunity,
+            sender: sender);
+      }
+
       NotificationsRepository.readUserNotification(notificationId, email);
     }
   }

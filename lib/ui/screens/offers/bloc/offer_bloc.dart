@@ -76,23 +76,6 @@ class OfferBloc extends BlocBase {
     });
   }
 
-  Future<List<String>> getCompletedMembers({
-    String associatedOfferId,
-  }) async {
-    var completedParticipants = <String>[];
-
-    await CollectionRef.transactions.where('offerId', isEqualTo: associatedOfferId).get().then(
-          (value) => {
-            logger.i(" >>>>>>>> " + value.docs.length.toString()),
-            value.docs.forEach((map) {
-              var model = TransactionModel.fromMap(map.data());
-              completedParticipants.add(model.from);
-            })
-          },
-        );
-    return completedParticipants;
-  }
-
   Future<List<TransactionModel>> getCompletedMembersTransaction({
     String associatedOfferId,
   }) async {
