@@ -20,7 +20,7 @@ class ReportMemberBloc {
   Function(bool) get changeButtonStatus => _buttonStatus.sink.add;
   void onMessageChanged(String value) {
     _message.sink.add(value);
-    if (_message.value.length >= 10 && _buttonStatus.value == false) {
+    if (_message.value.length != null  && _buttonStatus.value == false) {
       _buttonStatus.add(true); //enable button
       log("button enabled");
     }
@@ -29,8 +29,8 @@ class ReportMemberBloc {
       _buttonStatus.add(false);
       log("profanity detected");
     }
-    if (_message.value.length < 10 ) {
-      _message.addError("minimum characters");
+    if (_message.value.length  == null || _message.value.isEmpty && _buttonStatus.value == true ) {
+      _message.addError("Enter Some Text");
       _buttonStatus.add(false); //disable button
       log("button disabled");
     }
