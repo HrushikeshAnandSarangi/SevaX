@@ -426,7 +426,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 },
                 // onSaved: (value) => enteredName = value,
                 validator: (value) {
-                  if (value.isEmpty) {
+                  if (value.trimLeft().isEmpty) {
                     return S.of(context).validation_error_project_name_empty;
                   } else if (profanityDetector.isProfaneString(value)) {
                     return S.of(context).profanity_text_alert;
@@ -499,7 +499,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   projectModel.description = value;
                 },
                 validator: (value) {
-                  if (value.isEmpty) {
+                  if (value.trimLeft().isEmpty) {
                     return S.of(context).validation_error_mission_empty;
                   } else if (profanityDetector.isProfaneString(value)) {
                     return S.of(context).profanity_text_alert;

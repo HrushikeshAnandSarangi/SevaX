@@ -106,6 +106,7 @@ class OfferBloc extends BlocBase {
               completedParticipants.add(model);
             })
           },
+          
         );
     return completedParticipants;
   }
