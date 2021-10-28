@@ -2090,10 +2090,10 @@ Future lenderReceivedBackCheck(
       requestModel: requestModelUpdated,
       context: context);
 
-  if (notification != null) {
+  if (notification != null && notification.id.isNotEmpty) {
     NotificationsRepository.readUserNotification(
         notification.id, SevaCore.of(context).loggedInUser.email);
-  } else if (notificationId != null) {
+  } else if (notificationId != null && notificationId.isNotEmpty) {
     NotificationsRepository.readUserNotification(
         notificationId, SevaCore.of(context).loggedInUser.email);
   }
