@@ -16,6 +16,7 @@ class OfferBloc extends BlocBase {
   final _participants = BehaviorSubject<List<OfferParticipantsModel>>();
   final _completedParticipants = BehaviorSubject<List<TimeOfferParticipantsModel>>();
   final _timeOfferParticipants = BehaviorSubject<List<TimeOfferParticipantsModel>>();
+  final _totalEarnings = BehaviorSubject<num>.seeded(0.0);
 
   OfferModel offerModel;
 
@@ -26,6 +27,8 @@ class OfferBloc extends BlocBase {
 
   Stream<List<TimeOfferParticipantsModel>> get completedParticipants =>
       _completedParticipants.stream;
+
+  Stream<num> get totalEarnings => _totalEarnings.stream;
 
   void init() {
     CollectionRef.offers
@@ -47,24 +50,27 @@ class OfferBloc extends BlocBase {
         .collection("offerAcceptors")
         .snapshots()
         .listen((QuerySnapshot snap) async {
-      var completedParticipantsFromTransactions =
-          await getCompletedMembers(associatedOfferId: offerModel.id);
-      logger.d("#com 2 ${completedParticipantsFromTransactions}");
+
+      List<TransactionModel> completedParticipantsTransactions =
+          await getCompletedMembersTransaction(associatedOfferId: offerModel.id);
+
       List<TimeOfferParticipantsModel> offer = [];
       List<TimeOfferParticipantsModel> completedParticipants = [];
-      snap.docs.forEach((DocumentSnapshot doc) {
-        TimeOfferParticipantsModel model =
-            TimeOfferParticipantsModel.fromJSON(doc.data()); //TEMP TO BE DELETED
-        model.id = doc.id;
-        offer.add(model);
-        logger.d("#parID ${model.participantDetails.sevauserid}");
+      _totalEarnings.value = 0;
 
-        if (completedParticipantsFromTransactions.contains(model.participantDetails.sevauserid) || completedParticipantsFromTransactions
-            .contains(model.timebankId)) {
-          completedParticipants.add(model);
-          logger.d("#com ${model}");
+      for (int i = 0; i < snap.docs.length; i++) {
+        TimeOfferParticipantsModel model = TimeOfferParticipantsModel.fromJSON(snap.docs[i].data());
+        offer.add(model);
+
+        for (int j = 0; j < completedParticipantsTransactions.length; j++) {
+          if (completedParticipantsTransactions[j].from == model.participantDetails.sevauserid ||
+              completedParticipantsTransactions[j].from == model.timebankId) {
+            completedParticipants.add(model);
+            _totalEarnings.value += completedParticipantsTransactions[j].credits;
+            completedParticipantsTransactions.removeAt(j);
+          }
         }
-      });
+      }
       _timeOfferParticipants.add(offer);
       _completedParticipants.add(completedParticipants);
     });
@@ -74,7 +80,6 @@ class OfferBloc extends BlocBase {
     String associatedOfferId,
   }) async {
     var completedParticipants = <String>[];
-    logger.d("#offID ${associatedOfferId}");
 
     await CollectionRef.transactions.where('offerId', isEqualTo: associatedOfferId).get().then(
           (value) => {
@@ -82,6 +87,23 @@ class OfferBloc extends BlocBase {
             value.docs.forEach((map) {
               var model = TransactionModel.fromMap(map.data());
               completedParticipants.add(model.from);
+            })
+          },
+        );
+    return completedParticipants;
+  }
+
+  Future<List<TransactionModel>> getCompletedMembersTransaction({
+    String associatedOfferId,
+  }) async {
+    var completedParticipants = <TransactionModel>[];
+
+    await CollectionRef.transactions.where('offerId', isEqualTo: associatedOfferId).get().then(
+          (value) => {
+            logger.i(" >>>>>>>> " + value.docs.length.toString()),
+            value.docs.forEach((map) {
+              var model = TransactionModel.fromMap(map.data());
+              completedParticipants.add(model);
             })
           },
         );
