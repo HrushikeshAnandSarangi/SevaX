@@ -124,7 +124,11 @@ class _ReportMemberPageState extends State<ReportMemberPage> {
                     disabledBorder: InputBorder.none,
                     errorText: snapshot.error.toString().contains('profanity')
                         ? S.of(context).profanity_text_alert
-                        : snapshot.error,
+                        : snapshot.error
+                                .toString()
+                                .contains('minimum characters')
+                            ? L.of(context).minimum_ten_characters
+                            : snapshot.error,
                   ),
                   maxLines: null,
                   keyboardType: TextInputType.multiline,

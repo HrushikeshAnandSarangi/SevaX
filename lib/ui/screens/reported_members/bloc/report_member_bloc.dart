@@ -20,7 +20,7 @@ class ReportMemberBloc {
   Function(bool) get changeButtonStatus => _buttonStatus.sink.add;
   void onMessageChanged(String value) {
     _message.sink.add(value);
-    if (_message.value.length > 10 && _buttonStatus.value == false) {
+    if (_message.value.length >= 10 && _buttonStatus.value == false) {
       _buttonStatus.add(true); //enable button
       log("button enabled");
     }
@@ -29,10 +29,14 @@ class ReportMemberBloc {
       _buttonStatus.add(false);
       log("profanity detected");
     }
-    if (_message.value.length < 10 && _buttonStatus.value == true) {
+    if (_message.value.length < 10 ) {
+      _message.addError("minimum characters");
       _buttonStatus.add(false); //disable button
       log("button disabled");
     }
+    // if(_message.value.length < 10){
+     
+    // }
   }
 
   Stream<File> get image => _file.stream;

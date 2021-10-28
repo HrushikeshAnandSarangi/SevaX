@@ -1454,4 +1454,5 @@ class L {
   //todo:: lables
   //
   String get seva_credit_s => "Seva Credit(s)";
+  String get minimum_ten_characters => "Enter minimum 10 Characters ";
 }
