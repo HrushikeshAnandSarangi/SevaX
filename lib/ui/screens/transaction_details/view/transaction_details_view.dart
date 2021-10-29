@@ -159,7 +159,7 @@ class _TransactionDetailsViewState extends State<TransactionDetailsView> {
                           text: TextSpan(
                             children: [
                               TextSpan(
-                                text: L.of(context).seva_credit_s,
+                                text: S.of(context).seva_credit_s,
                                 style: TextStyle(
                                   fontSize: 14,
                                   color: Color(0xFF9B9B9B),
