@@ -1,6 +1,10 @@
 {
     "@@locale": "zh-TW",
+<<<<<<< HEAD
+    "@@last_modified": "2021-10-11T12:01:40+00:00",
+=======
     "@@last_modified": "2021-09-30T11:17:51+00:00",
+>>>>>>> e411889ce518abca7faa2b0ac9e037134b4f0257
     "check_met": "查看我們曾經見過？",
     "we_met": "是的，我們曾見過",
     "hang_on": "請稍待。。。",
@@ -2038,5 +2042,26 @@
     "seva_exchange_text_new": "通過持續，您同意Seva Exchange的",
     "lending_offer_location_hint_item": "提供接送位置附近",
     "lending_offer_location_hint_place": "提供住宿的一般附近",
-    "location_safety_disclaimer": "注意：為了安全預防措施，請勿列出確切的位置。"
+    "location_safety_disclaimer": "注意：為了安全預防措施，請勿列出確切的位置。",
+    "customise_community": "定制你的社區",
+    "community_logo": "社區標誌",
+    "replace_logo": "此標誌將替換頁面左上角的 SevaX 標誌",
+    "choose_theme_color": "選擇主題顏色",
+    "long_press_to_reset": "長按重置",
+    "tap_to_add_colors": "點擊添加顏色",
+    "you_have_recieved": "你收到了",
+    "seva_credits_donated_text": "捐贈的塞維斯信用額",
+    "seva_credits_from_text": "Seva Credit（s）來自",
+    "as_a_donation_text": "作為捐款。",
+    "change_ownership_successful": "您已成功轉移** GroupName的所有權至** newownername。",
+    "changed_ownership_of_text": "改變了所有權",
+    "transfer_ownership_text": "所有權轉讓",
+    "you_have_been_made_the_new_owner_of_group_name_subtitle": "你已經成為新所有者",
+    "direction_for_manage_transfer_ownership": "轉到組管理選項卡，然後選擇新組成員以傳輸所有權。",
+    "be_sure_message_text": "請務必首先通過郵件發送成員。",
+    "removed_you_from_text": "刪除了你",
+    "note_for_transfer_ownership_notification": "注意：如果您無法滿足此角色，或者如果您認為這是錯誤的，請點擊此處。",
+    "transfer_of_group_ownership_update": "轉移組所有權更新。",
+    "directions_text": "方向",
+    "link_for_demo_video_text": "Demo視頻的鏈接："
 }

@@ -52,6 +52,7 @@ class _BlockedMembersPageState extends State<BlockedMembersPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor:Theme.of(context).primaryColor,
         title: Text(
           S.of(context).blocked_members,
           style: TextStyle(fontSize: 18),
@@ -160,13 +161,17 @@ class _BlockedMembersPageState extends State<BlockedMembersPage> {
                 child: isLoading
                     ? LoadingIndicator()
                     : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text(
-                            "${S.of(context).unblock} $name?",
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Theme.of(context).accentColor,
+                          Padding(
+                            padding: const EdgeInsets.only(left:8.0),
+                            child: Text(
+                              "${S.of(context).unblock} $name?",
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Theme.of(context).accentColor,
+                              ),
                             ),
                           ),
                           SizedBox(

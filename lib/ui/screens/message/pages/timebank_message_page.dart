@@ -43,6 +43,7 @@ class _TimebankMessagePageState extends State<TimebankMessagePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).primaryColor,
         title: Text(
           "${widget.adminMessageWrapperModel.name}",
           style: TextStyle(fontSize: 18),

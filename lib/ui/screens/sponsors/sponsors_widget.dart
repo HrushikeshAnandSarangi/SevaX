@@ -40,7 +40,7 @@ class SponsorsWidget extends StatefulWidget {
     @required this.sponsorsMode,
     this.title,
     this.onSponsorsAdded,
-    this.textColor = const Color(0xFFF766FE0),
+    this.textColor = const Color(0x0FF766FE0),
     this.textSize = 18.0,
     this.onSponsorsRemoved,
     this.isAdminVerified = false,
@@ -61,6 +61,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
   @override
   Widget build(BuildContext context) {
     userId = SevaCore.of(context).loggedInUser.sevaUserID;
+    log('verfied ${widget.isAdminVerified}');
     switch (widget.sponsorsMode) {
       case SponsorsMode.CREATE:
         return createSponsors();
@@ -83,10 +84,8 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
               width: 30,
             ),
             Offstage(
-              offstage: widget.sponsors == null ||
-                      widget.sponsors.length >= 5 ||
-                      widget.isAdminVerified
-                  ? !widget.isAdminVerified
+              offstage: widget.sponsors.length >= 5 || !widget.isAdminVerified
+                  ? true
                   : false,
               child: addIconWidget(),
             ),
@@ -246,7 +245,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                     : CustomAvatar(
                         name: name,
                         radius: 18,
-                        color: FlavorConfig.values.theme.primaryColor,
+                        color: Theme.of(context).primaryColor,
                         foregroundColor: Colors.black,
                         onTap: onTap,
                       ),
@@ -387,7 +386,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
       child: IconButton(
         icon: Icon(
           Icons.add_circle,
-          color: FlavorConfig.values.theme.primaryColor,
+          color: Theme.of(context).primaryColor,
         ),
         onPressed: () async {
           showEnterNameDialog(context);

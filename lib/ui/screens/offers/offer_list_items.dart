@@ -406,10 +406,10 @@ class OfferListItems extends StatelessWidget {
                   children: <Widget>[
                     Spacer(),
                     CustomTextButton(
-//                        child: Text(S.of(context).skip_for_now, style: TextStyle(color: FlavorConfig.values.theme.primaryColor),),
+//                        child: Text(S.of(context).skip_for_now, style: TextStyle(color: Theme.of(context).primaryColor),),
                         shape: StadiumBorder(),
                         padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                        color: FlavorConfig.values.theme.primaryColor,
+                        color: Theme.of(context).primaryColor,
                         child: Text(
                           S.of(context).do_it_later,
                           style: TextStyle(

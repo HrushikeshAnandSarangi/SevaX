@@ -1,6 +1,10 @@
 {
     "@@locale": "pt",
+<<<<<<< HEAD
+    "@@last_modified": "2021-10-11T12:01:41+00:00",
+=======
     "@@last_modified": "2021-09-30T11:17:54+00:00",
+>>>>>>> e411889ce518abca7faa2b0ac9e037134b4f0257
     "check_met": "Checando, se já nos conhecemos",
     "we_met": "Já nos conhecemos",
     "hang_on": "Aguarde ",
@@ -2037,5 +2041,26 @@
     "seva_exchange_text_new": "Continuando, voc� concorda com o Seva Exchange's",
     "lending_offer_location_hint_item": "Fornecer vizinhan�a geral de localiza��o de pick-up",
     "lending_offer_location_hint_place": "Fornecer vizinhan�a geral de onde o alojamento �",
-    "location_safety_disclaimer": "Nota: Para precau��es de seguran�a, n�o liste a localiza��o exata."
+    "location_safety_disclaimer": "Nota: Para precau��es de seguran�a, n�o liste a localiza��o exata.",
+    "customise_community": "Personalize sua comunidade",
+    "community_logo": "Logotipo da comunidade",
+    "replace_logo": "Este logotipo substituir� o logotipo Sevax no lado superior esquerdo da p�gina",
+    "choose_theme_color": "Escolha a cor do tema",
+    "long_press_to_reset": "Pressione longa para redefinir",
+    "tap_to_add_colors": "Toque para adicionar cores",
+    "you_have_recieved": "Você recebeu",
+    "seva_credits_donated_text": "Créditos de Seva doados",
+    "seva_credits_from_text": "Crédito (s) de Seva de",
+    "as_a_donation_text": "como uma doação.",
+    "change_ownership_successful": "Você transferiu com sucesso a propriedade ** GroupName para ** NewOwnername.",
+    "changed_ownership_of_text": "mudou a propriedade de.",
+    "transfer_ownership_text": "Transferir propriedade",
+    "you_have_been_made_the_new_owner_of_group_name_subtitle": "Você foi feito o novo dono de",
+    "direction_for_manage_transfer_ownership": "Vá para a guia Gerenciar seu grupo e selecione um novo membro do grupo para transferir a propriedade.",
+    "be_sure_message_text": "Certifique-se de verificar com o membro primeiro mensagens para eles.",
+    "removed_you_from_text": "removeu você de",
+    "note_for_transfer_ownership_notification": "Nota: Se você não puder cumprir essa função ou se acredita que isso foi feito por erro, clique aqui.",
+    "transfer_of_group_ownership_update": "Transferência de atualização de propriedade do grupo.",
+    "directions_text": "instruções",
+    "link_for_demo_video_text": "Link para Demo Video:"
 }

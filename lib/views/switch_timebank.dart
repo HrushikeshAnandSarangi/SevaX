@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class SwitchTimebank extends StatelessWidget {
   final String content;
@@ -24,7 +25,7 @@ class SwitchTimebank extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            CircularProgressIndicator(),
+            LoadingIndicator(),
             SizedBox(height: 20),
             Text(
               content ?? S.of(context).switching_timebank,

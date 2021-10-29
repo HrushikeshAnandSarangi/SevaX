@@ -1,6 +1,10 @@
 {
     "@@locale": "af",
+<<<<<<< HEAD
+    "@@last_modified": "2021-10-11T12:01:43+00:00",
+=======
     "@@last_modified": "2021-09-30T11:17:57+00:00",
+>>>>>>> e411889ce518abca7faa2b0ac9e037134b4f0257
     "check_met": "Kyk of ons van te vore al ontmoet het",
     "we_met": "Ons het van te vore al ontmoet",
     "hang_on": "Net 'n oomblik",
@@ -2038,5 +2042,26 @@
     "seva_exchange_text_new": "Deur voort te gaan, stem jy in tot Seva Exchange's",
     "lending_offer_location_hint_item": "Verskaf algemene omgewing van afhaalplek",
     "lending_offer_location_hint_place": "Verskaf algemene omgewing van waar die akkommodasie is",
-    "location_safety_disclaimer": "Let wel: Vir veiligheidsmaatre�ls, lys nie die presiese ligging nie."
+    "location_safety_disclaimer": "Let wel: Vir veiligheidsmaatre�ls, lys nie die presiese ligging nie.",
+    "customise_community": "Pas jou gemeenskap aan",
+    "community_logo": "Gemeenskap logo",
+    "replace_logo": "Hierdie logo sal die SEVAX-logo aan die linkerkant van die bladsy vervang",
+    "choose_theme_color": "Kies tema kleur",
+    "long_press_to_reset": "Lang druk om te herstel",
+    "tap_to_add_colors": "Tik om kleure by te voeg",
+    "you_have_recieved": "Jy het ontvang",
+    "seva_credits_donated_text": "SEVA krediete geskenk",
+    "seva_credits_from_text": "Seva krediet (s) van",
+    "as_a_donation_text": "as 'n skenking.",
+    "change_ownership_successful": "U het die eienaarskap van ** Groepnaam suksesvol oorgedra tot ** NewnabernaName.",
+    "changed_ownership_of_text": "verander eienaarskap van",
+    "transfer_ownership_text": "Oordrag eienaarskap",
+    "you_have_been_made_the_new_owner_of_group_name_subtitle": "U is die nuwe eienaar van",
+    "direction_for_manage_transfer_ownership": "Gaan na jou groep Bestuur oortjie en kies dan 'n nuwe groeplid om eienaarskap oor te dra.",
+    "be_sure_message_text": "Maak seker dat jy eers met die lid nagaan deur hulle te messag.",
+    "removed_you_from_text": "het jou verwyder van",
+    "note_for_transfer_ownership_notification": "Let wel: As u nie hierdie rol kan nakom nie, of as u dit glo, is dit verkeerd gedoen, kliek hier.",
+    "transfer_of_group_ownership_update": "Oordrag van groepbesit opdatering.",
+    "directions_text": "Aanwysings",
+    "link_for_demo_video_text": "Skakel vir demo video:"
 }

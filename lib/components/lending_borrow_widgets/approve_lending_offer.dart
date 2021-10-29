@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:doseform/main.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
@@ -31,8 +32,9 @@ class _ApproveLendingOfferState extends State<ApproveLendingOffer> {
   GeoFirePoint location;
   String additionalInstructionsText = '';
   String agreementId = '';
+  TextEditingController instructionController =   TextEditingController();
 
-  final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<DoseFormState>();
   final GlobalKey<ScaffoldState> _key = GlobalKey();
 
   @override
@@ -61,10 +63,10 @@ class _ApproveLendingOfferState extends State<ApproveLendingOffer> {
   }
 
   Widget get approveForm {
-    return Form(
-      key: _formKey,
-      child: Padding(
-        padding: const EdgeInsets.only(top: 10.0, left: 35, right: 35),
+    return Padding(
+      padding: const EdgeInsets.only(top: 10.0, left: 35, right: 35),
+      child: DoseForm(
+        formKey: _formKey,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
@@ -86,13 +88,16 @@ class _ApproveLendingOfferState extends State<ApproveLendingOffer> {
                 ),
                 textAlign: TextAlign.start),
             SizedBox(height: 2),
-            TextFormField(
+            DoseTextField(
+              isRequired: true,
+              controller: instructionController,
               onFieldSubmitted: (v) {
                 FocusScope.of(context).unfocus();
               },
               onChanged: (enteredValue) {
                 additionalInstructionsText = enteredValue;
-                setState(() {});
+                //TODO setstate causes form to reload
+                // setState(() {});
               },
               decoration: InputDecoration(
                 hintText: widget.offerModel.lendingOfferDetailsModel

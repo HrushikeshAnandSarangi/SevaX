@@ -15,6 +15,7 @@ import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/offer_card_widget.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class FindVolunteersViewForOffer extends StatefulWidget {
   final String timebankId;
@@ -249,7 +250,7 @@ class _ElasticSearchResultsHolderState
               child: SizedBox(
                 height: 48,
                 width: 48,
-                child: CircularProgressIndicator(),
+                child: LoadingIndicator(),
               ),
             );
           }

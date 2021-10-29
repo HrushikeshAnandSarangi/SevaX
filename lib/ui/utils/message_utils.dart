@@ -105,8 +105,6 @@ Future<void> sendBackgroundMessage({
     timestamp: DateTime.now().toUtc().millisecondsSinceEpoch,
   );
 
-  if (chatModel.isTimebankMessage) {}
-
   createNewMessage(
     chatId: chatModel.id,
     senderId: sender.id,

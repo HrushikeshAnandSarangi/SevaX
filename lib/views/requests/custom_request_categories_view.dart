@@ -22,6 +22,7 @@ class _CustomRequestCategoriesState extends State<CustomRequestCategories> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).primaryColor,
         title: Text(
           S.of(context).my_request_categories,
           style: TextStyle(fontSize: 18),

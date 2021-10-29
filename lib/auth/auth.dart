@@ -98,7 +98,7 @@ class Auth {
     UserCredential result;
     try {
       result = await _firebaseAuth.signInWithEmailAndPassword(
-        email: email,
+        email: email.toLowerCase(),
         password: password,
       );
     } on Exception catch (error) {
@@ -119,16 +119,16 @@ class Auth {
     try {
       UserCredential result =
           await _firebaseAuth.createUserWithEmailAndPassword(
-        email: email,
+        email: email.toLowerCase(),
         password: password,
       );
       return _processEmailPasswordUser(result.user, displayName);
     } on FirebaseAuthException catch (error) {
       logger.i(
           "${error.code} ==================================================");
-      if (error.code == 'ERROR_EMAIL_ALREADY_IN_USE')
+      if (error.code == 'email-already-in-use')
         // FirebaseCrashlytics.instance.log(error.toString());
-      throw EmailAlreadyInUseException(error.message);
+        throw EmailAlreadyInUseException(error.message);
     } catch (error) {
       log('createUserWithEmailAndPassword: error: ${error.toString()}');
       return null;
@@ -165,7 +165,7 @@ class Auth {
 
     UserModel userModel = UserModel(
       photoURL: user.photoURL,
-      email: user.email,
+      email: user.email.toLowerCase(),
       fullname: displayName,
       sevaUserID: user.uid,
     );
@@ -182,7 +182,7 @@ class Auth {
     UserModel userModel = UserModel(
       photoURL: user.photoURL,
       fullname: (name != null && name.isNotEmpty) ? name : user.displayName,
-      email: user.email,
+      email: user.email.toLowerCase(),
       sevaUserID: user.uid,
     );
     await _saveSignedInUser(userModel);
@@ -203,6 +203,8 @@ class Auth {
         await FirestoreManager.getCommunityDetailsByCommunityId(
       communityId: FlavorConfig.values.timebankId,
     );
+  
+  
     List<String> cmembers = cmodel.members;
     if (!cmembers.contains(signedInUser.sevaUserID)) {
       List<String> tbMembers = cmembers.map((m) => m).toList();
@@ -212,7 +214,7 @@ class Auth {
       cmodel.members = tbMembers;
       await FirestoreManager.updateCommunity(communityModel: cmodel);
     }
-
+   
     // updating the sevaX global timebank with user Id;
     TimebankModel model = await FirestoreManager.getTimeBankForId(
       timebankId: FlavorConfig.values.timebankId,
@@ -236,4 +238,5 @@ class Auth {
   Future _createUserDoc(UserModel userModel) async {
     await FirestoreManager.createUser(user: userModel);
   }
+
 }

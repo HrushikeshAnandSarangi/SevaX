@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_full_pdf_viewer/full_pdf_viewer_scaffold.dart';
 import 'package:sevaexchange/utils/helpers/local_file_downloader.dart';
+import 'package:sevaexchange/widgets/hide_widget.dart';
 import 'package:share_extend/share_extend.dart';
 
 class InvoiceScreen extends StatelessWidget {
@@ -14,20 +15,22 @@ class InvoiceScreen extends StatelessWidget {
     return PDFViewerScaffold(
       appBar: AppBar(
         actions: [
-          IconButton(
-            icon: Icon(
-              Icons.file_download,
-            ),
-            onPressed: () async {
-              //TODO: show appropriate snackbar
-              if (Theme.of(context).platform == TargetPlatform.android ||
-                  Theme.of(context).platform == TargetPlatform.iOS) {
-                LocalFileDownloader()
-                    .download('report', path)
-                    .then(
-                      (_) => log('file downloaded'),
-                    )
-                    .catchError((e) => log(e));
+          HideWidget(
+            hide: true,
+            child: IconButton(
+              icon: Icon(
+                Icons.file_download,
+              ),
+              onPressed: () async {
+                //TODO: show appropriate snackbar
+                if (Theme.of(context).platform == TargetPlatform.android ||
+                    Theme.of(context).platform == TargetPlatform.iOS) {
+                  LocalFileDownloader()
+                      .download('report', path)
+                      .then(
+                        (_) => log('file downloaded'),
+                      )
+                      .catchError((e) => log(e));
 //              } else {
 //                final text = 'this is the text file';
 //
@@ -48,8 +51,9 @@ class InvoiceScreen extends StatelessWidget {
 //                // cleanup
 //                html.document.body.children.remove(anchor);
 //                html.Url.revokeObjectUrl(url);
-              }
-            },
+                }
+              },
+            ),
           ),
           Theme.of(context).platform == TargetPlatform.android ||
                   Theme.of(context).platform == TargetPlatform.iOS

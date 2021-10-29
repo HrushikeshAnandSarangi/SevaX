@@ -45,7 +45,7 @@ class AdminMessagePage extends StatelessWidget {
                       S.of(context).go_to_community_chat,
                       style: TextStyle(
                         fontSize: 18,
-                        color: FlavorConfig.values.theme.primaryColor,
+                        color: Theme.of(context).primaryColor,
                         fontFamily: 'Europa',
                         fontWeight: FontWeight.bold,
                       ),
@@ -54,7 +54,7 @@ class AdminMessagePage extends StatelessWidget {
                     Spacer(),
                     Icon(
                       Icons.arrow_forward_ios,
-                      color: FlavorConfig.values.theme.primaryColor,
+                      color: Theme.of(context).primaryColor,
                     )
                   ],
                 ),

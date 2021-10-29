@@ -12,6 +12,7 @@ import 'package:sevaexchange/ui/utils/validators.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 import '../../../../flavor_config.dart';
 
@@ -43,36 +44,54 @@ class OneToManyOfferBloc extends BlocBase {
   final _isVisible = BehaviorSubject<bool>.seeded(false);
 
   Function(bool value) get onOfferMadePublic => _makePublic.sink.add;
+
   void onOfferMadeVirtual(bool value) {
+    
     if (value != null) {
       if (!value) {
         onOfferMadePublic(false);
+        
       }
       _isVisible.add(value);
       _makeVirtual.add(value);
+      
     }
   }
 
   Function(String value) get onTitleChanged => _title.sink.add;
+
   Function(String) get onPreparationHoursChanged => _preparationHours.sink.add;
+
   Function(String) get onClassHoursChanged => _classHours.sink.add;
+
   Function(String) get onClassSizeChanged => _classSize.sink.add;
+
   Function(String) get onclassDescriptionChanged => _classDescription.sink.add;
+
   Function(CustomLocation) get onLocatioChanged => _location.sink.add;
+
   Function(String) get onClassSizeError => _classSizeError.sink.add;
+
   // Function(bool) get isAdminChanged => _isAdmin.sink.add;
   Stream<bool> get isVisible => _isVisible.stream;
 
   Stream<bool> get makePublicValue => _makePublic.stream;
+
   Stream<bool> get makeVirtualValue => _makeVirtual.stream;
 
   Stream<String> get title => _title.stream;
+
   Stream<String> get preparationHours => _preparationHours.stream;
+
   Stream<String> get classHours => _classHours.stream;
+
   Stream<String> get classSize => _classSize.stream;
+
   // Stream<bool> get isAdmin => _isAdmin.stream;
   Stream<String> get classDescription => _classDescription.stream;
+
   Stream<CustomLocation> get location => _location.stream;
+
   Stream<String> get classSizeError => _classSizeError.stream;
 
   Stream<Status> get status => _status.stream;
@@ -84,7 +103,7 @@ class OneToManyOfferBloc extends BlocBase {
     String communityName,
     @required BuildContext context,
   }) async {
-    if (!errorCheck()) {
+    if (!validateForm()) {
       int prepHours = int.parse(_preparationHours.value);
       int classHours = int.parse(_classHours.value);
       int classSize = int.parse(_classSize.value);
@@ -154,7 +173,8 @@ class OneToManyOfferBloc extends BlocBase {
 
           new KloudlessWidgetManager<CreateMode, OfferModel>().syncCalendar(
             context: context,
-            builder: KloudlessWidgetBuilder().fromContext<CreateMode, OfferModel>(
+            builder:
+                KloudlessWidgetBuilder().fromContext<CreateMode, OfferModel>(
               context: context,
               id: offerModel.id,
               model: offerModel,
@@ -169,7 +189,7 @@ class OneToManyOfferBloc extends BlocBase {
 
   void updateOneToManyOffer(OfferModel offerModel, int editType) {
     OfferModel offer = offerModel;
-    if (!errorCheck()) {
+    if (!validateForm()) {
       int prepHours = int.parse(_preparationHours.value);
       int classHours = int.parse(_classHours.value);
       int classSize = int.parse(_classSize.value);
@@ -241,7 +261,7 @@ class OneToManyOfferBloc extends BlocBase {
     _classDescription.add(
       offerModel.groupOfferDataModel.classDescription,
     );
-
+    _isVisible.add(offerModel.public);
     _makePublic.add(offerModel.public);
     _makeVirtual.add(offerModel.virtual);
     _location.add(
@@ -250,6 +270,69 @@ class OneToManyOfferBloc extends BlocBase {
         offerModel.selectedAdrress,
       ),
     );
+  }
+
+  String validateTitle(String value) {
+    if (value == null || value == '') {
+      _title.addError(ValidationErrors.titleError);
+      return ValidationErrors.titleError;
+    } else if (value.substring(0, 1).contains('_') &&
+        !AppConfig.testingEmails.contains(AppConfig.loggedInEmail)) {
+      _title.addError(ValidationErrors.char_error);
+      return ValidationErrors.char_error;
+    } else if (profanityDetector.isProfaneString(value)) {
+      _title.addError(ValidationErrors.profanityError);
+      return ValidationErrors.profanityError;
+    }
+    return null;
+  }
+
+  String validateDescription(String value) {
+    if (value == null || value == '') {
+      _classDescription.addError(ValidationErrors.genericError);
+      return ValidationErrors.genericError;
+    } else if (profanityDetector.isProfaneString(value)) {
+      _classDescription.addError(ValidationErrors.profanityError);
+      return ValidationErrors.profanityError;
+    }
+    return null;
+  }
+
+  RegExp numberCheck = RegExp(r"^0*[1-9]\d*$");
+
+  String validateClassHours(String value) {
+    if (_classHours.value == null || !numberCheck.hasMatch(_classHours.value)) {
+      _classHours.addError(ValidationErrors.classHours);
+      return ValidationErrors.classHours;
+    }
+    return null;
+  }
+
+  String validateClassSize(String value) {
+    if (_classSize.value == null || !numberCheck.hasMatch(_classSize.value)) {
+      _classSize.addError(ValidationErrors.sizeOfClassError);
+      return ValidationErrors.sizeOfClassError;
+    }
+    return null;
+  }
+
+  RegExp numberWithZeroCheck = RegExp(r"^\d+$");
+
+  String validatePrepHours(String value) {
+    if (_preparationHours.value == null ||
+        !numberWithZeroCheck.hasMatch(_preparationHours.value)) {
+      _preparationHours.addError(ValidationErrors.preprationTimeError);
+      return ValidationErrors.preprationTimeError;
+    }
+    return null;
+  }
+
+  bool validateForm() {
+    return !(validateTitle(_title.value) == null &&
+        validateDescription(_classDescription.value) == null &&
+        validatePrepHours(_preparationHours.value.toString()) == null &&
+        validateClassHours(_classHours.value.toString()) == null &&
+        validateClassSize(_classSize.value.toString()) == null);
   }
 
   ///[ERROR CHECKS] TO Validate input
@@ -301,7 +384,7 @@ class OneToManyOfferBloc extends BlocBase {
   }
 
   bool checkCreditError() {
-    if (!errorCheck()) {
+    if (!validateForm()) {
       int prepHours = int.parse(_preparationHours.value);
       int classHours = int.parse(_classHours.value);
       int classSize = int.parse(_classSize.value);

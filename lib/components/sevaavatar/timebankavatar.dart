@@ -10,6 +10,7 @@ import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 import './image_picker_handler.dart';
 import '../../globals.dart' as globals;
@@ -141,7 +142,7 @@ class _TimebankAvatarState extends State<TimebankAvatar>
                     child: Container(
                       height: 50,
                       width: 50,
-                      child: CircularProgressIndicator(),
+                      child: LoadingIndicator(),
                     ),
                   ),
                 ),

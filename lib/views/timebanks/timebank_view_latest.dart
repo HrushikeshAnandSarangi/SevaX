@@ -329,7 +329,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                   fontFamily: 'Europa',
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: Colors.lightBlueAccent,
+                  color: Theme.of(context).primaryColor,
                 ),
               ),
             ),
@@ -402,9 +402,10 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
               child: Padding(
                 padding: const EdgeInsets.only(left: 20),
                 child: SponsorsWidget(
+                  textColor: Theme.of(context).primaryColor,
                   sponsorsMode: SponsorsMode.ABOUT,
                   sponsors: widget.timebankModel.sponsors,
-                  isAdminVerified: GetUserVerified<bool>().verify(
+                  isAdminVerified: GetUserVerified.verify(
                     userId: SevaCore.of(context).loggedInUser.sevaUserID,
                     creatorId: widget.timebankModel.creatorId,
                     admins: widget.timebankModel.admins,
@@ -473,7 +474,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                               fontFamily: 'Europa',
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: Colors.lightBlueAccent,
+                              color: Theme.of(context).primaryColor,
                             ),
                           ),
                         ),

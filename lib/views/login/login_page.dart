@@ -5,6 +5,7 @@ import 'dart:ui' as ui;
 
 import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:doseform/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
@@ -41,9 +42,9 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final GlobalKey<FormState> _formKey = GlobalKey();
+  final GlobalKey<DoseFormState> _formKey = GlobalKey();
   final GlobalKey<FormState> _formKeyDialog = GlobalKey();
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+  // final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   Alignment childAlignment = Alignment.center;
   bool _isLoading = false;
   final pwdFocus = FocusNode();
@@ -54,6 +55,7 @@ class _LoginPageState extends State<LoginPage> {
   Color enabled = Colors.white.withAlpha(120);
   BuildContext parentContext;
   GeoFirePoint location;
+  TextEditingController emailController = TextEditingController(), passwordController = TextEditingController();
 
   void initState() {
     super.initState();
@@ -95,10 +97,10 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     parentContext = context;
-    var appLanguage = Provider.of<AppLanguage>(context);
-    Locale _sysLng = ui.window.locale;
-    Locale _language = S.delegate.isSupported(_sysLng) ? _sysLng : Locale('en');
-    appLanguage.changeLanguage(_language);
+    // var appLanguage = Provider.of<AppLanguage>(context);
+    // Locale _sysLng = ui.window.locale;
+    // Locale _language = S.delegate.isSupported(_sysLng) ? _sysLng : Locale('en');
+    // appLanguage.changeLanguage(_language);
     //UserData.shared.isFromLogin = true;
     //Todo check this line
     // ScreenUtil.init(context);
@@ -183,7 +185,7 @@ class _LoginPageState extends State<LoginPage> {
                             S.of(context).enter_email,
                           ),
                           content: Container(
-                            width: 300,
+                            width: 320,
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: <Widget>[
@@ -211,78 +213,75 @@ class _LoginPageState extends State<LoginPage> {
                                 SizedBox(
                                   height: 15,
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                    left: 30.0,
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      CustomTextButton(
-                                        color: HexColor("#d2d2d2"),
-                                        child: Text(
-                                          S.of(context).cancel,
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            color: Colors.white,
-                                            fontFamily: 'Europa',
-                                          ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    CustomTextButton(
+                                      color: HexColor("#d2d2d2"),
+                                      child: Text(
+                                        S.of(context).cancel,
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.white,
+                                          fontFamily: 'Europa',
                                         ),
-                                        onPressed: () {
-                                          Navigator.of(_context).pop(
-                                            {"sendResetLink": false, "userEmail": null},
-                                          );
-                                        },
                                       ),
-                                      Spacer(),
-                                      CustomTextButton(
-                                        shape: StadiumBorder(),
-                                        color: Theme.of(context).accentColor,
-                                        textColor: FlavorConfig.values.buttonTextColor,
-                                        child: Text(
-                                          S.of(context).reset_password,
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            color: Colors.white,
-                                            fontFamily: 'Europa',
-                                          ),
+                                      onPressed: () {
+                                        Navigator.of(_context).pop(
+                                          {"sendResetLink": false, "userEmail": null},
+                                        );
+                                      },
+                                    ),
+                                    SizedBox(
+                                      width: 8,
+                                    ),
+                                    CustomTextButton(
+                                      shape: StadiumBorder(),
+                                      color: Theme.of(context).accentColor,
+                                      textColor: FlavorConfig.values.buttonTextColor,
+                                      child: Text(
+                                        S.of(context).reset_password,
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.white,
+                                          fontFamily: 'Europa',
                                         ),
-                                        onPressed: () {
-                                          if (!_formKeyDialog.currentState.validate()) {
-                                            return;
-                                          }
-                                          Navigator.of(_context).pop(
-                                            {
-                                              "sendResetLink": true,
-                                              "userEmail": _textFieldControllerResetEmail.trim()
-                                            },
-                                          );
-                                        },
                                       ),
-                                    ],
-                                  ),
+                                      onPressed: () {
+                                        if (!_formKeyDialog.currentState.validate()) {
+                                          return;
+                                        }
+                                        Navigator.of(_context).pop(
+                                          {"sendResetLink": true, "userEmail": _textFieldControllerResetEmail.trim()},
+                                        );
+                                      },
+                                    ),
+                                  ],
                                 ),
-//                                LayoutBuilder(
-//                                  builder: (context, size) {
-//                                    TextSpan span = TextSpan(
-//                                      text: S.of(context).reset_password +
-//                                          '${Padding(padding: const EdgeInsets.only(left: 20))}' +
-//                                          S.of(context).cancel,
-//                                    );
-//                                    return textLengthCalculator(span, size) ==
-//                                            true
-//                                        ? Wrap(
-//                                            alignment: WrapAlignment.center,
-//                                            crossAxisAlignment:
-//                                                WrapCrossAlignment.center,
-//                                            children:
-//                                                resetPasswordAndCancelButton,
-//                                          )
-//                                        : Row(
-//                                            children:
-//                                                resetPasswordAndCancelButton,
-//                                          );
-//                                  },
-//                                ),
+                                //                                LayoutBuilder(
+                                //                                  builder: (context, size) {
+                                //                                    TextSpan span = TextSpan(
+                                //                                      text: S.of(context).reset_password +
+                                //                                          '${Padding(padding: const EdgeInsets.only(left: 20))}' +
+                                //                                          S.of(context).cancel,
+                                //                                    );
+                                //                                    return textLengthCalculator(span, size) ==
+                                //                                            true
+                                //                                        ? Wrap(
+                                //                                            alignment: WrapAlignment.center,
+                                //                                            crossAxisAlignment:
+                                //                                                WrapCrossAlignment.center,
+                                //                                            children:
+                                //                                                resetPasswordAndCancelButton,
+                                //                                          )
+                                //                                        : Row(
+                                //                                            children:
+                                //                                                resetPasswordAndCancelButton,
+                                //                                          );
+                                //                                  },
+                                //                                ),
                               ],
                             ),
                           ),
@@ -317,7 +316,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       resizeToAvoidBottomInset: true,
-      key: _scaffoldKey,
+      // key: _scaffoldKey,
       body: Stack(
         fit: StackFit.expand,
         children: <Widget>[
@@ -463,8 +462,7 @@ class _LoginPageState extends State<LoginPage> {
                                       content: Text(S.of(context).check_internet),
                                       action: SnackBarAction(
                                         label: S.of(context).dismiss,
-                                        onPressed: () =>
-                                            ScaffoldMessenger.of(context).hideCurrentSnackBar(),
+                                        onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
                                       ),
                                     ),
                                   );
@@ -541,42 +539,47 @@ class _LoginPageState extends State<LoginPage> {
         height: 200,
         child: Padding(
           padding: EdgeInsets.only(top: 8.0, bottom: 0.0),
-          child: Form(
-            key: _formKey,
+          child: DoseForm(
+            formKey: _formKey,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                TextFormField(
-                  focusNode: emailFocus,
-                  style: textStyle,
-                  cursorColor: Colors.black54,
-                  validator: _validateEmailId,
-                  onSaved: _saveEmail,
-                  onFieldSubmitted: (v) {
-                    FocusScope.of(context).requestFocus(pwdFocus);
-                  },
-                  decoration: InputDecoration(
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black54),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black54),
-                    ),
-                    labelText: S.of(context).email.toUpperCase(),
-                    labelStyle: textStyle,
-                  ),
-                ),
-                TextFormField(
+                DoseTextField(
+                    isRequired: true,
+                    focusNode: emailFocus,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    style: textStyle,
+                    // cursorColor: Colors.black54,
+                    controller: emailController,
+                    validator: _validateEmailId,
+                    onSaved: _saveEmail,
+                    onFieldSubmitted: (v) {
+                      FocusScope.of(context).requestFocus(pwdFocus);
+                    },
+                    decoration: InputDecoration(
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black54),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black54),
+                      ),
+                      labelText: S.of(context).email.toUpperCase(),
+                      labelStyle: textStyle,
+                    )),
+                DoseTextField(
+                  controller: passwordController,
+                  isRequired: true,
                   focusNode: pwdFocus,
                   obscureText: _shouldObscurePassword,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   style: textStyle,
-                  cursorColor: Colors.black54,
+                  maxLines: 1,
+                  // cursorColor: Colors.black54,
                   validator: _validatePassword,
                   onSaved: _savePassword,
                   decoration: InputDecoration(
-                      enabledBorder:
-                          UnderlineInputBorder(borderSide: BorderSide(color: Colors.black54)),
+                      enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black54)),
                       focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.black54),
                       ),
@@ -584,8 +587,9 @@ class _LoginPageState extends State<LoginPage> {
                       labelStyle: textStyle,
                       suffix: GestureDetector(
                         onTap: () {
-                          _shouldObscurePassword = !_shouldObscurePassword;
-                          setState(() {});
+                          setState(() {
+                            _shouldObscurePassword = !_shouldObscurePassword;
+                          });
                         },
                         child: Icon(
                           _shouldObscurePassword ? Icons.visibility_off : Icons.visibility,
@@ -642,6 +646,7 @@ class _LoginPageState extends State<LoginPage> {
 
   List<String> emails = [
     'barney@yopmail.com',
+    'umesha@uipep.com',
     'tony@yopmail.com',
     'robert@yopmail.com',
     'howard@yopmail.com',
@@ -873,6 +878,7 @@ class _LoginPageState extends State<LoginPage> {
     UserModel user;
     try {
       user = await auth.handleGoogleSignIn();
+      logger.d("#user ${user}");
       await getAndUpdateDeviceDetailsOfUser(locationVal: location, userEmailId: user.email);
     } on FirebaseAuthException catch (erorr) {
       handlePlatformException(erorr);
@@ -892,7 +898,7 @@ class _LoginPageState extends State<LoginPage> {
     isLoading = true;
     try {
       user = await auth.signInWithEmailAndPassword(
-        email: emailId.trim(),
+        email: emailId.trim().toLowerCase(),
         password: password,
       );
       await getAndUpdateDeviceDetailsOfUser(locationVal: location, userEmailId: user.email)
@@ -961,8 +967,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   String _validateEmailId(String value) {
-    RegExp emailPattern =
-        RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+    RegExp emailPattern = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
     if (value.isEmpty) return S.of(context).enter_email;
     if (!emailPattern.hasMatch(value)) return S.of(context).validation_error_invalid_email;
     return null;
@@ -975,7 +980,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _saveEmail(String value) {
-    this.emailId = value;
+    this.emailId = value.toLowerCase();
   }
 
   void _savePassword(String value) {
@@ -1018,9 +1023,8 @@ class _LoginPageState extends State<LoginPage> {
     );
 
     navigateToWebView(
-      aboutMode: AboutMode(
-          title: S.of(context).login_agreement_terms_link,
-          urlToHit: dynamicLinks['termsAndConditionsLink']),
+      aboutMode:
+          AboutMode(title: S.of(context).login_agreement_terms_link, urlToHit: dynamicLinks['termsAndConditionsLink']),
       context: context,
     );
   }
@@ -1032,9 +1036,8 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
     navigateToWebView(
-      aboutMode: AboutMode(
-          title: S.of(context).login_agreement_privacy_link,
-          urlToHit: dynamicLinks['privacyPolicyLink']),
+      aboutMode:
+          AboutMode(title: S.of(context).login_agreement_privacy_link, urlToHit: dynamicLinks['privacyPolicyLink']),
       context: context,
     );
   }
@@ -1046,9 +1049,8 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
     navigateToWebView(
-      aboutMode: AboutMode(
-          title: S.of(context).login_agreement_payment_link,
-          urlToHit: dynamicLinks['paymentPolicyLink']),
+      aboutMode:
+          AboutMode(title: S.of(context).login_agreement_payment_link, urlToHit: dynamicLinks['paymentPolicyLink']),
       context: context,
     );
   }
@@ -1082,8 +1084,7 @@ class _LoginPageState extends State<LoginPage> {
 
         //   String communityId = queryParams["communityId"];
         // String primaryTimebankId = queryParams["primaryTimebankId"];
-        if (queryParams.containsKey("isFromBulkInvite") &&
-            queryParams["isFromBulkInvite"] == 'true') {
+        if (queryParams.containsKey("isFromBulkInvite") && queryParams["isFromBulkInvite"] == 'true') {
           resetDynamicLinkPassword(invitedMemberEmail);
         }
       }

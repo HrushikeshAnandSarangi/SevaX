@@ -16,6 +16,7 @@ import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/request_card_widget.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class FindVolunteersView extends StatefulWidget {
   final String timebankId;
@@ -238,7 +239,7 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
               child: SizedBox(
                 height: 48,
                 width: 48,
-                child: CircularProgressIndicator(),
+                child: LoadingIndicator(),
               ),
             );
           }
@@ -298,7 +299,7 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
             child: SizedBox(
               height: 48,
               width: 48,
-              child: CircularProgressIndicator(),
+              child: LoadingIndicator(),
             ),
           );
         }

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:provider/provider.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/labels.dart';
@@ -17,6 +18,8 @@ import 'package:sevaexchange/views/profile/language.dart';
 import 'package:sevaexchange/views/profile/timezone.dart';
 
 class SevaExploreFooter extends StatefulWidget {
+  final bool footerColor;
+  SevaExploreFooter({this.footerColor});
   @override
   _SevaExploreFooterState createState() => _SevaExploreFooterState();
 }
@@ -55,7 +58,9 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
 
     return Container(
       width: MediaQuery.of(context).size.width,
-      color: Theme.of(context).primaryColor,
+      color: widget.footerColor == true
+          ? Theme.of(context).primaryColor
+          : Color(0xFFF454684),
       child: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 8.0,
@@ -77,15 +82,17 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton<String>(
                       onChanged: (value) async {
-                        Provider.of<AppLanguage>(context, listen: false)
-                            .changeLanguage(
-                          getLocaleFromCode(value),
-                        );
                         if (SevaCore.of(context).loggedInUser != null) {
                           await updateUserLanguage(
                             user: SevaCore.of(context).loggedInUser
                               ..language = value,
                           );
+                          Provider.of<AppLanguage>(context, listen: false)
+                              .changeLanguage(
+                            getLocaleFromCode(value),
+                          );
+
+                          // Phoenix.rebirth(context);
                         }
                       },
                       value: S.of(context).localeName,

@@ -76,7 +76,7 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
       this.requestModel.timebankId = _selectedTimebankId;
       this.requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
       requestModel.requestType = widget.offer.type;
-
+      requestModel.offerId = widget.offer.id;
       this.requestModel.title = widget.offer.individualOfferDataModel.title;
       this.requestModel.description =
           widget.offer.individualOfferDataModel.description;
@@ -431,7 +431,12 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
           dialogContext = createDialogContext;
           return AlertDialog(
             title: Text(S.of(context).please_wait),
-            content: LinearProgressIndicator(),
+            content: LinearProgressIndicator(
+ backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+        valueColor: AlwaysStoppedAnimation<Color>(
+          Theme.of(context).primaryColor,
+        ),
+),
           );
         });
   }

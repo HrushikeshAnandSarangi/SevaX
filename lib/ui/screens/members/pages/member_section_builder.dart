@@ -8,6 +8,7 @@ import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_exit_community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/repositories/donations_repository.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/repositories/notifications_repository.dart';
 import 'package:sevaexchange/ui/screens/members/bloc/members_bloc.dart';
@@ -636,17 +637,29 @@ class MemberSectionBuilder extends StatelessWidget {
 
       //from, to, timestamp, credits, isApproved, type, typeid, timebankid
       await TransactionBloc().createNewTransaction(
-          model.id,
-          user.sevaUserID,
-          DateTime.now().millisecondsSinceEpoch,
-          donateAmount,
-          true,
-          "ADMIN_DONATE_TOUSER",
-          null,
-          model.id,
-          communityId: model.communityId,
-          fromEmailORId: model.id,
-          toEmailORId: user.email);
+        model.id,
+        user.sevaUserID,
+        DateTime.now().millisecondsSinceEpoch,
+        donateAmount,
+        true,
+        "ADMIN_DONATE_TOUSER",
+        null,
+        model.id,
+        communityId: model.communityId,
+        fromEmailORId: model.id,
+        toEmailORId: user.email,
+      );
+
+      //SEND DONATION NOTIFICATION TO MEMBER
+      final DonationsRepository _donationsRepository = DonationsRepository();
+      await _donationsRepository.donationCreditedNotificationToMember(
+        context: context,
+        donateAmount: donateAmount,
+        model: model,
+        user: user,
+        toMember: true,
+      );
+
       await showDialog<double>(
         context: context,
         builder: (context) => InputDonateSuccessDialog(

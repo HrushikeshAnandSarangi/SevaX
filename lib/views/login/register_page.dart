@@ -5,6 +5,7 @@ import 'dart:ui' as ui;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:doseform/main.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -52,14 +53,17 @@ class RegisterPage extends StatefulWidget {
   _RegisterPageState createState() => _RegisterPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage>
-    with ImagePickerListener, SingleTickerProviderStateMixin {
-  final GlobalKey<FormState> _formKey = GlobalKey();
+class _RegisterPageState extends State<RegisterPage> with ImagePickerListener, SingleTickerProviderStateMixin {
+  final GlobalKey<DoseFormState> _formKey = GlobalKey();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   final fullnameFocus = FocusNode();
   final emailFocus = FocusNode();
   final pwdFocus = FocusNode();
   final confirmPwdFocus = FocusNode();
+  TextEditingController nameController = TextEditingController(),
+      emailController = TextEditingController(),
+      passwordController = TextEditingController(),
+      confirmPasswordController = TextEditingController();
 
   bool _shouldObscurePassword = true;
   bool _shouldObscureConfirmPassword = true;
@@ -303,25 +307,22 @@ class _RegisterPageState extends State<RegisterPage>
                   width: 150.0,
                   height: 150.0,
                   decoration: BoxDecoration(
-                      image: DecorationImage(
-                          image: NetworkImage(defaultCameraImageURL), fit: BoxFit.cover),
+                      image: DecorationImage(image: NetworkImage(defaultCameraImageURL), fit: BoxFit.cover),
                       borderRadius: BorderRadius.all(Radius.circular(75.0)),
                       boxShadow: [BoxShadow(blurRadius: 7.0, color: Colors.black12)]))
               : Container(
                   decoration: BoxDecoration(
                       image: DecorationImage(
-                          image: webImageUrl == null
-                              ? FileImage(selectedImage)
-                              : CachedNetworkImageProvider(webImageUrl),
+                          image:
+                              webImageUrl == null ? FileImage(selectedImage) : CachedNetworkImageProvider(webImageUrl),
                           fit: BoxFit.cover),
                       borderRadius: BorderRadius.all(Radius.circular(75.0)),
                       boxShadow: [BoxShadow(blurRadius: 7.0, color: Colors.black12)]),
                   child: Align(
                     alignment: Alignment.bottomRight,
                     child: Container(
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(Radius.circular(50.0))),
+                      decoration:
+                          BoxDecoration(color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(50.0))),
                       child: Icon(Icons.add_a_photo),
                     ),
                   ),
@@ -389,12 +390,13 @@ class _RegisterPageState extends State<RegisterPage>
   // }
 
   Widget get _formFields {
-    return Form(
-      key: _formKey,
+    return DoseForm(
+      formKey: _formKey,
       child: Column(
         children: <Widget>[
           getFormField(
             focusNode: fullnameFocus,
+            controller: nameController,
             onFieldSubmittedCB: (v) {
               FocusScope.of(context).requestFocus(emailFocus);
             },
@@ -414,6 +416,7 @@ class _RegisterPageState extends State<RegisterPage>
           ),
           getFormField(
             focusNode: emailFocus,
+            controller: emailController,
             onFieldSubmittedCB: (v) {
               FocusScope.of(context).requestFocus(pwdFocus);
             },
@@ -430,6 +433,7 @@ class _RegisterPageState extends State<RegisterPage>
           ),
           getPasswordFormField(
             focusNode: pwdFocus,
+            controller: passwordController,
             onFieldSubmittedCB: (v) {
               FocusScope.of(context).requestFocus(confirmPwdFocus);
             },
@@ -461,13 +465,12 @@ class _RegisterPageState extends State<RegisterPage>
           ),
           getPasswordFormField(
             focusNode: confirmPwdFocus,
+            controller: confirmPasswordController,
             onFieldSubmittedCB: (v) {
               FocusScope.of(context).requestFocus(FocusNode());
             },
             shouldRestrictLength: false,
-            hint: S.of(context).confirm.firstWordUpperCase() +
-                ' ' +
-                S.of(context).password.firstWordUpperCase(),
+            hint: S.of(context).confirm.firstWordUpperCase() + ' ' + S.of(context).password.firstWordUpperCase(),
             shouldObscure: shouldObscureConfirmPassword,
             validator: (value) {
               if (value.length < 6) {
@@ -495,25 +498,27 @@ class _RegisterPageState extends State<RegisterPage>
     );
   }
 
-  Widget getFormField({
-    focusNode,
-    onFieldSubmittedCB,
-    bool shouldRestrictLength,
-    String hint,
-    String Function(String value) validator,
-    Function(String value) onSave,
-    bool shouldObscure = false,
-    Widget suffix,
-    TextCapitalization capitalization = TextCapitalization.none,
-  }) {
+  Widget getFormField(
+      {focusNode,
+      onFieldSubmittedCB,
+      bool shouldRestrictLength,
+      String hint,
+      String Function(String value) validator,
+      Function(String value) onSave,
+      bool shouldObscure = false,
+      Widget suffix,
+      TextCapitalization capitalization = TextCapitalization.none,
+      TextEditingController controller}) {
     var size = shouldRestrictLength ? 20 : 150;
     return Padding(
       padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-      child: TextFormField(
+      child: DoseTextField(
+        isRequired: true,
         autovalidateMode: AutovalidateMode.onUserInteraction,
+        controller: controller,
         focusNode: focusNode,
         onFieldSubmitted: onFieldSubmittedCB,
-        enabled: !isLoading,
+        // enabled: !isLoading,
         decoration: InputDecoration(
           labelText: hint,
           errorMaxLines: 2,
@@ -532,7 +537,7 @@ class _RegisterPageState extends State<RegisterPage>
         textCapitalization: capitalization,
         validator: validator,
         onSaved: onSave,
-        inputFormatters: [
+        formatters: [
           LengthLimitingTextInputFormatter(size),
         ],
         obscureText: shouldObscure,
@@ -540,24 +545,28 @@ class _RegisterPageState extends State<RegisterPage>
     );
   }
 
-  Widget getPasswordFormField({
-    focusNode,
-    onFieldSubmittedCB,
-    bool shouldRestrictLength,
-    String hint,
-    String Function(String value) validator,
-    Function(String value) onSave,
-    bool shouldObscure = false,
-    Widget suffix,
-    TextCapitalization capitalization = TextCapitalization.none,
-  }) {
+  Widget getPasswordFormField(
+      {focusNode,
+      onFieldSubmittedCB,
+      bool shouldRestrictLength,
+      String hint,
+      String Function(String value) validator,
+      Function(String value) onSave,
+      bool shouldObscure = false,
+      Widget suffix,
+      TextCapitalization capitalization = TextCapitalization.none,
+      TextEditingController controller}) {
     var size = shouldRestrictLength ? 20 : 150;
     return Padding(
       padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-      child: TextFormField(
+      child: DoseTextField(
+        isRequired: true,
         focusNode: focusNode,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
         onFieldSubmitted: onFieldSubmittedCB,
-        enabled: !isLoading,
+        controller: controller,
+        maxLines: 1,
+        // enabled: !isLoading,
         decoration: InputDecoration(
           labelText: hint,
           errorMaxLines: 2,
@@ -576,7 +585,7 @@ class _RegisterPageState extends State<RegisterPage>
         textCapitalization: capitalization,
         validator: validator,
         onSaved: onSave,
-        inputFormatters: [
+        formatters: [
           LengthLimitingTextInputFormatter(size),
         ],
         obscureText: shouldObscure,
@@ -613,6 +622,7 @@ class _RegisterPageState extends State<RegisterPage>
                     isLoading = false;
                     return;
                   }
+                  FocusScope.of(context).unfocus();
                   showDialog(
                     barrierDismissible: false,
                     context: context,
@@ -624,59 +634,59 @@ class _RegisterPageState extends State<RegisterPage>
                           content: Text(S.of(context).add_photo_hint),
                           actions: <Widget>[
                             Padding(
-                              padding: const EdgeInsets.only(bottom: 15),
-                              child: CustomTextButton(
-                                shape: StadiumBorder(),
-                                color: Colors.grey,
-                                padding: EdgeInsets.fromLTRB(10, 5, 5, 10),
-                                child: Text(
-                                  S.of(context).skip_and_register,
-                                  style: TextStyle(
-                                    fontSize: dialogButtonSize,
-                                    color: Colors.white,
-                                    fontFamily: 'Europa',
-                                  ),
-                                ),
-                                onPressed: () async {
-                                  Navigator.pop(viewContext);
-                                  if (!_formKey.currentState.validate()) {
-                                    isLoading = false;
-                                    return;
-                                  }
-                                  _formKey.currentState.save();
+                              padding: const EdgeInsets.only(bottom: 10),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  CustomTextButton(
+                                    shape: StadiumBorder(),
+                                    color: Colors.grey,
+                                    padding: EdgeInsets.fromLTRB(10, 5, 5, 10),
+                                    child: Text(
+                                      S.of(context).skip_and_register,
+                                      style: TextStyle(
+                                        fontSize: dialogButtonSize,
+                                        color: Colors.white,
+                                        fontFamily: 'Europa',
+                                      ),
+                                    ),
+                                    onPressed: () async {
+                                      Navigator.pop(viewContext);
+                                      if (!_formKey.currentState.validate()) {
+                                        isLoading = false;
+                                        return;
+                                      }
+                                      _formKey.currentState.save();
 
-                                  await profanityCheck();
-                                  isLoading = false;
-                                },
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                bottom: 15,
-                                right: 15,
-                              ),
-                              child: CustomTextButton(
-                                shape: StadiumBorder(),
-                                padding: EdgeInsets.fromLTRB(10, 5, 5, 10),
-                                color: Theme.of(context).accentColor,
-                                textColor: FlavorConfig.values.buttonTextColor,
-                                child: Text(
-                                  S.of(context).add_photo,
-                                  style: TextStyle(
-                                    fontSize: dialogButtonSize,
-                                    fontFamily: 'Europa',
-                                    color: Colors.white,
+                                      await profanityCheck();
+                                      isLoading = false;
+                                    },
                                   ),
-                                ),
-                                onPressed: () {
-                                  Navigator.pop(viewContext);
-                                  FocusScope.of(context).requestFocus(new FocusNode());
-                                  imagePicker.showDialog(context);
-                                  isLoading = false;
-                                  return;
-                                },
+                                  CustomTextButton(
+                                    shape: StadiumBorder(),
+                                    padding: EdgeInsets.fromLTRB(10, 5, 5, 10),
+                                    color: Theme.of(context).accentColor,
+                                    textColor: FlavorConfig.values.buttonTextColor,
+                                    child: Text(
+                                      S.of(context).add_photo,
+                                      style: TextStyle(
+                                        fontSize: dialogButtonSize,
+                                        fontFamily: 'Europa',
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    onPressed: () {
+                                      Navigator.pop(viewContext);
+                                      FocusScope.of(context).requestFocus(new FocusNode());
+                                      imagePicker.showDialog(context);
+                                      isLoading = false;
+                                      return;
+                                    },
+                                  ),
+                                ],
                               ),
-                            ),
+                            )
                           ],
                         ),
                       );
@@ -715,7 +725,12 @@ class _RegisterPageState extends State<RegisterPage>
           dialogContext = createDialogContext;
           return AlertDialog(
             title: Text(S.of(context).creating_account),
-            content: LinearProgressIndicator(),
+            content: LinearProgressIndicator(
+              backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+              valueColor: AlwaysStoppedAnimation<Color>(
+                Theme.of(context).primaryColor,
+              ),
+            ),
           );
         });
   }
@@ -755,8 +770,7 @@ class _RegisterPageState extends State<RegisterPage>
             if (dialogContext != null) {
               Navigator.pop(dialogContext);
             }
-            showProfanityImageAlert(context: context, content: profanityStatusModel.category)
-                .then((status) {
+            showProfanityImageAlert(context: context, content: profanityStatusModel.category).then((status) {
               if (status == 'Proceed') {
                 deleteFireBaseImage(imageUrl: imageUrl).then((value) {
                   if (value) {
@@ -785,7 +799,7 @@ class _RegisterPageState extends State<RegisterPage>
 
     try {
       UserModel user = await auth.createUserWithEmailAndPassword(
-        email: email,
+        email: email.toLowerCase(),
         password: password,
         displayName: fullName,
       );
@@ -802,24 +816,20 @@ class _RegisterPageState extends State<RegisterPage>
         user.cvName = cvName;
         user.cvUrl = cvUrl;
       }
-      await FirestoreManager.addCreationSourceOfUser(
-          locationVal: location, userEmailId: user.email);
+      await FirestoreManager.addCreationSourceOfUser(locationVal: location, userEmailId: user.email);
 
       await FirestoreManager.updateUser(user: user);
 
       logger.i('----- START OF JOINED SEVAX GLOBAL LOG CODE -------');
 
-      await CollectionRef.timebank
-          .doc(FlavorConfig.values.timebankId)
-          .collection('entryExitLogs')
-          .add({
+      await CollectionRef.timebank.doc(FlavorConfig.values.timebankId).collection('entryExitLogs').add({
         'mode': ExitJoinType.JOIN.readable,
         'modeType': JoinMode.JOINED_SEVAX_GLOBAL.readable,
         'timestamp': DateTime.now().millisecondsSinceEpoch,
         'communityId': FlavorConfig.values.timebankId,
         'isGroup': false,
         'memberDetails': {
-          'email': email,
+          'email': email.toLowerCase(),
           'id': user.sevaUserID,
           'fullName': user.fullname,
           'photoUrl': user.photoURL,
@@ -950,8 +960,7 @@ class _RegisterPageState extends State<RegisterPage>
     Map<String, String> _paths;
     try {
       _paths = null;
-      FilePickerResult result =
-          await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ['pdf']);
+      FilePickerResult result = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ['pdf']);
       if (result != null) {
         _path = result.files.single.path;
       }
@@ -1309,7 +1318,7 @@ class _RegisterPageState extends State<RegisterPage>
   }
 
   Future<void> resetPassword(String email) async {
-    await FirebaseAuth.instance.sendPasswordResetEmail(email: email).then((onValue) {
+    await FirebaseAuth.instance.sendPasswordResetEmail(email: email.toLowerCase()).then((onValue) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(S.of(context).reset_password_message),
         action: SnackBarAction(

@@ -1,5 +1,5 @@
 class GetUserVerified<UserVerify> {
-  bool verify(
+  static bool verify(
           {String userId,
           String creatorId,
           List<String> admins,

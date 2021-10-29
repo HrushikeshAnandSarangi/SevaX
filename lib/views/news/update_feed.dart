@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:connectivity/connectivity.dart';
+import 'package:doseform/main.dart';
 import 'package:flutter/material.dart' as prefix0;
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
@@ -44,15 +45,18 @@ class UpdateNewsFeed extends StatelessWidget {
         child: Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
+            backgroundColor: Theme.of(context).primaryColor,
             title: Text(
               S.of(context).update_feed,
               style: TextStyle(fontSize: 18),
             ),
           ),
-          body: NewsCreateForm(
-            timebankId: timebankId,
-            newsModel: newsMmodel,
-            timebankModel: timebankModel,
+          body: SingleChildScrollView(
+            child: NewsCreateForm(
+              timebankId: timebankId,
+              newsModel: newsMmodel,
+              timebankModel: timebankModel,
+            ),
           ),
         ),
       ),
@@ -81,7 +85,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
   // us to validate the form
   //
   // Note: This is a GlobalKey<FormState>, not a GlobalKey<NewsCreateFormState>!
-  final formKey = GlobalKey<FormState>();
+  final formKey = GlobalKey<DoseFormState>();
   String imageUrl;
   String photoCredits;
 
@@ -124,11 +128,13 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     globals.newsImageURL = newsObject.newsImageUrl;
     globals.newsDocumentURL = newsObject.newsDocumentUrl;
     globals.newsDocumentName = newsObject.newsDocumentName;
-       selectedTimebanks.add(this.widget.timebankModel.id);
+    selectedTimebanks.add(this.widget.timebankModel.id);
     super.initState();
 
     selectedAddress = newsObject.placeAddress;
     location = newsObject.location;
+
+    subheadingController.text = newsObject.subheading;
 
     dataList.add(EntityModel(entityType: EntityType.general));
 //    ApiManager.getTimeBanksForUser(userEmail: globals.email)
@@ -163,255 +169,272 @@ class NewsCreateFormState extends State<NewsCreateForm> {
   Widget build(BuildContext context) {
     textStyle = Theme.of(context).textTheme.headline6;
     // Build a Form widget using the formKey we created above
-    return Form(
-        key: formKey,
-        child: Container(
-          // margin: EdgeInsets.all(10),
-          // padding: EdgeInsets.all(10.0),
-          child: SingleChildScrollView(
-              child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+    return DoseForm(
+        formKey: formKey,
+        child: prefix0.Column(
+          children: [
+            Container(
+              // margin: EdgeInsets.all(10),
+              // padding: EdgeInsets.all(10.0),
+              child: SingleChildScrollView(
+                  child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  Container(
-                    margin: EdgeInsets.only(left: 20, right: 20, top: 20),
-                    child: Column(
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.only(bottom: 0.0),
-                          child: TextFormField(
-                            // controller: subheadingController,
-                            initialValue: newsObject.subheading,
-                            textInputAction: TextInputAction.newline,
-                            autofocus: true,
-                            textAlign: TextAlign.start,
-                            decoration: InputDecoration(
-                              alignLabelWithHint: false,
-                              hintText: S.of(context).create_feed_desc_hint,
-                              labelText: S.of(context).create_feed_placeholder,
-                              border: OutlineInputBorder(
-                                borderRadius: const BorderRadius.all(
-                                  const Radius.circular(0.0),
-                                ),
-                                borderSide: BorderSide(
-                                  color: Colors.black,
-                                  width: 0.5,
-                                ),
-                              ),
-                            ),
-                            keyboardType: TextInputType.multiline,
-                            maxLines: 5,
-                            onChanged: (value) {
-                              ExitWithConfirmation.of(context).fieldValues[1] =
-                                  value;
-                              widget.newsModel.subheading = value;
-                            },
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return S
-                                    .of(context)
-                                    .validation_error_general_text;
-                              }
-                              newsObject.subheading = value;
-                              return null;
-                            },
-                          ),
-                        ),
-                        Text(""),
-                        // TextFormField(
-                        //   decoration: InputDecoration(
-                        //     hintText: 'Your news and any #hashtags',
-                        //     labelText: 'Photo Credits',
-                        //     border: OutlineInputBorder(
-                        //       borderRadius: const BorderRadius.all(
-                        //         const Radius.circular(10.0),
-                        //       ),
-                        //       borderSide: BorderSide(
-                        //         color: Colors.black,
-                        //         width: 0.5,
-                        //       ),
-                        //     ),
-                        //   ),
-                        //   keyboardType: TextInputType.multiline,
-                        //   //style: textStyle,
-                        //   maxLines: null,
-                        //   validator: (value) {
-                        //     if (value.isEmpty) {
-                        //       return 'Please enter some text';
-                        //     }
-                        //     newsObject.description = value;
-                        //   },
-                        // ),
-                      ],
-                    ),
-                  ),
-                  // Container(
-                  //   padding: EdgeInsets.fromLTRB(
-                  //       MediaQuery.of(context).size.width / 4,
-                  //       0,
-                  //       MediaQuery.of(context).size.width / 4,
-                  //       0),
-                  //   child: TextFormField(
-                  //     initialValue: newsObject.photoCredits,
-                  //     onChanged: (value) {
-                  //       newsObject.photoCredits = value;
-                  //     },
-                  //     decoration: InputDecoration(
-                  //       hintText: '+ Photo Credits',
-                  //     ),
-                  //     keyboardType: TextInputType.text,
-                  //     textAlign: TextAlign.center,
-                  //     //style: textStyle,
-                  //     validator: (value) {
-                  //       // if (value.isEmpty) {
-                  //       //   return 'Please enter some text';
-                  //       // }
-                  //       newsObject.photoCredits = value;
-                  //     },
-                  //   ),
-                  // ),
-                  // Text(""),
-                  Offstage(
-                    offstage: !isAccessAvailable(widget.timebankModel,
-                            SevaCore.of(context).loggedInUser.sevaUserID) ||
-                        !isPrimaryTimebank(
-                            parentTimebankId:
-                                widget.timebankModel.parentTimebankId),
-                    child: Center(
-                      child: TransactionsMatrixCheck(
-                        comingFrom: ComingFrom.Home,
-                        upgradeDetails:
-                            AppConfig.upgradePlanBannerModel.parent_timebanks,
-                        transaction_matrix_type: "parent_timebanks",
-                        child: CustomElevatedButton(
-                          textColor: Colors.green,
-                          elevation: 0,
-                          child: Container(
-                            constraints: BoxConstraints.loose(
-                              Size(
-                                MediaQuery.of(context).size.width - 200,
-                                50,
-                              ),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Expanded(
-                                  child: Text(
-                                    "${S.of(context).posting_to_text} ${((this.selectedTimebanks.length > 1) ? this.selectedTimebanks.length.toString() + ' Seva Communities' : this.widget.timebankModel.name)}",
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Container(
+                        margin: EdgeInsets.only(left: 20, right: 20, top: 20),
+                        child: Column(
+                          children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.only(bottom: 0.0),
+                              child: DoseTextField(
+                                isRequired: true,
+                                controller: subheadingController,
+                                // initialValue: newsObject.subheading,
+                                textInputAction: TextInputAction.newline,
+                                // autofocus: true,
+                                textAlign: TextAlign.start,
+                                decoration: InputDecoration(
+                                  alignLabelWithHint: false,
+                                  hintText: S.of(context).create_feed_desc_hint,
+                                  labelText:
+                                      S.of(context).create_feed_placeholder,
+                                  border: OutlineInputBorder(
+                                    borderRadius: const BorderRadius.all(
+                                      const Radius.circular(0.0),
+                                    ),
+                                    borderSide: BorderSide(
+                                      color: Colors.black,
+                                      width: 0.5,
+                                    ),
                                   ),
                                 ),
-                                Icon(Icons.arrow_drop_down)
-                              ],
+                                keyboardType: TextInputType.multiline,
+                                maxLines: 5,
+                                onChanged: (value) {
+                                  ExitWithConfirmation.of(context)
+                                      .fieldValues[1] = value;
+                                  widget.newsModel.subheading = value;
+                                },
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return S
+                                        .of(context)
+                                        .validation_error_general_text;
+                                  }
+                                  newsObject.subheading = value;
+                                  return null;
+                                },
+                              ),
+                            ),
+                            Text(""),
+                            // TextFormField(
+                            //   decoration: InputDecoration(
+                            //     hintText: 'Your news and any #hashtags',
+                            //     labelText: 'Photo Credits',
+                            //     border: OutlineInputBorder(
+                            //       borderRadius: const BorderRadius.all(
+                            //         const Radius.circular(10.0),
+                            //       ),
+                            //       borderSide: BorderSide(
+                            //         color: Colors.black,
+                            //         width: 0.5,
+                            //       ),
+                            //     ),
+                            //   ),
+                            //   keyboardType: TextInputType.multiline,
+                            //   //style: textStyle,
+                            //   maxLines: null,
+                            //   validator: (value) {
+                            //     if (value.isEmpty) {
+                            //       return 'Please enter some text';
+                            //     }
+                            //     newsObject.description = value;
+                            //   },
+                            // ),
+                          ],
+                        ),
+                      ),
+                      // Container(
+                      //   padding: EdgeInsets.fromLTRB(
+                      //       MediaQuery.of(context).size.width / 4,
+                      //       0,
+                      //       MediaQuery.of(context).size.width / 4,
+                      //       0),
+                      //   child: TextFormField(
+                      //     initialValue: newsObject.photoCredits,
+                      //     onChanged: (value) {
+                      //       newsObject.photoCredits = value;
+                      //     },
+                      //     decoration: InputDecoration(
+                      //       hintText: '+ Photo Credits',
+                      //     ),
+                      //     keyboardType: TextInputType.text,
+                      //     textAlign: TextAlign.center,
+                      //     //style: textStyle,
+                      //     validator: (value) {
+                      //       // if (value.isEmpty) {
+                      //       //   return 'Please enter some text';
+                      //       // }
+                      //       newsObject.photoCredits = value;
+                      //     },
+                      //   ),
+                      // ),
+                      // Text(""),
+                      Offstage(
+                        offstage: !isAccessAvailable(widget.timebankModel,
+                                SevaCore.of(context).loggedInUser.sevaUserID) ||
+                            !isPrimaryTimebank(
+                                parentTimebankId:
+                                    widget.timebankModel.parentTimebankId),
+                        child: Center(
+                          child: TransactionsMatrixCheck(
+                            comingFrom: ComingFrom.Home,
+                            upgradeDetails: AppConfig
+                                .upgradePlanBannerModel.parent_timebanks,
+                            transaction_matrix_type: "parent_timebanks",
+                            child: CustomElevatedButton(
+                              textColor: Colors.green,
+                              elevation: 0,
+                              child: Container(
+                                constraints: BoxConstraints.loose(
+                                  Size(
+                                    MediaQuery.of(context).size.width - 200,
+                                    50,
+                                  ),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Expanded(
+                                      child: Text(
+                                        "${S.of(context).posting_to_text} ${((this.selectedTimebanks.length > 1) ? this.selectedTimebanks.length.toString() + ' Seva Communities' : this.widget.timebankModel.name)}",
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                      ),
+                                    ),
+                                    Icon(Icons.arrow_drop_down)
+                                  ],
+                                ),
+                              ),
+                              // color: Colors.grey[200],
+                              onPressed: () async {
+                                FocusScope.of(context).unfocus();
+                                _silblingTimebankSelectionBottomsheet(
+                                  context,
+                                  this.widget.timebankModel,
+                                  selectedTimebanks,
+                                  (selectedTimebanks) => {
+                                    setState(
+                                      () => {
+                                        selectedTimebanks = selectedTimebanks
+                                      },
+                                    )
+                                  },
+                                );
+                              },
                             ),
                           ),
-                          // color: Colors.grey[200],
-                          onPressed: () async {
-                            FocusScope.of(context).unfocus();
-                            _silblingTimebankSelectionBottomsheet(
-                              context,
-                              this.widget.timebankModel,
-                              selectedTimebanks,
-                              (selectedTimebanks) => {
-                                setState(
-                                  () => {selectedTimebanks = selectedTimebanks},
-                                )
-                              },
-                            );
-                          },
                         ),
                       ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 0),
-                    child: Center(
-                      child: NewsImage(
-                        photoCredits: newsObject.photoCredits,
-                        geoFirePointLocation: location,
-                        selectedAddress: selectedAddress,
-                        onLocationDataModelUpdate:
-                            (LocationDataModel dataModel) async {
-                          location = dataModel.geoPoint;
-                          setState(() {
-                            this.selectedAddress = dataModel.location;
-                          });
-                          // await _getLocation();
-                        },
-                        onCreditsEntered: (photoCreditsFromNews) {
-                          photoCredits = photoCreditsFromNews;
-                        },
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-
-              Container(
-                margin: EdgeInsets.fromLTRB(20, 0, 20, 20),
-                alignment: Alignment(0, 1),
-                padding: const EdgeInsets.only(top: 10.0),
-                child: CustomElevatedButton(
-                  shape: StadiumBorder(),
-                  onPressed: () async {
-                    var connResult = await Connectivity().checkConnectivity();
-                    if (connResult == ConnectivityResult.none) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(S.of(context).check_internet),
-                          action: SnackBarAction(
-                            label: S.of(context).dismiss,
-                            onPressed: () => ScaffoldMessenger.of(context)
-                                .hideCurrentSnackBar(),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 0),
+                        child: Center(
+                          child: NewsImage(
+                            photoCredits: newsObject.photoCredits,
+                            geoFirePointLocation: location,
+                            selectedAddress: selectedAddress,
+                            onLocationDataModelUpdate:
+                                (LocationDataModel dataModel) async {
+                              location = dataModel.geoPoint;
+                              setState(() {
+                                this.selectedAddress = dataModel.location;
+                              });
+                              // await _getLocation();
+                            },
+                            onCreditsEntered: (photoCreditsFromNews) {
+                              photoCredits = photoCreditsFromNews;
+                            },
                           ),
                         ),
-                      );
-                      return;
-                    }
-                    if (formKey.currentState.validate()) {
-                      // If the form is valid, we want to show a Snackbar
-                      showDialog(
-                          barrierDismissible: false,
-                          context: context,
-                          builder: (createDialogContext) {
-                            dialogContext = createDialogContext;
-                            return AlertDialog(
-                              title: Text(S.of(context).updating_feed),
-                              content: LinearProgressIndicator(),
-                            );
-                          });
-                      scrapeURLFromSubheading(newsObject.subheading);
-                      scrapeHashTagsFromSubHeadings(newsObject.subheading);
+                      ),
+                    ],
+                  ),
 
-                      if (newsObject.urlsFromPost.length > 0) {
-                        await scrapeURLDetails(newsObject.urlsFromPost.first);
-                      } else {
-                        newsObject.title = '';
-                        newsObject.imageScraped = "NoData";
-                        newsObject.newsImageUrl = '';
-                        newsObject.description = '';
-                      }
+                  Container(
+                    margin: EdgeInsets.fromLTRB(20, 0, 20, 20),
+                    alignment: Alignment(0, 1),
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: CustomElevatedButton(
+                      shape: StadiumBorder(),
+                      onPressed: () async {
+                        var connResult =
+                            await Connectivity().checkConnectivity();
+                        if (connResult == ConnectivityResult.none) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(S.of(context).check_internet),
+                              action: SnackBarAction(
+                                label: S.of(context).dismiss,
+                                onPressed: () => ScaffoldMessenger.of(context)
+                                    .hideCurrentSnackBar(),
+                              ),
+                            ),
+                          );
+                          return;
+                        }
+                        if (formKey.currentState.validate()) {
+                          // If the form is valid, we want to show a Snackbar
+                          showDialog(
+                              barrierDismissible: false,
+                              context: context,
+                              builder: (createDialogContext) {
+                                dialogContext = createDialogContext;
+                                return AlertDialog(
+                                  title: Text(S.of(context).updating_feed),
+                                  content: LinearProgressIndicator(
+                                    backgroundColor: Theme.of(context)
+                                        .primaryColor
+                                        .withOpacity(0.5),
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                      Theme.of(context).primaryColor,
+                                    ),
+                                  ),
+                                );
+                              });
+                          scrapeURLFromSubheading(newsObject.subheading);
+                          scrapeHashTagsFromSubHeadings(newsObject.subheading);
 
-                      writeToDB();
-                    }
-                  },
-                  child: Text(
-                    S.of(context).update_feed,
-                    style: TextStyle(
-                      color: Colors.white,
+                          if (newsObject.urlsFromPost.length > 0) {
+                            await scrapeURLDetails(
+                                newsObject.urlsFromPost.first);
+                          } else {
+                            newsObject.title = '';
+                            newsObject.imageScraped = "NoData";
+                            newsObject.newsImageUrl = '';
+                            newsObject.description = '';
+                          }
+
+                          writeToDB();
+                        }
+                      },
+                      child: Text(
+                        S.of(context).update_feed,
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
-              // Text(sevaUserID),
-            ],
-          )),
+                  // Text(sevaUserID),
+                ],
+              )),
+            ),
+          ],
         ));
   }
 

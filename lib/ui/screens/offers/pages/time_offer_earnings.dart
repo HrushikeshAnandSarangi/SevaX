@@ -17,8 +17,7 @@ class TimeOfferEarnings extends StatelessWidget {
   final OfferModel offerModel;
   final TimebankModel timebankModel;
 
-  const TimeOfferEarnings({Key key, this.offerModel, this.timebankModel})
-      : super(key: key);
+  const TimeOfferEarnings({Key key, this.offerModel, this.timebankModel}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -41,10 +40,7 @@ class TimeOfferEarnings extends StatelessWidget {
                   children: [
                     SevaCoinStarWidget(
                       title: S.of(context).your_earnings,
-                      amount:
-                          (offerModel.individualOfferDataModel.minimumCredits *
-                                  snapshot.data.length)
-                              .toString(),
+                      amount: '0',
                     ),
                     Divider(),
                   ],
@@ -52,64 +48,60 @@ class TimeOfferEarnings extends StatelessWidget {
               );
             }
 
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    SevaCoinStarWidget(
-                      title: S.of(context).your_earnings,
-                      amount:
-                          (offerModel.individualOfferDataModel.minimumCredits ??
-                                      0 * snapshot.data.length)
-                                  .toString() ??
-                              '0',
-                    ),
-                  ],
-                ),
-                Divider(),
-                Expanded(
-                  child: ListView.separated(
-                    shrinkWrap: true,
-                    itemCount: snapshot.data.length,
-                    itemBuilder: (context, index) {
-                      return MemberCardWithSingleAction(
-                        name: snapshot.data[index].participantDetails.fullname,
-                        timestamp: DateFormat.MMMd().format(
-                          DateTime.fromMillisecondsSinceEpoch(
-                            snapshot.data[index].timestamp,
+            return StreamBuilder<num>(
+                stream: _bloc.totalEarnings,
+                builder: (context, earnings) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          SevaCoinStarWidget(
+                            title: S.of(context).your_earnings,
+                            amount: "${earnings.data}",
                           ),
-                        ),
-                        onImageTap: () {
-                          Navigator.of(context)
-                              .push(MaterialPageRoute(builder: (context) {
-                            return ProfileViewer(
-                              timebankId: timebankModel.id,
-                              entityName: timebankModel.name,
-                              isFromTimebank: isPrimaryTimebank(
-                                  parentTimebankId:
-                                      timebankModel.parentTimebankId),
-                              userEmail:
-                                  snapshot.data[index].participantDetails.email,
+                        ],
+                      ),
+                      Divider(),
+                      Expanded(
+                        child: ListView.separated(
+                          shrinkWrap: true,
+                          itemCount: snapshot.data.length,
+                          itemBuilder: (context, index) {
+                            return MemberCardWithSingleAction(
+                              name: snapshot.data[index].participantDetails.fullname,
+                              timestamp: DateFormat.MMMd().format(
+                                DateTime.fromMillisecondsSinceEpoch(
+                                  snapshot.data[index].timestamp,
+                                ),
+                              ),
+                              onImageTap: () {
+                                Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                                  return ProfileViewer(
+                                    timebankId: timebankModel.id,
+                                    entityName: timebankModel.name,
+                                    isFromTimebank: isPrimaryTimebank(
+                                        parentTimebankId: timebankModel.parentTimebankId),
+                                    userEmail: snapshot.data[index].participantDetails.email,
+                                  );
+                                }));
+                              },
+                              onMessagePressed: () {},
+                              action: () {},
+                              status: snapshot.data[index].status.readable,
+                              photoUrl: snapshot.data[index].participantDetails.photourl,
+                              buttonColor: Colors.green,
                             );
-                          }));
-                        },
-                        onMessagePressed: () {},
-                        action: () {},
-                        status: snapshot.data[index].status.readable,
-                        photoUrl:
-                            snapshot.data[index].participantDetails.photourl,
-                        buttonColor: Colors.green,
-                      );
-                    },
-                    separatorBuilder: (context, index) {
-                      return Divider();
-                    },
-                  ),
-                )
-              ],
-            );
+                          },
+                          separatorBuilder: (context, index) {
+                            return Divider();
+                          },
+                        ),
+                      )
+                    ],
+                  );
+                });
           },
         ),
       ),

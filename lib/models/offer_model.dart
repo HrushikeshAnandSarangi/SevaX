@@ -68,8 +68,7 @@ class GroupOfferDataModel {
 
     if (this.endDate != null) map['endDate'] = this.endDate;
 
-    if (this.numberOfPreperationHours != null)
-      map['numberOfPreperationHours'] = this.numberOfPreperationHours;
+    if (this.numberOfPreperationHours != null) map['numberOfPreperationHours'] = this.numberOfPreperationHours;
 
     if (this.numberOfClassHours != null) map['numberOfClassHours'] = this.numberOfClassHours;
 
@@ -435,8 +434,7 @@ class OfferModel extends DataModel {
     location = getLocation(map);
 
     if (map.containsKey("individualOfferDataModel"))
-      this.individualOfferDataModel =
-          IndividualOfferDataModel.fromMap(map['individualOfferDataModel']);
+      this.individualOfferDataModel = IndividualOfferDataModel.fromMap(map['individualOfferDataModel']);
     else
       this.individualOfferDataModel = null;
 
@@ -473,8 +471,7 @@ class OfferModel extends DataModel {
       this.photoUrlImage = map['photoUrlImage'];
     }
     if (map.containsKey('lendingOfferDetailsModel')) {
-      this.lendingOfferDetailsModel =
-          LendingOfferDetailsModel.fromMap(map['lendingOfferDetailsModel']);
+      this.lendingOfferDetailsModel = LendingOfferDetailsModel.fromMap(map['lendingOfferDetailsModel']);
     } else {
       this.lendingOfferDetailsModel = new LendingOfferDetailsModel();
     }
@@ -609,8 +606,7 @@ class OfferModel extends DataModel {
     location = getLocation(map);
 
     if (map.containsKey("individualOfferDataModel"))
-      this.individualOfferDataModel =
-          IndividualOfferDataModel.fromMap(map['individualOfferDataModel']);
+      this.individualOfferDataModel = IndividualOfferDataModel.fromMap(map['individualOfferDataModel']);
     else
       this.individualOfferDataModel = null;
 
@@ -645,8 +641,7 @@ class OfferModel extends DataModel {
       this.photoUrlImage = map['photoUrlImage'];
     }
     if (map.containsKey('lendingOfferDetailsModel')) {
-      this.lendingOfferDetailsModel =
-          LendingOfferDetailsModel.fromMap(map['lendingOfferDetailsModel']);
+      this.lendingOfferDetailsModel = LendingOfferDetailsModel.fromMap(map['lendingOfferDetailsModel']);
     } else {
       this.lendingOfferDetailsModel = new LendingOfferDetailsModel();
     }
@@ -770,14 +765,14 @@ class OfferModel extends DataModel {
         case RequestType.LENDING_OFFER:
           map['requestType'] = "LENDING_OFFER";
           break;
+        case RequestType.ONE_TO_MANY_OFFER:
+          map['requestType'] = "ONE_TO_MANY_OFFER";
+          break;
         case RequestType.BORROW:
           // TODO: Handle this case.
           break;
         case RequestType.ONE_TO_MANY_REQUEST:
-          // TODO: Handle this case.
-          break;
-        case RequestType.ONE_TO_MANY_OFFER:
-          // TODO: Handle this case.
+          map['requestType'] = "ONE_TO_MANY_OFFER";
           break;
       }
     } else {

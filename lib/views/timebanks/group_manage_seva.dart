@@ -12,6 +12,8 @@ import 'package:sevaexchange/views/community/communitycreate.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebanks/edit_group.dart';
 import 'package:sevaexchange/views/timebanks/timebank_manage_seva.dart';
+import 'package:sevaexchange/views/timebanks/widgets/transfer_group_ownership.dart';
+import 'package:sevaexchange/widgets/hide_widget.dart';
 
 import '../../flavor_config.dart';
 
@@ -35,14 +37,10 @@ class _ManageGroupView extends State<ManageGroupView> {
   void initState() {
     super.initState();
     Future.delayed(Duration.zero, () {
-      FirestoreManager.getCommunityDetailsByCommunityId(
-              communityId: widget.timebankModel.communityId)
-          .then((onValue) {
+      FirestoreManager.getCommunityDetailsByCommunityId(communityId: widget.timebankModel.communityId).then((onValue) {
         communityModel = onValue;
-        if (SevaCore.of(context).loggedInUser.sevaUserID ==
-                communityModel.created_by ||
-            communityModel.organizers
-                .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+        if (SevaCore.of(context).loggedInUser.sevaUserID == communityModel.created_by ||
+            communityModel.organizers.contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
           isSuperAdmin = true;
           setState(() {});
         }
@@ -83,8 +81,7 @@ class _ManageGroupView extends State<ManageGroupView> {
                   NotificationManagerForAmins(
                     widget.timebankModel.id,
                     SevaCore.of(context).loggedInUser.sevaUserID,
-                    widget.timebankModel.parentTimebankId ==
-                        FlavorConfig.values.timebankId,
+                    widget.timebankModel.parentTimebankId == FlavorConfig.values.timebankId,
                   )
                 ],
               ),
@@ -119,8 +116,7 @@ class _ManageGroupView extends State<ManageGroupView> {
                   NotificationManagerForAmins(
                     widget.timebankModel.id,
                     SevaCore.of(context).loggedInUser.sevaUserID,
-                    widget.timebankModel.parentTimebankId ==
-                        FlavorConfig.values.timebankId,
+                    widget.timebankModel.parentTimebankId == FlavorConfig.values.timebankId,
                   )
                 ],
               ),
@@ -236,8 +232,7 @@ class _ManageGroupView extends State<ManageGroupView> {
           softDeleteType: SoftDelete.REQUEST_DELETE_GROUP,
           associatedContentTitle: widget.timebankModel.name,
           email: SevaCore.of(context).loggedInUser.email,
-          isAccedentalDeleteEnabled:
-              widget.timebankModel.preventAccedentalDelete,
+          isAccedentalDeleteEnabled: widget.timebankModel.preventAccedentalDelete,
         );
       },
       child: Text(
@@ -300,6 +295,15 @@ class _ManageGroupView extends State<ManageGroupView> {
           SizedBox(
             height: 30,
           ),
+          Offstage(
+              offstage: SevaCore.of(context).loggedInUser.sevaUserID != widget.timebankModel.creatorId,
+              child: transferOwnersShip(context: context)),
+          Offstage(
+            offstage: SevaCore.of(context).loggedInUser.sevaUserID != widget.timebankModel.creatorId,
+            child: SizedBox(
+              height: 30,
+            ),
+          ),
           deleteGroup,
         ],
       ),
@@ -317,6 +321,27 @@ class _ManageGroupView extends State<ManageGroupView> {
       },
       child: Text(
         S.of(context).manage_permissions,
+        style: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.bold,
+          color: Colors.blue,
+        ),
+      ),
+    );
+  }
+
+  Widget transferOwnersShip({BuildContext context}) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => TransferGroupOwnerShip(
+            timebankModel: widget.timebankModel,
+            timebankId: widget.timebankModel.id,
+          ),
+        ));
+      },
+      child: Text(
+        S.of(context).change_ownership,
         style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.bold,

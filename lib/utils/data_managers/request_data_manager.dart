@@ -1159,47 +1159,49 @@ Future<void> approveRequestCompletion({
     );
 
     TransactionBloc().createNewTransaction(
-      FlavorConfig.values.timebankId,
-      model.timebankId,
-      DateTime.now().millisecondsSinceEpoch,
-      transactionvalue ?? 0,
-      true,
-      "REQUEST_CREATION_TIMEBANK_FILL_CREDITS",
-      FlavorConfig.values.timebankId,
-      model.timebankId,
-      communityId: communityId,
-      fromEmailORId: model.timebankId,
-      toEmailORId: model.timebankId,
-    );
+        FlavorConfig.values.timebankId,
+        model.timebankId,
+        DateTime.now().millisecondsSinceEpoch,
+        transactionvalue ?? 0,
+        true,
+        "REQUEST_CREATION_TIMEBANK_FILL_CREDITS",
+        FlavorConfig.values.timebankId,
+        model.timebankId,
+        communityId: communityId,
+        fromEmailORId: model.timebankId,
+        toEmailORId: model.timebankId,
+        );
 
     TransactionBloc().createNewTransaction(
-      model.timebankId,
-      userId,
-      DateTime.now().millisecondsSinceEpoch,
-      transactionvalue,
-      true,
-      "TIME_REQUEST",
-      model.id,
-      model.timebankId,
-      communityId: communityId,
-      fromEmailORId: model.timebankId,
-      toEmailORId: model.timebankId,
-    );
+        model.timebankId,
+        userId,
+        DateTime.now().millisecondsSinceEpoch,
+        transactionvalue,
+        true,
+        "TIME_REQUEST",
+        model.id,
+        model.timebankId,
+        communityId: communityId,
+        fromEmailORId: model.timebankId,
+        toEmailORId: model.timebankId,
+        offerId: model.offerId ?? ''
+        );
     // adds review to firestore
   } else if (model.requestMode == RequestMode.PERSONAL_REQUEST) {
     TransactionBloc().createNewTransaction(
-      model.sevaUserId,
-      userId,
-      DateTime.now().millisecondsSinceEpoch,
-      transactionvalue,
-      true,
-      "TIME_REQUEST",
-      model.id,
-      model.timebankId,
-      communityId: communityId,
-      fromEmailORId: model.timebankId,
-      toEmailORId: model.timebankId,
-    );
+        model.sevaUserId,
+        userId,
+        DateTime.now().millisecondsSinceEpoch,
+        transactionvalue,
+        true,
+        "TIME_REQUEST",
+        model.id,
+        model.timebankId,
+        communityId: communityId,
+        fromEmailORId: model.timebankId,
+        toEmailORId: model.timebankId,
+        offerId: model.offerId ?? ''
+        );
   }
 
   NotificationsModel notification = NotificationsModel(
@@ -1705,6 +1707,8 @@ Stream<List<TransactionModel>> getTimebankCreditsDebitsStream({
         List<TransactionModel> requestList = [];
         snapshot.docs.forEach((document) {
           TransactionModel model = TransactionModel.fromMap(document.data());
+          log('tyoe id ${model.typeid}');
+
           requestList.add(model);
         });
         requestSink.add(requestList);
@@ -1740,6 +1744,7 @@ Stream<List<TransactionModel>> getUsersCreditsDebitsStream({
         List<TransactionModel> requestList = [];
         snapshot.docs.forEach((document) {
           TransactionModel model = TransactionModel.fromMap(document.data());
+          log('tyoe id ${model.typeid}');
           requestList.add(model);
         });
         requestSink.add(requestList);
@@ -1836,7 +1841,12 @@ Future oneToManyCreatorRequestCompletionRejectedTimebankNotifications(
         dialogContext = createDialogContext;
         return AlertDialog(
           title: Text(S.of(context).loading),
-          content: LinearProgressIndicator(),
+          content: LinearProgressIndicator(
+            backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+            valueColor: AlwaysStoppedAnimation<Color>(
+              Theme.of(context).primaryColor,
+            ),
+          ),
         );
       });
 
@@ -2080,10 +2090,10 @@ Future lenderReceivedBackCheck(
       requestModel: requestModelUpdated,
       context: context);
 
-  if (notification != null) {
+  if (notification != null && notification.id.isNotEmpty) {
     NotificationsRepository.readUserNotification(
         notification.id, SevaCore.of(context).loggedInUser.email);
-  } else if (notificationId != null) {
+  } else if (notificationId != null && notificationId.isNotEmpty) {
     NotificationsRepository.readUserNotification(
         notificationId, SevaCore.of(context).loggedInUser.email);
   }
@@ -2184,7 +2194,12 @@ void showProgressForCreditRetrieval(BuildContext context) {
         creditRequestDialogContextNew = context;
         return AlertDialog(
           title: Text(S.of(context).please_wait),
-          content: LinearProgressIndicator(),
+          content: LinearProgressIndicator(
+            backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+            valueColor: AlwaysStoppedAnimation<Color>(
+              Theme.of(context).primaryColor,
+            ),
+          ),
         );
       });
 }
@@ -2457,7 +2472,12 @@ linearProgressForCreatingRequest(context, title) {
         dialogContext = createDialogContext;
         return AlertDialog(
           title: Text(title),
-          content: LinearProgressIndicator(),
+          content: LinearProgressIndicator(
+            backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+            valueColor: AlwaysStoppedAnimation<Color>(
+              Theme.of(context).primaryColor,
+            ),
+          ),
         );
       });
 }

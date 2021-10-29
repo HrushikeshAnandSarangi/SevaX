@@ -5,12 +5,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:frankfurter/frankfurter.dart';
 import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/manual_time_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/widgets/request_enums.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
@@ -67,15 +69,13 @@ bool isOwnerCreator(TimebankModel timebank, String userId) =>
     timebank.creatorId == userId || timebank.organizers.contains(userId);
 
 bool isMemberBlocked(UserModel user, String idToCheck) {
-  return user.blockedBy.contains(idToCheck) ||
-      user.blockedMembers.contains(idToCheck);
+  return user.blockedBy.contains(idToCheck) || user.blockedMembers.contains(idToCheck);
 }
 
 UserRole getLoggedInUserRole(TimebankModel model, String userId) {
   if (model.creatorId == userId) {
     if (model.parentTimebankId == FlavorConfig.values.timebankId ||
-        model.managedCreatorIds != null &&
-            model.managedCreatorIds.contains(userId)) {
+        model.managedCreatorIds != null && model.managedCreatorIds.contains(userId)) {
       return UserRole.TimebankCreator;
     } else {
       return UserRole.Creator;
@@ -131,9 +131,9 @@ Future<File> createFileOfPdfUrl(String documentUrl, String documentName) async {
   var response = await request.close();
   var bytes = await consolidateHttpClientResponseBytes(response);
   String dir = (await getApplicationDocumentsDirectory()).path;
-  File file = new File('$dir/$filename');
-  await file.writeAsBytes(bytes);
-  return file;
+  File file = new File('$dir/$filename.pdf');
+  return file.writeAsBytes(bytes).then((value) => value);
+  // return file;
 }
 
 String getReviewMessage(
@@ -200,7 +200,7 @@ Future<File> urlToFile(String imageUrl) async {
 
 class HexColor extends Color {
   static int _getColorFromHex(String hexColor) {
-    hexColor = hexColor.toUpperCase().replaceAll("#", "");
+    hexColor = hexColor?.toUpperCase()?.replaceAll("#", "");
     if (hexColor.length == 6) {
       hexColor = "FF" + hexColor;
     }
@@ -217,8 +217,7 @@ class CommonUtils {
     TotalCreditseMode requestCreditsMode,
   }) {
     var label;
-    var totalCredits =
-        requestModel.numberOfApprovals * (requestModel.maxCredits ?? 1);
+    var totalCredits = requestModel.numberOfApprovals * (requestModel.maxCredits ?? 1);
     requestModel.numberOfHours = totalCredits;
 
     if ((requestModel.maxCredits ?? 0) > 0 && totalCredits > 0) {
@@ -264,35 +263,43 @@ Future<bool> deleteFireBaseImage({String imageUrl}) async {
   });
 }
 
-String getStartDateFormat(DateTime date,{BuildContext context}) {
+String getStartDateFormat(DateTime date, {BuildContext context}) {
   var suffix = "th";
   var digit = date.day % 10;
   if ((digit > 0 && digit < 4) && (date.day < 11 || date.day > 13)) {
     suffix = ["st", "nd", "rd"][digit - 1];
   }
-  if(context == null)
-  return new DateFormat("EEEE MMM d'$suffix',  h:mm a").format(date);
+  if (context == null)
+    return new DateFormat("EEEE MMM d'$suffix',  h:mm a").format(date);
   else
-  return new DateFormat("EEEE MMM d'$suffix',  h:mm a").format(context.getDateTime(date.millisecondsSinceEpoch));
+    return new DateFormat("EEEE MMM d'$suffix',  h:mm a")
+        .format(context.getDateTime(date.millisecondsSinceEpoch));
 }
 
-Future<double> currencyConversion(
-    {String fromCurrency, String toCurrency, double amount}) async {
+Future<double> currencyConversion({String fromCurrency, String toCurrency, double amount}) async {
   final frankfurter = Frankfurter();
 
   // final latest = await frankfurter.latest(from: Currency('INR'));
-
-  if (fromCurrency == toCurrency) {
-    return amount.toDouble();
+  // logger.i("from: $fromCurrency || to: $toCurrency  || amount: $amount");
+  if (fromCurrency == null || fromCurrency == "") {
+    fromCurrency = "USD";
   }
-  final rate = await frankfurter.getRate(
+  if (toCurrency == null || toCurrency == "") {
+    toCurrency = "USD";
+  }
+  if (amount == null || amount == 0.0) {
+    amount = 0.0;
+  }
+  if (fromCurrency == toCurrency) {
+    return amount;
+  }
+  var rate = await frankfurter.getRate(
     from: Currency(fromCurrency),
     to: Currency(toCurrency),
   );
   double convertedCurrency = rate.rate * amount;
-  double convertedCurrencyTwoDecimalPoint =
-      ((convertedCurrency * pow(10, 2)).round()) / pow(10, 2);
-  return convertedCurrencyTwoDecimalPoint;
+  double convertedCurrencyTwoDecimalPoint = ((convertedCurrency * pow(10, 2)).round()) / pow(10, 2);
+  return convertedCurrencyTwoDecimalPoint ?? 0.0;
 }
 
 String createCryptoRandomString([int length = 10]) {

@@ -35,6 +35,7 @@ import 'package:sevaexchange/views/timebank_modules/request_details_about_page.d
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_back.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
+import 'package:sevaexchange/widgets/hide_widget.dart';
 
 class ExploreCommunityDetails extends StatefulWidget {
   final String communityId;
@@ -78,7 +79,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
-              child: CircularProgressIndicator(),
+              child: LoadingIndicator(),
             );
           }
 
@@ -112,7 +113,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(
-                    child: CircularProgressIndicator(),
+                    child: LoadingIndicator(),
                   );
                 }
 
@@ -235,7 +236,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                                           ),
                                         ),
                                       );
-                                    } else {
+                                    } else if (!widget.isSignedUser) {
                                       showSignInAlertMessage(
                                         context: context,
                                         message: S.of(context).sign_in_alert,
@@ -282,17 +283,22 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                           ),
                         ],
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: SponsorsWidget(
-                          sponsorsMode: SponsorsMode.ABOUT,
-                          sponsors: timebankModel.sponsors,
-                          isAdminVerified: GetUserVerified<bool>().verify(
-                            userId:
-                                SevaCore.of(context).loggedInUser.sevaUserID,
-                            creatorId: timebankModel.creatorId,
-                            admins: timebankModel.admins,
-                            organizers: timebankModel.organizers,
+                      HideWidget(
+                        hide: !widget.isSignedUser,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: SponsorsWidget(
+                            textColor: Theme.of(context).primaryColor,
+                            sponsorsMode: SponsorsMode.ABOUT,
+                            sponsors: timebankModel.sponsors,
+                            isAdminVerified: GetUserVerified.verify(
+                              userId: widget.isSignedUser
+                                  ? SevaCore.of(context).loggedInUser.sevaUserID
+                                  : '',
+                              creatorId: timebankModel.creatorId,
+                              admins: timebankModel.admins,
+                              organizers: timebankModel.organizers,
+                            ),
                           ),
                         ),
                       ),
@@ -309,7 +315,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
                             return Center(
-                              child: CircularProgressIndicator(),
+                              child: LoadingIndicator(),
                             );
                           }
 
@@ -429,7 +435,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
                             return Center(
-                              child: CircularProgressIndicator(),
+                              child: LoadingIndicator(),
                             );
                           }
 

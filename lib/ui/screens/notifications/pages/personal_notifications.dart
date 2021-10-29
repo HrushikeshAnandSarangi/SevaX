@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 // import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -9,6 +10,7 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/basic_user_details.dart';
+import 'package:sevaexchange/models/change_ownership_model.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/enums/lending_borrow_enums.dart';
 import 'package:sevaexchange/models/donation_model.dart';
@@ -45,6 +47,7 @@ import 'package:sevaexchange/utils/helpers/mailer.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
+import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 import 'package:sevaexchange/views/requests/approveBorrowRequest.dart';
@@ -65,6 +68,7 @@ class PersonalNotifications extends StatefulWidget {
   _PersonalNotificationsState createState() => _PersonalNotificationsState();
 }
 
+UserModel loggedInUser;
 BuildContext dialogContext;
 
 class _PersonalNotificationsState extends State<PersonalNotifications>
@@ -93,6 +97,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
 
   @override
   Widget build(BuildContext context) {
+    loggedInUser = SevaCore.of(context).loggedInUser;
     super.build(context);
     parentContext = context;
     final _bloc = BlocProvider.of<NotificationsBloc>(context);
@@ -422,19 +427,6 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       return Container();
                       break;
 
-                    // case NotificationType.TypeChangeOwnership:
-                    //   ChangeOwnershipModel ownershipModel =
-                    //       ChangeOwnershipModel.fromMap(notification.data);
-                    //   return ChangeOwnershipWidget(
-                    //     timestamp: notification.timestamp,
-                    //     notificationId: notification.id,
-                    //     communityId: notification.communityId,
-                    //     changeOwnershipModel: ownershipModel,
-                    //     timebankId: notification.timebankId,
-                    //     notificationsModel: notification,
-                    //   );
-                    //   break;
-
                     case NotificationType.OneToManyRequestAccept:
                       // Map oneToManyRequestModel = notification.data;
                       RequestModel model =
@@ -663,12 +655,12 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                             user.email,
                           );
                         },
-                        onPressed: null,
+                        onPressed: () {},
                         photoUrl:
                             creatorDetails.photoUrl ?? defaultUserImageURL,
                         title: S.of(context).message_room_join,
                         subTitle:
-                            '${creatorDetails.name.toLowerCase()} ${S.of(context).notifications_added_you} ${data['messageRoomName']} ${S.of(context).messaging_room}.',
+                            '${creatorDetails.name.toLowerCase()} ${S.of(context).notifications_added_you} ${data['messageRoomName']} ${S.of(context).messaging_room}.\n\n${S.of(context).note_for_transfer_ownership_notification}',
                       );
                       break;
                     case NotificationType.MEMBER_REMOVED_FROM_MESSAGE_ROOM:
@@ -691,7 +683,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         photoUrl: creatorDetails.photoUrl,
                         title: S.of(context).message_room_remove,
                         subTitle:
-                            '${creatorDetails.name.toLowerCase()} removed you from ${data['messageRoomName']}.',
+                            '${creatorDetails.name.toLowerCase()} ${S.of(context).removed_you_from_text} ${data['messageRoomName']}.',
                       );
                       break;
                     case NotificationType.MEMBER_DEMOTED_FROM_ADMIN:
@@ -1045,6 +1037,29 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                 .credits_have_been_credited_to_your_account,
                         onDismissed: onDismissed,
                       );
+
+//! NEW NOTIFICATION BELOW ---------------------------------------------------------->
+//Feature name: Create Notification for member receiving donation //1.9 Release Feature
+                    case NotificationType.MEMBER_RECEIVED_CREDITS_DONATION:
+                      return NotificationCard(
+                        timestamp: notification.timestamp,
+                        entityName: "CR",
+                        photoUrl: notification.data['donorPhotoUrl'] ?? null,
+                        title: S.of(context).seva_credits_donated_text,
+                        subTitle: S.of(context).you_have_recieved +
+                            notification.data['credits'].toStringAsFixed(1) +
+                            " " +
+                            S.of(context).seva_credits_from_text +
+                            " " +
+                            (notification.data['donorName'] != null
+                                ? (notification.data[
+                                    'communityName']) //or can use notification.data['donorName']
+                                : '') +
+                            " " +
+                            S.of(context).as_a_donation_text,
+                        onDismissed: onDismissed,
+                      );
+//! NEW NOTIFICATION ABOVE ---------------------------------------------------------->
 
                     case NotificationType.SEVA_COINS_DEBITED:
                       return NotificationCard(
@@ -1668,7 +1683,85 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                             .idle_borrow_request_third_warning_deleted,
                       );
                       break;
-
+                    case NotificationType.TypeChangeGroupOwnership:
+                      ChangeOwnershipModel ownershipModel =
+                          ChangeOwnershipModel.fromMap(notification.data);
+                      return NotificationCard(
+                        timestamp: notification.timestamp,
+                        entityName: ownershipModel.creatorName,
+                        isDissmissible: true,
+                        onDismissed: () {
+                          FirestoreManager.readUserNotification(
+                            notification.id,
+                            SevaCore.of(context).loggedInUser.email,
+                          );
+                        },
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (mContext) => AlertDialog(
+                              title: Text('${S.of(context).directions_text}:'),
+                              content: InkWell(
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => SevaWebView(
+                                        AboutMode(
+                                          title: "Demo Videos",
+                                          urlToHit:
+                                              "https://training.sevaxapp.com/",
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                  Navigator.of(mContext).pop();
+                                },
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      "${S.of(context).link_for_demo_video_text}",
+                                    ),
+                                    Text(
+                                      'https://training.sevaxapp.com/',
+                                      style: TextStyle(color: Colors.blue),
+                                    ),
+                                    Text(
+                                      "${S.of(context).direction_for_manage_transfer_ownership}\n${S.of(context).be_sure_message_text}",
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                        photoUrl: ownershipModel.creatorPhotoUrl,
+                        title: S.of(context).transfer_ownership_text,
+                        subTitle: ownershipModel.message,
+                      );
+                      break;
+                    case NotificationType
+                        .TYPE_CHANGE_GROUP_OWNERSHIP_UPDATE_TO_COMMUNITY_OWNER:
+                      Map<String, dynamic> data = notification.data;
+                      return NotificationCard(
+                        timestamp: notification.timestamp,
+                        entityName: data['group_name'],
+                        isDissmissible: true,
+                        onDismissed: () {
+                          FirestoreManager.readUserNotification(
+                            notification.id,
+                            SevaCore.of(context).loggedInUser.email,
+                          );
+                        },
+                        onPressed: () {},
+                        photoUrl:
+                            data['group_photourl'] ?? defaultGroupImageURL,
+                        title: S.of(context).transfer_of_group_ownership_update,
+                        subTitle:
+                            '${data['old_owner_name']} ${S.of(context).changed_ownership_of_text} ${data['group_name']} ${S.of(context).to_text} ${data['new_owner_name']}',
+                      );
+                      break;
                     default:
                       log("Unhandled user notification type ${notification.type} ${notification.id}");
                       // FirebaseCrashlytics.instance.log(
@@ -1727,7 +1820,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
           "reviewer": SevaCore.of(context).loggedInUser.email,
           "reviewed": data.classDetails.classTitle,
           "ratings": results['selection'],
-          "requestId": "testId",
+          "requestId": '',
           "comments":
               results['didComment'] ? results['comment'] : "No comments",
           'liveMode': !AppConfig.isTestCommunity,
@@ -1763,7 +1856,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
           "reviewer": SevaCore.of(context).loggedInUser.email,
           "reviewed": requestModel.title,
           "ratings": results['selection'],
-          "requestId": "testId",
+          "requestId": requestModel.id,
           "comments":
               results['didComment'] ? results['comment'] : "No comments",
           'liveMode': !AppConfig.isTestCommunity,
@@ -1809,25 +1902,62 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
               ? requestModel.email
               : requestModel.approvedUsers.first,
           "ratings": results['selection'],
-          "requestId": "testId",
-          "comments":
-              results['didComment'] ? results['comment'] : "No comments",
+          "requestId": requestModel.id,
+          "comments": results['didComment'] ? results['comment'] : "No comments",
           'liveMode': !AppConfig.isTestCommunity,
         },
       );
 
       await handleVolunterFeedbackForTrustWorthynessNRealiablityScore(
-          feedbackType,
-          results,
-          requestModel,
-          SevaCore.of(context).loggedInUser);
-/*
-      await sendMessageOfferCreator(
-          loggedInUser: SevaCore.of(context).loggedInUser,
-          message: results['didComment'] ? results['comment'] : "No comments",
-          creatorId: requestModel.sevaUserId,
-          offerTitle: requestModel.title,
-          isFromOfferRequest: requestModel.isFromOfferRequest);*/
+          feedbackType, results, requestModel, loggedInUser);
+
+      TimebankModel timebankModel = await getTimeBankForId(timebankId: requestModelNew.timebankId);
+      UserModel userModel =
+          await FirestoreManager.getUserForId(sevaUserId: requestModelNew.sevaUserId);
+      if (userModel != null && timebankModel != null) {
+        ParticipantInfo sender = ParticipantInfo(
+          id: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+              ? loggedInUser.sevaUserID
+              : requestModel.timebankId,
+          photoUrl: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+              ? loggedInUser.photoURL
+              : timebankModel.photoUrl,
+          name: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+              ? loggedInUser.fullname
+              : timebankModel.name,
+          type: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+              ? ChatType.TYPE_PERSONAL
+              : timebankModel.parentTimebankId == FlavorConfig.values.timebankId
+                  ? ChatType.TYPE_TIMEBANK
+                  : ChatType.TYPE_GROUP,
+        );
+
+        ParticipantInfo reciever = ParticipantInfo(
+          id: userModel.sevaUserID,
+          photoUrl: userModel.photoURL,
+          name: userModel.fullname,
+          type: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+              ? ChatType.TYPE_PERSONAL
+              : timebankModel.parentTimebankId == FlavorConfig.values.timebankId
+                  ? ChatType.TYPE_TIMEBANK
+                  : ChatType.TYPE_GROUP,
+        );
+        await sendBackgroundMessage(
+            messageContent: getReviewMessage(
+              isForCreator: false,
+              requestTitle: requestModel.title,
+              context: context,
+              userName: loggedInUser.fullname,
+              reviewMessage: results['didComment'] ? results['comment'] : "No comments",
+            ),
+            reciever: reciever,
+            isTimebankMessage:
+                requestModel.requestMode == RequestMode.PERSONAL_REQUEST ? false : true,
+            timebankId: requestModel.timebankId,
+            communityId: loggedInUser.currentCommunity,
+            sender: sender);
+      }
+
       NotificationsRepository.readUserNotification(notificationId, email);
     }
   }
@@ -2019,7 +2149,12 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
           creditRequestDialogContext = context;
           return AlertDialog(
             title: Text(S.of(context).please_wait),
-            content: LinearProgressIndicator(),
+            content: LinearProgressIndicator(
+              backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+              valueColor: AlwaysStoppedAnimation<Color>(
+                Theme.of(context).primaryColor,
+              ),
+            ),
           );
         });
   }
@@ -2104,7 +2239,12 @@ Future oneToManySpeakerInviteAcceptedPersonalNotifications(
         dialogContext = createDialogContext;
         return AlertDialog(
           title: Text(S.of(context).loading),
-          content: LinearProgressIndicator(),
+          content: LinearProgressIndicator(
+            backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+            valueColor: AlwaysStoppedAnimation<Color>(
+              Theme.of(context).primaryColor,
+            ),
+          ),
         );
       });
 
@@ -2153,7 +2293,12 @@ Future oneToManySpeakerInviteRejectedPersonalNotifications(
         dialogContext = createDialogContext;
         return AlertDialog(
           title: Text(S.of(context).loading),
-          content: LinearProgressIndicator(),
+          content: LinearProgressIndicator(
+            backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+            valueColor: AlwaysStoppedAnimation<Color>(
+              Theme.of(context).primaryColor,
+            ),
+          ),
         );
       });
 
@@ -2206,7 +2351,12 @@ Future oneToManySpeakerInviteAccepted(
         dialogContext = createDialogContext;
         return AlertDialog(
           title: Text(S.of(context).loading),
-          content: LinearProgressIndicator(),
+          content: LinearProgressIndicator(
+            backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+            valueColor: AlwaysStoppedAnimation<Color>(
+              Theme.of(context).primaryColor,
+            ),
+          ),
         );
       });
 
@@ -2265,7 +2415,12 @@ Future oneToManySpeakerInviteRejected(
         dialogContext = createDialogContext;
         return AlertDialog(
           title: Text(S.of(context).loading),
-          content: LinearProgressIndicator(),
+          content: LinearProgressIndicator(
+            backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+            valueColor: AlwaysStoppedAnimation<Color>(
+              Theme.of(context).primaryColor,
+            ),
+          ),
         );
       });
 
@@ -2341,7 +2496,12 @@ Future oneToManySpeakerRequestCompleted(
         dialogContext = createDialogContext;
         return AlertDialog(
           title: Text(S.of(context).loading),
-          content: LinearProgressIndicator(),
+          content: LinearProgressIndicator(
+            backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+            valueColor: AlwaysStoppedAnimation<Color>(
+              Theme.of(context).primaryColor,
+            ),
+          ),
         );
       });
 

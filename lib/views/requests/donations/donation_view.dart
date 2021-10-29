@@ -1,4 +1,5 @@
 import 'package:connectivity/connectivity.dart';
+import 'package:doseform/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:progress_dialog/progress_dialog.dart';
@@ -47,7 +48,7 @@ class DonationView extends StatefulWidget {
 class _DonationViewState extends State<DonationView> {
   final IndividualOfferBloc _bloc = IndividualOfferBloc();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
-  final GlobalKey<FormState> _formKey = GlobalKey();
+  final GlobalKey<DoseFormState> _formKey = GlobalKey();
   final DonationBloc donationBloc = DonationBloc();
   ProgressDialog progressDialog;
   RegExp emailPattern = RegExp(
@@ -70,7 +71,7 @@ class _DonationViewState extends State<DonationView> {
   UserModel sevaUser = UserModel();
   String none = '';
   PaymentDetailModel paymentDetailModel;
-  var focusNodes = List.generate(2, (_) => FocusNode());
+  var focusNodes = List.generate(4, (_) => FocusNode());
   final profanityDetector = ProfanityDetector();
   double rate;
   double amountConverted;
@@ -83,6 +84,9 @@ class _DonationViewState extends State<DonationView> {
   int indexSelected = -1;
   bool isDropdownOpened = false;
   bool isNeedCloseDropDown = false;
+  TextEditingController amountController = TextEditingController(),
+      addressController = TextEditingController(),
+      commentController = TextEditingController();
 
   @override
   void initState() {
@@ -160,6 +164,7 @@ class _DonationViewState extends State<DonationView> {
       onTap: () {},
       child: Scaffold(
         appBar: AppBar(
+          backgroundColor: Theme.of(context).primaryColor,
           leading: BackButton(
             onPressed: () => Navigator.of(context).pop(),
           ),
@@ -169,8 +174,8 @@ class _DonationViewState extends State<DonationView> {
           ),
           centerTitle: true,
         ),
-        body: Form(
-          key: _formKey,
+        body: DoseForm(
+          formKey: _formKey,
           child: Container(
             padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
             child: Card(
@@ -330,8 +335,10 @@ class _DonationViewState extends State<DonationView> {
                           color: Colors.grey,
                         ),
                       ),
-                      TextFormField(
-                        inputFormatters: [
+                      DoseTextField(
+                        isRequired: true,
+                        controller: amountController,
+                        formatters: [
                           FilteringTextInputFormatter.allow(RegExp("[0-9]")),
                         ],
                         autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -622,7 +629,7 @@ class _DonationViewState extends State<DonationView> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: <Widget>[
                           CustomTextButton(
-                              color: Theme.of(context).accentColor,
+                              color: Theme.of(context).primaryColor,
                               textColor: Colors.white,
                               child: Text(S.of(context).submit),
                               onPressed: () async {
@@ -699,8 +706,10 @@ class _DonationViewState extends State<DonationView> {
           StreamBuilder<String>(
               stream: donationBloc.commentEntered,
               builder: (context, snapshot) {
-                return TextFormField(
+                return DoseTextField(
+                  controller: commentController,
                   keyboardType: TextInputType.text,
+                  focusNode: focusNodes[3],
                   textCapitalization: TextCapitalization.sentences,
                   textInputAction: TextInputAction.done,
                   maxLines: 2,
@@ -856,7 +865,9 @@ class _DonationViewState extends State<DonationView> {
                 color: Colors.grey,
               ),
             ),
-            TextFormField(
+            DoseTextField(
+              isRequired: true,
+              controller: addressController,
               autovalidateMode: AutovalidateMode.onUserInteraction,
               onChanged: (value) {
                 donationsModel.goodsDetails.toAddress = value;
@@ -880,7 +891,6 @@ class _DonationViewState extends State<DonationView> {
                 hintText: S.of(context).request_goods_address_inputhint,
                 hintStyle: hintTextStyle,
               ),
-              initialValue: "",
               keyboardType: TextInputType.multiline,
               maxLines: 3,
               validator: (value) {
@@ -942,7 +952,7 @@ class _DonationViewState extends State<DonationView> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
                 actionButton(
-                    buttonColor: Color.fromRGBO(246, 147, 72, 1.0),
+                    buttonColor: Theme.of(context).primaryColor,
                     textColor: Colors.white,
                     buttonTitle: S.of(context).submit,
                     onPressed: () async {
@@ -1035,7 +1045,10 @@ class _DonationViewState extends State<DonationView> {
             builder: (context, snapshot) {
               return Container(
                 // constraints: BoxConstraints(maxHeight: 55, minHeight: 50),
-                child: TextField(
+                child: DoseTextField(
+                  isRequired: false,
+                  controller: amountController,
+                  focusNode: focusNodes[2],
                   onChanged: (value) {
                     if (value.isNotEmpty) {
                       donationBloc.onAmountChange(value);
@@ -1229,13 +1242,19 @@ class _DonationViewState extends State<DonationView> {
                 onPressed: () async {
                   // logger.d("#FROM C ${defaultDonationCurrencyType}");
                   rate = await currencyConversion(
-                      fromCurrency:
-                          widget.requestModel.cashModel.requestCurrencyType,
-                      toCurrency: donationsModel
-                          .cashDetails.cashDetails.requestDonatedCurrency,
-                      amount:
-                          widget.requestModel.cashModel.minAmount.toDouble());
+                          fromCurrency: widget?.requestModel?.cashModel
+                                  ?.requestCurrencyType ??
+                              "USD",
+                          toCurrency: donationsModel?.cashDetails?.cashDetails
+                                  ?.requestDonatedCurrency ??
+                              "USD",
+                          amount: widget?.requestModel?.cashModel?.minAmount
+                                  ?.toDouble() ??
+                              0.0)
+                      .then((value) => rate = value);
                   logger.d("#FROM C ${defaultDonationCurrencyType}");
+                  logger.d("#rate C ${rate}");
+                  //  logger.d("#FROM C ${defaultDonationCurrencyType}");
 
                   donationBloc
                       .validateAmount(
@@ -1375,6 +1394,8 @@ class _DonationViewState extends State<DonationView> {
 
         case RequestPaymentType.VENMO:
           return widget.requestModel.cashModel.venmoId ?? '';
+        case RequestPaymentType.SWIFT:
+          return widget.requestModel.cashModel.swiftId ?? '';
 
         case RequestPaymentType.ACH:
           return S.of(context).account_information +
@@ -1451,7 +1472,7 @@ class _DonationViewState extends State<DonationView> {
               fontSize: 12,
             ),
           ),
-          color: buttonColor ?? Colors.grey[200],
+          color: buttonColor ?? Colors.grey[400],
           shape: StadiumBorder(),
         ),
       ),

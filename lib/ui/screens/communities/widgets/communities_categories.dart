@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/community_category_model.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/explore_search_page.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class CommunitiesCategory extends StatelessWidget {
   final Stream<List<CommunityCategoryModel>> stream;
@@ -19,7 +20,7 @@ class CommunitiesCategory extends StatelessWidget {
         builder: (BuildContext context,
             AsyncSnapshot<List<CommunityCategoryModel>> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return Center(child: LoadingIndicator());
           }
           if (snapshot.data == null) {
             return Center(

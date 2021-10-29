@@ -4,6 +4,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:doseform/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,7 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
+
 // import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/community_category_model.dart';
 import 'package:sevaexchange/models/enums/plan_ids.dart';
@@ -65,6 +67,7 @@ class CreateEditCommunityView extends StatelessWidget {
         ? ExitWithConfirmation(
             child: Scaffold(
               appBar: AppBar(
+                backgroundColor: Theme.of(context).primaryColor,
                 elevation: 0.5,
                 automaticallyImplyLeading: true,
                 title: Text(
@@ -107,7 +110,7 @@ class CreateEditCommunityViewForm extends StatefulWidget {
   }
 }
 
-GlobalKey<FormState> _billingInformationKey = GlobalKey();
+GlobalKey<DoseFormState> _billingInformationKey = GlobalKey();
 
 class CreateEditCommunityViewFormState
     extends State<CreateEditCommunityViewForm> {
@@ -115,7 +118,7 @@ class CreateEditCommunityViewFormState
   double negativeCreditsThreshold = 0;
   CommunityModel communityModel = CommunityModel({});
   CommunityModel editCommunityModel = CommunityModel({});
-  final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<DoseFormState>();
   final infoWindowKeys = [
     GlobalKey(),
     GlobalKey(),
@@ -159,6 +162,11 @@ class CreateEditCommunityViewFormState
   bool canTestCommunity = false;
   bool testCommunity = false;
   final _debouncer = Debouncer(milliseconds: 600);
+  TextEditingController cityController = TextEditingController(),
+      stateController = TextEditingController(),
+      countryController = TextEditingController(),
+      streetAddress1Controller = TextEditingController(),
+      pincodeController = TextEditingController();
 
   void initState() {
     if (widget.isCreateTimebank == false) {
@@ -274,10 +282,7 @@ class CreateEditCommunityViewFormState
   Widget build(BuildContext context) {
     this.parentContext = context;
 
-    return Form(
-        autovalidateMode: AutovalidateMode.disabled,
-        key: _formKey,
-        child: createSevaX);
+    return DoseForm(formKey: _formKey, child: createSevaX);
   }
 
   void moveToTop() {
@@ -382,7 +387,8 @@ class CreateEditCommunityViewFormState
                           ),
                         ),
                         headingText('${S.of(context).timebank_name} *'),
-                        TextFormField(
+                        DoseTextField(
+                          isRequired: true,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           focusNode: nameFocus,
                           textCapitalization: TextCapitalization.sentences,
@@ -399,13 +405,9 @@ class CreateEditCommunityViewFormState
                           ),
                           textInputAction: TextInputAction.next,
                           keyboardType: TextInputType.text,
-                          autocorrect: true,
+                          //TODO autocorrect required
+                          // autocorrect: true,
                           maxLines: 1,
-                          // inputFormatters: <TextInputFormatter>[
-                          //   WhitelistingTextInputFormatter(
-                          //     RegExp("[a-zA-Z0-9_ ]*"),
-                          //   )
-                          // ],
                           onSaved: (value) {
                             enteredName =
                                 // value.replaceAll("[^a-zA-Z0-9_ ]*", "").trim();
@@ -436,7 +438,8 @@ class CreateEditCommunityViewFormState
                           },
                         ),
                         headingText('${S.of(context).about} *'),
-                        TextFormField(
+                        DoseTextField(
+                          isRequired: true,
                           controller: descriptionTextController,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           focusNode: aboutFocus,
@@ -767,11 +770,12 @@ class CreateEditCommunityViewFormState
                                 .upgradePlanBannerModel.community_sponsors,
                             transaction_matrix_type: 'community_sponsors',
                             child: SponsorsWidget(
+                              textColor: Theme.of(context).primaryColor,
                               sponsorsMode: widget.isCreateTimebank
                                   ? SponsorsMode.CREATE
                                   : SponsorsMode.EDIT,
                               sponsors: timebankModel.sponsors,
-                              isAdminVerified: GetUserVerified<bool>().verify(
+                              isAdminVerified: GetUserVerified.verify(
                                 userId: SevaCore.of(context)
                                     .loggedInUser
                                     .sevaUserID,
@@ -842,6 +846,10 @@ class CreateEditCommunityViewFormState
                         widget.isCreateTimebank
                             ? Container()
                             : Slider(
+                                activeColor: Theme.of(context).primaryColor,
+                                inactiveColor: Theme.of(context)
+                                    .primaryColor
+                                    .withOpacity(0.2),
                                 label: "${taxPercentage.toInt()}%",
                                 value: taxPercentage,
                                 min: 0,
@@ -928,6 +936,10 @@ class CreateEditCommunityViewFormState
                                 ],
                               ),
                               Slider(
+                                activeColor: Theme.of(context).primaryColor,
+                                inactiveColor: Theme.of(context)
+                                    .primaryColor
+                                    .withOpacity(0.2),
                                 label:
                                     "${negativeCreditsThreshold.toInt()} ${S.of(context).seva_credits}",
                                 value: negativeCreditsThreshold.abs() * -1,
@@ -1225,12 +1237,10 @@ class CreateEditCommunityViewFormState
                                         globals.webImageUrl = null;
 
                                         Navigator.pop(dialogContext);
-                                        //   _formKey.currentState.reset();
-                                        // _billingInformationKey.currentState.reset();
                                         UserModel user =
                                             SevaCore.of(context).loggedInUser;
+                                        //TODO reset
                                         _formKey.currentState.reset();
-                                        // _billingInformationKey.currentState.reset();
                                         Navigator.of(context)
                                             .pushAndRemoveUntil(
                                           MaterialPageRoute(
@@ -1314,6 +1324,7 @@ class CreateEditCommunityViewFormState
                                     if (dialogContext != null) {
                                       Navigator.pop(dialogContext);
                                     }
+                                    //TODO reset
                                     _formKey.currentState.reset();
                                     if (widget.isFromFind) {
                                       Navigator.of(context).pop();
@@ -1375,7 +1386,7 @@ class CreateEditCommunityViewFormState
       key: infoKey,
       icon: Image.asset(
         'lib/assets/images/info.png',
-        color: FlavorConfig.values.theme.primaryColor,
+        color: Theme.of(context).primaryColor,
         height: 16,
         width: 16,
       ),
@@ -1449,7 +1460,13 @@ class CreateEditCommunityViewFormState
             },
             child: AlertDialog(
               title: Text(message),
-              content: LinearProgressIndicator(),
+              content: LinearProgressIndicator(
+                backgroundColor:
+                    Theme.of(context).primaryColor.withOpacity(0.5),
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  Theme.of(context).primaryColor,
+                ),
+              ),
             ),
           );
         });
@@ -1610,7 +1627,7 @@ class CreateEditCommunityViewFormState
                 Text(
                   S.of(context).account_information,
                   style: TextStyle(
-                      color: FlavorConfig.values.theme.primaryColor,
+                      color: Theme.of(context).primaryColor,
                       fontSize: 20,
                       fontWeight: FontWeight.bold),
                 ),
@@ -1666,7 +1683,9 @@ class CreateEditCommunityViewFormState
     Widget _stateWidget(controller) {
       return Container(
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
-        child: TextFormField(
+        child: DoseTextField(
+          isRequired: true,
+          controller: stateController,
           textCapitalization: TextCapitalization.sentences,
           onFieldSubmitted: (input) {
             FocusScope.of(context).requestFocus(focusNodes[2]);
@@ -1679,9 +1698,9 @@ class CreateEditCommunityViewFormState
                 .updateValueByKey('state', value);
             createEditCommunityBloc.onChange(controller);
           },
-          initialValue: controller.community.billing_address.state != null
+          /* initialValue: controller.community.billing_address.state != null
               ? '${controller.community.billing_address.state}'
-              : '',
+              : '',*/
           validator: (value) {
             return value.isEmpty
                 ? S.of(context).validation_error_required_fields
@@ -1701,7 +1720,9 @@ class CreateEditCommunityViewFormState
     Widget _cityWidget(controller) {
       return Container(
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
-        child: TextFormField(
+        child: DoseTextField(
+          isRequired: true,
+          controller: cityController,
           textCapitalization: TextCapitalization.sentences,
           onFieldSubmitted: (input) {
             FocusScope.of(context).requestFocus(focusNodes[1]);
@@ -1714,9 +1735,9 @@ class CreateEditCommunityViewFormState
                 .updateValueByKey('city', value);
             createEditCommunityBloc.onChange(controller);
           },
-          initialValue: controller.community.billing_address.city != null
+          /* initialValue: controller.community.billing_address.city != null
               ? '${controller.community.billing_address.city}'
-              : '',
+              : '',*/
           validator: (value) {
             return value.isEmpty
                 ? S.of(context).validation_error_required_fields
@@ -1736,7 +1757,9 @@ class CreateEditCommunityViewFormState
     Widget _pinCodeWidget(controller) {
       return Container(
         margin: EdgeInsets.fromLTRB(20, 10, 20, 0),
-        child: TextFormField(
+        child: DoseTextField(
+          isRequired: true,
+          controller: pincodeController,
           onFieldSubmitted: (input) {
             FocusScope.of(context).requestFocus(focusNodes[4]);
           },
@@ -1746,9 +1769,9 @@ class CreateEditCommunityViewFormState
                 .updateValueByKey('pincode', value);
             createEditCommunityBloc.onChange(controller);
           },
-          initialValue: controller.community.billing_address.pincode != null
+          /* initialValue: controller.community.billing_address.pincode != null
               ? '${controller.community.billing_address.pincode.toString()}'
-              : '',
+              : '',*/
           validator: (value) {
             return value.isEmpty
                 ? S.of(context).validation_error_required_fields
@@ -1806,7 +1829,9 @@ class CreateEditCommunityViewFormState
     Widget _streetAddressWidget(controller) {
       return Container(
         margin: EdgeInsets.fromLTRB(20, 0, 20, 10),
-        child: TextFormField(
+        child: DoseTextField(
+          isRequired: true,
+          controller: streetAddress1Controller,
           textCapitalization: TextCapitalization.sentences,
           onFieldSubmitted: (input) {
             // FocusScope.of(context).requestFocus(focusNodes[5]);
@@ -1829,10 +1854,9 @@ class CreateEditCommunityViewFormState
           },
           focusNode: focusNodes[4],
           textInputAction: TextInputAction.done,
-          initialValue:
-              controller.community.billing_address.street_address1 != null
-                  ? '${controller.community.billing_address.street_address1}'
-                  : '',
+/*          initialValue: controller.community.billing_address.street_address1 != null
+              ? '${controller.community.billing_address.street_address1}'
+              : '',*/
           decoration: getInputDecoration(
             fieldTitle: "${S.of(context).street_add1} *",
           ),
@@ -1911,7 +1935,9 @@ class CreateEditCommunityViewFormState
     Widget _countryNameWidget(controller) {
       return Container(
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
-        child: TextFormField(
+        child: DoseTextField(
+          isRequired: true,
+          controller: countryController,
           textCapitalization: TextCapitalization.sentences,
           onFieldSubmitted: (input) {
             FocusScope.of(context).requestFocus(focusNodes[3]);
@@ -1923,9 +1949,9 @@ class CreateEditCommunityViewFormState
                 .updateValueByKey('country', value);
             createEditCommunityBloc.onChange(controller);
           },
-          initialValue: controller.community.billing_address.country != null
-              ? '${controller.community.billing_address.country}'
-              : '',
+          /*   initialValue: controller.community.billing_address.country != null
+                ? '${controller.community.billing_address.country}'
+                : '',*/
           validator: (value) {
             return value.isEmpty
                 ? S.of(context).validation_error_required_fields
@@ -1972,8 +1998,8 @@ class CreateEditCommunityViewFormState
       //to open/close the sliding panel
       margin: const EdgeInsets.only(top: 15.0),
       color: Colors.white,
-      child: Form(
-        key: _billingInformationKey,
+      child: DoseForm(
+        formKey: _billingInformationKey,
         child: StreamBuilder(
           stream: createEditCommunityBloc.createEditCommunity,
           builder: (context, snapshot) {

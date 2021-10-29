@@ -441,7 +441,7 @@ class PersonalNotificationReducerForRequests {
                       child: Text(
                         S.of(context).do_it_later,
                         style: TextStyle(
-                            color: FlavorConfig.values.theme.primaryColor),
+                            color: Theme.of(context).primaryColor),
                       ),
                       onPressed: () async {
                         Navigator.of(bc).pop();

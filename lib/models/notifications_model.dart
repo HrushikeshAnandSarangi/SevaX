@@ -148,6 +148,8 @@ enum NotificationType {
   AcceptedOffer,
   TypeMemberExitTimebank,
   TypeChangeOwnership,
+  TypeChangeGroupOwnership,
+  TYPE_CHANGE_GROUP_OWNERSHIP_UPDATE_TO_COMMUNITY_OWNER,
   TypeMemberAdded,
   TypeMemberJoinViaCode,
   GroupJoinInvite,
@@ -171,6 +173,8 @@ enum NotificationType {
   DEBITED_SEVA_COINS_TIMEBANK,
   SEVA_COINS_DEBITED,
   SEVA_COINS_CREDITED,
+  MEMBER_RECEIVED_CREDITS_DONATION,
+  COMMUNITY_RECEIVED_CREDITS_DONATION,
 
   //PROMOTION AND DEMOTION
   MEMBER_PROMOTED_AS_ADMIN,
@@ -278,6 +282,9 @@ Map<String, NotificationType> typeMapper = {
   "TypeMemberAdded": NotificationType.TypeMemberAdded,
   "TypeMemberJoinViaCode": NotificationType.TypeMemberJoinViaCode,
   "TypeChangeOwnership": NotificationType.TypeChangeOwnership,
+  "TypeChangeGroupOwnership": NotificationType.TypeChangeGroupOwnership,
+  "TYPE_CHANGE_GROUP_OWNERSHIP_UPDATE_TO_COMMUNITY_OWNER":
+      NotificationType.TYPE_CHANGE_GROUP_OWNERSHIP_UPDATE_TO_COMMUNITY_OWNER,
   "GroupJoinInvite": NotificationType.GroupJoinInvite,
   "ACKNOWLEDGE_DONOR_DONATION": NotificationType.ACKNOWLEDGE_DONOR_DONATION,
   "GOODS_DONATION_REQUEST": NotificationType.GOODS_DONATION_REQUEST,
@@ -306,6 +313,12 @@ Map<String, NotificationType> typeMapper = {
   "OFFER_CANCELED_BY_CREATOR": NotificationType.OFFER_CANCELLED_BY_CREATOR,
   "DEBITED_SEVA_COINS_TIMEBANK": NotificationType.DEBITED_SEVA_COINS_TIMEBANK,
   "SEVA_COINS_CREDITED": NotificationType.SEVA_COINS_CREDITED,
+
+  "MEMBER_RECEIVED_CREDITS_DONATION":
+      NotificationType.MEMBER_RECEIVED_CREDITS_DONATION,
+  "COMMUNITY_RECEIVED_CREDITS_DONATION":
+      NotificationType.COMMUNITY_RECEIVED_CREDITS_DONATION,
+
   "SEVA_COINS_DEBITED": NotificationType.SEVA_COINS_DEBITED,
   "ADMIN_PROMOTED_AS_ORGANIZER": NotificationType.ADMIN_PROMOTED_AS_ORGANIZER,
   "ADMIN_DEMOTED_FROM_ORGANIZER": NotificationType.ADMIN_DEMOTED_FROM_ORGANIZER,

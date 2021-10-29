@@ -26,6 +26,7 @@ class _MessagePageRouterState extends State<MessagePageRouter> {
     final _bloc = BlocProvider.of<MessageBloc>(context);
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).primaryColor,
         title: Text(
           S.of(context).bottom_nav_messages,
           style: TextStyle(fontSize: 18),
@@ -93,7 +94,7 @@ class _MessagePageRouterState extends State<MessagePageRouter> {
                               S.of(context).go_to_community_chat,
                               style: TextStyle(
                                 fontSize: 18,
-                                color: FlavorConfig.values.theme.primaryColor,
+                                color: Theme.of(context).primaryColor,
                                 fontFamily: 'Europa',
                                 fontWeight: FontWeight.bold,
                               ),
@@ -102,7 +103,7 @@ class _MessagePageRouterState extends State<MessagePageRouter> {
                             Spacer(),
                             Icon(
                               Icons.arrow_forward_ios,
-                              color: FlavorConfig.values.theme.primaryColor,
+                              color: Theme.of(context).primaryColor,
                             )
                           ],
                         ),

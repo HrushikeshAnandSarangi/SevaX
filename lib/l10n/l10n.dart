@@ -3837,43 +3837,43 @@ class S {
 
   String timebank_project(num count) => Intl.message(
         '${Intl.plural(count, one: 'Seva Community Project', other: 'Seva Community Projects', args: [count])}',
-        name: 'timebank_project',        
+        name: 'timebank_project',
         args: [count],
       );
 
   String personal_project(num count) => Intl.message(
         '${Intl.plural(count, one: 'Personal Project', other: 'Personal Projects', args: [count])}',
-        name: 'personal_project',        
+        name: 'personal_project',
         args: [count],
       );
 
   String personal_request(num count) => Intl.message(
         '${Intl.plural(count, one: 'Personal Request', other: 'Personal Requests', args: [count])}',
-        name: 'personal_request',        
+        name: 'personal_request',
         args: [count],
       );
 
   String timebank_request(num count) => Intl.message(
         '${Intl.plural(count, one: 'Seva Community Request', other: 'Seva Community Requests', args: [count])}',
-        name: 'timebank_request',        
+        name: 'timebank_request',
         args: [count],
       );
 
   String members_selected(num count) => Intl.message(
         '${Intl.plural(count, one: 'member selected', other: 'members selected', args: [count])}',
-        name: 'members_selected',        
+        name: 'members_selected',
         args: [count],
       );
 
   String volunteers_selected(num count) => Intl.message(
         '${Intl.plural(count, one: 'volunteer selected', other: 'volunteers selected', args: [count])}',
-        name: 'volunteers_selected',        
+        name: 'volunteers_selected',
         args: [count],
       );
 
   String user(num count) => Intl.message(
         '${Intl.plural(count, one: 'user', other: 'users', args: [count])}',
-        name: 'user',        
+        name: 'user',
         args: [count],
       );
 
@@ -3884,7 +3884,7 @@ class S {
 
   String subscription(num count) => Intl.message(
         '${Intl.plural(count, one: 'Subscription', other: 'Subscriptions', args: [count])}',
-        name: 'subscription',        
+        name: 'subscription',
         args: [count],
       );
 
@@ -4020,13 +4020,13 @@ class S {
 
   String day(num count) => Intl.message(
         '${Intl.plural(count, one: 'Day', other: 'Days', args: [count])}',
-        name: 'day',        
+        name: 'day',
         args: [count],
       );
 
   String year(num count) => Intl.message(
         '${Intl.plural(count, one: 'Year', other: 'Years', args: [count])}',
-        name: 'year',        
+        name: 'year',
         args: [count],
       );
 
@@ -6900,7 +6900,7 @@ class S {
         name: 'camera_not_available',
       );
 
-  String get loading_camera  => Intl.message(
+  String get loading_camera => Intl.message(
         'Loading Camera...',
         name: 'loading_camera ',
       );
@@ -6925,7 +6925,7 @@ class S {
         name: 'update_msg',
       );
 
-  String get member_permission  => Intl.message(
+  String get member_permission => Intl.message(
         'Member Permission',
         name: 'member_permission ',
       );
@@ -6985,7 +6985,7 @@ class S {
         name: 'click_to_view_request_agreement',
       );
 
-  String get enter_prep_time  => Intl.message(
+  String get enter_prep_time => Intl.message(
         'Enter Prep Time',
         name: 'enter_prep_time ',
       );
@@ -7025,7 +7025,7 @@ class S {
         name: 'reliabilitysocre',
       );
 
-  String get cv_not_available  => Intl.message(
+  String get cv_not_available => Intl.message(
         'CV not available',
         name: 'cv_not_available ',
       );
@@ -7560,7 +7560,7 @@ class S {
         name: 'and_complete_task',
       );
 
-  String get remove_from_bookmark  => Intl.message(
+  String get remove_from_bookmark => Intl.message(
         'Remove from bookmarks',
         name: 'remove_from_bookmark ',
       );
@@ -9840,10 +9840,13 @@ class S {
         name: 'seva_ommunities_are_based_on_a_mutual_reciprocity_system',
       );
 
-  String get where_community_members_help_each_other_out_in_exchange_for_seva_credits_that_can_be_redeemed_for_services_they_need => Intl.message(
-        'where community members help each other out in exchange for Seva Credits that can be redeemed for services they need',
-        name: 'where_community_members_help_each_other_out_in_exchange_for_seva_credits_that_can_be_redeemed_for_services_they_need',
-      );
+  String
+      get where_community_members_help_each_other_out_in_exchange_for_seva_credits_that_can_be_redeemed_for_services_they_need =>
+          Intl.message(
+            'where community members help each other out in exchange for Seva Credits that can be redeemed for services they need',
+            name:
+                'where_community_members_help_each_other_out_in_exchange_for_seva_credits_that_can_be_redeemed_for_services_they_need',
+          );
 
   String get to_learn_more_about_being_a_part_of_a_Seva_Community_here_s_a_short_explainer_video => Intl.message(
         'To learn more about being a part of a Seva Community, here\"s a short explainer video',
@@ -9870,12 +9873,16 @@ class S {
         name: 'the_link_will_either_take_you_to_our_main',
       );
 
-  String get web_page_where_you_can_register_on_the_web_directly_or_it_will_take_you_from_your_mobile_phone_to_the_App_or_google_play_stores => Intl.message(
-        'web page where you can register on the web directly or it will take you from your mobile phone to the App or Google Play Stores',
-        name: 'web_page_where_you_can_register_on_the_web_directly_or_it_will_take_you_from_your_mobile_phone_to_the_App_or_google_play_stores',
-      );
+  String
+      get web_page_where_you_can_register_on_the_web_directly_or_it_will_take_you_from_your_mobile_phone_to_the_App_or_google_play_stores =>
+          Intl.message(
+            'web page where you can register on the web directly or it will take you from your mobile phone to the App or Google Play Stores',
+            name:
+                'web_page_where_you_can_register_on_the_web_directly_or_it_will_take_you_from_your_mobile_phone_to_the_App_or_google_play_stores',
+          );
 
-  String get where_you_can_download_our_SevaX_App_Once_you_have_registered_on_the_SevaX_mobile_app_or_the_website => Intl.message(
+  String get where_you_can_download_our_SevaX_App_Once_you_have_registered_on_the_SevaX_mobile_app_or_the_website =>
+      Intl.message(
         'where you can download our SevaX App. Once you have registered on the SevaX mobile app or the website',
         name: 'where_you_can_download_our_SevaX_App_Once_you_have_registered_on_the_SevaX_mobile_app_or_the_website',
       );
@@ -9905,7 +9912,8 @@ class S {
         name: 'and_their_Seva_Community_via_this_dynamic_link_at',
       );
 
-  String get thank_you_for_being_a_part_of_our_Seva_Exchange_movement_the_Seva_Exchange_team_Please_email_us_at => Intl.message(
+  String get thank_you_for_being_a_part_of_our_Seva_Exchange_movement_the_Seva_Exchange_team_Please_email_us_at =>
+      Intl.message(
         'Thank you for being a part of our Seva Exchange movement!\n-the Seva Exchange team\n\nPlease email us at support@sevaexchange.com',
         name: 'thank_you_for_being_a_part_of_our_Seva_Exchange_movement_the_Seva_Exchange_team_Please_email_us_at',
       );
@@ -10219,34 +10227,139 @@ class S {
         'Note: For safety precautions, do not list the exact location.',
         name: 'location_safety_disclaimer',
       );
+
+  String get customise_community => Intl.message(
+        'Customise your Community',
+        name: 'customise_community',
+      );
+
+  String get community_logo => Intl.message(
+        'Commumity Logo',
+        name: 'community_logo',
+      );
+
+  String get replace_logo => Intl.message(
+        'This logo will replace the SevaX Logo on the top left side of the page',
+        name: 'replace_logo',
+      );
+
+  String get choose_theme_color => Intl.message(
+        'Choose theme color',
+        name: 'choose_theme_color',
+      );
+
+  String get long_press_to_reset => Intl.message(
+        'Long press to reset',
+        name: 'long_press_to_reset',
+      );
+
+  String get tap_to_add_colors => Intl.message(
+        'Tap to add colors',
+        name: 'tap_to_add_colors',
+      );
+
+  String get you_have_recieved => Intl.message(
+        'You have received ',
+        name: 'you_have_recieved',
+      );
+
+  String get seva_credits_donated_text => Intl.message(
+        'Seva Credits Donated',
+        name: 'seva_credits_donated_text',
+      );
+
+  String get seva_credits_from_text => Intl.message(
+        'Seva Credit(s) from',
+        name: 'seva_credits_from_text',
+      );
+
+  String get as_a_donation_text => Intl.message(
+        'as a donation.',
+        name: 'as_a_donation_text',
+      );
+
+  String get change_ownership_successful => Intl.message(
+        'You have successfully transferred ownership of **groupName to **newOwnerName.',
+        name: 'change_ownership_successful',
+      );
+
+  String get changed_ownership_of_text => Intl.message(
+        'changed ownership of',
+        name: 'changed_ownership_of_text',
+      );
+
+  String get transfer_ownership_text => Intl.message(
+        'Transfer Ownership',
+        name: 'transfer_ownership_text',
+      );
+
+  String get you_have_been_made_the_new_owner_of_group_name_subtitle => Intl.message(
+        'You have been made the new owner of',
+        name: 'you_have_been_made_the_new_owner_of_group_name_subtitle',
+      );
+
+  String get direction_for_manage_transfer_ownership => Intl.message(
+        'Go to your group Manage tab and then select a new group member to transfer ownership.',
+        name: 'direction_for_manage_transfer_ownership',
+      );
+
+  String get be_sure_message_text => Intl.message(
+        'Be sure to check with the member first by messaging them.',
+        name: 'be_sure_message_text',
+      );
+
+  String get removed_you_from_text => Intl.message(
+        'removed you from',
+        name: 'removed_you_from_text',
+      );
+
+  String get note_for_transfer_ownership_notification => Intl.message(
+        'Note: If you cannot fulfil this role or if you believe this was done in error please click here.',
+        name: 'note_for_transfer_ownership_notification',
+      );
+
+  String get transfer_of_group_ownership_update => Intl.message(
+        'Transfer of group ownership update.',
+        name: 'transfer_of_group_ownership_update',
+      );
+
+  String get directions_text => Intl.message(
+        'Directions',
+        name: 'directions_text',
+      );
+
+  String get link_for_demo_video_text => Intl.message(
+        'Link for demo video:',
+        name: 'link_for_demo_video_text',
+      );
 }
 
 class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {
   const ArbifyLocalizationsDelegate();
 
   List<Locale> get supportedLocales => [
-        Locale.fromSubtags(languageCode: 'af'),
-        Locale.fromSubtags(languageCode: 'en'),
         Locale.fromSubtags(languageCode: 'es'),
-        Locale.fromSubtags(languageCode: 'fr'),
         Locale.fromSubtags(languageCode: 'pt'),
         Locale.fromSubtags(languageCode: 'sn'),
-        Locale.fromSubtags(languageCode: 'sw'),
         Locale.fromSubtags(languageCode: 'zh', countryCode: 'CN'),
         Locale.fromSubtags(languageCode: 'zh', countryCode: 'TW'),
-  ];
+        Locale.fromSubtags(languageCode: 'af'),
+        Locale.fromSubtags(languageCode: 'sw'),
+        Locale.fromSubtags(languageCode: 'en'),
+        Locale.fromSubtags(languageCode: 'fr'),
+      ];
 
   @override
   bool isSupported(Locale locale) => [
-        'af',
-        'en',
         'es',
-        'fr',
         'pt',
         'sn',
+        'zh',
+        'zh',
+        'af',
         'sw',
-        'zh',
-        'zh',
+        'en',
+        'fr',
       ].contains(locale.languageCode);
 
   @override

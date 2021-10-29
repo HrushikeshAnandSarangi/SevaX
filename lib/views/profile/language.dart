@@ -30,6 +30,7 @@ class _LanguageViewState extends State<LanguageView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).primaryColor,
         title: Text(
           S.of(context).my_language,
           style: TextStyle(fontSize: 18),
@@ -98,7 +99,7 @@ class LanguageListState extends State<LanguageList> {
                 trailing: Text(
                   '${model.languageName}',
                   style: TextStyle(
-                    color: Colors.blue,
+                    color: Theme.of(context).primaryColor,
                     fontSize: 18,
                     fontWeight: FontWeight.w500,
                   ),

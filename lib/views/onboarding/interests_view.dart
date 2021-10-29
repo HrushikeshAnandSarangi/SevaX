@@ -82,6 +82,7 @@ class _InterestViewNewState extends State<InterestViewNew> {
       resizeToAvoidBottomInset: false,
       key: _scaffoldKey,
       appBar: AppBar(
+        backgroundColor: Theme.of(context).primaryColor,
         automaticallyImplyLeading: widget.automaticallyImplyLeading,
         leading: widget.automaticallyImplyLeading
             ? null
@@ -391,7 +392,12 @@ class _InterestViewNewState extends State<InterestViewNew> {
       ),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return showLoader ? getLoading : LinearProgressIndicator();
+          return showLoader ? getLoading : LinearProgressIndicator(
+ backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+        valueColor: AlwaysStoppedAnimation<Color>(
+          Theme.of(context).primaryColor,
+        ),
+);
         }
 
         return getSuggestionLayout(
