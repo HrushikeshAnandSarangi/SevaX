@@ -400,13 +400,25 @@ class OfferDetails extends StatelessWidget {
               content: Text(S.of(context).cancel_offer_confirmation),
               actions: [
                 CustomTextButton(
-                  child: Text(S.of(context).close),
+                  shape: StadiumBorder(),
+                  padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                  color: Theme.of(context).accentColor,
+                  child: Text(
+                    S.of(context).close,
+                    style: TextStyle(color: Colors.white),
+                  ),
                   onPressed: () {
                     Navigator.of(_context).pop();
                   },
                 ),
                 CustomTextButton(
-                  child: Text(S.of(context).cancel_offer),
+                  shape: StadiumBorder(),
+                  padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                  color: Theme.of(context).primaryColor,
+                  child: Text(
+                    S.of(context).cancel_offer,
+                    style: TextStyle(color: Colors.white),
+                  ),
                   onPressed: () async {
                     Navigator.of(_context).pop();
                     await CollectionRef.offers.doc(offerModel.id).update({'groupOfferDataModel.isCanceled': true});
