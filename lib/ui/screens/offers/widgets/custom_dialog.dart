@@ -34,8 +34,7 @@ Future<void> errorDialog({BuildContext context, String error}) async {
   return true;
 }
 
-Future<bool> confirmationDialog(
-    {BuildContext context, String title, Function onConfirmed}) async {
+Future<bool> confirmationDialog({BuildContext context, String title, Function onConfirmed}) async {
   await showDialog(
     context: context,
     builder: (BuildContext viewContext) {
@@ -46,8 +45,9 @@ Future<bool> confirmationDialog(
         title: Text(title),
         actions: <Widget>[
           CustomTextButton(
-            // color: HexColor("#D2D2D2"),
-            // shape: StadiumBorder(),
+            color: Theme.of(context).accentColor,
+            textColor: Colors.white,
+            shape: StadiumBorder(),
             child: Text(
               S.of(context).cancel,
               style: TextStyle(

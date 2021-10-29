@@ -1137,9 +1137,11 @@ class InviteAddMembersState extends State<InviteAddMembers> {
               },
             ),
             CustomTextButton(
+              color: utils.HexColor("#d2d2d2"),
+              textColor: Colors.white,
               child: Text(
                 S.of(context).cancel,
-                style: TextStyle(color: Colors.red, fontSize: dialogButtonSize),
+                style: TextStyle(  fontSize: dialogButtonSize),
               ),
               onPressed: () {
                 Navigator.of(context).pop();

@@ -3063,6 +3063,9 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
             actions: <Widget>[
               // usually buttons at the bottom of the dialog
               CustomTextButton(
+                shape: StadiumBorder(),
+                color: Theme.of(context).accentColor,
+                textColor: Colors.white,
                 child: Text(S.of(context).close),
                 onPressed: () {
                   Navigator.of(context).pop();

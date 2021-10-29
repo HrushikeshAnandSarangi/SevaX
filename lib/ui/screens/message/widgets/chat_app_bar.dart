@@ -5,6 +5,7 @@ import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/network_image.dart';
 import 'package:sevaexchange/ui/utils/avatar.dart';
 import 'package:sevaexchange/ui/utils/editDeleteIconWidget.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 
@@ -208,9 +209,11 @@ class ChatAppBar extends PreferredSize {
               },
             ),
             CustomTextButton(
+              color: HexColor("#d2d2d2"),
+              shape: StadiumBorder(),
               child: Text(
                 cancelLabel,
-                style: TextStyle(fontSize: dialogButtonSize, color: Colors.red),
+                style: TextStyle(fontSize: dialogButtonSize, color: Colors.white),
               ),
               onPressed: () {
                 Navigator.of(context).pop("CANCEL");
