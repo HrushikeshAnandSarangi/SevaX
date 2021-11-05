@@ -1145,8 +1145,7 @@ class RequestCreateEditFormState extends State<RequestCreateEditForm> with Widge
       }
 
       if (OfferDurationWidgetState.starttimestamp == OfferDurationWidgetState.endtimestamp) {
-        requestUtils.showDialogForTitle(
-            dialogTitle: S.of(context).validation_error_same_start_date_end_date, context: context);
+        requestUtils.showDialogForTitle(dialogTitle: S.of(context).validation_error_same_start_date_end_date, context: context);
         return;
       }
 

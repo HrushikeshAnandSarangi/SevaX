@@ -46,8 +46,7 @@ class ChatAppBar extends PreferredSize {
   @override
   Widget build(BuildContext context) {
     final String name = isGroupMessage ? groupDetails.name : recieverInfo.name;
-    final String photoUrl =
-        isGroupMessage ? groupDetails.imageUrl : recieverInfo.photoUrl;
+    final String photoUrl = isGroupMessage ? groupDetails.imageUrl : recieverInfo.photoUrl;
     return AppBar(
       iconTheme: IconThemeData(color: Colors.white),
       backgroundColor: Theme.of(context).primaryColor,
@@ -111,12 +110,8 @@ class ChatAppBar extends PreferredSize {
               context,
               S.of(context).exit_messaging_room,
               isCreator
-                  ? S.of(context).exit_messaging_room_admin_confirmation +
-                      ' ' +
-                      groupDetails.name
-                  : S.of(context).exit_messaging_room_user_confirmation +
-                      ' ' +
-                      groupDetails.name,
+                  ? S.of(context).exit_messaging_room_admin_confirmation + ' ' + groupDetails.name
+                  : S.of(context).exit_messaging_room_user_confirmation + ' ' + groupDetails.name,
               S.of(context).exit,
               S.of(context).cancel,
             ).then((value) {
@@ -146,26 +141,21 @@ class ChatAppBar extends PreferredSize {
       itemBuilder: (BuildContext _context) {
         return [
           PopupMenuItem(
-            child: textAndIconWidget(
-                Icons.delete, S.of(context).delete_chat, context),
+            child: textAndIconWidget(Icons.delete, S.of(context).delete_chat, context),
             value: MessageMenu.CLEAR_CHAT,
           ),
           ...!isBlockEnabled
               ? [
                   PopupMenuItem(
-                    child: textAndIconWidget(
-                        Icons.block, S.of(context).block, context),
+                    child: textAndIconWidget(Icons.block, S.of(context).block, context),
                     value: MessageMenu.BLOCK,
                   )
                 ]
               : [],
-          ...(isGroupMessage &&
-                  groupDetails.admins
-                      .contains(SevaCore.of(context).loggedInUser.sevaUserID))
+          ...(isGroupMessage && groupDetails.admins.contains(SevaCore.of(context).loggedInUser.sevaUserID))
               ? [
                   PopupMenuItem(
-                    child: textAndIconWidget(
-                        Icons.edit, S.of(context).edit, context),
+                    child: textAndIconWidget(Icons.edit, S.of(context).edit, context),
                     value: MessageMenu.EDIT_GROUP,
                   )
                 ]
@@ -173,8 +163,7 @@ class ChatAppBar extends PreferredSize {
           ...isGroupMessage
               ? [
                   PopupMenuItem(
-                    child: textAndIconWidget(
-                        Icons.exit_to_app, S.of(context).exit, context),
+                    child: textAndIconWidget(Icons.exit_to_app, S.of(context).exit, context),
                     value: MessageMenu.EXIT_CHAT,
                   )
                 ]
@@ -184,8 +173,8 @@ class ChatAppBar extends PreferredSize {
     );
   }
 
-  Future<String> showCustomDialog(BuildContext viewContext, String title,
-      String content, String buttonLabel, String cancelLabel) {
+  Future<String> showCustomDialog(
+      BuildContext viewContext, String title, String content, String buttonLabel, String cancelLabel) {
     return showDialog(
       barrierDismissible: false,
       context: viewContext,

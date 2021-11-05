@@ -330,10 +330,9 @@ class OfferDetails extends StatelessWidget {
             height: 40,
             width: 90,
             child: CustomTextButton(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-              color: Colors.red,
+              shape: StadiumBorder(),
+              padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+              color: Theme.of(context).accentColor,
               child: Text(
                 S.of(context).cancel,
                 style: TextStyle(color: Colors.white),

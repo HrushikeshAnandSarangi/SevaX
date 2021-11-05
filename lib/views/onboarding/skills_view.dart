@@ -18,8 +18,7 @@ import '../spell_check_manager.dart';
 import 'interests_view.dart';
 
 typedef StringListCallback = void Function(List<String> skills);
-typedef MapListCallback = void Function(
-    Map<String, dynamic> _selectedSkillsMap);
+typedef MapListCallback = void Function(Map<String, dynamic> _selectedSkillsMap);
 
 class SkillViewNew extends StatefulWidget {
   final bool automaticallyImplyLeading;
@@ -59,10 +58,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
   @override
   void initState() {
     hasPellError = false;
-    CollectionRef.skills
-        .orderBy('name')
-        .get()
-        .then((QuerySnapshot querySnapshot) {
+    CollectionRef.skills.orderBy('name').get().then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((DocumentSnapshot data) {
         // suggestionText.add(data['name']);
         // suggestionID.add(data.id);
@@ -73,8 +69,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
         // ids[data['name']] = data.id;
       });
       if (!widget.isFromRequests) {
-        if (widget.userModel.skills != null &&
-            widget.userModel.skills.length > 0) {
+        if (widget.userModel.skills != null && widget.userModel.skills.length > 0) {
           widget.userModel.skills.forEach(
             (id) {
               _selectedSkills[id] = skills[id];
@@ -151,8 +146,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
                     borderRadius: BorderRadius.circular(25.7),
                   ),
                   enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                      borderRadius: BorderRadius.circular(25.7)),
+                      borderSide: BorderSide(color: Colors.white), borderRadius: BorderRadius.circular(25.7)),
                   contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
                   prefixIcon: Icon(
                     Icons.search,
@@ -183,12 +177,9 @@ class _SkillViewNewState extends State<SkillViewNew> {
                       ),
                 );
 
-                if (pattern.length > 2 &&
-                    !dataCopy.contains(
-                        SuggestedItem()..suggesttionTitle = pattern)) {
+                if (pattern.length > 2 && !dataCopy.contains(SuggestedItem()..suggesttionTitle = pattern)) {
                   var spellCheckResult =
-                      await SpellCheckManager.evaluateSpellingFor(pattern,
-                          language: widget.languageCode);
+                      await SpellCheckManager.evaluateSpellingFor(pattern, language: widget.languageCode);
                   if (spellCheckResult.hasErros) {
                     dataCopy.add(SuggestedItem()
                       ..suggestionMode = SuggestionMode.USER_DEFINED
@@ -224,8 +215,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
                     );
 
                   case SuggestionMode.SUGGESTED:
-                    if (ProfanityDetector()
-                        .isProfaneString(suggestedItem.suggesttionTitle)) {
+                    if (ProfanityDetector().isProfaneString(suggestedItem.suggesttionTitle)) {
                       return ProfanityDetector.getProanityAdvisory(
                         suggestion: suggestedItem.suggesttionTitle,
                         suggestionMode: SuggestionMode.USER_DEFINED,
@@ -240,8 +230,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
                     );
 
                   case SuggestionMode.USER_DEFINED:
-                    if (ProfanityDetector()
-                        .isProfaneString(suggestedItem.suggesttionTitle)) {
+                    if (ProfanityDetector().isProfaneString(suggestedItem.suggesttionTitle)) {
                       return ProfanityDetector.getProanityAdvisory(
                         suggestion: suggestedItem.suggesttionTitle,
                         suggestionMode: SuggestionMode.USER_DEFINED,
@@ -268,8 +257,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
                 );
               },
               onSuggestionSelected: (SuggestedItem suggestion) {
-                if (ProfanityDetector()
-                    .isProfaneString(suggestion.suggesttionTitle)) {
+                if (ProfanityDetector().isProfaneString(suggestion.suggesttionTitle)) {
                   return;
                 }
 
@@ -277,9 +265,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
                   case SuggestionMode.SUGGESTED:
                     var skillId = Uuid().generateV4();
                     SkillsAndInterestBloc.addSkillToDb(
-                        skillId: skillId,
-                        skillLanguage: widget.languageCode,
-                        skillTitle: suggestion.suggesttionTitle);
+                        skillId: skillId, skillLanguage: widget.languageCode, skillTitle: suggestion.suggesttionTitle);
                     skills[skillId] = suggestion.suggesttionTitle;
                     break;
 
@@ -298,11 +284,9 @@ class _SkillViewNewState extends State<SkillViewNew> {
                 }
 
                 _textEditingController.clear();
-                if (!_selectedSkills
-                    .containsValue(suggestion.suggesttionTitle)) {
+                if (!_selectedSkills.containsValue(suggestion.suggesttionTitle)) {
                   controller.close();
-                  String id = skills.keys.firstWhere(
-                      (k) => skills[k] == suggestion.suggesttionTitle);
+                  String id = skills.keys.firstWhere((k) => skills[k] == suggestion.suggesttionTitle);
                   _selectedSkills[id] = suggestion.suggesttionTitle;
                   setState(() {});
                 }
@@ -327,8 +311,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
                                     : CustomChip(
                                         title: value,
                                         onDelete: () {
-                                          String id = skills.keys.firstWhere(
-                                              (k) => skills[k] == value);
+                                          String id = skills.keys.firstWhere((k) => skills[k] == value);
                                           _selectedSkills.remove(id);
                                           setState(() {});
                                         },
@@ -352,8 +335,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
                         content: Text(S.of(context).check_internet),
                         action: SnackBarAction(
                           label: S.of(context).dismiss,
-                          onPressed: () => ScaffoldMessenger.of(context)
-                              .hideCurrentSnackBar(),
+                          onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
                         ),
                       ),
                     );
@@ -379,6 +361,9 @@ class _SkillViewNewState extends State<SkillViewNew> {
               ),
             ),
             CustomTextButton(
+              shape: StadiumBorder(),
+              padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+              color: Theme.of(context).accentColor,
               onPressed: () {
                 widget.onSkipped();
               },
@@ -389,7 +374,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
                         ? S.of(context).skip
                         : S.of(context).cancel,
                 style: TextStyle(
-                  color: Theme.of(context).accentColor,
+                  color: Colors.white,
                 ),
               ),
             ),
@@ -414,19 +399,18 @@ class _SkillViewNewState extends State<SkillViewNew> {
       ),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return showLoader ? getLoading : LinearProgressIndicator(
- backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
-        valueColor: AlwaysStoppedAnimation<Color>(
-          Theme.of(context).primaryColor,
-        ),
-);
+          return showLoader
+              ? getLoading
+              : LinearProgressIndicator(
+                  backgroundColor: Theme.of(context).primaryColor.withOpacity(0.5),
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    Theme.of(context).primaryColor,
+                  ),
+                );
         }
 
         return getSuggestionLayout(
-            suggestion: keyword,
-            suggestionMode: suggestionMode,
-            add: S.of(context).add + ' ',
-            context: context);
+            suggestion: keyword, suggestionMode: suggestionMode, add: S.of(context).add + ' ', context: context);
       },
     );
   }
@@ -487,9 +471,7 @@ Padding getSuggestionLayout({
                     ),
                   ),
                   Text(
-                    suggestionMode == SuggestionMode.SUGGESTED
-                        ? S.of(context).suggested
-                        : S.of(context).you_entered,
+                    suggestionMode == SuggestionMode.SUGGESTED ? S.of(context).suggested : S.of(context).you_entered,
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.grey,

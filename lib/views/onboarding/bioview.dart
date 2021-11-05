@@ -141,14 +141,15 @@ class _BioViewState extends State<BioView> {
                   ),
                 ),
                 CustomTextButton(
+                  shape: StadiumBorder(),
+                  padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                  color: Theme.of(context).accentColor,
                   onPressed: () {
                     widget.onSkipped();
                   },
                   child: Text(
-                    AppConfig.prefs.getBool(AppConfig.skip_bio) == null
-                        ? S.of(context).skip
-                        : S.of(context).cancel,
-                    style: TextStyle(color: Theme.of(context).accentColor),
+                    AppConfig.prefs.getBool(AppConfig.skip_bio) == null ? S.of(context).skip : S.of(context).cancel,
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
                 SizedBox(height: 20),
