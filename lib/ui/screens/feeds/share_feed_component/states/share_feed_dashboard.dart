@@ -97,6 +97,7 @@ class ShareDashboard extends StatelessWidget {
                         ),
                       ),
                       Container(
+                        width: MediaQuery.of(context).size.width/2,
                         margin: EdgeInsets.only(left: 5),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -117,12 +118,15 @@ class ShareDashboard extends StatelessWidget {
                                   color: HexColor('#4A4A4A'),
                                   size: 15.0,
                                 ),
-                                Text(
-                                  feedToShare.placeAddress ?? '',
-                                  // 'California',
-                                  style: TextStyle(
-                                    color: HexColor('#9B9B9B'),
-                                    fontSize: 14,
+                                Flexible(
+                                  child: Text(
+                                    feedToShare.placeAddress ?? '',
+                                    // 'California',
+                                    style: TextStyle(
+                                      color: HexColor('#9B9B9B'),
+                                      fontSize: 14,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
                               ],

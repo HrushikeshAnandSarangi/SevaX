@@ -166,8 +166,7 @@ class MyTasksListState extends State<MyTaskList> {
       });
       logger.i('here 2');
       await sendMessageToMember(
-          message: results['didComment'] ? results['comment'] : "No comments",
-          loggedInUser: loggedInUser);
+          message: results['didComment'] ? results['comment'] : "No comments", loggedInUser: loggedInUser);
       logger.i('here 3');
       startTransaction();
     } on Exception catch (e) {
@@ -180,19 +179,15 @@ class MyTasksListState extends State<MyTaskList> {
     String message,
   }) async {
     TimebankModel timebankModel = await getTimeBankForId(timebankId: requestModelNew.timebankId);
-    UserModel userModel =
-        await FirestoreManager.getUserForId(sevaUserId: requestModelNew.sevaUserId);
+    UserModel userModel = await FirestoreManager.getUserForId(sevaUserId: requestModelNew.sevaUserId);
     if (userModel != null && timebankModel != null) {
       ParticipantInfo receiver = ParticipantInfo(
         id: requestModelNew.requestMode == RequestMode.PERSONAL_REQUEST
             ? userModel.sevaUserID
             : requestModelNew.timebankId,
-        photoUrl: requestModelNew.requestMode == RequestMode.PERSONAL_REQUEST
-            ? userModel.photoURL
-            : timebankModel.photoUrl,
-        name: requestModelNew.requestMode == RequestMode.PERSONAL_REQUEST
-            ? userModel.fullname
-            : timebankModel.name,
+        photoUrl:
+            requestModelNew.requestMode == RequestMode.PERSONAL_REQUEST ? userModel.photoURL : timebankModel.photoUrl,
+        name: requestModelNew.requestMode == RequestMode.PERSONAL_REQUEST ? userModel.fullname : timebankModel.name,
         type: requestModelNew.requestMode == RequestMode.PERSONAL_REQUEST
             ? ChatType.TYPE_PERSONAL
             : timebankModel.parentTimebankId == FlavorConfig.values.timebankId
@@ -219,8 +214,7 @@ class MyTasksListState extends State<MyTaskList> {
             reviewMessage: message,
           ),
           reciever: receiver,
-          isTimebankMessage:
-              requestModelNew.requestMode == RequestMode.PERSONAL_REQUEST ? false : true,
+          isTimebankMessage: requestModelNew.requestMode == RequestMode.PERSONAL_REQUEST ? false : true,
           timebankId: requestModelNew.timebankId,
           communityId: loggedInUser.currentCommunity,
           sender: sender);
@@ -338,8 +332,7 @@ class MyTasksListState extends State<MyTaskList> {
                               color: Theme.of(context).primaryColor,
                               child: Text(
                                 S.of(context).speaker_claim_credits,
-                                style: TextStyle(
-                                    color: Colors.white, fontFamily: 'Europa', fontSize: 12),
+                                style: TextStyle(color: Colors.white, fontFamily: 'Europa', fontSize: 12),
                               ),
                               onPressed: () async {
                                 Navigator.of(context).push(
@@ -484,9 +477,7 @@ class MyTasksListState extends State<MyTaskList> {
     });
 
     await FirestoreManager.readUserNotificationOneToManyWhenSpeakerIsRejectedCompletion(
-        requestModel: requestModel,
-        userEmail: SevaCore.of(context).loggedInUser.email,
-        fromNotification: false);
+        requestModel: requestModel, userEmail: SevaCore.of(context).loggedInUser.email, fromNotification: false);
   }
 }
 
@@ -518,9 +509,7 @@ class TaskCardViewState extends State<TaskCardView> {
   void initState() {
     super.initState();
     this.requestModel = widget.requestModel;
-    subject
-        .transform(ThrottleStreamTransformer((_) => TimerStream(true, const Duration(seconds: 1))))
-        .listen((data) {
+    subject.transform(ThrottleStreamTransformer((_) => TimerStream(true, const Duration(seconds: 1)))).listen((data) {
       checkForReview();
     });
   }
@@ -573,14 +562,11 @@ class TaskCardViewState extends State<TaskCardView> {
                       alignment: Alignment(-1.0, 0.0),
                       child: Text(
                         '${S.of(context).from}  ' +
-                            DateFormat(
-                                    'MMMM dd, yyyy @ h:mm a',
-                                    Locale(AppConfig.prefs.getString('language_code'))
-                                        .toLanguageTag())
+                            DateFormat('MMMM dd, yyyy @ h:mm a',
+                                    Locale(AppConfig.prefs.getString('language_code')).toLanguageTag())
                                 .format(
                               getDateTimeAccToUserTimezone(
-                                  dateTime: DateTime.fromMillisecondsSinceEpoch(
-                                      requestModel.requestStart),
+                                  dateTime: DateTime.fromMillisecondsSinceEpoch(requestModel.requestStart),
                                   timezoneAbb: widget.userTimezone),
                             ),
                       ),
@@ -590,14 +576,11 @@ class TaskCardViewState extends State<TaskCardView> {
                       alignment: Alignment(-1.0, 0.0),
                       child: Text(
                         '${S.of(context).until}  ' +
-                            DateFormat(
-                                    'MMMM dd, yyyy @ h:mm a',
-                                    Locale(AppConfig.prefs.getString('language_code'))
-                                        .toLanguageTag())
+                            DateFormat('MMMM dd, yyyy @ h:mm a',
+                                    Locale(AppConfig.prefs.getString('language_code')).toLanguageTag())
                                 .format(
                               getDateTimeAccToUserTimezone(
-                                  dateTime:
-                                      DateTime.fromMillisecondsSinceEpoch(requestModel.requestEnd),
+                                  dateTime: DateTime.fromMillisecondsSinceEpoch(requestModel.requestEnd),
                                   timezoneAbb: widget.userTimezone),
                             ),
                       ),
@@ -612,14 +595,11 @@ class TaskCardViewState extends State<TaskCardView> {
                       alignment: Alignment(-1.0, 0.0),
                       child: Text(
                         '${S.of(context).posted_date}  ' +
-                            DateFormat(
-                                    'MMMM dd, yyyy @ h:mm a',
-                                    Locale(AppConfig.prefs.getString('language_code'))
-                                        .toLanguageTag())
+                            DateFormat('MMMM dd, yyyy @ h:mm a',
+                                    Locale(AppConfig.prefs.getString('language_code')).toLanguageTag())
                                 .format(
                               getDateTimeAccToUserTimezone(
-                                  dateTime: DateTime.fromMillisecondsSinceEpoch(
-                                      requestModel.postTimestamp),
+                                  dateTime: DateTime.fromMillisecondsSinceEpoch(requestModel.postTimestamp),
                                   timezoneAbb: widget.userTimezone),
                             ),
                       ),
@@ -629,8 +609,7 @@ class TaskCardViewState extends State<TaskCardView> {
                       child: Text(' '),
                     ),
                     (requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST &&
-                            requestModel.selectedInstructor.sevaUserID ==
-                                SevaCore.of(context).loggedInUser.sevaUserID)
+                            requestModel.selectedInstructor.sevaUserID == SevaCore.of(context).loggedInUser.sevaUserID)
                         ? DoseForm(
                             formKey: _formKey,
                             child: Column(
@@ -662,8 +641,7 @@ class TaskCardViewState extends State<TaskCardView> {
                                                 RegExp('[\\.|\\,|\\ |\\-]'),
                                               ),
                                             ],
-                                            decoration: InputDecoration(
-                                                contentPadding: EdgeInsets.only(bottom: 20)),
+                                            decoration: InputDecoration(contentPadding: EdgeInsets.only(bottom: 20)),
                                             validator: (value) {
                                               if (value == null) {
                                                 return S.of(context).enter_hours;
@@ -706,8 +684,7 @@ class TaskCardViewState extends State<TaskCardView> {
                                               return null;
                                             },
                                             items: minuteList.map((value) {
-                                              return DropdownMenuItem(
-                                                  child: Text(value), value: value);
+                                              return DropdownMenuItem(child: Text(value), value: value);
                                             }).toList(),
                                             onChanged: (value) {
                                               setState(() {
@@ -749,8 +726,7 @@ class TaskCardViewState extends State<TaskCardView> {
                                                 RegExp('[\\.|\\,|\\ |\\-]'),
                                               ),
                                             ],
-                                            decoration: InputDecoration(
-                                                contentPadding: EdgeInsets.only(bottom: 20)),
+                                            decoration: InputDecoration(contentPadding: EdgeInsets.only(bottom: 20)),
                                             validator: (value) {
                                               if (value == null) {
                                                 return S.of(context).enter_hours;
@@ -793,8 +769,7 @@ class TaskCardViewState extends State<TaskCardView> {
                                               return null;
                                             },
                                             items: minuteList.map((value) {
-                                              return DropdownMenuItem(
-                                                  child: Text(value), value: value);
+                                              return DropdownMenuItem(child: Text(value), value: value);
                                             }).toList(),
                                             onChanged: (value) {
                                               setState(() {
@@ -821,28 +796,30 @@ class TaskCardViewState extends State<TaskCardView> {
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: <Widget>[
-                                      DoseTextField(
-                                        isRequired: true,
-                                        controller: hoursController,
-                                        focusNode: focusNodeList[2],
-                                        keyboardType: TextInputType.number,
-                                        formatters: [
-                                          BlacklistingTextInputFormatter(
-                                            RegExp('[\\.|\\,|\\ |\\-]'),
-                                          ),
-                                        ],
-                                        decoration: InputDecoration(
-                                            contentPadding: EdgeInsets.only(bottom: 20)),
-                                        validator: (value) {
-                                          if (value == null) {
-                                            return S.of(context).enter_hours;
-                                          }
-                                          if (value.isEmpty) {
-                                            S.of(context).select_hours;
-                                          }
-                                          this.selectedHourValue = value;
-                                          return null;
-                                        },
+                                      Padding(
+                                        padding: const EdgeInsets.only(bottom: 20.0),
+                                        child: DoseTextField(
+                                          isRequired: true,
+                                          controller: hoursController,
+                                          focusNode: focusNodeList[2],
+                                          keyboardType: TextInputType.number,
+                                          formatters: [
+                                            BlacklistingTextInputFormatter(
+                                              RegExp('[\\.|\\,|\\ |\\-]'),
+                                            ),
+                                          ],
+                                          decoration: InputDecoration(contentPadding: EdgeInsets.only(bottom: 0)),
+                                          validator: (value) {
+                                            if (value == null) {
+                                              return S.of(context).enter_hours;
+                                            }
+                                            if (value.isEmpty) {
+                                              S.of(context).select_hours;
+                                            }
+                                            this.selectedHourValue = value;
+                                            return null;
+                                          },
+                                        ),
                                       ),
                                       Text(S.of(context).hours),
                                     ],
@@ -865,24 +842,27 @@ class TaskCardViewState extends State<TaskCardView> {
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: <Widget>[
-                                      DropdownButtonFormField<String>(
-                                        validator: (value) {
-                                          if (value == null || value.isEmpty) {
-                                            return S.of(context).validation_error_invalid_hours;
-                                          }
+                                      Padding(
+                                        padding: const EdgeInsets.only(bottom: 20.0),
+                                        child: DropdownButtonFormField<String>(
+                                          validator: (value) {
+                                            if (value == null || value.isEmpty) {
+                                              return S.of(context).validation_error_invalid_hours;
+                                            }
 
-                                          selectedMinuteValue = value;
-                                          return null;
-                                        },
-                                        items: minuteList.map((value) {
-                                          return DropdownMenuItem(child: Text(value), value: value);
-                                        }).toList(),
-                                        onChanged: (value) {
-                                          setState(() {
                                             selectedMinuteValue = value;
-                                          });
-                                        },
-                                        value: selectedMinuteValue,
+                                            return null;
+                                          },
+                                          items: minuteList.map((value) {
+                                            return DropdownMenuItem(child: Text(value), value: value);
+                                          }).toList(),
+                                          onChanged: (value) {
+                                            setState(() {
+                                              selectedMinuteValue = value;
+                                            });
+                                          },
+                                          value: selectedMinuteValue,
+                                        ),
                                       ),
                                       Text(S.of(context).minutes),
                                     ],
@@ -944,8 +924,7 @@ class TaskCardViewState extends State<TaskCardView> {
     logger.i('TYPE:  ' + requestModel.requestType.toString());
 
     if (requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST &&
-        requestModel.selectedInstructor.sevaUserID ==
-            SevaCore.of(context).loggedInUser.sevaUserID) {
+        requestModel.selectedInstructor.sevaUserID == SevaCore.of(context).loggedInUser.sevaUserID) {
       if (selectedHoursPrepTimeController.text == null ||
           selectedHoursPrepTimeController.text.length == 0 ||
           selectedHoursDeliveryTimeController.text == null ||
@@ -958,8 +937,7 @@ class TaskCardViewState extends State<TaskCardView> {
           (int.parse(selectedHoursPrepTimeController.text) * 60) +
           (int.parse(selectedHoursDeliveryTimeController.text) * 60);
     } else if (requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST &&
-        requestModel.selectedInstructor.sevaUserID !=
-            SevaCore.of(context).loggedInUser.sevaUserID) {
+        requestModel.selectedInstructor.sevaUserID != SevaCore.of(context).loggedInUser.sevaUserID) {
       logger.i('This 2');
 
       if (hoursController.text == null || hoursController.text.length == 0) {
@@ -999,8 +977,7 @@ class TaskCardViewState extends State<TaskCardView> {
     if (!requestModel.isFromOfferRequest && creditRequest > maxClaim) {
       showDialogFoInfo(
         title: S.of(context).limit_exceeded,
-        content:
-            "${S.of(context).task_max_request_message} $maxClaim ${S.of(context).task_max_hours_of_credit}",
+        content: "${S.of(context).task_max_request_message} $maxClaim ${S.of(context).task_max_hours_of_credit}",
       );
       return;
       //show dialog
@@ -1083,15 +1060,10 @@ class TaskCardViewState extends State<TaskCardView> {
     UserModel userModel = await FirestoreManager.getUserForId(sevaUserId: requestModel.sevaUserId);
     if (userModel != null && timebankModel != null) {
       ParticipantInfo receiver = ParticipantInfo(
-        id: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-            ? userModel.sevaUserID
-            : requestModel.timebankId,
-        photoUrl: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-            ? userModel.photoURL
-            : timebankModel.photoUrl,
-        name: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-            ? userModel.fullname
-            : timebankModel.name,
+        id: requestModel.requestMode == RequestMode.PERSONAL_REQUEST ? userModel.sevaUserID : requestModel.timebankId,
+        photoUrl:
+            requestModel.requestMode == RequestMode.PERSONAL_REQUEST ? userModel.photoURL : timebankModel.photoUrl,
+        name: requestModel.requestMode == RequestMode.PERSONAL_REQUEST ? userModel.fullname : timebankModel.name,
         type: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
             ? ChatType.TYPE_PERSONAL
             : timebankModel.parentTimebankId == FlavorConfig.values.timebankId
@@ -1118,8 +1090,7 @@ class TaskCardViewState extends State<TaskCardView> {
             reviewMessage: message,
           ),
           reciever: receiver,
-          isTimebankMessage:
-              requestModel.requestMode == RequestMode.PERSONAL_REQUEST ? false : true,
+          isTimebankMessage: requestModel.requestMode == RequestMode.PERSONAL_REQUEST ? false : true,
           timebankId: requestModel.timebankId,
           communityId: loggedInUser.currentCommunity,
           sender: sender);
@@ -1132,8 +1103,7 @@ class TaskCardViewState extends State<TaskCardView> {
       int totalMinutes = 0;
 
       if (requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST &&
-          requestModel.selectedInstructor.sevaUserID ==
-              SevaCore.of(context).loggedInUser.sevaUserID) {
+          requestModel.selectedInstructor.sevaUserID == SevaCore.of(context).loggedInUser.sevaUserID) {
         totalMinutes = int.parse(selectedMinutesPrepTime) +
             int.parse(selectedMinutesDeliveryTime) +
             (int.parse(selectedHoursPrepTimeController.text) * 60) +

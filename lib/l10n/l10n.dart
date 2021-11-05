@@ -10273,11 +10273,6 @@ class S {
         name: 'seva_credits_from_text',
       );
 
-  String get as_a_donation_text => Intl.message(
-        'as a donation.',
-        name: 'as_a_donation_text',
-      );
-
   String get change_ownership_successful => Intl.message(
         'You have successfully transferred ownership of **groupName to **newOwnerName.',
         name: 'change_ownership_successful',
@@ -10331,6 +10326,396 @@ class S {
   String get link_for_demo_video_text => Intl.message(
         'Link for demo video:',
         name: 'link_for_demo_video_text',
+      );
+
+  String get within_text => Intl.message(
+        'Within',
+        name: 'within_text',
+      );
+
+  String get share_text => Intl.message(
+        'Share',
+        name: 'share_text',
+      );
+
+  String get edit_post => Intl.message(
+        'Edit Post',
+        name: 'edit_post',
+      );
+
+  String get create_post => Intl.message(
+        'Create a Post',
+        name: 'create_post',
+      );
+
+  String get add_to_post => Intl.message(
+        'Add to post',
+        name: 'add_to_post',
+      );
+
+  String get save_changes => Intl.message(
+        'Save Changes',
+        name: 'save_changes',
+      );
+
+  String get accept_this_offer => Intl.message(
+        'Would you like to accept this offer?',
+        name: 'accept_this_offer',
+      );
+
+  String get have_accepted_offer => Intl.message(
+        'You have accepted this offer.',
+        name: 'have_accepted_offer',
+      );
+
+  String get chat_text => Intl.message(
+        'Chat',
+        name: 'chat_text',
+      );
+
+  String get share_post_to => Intl.message(
+        'Whom do you want to share this Post?',
+        name: 'share_post_to',
+      );
+
+  String get remove_bookmark => Intl.message(
+        'Remove from bookmark',
+        name: 'remove_bookmark',
+      );
+
+  String get add_images => Intl.message(
+        'Add images',
+        name: 'add_images',
+      );
+
+  String get choose_images => Intl.message(
+        'Choose Images',
+        name: 'choose_images',
+      );
+
+  String get money_request_minimum_donation_error_text => Intl.message(
+        'Please enter the number of minimum donation needed',
+        name: 'money_request_minimum_donation_error_text',
+      );
+
+  String get latest => Intl.message(
+        'LATEST',
+        name: 'latest',
+      );
+
+  String get why_do_you_want_to_join => Intl.message(
+        'Why do you want to join this community?',
+        name: 'why_do_you_want_to_join',
+      );
+
+  String get recommended_image_ratio => Intl.message(
+        'Recommended ratio 3:1, no larger than 2 MB',
+        name: 'recommended_image_ratio',
+      );
+
+  String get short_review => Intl.message(
+        'Write a short review',
+        name: 'short_review',
+      );
+
+  String get invite_members_copy_code => Intl.message(
+        'To invite members, copy and paste this either into the message portion of your email or into a text message.',
+        name: 'invite_members_copy_code',
+      );
+
+  String get failed_text => Intl.message(
+        'FAILED',
+        name: 'failed_text',
+      );
+
+  String get not_attended => Intl.message(
+        'NOT ATTENDED',
+        name: 'not_attended',
+      );
+
+  String get copy_to_clipboard => Intl.message(
+        'Copy to clipboard',
+        name: 'copy_to_clipboard',
+      );
+
+  String get create_feeds => Intl.message(
+        'Create Feeds',
+        name: 'create_feeds',
+      );
+
+  String get billing_access => Intl.message(
+        'Billing Access',
+        name: 'billing_access',
+      );
+
+  String get customise_community_title => Intl.message(
+        'Customise Community',
+        name: 'customise_community_title',
+      );
+
+  String get create_borrow_request => Intl.message(
+        'Create Borrow Request',
+        name: 'create_borrow_request',
+      );
+
+  String get create_events => Intl.message(
+        'Create Events',
+        name: 'create_events',
+      );
+
+  String get create_goods_offers => Intl.message(
+        'Create Goods Offers',
+        name: 'create_goods_offers',
+      );
+
+  String get create_goods_request => Intl.message(
+        'Create Goods Requests',
+        name: 'create_goods_request',
+      );
+
+  String get create_money_offers => Intl.message(
+        'Create Money Offers',
+        name: 'create_money_offers',
+      );
+
+  String get create_money_request => Intl.message(
+        'Create Money Requests',
+        name: 'create_money_request',
+      );
+
+  String get create_time_offers => Intl.message(
+        'Create Time Offers',
+        name: 'create_time_offers',
+      );
+
+  String get create_time_request => Intl.message(
+        'Create Time Requests',
+        name: 'create_time_request',
+      );
+
+  String get invite_bulk_members => Intl.message(
+        'Invite / Invite bulk members',
+        name: 'invite_bulk_members',
+      );
+
+  String get promote_user => Intl.message(
+        'Promote User',
+        name: 'promote_user',
+      );
+
+  String get demote_user => Intl.message(
+        'Demote user',
+        name: 'demote_user',
+      );
+
+  String get create_onetomany_request => Intl.message(
+        'Create One To Many Requests',
+        name: 'create_onetomany_request',
+      );
+
+  String get create_virtual_request => Intl.message(
+        'Create virtual Request',
+        name: 'create_virtual_request',
+      );
+
+  String get create_public_request => Intl.message(
+        'Create public request',
+        name: 'create_public_request',
+      );
+
+  String get create_virtual_event => Intl.message(
+        'Create virtual event',
+        name: 'create_virtual_event',
+      );
+
+  String get create_public_event => Intl.message(
+        'Create public event',
+        name: 'create_public_event',
+      );
+
+  String get create_endorsed_group => Intl.message(
+        'Create endorsed group',
+        name: 'create_endorsed_group',
+      );
+
+  String get create_private_group => Intl.message(
+        'Create private group',
+        name: 'create_private_group',
+      );
+
+  String get one_to_many_offer => Intl.message(
+        'Create One To Many Offer',
+        name: 'one_to_many_offer',
+      );
+
+  String get accept_time_offer => Intl.message(
+        'Accept Time Offer',
+        name: 'accept_time_offer',
+      );
+
+  String get accept_money_offer => Intl.message(
+        'Accept Money Offer',
+        name: 'accept_money_offer',
+      );
+
+  String get accept_goods_offer => Intl.message(
+        'Accept Goods Offer',
+        name: 'accept_goods_offer',
+      );
+
+  String get accept_one_to_many_offer => Intl.message(
+        'Accept One To Many Offer',
+        name: 'accept_one_to_many_offer',
+      );
+
+  String get create_lending_offers => Intl.message(
+        'Create Lending Offers',
+        name: 'create_lending_offers',
+      );
+
+  String get accept_lending_offers => Intl.message(
+        'Accept Lending Offers',
+        name: 'accept_lending_offers',
+      );
+
+  String get as_a_donation_text => Intl.message(
+        'as a donation.',
+        name: 'as_a_donation_text',
+      );
+
+  String get name_should_contain_three_characters => Intl.message(
+        'Name should atleast contain 3 characters',
+        name: 'name_should_contain_three_characters',
+      );
+
+  String get password_cannot_be_empty => Intl.message(
+        'Password cannot be empty',
+        name: 'password_cannot_be_empty',
+      );
+
+  String get password_length => Intl.message(
+        'Password must be at least 6 character long',
+        name: 'password_length',
+      );
+
+  String get confirm_password_length => Intl.message(
+        'Confirm Password must be at least 6 character long',
+        name: 'confirm_password_length',
+      );
+
+  String get confirm_password_empty => Intl.message(
+        'Confirm Password cannot be empty',
+        name: 'confirm_password_empty',
+      );
+
+  String get paypal_hint_text => Intl.message(
+        'Ex: Paypal ID (phone or email)',
+        name: 'paypal_hint_text',
+      );
+
+  String get swift_hint_text => Intl.message(
+        'Ex: Swift ID',
+        name: 'swift_hint_text',
+      );
+
+  String get id_cannot_be_empty => Intl.message(
+        'ID cannot be empty',
+        name: 'id_cannot_be_empty',
+      );
+
+  String get enter_valid_swift_id => Intl.message(
+        'Enter valid Swift ID',
+        name: 'enter_valid_swift_id',
+      );
+
+  String get creating_offer_with_underscore => Intl.message(
+        'Creating offer with \"_\" is not allowed',
+        name: 'creating_offer_with_underscore',
+      );
+
+  String get change_trasaction_bundle_pricing => Intl.message(
+        'Are you sure you want to change the transaction pricing to bundle pricing',
+        name: 'change_trasaction_bundle_pricing',
+      );
+
+  String get pricing_method_changed => Intl.message(
+        'Pricing method changed successfully',
+        name: 'pricing_method_changed',
+      );
+
+  String get change_trasaction_pricing => Intl.message(
+        'Change transaction pricing',
+        name: 'change_trasaction_pricing',
+      );
+
+  String get seva_credit_s => Intl.message(
+        'Seva Credit(s)',
+        name: 'seva_credit_s',
+      );
+
+  String get link_not_provided => Intl.message(
+        'Link not provided!',
+        name: 'link_not_provided',
+      );
+
+  String get customize_community => Intl.message(
+        'Customize Your Community',
+        name: 'customize_community',
+      );
+
+  String get amount_cannot_be_greater => Intl.message(
+        'Requested amount cannot be greater than offered amount!',
+        name: 'amount_cannot_be_greater',
+      );
+
+  String get glossaries_text => Intl.message(
+        'Glossaries',
+        name: 'glossaries_text',
+      );
+
+  String get faq_text => Intl.message(
+        'FAQ',
+        name: 'faq_text',
+      );
+
+  String get requires_permission_to_access_your_location => Intl.message(
+        'requires permission to access your location.',
+        name: 'requires_permission_to_access_your_location',
+      );
+
+  String get would_you_like_to_add_this_event_to_your_calendar => Intl.message(
+        'Would you like to add this event to your calendar?',
+        name: 'would_you_like_to_add_this_event_to_your_calendar',
+      );
+
+  String get choose_category_text => Intl.message(
+        'Choose Category',
+        name: 'choose_category_text',
+      );
+
+  String get reported_within_seva_community => Intl.message(
+        'Reported within Seva Community',
+        name: 'reported_within_seva_community',
+      );
+
+  String get reported_within_group => Intl.message(
+        'Reported within Group',
+        name: 'reported_within_group',
+      );
+
+  String get cropped_image => Intl.message(
+        'Cropped image',
+        name: 'cropped_image',
+      );
+
+  String get relative_text => Intl.message(
+        'relative',
+        name: 'relative_text',
+      );
+
+  String get seva_community_name_already_exists => Intl.message(
+        'Seva Community name already exists',
+        name: 'seva_community_name_already_exists',
       );
 }
 

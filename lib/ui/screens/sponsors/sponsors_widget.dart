@@ -56,8 +56,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
   String userId = '';
   SponsorDataModel removedSponsors;
   SponsorDataModel addedSponsors;
-  StreamController<SponsorDataModel> imageDatacontroller =
-      StreamController.broadcast();
+  StreamController<SponsorDataModel> imageDatacontroller = StreamController.broadcast();
   @override
   Widget build(BuildContext context) {
     userId = SevaCore.of(context).loggedInUser.sevaUserID;
@@ -84,9 +83,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
               width: 30,
             ),
             Offstage(
-              offstage: widget.sponsors.length >= 5 || !widget.isAdminVerified
-                  ? true
-                  : false,
+              offstage: widget.sponsors.length >= 5 || !widget.isAdminVerified ? true : false,
               child: addIconWidget(),
             ),
           ],
@@ -129,8 +126,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                               indexPosition = index;
                               chooseImage(
                                 context: context,
-                                name: widget.sponsors != null ||
-                                        widget.sponsors.isNotEmpty
+                                name: widget.sponsors != null || widget.sponsors.isNotEmpty
                                     ? widget.sponsors[indexPosition].name
                                     : '',
                                 isEdit: true,
@@ -152,8 +148,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                             onTap: () async {
                               removedSponsors = widget.sponsors[index];
                               widget.sponsors.removeAt(index);
-                              widget.onSponsorsRemoved(
-                                  widget.sponsors, removedSponsors);
+                              widget.onSponsorsRemoved(widget.sponsors, removedSponsors);
                               Navigator.of(dialogContext).pop();
                             },
                             title: Text(S.of(context).delete),
@@ -207,9 +202,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
           Column(
             children: List.generate(
               widget.sponsors.length > 5 ? 5 : widget.sponsors.length,
-              (index) => sponsorItemWidget(
-                  name: widget.sponsors[index].name,
-                  logoUrl: widget.sponsors[index].logo),
+              (index) => sponsorItemWidget(name: widget.sponsors[index].name, logoUrl: widget.sponsors[index].logo),
             ),
           ),
         ],
@@ -270,10 +263,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
             SizedBox(
               width: 30,
             ),
-            Offstage(
-                offstage:
-                    widget.sponsors != null && widget.sponsors.length >= 5,
-                child: addIconWidget()),
+            Offstage(offstage: widget.sponsors != null && widget.sponsors.length >= 5, child: addIconWidget()),
           ],
         ),
         SizedBox(
@@ -304,12 +294,9 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                                 onTap: () async {
                                   indexPosition = index;
                                   Navigator.of(dialogContext).pop();
-                                  logger.wtf(
-                                      'create: ${widget.sponsors[indexPosition].name}');
+                                  logger.wtf('create: ${widget.sponsors[indexPosition].name}');
                                   chooseImage(
-                                      context: context,
-                                      name: widget.sponsors[indexPosition].name,
-                                      isEdit: false);
+                                      context: context, name: widget.sponsors[indexPosition].name, isEdit: false);
                                 },
                                 title: Text(S.of(context).change_image),
                                 trailing: Icon(Icons.image),
@@ -327,8 +314,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                                 onTap: () async {
                                   removedSponsors = widget.sponsors[index];
                                   widget.sponsors.removeAt(index);
-                                  widget.onSponsorsRemoved(
-                                      widget.sponsors, removedSponsors);
+                                  widget.onSponsorsRemoved(widget.sponsors, removedSponsors);
                                   Navigator.of(dialogContext).pop();
                                 },
                                 title: Text(S.of(context).delete),
@@ -354,9 +340,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                       ),
                     );
                   },
-                  child: sponsorItemWidget(
-                      name: widget.sponsors[index].name,
-                      logoUrl: widget.sponsors[index].logo),
+                  child: sponsorItemWidget(name: widget.sponsors[index].name, logoUrl: widget.sponsors[index].logo),
                 ),
               ),
             ),
@@ -404,11 +388,10 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
       barrierDismissible: false,
       builder: (BuildContext viewContext) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
           title: SizedBox(
             height: 216,
-            width: MediaQuery.of(context).size.width - 60,
+            width: MediaQuery.of(context).size.width - 46,
             child: Row(
               children: [
                 Padding(
@@ -429,11 +412,9 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                                     imagePickerType: ImagePickerType.SPONSOR,
                                     onLinkCreated: (link) {
                                       // try {
-                                      SponsorDataModel sponsorModel =
-                                          SponsorDataModel(
+                                      SponsorDataModel sponsorModel = SponsorDataModel(
                                         name: '',
-                                        createdAt: DateTime.now()
-                                            .millisecondsSinceEpoch,
+                                        createdAt: DateTime.now().millisecondsSinceEpoch,
                                         createdBy: userId,
                                         logo: link,
                                       );
@@ -473,9 +454,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                           stream: imageDatacontroller.stream,
                           builder: (context, snapshot) {
                             return Image.network(
-                              snapshot != null &&
-                                      snapshot.data != null &&
-                                      snapshot.data.logo != ''
+                              snapshot != null && snapshot.data != null && snapshot.data.logo != ''
                                   ? snapshot.data.logo
                                   : defaultCameraImageURL,
                             );
@@ -500,8 +479,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                           Spacer(),
                           IconButton(
                             iconSize: 15,
-                            icon: Icon(Icons.cancel,
-                                size: 15, color: Colors.grey[400]),
+                            icon: Icon(Icons.cancel, size: 15, color: Colors.grey[400]),
                             onPressed: () => Navigator.of(viewContext).pop(),
                           ),
                         ],
@@ -512,12 +490,10 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                         decoration: BoxDecoration(
                           color: Colors.grey.shade100,
                           borderRadius: BorderRadius.circular(6),
-                          border:
-                              Border.all(color: Colors.grey.shade200, width: 1),
+                          border: Border.all(color: Colors.grey.shade200, width: 1),
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 5, vertical: 5),
+                          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -556,8 +532,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                                           //   ),
                                           // ),
                                           (
-                                        contentPadding:
-                                            EdgeInsets.only(bottom: 8),
+                                        contentPadding: EdgeInsets.only(bottom: 8),
                                         border: InputBorder.none,
                                         enabledBorder: InputBorder.none,
                                         focusedBorder: InputBorder.none,
@@ -572,24 +547,16 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                                         ),
                                       ),
                                       keyboardType: TextInputType.text,
-                                      textCapitalization:
-                                          TextCapitalization.sentences,
-                                      initialValue: indexPosition != null
-                                          ? widget.sponsors[indexPosition].name
-                                          : '',
+                                      textCapitalization: TextCapitalization.sentences,
+                                      initialValue: indexPosition != null ? widget.sponsors[indexPosition].name : '',
                                       inputFormatters: [
                                         LengthLimitingTextInputFormatter(50),
                                       ],
                                       validator: (value) {
                                         if (value.isEmpty) {
-                                          return S
-                                              .of(context)
-                                              .validation_error_full_name;
-                                        } else if (profanityDetector
-                                            .isProfaneString(value)) {
-                                          return S
-                                              .of(context)
-                                              .profanity_text_alert;
+                                          return S.of(context).validation_error_full_name;
+                                        } else if (profanityDetector.isProfaneString(value)) {
+                                          return S.of(context).profanity_text_alert;
                                         } else {
                                           return null;
                                         }
@@ -607,15 +574,16 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                       StreamBuilder<Object>(
                           stream: imageDatacontroller.stream,
                           builder: (context, snapshot) {
+                            var side = MediaQuery.of(context).size.width / 17;
                             return CustomTextButton(
                               shape: StadiumBorder(),
-                              padding: EdgeInsets.fromLTRB(40, 10, 40, 10),
+                              padding: EdgeInsets.fromLTRB(side, 5, side, 5),
                               color: Theme.of(context).primaryColor,
                               // textColor: FlavorConfig.values.buttonTextColor,
                               child: Text(
                                 S.of(context).add_sponsor,
                                 style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 15,
                                   fontFamily: 'Europa',
                                   color: Colors.white,
                                 ),
@@ -628,11 +596,9 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                                       try {
                                         SponsorDataModel model = snapshot.data;
                                         if (model != null) {
-                                          SponsorDataModel sponsorModel =
-                                              SponsorDataModel(
+                                          SponsorDataModel sponsorModel = SponsorDataModel(
                                             name: name,
-                                            createdAt: DateTime.now()
-                                                .millisecondsSinceEpoch,
+                                            createdAt: DateTime.now().millisecondsSinceEpoch,
                                             createdBy: userId,
                                             logo: model.logo,
                                           );
@@ -647,22 +613,17 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                                               addedSponsors = sponsorModel;
                                             }
                                           } else {
-                                            widget.sponsors[indexPosition] =
-                                                sponsorModel;
-                                            addedSponsors =
-                                                widget.sponsors[indexPosition];
+                                            widget.sponsors[indexPosition] = sponsorModel;
+                                            addedSponsors = widget.sponsors[indexPosition];
                                           }
 
-                                          widget.onSponsorsAdded(
-                                              widget.sponsors, addedSponsors);
+                                          widget.onSponsorsAdded(widget.sponsors, addedSponsors);
                                           indexPosition = null;
                                           imageDatacontroller.add(null);
                                         } else {
-                                          SponsorDataModel sponsorModel =
-                                              SponsorDataModel(
+                                          SponsorDataModel sponsorModel = SponsorDataModel(
                                             name: name,
-                                            createdAt: DateTime.now()
-                                                .millisecondsSinceEpoch,
+                                            createdAt: DateTime.now().millisecondsSinceEpoch,
                                             createdBy: userId,
                                             logo: '',
                                           );
@@ -677,13 +638,10 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                                               addedSponsors = sponsorModel;
                                             }
                                           } else {
-                                            widget.sponsors[indexPosition] =
-                                                sponsorModel;
-                                            addedSponsors =
-                                                widget.sponsors[indexPosition];
+                                            widget.sponsors[indexPosition] = sponsorModel;
+                                            addedSponsors = widget.sponsors[indexPosition];
                                           }
-                                          widget.onSponsorsAdded(
-                                              widget.sponsors, addedSponsors);
+                                          widget.onSponsorsAdded(widget.sponsors, addedSponsors);
                                           indexPosition = null;
                                           imageDatacontroller.add(null);
                                         }
@@ -724,8 +682,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
       useRootNavigator: true,
       builder: (BuildContext viewContext) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
           title: Text(
             S.of(context).sponsor_name,
             style: TextStyle(fontSize: 15.0),
@@ -736,13 +693,10 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
               Form(
                 key: _formKey,
                 child: TextFormField(
-                  decoration:
-                      InputDecoration(hintText: S.of(context).enter_name),
+                  decoration: InputDecoration(hintText: S.of(context).enter_name),
                   keyboardType: TextInputType.text,
                   textCapitalization: TextCapitalization.sentences,
-                  initialValue: indexPosition != null
-                      ? widget.sponsors[indexPosition].name
-                      : '',
+                  initialValue: indexPosition != null ? widget.sponsors[indexPosition].name : '',
                   style: TextStyle(fontSize: 17.0),
                   inputFormatters: [
                     LengthLimitingTextInputFormatter(50),
@@ -840,8 +794,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                           // } else {
                           widget.sponsors[indexPosition].name = name;
                           addedSponsors = widget.sponsors[indexPosition];
-                          widget.onSponsorsAdded(
-                              widget.sponsors, addedSponsors);
+                          widget.onSponsorsAdded(widget.sponsors, addedSponsors);
                           indexPosition = null;
                           name = null;
                           // Navigator.of(viewContext).pop();
@@ -869,8 +822,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
       barrierDismissible: false,
       builder: (BuildContext viewContext) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
           title: Text(
             S.of(context).add_sponsor_image,
             style: TextStyle(fontSize: 15.0),
