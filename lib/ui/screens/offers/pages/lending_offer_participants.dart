@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/components/lending_borrow_widgets/approve_lending_offer.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
-import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/enums/lending_borrow_enums.dart';
 import 'package:sevaexchange/models/models.dart';

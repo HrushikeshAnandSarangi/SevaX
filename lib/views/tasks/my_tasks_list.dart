@@ -637,7 +637,7 @@ class TaskCardViewState extends State<TaskCardView> {
                                             focusNode: focusNodeList[0],
                                             keyboardType: TextInputType.number,
                                             formatters: [
-                                              BlacklistingTextInputFormatter(
+                                              FilteringTextInputFormatter.deny(
                                                 RegExp('[\\.|\\,|\\ |\\-]'),
                                               ),
                                             ],
@@ -722,7 +722,7 @@ class TaskCardViewState extends State<TaskCardView> {
                                             focusNode: focusNodeList[1],
                                             keyboardType: TextInputType.number,
                                             formatters: [
-                                              BlacklistingTextInputFormatter(
+                                              FilteringTextInputFormatter.deny(
                                                 RegExp('[\\.|\\,|\\ |\\-]'),
                                               ),
                                             ],
@@ -804,7 +804,7 @@ class TaskCardViewState extends State<TaskCardView> {
                                           focusNode: focusNodeList[2],
                                           keyboardType: TextInputType.number,
                                           formatters: [
-                                            BlacklistingTextInputFormatter(
+                                            FilteringTextInputFormatter.deny(
                                               RegExp('[\\.|\\,|\\ |\\-]'),
                                             ),
                                           ],
