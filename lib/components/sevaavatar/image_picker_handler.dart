@@ -93,7 +93,7 @@ class ImagePickerHandler {
     log('event cover cropImage path ${path}');
 
     File croppedFile;
-    ImageCropper.cropImage(
+    ImageCropper().cropImage(
       sourcePath: path,
       aspectRatio: CropAspectRatio(
         ratioX: isCover ? 3 / 1 : 1.0,

@@ -253,7 +253,7 @@ class _ImageUrlViewState extends State<ImageUrlView> {
 
   Future cropImage(String path) async {
     File croppedFile;
-    await ImageCropper.cropImage(
+    await ImageCropper().cropImage(
       sourcePath: path,
       aspectRatio: CropAspectRatio(
         ratioX: 1.0,

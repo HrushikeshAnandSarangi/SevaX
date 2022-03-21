@@ -89,7 +89,7 @@ class NewsImagePickerHandler {
 
   Future cropImage(String image) async {
     File croppedFile;
-    ImageCropper.cropImage(
+    ImageCropper().cropImage(
       sourcePath: image,
       aspectRatio: CropAspectRatio(
         ratioX: 1.0,

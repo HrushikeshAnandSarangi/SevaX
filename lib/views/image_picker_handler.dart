@@ -39,7 +39,7 @@ class ImagePickerHandler {
   }
 
   Future cropImage(String image) async {
-    File croppedFile = await ImageCropper.cropImage(
+    File croppedFile = await ImageCropper().cropImage(
       sourcePath: image,
       aspectRatio: CropAspectRatio(
         ratioX: 1.0,

@@ -37,7 +37,7 @@ class _SelectedImagePreviewState extends State<SelectedImagePreview> {
           IconButton(
             icon: Icon(Icons.crop_rotate),
             onPressed: () {
-              ImageCropper.cropImage(sourcePath: _file.path).then((File file) {
+              ImageCropper().cropImage(sourcePath: _file.path).then((File file) {
                 if (file != null) {
                   setState(() {
                     _file = file;
