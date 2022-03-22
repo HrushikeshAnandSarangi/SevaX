@@ -1,10 +1,11 @@
 buildscript {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
         maven {
             url 'https://maven.fabric.io/public'
         }
+        jcenter()
     }
 
     dependencies {
@@ -44,7 +45,7 @@ subprojects {
     afterEvaluate {project ->
         if (project.hasProperty("android") && project.property("android").compileSdkVersion.equals("android-R")) {
             android {
-                compileSdkVersion 30
+                compileSdkVersion 31
             }
         }
     }

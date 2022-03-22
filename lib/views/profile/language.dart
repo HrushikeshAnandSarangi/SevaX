@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
@@ -15,7 +17,7 @@ Map<String, String> languageNames = {
   'es': 'Spanish',
   'af': 'Afrikaans',
   'sw': 'Swahili',
-  // 'sn': 'Shona',
+  'de': 'German',
   'zh_CN': 'Chinese Simplified',
   'zh_TW': 'Chinese Traditional',
 };
@@ -91,6 +93,7 @@ class LanguageListState extends State<LanguageList> {
 //            controller: _scrollController,
           itemBuilder: (context, index) {
             LanguageModel model = languagelist.elementAt(index);
+            log("language length ${languagelist.length}");
             return Card(
               child: ListTile(
                 leading: getIcon(

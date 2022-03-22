@@ -67,7 +67,7 @@ dependencies:
   intl: ^0.16.1
   intro_slider:
     path: ./packages/intro_slider
-  location: null
+  #location: ^4.1.1
   logger: ^1.0.0
   modal_progress_hud: ^0.1.3
   package_info: ^0.4.1
@@ -93,6 +93,7 @@ dependencies:
     git:
       url: git://github.com/Drabu/DoseForm.git
       path: "packages/doseform"
+  geolocator: ^6.2.1
 
 dependency_overrides:
   intl: ^0.17.0-nullsafety.2
