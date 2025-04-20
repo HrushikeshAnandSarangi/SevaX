@@ -12,7 +12,7 @@ class NotificationTimebankList extends StatelessWidget {
   Widget build(BuildContext context) {
     final _bloc = BlocProvider.of<NotificationsBloc>(context);
     return StreamBuilder<TimebankNotificationData>(
-      stream: _bloc.timebankNotifications,
+      stream: _bloc!.timebankNotifications,
       builder: (context, AsyncSnapshot<TimebankNotificationData> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting ||
             snapshot.data == null) {

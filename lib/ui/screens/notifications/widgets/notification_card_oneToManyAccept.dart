@@ -19,20 +19,17 @@ class NotificationCardOneToManyAccept extends StatelessWidget {
   final int timestamp;
 
   const NotificationCardOneToManyAccept({
-    Key key,
-    this.onPressedAccept,
-    this.onPressedReject,
-    this.photoUrl,
-    this.title,
-    this.subTitle,
-    this.onDismissed,
-    this.entityName,
+    Key? key,
+    required this.onPressedAccept,
+    required this.onPressedReject,
+    required this.photoUrl,
+    required this.title,
+    required this.subTitle,
+    required this.onDismissed,
+    required this.entityName,
     this.isDissmissible = true,
-    @required this.timestamp,
-  })  : assert(title != null),
-        assert(subTitle != null),
-        assert(timestamp != null),
-        super(key: key);
+    required this.timestamp,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -40,51 +37,52 @@ class NotificationCardOneToManyAccept extends StatelessWidget {
       absorbing:
           !isDissmissible && onPressedAccept == null && onPressedReject == null,
       child: Slidable(
-        actionExtentRatio: 0.25,
-        actions: isDissmissible
-            ? <Widget>[
-                IconSlideAction(
-                  caption: S.of(context).delete,
-                  color: Colors.red,
-                  icon: Icons.delete,
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      barrierDismissible: true,
-                      builder: (BuildContext dialogContext) {
-                        return AlertDialog(
-                          title: Text(
-                            S.of(context).delete_notification,
-                          ),
-                          content: Text(
-                            S.of(context).delete_notification_confirmation,
-                          ),
-                          actions: <Widget>[
-                            CustomTextButton(
-                              onPressed: () =>
-                                  {Navigator.of(dialogContext).pop()},
-                              child: Text(
-                                S.of(context).cancel,
-                              ),
+        startActionPane: isDissmissible
+            ? ActionPane(
+                motion: const DrawerMotion(),
+                children: [
+                  SlidableAction(
+                    label: S.of(context).delete,
+                    backgroundColor: Colors.red,
+                    icon: Icons.delete,
+                    onPressed: (context) {
+                      showDialog(
+                        context: context,
+                        barrierDismissible: true,
+                        builder: (BuildContext dialogContext) {
+                          return AlertDialog(
+                            title: Text(
+                              S.of(context).delete_notification,
                             ),
-                            CustomTextButton(
-                              onPressed: () async {
-                                onDismissed();
-                                Navigator.of(dialogContext).pop();
-                              },
-                              child: Text(
-                                S.of(context).delete,
-                              ),
+                            content: Text(
+                              S.of(context).delete_notification_confirmation,
                             ),
-                          ],
-                        );
-                      },
-                    );
-                  },
-                ),
-              ]
-            : [],
-        actionPane: SlidableDrawerActionPane(),
+                            actions: <Widget>[
+                              CustomTextButton(
+                                onPressed: () =>
+                                    {Navigator.of(dialogContext).pop()},
+                                child: Text(
+                                  S.of(context).cancel,
+                                ),
+                              ),
+                              CustomTextButton(
+                                onPressed: () async {
+                                  onDismissed();
+                                  Navigator.of(dialogContext).pop();
+                                },
+                                child: Text(
+                                  S.of(context).delete,
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ],
+              )
+            : null,
         child: Container(
           margin: EdgeInsets.fromLTRB(5, 5, 5, 0),
           decoration: ShapeDecoration(
@@ -143,6 +141,11 @@ class NotificationCardOneToManyAccept extends StatelessWidget {
                     child: CustomElevatedButton(
                       padding: EdgeInsets.zero,
                       color: Theme.of(context).primaryColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      elevation: 2.0,
+                      textColor: Colors.white,
                       child: Text(
                         S.of(context).accept,
                         style: TextStyle(
@@ -150,16 +153,21 @@ class NotificationCardOneToManyAccept extends StatelessWidget {
                             fontFamily: 'Europa',
                             fontSize: 12),
                       ),
-                      onPressed: () =>
-                          onPressedAccept != null ? onPressedAccept() : null,
+                      onPressed: onPressedAccept,
                     ),
                   ),
-                  SizedBox(width: 12),
+                  SizedBox(width: 10),
                   Container(
                     height: MediaQuery.of(context).size.width * 0.07,
                     child: CustomElevatedButton(
                       padding: EdgeInsets.zero,
-                      color: FlavorConfig.values.theme.accentColor,
+                      color: FlavorConfig.values.theme?.colorScheme.secondary ??
+                          Colors.grey,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      elevation: 2.0,
+                      textColor: Colors.white,
                       child: Text(
                         S.of(context).reject,
                         style: TextStyle(
@@ -167,8 +175,7 @@ class NotificationCardOneToManyAccept extends StatelessWidget {
                             fontFamily: 'Europa',
                             fontSize: 12),
                       ),
-                      onPressed: () =>
-                          onPressedReject != null ? onPressedReject() : null,
+                      onPressed: onPressedReject,
                     ),
                   ),
                 ],

@@ -26,10 +26,9 @@ class AdminMessageCard extends StatelessWidget {
             onTap: () => Navigator.of(context).push(
               TimebankMessagePage.route(
                 adminMessageWrapperModel: model!,
-                                communityId: model!.communityId, // Make sure 'communityId' exists in AdminMessageWrapperModel
-
+                // Make sure 'communityId' exists in AdminMessageWrapperModel
                 // If the correct property is named differently, for example 'communityID' or 'community', use that instead:
-                // communityId: model!.communityID,
+                communityId: model!.id,
                 // or
                 // communityId: model!.community,
               ),
@@ -88,7 +87,8 @@ class AdminMessageCard extends StatelessWidget {
               ),
               SizedBox(width: 20),
               Text(
-                     ? ""
+                model?.timestamp == null
+                    ? ""
                     : timeago.format(model!.timestamp,
                         locale: Locale(getLangTag()).toLanguageTag()),
                 style: TextStyle(fontSize: 12),

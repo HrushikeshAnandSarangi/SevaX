@@ -381,14 +381,14 @@ class UserModel extends DataModel {
   }
 
   UserModel.fromDynamic(UserModel user) {
-    this.fullname = user.fullname == null || user.fullname?.isEmpty == true
+    this.fullname = user.fullname == null || user.fullname!.isEmpty
         ? "Anonymous"
         : user.fullname;
     this.photoURL = user.photoURL;
     this.sevaUserID = user.sevaUserID;
     this.bio = user.bio;
     this.email = user.email;
-    this.communities = List.castFrom(user.communities ?? []);
+    this.communities = List.castFrom(user.communities!);
   }
 
   bool operator ==(o) => o is UserModel && o.sevaUserID == sevaUserID;
@@ -405,7 +405,7 @@ class UserModel extends DataModel {
   Map<String, dynamic> toMap() {
     Map<String, dynamic> object = {};
 
-    if (this.calendarId != null && this.calendarId?.isNotEmpty == true) {
+    if (this.calendarId != null && this.calendarId!.isNotEmpty) {
       object['calendarId'] = this.calendarId;
     }
     if (this.calendarScope != null) {
@@ -423,18 +423,18 @@ class UserModel extends DataModel {
     if (this.calendarAccId != null) {
       object['calendarAccId'] = this.calendarAccId;
     }
-    if (this.bio != null && this.bio?.isNotEmpty == true) {
+    if (this.bio != null && this.bio!.isNotEmpty) {
       object['bio'] = this.bio;
     }
-    if (this.email != null && this.email?.isNotEmpty == true) {
+    if (this.email != null && this.email!.isNotEmpty) {
       object['email'] = this.email;
     }
-    if (this.fullname != null && this.fullname?.isNotEmpty == true) {
+    if (this.fullname != null && this.fullname!.isNotEmpty) {
       object['fullname'] = this.fullname;
     } else {
       object['fullname'] = "Anonymous";
     }
-    if (this.photoURL != null && this.photoURL?.isNotEmpty == true) {
+    if (this.photoURL != null && this.photoURL!.isNotEmpty) {
       object['photourl'] = this.photoURL;
     }
     if (this.interests != null) {
@@ -446,15 +446,14 @@ class UserModel extends DataModel {
     if (this.calendar != null) {
       object['calendar'] = this.calendar;
     }
-    if (this.reportedUsers != null && this.reportedUsers?.isNotEmpty == true) {
+    if (this.reportedUsers != null && this.reportedUsers!.isNotEmpty) {
       object['reportedUsers'] = this.reportedUsers;
     }
     if (this.recommendedForRequestIds != null &&
-        this.recommendedForRequestIds?.isNotEmpty == true) {
+        this.recommendedForRequestIds!.isNotEmpty) {
       object['recommendedForRequestIds'] = this.recommendedForRequestIds;
     }
-    if (this.curatedRequestIds != null &&
-        this.curatedRequestIds?.isNotEmpty == true) {
+    if (this.curatedRequestIds != null && this.curatedRequestIds!.isNotEmpty) {
       object['curatedRequestIds'] = this.curatedRequestIds;
     }
     if (this.requestStatus != null) {
@@ -464,30 +463,29 @@ class UserModel extends DataModel {
       object['otp'] = this.otp;
     }
     if (this.membershipCampaigns != null &&
-        this.membershipCampaigns?.isNotEmpty == true) {
+        this.membershipCampaigns!.isNotEmpty) {
       object['membership_campaigns'] = this.membershipCampaigns;
     }
     if (this.membershipTimebanks != null &&
-        this.membershipTimebanks?.isNotEmpty == true) {
+        this.membershipTimebanks!.isNotEmpty) {
       object['membershipTimebanks'] = this.membershipTimebanks;
     }
-    if (this.sevaUserID != null && this.sevaUserID?.isNotEmpty == true) {
+    if (this.sevaUserID != null && this.sevaUserID!.isNotEmpty) {
       object['sevauserid'] = this.sevaUserID;
     }
     if (this.skills != null) {
       object['skills'] = this.skills;
     }
-    if (this.communities != null && this.communities?.isNotEmpty == true) {
+    if (this.communities != null && this.communities!.isNotEmpty) {
       object['communities'] = this.communities;
     } else {
       object['communities'] = [FlavorConfig.values.timebankId];
     }
     if (this.favoriteByTimeBank != null &&
-        this.favoriteByTimeBank?.isNotEmpty == true) {
+        this.favoriteByTimeBank!.isNotEmpty) {
       object['favoriteByTimeBank'] = this.favoriteByTimeBank;
     }
-    if (this.favoriteByMember != null &&
-        this.favoriteByMember?.isNotEmpty == true) {
+    if (this.favoriteByMember != null && this.favoriteByMember!.isNotEmpty) {
       object['favoriteByMember'] = this.favoriteByMember;
     }
     if (this.currentCommunity != null) {
@@ -545,7 +543,7 @@ class UserModel extends DataModel {
       this.notificationsRead = 0;
     }
 
-    if (this.pastHires != null && this.pastHires?.isNotEmpty == true) {
+    if (this.pastHires != null && this.pastHires!.isNotEmpty) {
       object['recommendedTimebank'] = this.pastHires;
     } else {
       object['recommendedTimebank'] = [];
@@ -562,10 +560,10 @@ class UserModel extends DataModel {
       object['cvName'] = this.cvName;
     }
     if (this.deviceDetails != null) {
-      object['deviceDetails'] = this.deviceDetails?.toMap();
+      object['deviceDetails'] = this.deviceDetails!.toMap();
     }
     if (this.creationSource != null) {
-      object['creationSource'] = this.creationSource?.toMap();
+      object['creationSource'] = this.creationSource!.toMap();
     }
     return object;
   }

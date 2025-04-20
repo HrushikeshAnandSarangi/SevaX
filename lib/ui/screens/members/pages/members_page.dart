@@ -323,7 +323,9 @@ class _MembersPageState extends State<MembersPage> {
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => SwitchTimebank(),
+                                    builder: (context) => SwitchTimebank(
+                                      content: "Timebank switched",
+                                    ),
                                   ),
                                 );
                               },

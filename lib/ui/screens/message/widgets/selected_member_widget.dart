@@ -6,13 +6,13 @@ import 'package:sevaexchange/ui/screens/search/widgets/network_image.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 class SelectedMemberWidget extends StatelessWidget {
-  final TimebankModel timebankModel;
-  final ParticipantInfo info;
-  final VoidCallback onRemovePressed;
-  final bool isEditable;
+  final TimebankModel? timebankModel;
+  final ParticipantInfo? info;
+  final VoidCallback? onRemovePressed;
+  final bool? isEditable;
 
   const SelectedMemberWidget(
-      {Key key,
+      {Key? key,
       this.timebankModel,
       this.info,
       this.onRemovePressed,
@@ -22,7 +22,7 @@ class SelectedMemberWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return (info == null ||
             (timebankModel != null
-                ? !timebankModel.members.contains(info.id)
+                ? !timebankModel!.members.contains(info!.id!)
                 : false))
         ? Container(
             width: 0,
@@ -43,7 +43,7 @@ class SelectedMemberWidget extends StatelessWidget {
                       ),
                     ),
                     Offstage(
-                      offstage: !isEditable,
+                      offstage: !isEditable!,
                       child: Align(
                         alignment: Alignment.topRight,
                         child: Container(
@@ -63,7 +63,7 @@ class SelectedMemberWidget extends StatelessWidget {
                     ),
                   ],
                 ),
-                Text(info.name == null ? '' : info.name,
+                Text(info!.name == null ? '' : info!.name!,
                     textAlign: TextAlign.center),
               ],
             ),

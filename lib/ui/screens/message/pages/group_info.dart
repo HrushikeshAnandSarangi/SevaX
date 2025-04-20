@@ -17,15 +17,16 @@ import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/widgets/camera/selected_image_preview.dart';
 import 'package:sevaexchange/widgets/camera_icon.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/image_picker_widget.dart';
 
 class GroupInfoPage extends StatefulWidget {
-  final ChatModel chatModel;
-  final TimebankModel timebankModel;
+  final ChatModel? chatModel;
+  final TimebankModel? timebankModel;
 
-  GroupInfoPage({Key key, this.chatModel, this.timebankModel})
+  GroupInfoPage({Key? key, this.chatModel, this.timebankModel})
       : super(key: key);
 
   @override
@@ -35,25 +36,26 @@ class GroupInfoPage extends StatefulWidget {
 class _GroupInfoState extends State<GroupInfoPage> {
   final TextEditingController _controller = TextEditingController();
   final _bloc = EditGroupInfoBloc();
-  ChatModel chatModel;
+  ChatModel? chatModel;
   ProfanityImageModel profanityImageModel = ProfanityImageModel();
   ProfanityStatusModel profanityStatusModel = ProfanityStatusModel();
   @override
   void initState() {
     chatModel = widget.chatModel;
-    _bloc.onGroupNameChanged(chatModel.groupDetails.name);
+    _bloc.onGroupNameChanged(chatModel!.groupDetails!.name!);
     _bloc.addCurrentParticipants(
-        List<String>.from(chatModel.participants.map((x) => x)));
+        List<String>.from(chatModel!.participants!.map((x) => x)));
     _bloc.addParticipants(
-      chatModel.participantInfo
+      chatModel!.participantInfo!
           .where(
-            (p) => chatModel.participants.contains(p.id),
+            (p) => chatModel!.participants!.contains(p.id),
           )
           .toList(),
     );
     _bloc.onImageChanged(
       MessageRoomImageModel(
-        stockImageUrl: chatModel.groupDetails.imageUrl,
+        stockImageUrl: chatModel!.groupDetails!.imageUrl!,
+        selectedImage: File(chatModel!.groupDetails!.imageUrl!),
       ),
     );
 
@@ -61,16 +63,16 @@ class _GroupInfoState extends State<GroupInfoPage> {
     super.initState();
   }
 
-  BuildContext dialogContext;
+  BuildContext? dialogContext;
   @override
   Widget build(BuildContext context) {
-    final bool isAdmin = chatModel.groupDetails.admins
+    final bool isAdmin = chatModel!.groupDetails!.admins!
         .contains(SevaCore.of(context).loggedInUser.sevaUserID);
     return Scaffold(
       appBar: AppBar(
         titleSpacing: 0,
         title: Text(
-          "${chatModel.groupDetails.name}",
+          "${chatModel!.groupDetails!.name}",
           style: TextStyle(fontSize: 18),
         ),
         actions: <Widget>[
@@ -99,12 +101,12 @@ class _GroupInfoState extends State<GroupInfoPage> {
                   },
                 );
                 _bloc
-                    .editGroupDetails(widget.chatModel.id, context,
+                    .editGroupDetails(widget.chatModel!.id!, context,
                         SevaCore.of(context).loggedInUser)
                     .then(
                   (value) {
                     if (value) {
-                      Navigator.of(dialogContext).pop();
+                      Navigator.of(dialogContext!).pop();
 
                       Navigator.of(context).pop();
                     }
@@ -135,7 +137,7 @@ class _GroupInfoState extends State<GroupInfoPage> {
                         absorbing: !isAdmin,
                         child: ImagePickerWidget(
                             child: snapshot.data == null &&
-                                    chatModel.groupDetails.imageUrl == null
+                                    chatModel!.groupDetails!.imageUrl! == null
                                 ? CameraIcon(radius: 35)
                                 : Container(
                                     width: 70,
@@ -148,19 +150,20 @@ class _GroupInfoState extends State<GroupInfoPage> {
                                     ),
                                     child: ClipOval(
                                       child: snapshot.data != null
-                                          ? snapshot.data.stockImageUrl != null
+                                          ? snapshot.data!.stockImageUrl != null
                                               ? Image.network(
-                                                  snapshot.data.stockImageUrl)
-                                              : snapshot.data.selectedImage !=
+                                                  snapshot.data!.stockImageUrl)
+                                              : snapshot.data!.selectedImage !=
                                                       null
                                                   ? Image.file(
                                                       snapshot
-                                                          .data.selectedImage,
+                                                          .data!.selectedImage,
                                                       fit: BoxFit.cover,
                                                     )
                                                   : CameraIcon(radius: 35)
                                           : CustomNetworkImage(
-                                              chatModel.groupDetails.imageUrl,
+                                              chatModel!
+                                                  .groupDetails!.imageUrl!,
                                               fit: BoxFit.cover,
                                             ),
                                     ),
@@ -168,7 +171,8 @@ class _GroupInfoState extends State<GroupInfoPage> {
                             onStockImageChanged: (String stockImageUrl) {
                               if (stockImageUrl != null) {
                                 _bloc.onImageChanged(MessageRoomImageModel(
-                                    stockImageUrl: stockImageUrl));
+                                    stockImageUrl: stockImageUrl,
+                                    selectedImage: null!));
                               }
                             },
                             onChanged: (file) {
@@ -190,7 +194,7 @@ class _GroupInfoState extends State<GroupInfoPage> {
                         builder: (context, snapshot) {
                           _controller.value = _controller.value.copyWith(
                             composing: TextRange(start: 0, end: 0),
-                            text: snapshot.data,
+                            text: snapshot.data as String?,
                           );
                           return TextField(
                             enabled: isAdmin,
@@ -202,11 +206,13 @@ class _GroupInfoState extends State<GroupInfoPage> {
                               enabledBorder: InputBorder.none,
                               disabledBorder: InputBorder.none,
                               focusedBorder: InputBorder.none,
-                              errorText: snapshot.error
-                                      .toString()
-                                      .contains('profanity')
-                                  ? S.of(context).profanity_text_alert
-                                  : snapshot.error,
+                              errorText: snapshot.error != null
+                                  ? (snapshot.error
+                                          .toString()
+                                          .contains('profanity')
+                                      ? S.of(context).profanity_text_alert
+                                      : snapshot.error.toString())
+                                  : null,
                               hintText: S.of(context).messaging_room_name,
                               hintStyle: TextStyle(
                                 fontSize: 18,
@@ -231,7 +237,7 @@ class _GroupInfoState extends State<GroupInfoPage> {
               alignment: Alignment.centerLeft,
               padding: EdgeInsets.only(left: 20),
               child: Text(
-                "${S.of(context).participants}: ${chatModel.participants.length ?? 0} OF 256",
+                "${S.of(context).participants}: ${chatModel!.participants!.length ?? 0} OF 256",
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ),
@@ -249,7 +255,7 @@ class _GroupInfoState extends State<GroupInfoPage> {
                           isSelectionEnabled: true,
                           selectedMembers: List.generate(
                               _bloc.participantsList.length,
-                              (i) => _bloc.participantsList[i].id)
+                              (i) => _bloc.participantsList[i].id!)
                             ..remove(
                               SevaCore.of(context).loggedInUser.sevaUserID,
                             ),
@@ -258,26 +264,23 @@ class _GroupInfoState extends State<GroupInfoPage> {
                       ),
                     )
                         .then(
-                      (List<ParticipantInfo> participantInfo) {
-                        if (participantInfo != null) {
-                          _bloc.addParticipants(
-                            participantInfo
-                              ..add(
-                                ParticipantInfo(
-                                  id: SevaCore.of(context)
-                                      .loggedInUser
-                                      .sevaUserID,
-                                  name: SevaCore.of(context)
-                                      .loggedInUser
-                                      .fullname,
-                                  photoUrl: SevaCore.of(context)
-                                      .loggedInUser
-                                      .photoURL,
-                                  type: ChatType.TYPE_MULTI_USER_MESSAGING,
-                                ),
+                      (List<ParticipantInfo>? participantInfo) {
+                        if (participantInfo == null) return;
+                        _bloc.addParticipants(
+                          participantInfo
+                            ..add(
+                              ParticipantInfo(
+                                id: SevaCore.of(context)
+                                    .loggedInUser
+                                    .sevaUserID,
+                                name:
+                                    SevaCore.of(context).loggedInUser.fullname,
+                                photoUrl:
+                                    SevaCore.of(context).loggedInUser.photoURL,
+                                type: ChatType.TYPE_MULTI_USER_MESSAGING,
                               ),
-                          );
-                        }
+                            ),
+                        );
                       },
                     );
                   },
@@ -323,11 +326,11 @@ class _GroupInfoState extends State<GroupInfoPage> {
                     return Container();
                   }
                   return GroupMemberBuilder(
-                    participants: snapshot.data,
-                    isAdmin: chatModel.groupDetails.admins
+                    participants: snapshot.data as List<ParticipantInfo>,
+                    isAdmin: chatModel!.groupDetails!.admins!
                         .contains(SevaCore.of(context).loggedInUser.sevaUserID),
                     onRemovePressed: _bloc.removeMember,
-                    timebankModel: widget.timebankModel,
+                    timebankModel: widget.timebankModel!,
                   );
                 },
               ),
@@ -339,35 +342,35 @@ class _GroupInfoState extends State<GroupInfoPage> {
   }
 
   Future<void> profanityCheck({
-    File file,
-    EditGroupInfoBloc bloc,
+    File? file,
+    EditGroupInfoBloc? bloc,
   }) async {
     progressDialog = ProgressDialog(
       context,
-      type: ProgressDialogType.Normal,
+      type: ProgressDialogType.normal,
       isDismissible: false,
     );
-    progressDialog.show();
+    progressDialog!.show();
 
     // _newsImageURL = imageURL;
     String filePath = DateTime.now().toString();
     if (file == null) {
-      progressDialog.hide();
+      progressDialog!.hide();
     }
     String imageUrl = file != null
         ? await StorageRepository.uploadFile("multiUserMessagingLogo", file)
-        : null;
+        : null!;
     profanityImageModel = await checkProfanityForImage(imageUrl: imageUrl);
     if (profanityImageModel == null) {
-      progressDialog.hide();
+      progressDialog!.hide();
 
       showFailedLoadImage(context: context).then((value) {});
     } else {
       profanityStatusModel =
           await getProfanityStatus(profanityImageModel: profanityImageModel);
 
-      if (profanityStatusModel.isProfane) {
-        progressDialog.hide();
+      if (profanityStatusModel.isProfane!) {
+        progressDialog!.hide();
 
         showProfanityImageAlert(
                 context: context, content: profanityStatusModel.category)
@@ -382,8 +385,9 @@ class _GroupInfoState extends State<GroupInfoPage> {
         deleteFireBaseImage(imageUrl: imageUrl).then((value) {
           if (value) {}
         }).catchError((e) => log(e));
-        bloc.onImageChanged(MessageRoomImageModel(selectedImage: file));
-        progressDialog.hide();
+        bloc!.onImageChanged(
+            MessageRoomImageModel(stockImageUrl: '', selectedImage: file));
+        progressDialog!.hide();
       }
     }
   }

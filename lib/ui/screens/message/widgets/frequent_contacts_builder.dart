@@ -15,7 +15,7 @@ class FrequentContactsBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     log("lenght ${models.length}");
     return StreamBuilder<List<String>>(
-        stream: BlocProvider.of<CreateChatBloc>(context).selectedMembers,
+        stream: BlocProvider.of<CreateChatBloc>(context)!.selectedMembers,
         builder: (context, snapshot) {
           return ListView.builder(
             padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
@@ -31,8 +31,8 @@ class FrequentContactsBuilder extends StatelessWidget {
                   child: MemberCard(
                     info: model.isGroupMessage
                         ? ParticipantInfo(
-                            name: model.chatModel.groupDetails.name,
-                            photoUrl: model.chatModel.groupDetails.imageUrl,
+                            name: model.chatModel.groupDetails!.name,
+                            photoUrl: model.chatModel.groupDetails!.imageUrl,
                           )
                         : model.participantInfo,
                     chatModel: model.chatModel,

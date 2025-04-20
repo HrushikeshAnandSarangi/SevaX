@@ -17,37 +17,38 @@ enum MessageMenu {
 }
 
 class ChatAppBar extends PreferredSize {
-  final ParticipantInfo recieverInfo;
-  final MultiUserMessagingModel groupDetails;
-  final bool isGroupMessage;
-  final VoidCallback clearChat;
-  final VoidCallback blockUser;
-  final VoidCallback exitGroup;
-  final VoidCallback openGroupInfo;
-  final VoidCallback onProfileImageTap;
+  final ParticipantInfo? recieverInfo;
+  final MultiUserMessagingModel? groupDetails;
+  final bool? isGroupMessage;
+  final VoidCallback? clearChat = () {};
+  final VoidCallback? blockUser;
+  final VoidCallback? exitGroup;
+  final VoidCallback? openGroupInfo;
+  final VoidCallback? onProfileImageTap;
 
-  final bool isBlockEnabled;
+  final bool? isBlockEnabled;
 
   ChatAppBar({
+    Key? key,
     this.openGroupInfo,
     this.exitGroup,
     this.groupDetails,
     this.isGroupMessage,
     this.recieverInfo,
-    this.clearChat,
     this.blockUser,
     this.isBlockEnabled,
     this.onProfileImageTap,
-  });
-
-  @override
-  Size get preferredSize => Size.fromHeight(56.0);
+  }) : super(
+            key: key, child: Container(), preferredSize: Size.fromHeight(56.0));
 
   @override
   Widget build(BuildContext context) {
-    final String name = isGroupMessage ? groupDetails.name : recieverInfo.name;
-    final String photoUrl =
-        isGroupMessage ? groupDetails.imageUrl : recieverInfo.photoUrl;
+    final String name = (isGroupMessage! ?? false)
+        ? groupDetails!.name ?? ""
+        : recieverInfo?.name ?? "";
+    final String photoUrl = isGroupMessage!
+        ? groupDetails!.imageUrl!
+        : recieverInfo?.photoUrl ?? '';
     return AppBar(
       iconTheme: IconThemeData(color: Colors.white),
       backgroundColor: Theme.of(context).primaryColor,
@@ -60,7 +61,7 @@ class ChatAppBar extends PreferredSize {
                 ? CustomNetworkImage(
                     photoUrl,
                     size: 36,
-                    onTap: onProfileImageTap,
+                    onTap: onProfileImageTap!,
                   )
                 : CustomAvatar(
                     name: name,
@@ -93,18 +94,18 @@ class ChatAppBar extends PreferredSize {
           case MessageMenu.BLOCK:
             showCustomDialog(
               context,
-              S.of(context).block + " ${recieverInfo.name.split(' ')[0]}.",
-              "${recieverInfo.name.split(' ')[0]} ${S.of(context).chat_block_warning}",
+              S.of(context).block + " ${recieverInfo!.name!.split(' ')[0]}.",
+              "${recieverInfo!.name!.split(' ')[0]} ${S.of(context).chat_block_warning}",
               S.of(context).block,
               S.of(context).cancel,
             ).then((value) {
               if (value != "CANCEL") {
-                blockUser();
+                blockUser!();
               }
             });
             break;
           case MessageMenu.EXIT_CHAT:
-            bool isCreator = groupDetails.admins.contains(
+            bool isCreator = groupDetails!.admins!.contains(
               SevaCore.of(context).loggedInUser.sevaUserID,
             );
             showCustomDialog(
@@ -113,20 +114,20 @@ class ChatAppBar extends PreferredSize {
               isCreator
                   ? S.of(context).exit_messaging_room_admin_confirmation +
                       ' ' +
-                      groupDetails.name
+                      groupDetails!.name!
                   : S.of(context).exit_messaging_room_user_confirmation +
                       ' ' +
-                      groupDetails.name,
+                      groupDetails!.name!,
               S.of(context).exit,
               S.of(context).cancel,
             ).then((value) {
               if (value != "CANCEL") {
-                if (exitGroup != null) exitGroup();
+                if (exitGroup != null) exitGroup!();
               }
             });
             break;
           case MessageMenu.EDIT_GROUP:
-            openGroupInfo();
+            openGroupInfo!();
             break;
           case MessageMenu.CLEAR_CHAT:
             showCustomDialog(
@@ -137,7 +138,7 @@ class ChatAppBar extends PreferredSize {
               S.of(context).cancel,
             ).then((value) {
               if (value != "CANCEL") {
-                clearChat();
+                clearChat!();
               }
             });
             break;
@@ -150,7 +151,7 @@ class ChatAppBar extends PreferredSize {
                 Icons.delete, S.of(context).delete_chat, context),
             value: MessageMenu.CLEAR_CHAT,
           ),
-          ...!isBlockEnabled
+          ...!isBlockEnabled!
               ? [
                   PopupMenuItem(
                     child: textAndIconWidget(
@@ -159,8 +160,8 @@ class ChatAppBar extends PreferredSize {
                   )
                 ]
               : [],
-          ...(isGroupMessage &&
-                  groupDetails.admins
+          ...(isGroupMessage! &&
+                  groupDetails!.admins!
                       .contains(SevaCore.of(context).loggedInUser.sevaUserID))
               ? [
                   PopupMenuItem(
@@ -170,7 +171,7 @@ class ChatAppBar extends PreferredSize {
                   )
                 ]
               : [],
-          ...isGroupMessage
+          ...isGroupMessage!
               ? [
                   PopupMenuItem(
                     child: textAndIconWidget(
@@ -186,7 +187,7 @@ class ChatAppBar extends PreferredSize {
 
   Future<String> showCustomDialog(BuildContext viewContext, String title,
       String content, String buttonLabel, String cancelLabel) {
-    return showDialog(
+    return showDialog<String>(
       barrierDismissible: false,
       context: viewContext,
       builder: (BuildContext context) {
@@ -196,7 +197,7 @@ class ChatAppBar extends PreferredSize {
           actions: <Widget>[
             CustomTextButton(
               padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-              color: Theme.of(context).accentColor,
+              color: Theme.of(context).colorScheme.secondary,
               textColor: Colors.white,
               child: Text(
                 buttonLabel,
@@ -223,6 +224,6 @@ class ChatAppBar extends PreferredSize {
           ],
         );
       },
-    );
+    ).then((value) => value ?? "CANCEL");
   }
 }

@@ -31,7 +31,7 @@ class AdminMessagePage extends StatelessWidget {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => CommunityMessages(
-                        bloc: _bloc,
+                        bloc: _bloc!,
                       ),
                     ),
                   );
@@ -60,7 +60,7 @@ class AdminMessagePage extends StatelessWidget {
             ),
           ),
           StreamBuilder<List<AdminMessageWrapperModel>>(
-            stream: _bloc.adminMessage,
+            stream: _bloc!.adminMessage,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return LoadingIndicator();

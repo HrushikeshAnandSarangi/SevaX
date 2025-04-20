@@ -4,6 +4,7 @@ import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
 import 'package:provider/provider.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/models/manual_time_model.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_exit_community_model.dart';
@@ -80,10 +81,10 @@ class MemberSectionBuilder extends StatelessWidget {
                 child: ShortProfileCard(
                   key: ValueKey(member.sevaUserID),
                   model: member,
-                  role: type,
-                  actionButton: member.sevaUserID == creatorId!
-                      ? const SizedBox.shrink()!
-                      : actionBuilder(context, member, section, type)!,
+                  role: _memberTypeToUserRole(type),
+                  actionButton: member.sevaUserID! == creatorId
+                      ? PopupMenuButton(itemBuilder: (context) => [])
+                      : actionBuilder(context, member, section, type),
                 ),
               )
             : Container();
@@ -98,6 +99,21 @@ class MemberSectionBuilder extends StatelessWidget {
         );
       },
     );
+  }
+
+  // Helper function to convert MemberType to UserRole
+  UserRole _memberTypeToUserRole(MemberType type) {
+    switch (type) {
+      case MemberType.ADMIN:
+        return UserRole.Admin;
+      case MemberType.SUPER_ADMIN:
+        return UserRole.TimebankCreator;
+      case MemberType.CREATOR:
+        return UserRole.Creator;
+      case MemberType.MEMBER:
+      default:
+        return UserRole.Member;
+    }
   }
 
   PopupMenuButton<dynamic> actionBuilder(BuildContext context, UserModel member,
@@ -216,7 +232,7 @@ class MemberSectionBuilder extends StatelessWidget {
                     builder: (context) => UpgradePlanBanner(
                       activePlanName: AppConfig.paymentStatusMap['planId'],
                       details: AppConfig
-                          .upgradePlanBannerModel.multiple_super_admins!,
+                          .upgradePlanBannerModel!.multiple_super_admins!,
                     ),
                   ),
                 );
@@ -583,6 +599,28 @@ class MemberSectionBuilder extends StatelessWidget {
         );
       }
     }
+  }
+
+  void actionNotAllowedDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Action Not Allowed'),
+          content: Text(
+              'This action is not allowed based on current configurations.'),
+          actions: <Widget>[
+            CustomTextButton(
+              child: Text('Close'),
+              textColor: Colors.red,
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void _showFontSizePickerDialog(

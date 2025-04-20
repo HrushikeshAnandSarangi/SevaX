@@ -45,7 +45,7 @@ class _MessagePageRouterState extends State<MessagePageRouter> {
                 MaterialPageRoute(
                   builder: (context) => CreateNewChatPage(
                     isSelectionEnabled: false,
-                    frequentContacts: _bloc.frequentContacts,
+                    frequentContacts: _bloc!.frequentContacts,
                   ),
                 ),
               );
@@ -59,7 +59,7 @@ class _MessagePageRouterState extends State<MessagePageRouter> {
         child: Column(
           children: <Widget>[
             StreamBuilder<List<AdminMessageWrapperModel>>(
-                stream: _bloc.adminMessage,
+                stream: _bloc!.adminMessage,
                 builder: (context, snapshot) {
                   if (snapshot.hasData && (snapshot.data?.length ?? 0) > 0) {
                     return Column(

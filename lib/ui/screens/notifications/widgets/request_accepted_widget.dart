@@ -17,17 +17,17 @@ import 'package:sevaexchange/views/requests/creatorApproveAcceptorAgreement.dart
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class RequestAcceptedWidget extends StatelessWidget {
-  final String userId;
-  final String notificationId;
-  final RequestModel model;
+  final String ?userId;
+  final String ?notificationId;
+  final RequestModel? model;
 
   const RequestAcceptedWidget(
-      {Key key, this.userId, this.notificationId, this.model})
+      {Key? key, this.userId, this.notificationId, this.model})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<UserModel>(
-      future: UserRepository.fetchUserById(userId),
+      future: UserRepository.fetchUserById(userId!),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Container();
@@ -37,24 +37,23 @@ class RequestAcceptedWidget extends StatelessWidget {
           return NotificationShimmer();
         }
 
-        UserModel user = snapshot.data;
+        UserModel user = snapshot.data!;
 
         return Slidable(
-          actionPane: SlidableBehindActionPane(),
-          actions: <Widget>[],
-          secondaryActions: <Widget>[],
+          endActionPane: null,
+          startActionPane: null,
           child: GestureDetector(
             onTap: () {
-              if (model.requestType == RequestType.BORROW) {
+              if (model!.requestType == RequestType.BORROW) {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => CreatorApproveAcceptorAgreeement(
-                      requestModel: model,
-                      timeBankId: model.timebankId,
-                      userId: SevaCore.of(context).loggedInUser.sevaUserID,
+                      requestModel: model!,
+                      timeBankId: model!.timebankId!,
+                      userId: SevaCore.of(context).loggedInUser.sevaUserID!,
                       parentContext: context,
                       acceptorUserModel: user,
-                      notificationId: notificationId,
+                      notificationId: notificationId!,
                       //onTap: () async {},
                     ),
                   ),
@@ -63,8 +62,8 @@ class RequestAcceptedWidget extends StatelessWidget {
                 showDialogForApproval(
                   context: context,
                   userModel: user,
-                  notificationId: notificationId,
-                  requestModel: model,
+                  notificationId: notificationId!,
+                  requestModel: model!,
                 );
               }
             },
@@ -74,7 +73,7 @@ class RequestAcceptedWidget extends StatelessWidget {
               child: ListTile(
                 title: Padding(
                   padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                  child: Text(model.title),
+                  child: Text(model!.title!),
                 ),
                 leading: CircleAvatar(
                   backgroundImage:
@@ -95,13 +94,13 @@ class RequestAcceptedWidget extends StatelessWidget {
   }
 
   void showDialogForApproval({
-    BuildContext context,
-    UserModel userModel,
-    RequestModel requestModel,
-    String notificationId,
+    BuildContext? context,
+    UserModel ?userModel,
+    RequestModel? requestModel,
+    String ?notificationId,
   }) {
     showDialog(
-      context: context,
+      context: context!,
       builder: (BuildContext viewContext) {
         return AlertDialog(
           shape: RoundedRectangleBorder(
@@ -116,7 +115,7 @@ class RequestAcceptedWidget extends StatelessWidget {
                   width: 70,
                   child: CircleAvatar(
                     backgroundImage:
-                        NetworkImage(userModel.photoURL ?? defaultUserImageURL),
+                        NetworkImage(userModel!.photoURL ?? defaultUserImageURL),
                   ),
                 ),
                 Padding(
@@ -125,7 +124,7 @@ class RequestAcceptedWidget extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.all(4.0),
                   child: Text(
-                    userModel.fullname,
+                    userModel.fullname!,
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
@@ -143,7 +142,7 @@ class RequestAcceptedWidget extends StatelessWidget {
                   ),
                 Center(child: getBio(context, userModel)),
                 Center(
-                  child: model.requestType == RequestType.BORROW
+                  child: model!.requestType == RequestType.BORROW
                       ? Text(
                           "${S.of(context).notifications_by_approving}, ${userModel.fullname} " +
                               S.of(context).will_be_added_to_request,
@@ -168,63 +167,74 @@ class RequestAcceptedWidget extends StatelessWidget {
                   children: <Widget>[
                     Container(
                       width: double.infinity,
-                      child: CustomElevatedButton(
-                        color: Theme.of(context).primaryColor,
-                        child: Text(
-                          S.of(context).approve,
-                          style: TextStyle(
-                              color: Colors.white, fontFamily: 'Europa'),
-                        ),
-                        onPressed: () async {
-                          if (requestModel.requestType == RequestType.BORROW) {
-                            approveMemberForBorrowRequest(
-                              model: requestModel,
-                              notificationId: notificationId,
-                              user: userModel,
-                              communityId: SevaCore.of(context)
-                                  .loggedInUser
-                                  .currentCommunity,
-                            );
-                            log('approved member for borrow request');
-                          } else {
-                            approveMemberForVolunteerRequest(
-                              model: requestModel,
-                              notificationId: notificationId,
-                              user: userModel,
-                              communityId: SevaCore.of(context)
-                                  .loggedInUser
-                                  .currentCommunity,
-                            );
-                          }
-                          Navigator.pop(viewContext);
-                        },
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(3.0),
-                    ),
-                    Container(
-                      width: double.infinity,
-                      child: CustomElevatedButton(
-                        color: Theme.of(context).accentColor,
-                        child: Text(
-                          S.of(context).decline,
-                          style: TextStyle(
-                            color: Colors.white,
+                      child: Column(
+                        children: [
+                          CustomElevatedButton(
+                            color: Theme.of(context).primaryColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+                            elevation: 2.0,
+                            textColor: Colors.white,
+                            child: Text(
+                              S.of(context).approve,
+                              style: TextStyle(
+                                  color: Colors.white, fontFamily: 'Europa'),
+                            ),
+                            onPressed: () async {
+                              if (requestModel!.requestType == RequestType.BORROW) {
+                                approveMemberForBorrowRequest(
+                                  model: requestModel,
+                                  notificationId: notificationId!,
+                                  user: userModel,
+                                  communityId: SevaCore.of(context)
+                                      .loggedInUser
+                                      .currentCommunity!,
+                                );
+                                log('approved member for borrow request');
+                              } else {
+                                approveMemberForVolunteerRequest(
+                                  model: requestModel,
+                                  notificationId: notificationId!,
+                                  user: userModel,
+                                  communityId: SevaCore.of(context)
+                                      .loggedInUser
+                                      .currentCommunity!,
+                                );
+                              }
+                              Navigator.pop(viewContext);
+                            },
                           ),
-                        ),
-                        onPressed: () async {
-                          declineRequestedMember(
-                            model: requestModel,
-                            notificationId: notificationId,
-                            user: userModel,
-                            communityId: SevaCore.of(context)
-                                .loggedInUser
-                                .currentCommunity,
-                          );
+                          SizedBox(height: 8.0),
+                          CustomElevatedButton(
+                            color: Theme.of(context).colorScheme.secondary,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+                            elevation: 2.0,
+                            textColor: Colors.white,
+                            child: Text(
+                              S.of(context).decline,
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                            onPressed: () async {
+                              declineRequestedMember(
+                                model: requestModel!,
+                                notificationId: notificationId!,
+                                user: userModel,
+                                communityId: SevaCore.of(context)
+                                    .loggedInUser
+                                    .currentCommunity!,
+                              );
 
-                          Navigator.pop(viewContext);
-                        },
+                              Navigator.pop(viewContext);
+                            },
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -238,38 +248,38 @@ class RequestAcceptedWidget extends StatelessWidget {
   }
 
   void declineRequestedMember({
-    RequestModel model,
-    UserModel user,
-    String notificationId,
-    String communityId,
+    RequestModel ?model,
+    UserModel ?user,
+    String? notificationId,
+    String ?communityId,
   }) {
-    List<String> acceptedUsers = model.acceptors;
+    List<String> acceptedUsers = model!.acceptors!;
     Set<String> usersSet = acceptedUsers.toSet();
 
-    usersSet.remove(user.email);
+    usersSet.remove(user!.email);
     model.acceptors = usersSet.toList();
 
     FirestoreManager.rejectAcceptRequest(
       requestModel: model,
-      rejectedUserId: user.sevaUserID,
-      notificationId: notificationId,
-      communityId: communityId,
+      rejectedUserId: user.sevaUserID!,
+      notificationId: notificationId!,
+      communityId: communityId!,
     );
   }
 
   void approveMemberForVolunteerRequest({
-    RequestModel model,
-    UserModel user,
-    String notificationId,
-    String communityId,
+    RequestModel? model,
+    UserModel? user,
+    String? notificationId,
+    String? communityId,
   }) {
-    List<String> approvedUsers = model.approvedUsers;
+    List<String> approvedUsers = model!.approvedUsers;
     Set<String> usersSet = approvedUsers.toSet();
 
-    usersSet.add(user.email);
+    usersSet.add(user.email!);
     model.approvedUsers = usersSet.toList();
 
-    if (model.numberOfApprovals <= model.approvedUsers.length)
+    if (model.numberOfApprovals <= model.approvedUsers.length) {
       model.accepted = true;
     FirestoreManager.approveAcceptRequest(
       requestModel: model,

@@ -577,8 +577,8 @@ class _EditProfilePageState extends State<EditProfilePage>
 
     if (globals.webImageUrl != null && globals.webImageUrl!.isNotEmpty) {
       setState(() {
-        SevaCore.of(context).loggedInUser.photoURL = globals.webImageUrl;
-        widget.userModel!.photoURL = globals.webImageUrl;
+        SevaCore.of(context).loggedInUser.photoURL = globals.webImageUrl!;
+        widget.userModel!.photoURL = globals.webImageUrl!;
         this._saving = true;
       });
       globals.webImageUrl = null;
@@ -781,10 +781,10 @@ class _EditProfilePageState extends State<EditProfilePage>
     setState(() {
       this._saving = true;
     });
-    SevaCore.of(context).loggedInUser.cvName = cvName;
-    SevaCore.of(context).loggedInUser.cvUrl = cvUrl;
-    usermodel.cvUrl = cvUrl;
-    usermodel.cvName = cvName;
+    SevaCore.of(context).loggedInUser.cvName = cvName!;
+    SevaCore.of(context).loggedInUser.cvUrl = cvUrl!;
+    usermodel.cvUrl = cvUrl!;
+    usermodel.cvName = cvName!;
     await FirestoreManager.updateUser(user: SevaCore.of(context).loggedInUser);
     setState(() {
       this._saving = false;

@@ -11,7 +11,7 @@ class SelectedMemberListBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     final _bloc = BlocProvider.of<CreateChatBloc>(context);
     return StreamBuilder<List<String>>(
-      stream: _bloc.selectedMembers,
+      stream: _bloc!.selectedMembers,
       builder: (context, snapshot) {
         if ((snapshot.data?.length ?? 0) <= 0) {
           return Container();
@@ -24,13 +24,13 @@ class SelectedMemberListBuilder extends StatelessWidget {
               vertical: 10,
             ),
             scrollDirection: Axis.horizontal,
-            itemCount: snapshot.data.length,
+            itemCount: snapshot.data!.length,
             itemBuilder: (_, index) {
               return SelectedMemberWidget(
-                info: _bloc.allMembers[snapshot.data[index]],
+                info: _bloc.allMembers[snapshot.data![index]]!,
                 onRemovePressed: () {
                   _bloc.selectMember(
-                    _bloc.allMembers[snapshot.data[index]].id,
+                    _bloc.allMembers[snapshot.data![index]]!.id!,
                   );
                 },
               );
@@ -43,12 +43,12 @@ class SelectedMemberListBuilder extends StatelessWidget {
 }
 
 class SelectedMemberWrapBuilder extends StatelessWidget {
-  final Map<String, ParticipantInfo> allParticipants;
-  final Stream<List<String>> selectedParticipants;
-  final ValueChanged onRemovePressed;
+  final Map<String, ParticipantInfo>? allParticipants;
+  final Stream<List<String>>? selectedParticipants;
+  final ValueChanged? onRemovePressed;
   // final CreateChatBloc bloc;
   const SelectedMemberWrapBuilder({
-    Key key,
+    Key? key,
     this.allParticipants,
     this.selectedParticipants,
     this.onRemovePressed,
@@ -64,11 +64,11 @@ class SelectedMemberWrapBuilder extends StatelessWidget {
         return SingleChildScrollView(
           child: Wrap(
             children: List.generate(
-              snapshot.data.length,
+              snapshot.data!.length,
               (index) => SelectedMemberWidget(
-                info: allParticipants[snapshot.data[index]],
+                info: allParticipants![snapshot.data![index]]!,
                 onRemovePressed: () {
-                  onRemovePressed(snapshot.data[index]);
+                  onRemovePressed!(snapshot.data![index]);
                 },
               ),
             ),
@@ -80,10 +80,10 @@ class SelectedMemberWrapBuilder extends StatelessWidget {
 }
 
 class GroupMemberBuilder extends StatelessWidget {
-  final List<ParticipantInfo> participants;
-  final Function(String id) onRemovePressed;
-  final bool isAdmin;
-  final TimebankModel timebankModel;
+  final List<ParticipantInfo>? participants;
+  final Function(String id)? onRemovePressed;
+  final bool? isAdmin;
+  final TimebankModel? timebankModel;
 
   GroupMemberBuilder(
       {this.participants,
@@ -95,14 +95,14 @@ class GroupMemberBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     return Wrap(
       children: List.generate(
-        participants.length,
+        participants!.length,
         (index) => SelectedMemberWidget(
-          timebankModel: timebankModel,
-          info: participants[index],
-          isEditable: isAdmin &&
-              participants[index]?.id !=
+          timebankModel: timebankModel!,
+          info: participants![index],
+          isEditable: isAdmin! &&
+              participants![index]?.id !=
                   SevaCore.of(context).loggedInUser.sevaUserID,
-          onRemovePressed: () => onRemovePressed(participants[index].id),
+          onRemovePressed: () => onRemovePressed!(participants![index].id!),
         ),
       ),
     );

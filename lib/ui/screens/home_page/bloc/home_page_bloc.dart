@@ -7,7 +7,7 @@ import 'package:sevaexchange/utils/utils.dart';
 class HomePageBloc {
   final _currentTimebank = BehaviorSubject<TimebankModel>();
   final _isAdmin = BehaviorSubject<bool>();
-  TimebankModel _oldValue;
+  TimebankModel? _oldValue;
 
   void changeTimebank(TimebankModel timebank) {
     logger.wtf(timebank.name);
@@ -17,8 +17,8 @@ class HomePageBloc {
 
   void switchToPreviousTimebank() {
     if (_oldValue != null) {
-      AppConfig.timebankConfigurations = _oldValue.timebankConfigurations;
-      _currentTimebank.sink.add(_oldValue);
+      AppConfig.timebankConfigurations = _oldValue!.timebankConfigurations;
+      _currentTimebank.sink.add(_oldValue!);
     }
   }
 

@@ -7,17 +7,20 @@ import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 class CreateNewChatAppBar extends PreferredSize {
-  final ValueChanged<String> onChanged;
-  final TextEditingController controller;
-  final bool isSelectionEnabled;
-  final bool isFromEditGroup;
+  final ValueChanged<String>? onChanged;
+  final TextEditingController? controller;
+  final bool? isSelectionEnabled;
+  final bool? isFromEditGroup;
 
   CreateNewChatAppBar({
     this.isFromEditGroup = false,
     this.isSelectionEnabled,
     this.controller,
     this.onChanged,
-  });
+  }) : super(
+          preferredSize: const Size.fromHeight(120),
+          child: const SizedBox.shrink(),
+        );
 
   final OutlineInputBorder border = OutlineInputBorder(
     borderRadius: BorderRadius.circular(8),
@@ -46,14 +49,14 @@ class CreateNewChatAppBar extends PreferredSize {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      isSelectionEnabled
+                      isSelectionEnabled!
                           ? S.of(context).add_participants
                           : S.of(context).new_chat,
                       style: TextStyle(fontSize: 18, color: Colors.white),
                     ),
-                    isSelectionEnabled
+                    isSelectionEnabled!
                         ? StreamBuilder<List<String>>(
-                            stream: _bloc.selectedMembers,
+                            stream: _bloc!.selectedMembers,
                             builder: (context, snapshot) {
                               return Text(
                                 "${snapshot.data?.length ?? 0}/256",
@@ -68,20 +71,20 @@ class CreateNewChatAppBar extends PreferredSize {
                   ],
                 ),
                 Spacer(),
-                isSelectionEnabled
+                isSelectionEnabled!
                     ? StreamBuilder<List<String>>(
-                        stream: _bloc.selectedMembers,
+                        stream: _bloc!.selectedMembers,
                         builder: (context, snapshot) {
                           return (snapshot.data?.length ?? 0) > 0
                               ? customButton(S.of(context).next, () {
-                                  if (isFromEditGroup) {
+                                  if (isFromEditGroup!) {
                                     _bloc.selectedMembers.first
                                         .then((List<String> members) {
                                       List<ParticipantInfo> infos =
                                           List.generate(
                                         members.length,
                                         (index) =>
-                                            _bloc.allMembers[members[index]],
+                                            _bloc.allMembers[members[index]]!,
                                       );
 
                                       Navigator.of(context).pop(infos);
@@ -94,9 +97,8 @@ class CreateNewChatAppBar extends PreferredSize {
                                             CreateGroupPage(bloc: _bloc),
                                       ),
                                     )
-                                        .then((ChatModel value) {
-                                      if (value != null)
-                                        Navigator.of(context).pop(value);
+                                        .then((ChatModel? value) {
+                                      Navigator.of(context).pop(value);
                                     });
                                   }
                                 })
@@ -107,7 +109,7 @@ class CreateNewChatAppBar extends PreferredSize {
             ),
           ),
           StreamBuilder<String>(
-            stream: _bloc.searchText,
+            stream: _bloc!.searchText!,
             builder: (context, snapshot) {
               return Container(
                 padding: const EdgeInsets.all(10),
@@ -117,7 +119,9 @@ class CreateNewChatAppBar extends PreferredSize {
                   onChanged: _bloc.onSearchChanged,
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.only(bottom: 15, top: 10),
-                    errorText: snapshot.error,
+                    errorText: snapshot.error is String
+                        ? snapshot.error as String
+                        : null,
                     hintText: S.of(context).search,
                     prefixIcon: Icon(Icons.search),
                     suffixIcon: Offstage(
@@ -129,8 +133,8 @@ class CreateNewChatAppBar extends PreferredSize {
                         onPressed: () {
                           WidgetsBinding.instance.addPostFrameCallback(
                             (_) {
-                              controller.clear();
-                              _bloc.onSearchChanged(null);
+                              controller!.clear();
+                              _bloc.onSearchChanged(null!);
                             },
                           );
                         },

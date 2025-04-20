@@ -13,21 +13,21 @@ enum ParticipantMode { ADDED, REMOVED }
 
 class MessageRoomManager {
   static Future<void> addRemoveParticipant({
-    String communityId,
-    String timebankId,
-    NotificationType notificationType,
-    String messageRoomName,
-    String messageRoomImageUrl,
-    String participantId,
-    ParticipantInfo creatorDetails,
-    BuildContext context,
+    String? communityId,
+    String? timebankId,
+    NotificationType? notificationType,
+    String? messageRoomName,
+    String? messageRoomImageUrl,
+    String? participantId,
+    ParticipantInfo? creatorDetails,
+    BuildContext? context,
   }) async {
     NotificationsModel notification = NotificationsModel(
       communityId: communityId,
       id: utils.Utils.getUuid(),
       isRead: false,
       isTimebankNotification: false,
-      senderUserId: creatorDetails.id,
+      senderUserId: creatorDetails!.id,
       targetUserId: participantId,
       type: notificationType,
       timebankId: timebankId,
@@ -37,38 +37,46 @@ class MessageRoomManager {
         'messageRoomUrl': messageRoomImageUrl,
       },
     );
-    UserModel user = await Provider.of<MembersBloc>(
+    if (context == null) {
+      throw Exception('BuildContext is null');
+    }
+    final user = await Provider.of<MembersBloc>(
       context,
       listen: false,
     ).getMemberFromLocalData(userId: participantId);
+    if (user == null) {
+      throw Exception('UserModel is null');
+    }
     log('email ${user.email}');
-    return await CollectionRef.users
+    await CollectionRef.users
         .doc(user.email)
         .collection('notifications')
         .doc(notification.id)
         .set(notification.toMap())
-        .then((value) => true)
         .catchError((onError) {
-      return false;
+      // Handle error if needed
     });
   }
 
   static Future<void> addRemoveCommunityChatParticipant({
-    String communityId,
-    String timebankId,
-    NotificationType notificationType,
-    String messageRoomName,
-    String messageRoomImageUrl,
-    String participantId,
-    ParticipantInfo creatorDetails,
-    BuildContext context,
+    String? communityId,
+    String? timebankId,
+    NotificationType? notificationType,
+    String? messageRoomName,
+    String? messageRoomImageUrl,
+    String? participantId,
+    ParticipantInfo? creatorDetails,
+    BuildContext? context,
   }) async {
+    if (participantId == null) {
+      throw Exception('participantId is null');
+    }
     NotificationsModel notification = NotificationsModel(
       communityId: communityId,
       id: utils.Utils.getUuid(),
       isRead: false,
       isTimebankNotification: true,
-      senderUserId: creatorDetails.id,
+      senderUserId: creatorDetails!.id,
       targetUserId: participantId,
       type: notificationType,
       timebankId: timebankId,
@@ -80,12 +88,11 @@ class MessageRoomManager {
       },
     );
 
-    return await CollectionRef.timebankNotification(participantId)
+    await CollectionRef.timebankNotification(participantId)
         .doc(notification.id)
         .set(notification.toMap())
-        .then((value) => true)
         .catchError((onError) {
-      return false;
+      // Handle error if needed
     });
   }
 }

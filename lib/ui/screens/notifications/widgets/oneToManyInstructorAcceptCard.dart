@@ -17,21 +17,18 @@ class OneToManyInstructorAcceptCard extends StatelessWidget {
   final int timestamp;
 
   const OneToManyInstructorAcceptCard({
-    Key key,
-    this.onPressedAccept,
-    this.onPressedReject,
-    this.photoUrl,
-    this.creatorName,
-    this.title,
+    Key? key,
+    required this.onPressedAccept,
+    required this.onPressedReject,
+    required this.photoUrl,
+    required this.creatorName,
+    required this.title,
     //this.subTitle,
-    this.onDismissed,
-    this.entityName,
+    required this.onDismissed,
+    required this.entityName,
     this.isDissmissible = true,
-    @required this.timestamp,
-  })  : assert(title != null),
-        assert(creatorName != null),
-        assert(timestamp != null),
-        super(key: key);
+    required this.timestamp,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -39,51 +36,53 @@ class OneToManyInstructorAcceptCard extends StatelessWidget {
       absorbing:
           !isDissmissible && onPressedAccept == null && onPressedReject == null,
       child: Slidable(
-        actionExtentRatio: 0.25,
-        actions: isDissmissible
-            ? <Widget>[
-                IconSlideAction(
-                  caption: S.of(context).delete,
-                  color: Colors.red,
-                  icon: Icons.delete,
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      barrierDismissible: true,
-                      builder: (BuildContext dialogContext) {
-                        return AlertDialog(
-                          title: Text(
-                            S.of(context).delete_notification,
-                          ),
-                          content: Text(
-                            S.of(context).delete_notification_confirmation,
-                          ),
-                          actions: <Widget>[
-                            CustomTextButton(
-                              onPressed: () =>
-                                  {Navigator.of(dialogContext).pop()},
-                              child: Text(
-                                S.of(context).cancel,
-                              ),
+        startActionPane: isDissmissible
+            ? ActionPane(
+                motion: const DrawerMotion(),
+                children: [
+                  SlidableAction(
+                    onPressed: (context) {
+                      showDialog(
+                        context: context,
+                        barrierDismissible: true,
+                        builder: (BuildContext dialogContext) {
+                          return AlertDialog(
+                            title: Text(
+                              S.of(context).delete_notification,
                             ),
-                            CustomTextButton(
-                              onPressed: () async {
-                                onDismissed();
-                                Navigator.of(dialogContext).pop();
-                              },
-                              child: Text(
-                                S.of(context).delete,
-                              ),
+                            content: Text(
+                              S.of(context).delete_notification_confirmation,
                             ),
-                          ],
-                        );
-                      },
-                    );
-                  },
-                ),
-              ]
-            : [],
-        actionPane: SlidableDrawerActionPane(),
+                            actions: <Widget>[
+                              CustomTextButton(
+                                onPressed: () =>
+                                    {Navigator.of(dialogContext).pop()},
+                                child: Text(
+                                  S.of(context).cancel,
+                                ),
+                              ),
+                              CustomTextButton(
+                                onPressed: () async {
+                                  onDismissed();
+                                  Navigator.of(dialogContext).pop();
+                                },
+                                child: Text(
+                                  S.of(context).delete,
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    backgroundColor: Colors.red,
+                    foregroundColor: Colors.white,
+                    icon: Icons.delete,
+                    label: S.of(context).delete,
+                  ),
+                ],
+              )
+            : null,
         child: Container(
           margin: EdgeInsets.fromLTRB(5, 5, 5, 0),
           decoration: ShapeDecoration(
@@ -165,19 +164,34 @@ class OneToManyInstructorAcceptCard extends StatelessWidget {
                     Container(
                       height: 32,
                       child: CustomElevatedButton(
+                        color: Theme.of(context).primaryColor,
                         onPressed: onPressedAccept,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        elevation: 2.0,
+                        textColor: Colors.white,
                         child: Text(
                           S.of(context).accept,
                           style: TextStyle(fontSize: 11),
                         ),
                       ),
                     ),
-                    SizedBox(width: 12),
+                    SizedBox(width: 8),
                     Container(
                       height: 32,
                       child: CustomElevatedButton(
-                        color: Theme.of(context).accentColor,
+                        color: Theme.of(context).colorScheme.secondary,
                         onPressed: onPressedReject,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        elevation: 2.0,
+                        textColor: Colors.white,
                         child: Text(
                           S.of(context).reject,
                           style: TextStyle(fontSize: 11, color: Colors.white),

@@ -21,19 +21,19 @@ class NearbySettingsWidget extends StatefulWidget {
     if (nearBySettings != null &&
         nearBySettings.radius != null &&
         nearBySettings.isMiles != null) {
-      if (nearBySettings.isMiles) {
-        var kmEq = (nearBySettings.radius * 1.6093).toInt();
+      if (nearBySettings.isMiles!) {
+        var kmEq = (nearBySettings.radius! * 1.6093).toInt();
         return kmEq;
       }
 
-      return nearBySettings.radius.toInt();
+      return nearBySettings.radius!.toInt();
     }
     return DEFAULT_RADIUS_IN_MILES;
   }
 
   static int isInMiles(NearBySettings nearBySettings) {
     if (nearBySettings != null && nearBySettings.isMiles != null) {
-      return nearBySettings.isMiles
+      return nearBySettings.isMiles!
           ? NearbySettingBloc.MILES_SELECTION
           : NearbySettingBloc.KILOMETERS_SELECTION;
     }
@@ -279,7 +279,7 @@ class NearbySettingBloc {
 
   static int valueForSeekBar(NearBySettings nearBySettings, int distanceUnit) {
     if (nearBySettings.radius != null && nearBySettings.isMiles != null) {
-      return nearBySettings.radius.toInt();
+      return nearBySettings.radius!.toInt();
     }
     return distanceUnit == MILES_SELECTION
         ? DEFAULT_RADIUS_IN_MILES

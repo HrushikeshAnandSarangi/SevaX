@@ -104,7 +104,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
     final UserModel user = SevaCore.of(context).loggedInUser;
 
     return StreamBuilder<List<NotificationsModel>>(
-      stream: _bloc.personalNotifications,
+      stream: _bloc!.personalNotifications,
       builder: (_, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting ||
             snapshot.data == null) {
@@ -159,29 +159,31 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                           .getWidgetNotificaitonForDeletionrequest(
                         bloc: _bloc,
                         context: context,
-                        email: user.email,
+                        email: user.email!,
                         notification: notification,
                       );
 
                     case NotificationType.TransactionCredit:
-                      return PersonalNotificationReducerForRequests
+                      return PersonalNotificationReducerForRequests()
                           .getWidgetNotificationForTransactionCredit(
                         notification: notification,
                         loggedInUserEmail:
-                            SevaCore.of(context).loggedInUser.email,
+                            SevaCore.of(context).loggedInUser.email!,
                       );
 
                     case NotificationType.TransactionDebit:
-                      return PersonalNotificationReducerForRequests
+                      return PersonalNotificationReducerForRequests()
                           .getWidgetNotificationForTransactionDebit(
                         notification: notification,
                         loggedInUserEmail:
-                            SevaCore.of(context).loggedInUser.email,
+                            SevaCore.of(context).loggedInUser.email!,
                       );
                     case NotificationType.AcceptedOffer:
-                      return PersonalNotificationReducerForRequests
-                          .getWidgetForAcceptedOfferNotification(
+                      return PersonalNotificationsReducerForOffer
+                          .getNotificationFromOfferCreator(
                         notification: notification,
+                        context: context,
+                        user: user,
                       );
 
                     case NotificationType.TimeOfferInvitationFromCreator:
@@ -193,38 +195,40 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       );
 
                     case NotificationType.ACKNOWLEDGE_DONOR_DONATION:
-                      return PersonalNotificationsRedcerForDonations
+                      return PersonalNotificationsReducerForDonations
                           .getWidgetNotificationForAcknowlegeDonorDonation(
                         notification: notification,
                         context: context,
                         user: user,
                       );
                     case NotificationType.GOODS_DONATION_REQUEST:
-                      return PersonalNotificationsRedcerForDonations
+                      return PersonalNotificationsReducerForDonations
                           .getWidgetNotificationForOfferRequestGoods(
                         notification: notification,
                         context: context,
                         user: user,
                       );
                     case NotificationType.GroupJoinInvite:
-                      return PersonalNotificationReducerForRequests
+                      return PersonalNotificationReducerForRequests()
                           .getWidgetNotificationForGroupJoinInvite(
                         context: context,
                         notification: notification,
                         user: user,
                       );
                     case NotificationType.JoinRequest:
-                      return PersonalNotificationReducerForRequests
-                          .getNotificationForJoinRequest(
+                      return PersonalNotificationReducerForRequests()
+                          .getWidgetForRequestCompletedApproved(
                         notification: notification,
+                        context: context,
+                        user: user,
                       );
                       break;
 
                     case NotificationType.RequestCompleted:
-                      return PersonalNotificationReducerForRequests
+                      return PersonalNotificationReducerForRequests()
                           .getWidgetForRequestCompleted(
                         notification: notification,
-                        parentContext: parentContext,
+                        parentContext: parentContext!,
                       );
 
                     // case NotificationType.OneToManyRequestDoneForSpeaker:
@@ -246,7 +250,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                     //   );
 
                     case NotificationType.RequestCompletedApproved:
-                      return PersonalNotificationReducerForRequests
+                      return PersonalNotificationReducerForRequests()
                           .getWidgetForRequestCompletedApproved(
                         notification: notification,
                         context: context,
@@ -255,9 +259,9 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                     case NotificationType.CASH_DONATION_COMPLETED_SUCCESSFULLY:
                     case NotificationType.GOODS_DONATION_COMPLETED_SUCCESSFULLY:
                       DonationModel donationModel =
-                          DonationModel.fromMap(notification.data);
+                          DonationModel.fromMap(notification.data!);
 
-                      return PersonalNotificationsRedcerForDonations
+                      return PersonalNotificationsReducerForDonations
                           .getWidgetForSuccessfullDonation(
                         onDismissed: onDismissed,
                         onTap: () async {
@@ -268,20 +272,25 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                           try {
                             requestModel =
                                 await FirestoreManager.getRequestFutureById(
-                                    requestId: donationModel.requestId);
+                                    requestId: donationModel.requestId!);
                           } catch (error) {
                             logger.e(
                                 'ERROR FETCHING MODELS FOR TRANSACTIONS: ' +
                                     error.toString());
                           }
-                          timebankModel =
+                          final TimebankModel? fetchedTimebankModel =
                               await FirestoreManager.getTimeBankForId(
-                                  timebankId: donationModel.timebankId);
+                                  timebankId: donationModel.timebankId ?? '');
+                          if (fetchedTimebankModel == null) {
+                            // Handle case where timebank is not found
+                            return;
+                          }
+                          timebankModel = fetchedTimebankModel;
                           logger.e('TIMEBANK MODEL MONEY DIALOG: ' +
                               timebankModel.name.toString());
                           communityModel = await FirestoreManager
                               .getCommunityDetailsByCommunityId(
-                                  communityId: donationModel.communityId);
+                                  communityId: donationModel.communityId!);
 
                           showDialog(
                             context: context,
@@ -291,27 +300,34 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                               ),
                               insetPadding: EdgeInsets.zero,
                               child: TransactionDetailsDialog(
-                                transactionModel: null,
+                                transactionModel: TransactionModel(
+                                  fromEmail_Id:
+                                      donationModel.donorSevaUserId ?? '',
+                                  toEmail_Id: donationModel.donatedTo ?? '',
+                                  communityId: donationModel.communityId ?? '',
+                                ),
                                 donationModel: donationModel,
                                 timebankModel: timebankModel,
-                                requestModel: requestModel,
+                                requestModel: RequestModel(
+                                    communityId:
+                                        donationModel.communityId ?? ''),
                                 communityModel: communityModel,
                                 loggedInUserId: SevaCore.of(context)
                                     .loggedInUser
-                                    .sevaUserID,
+                                    .sevaUserID!,
                                 loggedInEmail:
-                                    SevaCore.of(context).loggedInUser.email,
+                                    SevaCore.of(context).loggedInUser.email!,
                               ),
                             ),
                           );
                         },
                         context: context,
-                        timestampVal: notification.timestamp,
+                        timestampVal: notification.timestamp!,
                       );
 
                     case NotificationType.CASH_DONATION_MODIFIED_BY_DONOR:
                     case NotificationType.GOODS_DONATION_MODIFIED_BY_DONOR:
-                      return PersonalNotificationsRedcerForDonations
+                      return PersonalNotificationsReducerForDonations
                           .getWidgetForDonationsModifiedByDonor(
                         context: context,
                         onDismissed: onDismissed,
@@ -320,12 +336,12 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
 
                     case NotificationType.CASH_DONATION_MODIFIED_BY_CREATOR:
                     case NotificationType.GOODS_DONATION_MODIFIED_BY_CREATOR:
-                      return PersonalNotificationsRedcerForDonations
+                      return PersonalNotificationsReducerForDonations
                           .getWidgetForDonationsModifiedByCreator(
                         context: context,
                         onDismissed: onDismissed,
                         notificationsModel: notification,
-                        timestampVal: notification.timestamp,
+                        timestampVal: notification.timestamp!,
                       );
 
                     case NotificationType.RequestInvite:
@@ -337,15 +353,15 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                           'Here 21.5: ' + requestModel.requestType.toString());
                       if (requestModel.requestType == RequestType.BORROW) {
                         return NotificationCard(
-                          entityName: requestModel.fullName,
+                          entityName: requestModel.fullName!,
                           isDissmissible: true,
                           onDismissed: () {
                             NotificationsRepository.readUserNotification(
-                              notification.id,
-                              user.email,
+                              notification.id!,
+                              user.email!,
                             );
                           },
-                          photoUrl: requestModel.photoUrl,
+                          photoUrl: requestModel.photoUrl!,
                           subTitle:
                               '${requestModel.fullName} ${S.of(context).notifications_requested_join} ${requestModel.title}, ${S.of(context).notifications_tap_to_view}',
                           title: S.of(context).join_borrow_request,
@@ -354,10 +370,10 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                               MaterialPageRoute(
                                 builder: (context) => AcceptBorrowRequest(
                                   requestModel: requestModel,
-                                  timeBankId: requestModel.timebankId,
+                                  timeBankId: requestModel.timebankId!,
                                   userId: SevaCore.of(context)
                                       .loggedInUser
-                                      .sevaUserID,
+                                      .sevaUserID!,
                                   parentContext: context,
                                   onTap: () async {
                                     //<----------- New Calendar Feature to be added here ----------->
@@ -368,8 +384,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                         requestModel: requestModel);
                                     NotificationsRepository
                                         .readUserNotification(
-                                      notification.id,
-                                      user.email,
+                                      notification.id!,
+                                      user.email!,
                                     );
                                     Navigator.of(context).pop();
                                   },
@@ -377,22 +393,21 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                               ),
                             );
                           },
-                          timestamp: notification.timestamp,
+                          timestamp: notification.timestamp!,
                         );
                       } else {
                         logger.e('HERE 24');
-                        return PersonalNotificationReducerForRequests
-                            .getInvitationForRequest(
-                          notification: notification,
-                          user: user,
-                          context: context,
+                        // TODO: Implement getWidgetForRequestInvite in PersonalNotificationReducerForRequests or use an existing method.
+                        return Container(
+                          child: Text(
+                              'Request Invite notification not implemented.'),
                         );
                       }
                       break;
 
                     case NotificationType.OfferRequestInvite:
-                      return PersonalNotificationReducerForRequests
-                          .getOfferRequestInvitation(
+                      return PersonalNotificationReducerForRequests()
+                          .getWidgetForOfferRequestInvite(
                         notification: notification,
                         user: user,
                         context: context,

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class CustomCloseButton extends StatelessWidget {
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
-  const CustomCloseButton({Key key, this.onTap})
+  const CustomCloseButton({Key? key, this.onTap})
       : assert(onTap != null),
         super(key: key);
   @override

@@ -8,31 +8,28 @@ import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 
 class NotificationCard extends StatelessWidget {
-  final VoidCallback onPressed;
-  final Function onDismissed;
-  final String photoUrl;
+  final VoidCallback? onPressed;
+  final Function? onDismissed;
+  final String? photoUrl;
   final String title;
   final String subTitle;
   final bool isDissmissible;
-  final String entityName;
+  final String? entityName;
   final int timestamp;
 
   NotificationCard({
-    Key key,
+    Key? key,
+    required this.title,
+    required this.subTitle,
+    required this.timestamp,
     this.onPressed,
     this.photoUrl,
-    this.title,
-    this.subTitle,
     this.onDismissed,
     this.entityName,
     this.isDissmissible = true,
-    @required this.timestamp,
-  })  : assert(title != null),
-        assert(subTitle != null),
-        assert(timestamp != null),
-        super(key: key);
+  }) : super(key: key);
 
-  DateTime clickTime;
+  late DateTime clickTime;
 
   bool isRedundantClick(DateTime currentTime) {
     if (clickTime == null) {
@@ -53,78 +50,80 @@ class NotificationCard extends StatelessWidget {
     return AbsorbPointer(
       absorbing: !isDissmissible && onPressed == null,
       child: Slidable(
-        actionExtentRatio: 0.25,
-        actions: isDissmissible
-            ? <Widget>[
-                IconSlideAction(
-                  caption: S.of(context).delete,
-                  color: Colors.red,
-                  icon: Icons.delete,
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      barrierDismissible: true,
-                      builder: (BuildContext dialogContext) {
-                        return AlertDialog(
-                          title: Text(
-                            S.of(context).delete_notification,
-                          ),
-                          content: Text(
-                            S.of(context).delete_notification_confirmation,
-                          ),
-                          actions: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                bottom: 15,
-                              ),
-                              child: CustomTextButton(
-                                shape: StadiumBorder(),
-                                color: Colors.grey,
-                                padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                                onPressed: () =>
-                                    {Navigator.of(dialogContext).pop()},
-                                child: Text(
-                                  S.of(context).cancel,
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontFamily: 'Europa',
+        startActionPane: isDissmissible
+            ? ActionPane(
+                motion: const DrawerMotion(),
+                children: [
+                  SlidableAction(
+                    onPressed: (context) {
+                      showDialog(
+                        context: context,
+                        barrierDismissible: true,
+                        builder: (BuildContext dialogContext) {
+                          return AlertDialog(
+                            title: Text(
+                              S.of(context).delete_notification,
+                            ),
+                            content: Text(
+                              S.of(context).delete_notification_confirmation,
+                            ),
+                            actions: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  bottom: 15,
+                                ),
+                                child: CustomTextButton(
+                                  shape: StadiumBorder(),
+                                  color: Colors.grey,
+                                  padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                                  onPressed: () =>
+                                      {Navigator.of(dialogContext).pop()},
+                                  child: Text(
+                                    S.of(context).cancel,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontFamily: 'Europa',
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                bottom: 15,
-                                right: 15,
-                              ),
-                              child: CustomTextButton(
-                                shape: StadiumBorder(),
-                                color: Colors.orange,
-                                padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                                onPressed: () async {
-                                  onDismissed();
-                                  Navigator.of(dialogContext).pop();
-                                },
-                                child: Text(
-                                  S.of(context).delete,
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontFamily: 'Europa',
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  bottom: 15,
+                                  right: 15,
+                                ),
+                                child: CustomTextButton(
+                                  shape: StadiumBorder(),
+                                  color: Colors.orange,
+                                  padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                                  onPressed: () async {
+                                    onDismissed!();
+                                    Navigator.of(dialogContext).pop();
+                                  },
+                                  child: Text(
+                                    S.of(context).delete,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontFamily: 'Europa',
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  },
-                ),
-              ]
-            : [],
-        actionPane: SlidableDrawerActionPane(),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    backgroundColor: Colors.red,
+                    foregroundColor: Colors.white,
+                    icon: Icons.delete,
+                    label: S.of(context).delete,
+                  ),
+                ],
+              )
+            : null,
         child: Container(
           margin: EdgeInsets.fromLTRB(5, 5, 5, 0),
           decoration: ShapeDecoration(
@@ -145,7 +144,7 @@ class NotificationCard extends StatelessWidget {
             leading: photoUrl != null
                 ? CircleAvatar(
                     radius: 22,
-                    backgroundImage: CachedNetworkImageProvider(photoUrl),
+                    backgroundImage: CachedNetworkImageProvider(photoUrl!),
                   )
                 : CustomAvatar(
                     radius: 22,
@@ -184,7 +183,7 @@ class NotificationCard extends StatelessWidget {
             onTap: () => onPressed != null
                 ? isRedundantClick(DateTime.now())
                     ? null
-                    : onPressed()
+                    : onPressed!()
                 : null,
           ),
         ),

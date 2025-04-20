@@ -11,28 +11,25 @@ class NotificationCardOneToManyCompletedApproval extends StatelessWidget {
   final VoidCallback onPressedApprove;
   final VoidCallback onPressedReject;
   final Function onDismissed;
-  final String photoUrl;
+  final String? photoUrl;
   final String title;
   final String subTitle;
   final bool isDissmissible;
-  final String entityName;
+  final String? entityName;
   final int timestamp;
 
   const NotificationCardOneToManyCompletedApproval({
-    Key key,
-    this.onPressedApprove,
-    this.onPressedReject,
+    Key? key,
+    required this.onPressedApprove,
+    required this.onPressedReject,
+    required this.onDismissed,
     this.photoUrl,
-    this.title,
-    this.subTitle,
-    this.onDismissed,
+    required this.title,
+    required this.subTitle,
     this.entityName,
     this.isDissmissible = true,
-    @required this.timestamp,
-  })  : assert(title != null),
-        assert(subTitle != null),
-        assert(timestamp != null),
-        super(key: key);
+    required this.timestamp,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -41,51 +38,53 @@ class NotificationCardOneToManyCompletedApproval extends StatelessWidget {
           onPressedApprove == null &&
           onPressedReject == null,
       child: Slidable(
-        actionExtentRatio: 0.25,
-        actions: isDissmissible
-            ? <Widget>[
-                IconSlideAction(
-                  caption: S.of(context).delete,
-                  color: Colors.red,
-                  icon: Icons.delete,
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      barrierDismissible: true,
-                      builder: (BuildContext dialogContext) {
-                        return AlertDialog(
-                          title: Text(
-                            S.of(context).delete_notification,
-                          ),
-                          content: Text(
-                            S.of(context).delete_notification_confirmation,
-                          ),
-                          actions: <Widget>[
-                            CustomTextButton(
-                              onPressed: () =>
-                                  {Navigator.of(dialogContext).pop()},
-                              child: Text(
-                                S.of(context).cancel,
-                              ),
+        startActionPane: isDissmissible
+            ? ActionPane(
+                motion: const DrawerMotion(),
+                children: [
+                  SlidableAction(
+                    onPressed: (context) {
+                      showDialog(
+                        context: context,
+                        barrierDismissible: true,
+                        builder: (BuildContext dialogContext) {
+                          return AlertDialog(
+                            title: Text(
+                              S.of(context).delete_notification,
                             ),
-                            CustomTextButton(
-                              onPressed: () async {
-                                onDismissed();
-                                Navigator.of(dialogContext).pop();
-                              },
-                              child: Text(
-                                S.of(context).delete,
-                              ),
+                            content: Text(
+                              S.of(context).delete_notification_confirmation,
                             ),
-                          ],
-                        );
-                      },
-                    );
-                  },
-                ),
-              ]
-            : [],
-        actionPane: SlidableDrawerActionPane(),
+                            actions: <Widget>[
+                              CustomTextButton(
+                                onPressed: () =>
+                                    {Navigator.of(dialogContext).pop()},
+                                child: Text(
+                                  S.of(context).cancel,
+                                ),
+                              ),
+                              CustomTextButton(
+                                onPressed: () async {
+                                  onDismissed();
+                                  Navigator.of(dialogContext).pop();
+                                },
+                                child: Text(
+                                  S.of(context).delete,
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    backgroundColor: Colors.red,
+                    foregroundColor: Colors.white,
+                    icon: Icons.delete,
+                    label: S.of(context).delete,
+                  ),
+                ],
+              )
+            : null,
         child: Container(
           margin: EdgeInsets.fromLTRB(5, 5, 5, 0),
           decoration: ShapeDecoration(
@@ -108,7 +107,7 @@ class NotificationCardOneToManyCompletedApproval extends StatelessWidget {
                 leading: photoUrl != null
                     ? CircleAvatar(
                         radius: 22,
-                        backgroundImage: CachedNetworkImageProvider(photoUrl),
+                        backgroundImage: CachedNetworkImageProvider(photoUrl!),
                       )
                     : CustomAvatar(
                         radius: 22,
@@ -144,6 +143,11 @@ class NotificationCardOneToManyCompletedApproval extends StatelessWidget {
                     child: CustomElevatedButton(
                       padding: EdgeInsets.zero,
                       color: Theme.of(context).primaryColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      elevation: 2.0,
+                      textColor: Colors.white,
                       child: Text(
                         S.of(context).approve,
                         style: TextStyle(
@@ -155,12 +159,18 @@ class NotificationCardOneToManyCompletedApproval extends StatelessWidget {
                           onPressedApprove != null ? onPressedApprove() : null,
                     ),
                   ),
-                  SizedBox(width: 12),
+                  SizedBox(width: 10),
                   Container(
                     height: MediaQuery.of(context).size.width * 0.07,
                     child: CustomElevatedButton(
                       padding: EdgeInsets.zero,
-                      color: FlavorConfig.values.theme.accentColor,
+                      color: FlavorConfig.values.theme?.colorScheme.secondary ??
+                          Colors.blue,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      elevation: 2.0,
+                      textColor: Colors.white,
                       child: Text(
                         S.of(context).reject,
                         style: TextStyle(

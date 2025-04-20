@@ -17,7 +17,7 @@ class GroupMembersPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final _bloc = BlocProvider.of<CreateChatBloc>(context);
     return StreamBuilder(
-      stream: _bloc.timebanksOfUser,
+      stream: _bloc!.timebanksOfUser,
       builder: (_, AsyncSnapshot<List<TimebankModel>> snapshot) {
         if (snapshot.data == null) {
           return LoadingIndicator();
@@ -57,7 +57,7 @@ class GroupMembersPage extends StatelessWidget {
                           ),
                         ),
                         Offstage(
-                          offstage: !BlocProvider.of<CreateChatBloc>(context)
+                          offstage: !BlocProvider.of<CreateChatBloc>(context)!
                               .isSelectionEnabled,
                           child: CustomTextButton(
                             child: Text(S.of(context).select_all),
@@ -65,7 +65,7 @@ class GroupMembersPage extends StatelessWidget {
                             onPressed: () {
                               model.members.forEach((element) {
                                 if (_bloc.allMembers.containsKey(element)) {
-                                  BlocProvider.of<CreateChatBloc>(context)
+                                  BlocProvider.of<CreateChatBloc>(context)!
                                       .selectMember(element);
                                 }
                               });

@@ -24,6 +24,7 @@ import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/helpers/configuration_check.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
+// import 'package:sevaexchange/utils/helpers/member_type_helper.dart'; // Add this import if memberType is defined here
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
@@ -41,6 +42,18 @@ class _NewChatPageState extends State<NewChatPage> {
   int currentIndex = 0;
   late ScrollController _scrollController;
   bool showQuickScroll = false;
+
+  MemberType memberType(TimebankModel model, String userId) {
+    if (model.creatorId == userId) {
+      return MemberType.CREATOR;
+    } else if (model.admins.contains(userId)) {
+      return MemberType.ADMIN;
+    } else if (model.organizers.contains(userId)) {
+      return MemberType.SUPER_ADMIN;
+    } else {
+      return MemberType.MEMBER;
+    }
+  }
 
   @override
   void initState() {
@@ -81,13 +94,13 @@ class _NewChatPageState extends State<NewChatPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                ..._bloc.isSelectionEnabled
+                ..._bloc!.isSelectionEnabled
                     ? <Widget>[SelectedMemberListBuilder()]
                     : [
                         TransactionsMatrixCheck(
                           comingFrom: ComingFrom.Chats,
                           upgradeDetails: AppConfig
-                              .upgradePlanBannerModel.multi_member_messaging!,
+                              .upgradePlanBannerModel!.multi_member_messaging!,
                           transaction_matrix_type: "multi_member_messaging",
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 8.0),

@@ -13,12 +13,12 @@ RegExp exp = RegExp(
     r'[a-zA-Z][a-zA-Z0-9_.%$&]*[@][a-zA-Z0-9]*[.][a-zA-Z.]*[*][0-9]{13,}');
 
 class MessageCard extends StatelessWidget {
-  final ChatModel model;
-  final bool isAdminMessage;
-  final String timebankId;
+  final ChatModel? model;
+  final bool? isAdminMessage;
+  final String? timebankId;
 
   const MessageCard({
-    Key key,
+    Key? key,
     this.model,
     this.isAdminMessage = false,
     this.timebankId,
@@ -26,27 +26,34 @@ class MessageCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (model.participants.length == 2 &&
-        model.participants[0] == model.participants[1]) {
+    if (model!.participants!.length == 2 &&
+        model!.participants![0] == model!.participants![1]) {
       return Container();
     }
-    String userId = SevaCore.of(context).loggedInUser.sevaUserID;
-    String senderId = model.isTimebankMessage ? timebankId : userId;
+    String userId = SevaCore.of(context).loggedInUser.sevaUserID!;
+    String senderId = (model != null && model!.isTimebankMessage == true)
+        ? (timebankId ?? '')
+        : userId;
     ParticipantInfo info = getSenderInfo(
-      isAdminMessage ? timebankId : userId,
-      model.participantInfo,
+      (isAdminMessage ?? false) ? (timebankId ?? '') : userId,
+      model!.participantInfo!,
     );
-    var chatType =
-        model.isGroupMessage ? ChatType.TYPE_MULTI_USER_MESSAGING : info?.type;
+    var chatType = model!.isGroupMessage!
+        ? ChatType.TYPE_MULTI_USER_MESSAGING
+        : info?.type;
 
-    int unreadCount =
-        model.unreadStatus.containsKey(isAdminMessage ? senderId : userId)
-            ? model.unreadStatus[isAdminMessage ? senderId : userId]
-            : 0;
+    int unreadCount = model?.unreadStatus != null &&
+            model!.unreadStatus!
+                .containsKey(isAdminMessage! ? senderId : userId)
+        ? (model!.unreadStatus![isAdminMessage! ? senderId : userId] ?? 0)
+        : 0;
 
-    String photoUrl =
-        model.isGroupMessage ? model.groupDetails.imageUrl : info.photoUrl;
-    String name = model.isGroupMessage ? model.groupDetails.name : info.name;
+    String? photoUrl = (model?.isGroupMessage ?? false)
+        ? model?.groupDetails?.imageUrl
+        : info.photoUrl;
+    String name = (model?.isGroupMessage ?? false)
+        ? (model?.groupDetails?.name ?? '')
+        : (info.name ?? '');
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Column(
@@ -56,10 +63,13 @@ class MessageCard extends StatelessWidget {
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => ChatPage(
-                  chatModel: model,
-                  senderId: isAdminMessage ? timebankId : userId,
-                  isAdminMessage: isAdminMessage,
-                  timebankId: timebankId,
+                  key: UniqueKey(),
+                  feedId: model!.id ?? '',
+                  chatModel: model!,
+                  senderId:
+                      (isAdminMessage ?? false) ? (timebankId ?? '') : userId,
+                  isAdminMessage: isAdminMessage!,
+                  timebankId: timebankId!,
                 ),
               ),
             ),
@@ -79,11 +89,11 @@ class MessageCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      isAdminMessage || chatType == ChatType.TYPE_PERSONAL
+                      isAdminMessage! || chatType == ChatType.TYPE_PERSONAL
                           ? Container()
                           : Container(
                               decoration: BoxDecoration(
-                                color: getMessageTypeColor(context, chatType),
+                                color: getMessageTypeColor(context, chatType!),
                                 borderRadius: BorderRadius.circular(2),
                               ),
                               padding: EdgeInsets.symmetric(horizontal: 3),
@@ -105,9 +115,9 @@ class MessageCard extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        exp.hasMatch(model.lastMessage ?? '')
+                        exp.hasMatch(model!.lastMessage ?? '')
                             ? S.of(context).shared_post
-                            : model.lastMessage ?? '',
+                            : model!.lastMessage ?? '',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -140,10 +150,10 @@ class MessageCard extends StatelessWidget {
               ),
               SizedBox(width: 20),
               Text(
-                model.timestamp == null
+                model!.timestamp == null
                     ? ""
                     : timeago.format(
-                        DateTime.fromMillisecondsSinceEpoch(model.timestamp),
+                        DateTime.fromMillisecondsSinceEpoch(model!.timestamp!),
                         locale: Locale(getLangTag()).toLanguageTag()),
                 // "Now 10:00 pm",
                 style: TextStyle(fontSize: 12),

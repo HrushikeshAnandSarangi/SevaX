@@ -861,7 +861,7 @@ class _RegisterPageState extends State<RegisterPage>
         displayName: fullName,
       );
 
-      user.photoURL = imageUrl;
+      user.photoURL = imageUrl!;
 
       user.timezone =
           TimezoneListData().getTimeZoneByCodeData(DateTime.now().timeZoneName);

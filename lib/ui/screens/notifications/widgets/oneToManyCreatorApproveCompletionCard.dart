@@ -17,21 +17,18 @@ class OneToManyCreatorApproveCompletionCard extends StatelessWidget {
   final int timestamp;
 
   const OneToManyCreatorApproveCompletionCard({
-    Key key,
-    this.onPressedAccept,
-    this.onPressedReject,
-    this.photoUrl,
-    this.creatorName,
-    this.title,
-    //this.subTitle,
-    this.onDismissed,
-    this.entityName,
+    Key? key,
+    required this.onPressedAccept,
+    required this.onPressedReject,
+    required this.photoUrl,
+    required this.creatorName,
+    required this.title,
+    //required this.subTitle,
+    required this.onDismissed,
+    required this.entityName,
     this.isDissmissible = true,
-    @required this.timestamp,
-  })  : assert(title != null),
-        assert(creatorName != null),
-        assert(timestamp != null),
-        super(key: key);
+    required this.timestamp,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -39,51 +36,53 @@ class OneToManyCreatorApproveCompletionCard extends StatelessWidget {
       absorbing:
           !isDissmissible && onPressedAccept == null && onPressedReject == null,
       child: Slidable(
-        actionExtentRatio: 0.25,
-        actions: isDissmissible
-            ? <Widget>[
-                IconSlideAction(
-                  caption: S.of(context).delete,
-                  color: Colors.red,
-                  icon: Icons.delete,
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      barrierDismissible: true,
-                      builder: (BuildContext dialogContext) {
-                        return AlertDialog(
-                          title: Text(
-                            S.of(context).delete_notification,
-                          ),
-                          content: Text(
-                            S.of(context).delete_notification_confirmation,
-                          ),
-                          actions: <Widget>[
-                            CustomTextButton(
-                              onPressed: () =>
-                                  {Navigator.of(dialogContext).pop()},
-                              child: Text(
-                                S.of(context).cancel,
-                              ),
+        startActionPane: isDissmissible
+            ? ActionPane(
+                motion: const DrawerMotion(),
+                children: [
+                  SlidableAction(
+                    onPressed: (context) {
+                      showDialog(
+                        context: context,
+                        barrierDismissible: true,
+                        builder: (BuildContext dialogContext) {
+                          return AlertDialog(
+                            title: Text(
+                              S.of(context).delete_notification,
                             ),
-                            CustomTextButton(
-                              onPressed: () async {
-                                onDismissed();
-                                Navigator.of(dialogContext).pop();
-                              },
-                              child: Text(
-                                S.of(context).delete,
-                              ),
+                            content: Text(
+                              S.of(context).delete_notification_confirmation,
                             ),
-                          ],
-                        );
-                      },
-                    );
-                  },
-                ),
-              ]
-            : [],
-        actionPane: SlidableDrawerActionPane(),
+                            actions: <Widget>[
+                              CustomTextButton(
+                                onPressed: () =>
+                                    {Navigator.of(dialogContext).pop()},
+                                child: Text(
+                                  S.of(context).cancel,
+                                ),
+                              ),
+                              CustomTextButton(
+                                onPressed: () async {
+                                  onDismissed();
+                                  Navigator.of(dialogContext).pop();
+                                },
+                                child: Text(
+                                  S.of(context).delete,
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    backgroundColor: Colors.red,
+                    foregroundColor: Colors.white,
+                    icon: Icons.delete,
+                    label: S.of(context).delete,
+                  ),
+                ],
+              )
+            : null,
         child: Container(
           margin: EdgeInsets.fromLTRB(5, 5, 5, 0),
           decoration: ShapeDecoration(
@@ -165,10 +164,18 @@ class OneToManyCreatorApproveCompletionCard extends StatelessWidget {
                     Container(
                       height: 32,
                       child: CustomElevatedButton(
+                        color: Theme.of(context).primaryColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        elevation: 2.0,
+                        textColor: Colors.white,
                         onPressed: onPressedAccept,
                         child: Text(
                           S.of(context).approve,
-                          style: TextStyle(fontSize: 11),
+                          style: TextStyle(fontSize: 11, color: Colors.white),
                         ),
                       ),
                     ),
@@ -176,7 +183,14 @@ class OneToManyCreatorApproveCompletionCard extends StatelessWidget {
                     Container(
                       height: 32,
                       child: CustomElevatedButton(
-                        color: Theme.of(context).accentColor,
+                        color: Theme.of(context).colorScheme.secondary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        elevation: 2.0,
+                        textColor: Colors.white,
                         onPressed: onPressedReject,
                         child: Text(
                           S.of(context).reject,

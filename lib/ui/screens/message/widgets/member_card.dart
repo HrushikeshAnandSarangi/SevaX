@@ -11,20 +11,20 @@ import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/views/core.dart';
 
 class MemberCard extends StatelessWidget {
-  final ParticipantInfo info;
-  final bool isSelected;
-  final ChatModel chatModel;
+  final ParticipantInfo? info;
+  final bool? isSelected;
+  final ChatModel? chatModel;
 
   const MemberCard(
-      {Key key, this.info, this.isSelected = false, this.chatModel})
+      {Key? key, this.info, this.isSelected = false, this.chatModel})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
     final _bloc = BlocProvider.of<CreateChatBloc>(context);
     return GestureDetector(
       onTap: () {
-        if (_bloc.isSelectionEnabled) {
-          _bloc.selectMember(info.id);
+        if (_bloc!.isSelectionEnabled!) {
+          _bloc.selectMember(info!.id!);
         } else {
           if (chatModel == null) {
             UserModel loggedInUser = SevaCore.of(context).loggedInUser;
@@ -36,17 +36,21 @@ class MemberCard extends StatelessWidget {
             );
 
             ParticipantInfo reciever = ParticipantInfo(
-              id: info.id,
-              name: info.name,
-              photoUrl: info.photoUrl,
+              id: info!.id!,
+              name: info!.name!,
+              photoUrl: info!.photoUrl,
               type: ChatType.TYPE_PERSONAL,
             );
 
             createAndOpenChat(
               context: context,
-              communityId: loggedInUser.currentCommunity,
+              communityId: loggedInUser.currentCommunity!,
               sender: sender,
               reciever: reciever,
+              timebankId: loggedInUser.currentTimebank!,
+              feedId: '',
+              showToCommunities: [],
+              entityId: '',
               onChatCreate: () {
                 Navigator.of(context).pop();
               },
@@ -55,11 +59,14 @@ class MemberCard extends StatelessWidget {
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => ChatPage(
-                  chatModel: chatModel,
-                  senderId: SevaCore.of(context).loggedInUser.sevaUserID,
+                  key: UniqueKey(),
+                  chatModel: chatModel!,
+                  senderId: SevaCore.of(context).loggedInUser.sevaUserID!,
                   isAdminMessage: false,
                   chatViewContext: ChatViewContext.MEMBER_CHAT_LIST,
-                  timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
+                  timebankId:
+                      SevaCore.of(context).loggedInUser.currentTimebank!,
+                  feedId: '', // Provide appropriate feedId if needed
                 ),
               ),
             );
@@ -69,25 +76,25 @@ class MemberCard extends StatelessWidget {
       child: Container(
         child: Row(
           children: <Widget>[
-            info.photoUrl != null
+            info!.photoUrl != null
                 ? CustomNetworkImage(
-                    info.photoUrl,
+                    info!.photoUrl!,
                     size: 40,
                   )
                 : CustomAvatar(
-                    name: info.name,
+                    name: info!.name,
                     radius: 20,
                   ),
             SizedBox(width: 12),
-            Expanded(child: Text(info.name)),
+            Expanded(child: Text(info!.name!)),
             Offstage(
               offstage:
-                  !BlocProvider.of<CreateChatBloc>(context).isSelectionEnabled,
+                  !BlocProvider.of<CreateChatBloc>(context)!.isSelectionEnabled,
               child: Checkbox(
                 value: isSelected,
                 onChanged: (_) {
-                  BlocProvider.of<CreateChatBloc>(context)
-                      .selectMember(info.id);
+                  BlocProvider.of<CreateChatBloc>(context)!
+                      .selectMember(info!.id!);
                 },
               ),
             ),

@@ -181,7 +181,8 @@ class _ChatPageState extends State<ChatPage> {
       recieverId ?? '',
       chatModel.participantInfo ?? [],
     );
-    final ParticipantInfo safeRecieverInfo = recieverInfo ?? ParticipantInfo(id: '', name: '');
+    final ParticipantInfo safeRecieverInfo =
+        recieverInfo ?? ParticipantInfo(id: '', name: '');
 
     final bool isGroupMessage = chatModel.isGroupMessage ?? false;
 
@@ -230,8 +231,8 @@ class _ChatPageState extends State<ChatPage> {
               onProfileImageTap: !isGroupMessage &&
                       timebankModel != null &&
                       !(safeRecieverInfo.id != null &&
-                        safeRecieverInfo.id!.isNotEmpty &&
-                        safeRecieverInfo.id!.contains('-'))
+                          safeRecieverInfo.id!.isNotEmpty &&
+                          safeRecieverInfo.id!.contains('-'))
                   ? () {
                       Navigator.of(context)
                           .push(MaterialPageRoute(builder: (context) {
@@ -246,7 +247,6 @@ class _ChatPageState extends State<ChatPage> {
                         );
                       }));
                     }
-                  : () {},
                   : () {},
             )
           : null,
@@ -323,7 +323,7 @@ class _ChatPageState extends State<ChatPage> {
                                     participantsInfoById[messageModel.fromId] !=
                                         null
                                 ? participantsInfoById[messageModel.fromId]!
-                                : null,
+                                : null!,
                           );
                         case MessageType.URL:
                           return Container(child: Text("url"));
@@ -452,6 +452,7 @@ class _ChatPageState extends State<ChatPage> {
         recieverId: recieverId ?? '',
         type: type,
         timebankId: timebankId ?? '',
+        file: null!,
       );
     }
 

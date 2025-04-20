@@ -53,7 +53,7 @@ void manualTimeActionDialog(
               width: 70,
               child: CircleAvatar(
                 backgroundImage: NetworkImage(
-                  model.userDetails.photoUrl ?? defaultUserImageURL,
+                  model.userDetails!.photoUrl ?? defaultUserImageURL,
                 ),
               ),
             ),
@@ -63,7 +63,7 @@ void manualTimeActionDialog(
             Padding(
               padding: EdgeInsets.all(4.0),
               child: Text(
-                model.userDetails.name,
+                model.userDetails!.name!,
                 style: TextStyle(
                   fontSize: 18,
                   fontFamily: 'Europa',
@@ -75,7 +75,7 @@ void manualTimeActionDialog(
               padding: EdgeInsets.all(8.0),
               child: Center(
                 child: Text(
-                  "${S.of(context).by_approving_you_accept} ${model.userDetails.name} ${S.of(context).has_worked_for_text} ${model.claimedTime / 60} ${S.of(context).hours_text}",
+                  "${S.of(context).by_approving_you_accept} ${model.userDetails!.name!} ${S.of(context).has_worked_for_text} ${model.claimedTime! / 60} ${S.of(context).hours_text}",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontFamily: 'Europa',
@@ -90,7 +90,7 @@ void manualTimeActionDialog(
                 padding: EdgeInsets.all(8.0),
                 child: Center(
                   child: Text(
-                    model.reason,
+                    model.reason!,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontFamily: 'Europa',
@@ -110,6 +110,11 @@ void manualTimeActionDialog(
                   width: double.infinity,
                   child: CustomElevatedButton(
                     color: Theme.of(context).primaryColor,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8)),
+                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                    elevation: 2.0,
+                    textColor: Colors.white,
                     child: Text(
                       S.of(context).approve,
                       style: TextStyle(
@@ -142,34 +147,40 @@ void manualTimeActionDialog(
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.all(4.0),
-                ),
-                Container(
-                  width: double.infinity,
-                  child: CustomElevatedButton(
-                    color: Theme.of(context).accentColor,
-                    child: Text(
-                      S.of(context).reject,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'Europa',
+                  padding: EdgeInsets.symmetric(vertical: 8),
+                  child: Container(
+                    width: double.infinity,
+                    child: CustomElevatedButton(
+                      color: Theme.of(context).colorScheme.secondary,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                      padding:
+                          EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                      elevation: 2.0,
+                      textColor: Colors.white,
+                      child: Text(
+                        S.of(context).reject,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'Europa',
+                        ),
                       ),
+                      onPressed: () async {
+                        // reject the claim
+                        var _model = model;
+                        _model.status = ClaimStatus.Rejected;
+                        _model.actionBy =
+                            SevaCore.of(context).loggedInUser.sevaUserID;
+                        ManualTimeRepository.rejectManualCreditClaim(
+                          model: _model,
+                          notificationId: notificationId,
+                          userModel: SevaCore.of(context).loggedInUser,
+                        );
+                        Navigator.of(_context).pop();
+                      },
                     ),
-                    onPressed: () async {
-                      // reject the claim
-                      var _model = model;
-                      _model.status = ClaimStatus.Rejected;
-                      _model.actionBy =
-                          SevaCore.of(context).loggedInUser.sevaUserID;
-                      ManualTimeRepository.rejectManualCreditClaim(
-                        model: _model,
-                        notificationId: notificationId,
-                        userModel: SevaCore.of(context).loggedInUser,
-                      );
-                      Navigator.of(_context).pop();
-                    },
                   ),
-                ),
+                )
               ],
             )
           ],
@@ -180,14 +191,14 @@ void manualTimeActionDialog(
 }
 
 class CreateTransaction {
-  static bool createTransaction({
-    TransactionModel transactionModel,
-    ManualTimeModel manualTimeModel,
-    String notificationId,
+  static bool? createTransaction({
+    TransactionModel? transactionModel,
+    ManualTimeModel? manualTimeModel,
+    String? notificationId,
   }) {}
 
   static updateMemberBalance({
-    TransactionModel transactionModel,
+    TransactionModel? transactionModel,
   }) {
     CollectionRef.users.doc();
   }

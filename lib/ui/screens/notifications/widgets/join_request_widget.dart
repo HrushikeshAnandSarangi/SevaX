@@ -9,11 +9,12 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebanks/join_request_view.dart';
 
 class JoinRequestWidget extends StatelessWidget {
-  final UserModel user;
-  final String notificationId;
-  final JoinRequestNotificationModel model;
+  final UserModel? user;
+  final String? notificationId;
+  final JoinRequestNotificationModel? model;
 
-  const JoinRequestWidget({Key key, this.user, this.notificationId, this.model})
+  const JoinRequestWidget(
+      {Key? key, this.user, this.notificationId, this.model})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -21,8 +22,8 @@ class JoinRequestWidget extends StatelessWidget {
       background: dismissibleBackground,
       key: Key(Utils.getUuid()),
       onDismissed: (direction) {
-        String userEmail = SevaCore.of(context).loggedInUser.email;
-        FirestoreManager.readUserNotification(notificationId, userEmail);
+        String userEmail = SevaCore.of(context).loggedInUser.email!;
+        FirestoreManager.readUserNotification(notificationId!, userEmail);
       },
       child: GestureDetector(
         child: Container(
@@ -30,13 +31,13 @@ class JoinRequestWidget extends StatelessWidget {
           decoration: notificationDecoration,
           child: ListTile(
             title: Text(S.of(context).notifications_join_request),
-            leading: user.photoURL != null
+            leading: user!.photoURL != null
                 ? CircleAvatar(
-                    backgroundImage: NetworkImage(user.photoURL),
+                    backgroundImage: NetworkImage(user!.photoURL!),
                   )
                 : Offstage(),
             subtitle: Text(
-                '${user.fullname.toLowerCase()} ${S.of(context).notifications_requested_join} ${model.timebankTitle}, ${S.of(context).notifications_tap_to_view}'),
+                '${user!.fullname!.toLowerCase()} ${S.of(context).notifications_requested_join} ${model!.timebankTitle}, ${S.of(context).notifications_tap_to_view}'),
           ),
         ),
         onTap: () {
@@ -44,7 +45,7 @@ class JoinRequestWidget extends StatelessWidget {
             context,
             MaterialPageRoute(
               builder: (context) => JoinRequestView(
-                timebankId: model.timebankId,
+                timebankId: model!.timebankId,
               ),
             ),
           );

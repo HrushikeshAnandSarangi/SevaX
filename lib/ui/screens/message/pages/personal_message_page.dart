@@ -12,7 +12,7 @@ class PersonalMessagePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final _bloc = BlocProvider.of<MessageBloc>(context);
     return StreamBuilder<List<ChatModel>>(
-      stream: _bloc.personalMessage,
+      stream: _bloc!.personalMessage,
       builder: (_, AsyncSnapshot<List<ChatModel>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return LoadingIndicator();

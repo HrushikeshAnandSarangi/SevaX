@@ -25,7 +25,7 @@ class _TimebankMembersPageState extends State<TimebankMembersPage> {
     return Stack(
       children: <Widget>[
         StreamBuilder<List<ParticipantInfo>>(
-          stream: _bloc.members,
+          stream: _bloc!.members,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return LoadingIndicator();

@@ -3,19 +3,19 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 
 class MessageInput extends StatelessWidget {
-  final TextEditingController _textController;
-  final ValueChanged<String> _handleSubmitted;
-  final ValueChanged<String> _handleChange;
-  final VoidCallback onCameraPressed;
-  final VoidCallback onSend;
-  final String hintText;
-  final String errorText;
-  final bool hideCameraIcon;
+  final TextEditingController? _textController;
+  final ValueChanged<String>? _handleSubmitted;
+  final ValueChanged<String>? _handleChange;
+  final VoidCallback? onCameraPressed;
+  final VoidCallback? onSend;
+  final String? hintText;
+  final String? errorText;
+  final bool? hideCameraIcon;
 
   MessageInput({
-    @required TextEditingController textController,
-    @required ValueChanged<String> handleSubmitted,
-    ValueChanged<String> handleChange,
+    required TextEditingController? textController,
+    required ValueChanged<String>? handleSubmitted,
+    ValueChanged<String>? handleChange,
     this.onCameraPressed,
     this.onSend,
     this.hintText,
@@ -63,12 +63,12 @@ class MessageInput extends StatelessWidget {
                       if (_handleChange == null) {
                         return;
                       }
-                      _handleChange(text);
+                      _handleChange!(text);
                     },
                   ),
                 ),
                 Offstage(
-                  offstage: hideCameraIcon,
+                  offstage: hideCameraIcon!,
                   child: IconButton(
                     icon: Icon(Icons.camera_alt),
                     color: Theme.of(context).hintColor,
@@ -88,7 +88,7 @@ class MessageInput extends StatelessWidget {
           child: CircleAvatar(
             radius: 24,
             child: Icon(Icons.send),
-            backgroundColor: Theme.of(context).accentColor,
+            backgroundColor: Theme.of(context).colorScheme.secondary,
             foregroundColor: Colors.white,
           ),
         ),

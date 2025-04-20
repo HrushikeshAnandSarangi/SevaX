@@ -58,7 +58,7 @@ class _CreateCommunityMessageState extends State<CreateCommunityMessage> {
         );
         if (widget.chatModel != null &&
             widget.chatModel.groupDetails != null &&
-            !(widget.chatModel.groupDetails.admins?.contains(
+            !(widget.chatModel.groupDetails!.admins?.contains(
                     SevaCore.of(context).loggedInUser.currentTimebank) ??
                 false)) {
           editable = false;
@@ -68,23 +68,24 @@ class _CreateCommunityMessageState extends State<CreateCommunityMessage> {
       },
     );
     if (widget.chatModel != null) {
-      bloc.onGroupNameChanged(widget.chatModel.groupDetails.name);
-      _controller.text = widget.chatModel.groupDetails.name;
+      bloc.onGroupNameChanged(widget.chatModel.groupDetails!.name!);
+      _controller.text = widget.chatModel.groupDetails!.name!;
       bloc.addCurrentParticipants(List<String>.from(
-          widget.chatModel.participants.map((x) => x).toList()));
+          widget.chatModel.participants!.map((x) => x).toList()));
       bloc.addPreviousParticipants(List<String>.from(
-          widget.chatModel.participants.map((x) => x).toList()));
+          widget.chatModel.participants!.map((x) => x).toList()));
       bloc.addParticipants(
-        widget.chatModel.participantInfo
+        widget.chatModel.participantInfo!
             .where(
-              (p) => widget.chatModel.participants.contains(p.id),
+              (p) => widget.chatModel.participants!.contains(p.id),
             )
             .toList(),
       );
 
       bloc.onImageChanged(
         MessageRoomImageModel(
-          stockImageUrl: widget.chatModel.groupDetails.imageUrl,
+          stockImageUrl: widget.chatModel.groupDetails!.imageUrl!,
+          selectedImage: null!,
         ),
       );
     }
@@ -111,15 +112,17 @@ class _CreateCommunityMessageState extends State<CreateCommunityMessage> {
         title: Text(
           widget.chatModel == null
               ? S.of(context).new_message_room
-              : widget.chatModel.groupDetails.name,
+              : widget.chatModel.groupDetails?.name ??
+                  S.of(context).new_message_room,
           style: TextStyle(fontSize: 18),
         ),
         actions: <Widget>[
           HideWidget(
             hide: widget.chatModel != null &&
-                !widget.chatModel.groupDetails.admins.contains(
+                !widget.chatModel.groupDetails!.admins!.contains(
                     SevaCore.of(context).loggedInUser.currentTimebank),
-            child: CustomTextButton(
+            child: Container(),
+            secondChild: CustomTextButton(
               child: Text(
                 widget.chatModel == null
                     ? S.of(context).create
@@ -142,12 +145,10 @@ class _CreateCommunityMessageState extends State<CreateCommunityMessage> {
                     ),
                   )
                       .then((
-                    ChatModel model,
+                    ChatModel? model,
                   ) {
                     Navigator.of(context, rootNavigator: true).pop();
-                    if (model != null) {
-                      Navigator.of(context).pop(model);
-                    }
+                    Navigator.of(context).pop(model);
                   });
                 } else {
                   bloc
@@ -200,12 +201,12 @@ class _CreateCommunityMessageState extends State<CreateCommunityMessage> {
                                   border: Border.all(),
                                 ),
                                 child: ClipOval(
-                                  child: snapshot.data.selectedImage == null
+                                  child: snapshot.data!.selectedImage == null
                                       ? Image.network(
-                                          snapshot.data.stockImageUrl ??
+                                          snapshot.data!.stockImageUrl ??
                                               defaultGroupImageURL)
                                       : Image.file(
-                                          snapshot.data.selectedImage,
+                                          snapshot.data!.selectedImage,
                                           fit: BoxFit.cover,
                                         ),
                                 ),
@@ -213,7 +214,8 @@ class _CreateCommunityMessageState extends State<CreateCommunityMessage> {
                         onStockImageChanged: (String stockImageUrl) {
                           if (stockImageUrl != null) {
                             bloc.onImageChanged(MessageRoomImageModel(
-                                stockImageUrl: stockImageUrl));
+                                stockImageUrl: stockImageUrl,
+                                selectedImage: null as File));
                           }
                         },
                         onChanged: (file) {
@@ -239,7 +241,7 @@ class _CreateCommunityMessageState extends State<CreateCommunityMessage> {
                           // );
 
                           return CustomTextField(
-                            value: snapshot.data != null ? snapshot.data : null,
+                            value: snapshot.data ?? '',
                             controller: _controller,
                             onChanged: bloc.onGroupNameChanged,
                             decoration: InputDecoration(
@@ -278,7 +280,7 @@ class _CreateCommunityMessageState extends State<CreateCommunityMessage> {
             StreamBuilder<List<String>>(
                 stream: bloc.selectedTimebanks,
                 builder: (context, snapshot) {
-                  log('len  ${snapshot.data.length}');
+                  log('len  ${snapshot.data!.length}');
                   return Container(
                     height: 30,
                     width: double.infinity,
@@ -303,11 +305,11 @@ class _CreateCommunityMessageState extends State<CreateCommunityMessage> {
                   return SingleChildScrollView(
                     child: Wrap(
                       children: List.generate(
-                        snapshot.data.length,
+                        snapshot.data!.length,
                         (index) => SelectedMemberWidget(
-                          info: snapshot.data[index],
+                          info: snapshot.data![index],
                           onRemovePressed: () {
-                            bloc.selectParticipant(snapshot.data[index].id);
+                            bloc.selectParticipant(snapshot.data![index].id!);
                           },
                         ),
                       ),
@@ -354,22 +356,22 @@ class _CreateCommunityMessageState extends State<CreateCommunityMessage> {
   }
 
   Future<void> profanityCheck({
-    File file,
-    BuildContext context,
+    File? file,
+    BuildContext? context,
   }) async {
     progressDialog = ProgressDialog(
-      context,
-      type: ProgressDialogType.Normal,
+      context!,
+      type: ProgressDialogType.normal,
       isDismissible: false,
     );
-    progressDialog.show();
+    progressDialog!.show();
 
     if (file == null) {
-      progressDialog.hide();
+      progressDialog!.hide();
     }
     String imageUrl = file != null
         ? await StorageRepository.uploadFile("multiUserMessagingLogo", file)
-        : null;
+        : null!;
     var profanityImageModel = await checkProfanityForImage(imageUrl: imageUrl);
     if (profanityImageModel == null) {
       showFailedLoadImage(context: context).then((value) {});
@@ -377,8 +379,8 @@ class _CreateCommunityMessageState extends State<CreateCommunityMessage> {
       var profanityStatusModel =
           await getProfanityStatus(profanityImageModel: profanityImageModel);
 
-      if (profanityStatusModel.isProfane) {
-        progressDialog.hide();
+      if (profanityStatusModel.isProfane!) {
+        progressDialog!.hide();
 
         showProfanityImageAlert(
                 context: context, content: profanityStatusModel.category)
@@ -393,8 +395,11 @@ class _CreateCommunityMessageState extends State<CreateCommunityMessage> {
         deleteFireBaseImage(imageUrl: imageUrl).then((value) {
           if (value) {}
         }).catchError((e) => log(e));
-        bloc.onImageChanged(MessageRoomImageModel(selectedImage: file));
-        progressDialog.hide();
+        bloc.onImageChanged(MessageRoomImageModel(
+          stockImageUrl: '',
+          selectedImage: file,
+        ));
+        progressDialog!.hide();
       }
     }
   }

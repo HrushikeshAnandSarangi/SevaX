@@ -216,10 +216,10 @@ class CreateGroupPage extends StatelessWidget {
       type: ProgressDialogType.normal,
       isDismissible: false,
     );
-    progressDialog.show();
+    progressDialog!.show();
 
     if (file == null) {
-      progressDialog.hide();
+      progressDialog!.hide();
     }
     String? imageUrl = file != null
         ? await StorageRepository.uploadFile("multiUserMessagingLogo", file)
@@ -235,7 +235,7 @@ class CreateGroupPage extends StatelessWidget {
 
       if (profanityStatusModel != null) {
         if (profanityStatusModel.isProfane == true) {
-          progressDialog.hide();
+          progressDialog!.hide();
 
           showProfanityImageAlert(
                   context: context,
@@ -253,7 +253,7 @@ class CreateGroupPage extends StatelessWidget {
           }).catchError((e) => log(e));
           bloc.onImageChanged(
               MessageRoomImageModel(selectedImage: file, stockImageUrl: ''));
-          progressDialog.hide();
+          progressDialog!.hide();
         }
       }
     }

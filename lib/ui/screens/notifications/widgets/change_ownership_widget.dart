@@ -16,25 +16,25 @@ class ChangeOwnershipWidget extends StatelessWidget {
   final String communityId;
 
   const ChangeOwnershipWidget(
-      {Key key,
-      @required this.timestamp,
-      this.changeOwnershipModel,
-      this.notificationsModel,
-      this.notificationId,
-      this.buildContext,
-      this.timebankId,
-      this.communityId})
+      {Key? key,
+      required this.timestamp,
+      required this.changeOwnershipModel,
+      required this.notificationsModel,
+      required this.notificationId,
+      required this.buildContext,
+      required this.timebankId,
+      required this.communityId})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
     return NotificationCard(
       timestamp: timestamp,
-      entityName: changeOwnershipModel.creatorName,
+      entityName: changeOwnershipModel.creatorName!,
       isDissmissible: true,
       onDismissed: () {
         FirestoreManager.readUserNotification(
           notificationId,
-          SevaCore.of(context).loggedInUser.email,
+          SevaCore.of(context).loggedInUser.email!,
         );
       },
       onPressed: () {
@@ -52,10 +52,10 @@ class ChangeOwnershipWidget extends StatelessWidget {
         //   },
         // );
       },
-      photoUrl: changeOwnershipModel.creatorPhotoUrl,
+      photoUrl: changeOwnershipModel.creatorPhotoUrl!,
       title: S.of(context).change_ownership,
       subTitle:
-          '${changeOwnershipModel.creatorName.toLowerCase()} ${S.of(context).change_ownership_invite} ${changeOwnershipModel.timebank.toLowerCase().replaceAll("timebank", "")} ${S.of(context).timebank}',
+          '${changeOwnershipModel.creatorName!.toLowerCase()} ${S.of(context).change_ownership_invite} ${changeOwnershipModel.timebank!.toLowerCase().replaceAll("timebank", "")} ${S.of(context).timebank}',
     );
   }
 }

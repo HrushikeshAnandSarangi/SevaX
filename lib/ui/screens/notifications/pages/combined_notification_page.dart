@@ -42,7 +42,7 @@ class _CombinedNotificationsPageState extends State<CombinedNotificationsPage>
         centerTitle: true,
       ),
       body: StreamBuilder<TimebankNotificationData>(
-        stream: _bloc.timebankNotifications,
+        stream: _bloc!.timebankNotifications,
         builder: (context, snapshot) {
           if (snapshot.data == null ||
               snapshot.connectionState == ConnectionState.waiting) {
