@@ -159,7 +159,7 @@ class LendingOffersRepo {
       {required OfferModel model,
       required LendingOfferAcceptorModel lendingOfferAcceptorModel}) async {
     model.lendingOfferDetailsModel?.offerAcceptors
-        .add(lendingOfferAcceptorModel.acceptorEmail);
+        .add(lendingOfferAcceptorModel.acceptorEmail!);
     NotificationsModel notification = NotificationsModel(
         timebankId: model.timebankId,
         id: utils.Utils.getUuid(),
@@ -271,7 +271,7 @@ class LendingOffersRepo {
           FieldValue.arrayRemove([lendingOfferAcceptorModel.acceptorEmail]),
     });
     var acceptorNotificationRef =
-        CollectionRef.userNotification(lendingOfferAcceptorModel.acceptorEmail)
+        CollectionRef.userNotification(lendingOfferAcceptorModel.acceptorEmail!)
             .doc(notification.id);
     batch.update(
         CollectionRef.lendingOfferAcceptors(model.id!)
@@ -344,7 +344,7 @@ class LendingOffersRepo {
     model.lendingOfferDetailsModel?.offerAcceptors
         ?.remove(lendingOfferAcceptorModel.acceptorEmail);
     model.lendingOfferDetailsModel?.approvedUsers
-        .add(lendingOfferAcceptorModel.acceptorEmail);
+        .add(lendingOfferAcceptorModel.acceptorEmail!);
     model.lendingOfferDetailsModel?.lendingOfferApprovedAgreementLink =
         lendingOfferApprovedAgreementLink ?? '';
 
@@ -372,7 +372,7 @@ class LendingOffersRepo {
     WriteBatch batch = CollectionRef.batch;
     var offersRef = CollectionRef.offers.doc(model.id);
     var acceptorNotificationRef =
-        CollectionRef.userNotification(lendingOfferAcceptorModel.acceptorEmail)
+        CollectionRef.userNotification(lendingOfferAcceptorModel.acceptorEmail!)
             .doc(notification.id);
     if (model.id == null) return;
     var offerAcceptorsReference = CollectionRef.lendingOfferAcceptors(model.id!)
@@ -475,7 +475,7 @@ class LendingOffersRepo {
       offerModel.lendingOfferDetailsModel?.approvedUsers
           .remove(lendingOfferAcceptorModel.acceptorEmail);
       offerModel.lendingOfferDetailsModel?.completedUsers
-          .add(lendingOfferAcceptorModel.acceptorEmail);
+          .add(lendingOfferAcceptorModel.acceptorEmail!);
     } else if (lendingOfferStatus == LendingOfferStatus.ITEMS_COLLECTED) {
       notificationType =
           NotificationType.NOTIFICATION_TO_LENDER_ITEMS_COLLECTED;
@@ -491,7 +491,7 @@ class LendingOffersRepo {
       offerModel.lendingOfferDetailsModel?.approvedUsers
           .remove(lendingOfferAcceptorModel.acceptorEmail);
       offerModel.lendingOfferDetailsModel?.completedUsers
-          .add(lendingOfferAcceptorModel.acceptorEmail);
+          .add(lendingOfferAcceptorModel.acceptorEmail!);
     }
 
     NotificationsModel notification = NotificationsModel(
@@ -538,7 +538,7 @@ class LendingOffersRepo {
           isRead: false,
           senderPhotoUrl: offerModel.photoUrlImage);
       batch.set(
-        CollectionRef.userNotification(lendingOfferAcceptorModel.acceptorEmail)
+        CollectionRef.userNotification(lendingOfferAcceptorModel.acceptorEmail!)
             .doc(feedbackNotification.id),
         feedbackNotification.toMap(),
         SetOptions(merge: true),
@@ -555,7 +555,7 @@ class LendingOffersRepo {
         logger.e('NOTIF ID $notifID');
         NotificationsRepository.readUserNotification(
           notifID,
-          lendingOfferAcceptorModel.acceptorEmail,
+          lendingOfferAcceptorModel.acceptorEmail!,
         );
       } catch (exception) {
         logger.e("getQueryOfferPersonalNotification $exception");

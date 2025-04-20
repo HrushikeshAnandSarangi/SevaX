@@ -212,8 +212,8 @@ class _ApproveLendingOfferState extends State<ApproveLendingOffer> {
                 widget.lendingOfferAcceptorModel!.endDate =
                     OfferDurationWidgetState.endtimestamp;
 
-                if (widget.lendingOfferAcceptorModel!.endDate <=
-                    widget.lendingOfferAcceptorModel!.startDate) {
+                if (widget.lendingOfferAcceptorModel!.endDate! <=
+                    widget.lendingOfferAcceptorModel!.startDate!) {
                   errorDialog(
                     context: context,
                     error: S.of(context).validation_error_end_date_greater,
