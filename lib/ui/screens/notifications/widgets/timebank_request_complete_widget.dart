@@ -16,6 +16,7 @@ import 'package:sevaexchange/ui/screens/notifications/widgets/custom_close_butto
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_shimmer.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/request_accepted_widget.dart';
+import 'package:sevaexchange/ui/screens/offers/pages/bookmarked_offers.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/app_config.dart';
@@ -27,28 +28,28 @@ import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class TimebankRequestCompletedWidget extends StatelessWidget {
-  final NotificationsModel notification;
-  final TimebankModel timebankModel;
-  final BuildContext parentContext;
+  final NotificationsModel? notification;
+  final TimebankModel? timebankModel;
+  final BuildContext? parentContext;
 
   const TimebankRequestCompletedWidget(
-      {Key key, this.notification, this.timebankModel, this.parentContext})
+      {Key? key, this.notification, this.timebankModel, this.parentContext})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
-    RequestModel model = RequestModel.fromMap(notification.data);
+    RequestModel model = RequestModel.fromMap(notification!.data!);
     return FutureBuilder<RequestModel>(
-      future: FirestoreManager.getRequestFutureById(requestId: model.id),
+      future: FirestoreManager.getRequestFutureById(requestId: model.id!),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting ||
             snapshot.data == null) {
           return NotificationShimmer();
         }
-        RequestModel model = snapshot.data;
+        RequestModel model = snapshot.data!;
         return getNotificationRequestCompletedWidget(
           model,
-          notification.senderUserId,
-          notification.id,
+          notification!.senderUserId!,
+          notification!.id!,
         );
       },
     );
@@ -59,9 +60,13 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
     String userId,
     String notificationId,
   ) {
-    TransactionModel transactionModel = model.transactions?.firstWhere(
-        (transaction) => transaction.to == userId,
-        orElse: () => null);
+    TransactionModel? transactionModel = model.transactions
+        ?.firstWhere((transaction) => transaction.to == userId,
+            orElse: () => TransactionModel(
+                  fromEmail_Id: model.email,
+                  toEmail_Id: userId,
+                  communityId: model.communityId,
+                ));
     return StreamBuilder<UserModel>(
       stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
       builder: (context, snapshot) {
@@ -69,47 +74,47 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return NotificationShimmer();
         }
-        UserModel user = snapshot.data;
+        UserModel user = snapshot.data!;
 
         return NotificationCard(
           isDissmissible: false,
-          title: model.title,
+          title: model.title!,
           subTitle: model.requestType == RequestType.BORROW
               ? '${user.fullname} ${S.of(context).has_reviewed_this_request_text}. \n${S.of(context).tap_to_share_feedback_text}.'
-              : '${user.fullname} ${S.of(context).completed_task_in} ${(transactionModel.credits).toStringAsFixed(2) ?? "0.0"} ${transactionModel.credits > 1 ? S.of(context).hours : S.of(context).hour}, ${S.of(context).notifications_waiting_for_approval}.',
+              : '${user.fullname} ${S.of(context).completed_task_in} ${(transactionModel!.credits)!.toStringAsFixed(2) ?? "0.0"} ${transactionModel.credits! > 1 ? S.of(context).hours : S.of(context).hour}, ${S.of(context).notifications_waiting_for_approval}.',
           photoUrl: user.photoURL,
           entityName: user.fullname,
           onPressed: () {
             //How to Integrate for borrow request from here, check and complete
 
             showMemberClaimConfirmation(
-              context: parentContext,
+              context: parentContext!,
               notificationId: notificationId,
               requestModel: model,
               userId: userId,
               userModel: user,
               credits: model.requestType == RequestType.BORROW
-                  ? 0
-                  : transactionModel.credits,
+                  ? 0.0
+                  : (transactionModel?.credits ?? 0.0).toDouble(),
             );
           },
-          timestamp: notification.timestamp,
+          timestamp: notification!.timestamp!,
         );
       },
     );
   }
 
   void showMemberClaimConfirmation(
-      {BuildContext context,
-      UserModel userModel,
-      RequestModel requestModel,
-      String notificationId,
-      String userId,
-      double credits}) {
+      {BuildContext? context,
+      UserModel? userModel,
+      RequestModel? requestModel,
+      String? notificationId,
+      String? userId,
+      double? credits}) {
     showDialog(
-      context: context,
+      context: context!,
       builder: (BuildContext viewContext) {
-        if (requestModel.requestType == RequestType.BORROW) {
+        if (requestModel!.requestType == RequestType.BORROW) {
           return AlertDialog(
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(25.0))),
@@ -125,7 +130,7 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
                     width: 70,
                     child: CircleAvatar(
                       backgroundImage: NetworkImage(
-                        userModel.photoURL ?? defaultUserImageURL,
+                        userModel!.photoURL ?? defaultUserImageURL,
                       ),
                     ),
                   ),
@@ -135,7 +140,7 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.all(4.0),
                     child: Text(
-                      userModel.fullname,
+                      userModel.fullname!,
                       style: TextStyle(
                         fontSize: 18,
                         fontFamily: 'Europa',
@@ -180,6 +185,13 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
                       Container(
                         width: double.infinity,
                         child: CustomElevatedButton(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                              vertical: 12, horizontal: 16),
+                          elevation: 2.0,
+                          textColor: Colors.white,
                           color: Theme.of(context).primaryColor,
                           child: Text(
                             S.of(context).review,
@@ -193,9 +205,9 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
                             approveMemberClaim(
                                 context: context,
                                 model: requestModel,
-                                notificationId: notificationId,
+                                notificationId: notificationId!,
                                 user: userModel,
-                                userId: userId);
+                                userId: userId!);
 
                             Navigator.pop(viewContext);
                           },
@@ -207,7 +219,14 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
                       Container(
                         width: double.infinity,
                         child: CustomElevatedButton(
-                          color: Theme.of(context).accentColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                              vertical: 12, horizontal: 16),
+                          elevation: 2.0,
+                          textColor: Colors.white,
+                          color: Theme.of(context).colorScheme.secondary,
                           child: Text(
                             S.of(context).close,
                             style: TextStyle(
@@ -243,7 +262,7 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
                     width: 70,
                     child: CircleAvatar(
                       backgroundImage: NetworkImage(
-                        userModel.photoURL ?? defaultUserImageURL,
+                        userModel!.photoURL ?? defaultUserImageURL,
                       ),
                     ),
                   ),
@@ -253,7 +272,7 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.all(4.0),
                     child: Text(
-                      userModel.fullname,
+                      userModel.fullname!,
                       style: TextStyle(
                         fontSize: 18,
                         fontFamily: 'Europa',
@@ -278,7 +297,7 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
                       child: Center(
                         child: requestModel.requestType == RequestType.BORROW
                             ? Text(
-                                userModel.fullname +
+                                userModel.fullname! +
                                     ' has reviewed you for this request. Click button below to review and complete the task',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
@@ -308,6 +327,13 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
                       Container(
                         width: double.infinity,
                         child: CustomElevatedButton(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                              vertical: 12, horizontal: 16),
+                          elevation: 2.0,
+                          textColor: Colors.white,
                           color: Theme.of(context).primaryColor,
                           child: Text(
                             S.of(context).approve,
@@ -321,9 +347,9 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
                             approveMemberClaim(
                                 context: context,
                                 model: requestModel,
-                                notificationId: notificationId,
+                                notificationId: notificationId!,
                                 user: userModel,
-                                userId: userId);
+                                userId: userId!);
 
                             Navigator.pop(viewContext);
                           },
@@ -335,7 +361,14 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
                       Container(
                         width: double.infinity,
                         child: CustomElevatedButton(
-                          color: Theme.of(context).accentColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                              vertical: 12, horizontal: 16),
+                          elevation: 2.0,
+                          textColor: Colors.white,
+                          color: Theme.of(context).colorScheme.secondary,
                           child: Text(
                             S.of(context).reject,
                             style: TextStyle(
@@ -348,9 +381,9 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
                             rejectMemberClaimForEvent(
                                 context: context,
                                 model: requestModel,
-                                notificationId: notificationId,
+                                notificationId: notificationId!,
                                 user: userModel,
-                                userId: userId);
+                                userId: userId!);
                             Navigator.pop(viewContext);
                           },
                         ),
@@ -367,48 +400,50 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
   }
 
   Future<void> rejectMemberClaimForEvent(
-      {RequestModel model,
-      String userId,
-      BuildContext context,
-      UserModel user,
-      String notificationId}) async {
+      {RequestModel? model,
+      String? userId,
+      BuildContext? context,
+      UserModel? user,
+      String? notificationId}) async {
     List<TransactionModel> transactions =
-        model.transactions.map((t) => t).toList();
+        model!.transactions!.map((t) => t).toList();
     transactions.removeWhere((t) => t.to == userId);
 
     model.transactions = transactions.map((t) {
       return t;
     }).toList();
-    FirestoreManager.rejectRequestCompletion(
-      model: model,
-      userId: userId,
-      communityid: model.participantDetails[user.email] != null
-          ? model.participantDetails[user.email]['communityId']
-          : model.communityId,
+    FirestoreManager.updateAcceptBorrowRequest(
+      requestModel: model,
+      userEmail: user?.email ?? "",
+      // status: "rejected",
+      // communityId: (user != null && model.participantDetails[user.email] != null)
+      //     ? model.participantDetails[user.email]['communityId']
+      //     : model.communityId,
     );
 
-    UserModel loggedInUser = SevaCore.of(context).loggedInUser;
+    UserModel loggedInUser = SevaCore.of(context!).loggedInUser;
     ParticipantInfo sender = ParticipantInfo(
       id: model.timebankId,
-      name: timebankModel.name,
-      photoUrl: timebankModel.photoUrl,
-      type: timebankModel.parentTimebankId == FlavorConfig.values.timebankId
+      name: timebankModel!.name,
+      photoUrl: timebankModel!.photoUrl,
+      type: timebankModel!.parentTimebankId == FlavorConfig.values.timebankId
           ? ChatType.TYPE_TIMEBANK
           : ChatType.TYPE_GROUP,
     );
 
     ParticipantInfo reciever = ParticipantInfo(
-      id: user.sevaUserID,
-      photoUrl: user.photoURL,
+      id: user!.sevaUserID!,
+      photoUrl: user.photoURL!,
       name: user.fullname,
       type: ChatType.TYPE_PERSONAL,
     );
 
     List<String> showToCommunities = [];
     try {
-      String communityId1 = model.communityId;
+      String communityId1 = model.communityId!;
 
-      String communityId2 = model.participantDetails[user.email]['communityId'];
+      String communityId2 =
+          model.participantDetails![user.email]['communityId'];
 
       if (communityId1 != null &&
           communityId2 != null &&
@@ -425,17 +460,20 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
     await createAndOpenChat(
       context: context,
       showToCommunities:
-          showToCommunities.isNotEmpty ? showToCommunities : null,
+          showToCommunities.isNotEmpty ? showToCommunities : <String>[],
       interCommunity: showToCommunities.isNotEmpty,
-      communityId: loggedInUser.currentCommunity,
+      communityId: loggedInUser.currentCommunity!,
       sender: sender,
       reciever: reciever,
       isFromRejectCompletion: true,
       isTimebankMessage: true,
+      timebankId: timebankModel!.id,
+      feedId: '',
+      entityId: model.id!,
       onChatCreate: () {
         FirestoreManager.readTimeBankNotification(
           notificationId: notificationId,
-          timebankId: timebankModel.id,
+          timebankId: timebankModel!.id!,
         );
       },
     );
@@ -452,9 +490,9 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
       FirestoreManager.approveRequestCompletion(
         model: model,
         userId: userId,
-        communityId: sevaCore.loggedInUser.currentCommunity,
-        memberCommunityId: model.participantDetails[email] != null
-            ? model.participantDetails[email]['communityId']
+        communityId: sevaCore.loggedInUser.currentCommunity!,
+        memberCommunityId: model.participantDetails![email] != null
+            ? model.participantDetails![email]['communityId']
             : model.communityId,
       );
     }
@@ -466,54 +504,54 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
   }
 
   void approveMemberClaim({
-    String userId,
-    UserModel user,
-    BuildContext context,
-    RequestModel model,
-    String notificationId,
+    String? userId,
+    UserModel? user,
+    BuildContext? context,
+    RequestModel? model,
+    String? notificationId,
   }) {
     //request for feedback;
     checkForFeedback(
-      userId: userId,
-      user: user,
-      context: context,
-      model: model,
-      notificationId: notificationId,
+      userId: userId!,
+      user: user!,
+      context: context!,
+      model: model!,
+      notificationId: notificationId!,
       sevaCore: SevaCore.of(context),
     );
   }
 
   Future<void> sendMessageToMember({
-    UserModel loggedInUser,
-    UserModel receiver,
-    RequestModel requestModel,
-    String message,
-    BuildContext context,
+    UserModel? loggedInUser,
+    UserModel? receiver,
+    RequestModel? requestModel,
+    String? message,
+    BuildContext? context,
   }) async {
     ParticipantInfo sender = ParticipantInfo(
-      id: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-          ? loggedInUser.sevaUserID
+      id: requestModel!.requestMode == RequestMode.PERSONAL_REQUEST
+          ? loggedInUser!.sevaUserID
           : requestModel.timebankId,
       photoUrl: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-          ? loggedInUser.photoURL
-          : timebankModel.photoUrl,
+          ? loggedInUser!.photoURL
+          : timebankModel!.photoUrl,
       name: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-          ? loggedInUser.fullname
-          : timebankModel.name,
+          ? loggedInUser!.fullname
+          : timebankModel!.name,
       type: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
           ? ChatType.TYPE_PERSONAL
-          : timebankModel.parentTimebankId == FlavorConfig.values.timebankId
+          : timebankModel!.parentTimebankId == FlavorConfig.values.timebankId
               ? ChatType.TYPE_TIMEBANK
               : ChatType.TYPE_GROUP,
     );
 
     ParticipantInfo reciever = ParticipantInfo(
-      id: receiver.sevaUserID,
+      id: receiver!.sevaUserID,
       photoUrl: receiver.photoURL,
       name: receiver.fullname,
       type: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
           ? ChatType.TYPE_PERSONAL
-          : timebankModel.parentTimebankId == FlavorConfig.values.timebankId
+          : timebankModel!.parentTimebankId == FlavorConfig.values.timebankId
               ? ChatType.TYPE_TIMEBANK
               : ChatType.TYPE_GROUP,
     );
@@ -522,7 +560,7 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
           isForCreator: false,
           requestTitle: requestModel.title,
           context: context,
-          userName: loggedInUser.fullname,
+          userName: loggedInUser!.fullname,
           reviewMessage: message,
         ),
         reciever: reciever,
@@ -530,23 +568,23 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
             requestModel.requestMode == RequestMode.PERSONAL_REQUEST
                 ? false
                 : true,
-        timebankId: requestModel.timebankId,
-        communityId: loggedInUser.currentCommunity,
+        timebankId: requestModel.timebankId!,
+        communityId: loggedInUser.currentCommunity!,
         sender: sender);
   }
 
   void checkForFeedback({
-    String userId,
-    UserModel user,
-    RequestModel model,
-    String notificationId,
-    BuildContext context,
-    SevaCore sevaCore,
+    String? userId,
+    UserModel? user,
+    RequestModel? model,
+    String? notificationId,
+    BuildContext? context,
+    SevaCore? sevaCore,
   }) async {
     Map results = {};
 
-    if (model.requestType == RequestType.BORROW) {
-      results = await Navigator.of(context).push(MaterialPageRoute(
+    if (model!.requestType == RequestType.BORROW) {
+      results = await Navigator.of(context!).push(MaterialPageRoute(
         builder: (BuildContext context) {
           return ReviewFeedback(
             feedbackType: FeedbackType.FOR_BORROW_REQUEST_BORROWER,
@@ -555,7 +593,7 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
         },
       ));
     } else {
-      results = await Navigator.of(context).push(MaterialPageRoute(
+      results = await Navigator.of(context!).push(MaterialPageRoute(
         builder: (BuildContext context) {
           return ReviewFeedback(
             feedbackType: FeedbackType.FOR_REQUEST_VOLUNTEER,
@@ -566,16 +604,16 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
 
     if (results != null && results.containsKey('selection')) {
       await handleVolunterFeedbackForTrustWorthynessNRealiablityScore(
-          FeedbackType.FOR_REQUEST_VOLUNTEER, results, model, user);
+          FeedbackType.FOR_REQUEST_VOLUNTEER, results, model, user!);
       onActivityResult(
-          sevaCore: sevaCore,
+          sevaCore: sevaCore!,
           requestModel: model,
-          userId: userId,
-          notificationId: notificationId,
+          userId: userId!,
+          notificationId: notificationId!,
           context: context,
-          reviewer: model.email,
-          reviewed: user.email,
-          requestId: model.id,
+          reviewer: model.email!,
+          reviewed: user.email!,
+          requestId: model.id!,
           results: results,
           reciever: user);
     } else {}
@@ -584,26 +622,26 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
   }
 
   void onActivityResult(
-      {SevaCore sevaCore,
-      RequestModel requestModel,
-      String userId,
-      String notificationId,
-      BuildContext context,
-      Map results,
-      String reviewer,
-      String reviewed,
-      UserModel reciever,
-      String requestId}) async {
+      {SevaCore? sevaCore,
+      RequestModel? requestModel,
+      String? userId,
+      String? notificationId,
+      BuildContext? context,
+      Map? results,
+      String? reviewer,
+      String? reviewed,
+      UserModel? reciever,
+      String? requestId}) async {
     // adds review to firestore
     CollectionRef.reviews.add({
       "reviewer": reviewer,
       "reviewed": reviewed,
-      "ratings": results['selection'],
+      "ratings": results!['selection'],
       "ratingsonquestions": results['ratings'],
       "requestId": requestId,
       "comments": (results['didComment']
           ? results['comment']
-          : S.of(context).no_comments),
+          : S.of(context!).no_comments),
       'liveMode': !AppConfig.isTestCommunity,
     });
     // if (requestModel.requestMode == RequestMode.TIMEBANK_REQUEST) {
@@ -628,15 +666,15 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
     // }
     await sendMessageToMember(
         context: context,
-        loggedInUser: sevaCore.loggedInUser,
+        loggedInUser: sevaCore!.loggedInUser,
         requestModel: requestModel,
         receiver: reciever,
-        message: results['comment'] ?? S.of(context).no_comments);
+        message: results['comment'] ?? S.of(context!).no_comments);
     approveTransaction(
-        requestModel, userId, notificationId, sevaCore, reciever.email);
+        requestModel!, userId!, notificationId!, sevaCore, reciever!.email!);
 
     if (requestModel.requestType == RequestType.BORROW && results != null) {
-      if (SevaCore.of(context).loggedInUser.sevaUserID ==
+      if (SevaCore.of(context!).loggedInUser.sevaUserID ==
           requestModel.sevaUserId) {
         requestModel.borrowerReviewed = true;
       }
@@ -644,9 +682,9 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
 
     FirestoreManager.approveAcceptRequestForTimebank(
       requestModel: requestModel,
-      approvedUserId: requestModel.sevaUserId,
+      approvedUserId: requestModel.sevaUserId!,
       notificationId: notificationId,
-      communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+      communityId: SevaCore.of(context!).loggedInUser.currentCommunity!,
     );
 
     // void approveTransaction(RequestModel model, String userId,

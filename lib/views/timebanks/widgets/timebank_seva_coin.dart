@@ -83,6 +83,9 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
                                           .loggedInUser
                                           .sevaUserID ??
                                       '',
+                                  userEmail:
+                                      SevaCore.of(context).loggedInUser.email ??
+                                          '',
                                   totalBalance: '${balance ?? 0}',
                                 );
                               },

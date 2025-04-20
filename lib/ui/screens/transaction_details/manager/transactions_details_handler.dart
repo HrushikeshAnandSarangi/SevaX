@@ -5,7 +5,7 @@ import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 String getTimelineLabel(
     String tag, BuildContext context, RequestType requestType) {
-  logger.i(tag, 'tag 1');
+  logger.i(tag);
   String finalLabel = '';
 
   //convert string tag to timeline tag type
@@ -298,7 +298,7 @@ TimelineTransactionTags getConvertedTimelineTransactionTagsType(
 
     default:
       logger.i('tag error 1 $stringTag');
-      return null;
+      return null!;
   }
 }
 
@@ -309,7 +309,7 @@ String getTransactionTypeLabel(
     // RequestType requestType,
     String tag,
     BuildContext context) {
-  logger.i(tag, 'tag 2');
+  logger.i(tag);
   String finalLabel = '';
 
   //convert string tag to timeline tag type
@@ -492,6 +492,6 @@ TransactionTypeTags getConvertedTransactionTypeTag(String stringTag) {
 
     default:
       logger.i('tag error 2 $stringTag');
-      return null;
+      return null!;
   }
 }

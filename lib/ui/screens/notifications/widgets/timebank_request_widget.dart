@@ -11,6 +11,7 @@ import 'package:sevaexchange/ui/screens/notifications/widgets/custom_close_butto
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_shimmer.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/request_accepted_widget.dart';
+import 'package:sevaexchange/ui/screens/offers/pages/bookmarked_offers.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/custom_dialog.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
@@ -18,11 +19,11 @@ import 'package:sevaexchange/views/requests/creatorApproveAcceptorAgreement.dart
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class TimebankRequestWidget extends StatelessWidget {
-  final RequestModel model;
-  final NotificationsModel notification;
+  final RequestModel? model;
+  final NotificationsModel? notification;
 
   const TimebankRequestWidget({
-    Key key,
+    Key? key,
     this.model,
     this.notification,
   }) : super(key: key);
@@ -31,17 +32,17 @@ class TimebankRequestWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return FutureBuilder<RequestModel>(
       future: FirestoreManager.getRequestFutureById(
-        requestId: model.id,
+        requestId: model!.id!,
       ),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting ||
             snapshot.data == null) {
           return NotificationShimmer();
         }
-        RequestModel model = snapshot.data;
+        RequestModel model = snapshot.data!;
         return FutureBuilder<UserModel>(
           future: FirestoreManager.getUserForIdFuture(
-              sevaUserId: notification.senderUserId),
+              sevaUserId: notification!.senderUserId!),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return Container();
@@ -49,24 +50,24 @@ class TimebankRequestWidget extends StatelessWidget {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return NotificationShimmer();
             }
-            UserModel user = snapshot.data;
+            UserModel user = snapshot.data!;
             return NotificationCard(
               onDismissed: () {
                 FirestoreManager.readTimeBankNotification(
-                  notificationId: notification.id,
-                  timebankId: notification.timebankId,
+                  notificationId: notification!.id,
+                  timebankId: notification!.timebankId,
                 );
               },
-              timestamp: notification.timestamp,
+              timestamp: notification!.timestamp!,
               isDissmissible: true,
-              title: model.title,
+              title: model.title!,
               subTitle:
                   '${S.of(context).notifications_request_accepted_by} ${user.fullname}, ${S.of(context).notifications_waiting_for_approval}',
               photoUrl: user.photoURL,
               entityName: user.fullname,
               onPressed: () {
                 if (model.requestType == RequestType.BORROW) {
-                  if (model.approvedUsers.length >= 1) {
+                  if (model.approvedUsers!.length >= 1) {
                     errorDialog(
                         context: context,
                         error: model.roomOrTool == LendingType.PLACE.readable
@@ -77,11 +78,11 @@ class TimebankRequestWidget extends StatelessWidget {
                       MaterialPageRoute(
                         builder: (context) => CreatorApproveAcceptorAgreeement(
                           requestModel: model,
-                          timeBankId: model.timebankId,
-                          userId: SevaCore.of(context).loggedInUser.sevaUserID,
+                          timeBankId: model.timebankId!,
+                          userId: SevaCore.of(context).loggedInUser.sevaUserID!,
                           parentContext: context,
                           acceptorUserModel: user,
-                          notificationId: notification.id,
+                          notificationId: notification!.id!,
                           //onTap: () async {},
                         ),
                       ),
@@ -91,7 +92,7 @@ class TimebankRequestWidget extends StatelessWidget {
                   showDialogForApproval(
                     context: context,
                     userModel: user,
-                    notificationId: notification.id,
+                    notificationId: notification!.id!,
                     requestModel: model,
                   );
                 }
@@ -104,13 +105,13 @@ class TimebankRequestWidget extends StatelessWidget {
   }
 
   void showDialogForApproval({
-    BuildContext context,
-    UserModel userModel,
-    RequestModel requestModel,
-    String notificationId,
+    BuildContext? context,
+    UserModel? userModel,
+    RequestModel? requestModel,
+    String? notificationId,
   }) {
     showDialog(
-      context: context,
+      context: context!,
       builder: (BuildContext viewContext) {
         return AlertDialog(
           shape: RoundedRectangleBorder(
@@ -126,7 +127,7 @@ class TimebankRequestWidget extends StatelessWidget {
                   width: 70,
                   child: CircleAvatar(
                     backgroundImage: NetworkImage(
-                      userModel.photoURL ?? defaultUserImageURL,
+                      userModel!.photoURL ?? defaultUserImageURL,
                     ),
                   ),
                 ),
@@ -136,7 +137,7 @@ class TimebankRequestWidget extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.all(4.0),
                   child: Text(
-                    userModel.fullname,
+                    userModel.fullname!,
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
@@ -160,7 +161,7 @@ class TimebankRequestWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Center(
-                        child: requestModel.requestType == RequestType.BORROW
+                        child: requestModel!.requestType == RequestType.BORROW
                             ? Text(
                                 "${S.of(context).notifications_by_approving} ${userModel.fullname}," +
                                     S
@@ -181,6 +182,13 @@ class TimebankRequestWidget extends StatelessWidget {
                       width: double.infinity,
                       child: CustomElevatedButton(
                         color: Theme.of(context).primaryColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                            vertical: 12.0, horizontal: 16.0),
+                        elevation: 2.0,
+                        textColor: Colors.white,
                         child: Text(
                           S.of(context).approve,
                           style: TextStyle(color: Colors.white),
@@ -188,7 +196,7 @@ class TimebankRequestWidget extends StatelessWidget {
                         onPressed: () async {
                           approveMemberForVolunteerRequest(
                             model: requestModel,
-                            notificationId: notificationId,
+                            notificationId: notificationId!,
                             user: userModel,
                             context: context,
                           );
@@ -225,7 +233,14 @@ class TimebankRequestWidget extends StatelessWidget {
                     Container(
                       width: double.infinity,
                       child: CustomElevatedButton(
-                        color: Theme.of(context).accentColor,
+                        color: Theme.of(context).colorScheme.secondary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                            vertical: 12.0, horizontal: 16.0),
+                        elevation: 2.0,
+                        textColor: Colors.white,
                         child: Text(
                           S.of(context).decline,
                           style: TextStyle(color: Colors.white),
@@ -233,7 +248,7 @@ class TimebankRequestWidget extends StatelessWidget {
                         onPressed: () async {
                           declineRequestedMember(
                             model: requestModel,
-                            notificationId: notificationId,
+                            notificationId: notificationId!,
                             user: userModel,
                             context: context,
                           );
@@ -252,47 +267,47 @@ class TimebankRequestWidget extends StatelessWidget {
   }
 
   Future<void> approveMemberForVolunteerRequest({
-    RequestModel model,
-    UserModel user,
-    String notificationId,
-    @required BuildContext context,
+    RequestModel? model,
+    UserModel? user,
+    String? notificationId,
+    required BuildContext? context,
   }) async {
-    List<String> approvedUsers = model.approvedUsers;
+    List<String> approvedUsers = model!.approvedUsers!;
     Set<String> usersSet = approvedUsers.toSet();
 
-    usersSet.add(user.email);
+    usersSet.add(user!.email!);
     model.approvedUsers = usersSet.toList();
 
-    (model.numberOfApprovals <= model.approvedUsers.length ||
-            model.approvedUsers.length == 0)
+    (model.numberOfApprovals! <= model.approvedUsers!.length ||
+            model.approvedUsers!.length == 0)
         ? model.accepted == true
         : null;
 
     FirestoreManager.approveAcceptRequestForTimebank(
       requestModel: model,
-      approvedUserId: user.sevaUserID,
-      notificationId: notificationId,
-      communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+      approvedUserId: user.sevaUserID!,
+      notificationId: notificationId!,
+      communityId: SevaCore.of(context!).loggedInUser.currentCommunity!,
     );
   }
 
   void declineRequestedMember({
-    RequestModel model,
-    UserModel user,
-    String notificationId,
-    BuildContext context,
+    RequestModel? model,
+    UserModel? user,
+    String? notificationId,
+    BuildContext? context,
   }) {
-    List<String> acceptedUsers = model.acceptors;
+    List<String> acceptedUsers = model!.acceptors!;
     Set<String> usersSet = acceptedUsers.toSet();
 
-    usersSet.remove(user.email);
+    usersSet.remove(user!.email!);
     model.acceptors = usersSet.toList();
 
     FirestoreManager.rejectAcceptRequest(
       requestModel: model,
-      rejectedUserId: user.sevaUserID,
-      notificationId: notificationId,
-      communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+      rejectedUserId: user.sevaUserID!,
+      notificationId: notificationId!,
+      communityId: SevaCore.of(context!).loggedInUser.currentCommunity!,
     );
   }
 }

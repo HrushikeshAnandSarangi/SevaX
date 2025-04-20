@@ -346,9 +346,9 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
 
                     case NotificationType.RequestInvite:
                       RequestModel requestModel = RequestModel.fromMap(
-                          notification.data['requestModel']);
+                          notification.data!['requestModel']);
                       TimebankModel timebankModel = TimebankModel.fromMap(
-                          notification.data['timebankModel']);
+                          notification.data!['timebankModel']);
                       logger.e(
                           'Here 21.5: ' + requestModel.requestType.toString());
                       if (requestModel.requestType == RequestType.BORROW) {
@@ -406,15 +406,14 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       break;
 
                     case NotificationType.OfferRequestInvite:
-                      return PersonalNotificationReducerForRequests()
-                          .getWidgetForOfferRequestInvite(
+                      return getOfferRequestInvitation(
                         notification: notification,
                         user: user,
                         context: context,
                       );
 
                     case NotificationType.RecurringOfferUpdated:
-                      return PersonalNotificationReducerForRequests
+                      return PersonalNotificationsReducerForOffer()
                           .getNotificationForRecurringOffer(
                         bloc: _bloc,
                         context: context,
@@ -423,8 +422,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       );
                       break;
                     case NotificationType.RecurringRequestUpdated:
-                      return PersonalNotificationReducerForRequests
-                          .getNotificationForRecurringRequestUpdated(
+                      return PersonalNotificationReducerForRequests()
+                          .getWidgetNotificationForRecurringRequestUpdated(
                         bloc: _bloc,
                         context: context,
                         notification: notification,
@@ -432,7 +431,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       );
                       break;
                     case NotificationType.RequestAccept:
-                      return PersonalNotificationReducerForRequests
+                      return PersonalNotificationReducerForRequests()
                           .getNotificationForRequestAccept(
                               notification: notification);
 
@@ -445,15 +444,15 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                     case NotificationType.OneToManyRequestAccept:
                       // Map oneToManyRequestModel = notification.data;
                       RequestModel model =
-                          RequestModel.fromMap(notification.data);
+                          RequestModel.fromMap(notification.data!);
                       return NotificationCardOneToManyAccept(
-                        timestamp: notification.timestamp,
+                        timestamp: notification.timestamp!,
                         entityName: 'NAME',
                         isDissmissible: false,
                         onDismissed: () {
                           NotificationsRepository.readUserNotification(
-                            notification.id,
-                            user.email,
+                            notification.id!,
+                            user.email!,
                           );
                         },
                         onPressedAccept: () async {
@@ -485,7 +484,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                   ),
                                   CustomTextButton(
                                     shape: StadiumBorder(),
-                                    color: Theme.of(context).accentColor,
+                                    color:
+                                        Theme.of(context).colorScheme.secondary,
                                     child: Text(
                                       S.of(context).no,
                                       style: TextStyle(
@@ -547,7 +547,9 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                     ),
                                     CustomTextButton(
                                       shape: StadiumBorder(),
-                                      color: Theme.of(context).accentColor,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary,
                                       child: Text(
                                         S.of(context).no,
                                         style: TextStyle(
@@ -564,25 +566,26 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                 );
                               });
                         },
-                        photoUrl: model.photoUrl,
-                        title: model.requestCreatorName,
+                        photoUrl: model.photoUrl!,
+                        title: model.requestCreatorName!,
                         subTitle: S.of(context).speaker_invite_notification +
-                            model.title,
+                            model.title!,
                       );
                       break;
 
                     case NotificationType.OneToManyCreatorRejectedCompletion:
-                      Map oneToManyRequestModel = notification.data;
+                      Map oneToManyRequestModel = notification.data!;
                       RequestModel model =
-                          RequestModel.fromMap(notification.data);
+                          RequestModel.fromMap(notification.data!);
                       return NotificationCardOneToManySpeakerRecalims(
-                        timestamp: notification.timestamp,
+                        key: Key(notification.id ?? ''),
+                        timestamp: notification.timestamp!,
                         entityName: 'NAME',
                         isDissmissible: true,
                         onDismissed: () {
                           NotificationsRepository.readUserNotification(
-                            notification.id,
-                            user.email,
+                            notification.id!,
+                            user.email!,
                           );
                         },
                         onPressedAccept: () async {
@@ -613,21 +616,21 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
 
                     case NotificationType.RequestApprove:
                       RequestModel model =
-                          RequestModel.fromMap(notification.data);
+                          RequestModel.fromMap(notification.data!);
                       return NotificationCard(
-                        timestamp: notification.timestamp,
+                        timestamp: notification.timestamp!,
                         entityName: null,
                         isDissmissible: true,
                         onDismissed: () {
                           NotificationsRepository.readUserNotification(
-                            notification.id,
-                            user.email,
+                            notification.id!,
+                            user.email!,
                           );
                         },
                         onPressed: null,
                         // TO BE MADE
                         photoUrl: model.photoUrl,
-                        title: model.title,
+                        title: model.title!,
                         subTitle: model.requestType == RequestType.BORROW
                             ? 'Request has been approved'
                             : '${S.of(context).notifications_approved_by} ${model.fullName}',
@@ -636,38 +639,38 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
 
                     case NotificationType.TypeMemberAdded:
                       UserAddedModel userAddedModel =
-                          UserAddedModel.fromMap(notification.data);
+                          UserAddedModel.fromMap(notification.data!);
                       return NotificationCard(
-                        timestamp: notification.timestamp,
+                        timestamp: notification.timestamp!,
                         entityName: userAddedModel.adminName,
                         isDissmissible: true,
                         onDismissed: () {
                           NotificationsRepository.readUserNotification(
-                            notification.id,
-                            user.email,
+                            notification.id!,
+                            user.email!,
                           );
                         },
                         onPressed: null,
                         photoUrl: userAddedModel.timebankImage,
                         title: S.of(context).notification_timebank_join,
                         subTitle:
-                            '${userAddedModel.adminName.toLowerCase()} ${S.of(context).notifications_added_you} ${userAddedModel.timebankName} ${S.of(context).timebank} ',
+                            '${userAddedModel.adminName!.toLowerCase()} ${S.of(context).notifications_added_you} ${userAddedModel.timebankName} ${S.of(context).timebank} ',
                       );
                       break;
                     case NotificationType.MEMBER_ADDED_TO_MESSAGE_ROOM:
                       var data = notification.data;
                       Map<String, dynamic> map =
-                          Map<String, dynamic>.from(data['creatorDetails']);
+                          Map<String, dynamic>.from(data!['creatorDetails']);
                       ParticipantInfo creatorDetails =
                           ParticipantInfo.fromMap(map);
                       return NotificationCard(
-                        timestamp: notification.timestamp,
+                        timestamp: notification.timestamp!,
                         entityName: creatorDetails.name,
                         isDissmissible: true,
                         onDismissed: () {
                           NotificationsRepository.readUserNotification(
-                            notification.id,
-                            user.email,
+                            notification.id!,
+                            user.email!,
                           );
                         },
                         onPressed: () {},
@@ -675,41 +678,41 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                             creatorDetails.photoUrl ?? defaultUserImageURL,
                         title: S.of(context).message_room_join,
                         subTitle:
-                            '${creatorDetails.name.toLowerCase()} ${S.of(context).notifications_added_you} ${data['messageRoomName']} ${S.of(context).messaging_room}.\n\n${S.of(context).note_for_transfer_ownership_notification}',
+                            '${creatorDetails.name!.toLowerCase()} ${S.of(context).notifications_added_you} ${data!['messageRoomName']} ${S.of(context).messaging_room}.\n\n${S.of(context).note_for_transfer_ownership_notification}',
                       );
                       break;
                     case NotificationType.MEMBER_REMOVED_FROM_MESSAGE_ROOM:
                       var data = notification.data;
                       Map<String, dynamic> map =
-                          Map<String, dynamic>.from(data['creatorDetails']);
+                          Map<String, dynamic>.from(data!['creatorDetails']);
                       ParticipantInfo creatorDetails =
                           ParticipantInfo.fromMap(map);
                       return NotificationCard(
-                        timestamp: notification.timestamp,
+                        timestamp: notification.timestamp!,
                         entityName: creatorDetails.name,
                         isDissmissible: true,
                         onDismissed: () {
                           NotificationsRepository.readUserNotification(
-                            notification.id,
-                            user.email,
+                            notification.id!,
+                            user.email!,
                           );
                         },
                         onPressed: null,
                         photoUrl: creatorDetails.photoUrl,
                         title: S.of(context).message_room_remove,
                         subTitle:
-                            '${creatorDetails.name.toLowerCase()} ${S.of(context).removed_you_from_text} ${data['messageRoomName']}.',
+                            '${creatorDetails.name!.toLowerCase()} ${S.of(context).removed_you_from_text} ${data!['messageRoomName']}.',
                       );
                       break;
                     case NotificationType.MEMBER_DEMOTED_FROM_ADMIN:
                       bool isGroup = false;
                       String associatedName =
-                          notification.data['associatedName'];
+                          notification.data!['associatedName'];
 
                       // bool
-                      String timebankTitle = notification.data['timebankName'];
+                      String timebankTitle = notification.data!['timebankName'];
                       return NotificationCard(
-                        timestamp: notification.timestamp,
+                        timestamp: notification.timestamp!,
                         title: '${S.of(context).notifications_demoted_title}',
                         subTitle:
                             '$associatedName ${S.of(context).notifications_demoted_subtitle_phrase} ${isGroup ? S.of(context).group : S.of(context).timebank} ${timebankTitle} ',
@@ -717,8 +720,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         onDismissed: () {
                           // Dismiss notification
                           NotificationsRepository.readUserNotification(
-                            notification.id,
-                            user.email,
+                            notification.id!,
+                            user.email!,
                           );
                         },
                       );
@@ -726,12 +729,12 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                     case NotificationType.ADMIN_DEMOTED_FROM_ORGANIZER:
                       bool isGroup = false;
                       String associatedName =
-                          notification.data['associatedName'];
+                          notification.data!['associatedName'];
 
                       // bool
-                      String timebankTitle = notification.data['timebankName'];
+                      String timebankTitle = notification.data!['timebankName'];
                       return NotificationCard(
-                        timestamp: notification.timestamp,
+                        timestamp: notification.timestamp!,
                         title:
                             '${S.of(context).notifications_demoted_title.replaceAll(S.of(context).admin, S.of(context).owner)}',
                         subTitle: S
@@ -745,20 +748,20 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         onDismissed: () {
                           // Dismiss notification
                           NotificationsRepository.readUserNotification(
-                            notification.id,
-                            user.email,
+                            notification.id!,
+                            user.email!,
                           );
                         },
                       );
 
                     case NotificationType.MEMBER_PROMOTED_AS_ADMIN:
                       String associatedName =
-                          notification.data['associatedName'];
-                      bool isGroup = notification.data['isGroup'];
-                      String timebankTitle = notification.data['timebankName'];
+                          notification.data!['associatedName'];
+                      bool isGroup = notification.data!['isGroup'];
+                      String timebankTitle = notification.data!['timebankName'];
 
                       return NotificationCard(
-                        timestamp: notification.timestamp,
+                        timestamp: notification.timestamp!,
                         title: '${S.of(context).notifications_promoted_title}',
                         subTitle:
                             '$associatedName ${S.of(context).notifications_promoted_subtitle_phrase} ${isGroup ? S.of(context).group : S.of(context).timebank} ${timebankTitle} ',
@@ -766,19 +769,19 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         onDismissed: () {
                           // Dismiss notification
                           NotificationsRepository.readUserNotification(
-                            notification.id,
-                            user.email,
+                            notification.id!,
+                            user.email!,
                           );
                         },
                       );
                     case NotificationType.ADMIN_PROMOTED_AS_ORGANIZER:
                       String associatedName =
-                          notification.data['associatedName'];
-                      bool isGroup = notification.data['isGroup'];
-                      String timebankTitle = notification.data['timebankName'];
+                          notification.data!['associatedName'];
+                      bool isGroup = notification.data!['isGroup'];
+                      String timebankTitle = notification.data!['timebankName'];
 
                       return NotificationCard(
-                        timestamp: notification.timestamp,
+                        timestamp: notification.timestamp!,
                         title:
                             '${S.of(context).notifications_promoted_title.replaceAll(S.of(context).admin, S.of(context).owner)}',
                         subTitle: S
@@ -790,24 +793,24 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         onDismissed: () {
                           // Dismiss notification
                           NotificationsRepository.readUserNotification(
-                            notification.id,
-                            user.email,
+                            notification.id!,
+                            user.email!,
                           );
                         },
                       );
 
                     case NotificationType.RequestReject:
                       RequestModel model =
-                          RequestModel.fromMap(notification.data);
+                          RequestModel.fromMap(notification.data!);
                       return NotificationCard(
-                        timestamp: notification.timestamp,
+                        timestamp: notification.timestamp!,
                         entityName: model.fullName,
-                        title: model.title,
+                        title: model.title!,
                         isDissmissible: true,
                         onDismissed: () {
                           NotificationsRepository.readUserNotification(
-                            notification.id,
-                            user.email,
+                            notification.id!,
+                            user.email!,
                           );
                         },
                         onPressed: null,
@@ -819,16 +822,16 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
 
                     case NotificationType.RequestCompletedRejected:
                       RequestModel model =
-                          RequestModel.fromMap(notification.data);
+                          RequestModel.fromMap(notification.data!);
                       return NotificationCard(
-                        timestamp: notification.timestamp,
+                        timestamp: notification.timestamp!,
                         entityName: model.fullName,
-                        title: model.title,
+                        title: model.title!,
                         isDissmissible: true,
                         onDismissed: () {
                           NotificationsRepository.readUserNotification(
-                            notification.id,
-                            user.email,
+                            notification.id!,
+                            user.email!,
                           );
                         },
                         onPressed: null,
@@ -849,21 +852,21 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                     case NotificationType.TYPE_CREDIT_FROM_OFFER:
                       OneToManyNotificationDataModel data =
                           OneToManyNotificationDataModel.fromJson(
-                              notification.data);
+                              notification.data!);
                       return NotificationCard(
-                        timestamp: notification.timestamp,
+                        timestamp: notification.timestamp!,
                         photoUrl: '',
                         title: S.of(context).notifications_credited,
                         subTitle: UserNotificationMessage.CREDIT_FROM_OFFER
                                 .replaceFirst(
                                   '*n',
-                                  (data.classDetails.numberOfClassHours +
-                                          data.classDetails
-                                              .numberOfPreperationHours)
+                                  (data.classDetails!.numberOfClassHours! +
+                                          data.classDetails!
+                                              .numberOfPreperationHours!)
                                       .toString(),
                                 )
                                 .replaceFirst(
-                                    '*class', data.classDetails.classTitle) +
+                                    '*class', data.classDetails!.classTitle!) +
                             " ",
                         onDismissed: onDismissed,
                       );
@@ -871,20 +874,20 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                     case NotificationType.TYPE_NEW_MEMBER_SIGNUP_OFFER:
                       OneToManyNotificationDataModel data =
                           OneToManyNotificationDataModel.fromJson(
-                              notification.data);
+                              notification.data!);
 
                       return NotificationCard(
-                        timestamp: notification.timestamp,
-                        photoUrl: data.participantDetails.photourl,
+                        timestamp: notification.timestamp!,
+                        photoUrl: data.participantDetails!.photourl,
                         title: S.of(context).notifications_new_member_signup,
                         subTitle: UserNotificationMessage
                                 .NEW_MEMBER_SIGNUP_OFFER
                                 .replaceFirst(
                                   '*name',
-                                  data.participantDetails.fullname,
+                                  data.participantDetails!.fullname!,
                                 )
                                 .replaceFirst(
-                                    '*class', data.classDetails.classTitle) +
+                                    '*class', data.classDetails!.classTitle!) +
                             " ",
                         onDismissed: onDismissed,
                       );
@@ -892,24 +895,24 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                     case NotificationType.TYPE_OFFER_FULFILMENT_ACHIEVED:
                       OneToManyNotificationDataModel data =
                           OneToManyNotificationDataModel.fromJson(
-                              notification.data);
+                              notification.data!);
 
                       return NotificationCard(
-                        timestamp: notification.timestamp,
+                        timestamp: notification.timestamp!,
                         photoUrl: '',
                         title:
-                            "${S.of(context).notifications_credits_for} ${data.classDetails.classTitle}",
+                            "${S.of(context).notifications_credits_for} ${data.classDetails!.classTitle}",
                         subTitle: UserNotificationMessage
                                 .OFFER_FULFILMENT_ACHIEVED
                                 .replaceFirst(
                                   '*n',
-                                  (data.classDetails.numberOfClassHours +
-                                          data.classDetails
-                                              .numberOfPreperationHours)
+                                  (data.classDetails!.numberOfClassHours! +
+                                          data.classDetails!
+                                              .numberOfPreperationHours!)
                                       .toString(),
                                 )
                                 .replaceFirst(
-                                    '*class', data.classDetails.classTitle) +
+                                    '*class', data.classDetails!.classTitle!) +
                             " ",
                         onDismissed: onDismissed,
                       );
@@ -918,20 +921,20 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                     case NotificationType.TYPE_DEBIT_FROM_OFFER:
                       OneToManyNotificationDataModel data =
                           OneToManyNotificationDataModel.fromJson(
-                              notification.data);
+                              notification.data!);
 
                       return NotificationCard(
-                        timestamp: notification.timestamp,
-                        photoUrl: data.participantDetails.photourl,
+                        timestamp: notification.timestamp!,
+                        photoUrl: data.participantDetails!.photourl,
                         title: S.of(context).notifications_debited,
                         subTitle: UserNotificationMessage.DEBIT_FROM_OFFER
                                 .replaceFirst(
                                   '*n',
-                                  data.classDetails.numberOfClassHours
+                                  data.classDetails!.numberOfClassHours
                                       .toString(),
                                 )
                                 .replaceFirst(
-                                    '*class', data.classDetails.classTitle) +
+                                    '*class', data.classDetails!.classTitle!) +
                             " ",
                         onDismissed: onDismissed,
                       );
@@ -940,20 +943,20 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                     case NotificationType.TYPE_OFFER_SUBSCRIPTION_COMPLETED:
                       OneToManyNotificationDataModel data =
                           OneToManyNotificationDataModel.fromJson(
-                              notification.data);
+                              notification.data!);
 
                       return NotificationCard(
-                        timestamp: notification.timestamp,
-                        photoUrl: data.participantDetails.photourl,
+                        timestamp: notification.timestamp!,
+                        photoUrl: data.participantDetails!.photourl!,
                         title: S.of(context).notifications_signed_for_class,
                         subTitle: UserNotificationMessage
                                 .OFFER_SUBSCRIPTION_COMPLETED
                                 .replaceFirst(
                                   '*class',
-                                  data.classDetails.classTitle,
+                                  data.classDetails!.classTitle!,
                                 )
                                 .replaceFirst(
-                                    '*class', data.classDetails.classTitle) +
+                                    '*class', data.classDetails!.classTitle!) +
                             " ",
                         onDismissed: onDismissed,
                       );
@@ -962,24 +965,24 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                     case NotificationType.TYPE_FEEDBACK_FROM_SIGNUP_MEMBER:
                       OneToManyNotificationDataModel data =
                           OneToManyNotificationDataModel.fromJson(
-                              notification.data);
+                              notification.data!);
 
                       return NotificationCard(
-                        timestamp: notification.timestamp,
-                        photoUrl: data.participantDetails.photourl,
+                        timestamp: notification.timestamp!,
+                        photoUrl: data.participantDetails!.photourl!,
                         title: S.of(context).notifications_feedback_request,
                         subTitle: UserNotificationMessage
                                 .FEEDBACK_FROM_SIGNUP_MEMBER
                                 .replaceFirst(
                               '*class',
-                              data.classDetails.classTitle,
+                              data.classDetails!.classTitle!,
                             ) +
                             " ",
                         onPressed: () => _handleFeedBackNotificationAction(
                           context,
                           data,
-                          notification.id,
-                          user.email,
+                          notification.id!,
+                          user.email!,
                         ),
                         onDismissed: onDismissed,
                       );
@@ -987,11 +990,11 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
 
                     case NotificationType.ONETOMANY_REQUEST_ATTENDEES_FEEDBACK:
                       RequestModel requestModel =
-                          RequestModel.fromMap(notification.data);
+                          RequestModel.fromMap(notification.data!);
 
                       return NotificationCard(
                         isDissmissible: true,
-                        timestamp: notification.timestamp,
+                        timestamp: notification.timestamp!,
                         entityName: 'Feed Back',
                         photoUrl: null,
                         title: S.of(context).notifications_feedback_request,
@@ -999,15 +1002,15 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                 .FEEDBACK_FROM_SIGNUP_MEMBER
                                 .replaceFirst(
                               '*class',
-                              requestModel.title,
+                              requestModel.title!,
                             ) +
                             " ",
                         onPressed: () =>
                             _handleFeedBackNotificationOneToManyAttendees(
                           context,
                           requestModel,
-                          notification.id,
-                          user.email,
+                          notification.id!,
+                          user.email!,
                         ),
                         onDismissed: onDismissed,
                       );
@@ -1015,9 +1018,9 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
 
                     case NotificationType.APPROVED_MEMBER_WITHDRAWING_REQUEST:
                       var body =
-                          WithdrawnRequestBody.fromMap(notification.data);
+                          WithdrawnRequestBody.fromMap(notification.data!);
                       return NotificationCard(
-                        timestamp: notification.timestamp,
+                        timestamp: notification.timestamp!,
                         entityName: body.fullName,
                         photoUrl: null,
                         title:
@@ -1030,7 +1033,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                     case NotificationType.OFFER_CANCELLED_BY_CREATOR:
                       // var body = WithdrawnRequestBody.fromMap(notification.data);
                       return NotificationCard(
-                        timestamp: notification.timestamp,
+                        timestamp: notification.timestamp!,
                         entityName: "",
                         photoUrl: null,
                         title: "${S.of(context).otm_offer_cancelled_title}",
@@ -1041,11 +1044,11 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
 
                     case NotificationType.SEVA_COINS_CREDITED:
                       return NotificationCard(
-                        timestamp: notification.timestamp,
+                        timestamp: notification.timestamp!,
                         entityName: "CR",
                         photoUrl: null,
                         title: S.of(context).credits_credited,
-                        subTitle: notification.data['credits'].toString() +
+                        subTitle: notification.data!['credits'].toString() +
                             " " +
                             S
                                 .of(context)
@@ -1057,17 +1060,17 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
 //Feature name: Create Notification for member receiving donation //1.9 Release Feature
                     case NotificationType.MEMBER_RECEIVED_CREDITS_DONATION:
                       return NotificationCard(
-                        timestamp: notification.timestamp,
+                        timestamp: notification.timestamp!,
                         entityName: "CR",
-                        photoUrl: notification.data['donorPhotoUrl'] ?? null,
+                        photoUrl: notification.data!['donorPhotoUrl'] ?? null,
                         title: S.of(context).seva_credits_donated_text,
                         subTitle: S.of(context).you_have_recieved +
-                            notification.data['credits'].toStringAsFixed(1) +
+                            notification.data!['credits'].toStringAsFixed(1) +
                             " " +
                             S.of(context).seva_credits_from_text +
                             " " +
-                            (notification.data['donorName'] != null
-                                ? (notification.data[
+                            (notification.data!['donorName'] != null
+                                ? (notification.data![
                                     'communityName']) //or can use notification.data['donorName']
                                 : '') +
                             " " +
@@ -1078,11 +1081,11 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
 
                     case NotificationType.SEVA_COINS_DEBITED:
                       return NotificationCard(
-                        timestamp: notification.timestamp,
+                        timestamp: notification.timestamp!,
                         entityName: "CR",
                         photoUrl: null,
                         title: S.of(context).credits_debited,
-                        subTitle: notification.data['credits'].toString() +
+                        subTitle: notification.data!['credits'].toString() +
                             " " +
                             S
                                 .of(context)
@@ -1092,17 +1095,17 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
 
                     case NotificationType.MANUAL_TIME_CLAIM_APPROVED:
                       var body = ManualTimeModel.fromMap(
-                          Map<String, dynamic>.from(notification.data));
+                          Map<String, dynamic>.from(notification.data!));
 
                       return NotificationCard(
-                        timestamp: notification.timestamp,
-                        entityName: body.userDetails.name,
-                        photoUrl: body.userDetails.photoUrl,
+                        timestamp: notification.timestamp!,
+                        entityName: body.userDetails!.name!,
+                        photoUrl: body.userDetails!.photoUrl,
                         title: S.of(context).manual_notification_title,
                         subTitle: S
                             .of(context)
                             .manual_time_request_approved
-                            .replaceAll('**number', '${body.claimedTime / 60}')
+                            .replaceAll('**number', '${body.claimedTime! / 60}')
                             .replaceAll(
                                 '**communityName', body.communityName ?? ' '),
                         isDissmissible: true,
@@ -1111,17 +1114,17 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
 
                     case NotificationType.MANUAL_TIME_CLAIM_REJECTED:
                       var body = ManualTimeModel.fromMap(
-                          Map<String, dynamic>.from(notification.data));
+                          Map<String, dynamic>.from(notification.data!));
 
                       return NotificationCard(
-                        timestamp: notification.timestamp,
-                        entityName: body.userDetails.name,
-                        photoUrl: body.userDetails.photoUrl,
+                        timestamp: notification.timestamp!,
+                        entityName: body.userDetails!.name!,
+                        photoUrl: body.userDetails!.photoUrl,
                         title: S.of(context).manual_notification_title,
                         subTitle: S
                             .of(context)
                             .manual_time_request_rejected
-                            .replaceAll('**number', '${body.claimedTime / 60}')
+                            .replaceAll('**number', '${body.claimedTime! / 60}')
                             .replaceAll(
                                 '**communityName', body.communityName ?? ' '),
                         isDissmissible: true,
@@ -1130,10 +1133,10 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
 
                     case NotificationType
                         .NOTIFICATION_TO_LENDER_RECEIVED_BACK_CHECK:
-                      var model = RequestModel.fromMap(notification.data);
+                      var model = RequestModel.fromMap(notification.data!);
                       requestModelNew = model;
                       return NotificationCard(
-                        timestamp: notification.timestamp,
+                        timestamp: notification.timestamp!,
                         entityName: 'NAME',
                         isDissmissible: false,
                         //onDismissed: onDismissed,
@@ -1141,7 +1144,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                           showDialog(
                             context: context,
                             builder: (_context) => AlertDialog(
-                              title: Text(requestModelNew.roomOrTool ==
+                              title: Text(requestModelNew!.roomOrTool ==
                                       LendingType.PLACE.readable
                                   ? S
                                       .of(context)
@@ -1152,7 +1155,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                               actions: [
                                 CustomTextButton(
                                   shape: StadiumBorder(),
-                                  color: Theme.of(context).accentColor,
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
                                   padding:
                                       const EdgeInsets.fromLTRB(20, 5, 20, 5),
                                   onPressed: () {
@@ -1173,28 +1177,28 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                     Navigator.of(_context).pop();
 
                                     log('timebank ID:  ' +
-                                        requestModelNew.timebankId);
+                                        requestModelNew!.timebankId!);
 
                                     //Update request model to complete it
                                     //requestModelNew.approvedUsers = [];
-                                    requestModelNew.acceptors = [];
-                                    requestModelNew.accepted =
+                                    requestModelNew!.acceptors = [];
+                                    requestModelNew!.accepted =
                                         true; //so that we can know that this request has completed
-                                    requestModelNew.isNotified =
+                                    requestModelNew!.isNotified =
                                         true; //resets to false otherwise
 
-                                    if (requestModelNew.roomOrTool ==
+                                    if (requestModelNew!.roomOrTool ==
                                         LendingType.ITEM.readable) {
-                                      requestModelNew
-                                          .borrowModel.itemsReturned = true;
+                                      requestModelNew!
+                                          .borrowModel!.itemsReturned = true;
                                     } else {
-                                      requestModelNew.borrowModel.isCheckedOut =
-                                          true;
+                                      requestModelNew!
+                                          .borrowModel!.isCheckedOut = true;
                                     }
 
                                     await lenderReceivedBackCheck(
                                         notification: notification,
-                                        requestModelUpdated: requestModelNew,
+                                        requestModelUpdated: requestModelNew!,
                                         context: context);
                                   },
                                   child: Text(
@@ -1217,19 +1221,19 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
 
                     case NotificationType
                         .NOTIFICATION_TO_LENDER_COMPLETION_RECEIPT:
-                      var model = RequestModel.fromMap(notification.data);
+                      var model = RequestModel.fromMap(notification.data!);
                       requestModelNew = model;
                       return NotificationCard(
-                        timestamp: notification.timestamp,
+                        timestamp: notification.timestamp!,
                         entityName: 'NAME',
                         isDissmissible: true,
                         onDismissed: onDismissed,
                         onPressed: () =>
                             _handleFeedBackNotificationBorrowRequest(
                                 context,
-                                requestModelNew,
-                                notification.id,
-                                user.email,
+                                requestModelNew!,
+                                notification.id!,
+                                user.email!,
                                 FeedbackType.FOR_BORROW_REQUEST_LENDER),
                         photoUrl: model.photoUrl,
                         title: '${model.title}',
@@ -1239,19 +1243,19 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
 
                     case NotificationType
                         .NOTIFICATION_TO_BORROWER_COMPLETION_FEEDBACK:
-                      var model = RequestModel.fromMap(notification.data);
+                      var model = RequestModel.fromMap(notification.data!);
                       requestModelNew = model;
                       return NotificationCard(
-                        timestamp: notification.timestamp,
+                        timestamp: notification.timestamp!,
                         entityName: 'NAME',
                         isDissmissible: true,
                         onDismissed: onDismissed,
                         onPressed: () =>
                             _handleFeedBackNotificationBorrowRequest(
                                 context,
-                                requestModelNew,
-                                notification.id,
-                                user.email,
+                                requestModelNew!,
+                                notification.id!,
+                                user.email!,
                                 FeedbackType.FOR_BORROW_REQUEST_BORROWER),
                         photoUrl: model.photoUrl,
                         title: '${model.title}',
@@ -1262,7 +1266,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       break;
 
                     case NotificationType.MEMBER_ACCEPT_LENDING_OFFER:
-                      return PersonalNotificationsReducerForOffer
+                      return PersonalNotificationsReducerForOffer()
                           .getNotificationForLendingOfferAccept(
                         notification: notification,
                       );
@@ -1270,16 +1274,16 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
 
                     case NotificationType
                         .NOTIFICATION_TO_BORROWER_REJECTED_LENDING_OFFER:
-                      OfferModel model = OfferModel.fromMap(notification.data);
+                      OfferModel model = OfferModel.fromMap(notification.data!);
                       return NotificationCard(
-                        timestamp: notification.timestamp,
+                        timestamp: notification.timestamp!,
                         entityName: model.fullName,
-                        title: model.individualOfferDataModel.title,
+                        title: model.individualOfferDataModel!.title,
                         isDissmissible: true,
                         onDismissed: () {
                           NotificationsRepository.readUserNotification(
-                            notification.id,
-                            user.email,
+                            notification.id!,
+                            user.email!,
                           );
                         },
                         onPressed: null,
@@ -1291,23 +1295,24 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
 
                     case NotificationType
                         .NOTIFICATION_TO_BORROWER_APPROVED_LENDING_OFFER:
-                      OfferModel model = OfferModel.fromMap(notification.data);
+                      OfferModel model = OfferModel.fromMap(notification.data!);
                       return NotificationCard(
-                        timestamp: notification.timestamp,
+                        timestamp: notification.timestamp!,
                         entityName: model.fullName,
-                        title: model.individualOfferDataModel.title,
+                        title: model.individualOfferDataModel!.title,
                         isDissmissible: true,
                         onDismissed: () {
                           NotificationsRepository.readUserNotification(
-                            notification.id,
-                            user.email,
+                            notification.id!,
+                            user.email!,
                           );
                         },
                         onPressed: () async {
                           LendingOfferAcceptorModel lendingOfferAcceptorModel =
                               await LendingOffersRepo.getBorrowAcceptorModel(
-                                  offerId: model.id, acceptorEmail: user.email);
-                          await LendingOffersRepo.getDialogForBorrowerToUpdate(
+                                  offerId: model.id!,
+                                  acceptorEmail: user.email!);
+                          LendingOffersRepo.getDialogForBorrowerToUpdate(
                             offerModel: model,
                             context: context,
                             lendingOfferAcceptorModel:
@@ -1322,10 +1327,10 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
 
                     case NotificationType
                         .NOTIFICATION_TO_LENDER_PLACE_CHECKED_IN:
-                      var model = OfferModel.fromMap(notification.data);
+                      var model = OfferModel.fromMap(notification.data!);
                       return FutureBuilder<UserModel>(
                           future: UserRepository.fetchUserById(
-                              notification.senderUserId),
+                              notification.senderUserId!),
                           builder: (context, snapshot) {
                             if (snapshot.hasError) {
                               return Container();
@@ -1334,26 +1339,26 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                 ConnectionState.waiting) {
                               return NotificationShimmer();
                             }
-                            UserModel user = snapshot.data;
+                            UserModel user = snapshot.data!;
                             return user != null && user.fullname != null
                                 ? NotificationCard(
-                                    timestamp: notification.timestamp,
+                                    timestamp: notification.timestamp!,
                                     entityName: 'NAME',
                                     isDissmissible: true,
                                     onPressed: null,
                                     photoUrl: notification.senderPhotoUrl ??
                                         defaultUserImageURL,
                                     title:
-                                        '${model.individualOfferDataModel.title}',
+                                        '${model.individualOfferDataModel!.title}',
                                     subTitle: "${user.fullname} " +
                                         S.of(context).checked_in_text,
                                     onDismissed: () {
                                       NotificationsRepository
                                           .readUserNotification(
-                                              notification.id,
+                                              notification.id!,
                                               SevaCore.of(context)
                                                   .loggedInUser
-                                                  .email);
+                                                  .email!);
                                     },
                                   )
                                 : Container();
@@ -1362,10 +1367,10 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
 
                     case NotificationType
                         .NOTIFICATION_TO_LENDER_PLACE_CHECKED_OUT:
-                      var model = OfferModel.fromMap(notification.data);
+                      var model = OfferModel.fromMap(notification.data!);
                       return FutureBuilder<UserModel>(
                           future: UserRepository.fetchUserById(
-                              notification.senderUserId),
+                              notification.senderUserId!),
                           builder: (context, snapshot) {
                             if (snapshot.hasError) {
                               return Container();
@@ -1374,10 +1379,10 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                 ConnectionState.waiting) {
                               return NotificationShimmer();
                             }
-                            UserModel user = snapshot.data;
+                            UserModel user = snapshot.data!;
                             return user != null && user.fullname != null
                                 ? NotificationCard(
-                                    timestamp: notification.timestamp,
+                                    timestamp: notification.timestamp!,
                                     entityName: 'NAME',
                                     isDissmissible: true,
                                     onPressed: () async {
@@ -1385,15 +1390,15 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                           lendingOfferAcceptorModel =
                                           await LendingOffersRepo
                                               .getBorrowAcceptorModel(
-                                                  offerId: model.id,
-                                                  acceptorEmail: user.email);
+                                                  offerId: model.id!,
+                                                  acceptorEmail: user.email!);
                                       handleFeedBackNotificationLendingOffer(
                                           offerModel: model,
-                                          notificationId: notification.id,
+                                          notificationId: notification.id!,
                                           context: context,
                                           email: SevaCore.of(context)
                                               .loggedInUser
-                                              .email,
+                                              .email!,
                                           feedbackType: FeedbackType
                                               .FEEDBACK_FOR_BORROWER_FROM_LENDER,
                                           lendingOfferAcceptorModel:
@@ -1402,7 +1407,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                     photoUrl: notification.senderPhotoUrl ??
                                         defaultUserImageURL,
                                     title:
-                                        '${model.individualOfferDataModel.title}',
+                                        '${model.individualOfferDataModel!.title}',
                                     subTitle: "${user.fullname} " +
                                         S.of(context).checked_out_text +
                                         '. ' +
@@ -1410,10 +1415,10 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                     onDismissed: () {
                                       NotificationsRepository
                                           .readUserNotification(
-                                              notification.id,
+                                              notification.id!,
                                               SevaCore.of(context)
                                                   .loggedInUser
-                                                  .email);
+                                                  .email!);
                                     },
                                   )
                                 : Container();
@@ -1422,10 +1427,10 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
 
                     case NotificationType
                         .NOTIFICATION_TO_LENDER_ITEMS_COLLECTED:
-                      var model = OfferModel.fromMap(notification.data);
+                      var model = OfferModel.fromMap(notification.data!);
                       return FutureBuilder<UserModel>(
                           future: UserRepository.fetchUserById(
-                              notification.senderUserId),
+                              notification.senderUserId!),
                           builder: (context, snapshot) {
                             if (snapshot.hasError) {
                               return Container();
@@ -1434,26 +1439,26 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                 ConnectionState.waiting) {
                               return NotificationShimmer();
                             }
-                            UserModel user = snapshot.data;
+                            UserModel user = snapshot.data!;
                             return user != null && user.fullname != null
                                 ? NotificationCard(
-                                    timestamp: notification.timestamp,
+                                    timestamp: notification.timestamp!,
                                     entityName: 'NAME',
                                     isDissmissible: true,
                                     onPressed: null,
                                     photoUrl: notification.senderPhotoUrl ??
                                         defaultUserImageURL,
                                     title:
-                                        '${model.individualOfferDataModel.title}',
+                                        '${model.individualOfferDataModel!.title}',
                                     subTitle: "${user.fullname} " +
                                         S.of(context).collected_items,
                                     onDismissed: () {
                                       NotificationsRepository
                                           .readUserNotification(
-                                              notification.id,
+                                              notification.id!,
                                               SevaCore.of(context)
                                                   .loggedInUser
-                                                  .email);
+                                                  .email!);
                                     },
                                   )
                                 : Container();
@@ -1461,10 +1466,10 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       break;
 
                     case NotificationType.NOTIFICATION_TO_LENDER_ITEMS_RETURNED:
-                      var model = OfferModel.fromMap(notification.data);
+                      var model = OfferModel.fromMap(notification.data!);
                       return FutureBuilder<UserModel>(
                           future: UserRepository.fetchUserById(
-                              notification.senderUserId),
+                              notification.senderUserId!),
                           builder: (context, snapshot) {
                             if (snapshot.hasError) {
                               return Container();
@@ -1473,10 +1478,10 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                 ConnectionState.waiting) {
                               return NotificationShimmer();
                             }
-                            UserModel user = snapshot.data;
+                            UserModel user = snapshot.data!;
                             return user != null && user.fullname != null
                                 ? NotificationCard(
-                                    timestamp: notification.timestamp,
+                                    timestamp: notification.timestamp!,
                                     entityName: 'NAME',
                                     isDissmissible: true,
                                     onPressed: () async {
@@ -1484,15 +1489,15 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                           lendingOfferAcceptorModel =
                                           await LendingOffersRepo
                                               .getBorrowAcceptorModel(
-                                                  offerId: model.id,
-                                                  acceptorEmail: user.email);
+                                                  offerId: model.id!,
+                                                  acceptorEmail: user.email!);
                                       handleFeedBackNotificationLendingOffer(
                                           offerModel: model,
-                                          notificationId: notification.id,
+                                          notificationId: notification.id!,
                                           context: context,
                                           email: SevaCore.of(context)
                                               .loggedInUser
-                                              .email,
+                                              .email!,
                                           feedbackType: FeedbackType
                                               .FEEDBACK_FOR_BORROWER_FROM_LENDER,
                                           lendingOfferAcceptorModel:
@@ -1501,7 +1506,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                     photoUrl: notification.senderPhotoUrl ??
                                         defaultUserImageURL,
                                     title:
-                                        '${model.individualOfferDataModel.title}',
+                                        '${model.individualOfferDataModel!.title}',
                                     subTitle: "${user.fullname} " +
                                         S.of(context).returned_items +
                                         ' ' +
@@ -1509,10 +1514,10 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                     onDismissed: () {
                                       NotificationsRepository
                                           .readUserNotification(
-                                              notification.id,
+                                              notification.id!,
                                               SevaCore.of(context)
                                                   .loggedInUser
-                                                  .email);
+                                                  .email!);
                                     },
                                   )
                                 : Container();
@@ -1520,20 +1525,21 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       break;
                     case NotificationType
                         .NOTIFICATION_TO_BORROWER_FOR_LENDING_FEEDBACK:
-                      var model = OfferModel.fromMap(notification.data);
+                      var model = OfferModel.fromMap(notification.data!);
                       return NotificationCard(
-                        timestamp: notification.timestamp,
+                        timestamp: notification.timestamp!,
                         entityName: 'NAME',
                         isDissmissible: true,
                         onPressed: () async {
                           LendingOfferAcceptorModel lendingOfferAcceptorModel =
                               await LendingOffersRepo.getBorrowAcceptorModel(
-                                  offerId: model.id, acceptorEmail: user.email);
+                                  offerId: model.id!,
+                                  acceptorEmail: user.email!);
                           handleFeedBackNotificationLendingOffer(
                               offerModel: model,
-                              notificationId: notification.id,
+                              notificationId: notification.id!,
                               context: context,
-                              email: SevaCore.of(context).loggedInUser.email,
+                              email: SevaCore.of(context).loggedInUser.email!,
                               feedbackType: FeedbackType
                                   .FEEDBACK_FOR_LENDER_FROM_BORROWER,
                               lendingOfferAcceptorModel:
@@ -1541,32 +1547,32 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         },
                         photoUrl:
                             notification.senderPhotoUrl ?? defaultUserImageURL,
-                        title: '${model.individualOfferDataModel.title}',
+                        title: '${model.individualOfferDataModel!.title}',
                         subTitle:
-                            "${model.lendingOfferDetailsModel.lendingModel.lendingType == LendingType.PLACE ? S.of(context).borrower_departed_provide_feedback : S.of(context).borrower_returned_items_feedback}",
+                            "${model.lendingOfferDetailsModel!.lendingModel!.lendingType == LendingType.PLACE ? S.of(context).borrower_departed_provide_feedback : S.of(context).borrower_returned_items_feedback}",
                         onDismissed: () {
                           NotificationsRepository.readUserNotification(
-                              notification.id, user.email);
+                              notification.id!, user.email!);
                         },
                       );
 
                       break;
                     case NotificationType.LendingOfferIdleFirstWarning:
-                      OfferModel model = OfferModel.fromMap(notification.data);
+                      OfferModel model = OfferModel.fromMap(notification.data!);
                       offerModelNew = model;
                       return NotificationCard(
-                        timestamp: notification.timestamp,
+                        timestamp: notification.timestamp!,
                         entityName: 'NAME',
                         isDissmissible: true,
                         onDismissed: () async {
                           NotificationsRepository.readUserNotification(
-                            notification.id,
-                            user.email,
+                            notification.id!,
+                            user.email!,
                           );
                         },
                         onPressed: () {},
                         photoUrl: model.photoUrlImage,
-                        title: model.individualOfferDataModel.title +
+                        title: model.individualOfferDataModel!.title +
                             S.of(context).idle_for_2_weeks,
                         subTitle: S
                             .of(context)
@@ -1576,21 +1582,21 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       break;
 
                     case NotificationType.LendingOfferIdleSecondWarning:
-                      OfferModel model = OfferModel.fromMap(notification.data);
+                      OfferModel model = OfferModel.fromMap(notification.data!);
                       offerModelNew = model;
                       return NotificationCard(
-                        timestamp: notification.timestamp,
+                        timestamp: notification.timestamp!,
                         entityName: 'NAME',
                         isDissmissible: true,
                         onDismissed: () async {
                           NotificationsRepository.readUserNotification(
-                            notification.id,
-                            user.email,
+                            notification.id!,
+                            user.email!,
                           );
                         },
                         onPressed: () {},
                         photoUrl: model.photoUrlImage,
-                        title: model.individualOfferDataModel.title +
+                        title: model.individualOfferDataModel!.title +
                             S.of(context).idle_for_4_weeks,
                         subTitle: S
                             .of(context)
@@ -1600,21 +1606,21 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       break;
 
                     case NotificationType.LendingOfferIdleSoftDeleted:
-                      OfferModel model = OfferModel.fromMap(notification.data);
+                      OfferModel model = OfferModel.fromMap(notification.data!);
                       offerModelNew = model;
                       return NotificationCard(
-                        timestamp: notification.timestamp,
+                        timestamp: notification.timestamp!,
                         entityName: 'NAME',
                         isDissmissible: true,
                         onDismissed: () async {
                           NotificationsRepository.readUserNotification(
-                            notification.id,
-                            user.email,
+                            notification.id!,
+                            user.email!,
                           );
                         },
                         onPressed: () {},
                         photoUrl: model.photoUrlImage,
-                        title: model.individualOfferDataModel.title +
+                        title: model.individualOfferDataModel!.title +
                             ' ' +
                             S
                                 .of(context)
@@ -1627,21 +1633,21 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       break;
 
                     case NotificationType.BorrowRequestIdleFirstWarning:
-                      var model = RequestModel.fromMap(notification.data);
+                      var model = RequestModel.fromMap(notification.data!);
                       requestModelNew = model;
                       return NotificationCard(
-                        timestamp: notification.timestamp,
+                        timestamp: notification.timestamp!,
                         entityName: 'NAME',
                         isDissmissible: true,
                         onDismissed: () async {
                           NotificationsRepository.readUserNotification(
-                            notification.id,
-                            user.email,
+                            notification.id!,
+                            user.email!,
                           );
                         },
                         onPressed: () {},
                         photoUrl: model.photoUrl,
-                        title: model.title + S.of(context).idle_for_2_weeks,
+                        title: model.title! + S.of(context).idle_for_2_weeks,
                         subTitle: S
                             .of(context)
                             .idle_borrow_request_first_warning
@@ -1650,21 +1656,21 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       break;
 
                     case NotificationType.BorrowRequestIdleSecondWarning:
-                      var model = RequestModel.fromMap(notification.data);
+                      var model = RequestModel.fromMap(notification.data!);
                       requestModelNew = model;
                       return NotificationCard(
-                        timestamp: notification.timestamp,
+                        timestamp: notification.timestamp!,
                         entityName: 'NAME',
                         isDissmissible: true,
                         onDismissed: () async {
                           NotificationsRepository.readUserNotification(
-                            notification.id,
-                            user.email,
+                            notification.id!,
+                            user.email!,
                           );
                         },
                         onPressed: () {},
                         photoUrl: model.photoUrl,
-                        title: model.title + S.of(context).idle_for_4_weeks,
+                        title: model.title! + S.of(context).idle_for_4_weeks,
                         subTitle: S
                             .of(context)
                             .idle_borrow_request_second_warning
@@ -1673,21 +1679,21 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       break;
 
                     case NotificationType.BorrowRequestIdleSoftDeleted:
-                      var model = RequestModel.fromMap(notification.data);
+                      var model = RequestModel.fromMap(notification.data!);
                       requestModelNew = model;
                       return NotificationCard(
-                        timestamp: notification.timestamp,
+                        timestamp: notification.timestamp!,
                         entityName: 'NAME',
                         isDissmissible: true,
                         onDismissed: () async {
                           NotificationsRepository.readUserNotification(
-                            notification.id,
-                            user.email,
+                            notification.id!,
+                            user.email!,
                           );
                         },
                         onPressed: () {},
                         photoUrl: model.photoUrl,
-                        title: model.title +
+                        title: model.title! +
                             ' ' +
                             S
                                 .of(context)
@@ -1700,15 +1706,15 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       break;
                     case NotificationType.TypeChangeGroupOwnership:
                       ChangeOwnershipModel ownershipModel =
-                          ChangeOwnershipModel.fromMap(notification.data);
+                          ChangeOwnershipModel.fromMap(notification.data!);
                       return NotificationCard(
-                        timestamp: notification.timestamp,
+                        timestamp: notification.timestamp!,
                         entityName: ownershipModel.creatorName,
                         isDissmissible: true,
                         onDismissed: () {
                           FirestoreManager.readUserNotification(
-                            notification.id,
-                            SevaCore.of(context).loggedInUser.email,
+                            notification.id!,
+                            SevaCore.of(context).loggedInUser.email!,
                           );
                         },
                         onPressed: () {
@@ -1753,20 +1759,20 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         },
                         photoUrl: ownershipModel.creatorPhotoUrl,
                         title: S.of(context).transfer_ownership_text,
-                        subTitle: ownershipModel.message,
+                        subTitle: ownershipModel.message!,
                       );
                       break;
                     case NotificationType
                         .TYPE_CHANGE_GROUP_OWNERSHIP_UPDATE_TO_COMMUNITY_OWNER:
-                      Map<String, dynamic> data = notification.data;
+                      Map<String, dynamic> data = notification.data!;
                       return NotificationCard(
-                        timestamp: notification.timestamp,
+                        timestamp: notification.timestamp!,
                         entityName: data['group_name'],
                         isDissmissible: true,
                         onDismissed: () {
                           FirestoreManager.readUserNotification(
-                            notification.id,
-                            SevaCore.of(context).loggedInUser.email,
+                            notification.id!,
+                            SevaCore.of(context).loggedInUser.email!,
                           );
                         },
                         onPressed: () {},
@@ -1833,7 +1839,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
       CollectionRef.reviews.add(
         {
           "reviewer": SevaCore.of(context).loggedInUser.email,
-          "reviewed": data.classDetails.classTitle,
+          "reviewed": data.classDetails!.classTitle,
           "ratings": results['selection'],
           "requestId": '',
           "comments":
@@ -1844,7 +1850,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
       await sendMessageOfferCreator(
           loggedInUser: SevaCore.of(context).loggedInUser,
           message: results['didComment'] ? results['comment'] : "No comments",
-          creatorId: data.classDetails.sevauserid,
+          creatorId: data.classDetails!.sevauserid!,
           isFromOfferRequest: true);
       NotificationsRepository.readUserNotification(notificationId, email);
     }
@@ -1887,9 +1893,9 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
       await sendMessageOfferCreator(
           loggedInUser: SevaCore.of(context).loggedInUser,
           message: results['didComment'] ? results['comment'] : "No comments",
-          creatorId: requestModel.sevaUserId,
-          offerTitle: requestModel.title,
-          isFromOfferRequest: requestModel.isFromOfferRequest);
+          creatorId: requestModel.sevaUserId!,
+          offerTitle: requestModel.title!,
+          isFromOfferRequest: requestModel.isFromOfferRequest!);
       NotificationsRepository.readUserNotification(notificationId, email);
     }
   }
@@ -1915,7 +1921,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
           "reviewer": SevaCore.of(context).loggedInUser.email,
           "reviewed": feedbackType == FeedbackType.FOR_BORROW_REQUEST_LENDER
               ? requestModel.email
-              : requestModel.approvedUsers.first,
+              : requestModel.approvedUsers!.first,
           "ratings": results['selection'],
           "requestId": requestModel.id,
           "comments":
@@ -1925,26 +1931,30 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
       );
 
       await handleVolunterFeedbackForTrustWorthynessNRealiablityScore(
-          feedbackType, results, requestModel, loggedInUser);
+          feedbackType, results, requestModel, loggedInUser!);
 
-      TimebankModel timebankModel =
-          await getTimeBankForId(timebankId: requestModelNew.timebankId);
+      TimebankModel? timebankModel;
+      if (requestModelNew != null && requestModelNew!.timebankId != null) {
+        timebankModel =
+            await getTimeBankForId(timebankId: requestModelNew!.timebankId!);
+      }
       UserModel userModel = await FirestoreManager.getUserForId(
-          sevaUserId: requestModelNew.sevaUserId);
+          sevaUserId: requestModelNew!.sevaUserId!);
       if (userModel != null && timebankModel != null) {
         ParticipantInfo sender = ParticipantInfo(
           id: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-              ? loggedInUser.sevaUserID
+              ? loggedInUser!.sevaUserID
               : requestModel.timebankId,
           photoUrl: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-              ? loggedInUser.photoURL
-              : timebankModel.photoUrl,
+              ? loggedInUser!.photoURL
+              : timebankModel!.photoUrl,
           name: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-              ? loggedInUser.fullname
-              : timebankModel.name,
+              ? loggedInUser!.fullname
+              : timebankModel!.name,
           type: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
               ? ChatType.TYPE_PERSONAL
-              : timebankModel.parentTimebankId == FlavorConfig.values.timebankId
+              : timebankModel!.parentTimebankId ==
+                      FlavorConfig.values.timebankId
                   ? ChatType.TYPE_TIMEBANK
                   : ChatType.TYPE_GROUP,
         );
@@ -1964,7 +1974,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
               isForCreator: false,
               requestTitle: requestModel.title,
               context: context,
-              userName: loggedInUser.fullname,
+              userName: loggedInUser!.fullname,
               reviewMessage:
                   results['didComment'] ? results['comment'] : "No comments",
             ),
@@ -1973,8 +1983,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                 requestModel.requestMode == RequestMode.PERSONAL_REQUEST
                     ? false
                     : true,
-            timebankId: requestModel.timebankId,
-            communityId: loggedInUser.currentCommunity,
+            timebankId: requestModel.timebankId!,
+            communityId: loggedInUser!.currentCommunity!,
             sender: sender);
       }
 
@@ -1983,14 +1993,14 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
   }
 
   Future<void> sendMessageOfferCreator({
-    UserModel loggedInUser,
-    String offerTitle,
-    String creatorId,
-    String message,
-    bool isFromOfferRequest,
+    UserModel? loggedInUser,
+    String? offerTitle,
+    String? creatorId,
+    String? message,
+    bool? isFromOfferRequest,
   }) async {
     UserModel userModel =
-        await FirestoreManager.getUserForId(sevaUserId: creatorId);
+        await FirestoreManager.getUserForId(sevaUserId: creatorId!);
     if (userModel != null) {
       ParticipantInfo receiver = ParticipantInfo(
         id: userModel.sevaUserID,
@@ -2000,15 +2010,15 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
       );
 
       ParticipantInfo sender = ParticipantInfo(
-        id: loggedInUser.sevaUserID,
-        photoUrl: loggedInUser.photoURL,
-        name: loggedInUser.fullname,
+        id: loggedInUser!.sevaUserID!,
+        photoUrl: loggedInUser.photoURL!,
+        name: loggedInUser.fullname!,
         type: ChatType.TYPE_PERSONAL,
       );
       await sendBackgroundMessage(
           messageContent: getReviewMessage(
             reviewMessage: message,
-            userName: loggedInUser.fullname,
+            userName: loggedInUser!.fullname,
             context: context,
             requestTitle: offerTitle,
             isForCreator: true,
@@ -2017,7 +2027,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
           reciever: receiver,
           isTimebankMessage: false,
           timebankId: '',
-          communityId: loggedInUser.currentCommunity,
+          communityId: loggedInUser.currentCommunity!,
           sender: sender);
     }
   }
@@ -2026,7 +2036,9 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
     Map results = await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (BuildContext context) {
-          return BorrowRequestFeedBackView(requestModel: requestModelNew);
+          return MaterialPageRoute(
+              builder: (context) =>
+                  BorrowRequestFeedBackView(requestModel: requestModelNew));
         },
       ),
     );
@@ -2044,10 +2056,10 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
       logger.i('here 1');
       await CollectionRef.reviews.add({
         "reviewer": SevaCore.of(context).loggedInUser.email,
-        "reviewed": requestModelNew.email,
+        "reviewed": requestModelNew!.email,
         "ratings": results['selection'],
         "device_info": results['device_info'],
-        "requestId": requestModelNew.id,
+        "requestId": requestModelNew!.id,
         "comments": (results['didComment'] ? results['comment'] : "No comments")
       });
       logger.i('here 2');
@@ -2062,27 +2074,30 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
   }
 
   Future<void> sendMessageToMember({
-    UserModel loggedInUser,
-    String message,
+    UserModel? loggedInUser,
+    String? message,
   }) async {
-    TimebankModel timebankModel =
-        await getTimeBankForId(timebankId: requestModelNew.timebankId);
+    TimebankModel? timebankModel;
+    if (requestModelNew != null && requestModelNew!.timebankId != null) {
+      timebankModel =
+          await getTimeBankForId(timebankId: requestModelNew!.timebankId!);
+    }
     UserModel userModel = await FirestoreManager.getUserForId(
-        sevaUserId: requestModelNew.sevaUserId);
+        sevaUserId: requestModelNew!.sevaUserId!);
     if (userModel != null && timebankModel != null) {
       ParticipantInfo receiver = ParticipantInfo(
-        id: requestModelNew.requestMode == RequestMode.PERSONAL_REQUEST
+        id: requestModelNew!.requestMode == RequestMode.PERSONAL_REQUEST
             ? userModel.sevaUserID
-            : requestModelNew.timebankId,
-        photoUrl: requestModelNew.requestMode == RequestMode.PERSONAL_REQUEST
+            : requestModelNew!.timebankId,
+        photoUrl: requestModelNew!.requestMode == RequestMode.PERSONAL_REQUEST
             ? userModel.photoURL
-            : timebankModel.photoUrl,
-        name: requestModelNew.requestMode == RequestMode.PERSONAL_REQUEST
+            : timebankModel!.photoUrl,
+        name: requestModelNew!.requestMode == RequestMode.PERSONAL_REQUEST
             ? userModel.fullname
-            : timebankModel.name,
-        type: requestModelNew.requestMode == RequestMode.PERSONAL_REQUEST
+            : timebankModel!.name,
+        type: requestModelNew!.requestMode == RequestMode.PERSONAL_REQUEST
             ? ChatType.TYPE_PERSONAL
-            : timebankModel.parentTimebankId == FlavorConfig.values.timebankId
+            : timebankModel!.parentTimebankId == FlavorConfig.values.timebankId
                 ? ChatType.TYPE_TIMEBANK
                 : ChatType.TYPE_GROUP,
       );
@@ -2230,6 +2245,34 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
 
   @override
   bool get wantKeepAlive => true;
+}
+
+// Add the missing method for OfferRequestInvite notifications
+Widget getOfferRequestInvitation({
+  required NotificationsModel notification,
+  required UserModel user,
+  required BuildContext context,
+}) {
+  // You can customize this widget as needed
+  return NotificationCard(
+    timestamp: notification.timestamp!,
+    entityName: notification.data?['fullName'] ?? '',
+    isDissmissible: true,
+    onDismissed: () {
+      NotificationsRepository.readUserNotification(
+        notification.id!,
+        user.email!,
+      );
+    },
+    onPressed: () {
+      // Implement navigation or action for offer request invitation
+    },
+    photoUrl: notification.data?['photoUrl'] ?? null,
+    title:
+        S.of(context).offer_request_invite_title ?? 'Offer Request Invitation',
+    subTitle: S.of(context).offer_request_invite_subtitle ??
+        'You have received an offer request invitation.',
+  );
 }
 
 class WithdrawnRequestBody {

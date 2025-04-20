@@ -6,39 +6,39 @@ import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.
 import 'package:sevaexchange/views/core.dart';
 
 class UserAddedWidget extends StatelessWidget {
-  final UserAddedModel userAddedModel;
-  final String notificationId;
-  final BuildContext buildContext;
-  final String timebankId;
-  final String communityId;
-  final int timestamp;
+  final UserAddedModel? userAddedModel;
+  final String? notificationId;
+  final BuildContext? buildContext;
+  final String? timebankId;
+  final String? communityId;
+  final int? timestamp;
 
   const UserAddedWidget({
-    Key key,
+    Key? key,
     this.userAddedModel,
     this.notificationId,
     this.buildContext,
     this.timebankId,
     this.communityId,
-    @required this.timestamp,
+    required this.timestamp,
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return NotificationCard(
-      timestamp: timestamp,
-      entityName: userAddedModel.adminName,
+      timestamp: timestamp!,
+      entityName: userAddedModel!.adminName,
       isDissmissible: true,
       onDismissed: () {
         NotificationsRepository.readUserNotification(
-          notificationId,
-          SevaCore.of(context).loggedInUser.email,
+          notificationId!,
+          SevaCore.of(context).loggedInUser.email!,
         );
       },
       onPressed: null,
-      photoUrl: userAddedModel.timebankImage,
+      photoUrl: userAddedModel!.timebankImage,
       title: S.of(context).notification_timebank_join,
       subTitle:
-          '${userAddedModel.adminName.toLowerCase()} ${S.of(context).notifications_added_you} ${userAddedModel.timebankName} ${S.of(context).timebank}',
+          '${userAddedModel!.adminName!.toLowerCase()} ${S.of(context).notifications_added_you} ${userAddedModel!.timebankName} ${S.of(context).timebank}',
     );
   }
 }

@@ -24,20 +24,20 @@ class SponsorsWidget extends StatefulWidget {
   final Color textColor;
   final double textSize;
   final bool isAdminVerified;
-  final String title;
+  final String? title;
   final Function(
     List<SponsorDataModel> sponsors,
     SponsorDataModel addedSponsors,
-  ) onSponsorsAdded;
-  final Function(dynamic error) onError;
+  )? onSponsorsAdded;
+  final Function(dynamic error)? onError;
   final Function(
     List<SponsorDataModel> sponsors,
     SponsorDataModel removedSponsors,
-  ) onSponsorsRemoved;
+  )? onSponsorsRemoved;
 
   SponsorsWidget({
-    @required this.sponsors,
-    @required this.sponsorsMode,
+    required this.sponsors,
+    required this.sponsorsMode,
     this.title,
     this.onSponsorsAdded,
     this.textColor = const Color(0x0FF766FE0),
@@ -52,15 +52,15 @@ class SponsorsWidget extends StatefulWidget {
 }
 
 class _SponsorsWidgetState extends State<SponsorsWidget> {
-  int indexPosition;
+  int? indexPosition;
   String userId = '';
-  SponsorDataModel removedSponsors;
-  SponsorDataModel addedSponsors;
-  StreamController<SponsorDataModel> imageDatacontroller =
-      StreamController.broadcast();
+  SponsorDataModel? removedSponsors;
+  SponsorDataModel? addedSponsors;
+  StreamController<SponsorDataModel?> imageDatacontroller =
+      StreamController<SponsorDataModel?>.broadcast();
   @override
   Widget build(BuildContext context) {
-    userId = SevaCore.of(context).loggedInUser.sevaUserID;
+    userId = SevaCore.of(context).loggedInUser.sevaUserID!;
     log('verfied ${widget.isAdminVerified}');
     switch (widget.sponsorsMode) {
       case SponsorsMode.CREATE:
@@ -115,7 +115,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
           margin: EdgeInsets.only(right: 10),
           child: sponsorItemWidget(
               onTap: () {
-                return showDialog(
+                showDialog(
                   context: context,
                   builder: (dialogContext) => AlertDialog(
                     contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -129,9 +129,8 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                               indexPosition = index;
                               chooseImage(
                                 context: context,
-                                name: widget.sponsors != null ||
-                                        widget.sponsors.isNotEmpty
-                                    ? widget.sponsors[indexPosition].name
+                                name: widget.sponsors.isNotEmpty
+                                    ? widget.sponsors[indexPosition!].name!
                                     : '',
                                 isEdit: true,
                               );
@@ -152,8 +151,10 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                             onTap: () async {
                               removedSponsors = widget.sponsors[index];
                               widget.sponsors.removeAt(index);
-                              widget.onSponsorsRemoved(
-                                  widget.sponsors, removedSponsors);
+                              if (widget.onSponsorsRemoved != null) {
+                                widget.onSponsorsRemoved!(
+                                    widget.sponsors, removedSponsors!);
+                              }
                               Navigator.of(dialogContext).pop();
                             },
                             title: Text(S.of(context).delete),
@@ -189,8 +190,8 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                   ),
                 );
               },
-              name: widget.sponsors[index].name,
-              logoUrl: widget.sponsors[index].logo)),
+              name: widget.sponsors[index].name!,
+              logoUrl: widget.sponsors[index].logo!)),
     );
   }
 
@@ -208,8 +209,8 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
             children: List.generate(
               widget.sponsors.length > 5 ? 5 : widget.sponsors.length,
               (index) => sponsorItemWidget(
-                  name: widget.sponsors[index].name,
-                  logoUrl: widget.sponsors[index].logo),
+                  name: widget.sponsors[index].name!,
+                  logoUrl: widget.sponsors[index].logo!),
             ),
           ),
         ],
@@ -218,9 +219,9 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
   }
 
   Widget sponsorItemWidget({
-    @required String name,
-    @required String logoUrl,
-    Function onTap,
+    required String name,
+    required String logoUrl,
+    GestureTapCallback? onTap,
   }) {
     return InkWell(
       onTap: onTap,
@@ -292,7 +293,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                 margin: EdgeInsets.only(right: 10),
                 child: InkWell(
                   onTap: () {
-                    return showDialog(
+                    showDialog(
                       context: context,
                       builder: (dialogContext) => AlertDialog(
                         content: Container(
@@ -305,10 +306,12 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                                   indexPosition = index;
                                   Navigator.of(dialogContext).pop();
                                   logger.wtf(
-                                      'create: ${widget.sponsors[indexPosition].name}');
+                                      'create: ${widget.sponsors[indexPosition!].name}');
                                   chooseImage(
                                       context: context,
-                                      name: widget.sponsors[indexPosition].name,
+                                      name: widget
+                                              .sponsors[indexPosition!].name ??
+                                          '',
                                       isEdit: false);
                                 },
                                 title: Text(S.of(context).change_image),
@@ -327,8 +330,8 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                                 onTap: () async {
                                   removedSponsors = widget.sponsors[index];
                                   widget.sponsors.removeAt(index);
-                                  widget.onSponsorsRemoved(
-                                      widget.sponsors, removedSponsors);
+                                  widget.onSponsorsRemoved
+                                      ?.call(widget.sponsors, removedSponsors!);
                                   Navigator.of(dialogContext).pop();
                                 },
                                 title: Text(S.of(context).delete),
@@ -341,7 +344,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                           CustomTextButton(
                             shape: StadiumBorder(),
                             padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                            color: Theme.of(context).accentColor,
+                            color: Theme.of(context).colorScheme.secondary,
                             onPressed: () {
                               Navigator.of(dialogContext).pop();
                             },
@@ -355,8 +358,8 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                     );
                   },
                   child: sponsorItemWidget(
-                      name: widget.sponsors[index].name,
-                      logoUrl: widget.sponsors[index].logo),
+                      name: widget.sponsors[index].name!,
+                      logoUrl: widget.sponsors[index].logo!),
                 ),
               ),
             ),
@@ -398,7 +401,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
   Future showEnterNameDialog(BuildContext context) async {
     final profanityDetector = ProfanityDetector();
     GlobalKey<FormState> _formKey = GlobalKey();
-    String name;
+    String name = '';
     return showDialog(
       context: context,
       barrierDismissible: false,
@@ -427,6 +430,9 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                                 builder: (BuildContext dialogContext) {
                                   return ImagePickerDialogMobile(
                                     imagePickerType: ImagePickerType.SPONSOR,
+                                    storeImageFile: (file) {},
+                                    storPdfFile: (file) {},
+                                    color: Theme.of(context).primaryColor,
                                     onLinkCreated: (link) {
                                       // try {
                                       SponsorDataModel sponsorModel =
@@ -465,18 +471,18 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                                   );
                                 });
                           } catch (e) {
-                            widget.onError(e);
+                            widget.onError?.call(e);
                             rethrow;
                           }
                         },
                         child: StreamBuilder<SponsorDataModel>(
-                          stream: imageDatacontroller.stream,
+                          stream: imageDatacontroller.stream
+                              as Stream<SponsorDataModel>,
                           builder: (context, snapshot) {
                             return Image.network(
-                              snapshot != null &&
-                                      snapshot.data != null &&
-                                      snapshot.data.logo != ''
-                                  ? snapshot.data.logo
+                              (snapshot.data?.logo != null &&
+                                      snapshot.data!.logo!.isNotEmpty)
+                                  ? snapshot.data!.logo!
                                   : defaultCameraImageURL,
                             );
                           },
@@ -575,13 +581,13 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                                       textCapitalization:
                                           TextCapitalization.sentences,
                                       initialValue: indexPosition != null
-                                          ? widget.sponsors[indexPosition].name
+                                          ? widget.sponsors[indexPosition!].name
                                           : '',
                                       inputFormatters: [
                                         LengthLimitingTextInputFormatter(50),
                                       ],
                                       validator: (value) {
-                                        if (value.isEmpty) {
+                                        if (value!.isEmpty) {
                                           return S
                                               .of(context)
                                               .validation_error_full_name;
@@ -594,7 +600,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                                           return null;
                                         }
                                       },
-                                      onSaved: (value) => name = value,
+                                      onSaved: (value) => name = value!,
                                     ),
                                   ),
                                 ),
@@ -604,7 +610,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                         ),
                       ),
                       SizedBox(height: 35),
-                      StreamBuilder<Object>(
+                      StreamBuilder<SponsorDataModel?>(
                           stream: imageDatacontroller.stream,
                           builder: (context, snapshot) {
                             var side = MediaQuery.of(context).size.width / 17;
@@ -623,11 +629,12 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                               ),
                               onPressed: () async {
                                 try {
-                                  if (_formKey.currentState.validate()) {
-                                    _formKey.currentState.save();
+                                  if (_formKey.currentState!.validate()) {
+                                    _formKey.currentState!.save();
                                     if (indexPosition == null) {
                                       try {
-                                        SponsorDataModel model = snapshot.data;
+                                        SponsorDataModel model =
+                                            snapshot.data as SponsorDataModel;
                                         if (model != null) {
                                           SponsorDataModel sponsorModel =
                                               SponsorDataModel(
@@ -648,16 +655,16 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                                               addedSponsors = sponsorModel;
                                             }
                                           } else {
-                                            widget.sponsors[indexPosition] =
+                                            widget.sponsors[indexPosition!] =
                                                 sponsorModel;
                                             addedSponsors =
-                                                widget.sponsors[indexPosition];
+                                                widget.sponsors[indexPosition!];
                                           }
 
-                                          widget.onSponsorsAdded(
-                                              widget.sponsors, addedSponsors);
+                                          widget.onSponsorsAdded?.call(
+                                              widget.sponsors, addedSponsors!);
                                           indexPosition = null;
-                                          imageDatacontroller.add(null);
+                                          imageDatacontroller.add(null!);
                                         } else {
                                           SponsorDataModel sponsorModel =
                                               SponsorDataModel(
@@ -678,25 +685,25 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                                               addedSponsors = sponsorModel;
                                             }
                                           } else {
-                                            widget.sponsors[indexPosition] =
+                                            widget.sponsors[indexPosition!] =
                                                 sponsorModel;
                                             addedSponsors =
-                                                widget.sponsors[indexPosition];
+                                                widget.sponsors[indexPosition!];
                                           }
-                                          widget.onSponsorsAdded(
-                                              widget.sponsors, addedSponsors);
+                                          widget.onSponsorsAdded?.call(
+                                              widget.sponsors, addedSponsors!);
                                           indexPosition = null;
-                                          imageDatacontroller.add(null);
+                                          imageDatacontroller.sink.add(null);
                                         }
                                         Navigator.of(viewContext).pop();
                                       } catch (e) {
-                                        widget.onError(e);
+                                        widget.onError?.call(e);
                                         rethrow;
                                       }
                                     }
                                   }
                                 } catch (e) {
-                                  widget.onError(e);
+                                  widget.onError?.call(e);
                                   rethrow;
                                 }
                               },
@@ -718,7 +725,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
   ) async {
     final profanityDetector = ProfanityDetector();
     GlobalKey<FormState> _formKey = GlobalKey();
-    String name;
+    String? name = '';
     return showDialog(
       context: context,
       barrierDismissible: false,
@@ -742,14 +749,14 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                   keyboardType: TextInputType.text,
                   textCapitalization: TextCapitalization.sentences,
                   initialValue: indexPosition != null
-                      ? widget.sponsors[indexPosition].name
+                      ? widget.sponsors[indexPosition!].name
                       : '',
                   style: TextStyle(fontSize: 17.0),
                   inputFormatters: [
                     LengthLimitingTextInputFormatter(50),
                   ],
                   validator: (value) {
-                    if (value.isEmpty) {
+                    if (value!.isEmpty) {
                       return S.of(context).validation_error_full_name;
                     } else if (profanityDetector.isProfaneString(value)) {
                       return S.of(context).profanity_text_alert;
@@ -757,7 +764,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                       return null;
                     }
                   },
-                  onSaved: (value) => name = value,
+                  onSaved: (value) => name = value!,
                 ),
               ),
               SizedBox(
@@ -802,8 +809,8 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                     ),
                     onPressed: () async {
                       try {
-                        if (_formKey.currentState.validate()) {
-                          _formKey.currentState.save();
+                        if (_formKey.currentState!.validate()) {
+                          _formKey.currentState!.save();
                           // if (indexPosition == null) {
                           //   try {
                           //     SponsorDataModel sponsorModel = SponsorDataModel(
@@ -839,10 +846,10 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                           //   }
                           //   name = null;
                           // } else {
-                          widget.sponsors[indexPosition].name = name;
-                          addedSponsors = widget.sponsors[indexPosition];
-                          widget.onSponsorsAdded(
-                              widget.sponsors, addedSponsors);
+                          widget.sponsors[indexPosition!].name = name;
+                          addedSponsors = widget.sponsors[indexPosition!];
+                          widget.onSponsorsAdded
+                              ?.call(widget.sponsors, addedSponsors!);
                           indexPosition = null;
                           name = null;
                           // Navigator.of(viewContext).pop();
@@ -850,7 +857,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                           Navigator.of(context, rootNavigator: true).pop();
                         }
                       } catch (e) {
-                        widget.onError(e);
+                        widget.onError!(e);
                         rethrow;
                       }
                     },
@@ -864,9 +871,9 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
     );
   }
 
-  Future addImageAlert({BuildContext context, @required String name}) async {
+  Future addImageAlert({BuildContext? context, required String? name}) async {
     return showDialog(
-      context: context,
+      context: context!,
       barrierDismissible: false,
       builder: (BuildContext viewContext) {
         return AlertDialog(
@@ -884,7 +891,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
               child: CustomTextButton(
                 shape: StadiumBorder(),
                 padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                color: Theme.of(context).accentColor,
+                color: Theme.of(context).colorScheme.secondary,
                 onPressed: () async {
                   try {
                     SponsorDataModel sponsorModel = SponsorDataModel(
@@ -904,15 +911,16 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                         addedSponsors = sponsorModel;
                       }
                     } else {
-                      widget.sponsors[indexPosition] = sponsorModel;
-                      addedSponsors = widget.sponsors[indexPosition];
+                      widget.sponsors[indexPosition!] = sponsorModel;
+                      addedSponsors = widget.sponsors[indexPosition!];
                     }
                     indexPosition = null;
-                    widget.onSponsorsAdded(widget.sponsors, addedSponsors);
+                    widget.onSponsorsAdded
+                        ?.call(widget.sponsors, addedSponsors!);
 
                     Navigator.of(viewContext).pop();
                   } catch (e) {
-                    widget.onError(e);
+                    widget.onError?.call(e);
                     rethrow;
                   }
                 },
@@ -939,7 +947,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                   Navigator.of(viewContext).pop();
                   chooseImage(
                     context: context,
-                    name: name,
+                    name: name!,
                     isEdit: false,
                   );
                 },
@@ -959,12 +967,15 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
     );
   }
 
-  void chooseImage({BuildContext context, String name, bool isEdit}) async {
+  void chooseImage({BuildContext? context, String? name, bool? isEdit}) async {
     showDialog(
-      context: context,
+      context: context!,
       builder: (BuildContext dialogContext) {
         return ImagePickerDialogMobile(
           imagePickerType: ImagePickerType.SPONSOR,
+          storeImageFile: (file) {},
+          storPdfFile: (file) {},
+          color: Theme.of(context).primaryColor,
           onLinkCreated: (link) {
             try {
               SponsorDataModel sponsorModel = SponsorDataModel(
@@ -984,16 +995,16 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                   addedSponsors = sponsorModel;
                 }
               } else {
-                widget.sponsors[indexPosition] = sponsorModel;
-                addedSponsors = widget.sponsors[indexPosition];
+                widget.sponsors[indexPosition!] = sponsorModel;
+                addedSponsors = widget.sponsors[indexPosition!];
               }
-              widget.onSponsorsAdded(widget.sponsors, addedSponsors);
+              widget.onSponsorsAdded?.call(widget.sponsors, addedSponsors!);
               indexPosition = null;
-              if (isEdit) {
+              if (isEdit!) {
                 Navigator.of(dialogContext).pop();
               }
             } catch (e) {
-              widget.onError(e);
+              widget.onError!(e);
               rethrow;
             }
           },

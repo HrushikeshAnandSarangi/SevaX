@@ -28,9 +28,9 @@ class CommunityAbout extends StatefulWidget {
   final CompareUserStatus joinStatus;
 
   CommunityAbout({
-    this.communityModel,
-    this.userModel,
-    this.joinStatus,
+    required this.communityModel,
+    required this.userModel,
+    required this.joinStatus,
   });
 
   @override
@@ -39,18 +39,18 @@ class CommunityAbout extends StatefulWidget {
 
 class _CommunityAboutState extends State<CommunityAbout>
     with SingleTickerProviderStateMixin {
-  ScrollController _scrollController;
-  TabController controller;
+  ScrollController? _scrollController;
+  TabController? controller;
   bool isTitleVisible = false;
   bool dataLoaded = false;
   List<String> _tabsNames = [];
-  TimebankModel timebankModel;
+  TimebankModel? timebankModel;
   List<String> iconPath = [
     'images/icons/about.png',
     'images/icons/projects.png',
     'images/icons/members.png'
   ];
-  UserProfileBloc _profileBloc;
+  UserProfileBloc? _profileBloc;
 
   @override
   void initState() {
@@ -68,12 +68,12 @@ class _CommunityAboutState extends State<CommunityAbout>
 
     controller = TabController(length: 3, vsync: this);
     _scrollController = ScrollController();
-    _scrollController.addListener(() {
-      if (_scrollController.offset > 260 && !isTitleVisible) {
+    _scrollController!.addListener(() {
+      if (_scrollController!.offset > 260 && !isTitleVisible) {
         isTitleVisible = true;
         setState(() {});
       }
-      if (_scrollController.offset < 250 && isTitleVisible) {
+      if (_scrollController!.offset < 250 && isTitleVisible) {
         isTitleVisible = false;
         setState(() {});
       }
@@ -95,7 +95,7 @@ class _CommunityAboutState extends State<CommunityAbout>
 
   @override
   void dispose() {
-    controller.dispose();
+    controller!.dispose();
     super.dispose();
   }
 
@@ -146,9 +146,9 @@ class _CommunityAboutState extends State<CommunityAbout>
                             leadingWidth: 37,
                             backgroundColor: Colors.white,
                             pinned: true,
-                            expandedHeight: timebankModel.sponsors != null &&
-                                    timebankModel.sponsors.length > 0
-                                ? 250 + timebankModel.sponsors.length * 100.0
+                            expandedHeight: timebankModel!.sponsors != null &&
+                                    timebankModel!.sponsors.length > 0
+                                ? 250 + timebankModel!.sponsors.length * 100.0
                                 : 270,
                             flexibleSpace: FlexibleSpaceBar(
                               collapseMode: CollapseMode.pin,
@@ -158,7 +158,7 @@ class _CommunityAboutState extends State<CommunityAbout>
                                   Container(
                                     width: MediaQuery.of(context).size.width,
                                     child: CachedNetworkImage(
-                                      imageUrl: timebankModel.photoUrl ?? ' ',
+                                      imageUrl: timebankModel!.photoUrl ?? ' ',
                                       fit: BoxFit.cover,
                                       height: 200,
                                       errorWidget: (context, url, error) =>
@@ -184,7 +184,7 @@ class _CommunityAboutState extends State<CommunityAbout>
                                     padding: const EdgeInsets.only(
                                         left: 15.0, top: 5),
                                     child: Text(
-                                      timebankModel.name ?? " ",
+                                      timebankModel!.name ?? " ",
                                       style: TextStyle(
                                         fontSize: 22,
                                         fontWeight: FontWeight.bold,
@@ -296,7 +296,7 @@ class _CommunityAboutState extends State<CommunityAbout>
           height: 7,
         ),
         Text(
-          '${timebankModel.members.length} ${S.of(context).members}',
+          '${timebankModel!.members.length} ${S.of(context).members}',
           style: TextStyle(
             fontSize: 16,
             fontFamily: 'Europa',
@@ -312,11 +312,11 @@ class _CommunityAboutState extends State<CommunityAbout>
           sevaUserId: widget.communityModel.created_by,
         ),
         builder: (context, snapshot) {
-          log("........>>>>" + timebankModel.emailId ??
+          log("........>>>>" + timebankModel!.emailId ??
               widget.communityModel.primary_email + "<<<<<<<<<<<");
 
           if (snapshot.hasError) {
-            log("........>>>>" + timebankModel.emailId ??
+            log("........>>>>" + timebankModel!.emailId ??
                 widget.communityModel.primary_email);
             return Container();
           }
@@ -344,7 +344,7 @@ class _CommunityAboutState extends State<CommunityAbout>
                       child: FadeInImage.assetNetwork(
                         fit: BoxFit.fill,
                         placeholder: defaultUserImageURL,
-                        image: snapshot.data.photoURL ?? defaultUserImageURL,
+                        image: snapshot.data!.photoURL ?? defaultUserImageURL,
                       ),
                     ),
                   ),
@@ -354,7 +354,7 @@ class _CommunityAboutState extends State<CommunityAbout>
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(snapshot.data.fullname ?? "",
+                      Text(snapshot.data!.fullname ?? "",
                           style: TextStyle(
                               fontSize: 16,
                               fontFamily: 'Europa',
@@ -415,8 +415,8 @@ class _CommunityAboutState extends State<CommunityAbout>
           ),
           SizedBox(height: 15),
           Offstage(
-              offstage: timebankModel.address == null ||
-                  timebankModel.address.isEmpty,
+              offstage: timebankModel!.address == null ||
+                  timebankModel!.address.isEmpty,
               child: LocationWidget),
           SizedBox(
             height: 10,
@@ -448,7 +448,7 @@ class _CommunityAboutState extends State<CommunityAbout>
             style: TextStyle(color: HexColor("#4A4A4A")),
             children: [
               TextSpan(
-                text: timebankModel.address,
+                text: timebankModel!.address,
                 style: TextStyle(
                   fontSize: 16,
                   fontFamily: 'Europa',
@@ -466,7 +466,7 @@ class _CommunityAboutState extends State<CommunityAbout>
         future: FirestoreManager.getAllTheGroups(widget.communityModel.id),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            log(snapshot.error);
+            log(snapshot.error! as String);
             return Text(S.of(context).general_stream_error);
           }
 
@@ -485,7 +485,8 @@ class _CommunityAboutState extends State<CommunityAbout>
               ),
             );
           }
-          List<TimebankModel> timabanksList = filterGroupsOfUser(snapshot.data);
+          List<TimebankModel> timabanksList =
+              filterGroupsOfUser(snapshot.data as List<TimebankModel>);
           if (timabanksList.isEmpty) {
             return Container(
               alignment: Alignment.topCenter,
@@ -528,7 +529,7 @@ class _CommunityAboutState extends State<CommunityAbout>
               imageUrl: timabanksList[index].photoUrl ??
                   'https://img.freepik.com/free-vector/group-young-people-posing-photo_52683-18823.jpg?size=338&ext=jpg',
               title: timabanksList[index].name,
-              membersCount: timabanksList[index].members ?? 0,
+              membersCount: (timabanksList[index].members as int?) ?? 0,
               subtitle: '',
               onTap: () {
                 if (widget.joinStatus == CompareUserStatus.JOINED) {
@@ -555,22 +556,28 @@ class _CommunityAboutState extends State<CommunityAbout>
         });
   }
 
-  void switchCommunity({String message}) {
+  void switchCommunity({String? message}) {
     showDialog(
         context: context,
         builder: (dialogContext) {
           return AlertDialog(
-            content: Text(S.of(context).please_switch_to_access + message),
+            content: Text(S.of(context).please_switch_to_access + message!),
             actions: [
               CustomElevatedButton(
                 color: Colors.orange,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                elevation: 2,
+                textColor: Colors.white,
                 onPressed: () {
-                  _profileBloc.setDefaultCommunity(
-                      widget.userModel.email, widget.communityModel, context);
+                  _profileBloc!.setDefaultCommunity(
+                      widget.userModel.email!, widget.communityModel, context);
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => SwitchTimebank(),
+                      builder: (context) =>
+                          SwitchTimebank(content: widget.communityModel.id),
                     ),
                   );
                 },
@@ -581,15 +588,20 @@ class _CommunityAboutState extends State<CommunityAbout>
         });
   }
 
-  void showAlertMessage({String message}) {
+  void showAlertMessage({String? message}) {
     showDialog(
         context: context,
         builder: (dialogContext) {
           return AlertDialog(
-            content: Text(S.of(context).please_join_seva_to_access + message),
+            content: Text(S.of(context).please_join_seva_to_access + message!),
             actions: [
               CustomElevatedButton(
                 color: Colors.red,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                elevation: 2,
+                textColor: Colors.white,
                 onPressed: () => Navigator.of(dialogContext).pop(),
                 child: Text(S.of(context).ok),
               )
@@ -604,7 +616,7 @@ class _CommunityAboutState extends State<CommunityAbout>
             timebankid: widget.communityModel.primary_timebank),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            log(snapshot.error);
+            log(snapshot.error as String);
             return Text(S.of(context).general_stream_error);
           }
 
@@ -623,7 +635,7 @@ class _CommunityAboutState extends State<CommunityAbout>
               ),
             );
           }
-          List<ProjectModel> projectsList = snapshot.data;
+          List<ProjectModel> projectsList = snapshot.data as List<ProjectModel>;
           if (projectsList.isEmpty) {
             return Container(
               alignment: Alignment.topCenter,
@@ -661,22 +673,22 @@ class _CommunityAboutState extends State<CommunityAbout>
             padding: EdgeInsets.symmetric(horizontal: 10),
             itemCount: projectsList.length,
             itemBuilder: (context, index) {
-              ProjectModel project = snapshot.data[index];
+              ProjectModel project = snapshot.data![index];
               int totalTask = project.completedRequests != null &&
                       project.pendingRequests != null
-                  ? project.pendingRequests.length +
-                      project.completedRequests.length
+                  ? project.pendingRequests!.length +
+                      project.completedRequests!.length
                   : 0;
               return ProjectsCard(
-                  timestamp: project.createdAt,
-                  startTime: project.startTime,
-                  endTime: project.endTime,
-                  title: project.name,
-                  description: project.description,
-                  photoUrl: project.photoUrl,
-                  location: project.address,
+                  timestamp: project.createdAt!,
+                  startTime: project.startTime!,
+                  endTime: project.endTime!,
+                  title: project.name!,
+                  description: project.description!,
+                  photoUrl: project.photoUrl!,
+                  location: project.address!,
                   tasks: totalTask,
-                  pendingTask: project.pendingRequests?.length,
+                  pendingTask: project.pendingRequests!.length!,
                   onTap: () {
                     if (widget.joinStatus == CompareUserStatus.JOINED) {
                       switchCommunity(message: S.of(context).event);
@@ -701,25 +713,25 @@ class _CommunityAboutState extends State<CommunityAbout>
 
 class ShortGroupCard extends StatelessWidget {
   const ShortGroupCard({
-    Key key,
-    this.imageUrl,
-    this.title,
-    this.subtitle,
-    this.membersCount,
+    Key? key,
+    required this.imageUrl,
+    required this.title,
+    required this.subtitle,
+    required this.membersCount,
+    required this.onTap,
     this.padding,
-    this.onTap,
     this.sponsoredWidget,
     this.isSelected = false,
-  }) : super(key: key);
+  });
 
   final String imageUrl;
   final String title;
   final String subtitle;
   final int membersCount;
   final bool isSelected;
-  final EdgeInsetsGeometry padding;
+  final EdgeInsetsGeometry? padding;
   final VoidCallback onTap;
-  final Widget sponsoredWidget;
+  final Widget? sponsoredWidget;
 
   @override
   Widget build(BuildContext context) {
@@ -749,7 +761,7 @@ class ShortGroupCard extends StatelessWidget {
                       fit: BoxFit.cover,
                     ),
                   ),
-                  sponsoredWidget,
+                  sponsoredWidget!,
                 ],
               ),
               const SizedBox(width: 12),

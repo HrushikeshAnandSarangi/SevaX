@@ -30,8 +30,8 @@ class TransactionsPdf {
   ) async {
     final Document pdf = Document();
 
-    Widget hideWidget({bool hide, Widget child}) {
-      return hide ? Container() : child;
+    Widget hideWidget({bool? hide, Widget? child}) {
+      return hide == true ? Container() : child!;
     }
 
     DateTime date = DateTime.now();
@@ -51,31 +51,32 @@ class TransactionsPdf {
     //   boldItalic: ttfBoldItalic,
     // );
 
-    double totalAmount;
-    String receiptIDCash;
-    String receiptIDGoods;
-    String receiptID;
+    double totalAmount = 0.0;
+    String receiptIDCash = '';
+    String receiptIDGoods = '';
+    String receiptID = '';
     List<String> listOFGoods = [];
-    TimebankModel transactionTimebankModel;
-    UserModel fromTransactionUserModel;
-    UserModel toTransactionUserModel;
+    TimebankModel? transactionTimebankModel;
+    UserModel? fromTransactionUserModel;
+    UserModel? toTransactionUserModel;
     //fetching from and to model
     if (donationModel == null) {
-      receiptID =
-          transactionModel.typeid.substring(transactionModel.typeid.length - 8);
-      if (transactionModel.from.contains('-')) {
+      receiptID = transactionModel.typeid!
+          .substring(transactionModel.typeid!.length - 8);
+      if (transactionModel.from != null &&
+          transactionModel.from!.contains('-')) {
         transactionTimebankModel =
-            await getTimeBankForId(timebankId: transactionModel.from);
-      } else {
+            await getTimeBankForId(timebankId: transactionModel.from!);
+      } else if (transactionModel.from != null) {
         fromTransactionUserModel = await Provider.of<MembersBloc>(
           mainContext,
           listen: false,
-        ).getUserModel(userId: transactionModel.from);
+        ).getUserModel(userId: transactionModel.from!);
       }
-      if (transactionModel.to.contains('-')) {
+      if (transactionModel.to != null && transactionModel.to!.contains('-')) {
         transactionTimebankModel =
-            await getTimeBankForId(timebankId: transactionModel.to);
-      } else {
+            await getTimeBankForId(timebankId: transactionModel.to!);
+      } else if (transactionModel.to != null) {
         toTransactionUserModel = await Provider.of<MembersBloc>(
           mainContext,
           listen: false,
@@ -83,11 +84,12 @@ class TransactionsPdf {
       }
     } else if (donationModel != null &&
         donationModel.donationType == RequestType.CASH) {
-      totalAmount = donationModel.cashDetails.pledgedAmount.toDouble();
-      receiptIDCash = donationModel.id.substring(donationModel.id.length - 8);
+      totalAmount = donationModel.cashDetails!.pledgedAmount!.toDouble();
+      receiptIDCash = donationModel.id!.substring(donationModel.id!.length - 8);
     } else {
-      receiptIDGoods = donationModel.id.substring(donationModel.id.length - 8);
-      Map<String, String> goodsList = donationModel.goodsDetails.donatedGoods;
+      receiptIDGoods =
+          donationModel.id!.substring(donationModel.id!.length - 8);
+      Map<String, String> goodsList = donationModel.goodsDetails!.donatedGoods!;
 
       goodsList.forEach((key, value) {
         listOFGoods.add(value);
@@ -129,7 +131,7 @@ class TransactionsPdf {
           crossAxisAlignment: CrossAxisAlignment.start,
           header: (Context context) {
             if (context.pageNumber == 1) {
-              return null;
+              return null!;
             }
             return Container(
               alignment: Alignment.centerRight,
@@ -184,8 +186,8 @@ class TransactionsPdf {
                       style:
                           TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                     ),
-                    Text(donationModel.donorDetails.name),
-                    Text(donationModel.donorDetails.email),
+                    Text(donationModel.donorDetails!.name!),
+                    Text(donationModel.donorDetails!.email!),
                     // Text(transactionModel.to.contains('-')
                     //     ? transactionTimebankModel.emailId ?? ''
                     //     : fromTransactionUserModel.email ?? ''),
@@ -207,7 +209,7 @@ class TransactionsPdf {
                     ),
                     SizedBox(height: 8),
                     Text(
-                        "\$ ${donationModel.cashDetails.pledgedAmount.toStringAsFixed(2)}",
+                        "\$ ${donationModel.cashDetails!.pledgedAmount!.toStringAsFixed(2)}",
                         style: TextStyle(
                             fontSize: 30, fontWeight: FontWeight.bold)),
                     SizedBox(height: 8),
@@ -229,8 +231,8 @@ class TransactionsPdf {
                           style: TextStyle(
                               fontSize: 12, fontWeight: FontWeight.bold),
                         ),
-                        Text(donationModel.receiverDetails.name),
-                        Text(donationModel.receiverDetails.email),
+                        Text(donationModel.receiverDetails!.name!),
+                        Text(donationModel.receiverDetails!.email!),
                         // Text(transactionModel.to.contains('-')
                         //     ? transactionTimebankModel.emailId ?? ''
                         //     : toTransactionUserModel.email ?? ''),
@@ -274,11 +276,11 @@ class TransactionsPdf {
                 1,
                 (index) => Column(children: [
                   Row(children: [
-                    Text(donationModel.requestTitle),
+                    Text(donationModel.requestTitle!),
                     Spacer(),
                     Text('1'),
                     Spacer(),
-                    Text(donationModel.cashDetails.pledgedAmount
+                    Text(donationModel.cashDetails!.pledgedAmount!
                         .toStringAsFixed(2)),
                   ]),
                   Divider(thickness: 1, color: PdfColors.grey),
@@ -294,7 +296,7 @@ class TransactionsPdf {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     SizedBox(height: 12),
-                    _rowText(" TOTAL", "\$${(totalAmount).toStringAsFixed(2)}"),
+                    _rowText(" TOTAL", "\$${totalAmount.toStringAsFixed(2)}"),
                   ],
                 ),
               ),
@@ -314,7 +316,7 @@ class TransactionsPdf {
           crossAxisAlignment: CrossAxisAlignment.start,
           header: (Context context) {
             if (context.pageNumber == 1) {
-              return null;
+              return null!;
             }
             return Container(
               alignment: Alignment.centerRight,
@@ -369,8 +371,8 @@ class TransactionsPdf {
                       style:
                           TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                     ),
-                    Text(donationModel.donorDetails.name),
-                    Text(donationModel.donorDetails.email),
+                    Text(donationModel.donorDetails!.name!),
+                    Text(donationModel.donorDetails!.email!),
                     // Text(transactionModel.to.contains('-')
                     //     ? transactionTimebankModel.emailId ?? ''
                     //     : fromTransactionUserModel.email ?? ''),
@@ -413,8 +415,8 @@ class TransactionsPdf {
                           style: TextStyle(
                               fontSize: 12, fontWeight: FontWeight.bold),
                         ),
-                        Text(donationModel.receiverDetails.name),
-                        Text(donationModel.receiverDetails.email),
+                        Text(donationModel.receiverDetails!.name!),
+                        Text(donationModel.receiverDetails!.email!),
                       ]),
                   Spacer(),
                   Column(
@@ -486,7 +488,7 @@ class TransactionsPdf {
           crossAxisAlignment: CrossAxisAlignment.start,
           header: (Context context) {
             if (context.pageNumber == 1) {
-              return null;
+              return null!;
             }
             return Container(
               alignment: Alignment.centerRight,
@@ -541,14 +543,14 @@ class TransactionsPdf {
                       style:
                           TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                     ),
-                    Text(transactionModel.from.contains('-')
+                    Text(transactionModel.from!.contains('-')
                         ? (transactionTimebankModel != null
                             ? transactionTimebankModel.name ?? ''
                             : '')
                         : (fromTransactionUserModel != null
                             ? fromTransactionUserModel.fullname ?? ''
                             : '')),
-                    Text(transactionModel.to.contains('-')
+                    Text(transactionModel.to!.contains('-')
                         ? (transactionTimebankModel != null
                             ? transactionTimebankModel.address ?? ''
                             : '')
@@ -557,14 +559,14 @@ class TransactionsPdf {
                                 ? fromTransactionUserModel.locationName ?? ''
                                 : '')
                             : '')),
-                    Text(transactionModel.to.contains('-')
+                    Text(transactionModel.to!.contains('-')
                         ? (transactionTimebankModel != null
                             ? transactionTimebankModel.emailId ?? ''
                             : '')
                         : (fromTransactionUserModel != null
                             ? fromTransactionUserModel.email ?? ''
                             : '')),
-                    Text(transactionModel.to.contains('-')
+                    Text(transactionModel.to!.contains('-')
                         ? (transactionTimebankModel != null
                             ? transactionTimebankModel.phoneNumber ?? ''
                             : '')
@@ -583,7 +585,7 @@ class TransactionsPdf {
                           TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(height: 8),
-                    Text("${transactionModel.credits.toStringAsFixed(2)}",
+                    Text("${transactionModel.credits!.toStringAsFixed(2)}",
                         style: TextStyle(
                             fontSize: 30, fontWeight: FontWeight.bold)),
                     SizedBox(height: 8),
@@ -605,28 +607,28 @@ class TransactionsPdf {
                           style: TextStyle(
                               fontSize: 12, fontWeight: FontWeight.bold),
                         ),
-                        Text(transactionModel.to.contains('-')
+                        Text(transactionModel.to!.contains('-')
                             ? (transactionTimebankModel != null
                                 ? transactionTimebankModel.name ?? ''
                                 : '')
                             : (toTransactionUserModel != null
                                 ? toTransactionUserModel.fullname ?? ''
                                 : '')),
-                        Text(transactionModel.to.contains('-')
+                        Text(transactionModel.to!.contains('-')
                             ? (transactionTimebankModel != null
                                 ? transactionTimebankModel.address ?? ''
                                 : '')
                             : (fromTransactionUserModel != null
                                 ? fromTransactionUserModel.locationName ?? ''
                                 : '')),
-                        Text(transactionModel.to.contains('-')
+                        Text(transactionModel.to!.contains('-')
                             ? (transactionTimebankModel != null
                                 ? transactionTimebankModel.emailId ?? ''
                                 : '')
                             : (toTransactionUserModel != null
                                 ? toTransactionUserModel.email ?? ''
                                 : '')),
-                        Text(transactionModel.to.contains('-')
+                        Text(transactionModel.to!.contains('-')
                             ? (transactionTimebankModel != null
                                 ? transactionTimebankModel.phoneNumber ?? ''
                                 : '')
@@ -664,7 +666,7 @@ class TransactionsPdf {
                   Row(children: [
                     Text(requestModel != null ? requestModel.title ?? '' : ''),
                     Spacer(),
-                    Text(transactionModel.credits.toStringAsFixed(2)),
+                    Text(transactionModel.credits!.toStringAsFixed(2)),
                   ]),
                   Divider(thickness: 1, color: PdfColors.grey),
                 ]),
@@ -679,7 +681,7 @@ class TransactionsPdf {
                   children: [
                     SizedBox(height: 12),
                     _rowText("TOTAL ",
-                        "${(transactionModel.credits).toStringAsFixed(2)}"),
+                        "${(transactionModel.credits)!.toStringAsFixed(2)}"),
                     SizedBox(height: 8),
                     // _rowText("GRAND TOTAL",
                     //     "\$ ${totalAmount - freeLimitAmount > 0 ? (totalAmount - freeLimitAmount) : 0}"),

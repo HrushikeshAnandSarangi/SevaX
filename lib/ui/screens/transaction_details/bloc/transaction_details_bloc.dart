@@ -9,18 +9,20 @@ import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 class TransactionDetailsBloc {
   final _transactionDetailsController =
       BehaviorSubject<List<TransactionModel>>();
-  final _searchQuery = BehaviorSubject<String>.seeded(null);
+  final _searchQuery = BehaviorSubject<String>.seeded('');
 
   Stream<List<TransactionModel>> get _transactionDetailsStream =>
       _transactionDetailsController.stream;
-  Stream<String> get _query => _searchQuery.stream;
+  Stream<String> get searchQueryStream => _searchQuery.stream;
+  Sink<String> get onSearchQueryChanged => _searchQuery.sink;
 
   Stream<List<TransactionModel>> data(BuildContext context) =>
-      CombineLatestStream.combine2(
+      CombineLatestStream.combine2<List<TransactionModel>, String,
+          List<TransactionModel>>(
         _transactionDetailsStream,
-        _query,
+        _searchQuery.stream,
         (transactions, searchText) {
-          if (searchText == null || searchText.isEmpty) {
+          if (searchText.isEmpty) {
             return transactions;
           }
 
@@ -28,7 +30,7 @@ class TransactionDetailsBloc {
           final searchTextLower = searchText.toLowerCase();
           _transactions.retainWhere(
             (element) =>
-                getTransactionTypeLabel(element.type, context)
+                getTransactionTypeLabel(element.type!, context)
                     .toLowerCase()
                     .contains(
                       searchTextLower,
@@ -39,8 +41,6 @@ class TransactionDetailsBloc {
           return _transactions;
         },
       );
-
-  Function(String) get onSearchQueryChanged => _searchQuery.sink.add;
 
   void init(String id, String userId) {
     logger.i("id==>: $id");

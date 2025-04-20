@@ -25,12 +25,12 @@ class TransactionDetailsView extends StatefulWidget {
   final String userEmail;
   final String totalBalance;
 
-  TransactionDetailsView({
-    Key key,
-    this.id,
-    this.userId,
-    this.userEmail,
-    @required this.totalBalance,
+  const TransactionDetailsView({
+    Key? key,
+    required this.id,
+    required this.userId,
+    required this.userEmail,
+    required this.totalBalance,
   }) : super(key: key);
 
   @override
@@ -40,10 +40,10 @@ class TransactionDetailsView extends StatefulWidget {
 class _TransactionDetailsViewState extends State<TransactionDetailsView> {
   TransactionDetailsBloc _bloc = TransactionDetailsBloc();
   // double totalBalance = 0.0;
-  RequestModel requestModel;
-  TimebankModel timebankModel;
-  CommunityModel communityModel;
-  TimebankModel timebankModelNew;
+  RequestModel? requestModel;
+  TimebankModel? timebankModel;
+  CommunityModel? communityModel;
+  TimebankModel? timebankModelNew;
 
   final TextStyle tableCellStyle = TextStyle(
     fontSize: 18,
@@ -69,16 +69,16 @@ class _TransactionDetailsViewState extends State<TransactionDetailsView> {
       logger.e('TypeID CHECK 1: ' + transaction.typeid.toString());
       try {
         requestModel = await FirestoreManager.getRequestFutureById(
-            requestId: transaction.typeid);
+            requestId: transaction.typeid!);
       } catch (e) {
         log('error fetching request model: ' + e.toString());
       }
       try {
         timebankModel = await FirestoreManager.getTimeBankForId(
-            timebankId: transaction.timebankid);
+            timebankId: transaction.timebankid!);
         communityModel =
             await FirestoreManager.getCommunityDetailsByCommunityId(
-                communityId: transaction.communityId);
+                communityId: transaction.communityId!);
       } catch (e) {
         log('error fetching timebank and/or community model: ' + e.toString());
       }
@@ -184,11 +184,13 @@ class _TransactionDetailsViewState extends State<TransactionDetailsView> {
                         ),
                         const SizedBox(height: 12),
                         StreamBuilder<String>(
+                          stream: _bloc.searchQueryStream,
                           builder: (context, snapshot) {
                             return SizedBox(
                               height: 40,
                               child: TextField(
-                                onChanged: _bloc.onSearchQueryChanged,
+                                onChanged: (query) =>
+                                    _bloc.onSearchQueryChanged!.add(query),
                                 decoration: InputDecoration(
                                   prefixIcon: Icon(
                                     Icons.search,
@@ -217,11 +219,11 @@ class _TransactionDetailsViewState extends State<TransactionDetailsView> {
                       ),
                       ListView.separated(
                         shrinkWrap: true,
-                        itemCount: snapshot.data.length,
+                        itemCount: snapshot.data!.length,
                         physics: NeverScrollableScrollPhysics(),
                         itemBuilder: (BuildContext context, int index) =>
                             InkWell(
-                          onTap: () => onRowTap(snapshot.data[index]),
+                          onTap: () => onRowTap(snapshot.data![index]),
                           child: Column(
                             children: [
                               Padding(
@@ -247,14 +249,14 @@ class _TransactionDetailsViewState extends State<TransactionDetailsView> {
                                         child: Text(
                                             SevaCore.of(context)
                                                 .loggedInUser
-                                                .fullname,
+                                                .fullname!,
                                             style: tableCellStyle)),
                                     SizedBox(width: 15),
                                     Expanded(
                                       flex: 3,
                                       child: Text(
                                         getTransactionTypeLabel(
-                                                snapshot.data[index].type,
+                                                snapshot.data![index].type!,
                                                 context)
                                             .toString(),
                                         style: tableCellStyle,
@@ -266,7 +268,8 @@ class _TransactionDetailsViewState extends State<TransactionDetailsView> {
                                       child: Text(
                                           DateFormat('MMMM dd').format(
                                             DateTime.fromMillisecondsSinceEpoch(
-                                                snapshot.data[index].timestamp),
+                                                snapshot
+                                                    .data![index].timestamp!),
                                           ),
                                           style: tableCellStyle),
                                     ),
@@ -274,10 +277,10 @@ class _TransactionDetailsViewState extends State<TransactionDetailsView> {
                                     Expanded(
                                       flex: 2,
                                       child: Text(
-                                        "${snapshot.data[index].to == widget.id ? "+" : "-"}${snapshot.data[index].credits}",
+                                        "${snapshot.data![index].to == widget.id ? "+" : "-"}${snapshot.data![index].credits}",
                                         textAlign: TextAlign.right,
                                         style: TextStyle(
-                                          color: snapshot.data[index].to ==
+                                          color: snapshot.data![index].to ==
                                                   widget.id
                                               ? Colors.green
                                               : Colors.black,

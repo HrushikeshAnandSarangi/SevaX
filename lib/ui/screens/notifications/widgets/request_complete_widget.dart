@@ -35,13 +35,13 @@ class RequestCompleteWidget extends StatelessWidget {
   final String notificationId;
   final BuildContext parentContext;
 
-  const RequestCompleteWidget(
-      {Key key,
-      this.model,
-      this.userId,
-      this.notificationId,
-      this.parentContext})
-      : super(key: key);
+  const RequestCompleteWidget({
+    Key? key,
+    required this.model,
+    required this.userId,
+    required this.notificationId,
+    required this.parentContext,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -52,24 +52,34 @@ class RequestCompleteWidget extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return NotificationShimmer();
         }
-        UserModel user = snapshot.data;
-        TransactionModel transactionModel =
-            model.transactions?.firstWhere((transaction) {
-          return transaction.to == userId;
-        });
+        UserModel user = snapshot.data!;
+        TransactionModel transactionModel = model.transactions?.firstWhere(
+              (transaction) => transaction.to == userId,
+              orElse: () => TransactionModel(
+                fromEmail_Id:
+                    '', // Provide appropriate default or fallback values
+                toEmail_Id: userId,
+                communityId: model.communityId ?? '',
+              ),
+            ) ??
+            TransactionModel(
+              fromEmail_Id:
+                  '', // Provide appropriate default or fallback values
+              toEmail_Id: userId,
+              communityId: model.communityId ?? '',
+            );
         return Slidable(
-            actionPane: SlidableBehindActionPane(),
-            actions: <Widget>[],
-            secondaryActions: <Widget>[],
+            endActionPane: null,
+            startActionPane: null,
             child: GestureDetector(
               onTap: () async {
                 var canApproveTransaction =
                     await SevaCreditLimitManager.hasSufficientCredits(
-                  email: SevaCore.of(context).loggedInUser.email,
-                  credits: transactionModel.credits,
-                  userId: SevaCore.of(context).loggedInUser.sevaUserID,
+                  email: SevaCore.of(context).loggedInUser.email!,
+                  credits: (transactionModel.credits as double),
+                  userId: SevaCore.of(context).loggedInUser.sevaUserID!,
                   communityId:
-                      SevaCore.of(context).loggedInUser.currentCommunity,
+                      SevaCore.of(context).loggedInUser.currentCommunity!,
                 );
 
                 if (!canApproveTransaction.hasSuffiientCredits) {
@@ -86,7 +96,7 @@ class RequestCompleteWidget extends StatelessWidget {
                   requestModel: model,
                   userId: userId,
                   userModel: user,
-                  credits: transactionModel.credits,
+                  credits: transactionModel.credits as double,
                 );
               },
               child: Container(
@@ -97,7 +107,7 @@ class RequestCompleteWidget extends StatelessWidget {
                     backgroundImage:
                         NetworkImage(user.photoURL ?? defaultUserImageURL),
                   ),
-                  title: Text(model.title),
+                  title: Text(model.title!),
                   subtitle: RichText(
                     text: TextSpan(
                       children: [
@@ -111,7 +121,7 @@ class RequestCompleteWidget extends StatelessWidget {
                         ),
                         TextSpan(
                           text: () {
-                            return '${transactionModel.credits} ${transactionModel.credits > 1 ? S.of(context).hours.toLowerCase() : S.of(context).hour.toLowerCase()}';
+                            return '${transactionModel.credits} ${transactionModel.credits! > 1 ? S.of(context).hours.toLowerCase() : S.of(context).hour.toLowerCase()}';
                           }(),
                           style: TextStyle(color: Colors.black, fontSize: 12),
                         ),
@@ -155,16 +165,31 @@ class RequestCompleteWidget extends StatelessWidget {
     );
   }
 
+  Widget getBio(BuildContext context, UserModel userModel) {
+    if (userModel.bio != null && userModel.bio!.isNotEmpty) {
+      return Padding(
+        padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+        child: Text(
+          userModel.bio!,
+          style: TextStyle(fontSize: 13, color: Colors.grey[700]),
+          textAlign: TextAlign.center,
+        ),
+      );
+    } else {
+      return SizedBox.shrink();
+    }
+  }
+
   void showMemberClaimConfirmation({
-    BuildContext context,
-    UserModel userModel,
-    RequestModel requestModel,
-    String notificationId,
-    String userId,
-    double credits,
+    BuildContext? context,
+    UserModel? userModel,
+    RequestModel? requestModel,
+    String? notificationId,
+    String? userId,
+    double? credits,
   }) {
     showDialog(
-      context: context,
+      context: context!,
       builder: (BuildContext viewContext) {
         return AlertDialog(
           shape: RoundedRectangleBorder(
@@ -178,8 +203,8 @@ class RequestCompleteWidget extends StatelessWidget {
                   height: 70,
                   width: 70,
                   child: CircleAvatar(
-                    backgroundImage:
-                        NetworkImage(userModel.photoURL ?? defaultUserImageURL),
+                    backgroundImage: NetworkImage(
+                        userModel!.photoURL ?? defaultUserImageURL),
                   ),
                 ),
                 Padding(
@@ -188,7 +213,7 @@ class RequestCompleteWidget extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.all(4.0),
                   child: Text(
-                    userModel.fullname,
+                    userModel.fullname!,
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
@@ -228,6 +253,13 @@ class RequestCompleteWidget extends StatelessWidget {
                     Container(
                       width: double.infinity,
                       child: CustomElevatedButton(
+                        color: Theme.of(context).primaryColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        padding: EdgeInsets.symmetric(vertical: 12.0),
+                        elevation: 2.0,
+                        textColor: Colors.white,
                         child: Text(
                           S.of(context).approve,
                           style: TextStyle(color: Colors.white),
@@ -235,10 +267,10 @@ class RequestCompleteWidget extends StatelessWidget {
                         onPressed: () async {
                           checkForFeedback(
                             context: parentContext,
-                            model: requestModel,
-                            notificationId: notificationId,
+                            model: requestModel!,
+                            notificationId: notificationId!,
                             user: userModel,
-                            userId: userId,
+                            userId: userId!,
                             loggedInUser: SevaCore.of(context).loggedInUser,
                           );
                           Navigator.pop(viewContext);
@@ -248,7 +280,13 @@ class RequestCompleteWidget extends StatelessWidget {
                     Container(
                       width: double.infinity,
                       child: CustomElevatedButton(
-                        color: Theme.of(context).accentColor,
+                        color: Theme.of(context).colorScheme.secondary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        padding: EdgeInsets.symmetric(vertical: 12.0),
+                        elevation: 2.0,
+                        textColor: Colors.white,
                         child: Text(
                           S.of(context).reject,
                           style: TextStyle(color: Colors.white),
@@ -256,10 +294,10 @@ class RequestCompleteWidget extends StatelessWidget {
                         onPressed: () async {
                           rejectMemberClaimForEvent(
                             context: parentContext,
-                            model: requestModel,
-                            notificationId: notificationId,
+                            model: requestModel!,
+                            notificationId: notificationId!,
                             user: userModel,
-                            userId: userId,
+                            userId: userId!,
                           );
                           Navigator.pop(viewContext);
                         },
@@ -276,14 +314,14 @@ class RequestCompleteWidget extends StatelessWidget {
   }
 
   void checkForFeedback({
-    String userId,
-    UserModel user,
-    RequestModel model,
-    String notificationId,
-    BuildContext context,
-    UserModel loggedInUser,
+    String? userId,
+    UserModel? user,
+    RequestModel? model,
+    String? notificationId,
+    BuildContext? context,
+    UserModel? loggedInUser,
   }) async {
-    Map results = await Navigator.of(context).push(
+    Map results = await Navigator.of(context!).push(
       MaterialPageRoute(
         builder: (BuildContext context) {
           return ReviewFeedback(
@@ -296,42 +334,42 @@ class RequestCompleteWidget extends StatelessWidget {
 
     if (results != null && results.containsKey('selection')) {
       await handleVolunterFeedbackForTrustWorthynessNRealiablityScore(
-          FeedbackType.FOR_REQUEST_VOLUNTEER, results, model, user);
+          FeedbackType.FOR_REQUEST_VOLUNTEER, results, model!, user!);
       onActivityResult(
-          loggedInUser: loggedInUser,
+          loggedInUser: loggedInUser!,
           requestModel: model,
-          userId: userId,
-          notificationId: notificationId,
+          userId: userId!,
+          notificationId: notificationId!,
           context: context,
-          reviewer: model.email,
-          reviewed: user.email,
-          requestId: model.id,
+          reviewer: model.email!,
+          reviewed: user.email!,
+          requestId: model.id!,
           results: results,
           receiverUser: user);
     } else {}
   }
 
   void onActivityResult({
-    UserModel loggedInUser,
-    RequestModel requestModel,
-    String userId,
-    String notificationId,
-    BuildContext context,
-    Map results,
-    String reviewer,
-    String reviewed,
-    String requestId,
-    UserModel receiverUser,
+    UserModel? loggedInUser,
+    RequestModel? requestModel,
+    String? userId,
+    String? notificationId,
+    BuildContext? context,
+    Map? results,
+    String? reviewer,
+    String? reviewed,
+    String? requestId,
+    UserModel? receiverUser,
   }) async {
     try {
       CollectionRef.reviews.add({
         "reviewer": reviewer,
         "reviewed": reviewed,
-        "ratings": results['selection'],
+        "ratings": results!['selection'],
         "requestId": requestId,
         "comments": (results['didComment']
             ? results['comment']
-            : S.of(context).no_comments),
+            : S.of(context!).no_comments),
         'liveMode': !AppConfig.isTestCommunity,
       });
       // if (requestModel.requestMode == RequestMode.TIMEBANK_REQUEST) {
@@ -354,15 +392,15 @@ class RequestCompleteWidget extends StatelessWidget {
       //   );
       //   log('success');
       // }
-      await approveTransaction(requestModel, userId, notificationId,
-          loggedInUser, receiverUser.email);
+      approveTransaction(requestModel!, userId!, notificationId!, loggedInUser!,
+          receiverUser!.email!);
 
       await sendMessageToMember(
         receiverUser: receiverUser,
         requestModel: requestModel,
         message: (results['didComment']
             ? results['comment']
-            : S.of(context).no_comments),
+            : S.of(context!).no_comments),
         loggedInUser: loggedInUser,
       );
     } on Exception catch (e) {
@@ -371,18 +409,20 @@ class RequestCompleteWidget extends StatelessWidget {
   }
 
   Future<void> sendMessageToMember(
-      {UserModel loggedInUser,
-      UserModel receiverUser,
-      RequestModel requestModel,
-      String message,
-      BuildContext context}) async {
-    TimebankModel timebankModel =
-        await getTimeBankForId(timebankId: requestModel.timebankId);
+      {UserModel? loggedInUser,
+      UserModel? receiverUser,
+      RequestModel? requestModel,
+      String? message,
+      BuildContext? context}) async {
+    TimebankModel? timebankModel =
+        requestModel != null && requestModel.timebankId != null
+            ? await getTimeBankForId(timebankId: requestModel.timebankId!)
+            : null;
     UserModel userModel = await FirestoreManager.getUserForId(
-        sevaUserId: requestModel.sevaUserId);
+        sevaUserId: requestModel!.sevaUserId!);
     if (userModel != null && timebankModel != null) {
       ParticipantInfo receiver = ParticipantInfo(
-        id: receiverUser.sevaUserID,
+        id: receiverUser!.sevaUserID,
         photoUrl: receiverUser.photoURL,
         name: receiverUser.fullname,
         type: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
@@ -393,7 +433,7 @@ class RequestCompleteWidget extends StatelessWidget {
       );
 
       ParticipantInfo sender = ParticipantInfo(
-        id: loggedInUser.sevaUserID,
+        id: loggedInUser!.sevaUserID,
         photoUrl: loggedInUser.photoURL,
         name: loggedInUser.fullname,
         type: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
@@ -415,8 +455,8 @@ class RequestCompleteWidget extends StatelessWidget {
               requestModel.requestMode == RequestMode.PERSONAL_REQUEST
                   ? false
                   : true,
-          timebankId: requestModel.timebankId,
-          communityId: loggedInUser.currentCommunity,
+          timebankId: requestModel.timebankId!,
+          communityId: loggedInUser.currentCommunity!,
           sender: sender);
     }
   }
@@ -431,40 +471,41 @@ class RequestCompleteWidget extends StatelessWidget {
     FirestoreManager.approveRequestCompletion(
       model: model,
       userId: userId,
-      communityId: loggedInUser.currentCommunity,
-      memberCommunityId: model.participantDetails[email] != null
-          ? model.participantDetails[email]['communityId']
+      communityId: loggedInUser.currentCommunity!,
+      memberCommunityId: model.participantDetails![email] != null
+          ? model.participantDetails![email]['communityId']
           : model.communityId,
     );
     log('clearing notification');
     FirestoreManager.readUserNotification(
       notificationId,
-      loggedInUser.email,
+      loggedInUser.email!,
     );
   }
 
   void rejectMemberClaimForEvent(
-      {RequestModel model,
-      String userId,
-      BuildContext context,
-      UserModel user,
-      String notificationId}) {
+      {RequestModel? model,
+      String? userId,
+      BuildContext? context,
+      UserModel? user,
+      String? notificationId}) {
     List<TransactionModel> transactions =
-        model.transactions.map((t) => t).toList();
+        model!.transactions!.map((t) => t).toList();
     transactions.removeWhere((t) => t.to == userId);
 
     model.transactions = transactions.map((t) {
       return t;
     }).toList();
-    FirestoreManager.rejectRequestCompletion(
-      model: model,
-      userId: userId,
-      communityid: model.participantDetails[user.email] != null
-          ? model.participantDetails[user.email]['communityId']
-          : model.communityId,
+    FirestoreManager.rejectAcceptRequest(
+      requestModel: model,
+      rejectedUserId: userId!,
+      notificationId: notificationId!,
+      communityId: model.participantDetails![user!.email] != null
+          ? model.participantDetails![user.email]['communityId']
+          : model.communityId!,
     );
 
-    UserModel loggedInUser = SevaCore.of(context).loggedInUser;
+    UserModel loggedInUser = SevaCore.of(context!).loggedInUser;
     ParticipantInfo sender = ParticipantInfo(
       id: loggedInUser.sevaUserID,
       name: loggedInUser.fullname,
@@ -481,9 +522,10 @@ class RequestCompleteWidget extends StatelessWidget {
 
     List<String> showToCommunities = [];
     try {
-      String communityId1 = model.communityId;
+      String communityId1 = model.communityId!;
 
-      String communityId2 = model.participantDetails[user.email]['communityId'];
+      String communityId2 =
+          model.participantDetails![user.email]['communityId'];
 
       if (communityId1 != null &&
           communityId2 != null &&
@@ -498,18 +540,22 @@ class RequestCompleteWidget extends StatelessWidget {
     }
 
     createAndOpenChat(
-      communityId: loggedInUser.currentCommunity,
+      communityId: loggedInUser.currentCommunity!,
       context: context,
       sender: sender,
       reciever: reciever,
       isFromRejectCompletion: true,
       showToCommunities:
-          showToCommunities.isNotEmpty ? showToCommunities : null,
+          showToCommunities.isNotEmpty ? showToCommunities : null!,
       interCommunity: showToCommunities.isNotEmpty,
+      timebankId: model.timebankId ?? '',
+      feedId: '',
+      entityId: model.id ?? '',
+      onChatCreate: () {},
     );
     FirestoreManager.readUserNotification(
       notificationId,
-      SevaCore.of(context).loggedInUser.email,
+      SevaCore.of(context).loggedInUser.email!,
     );
   }
 }

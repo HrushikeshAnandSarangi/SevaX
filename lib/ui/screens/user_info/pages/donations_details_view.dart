@@ -104,11 +104,15 @@ class _DonationsDetailsViewState extends State<DonationsDetailsView> {
         ),
         insetPadding: EdgeInsets.zero,
         child: TransactionDetailsDialog(
-          transactionModel: TransactionModel(),
+          transactionModel: TransactionModel(
+            fromEmail_Id: SevaCore.of(context).loggedInUser.email ?? '',
+            toEmail_Id: donation.donorSevaUserId ?? '',
+            communityId: communityModel?.id ?? '',
+          ),
           donationModel: donation,
-          timebankModel: timebankModel ?? TimebankModel(),
-          requestModel: requestModel ?? RequestModel(),
-          communityModel: communityModel ?? CommunityModel(),
+          timebankModel: timebankModel ?? TimebankModel(''),
+          requestModel: requestModel ?? RequestModel(communityId: ''),
+          communityModel: communityModel ?? CommunityModel(Map()),
           loggedInEmail: SevaCore.of(context).loggedInUser.email ?? '',
           loggedInUserId: SevaCore.of(context).loggedInUser.sevaUserID ?? '',
         ),
@@ -188,6 +192,8 @@ class _DonationsDetailsViewState extends State<DonationsDetailsView> {
       ),
       body: LoadingViewIndicator(
         isLoading: isLoading,
+        loadingIndicator:
+            CircularProgressIndicator(), // Provide a default loading indicator
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: StreamBuilder<List<DonationModel>>(
@@ -199,7 +205,7 @@ class _DonationsDetailsViewState extends State<DonationsDetailsView> {
                   return LoadingIndicator();
                 }
 
-                totalBalance = loadTotalBalance(snapshot.data);
+                totalBalance = loadTotalBalance(snapshot.data!);
 
                 return SingleChildScrollView(
                   physics: ScrollPhysics(),
@@ -273,12 +279,12 @@ class _DonationsDetailsViewState extends State<DonationsDetailsView> {
                               S.of(context).amount),
                           ListView.separated(
                             shrinkWrap: true,
-                            itemCount: snapshot.data.length,
+                            itemCount: snapshot.data!.length,
                             physics: NeverScrollableScrollPhysics(),
                             itemBuilder: (BuildContext context, int index) {
-                              DonationModel model = snapshot.data[index];
+                              DonationModel model = snapshot.data![index];
                               return InkWell(
-                                onTap: () => onRowTap(snapshot.data[index]),
+                                onTap: () => onRowTap(snapshot.data![index]),
                                 child: Column(
                                   children: [
                                     Padding(
@@ -290,10 +296,10 @@ class _DonationsDetailsViewState extends State<DonationsDetailsView> {
                                         children: [
                                           CircleAvatar(
                                             backgroundImage: NetworkImage(
-                                              model.donorSevaUserId
+                                              model.donorSevaUserId!
                                                       .contains('-')
                                                   ? (timebankModel != null
-                                                      ? timebankModel
+                                                      ? timebankModel!
                                                               .photoUrl ??
                                                           defaultUserImageURL
                                                       : defaultUserImageURL)
@@ -309,10 +315,10 @@ class _DonationsDetailsViewState extends State<DonationsDetailsView> {
                                           ),
                                           SizedBox(width: 8),
                                           Text(
-                                              model.donorSevaUserId
+                                              model.donorSevaUserId!
                                                       .contains('-')
                                                   ? (timebankModel != null
-                                                      ? timebankModel.name ??
+                                                      ? timebankModel!.name ??
                                                           S.of(context).no_data
                                                       : S
                                                           .of(context)
@@ -346,7 +352,7 @@ class _DonationsDetailsViewState extends State<DonationsDetailsView> {
                                                 DateFormat('MMMM dd').format(
                                                     DateTime
                                                         .fromMillisecondsSinceEpoch(
-                                                            model.timestamp)),
+                                                            model.timestamp!)),
                                                 style: tableCellStyle),
                                           ),
                                           SizedBox(width: 12),
@@ -355,14 +361,14 @@ class _DonationsDetailsViewState extends State<DonationsDetailsView> {
                                             child: Text(
                                               widget.fromTimebank
                                                   ? (model.donorSevaUserId ==
-                                                              timebankModel.id
+                                                              timebankModel!.id
                                                           ? '-'
                                                           : '+') +
                                                       (widget.isGoods
                                                           ? (model.goodsDetails?.donatedGoods != null
                                                                   ? model
-                                                                      .goodsDetails
-                                                                      .donatedGoods
+                                                                      .goodsDetails!
+                                                                      .donatedGoods!
                                                                       .length
                                                                       .toString()
                                                                   : '0') +
@@ -370,7 +376,7 @@ class _DonationsDetailsViewState extends State<DonationsDetailsView> {
                                                               S
                                                                   .of(context)
                                                                   .item_s_text
-                                                          : model.cashDetails
+                                                          : model.cashDetails!
                                                               .pledgedAmount
                                                               .toString())
                                                   : (widget.isGoods
@@ -384,19 +390,19 @@ class _DonationsDetailsViewState extends State<DonationsDetailsView> {
                                                       (widget.isGoods
                                                           ? (model.goodsDetails?.donatedGoods != null
                                                                   ? model
-                                                                      .goodsDetails
-                                                                      .donatedGoods
+                                                                      .goodsDetails!
+                                                                      .donatedGoods!
                                                                       .length
                                                                       .toString()
                                                                   : '0') +
                                                               ' ' +
                                                               S.of(context).item_s_text
-                                                          : model.cashDetails.pledgedAmount.toString()),
+                                                          : model.cashDetails!.pledgedAmount.toString()),
                                               style: TextStyle(
                                                   fontSize: 16,
                                                   color: widget.fromTimebank
                                                       ? model.donorSevaUserId ==
-                                                              timebankModel.id
+                                                              timebankModel!.id
                                                           ? Colors.black
                                                           : Colors.green[400]
                                                       : model.donorSevaUserId ==
@@ -503,7 +509,7 @@ class TransactionDataRow extends DataTableSource {
             children: [
               CircleAvatar(
                 backgroundImage: NetworkImage(
-                  data[index].donorSevaUserId.contains('-')
+                  data[index].donorSevaUserId!.contains('-')
                       ? (timebankModel != null
                           ? timebankModel.photoUrl ?? defaultUserImageURL
                           : defaultUserImageURL)
@@ -515,7 +521,7 @@ class TransactionDataRow extends DataTableSource {
               ),
               SizedBox(width: 8),
               Text(
-                  data[index].donorSevaUserId.contains('-')
+                  data[index].donorSevaUserId!.contains('-')
                       ? (timebankModel != null
                           ? timebankModel.name ?? S.of(context).no_data
                           : S.of(context).error_loading_data)
@@ -539,7 +545,7 @@ class TransactionDataRow extends DataTableSource {
         DataCell(
           Text(
               DateFormat('MMMM dd').format(
-                  DateTime.fromMillisecondsSinceEpoch(data[index].timestamp)),
+                  DateTime.fromMillisecondsSinceEpoch(data[index].timestamp!)),
               style: tableCellStyle),
           onTap: () => onRowTap(data[index]),
         ),
@@ -552,14 +558,14 @@ class TransactionDataRow extends DataTableSource {
                     (isGoods
                         ? (data[index].goodsDetails?.donatedGoods != null
                                 ? data[index]
-                                    .goodsDetails
-                                    .donatedGoods
+                                    .goodsDetails!
+                                    .donatedGoods!
                                     .length
                                     .toString()
                                 : '0') +
                             ' ' +
                             S.of(context).item_s_text
-                        : data[index].cashDetails.pledgedAmount.toString())
+                        : data[index].cashDetails!.pledgedAmount.toString())
                 : (data[index].donorSevaUserId ==
                             SevaCore.of(context).loggedInUser.sevaUserID
                         ? '-'
@@ -567,14 +573,14 @@ class TransactionDataRow extends DataTableSource {
                     (isGoods
                         ? (data[index].goodsDetails?.donatedGoods != null
                                 ? data[index]
-                                    .goodsDetails
-                                    .donatedGoods
+                                    .goodsDetails!
+                                    .donatedGoods!
                                     .length
                                     .toString()
                                 : '0') +
                             ' ' +
                             S.of(context).item_s_text
-                        : data[index].cashDetails.pledgedAmount.toString()),
+                        : data[index].cashDetails!.pledgedAmount.toString()),
             style: TextStyle(
                 fontSize: 16,
                 color: fromTimebank

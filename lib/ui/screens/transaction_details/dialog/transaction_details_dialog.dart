@@ -14,23 +14,23 @@ import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/ui/screens/transaction_details/transaction_pdf/transactions_pdf.dart';
 
 class TransactionDetailsDialog extends StatefulWidget {
-  final TransactionModel transactionModel;
-  final DonationModel donationModel;
-  final TimebankModel timebankModel;
-  final RequestModel requestModel;
-  final CommunityModel communityModel;
-  final String loggedInEmail;
-  final String loggedInUserId;
+  final TransactionModel? transactionModel;
+  final DonationModel? donationModel;
+  final TimebankModel? timebankModel;
+  final RequestModel? requestModel;
+  final CommunityModel? communityModel;
+  final String? loggedInEmail;
+  final String? loggedInUserId;
 
   const TransactionDetailsDialog({
-    Key key,
+    Key? key,
     this.transactionModel,
     this.donationModel,
     this.timebankModel,
     this.requestModel,
     this.communityModel,
-    @required this.loggedInEmail,
-    @required this.loggedInUserId,
+    required this.loggedInEmail,
+    required this.loggedInUserId,
   }) : super(key: key);
 
   @override
@@ -39,7 +39,7 @@ class TransactionDetailsDialog extends StatefulWidget {
 }
 
 class _TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
-  Stream timelineStream;
+  Stream<Object>? timelineStream;
 
   void initState() {
     super.initState();
@@ -48,9 +48,9 @@ class _TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
 
     timelineStream = FirestoreManager.getRequestTimelineDocs(
         transactionTypeId: widget.transactionModel != null
-            ? widget.transactionModel.typeid
-            : widget.donationModel.requestId,
-        sevaUserID: widget.loggedInUserId); //change to timebank id or userid
+            ? widget.transactionModel!.typeid
+            : widget.donationModel!.requestId,
+        sevaUserID: widget.loggedInUserId!); //change to timebank id or userid
   }
 
   @override
@@ -69,7 +69,7 @@ class _TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               StreamBuilder<Object>(
-                stream: timelineStream,
+                stream: timelineStream!,
                 builder: (
                   context,
                   snapshot,
@@ -88,7 +88,8 @@ class _TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                     );
                   }
 
-                  List<TransacationsTimelineModel> timelineDocs = snapshot.data;
+                  List<TransacationsTimelineModel> timelineDocs =
+                      snapshot.data! as List<TransacationsTimelineModel>;
                   if (snapshot.hasData) {
                     return (timelineDocs.length == 0 || timelineDocs == null)
                         ? Column(
@@ -134,13 +135,14 @@ class _TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                                               left: 8.0, right: 8),
                                           child: Text(
                                             widget.transactionModel != null
-                                                ? (widget.transactionModel.to ==
+                                                ? (widget.transactionModel!
+                                                            .to ==
                                                         widget.loggedInUserId
                                                     ? S.of(context).received
                                                     : S.of(context).sent_text)
                                                 : (widget
-                                                            .donationModel
-                                                            .receiverDetails
+                                                            .donationModel!
+                                                            .receiverDetails!
                                                             .email ==
                                                         widget.loggedInEmail
                                                     ? S.of(context).received
@@ -179,13 +181,13 @@ class _TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                                           ),
                                           Text(
                                             (widget.donationModel != null
-                                                ? (widget.donationModel
+                                                ? (widget.donationModel!
                                                             .donationType ==
                                                         RequestType.GOODS
                                                     ? widget
-                                                            .donationModel
-                                                            .goodsDetails
-                                                            .donatedGoods
+                                                            .donationModel!
+                                                            .goodsDetails!
+                                                            .donatedGoods!
                                                             .length
                                                             .toString() +
                                                         ' ' +
@@ -194,11 +196,11 @@ class _TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                                                             .item_s_text
                                                     : '\$' +
                                                         widget
-                                                            .donationModel
-                                                            .cashDetails
+                                                            .donationModel!
+                                                            .cashDetails!
                                                             .pledgedAmount
                                                             .toString())
-                                                : widget.transactionModel
+                                                : widget.transactionModel!
                                                         .credits
                                                         .toString() +
                                                     ' ' +
@@ -229,11 +231,13 @@ class _TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                                                   .format(
                                                 DateTime.fromMillisecondsSinceEpoch(
                                                     widget.donationModel != null
-                                                        ? widget.donationModel
-                                                            .timestamp
-                                                        : widget
-                                                            .transactionModel
-                                                            .timestamp),
+                                                        ? (widget.donationModel!
+                                                                .timestamp ??
+                                                            0)
+                                                        : (widget
+                                                                .transactionModel!
+                                                                .timestamp ??
+                                                            0)),
                                               ),
                                               style: TextStyle(
                                                 color: Color(0xFF4A4A4A),
@@ -282,7 +286,7 @@ class _TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                                                 requestType: widget
                                                         ?.donationModel
                                                         ?.donationType ??
-                                                    null);
+                                                    null!);
                                           },
                                         ),
                                       ],
@@ -296,15 +300,15 @@ class _TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                                         onPressed: () {
                                           TransactionsPdf().transactionsPdf(
                                             context,
-                                            widget.transactionModel,
-                                            widget.donationModel,
-                                            widget.requestModel,
-                                            widget.communityModel,
+                                            widget.transactionModel!,
+                                            widget.donationModel!,
+                                            widget.requestModel!,
+                                            widget.communityModel!,
                                           );
                                         },
                                         style: ElevatedButton.styleFrom(
                                           padding: EdgeInsets.zero,
-                                          primary:
+                                          backgroundColor:
                                               Theme.of(context).primaryColor,
                                           fixedSize: Size(130, 25),
                                           shape: StadiumBorder(),
@@ -337,18 +341,18 @@ class _TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
 }
 
 class TitleRow extends StatelessWidget {
-  final TransacationsTimelineModel timelineDoc;
-  final RequestType requestType;
+  final TransacationsTimelineModel? timelineDoc;
+  final RequestType? requestType;
 
   const TitleRow({
-    Key key,
+    Key? key,
     this.timelineDoc,
     this.requestType,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    logger.d("#TR ${timelineDoc.toJson()}");
+    logger.d("#TR ${timelineDoc!.toJson()}");
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6.0),
       child: SizedBox(
@@ -369,13 +373,13 @@ class TitleRow extends StatelessWidget {
               child: Text(
                 DateFormat('MMMM dd @ h:mm a ').format(
                         DateTime.fromMillisecondsSinceEpoch(
-                            timelineDoc.timestamp * 1000)) +
+                            timelineDoc!.timestamp! * 1000)) +
                     '- ' +
                     getTimelineLabel(
                             // requestType,
-                            timelineDoc.type,
+                            timelineDoc!.type!,
                             context,
-                            requestType)
+                            requestType!)
                         .toString(), //call handler function here to return string
                 style: TextStyle(
                   color: Color(0xFF9B9B9B).withOpacity(0.9),

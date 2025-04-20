@@ -8,12 +8,12 @@ class TimezoneCard extends StatelessWidget {
   final bool isSelected;
 
   const TimezoneCard(
-      {Key key,
-      this.title,
-      this.subTitle,
-      this.onTap,
-      this.isSelected,
-      this.code})
+      {Key? key,
+      required this.title,
+      required this.subTitle,
+      required this.code,
+      required this.onTap,
+      required this.isSelected})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,7 @@ class TimezoneCard extends StatelessWidget {
         ),
         title: Text(title),
         subtitle: Text(subTitle),
-        onTap: onTap,
+        onTap: () => onTap(),
       ),
     );
   }

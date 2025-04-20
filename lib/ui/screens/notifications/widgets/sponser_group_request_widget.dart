@@ -15,16 +15,17 @@ import 'package:sevaexchange/views/notifications/notification_utils.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class SponsorGroupRequestWidget extends StatelessWidget {
-  final NotificationsModel notification;
+  final NotificationsModel? notification;
 
-  const SponsorGroupRequestWidget({Key key, this.notification})
+  const SponsorGroupRequestWidget({Key? key, this.notification})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
-    SponsoredGroupModel model = SponsoredGroupModel.fromMap(notification.data);
+    SponsoredGroupModel model =
+        SponsoredGroupModel.fromMap(notification!.data!);
     return FutureBuilder<UserModel>(
-      future:
-          FirestoreManager.getUserForId(sevaUserId: notification.senderUserId),
+      future: FirestoreManager.getUserForId(
+          sevaUserId: notification!.senderUserId!),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Container();
@@ -32,44 +33,44 @@ class SponsorGroupRequestWidget extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return NotificationShimmer();
         }
-        UserModel user = snapshot.data;
+        UserModel user = snapshot.data!;
         return user != null && user.fullname != null
             ? NotificationCard(
-                timestamp: notification.timestamp,
+                timestamp: notification!.timestamp!,
                 title: S.of(context).endorsed_notification_title,
                 subTitle: S
                     .of(context)
                     .endorsed_notification_desc
-                    .replaceAll('user_name', user.fullname.toLowerCase())
-                    .replaceAll('group_name', model.timebankTitle),
+                    .replaceAll('user_name', user.fullname!.toLowerCase())
+                    .replaceAll('group_name', model.timebankTitle!),
                 photoUrl: user.photoURL,
                 entityName: user.fullname,
                 onDismissed: () {
                   dismissTimebankNotification(
-                      timebankId: notification.timebankId,
-                      notificationId: notification.id);
+                      timebankId: notification!.timebankId,
+                      notificationId: notification!.id);
                 },
                 onPressed: () async {
                   await showDialogForJoinRequestApproval(
                     context: context,
                     userModel: user,
                     model: model,
-                    notificationId: notification.id,
+                    notificationId: notification!.id!,
                   ).then((value) async {
                     if (value == null) {
                       return;
                     }
                     if (value) {
                       await approveSponsorRequest(
-                        parenttimebankId: notification.timebankId,
-                        groupId: model.timebankId,
-                        notificaitonId: notification.id,
+                        parenttimebankId: notification!.timebankId!,
+                        groupId: model.timebankId!,
+                        notificaitonId: notification!.id!,
                       ).commit();
                     } else {
                       await showProgressForOnboardingUser(context);
                       rejectSponsorRequest(
-                        parenttimebankId: notification.timebankId,
-                        notificaitonId: notification.id,
+                        parenttimebankId: notification!.timebankId!,
+                        notificaitonId: notification!.id!,
                       ).commit();
 
                       Navigator.of(context, rootNavigator: true).pop();
@@ -83,13 +84,13 @@ class SponsorGroupRequestWidget extends StatelessWidget {
   }
 
   Future<bool> showDialogForJoinRequestApproval({
-    BuildContext context,
-    UserModel userModel,
-    SponsoredGroupModel model,
-    String notificationId,
+    BuildContext? context,
+    UserModel? userModel,
+    SponsoredGroupModel? model,
+    String? notificationId,
   }) async {
     return await showDialog(
-      context: context,
+      context: context!,
       builder: (BuildContext viewContext) {
         return AlertDialog(
           shape: RoundedRectangleBorder(
@@ -105,7 +106,7 @@ class SponsorGroupRequestWidget extends StatelessWidget {
                   width: 70,
                   child: CircleAvatar(
                     backgroundImage: NetworkImage(
-                      model.timebankPhotUrl ?? defaultGroupImageURL,
+                      model!.timebankPhotUrl ?? defaultGroupImageURL,
                     ),
                   ),
                 ),
@@ -115,7 +116,7 @@ class SponsorGroupRequestWidget extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.all(4.0),
                   child: Text(
-                    model.timebankTitle,
+                    model.timebankTitle!,
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
@@ -133,8 +134,8 @@ class SponsorGroupRequestWidget extends StatelessWidget {
                         .of(context)
                         .endorsed_group_request_desc
                         .replaceAll(
-                            'user_name', userModel.fullname.toLowerCase())
-                        .replaceAll('group_name', model.timebankTitle),
+                            'user_name', userModel!.fullname!.toLowerCase())
+                        .replaceAll('group_name', model.timebankTitle!),
                     style: TextStyle(
                       fontSize: 14,
                     ),
@@ -150,6 +151,12 @@ class SponsorGroupRequestWidget extends StatelessWidget {
                     Container(
                       width: double.infinity,
                       child: CustomElevatedButton(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        elevation: 2.0,
+                        textColor: Colors.white,
                         color: Theme.of(context).primaryColor,
                         child: Text(
                           S.of(context).approve,
@@ -163,11 +170,14 @@ class SponsorGroupRequestWidget extends StatelessWidget {
                     ),
                     Padding(
                       padding: EdgeInsets.all(4.0),
-                    ),
-                    Container(
-                      width: double.infinity,
                       child: CustomElevatedButton(
-                        color: Theme.of(context).accentColor,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        elevation: 2.0,
+                        textColor: Colors.white,
+                        color: Theme.of(context).colorScheme.secondary,
                         child: Text(
                           S.of(context).reject,
                           style: TextStyle(color: Colors.white),
@@ -187,8 +197,8 @@ class SponsorGroupRequestWidget extends StatelessWidget {
     );
   }
 
-  void showProgressForOnboardingUser(BuildContext context) {
-    showDialog(
+  Future<void> showProgressForOnboardingUser(BuildContext context) async {
+    return showDialog(
       barrierDismissible: false,
       context: context,
       builder: (createDialogContext) {
@@ -208,9 +218,9 @@ class SponsorGroupRequestWidget extends StatelessWidget {
   }
 
   WriteBatch approveSponsorRequest({
-    String parenttimebankId,
-    String groupId,
-    String notificaitonId,
+    String? parenttimebankId,
+    String? groupId,
+    String? notificaitonId,
   }) {
     //add to timebank members
 
@@ -232,8 +242,8 @@ class SponsorGroupRequestWidget extends StatelessWidget {
   }
 
   WriteBatch rejectSponsorRequest({
-    String parenttimebankId,
-    String notificaitonId,
+    String? parenttimebankId,
+    String? notificaitonId,
   }) {
     //add to timebank members
 

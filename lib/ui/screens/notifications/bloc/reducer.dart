@@ -48,6 +48,38 @@ import '../../../../flavor_config.dart';
 import 'notifications_bloc.dart';
 
 class PersonalNotificationReducerForRequests {
+  Widget getWidgetNotificationForRecurringRequestUpdated({
+    required NotificationsModel notification,
+    required NotificationsBloc bloc,
+    required BuildContext context,
+    required UserModel user,
+  }) {
+    final eventData = ReccuringRequestUpdated.fromMap(
+        notification.data ?? <String, dynamic>{});
+    return NotificationCard(
+      timestamp: notification.timestamp ?? 0,
+      title: S.of(context).request_updated,
+      subTitle:
+          "${S.of(context).notifications_signed_up_for} ***eventName ${S.of(context).on} ***eventDate. ${S.of(context).notifications_event_modification} "
+              .replaceFirst('***eventName', eventData.eventName ?? '')
+              .replaceFirst(
+                '***eventDate',
+                DateTime.fromMillisecondsSinceEpoch(
+                  eventData.eventDate ?? 0,
+                ).toString(),
+              ),
+      entityName: S.of(context).request_updated,
+      photoUrl: eventData.photoUrl ?? '',
+      onDismissed: () {
+        onDismissed(
+          bloc: bloc,
+          notificationId: notification.id ?? '',
+          userEmail: user.email ?? '',
+        );
+      },
+    );
+  }
+
   void showDialogForIncompleteTransactions(
       BuildContext context, SoftDeleteRequestDataHolder deletionRequest) {
     var reason = S
@@ -472,422 +504,149 @@ class PersonalNotificationReducerForRequests {
           );
         });
   }
-}
 
-Widget getWidgetForAcceptedOfferNotification({
-  required NotificationsModel notification,
-}) {
-  OfferAcceptedNotificationModel acceptedOffer =
-      OfferAcceptedNotificationModel.fromMap(notification.data!);
-  return FutureBuilder<UserModel>(
-    future: UserRepository.fetchUserById(acceptedOffer.acceptedBy!),
-    builder: (context, snapshot) {
-      if (snapshot.hasError) {
-        return Container();
-      }
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return NotificationShimmer();
-      }
-      UserModel? user = snapshot.data;
-      if (user == null) return Container();
-
-      return NotificationCard(
-        timestamp: notification.timestamp ?? 0,
-        entityName: user.fullname ?? '',
-        isDissmissible: true,
-        onDismissed: () {
-          NotificationsRepository.readUserNotification(
-            notification.id!,
-            user.email!,
-          );
-        },
-        onPressed: () {},
-        photoUrl: user.photoURL ?? '',
-        title: S.of(context).notifications_offer_accepted,
-        subTitle:
-            '${user.fullname?.toLowerCase() ?? ''} ${S.of(context).notifications_shown_interest} ',
-      );
-    },
-  );
-}
-
-Widget getOfferRequestInvitation({
-  required NotificationsModel notification,
-  required UserModel user,
-  required BuildContext context,
-}) {
-  TimeOfferParticipantsModel timeOfferParticipantsModel =
-      TimeOfferParticipantsModel.fromJSON(notification.data!);
-
-  return _getNotificationCardForOfferRequestInvitationRequest(
-    notification: notification,
-    user: user,
-    context: context,
-    timeOfferParticipantsModel: timeOfferParticipantsModel,
-  );
-}
-
-Widget getInvitationForRequest({
-  required NotificationsModel notification,
-  required UserModel user,
-  required BuildContext context,
-}) {
-  RequestInvitationModel requestInvitationModel =
-      RequestInvitationModel.fromMap(notification.data!);
-
-  switch (requestInvitationModel.requestModel?.requestType) {
-    case RequestType.TIME:
-      return _getNotificationCardForTimeInvitationRequest(
-        notification: notification,
-        user: user,
-        context: context,
-        requestInvitationModel: requestInvitationModel,
-      );
-
-    case RequestType.GOODS:
-      return _getNotificationCardForGoodsInvitationRequest(
-        notification: notification,
-        user: user,
-        context: context,
-        requestInvitationModel: requestInvitationModel,
-      );
-      break;
-
-    case RequestType.CASH:
-      return _getNotificationCardForCashInvitationRequest(
-        notification: notification,
-        user: user,
-        context: context,
-        requestInvitationModel: requestInvitationModel,
-      );
-
-    case RequestType.ONE_TO_MANY_REQUEST:
-      return _getNotificationCardForOneToManyInvitationRequest(
-        notification: notification,
-        user: user,
-        context: context,
-        requestInvitationModel: requestInvitationModel,
-      );
-
-    default:
-      return _getNotificationCardForTimeInvitationRequest(
-        notification: notification,
-        user: user,
-        context: context,
-        requestInvitationModel: requestInvitationModel,
-      );
-  }
-}
-
-Widget _getNotificationCardForOneToManyInvitationRequest({
-  required NotificationsModel notification,
-  required UserModel user,
-  required BuildContext context,
-  required RequestInvitationModel requestInvitationModel,
-}) {
-  return NotificationCard(
-    entityName: requestInvitationModel.timebankModel?.name ?? '',
-    isDissmissible: true,
-    onDismissed: () {
-      NotificationsRepository.readUserNotification(
-        notification.id!,
-        user.email!,
-      );
-    },
-    photoUrl: requestInvitationModel.timebankModel?.photoUrl ?? '',
-    subTitle:
-        '${requestInvitationModel.timebankModel?.name ?? ''} ${S.of(context).notifications_requested_join} ${requestInvitationModel.requestModel?.title ?? ''}, ${S.of(context).notifications_tap_to_view}',
-    title: S.of(context).join_webinar,
-    onPressed: () {
-      //TODO calendar updated please test.
-      // if (SevaCore.of(context).loggedInUser.calendarId == null) {
-      //   _settingModalBottomSheet(context, requestInvitationModel,
-      //       notification.timebankId, notification.id, user);
-      // } else {}
-
-      showDialog(
-        context: context,
-        builder: (context) {
-          return JoinRejectDialogView(
-            requestInvitationModel: requestInvitationModel,
-            timeBankId: notification.timebankId ?? '',
-            notificationId: notification.id ?? '',
-            userModel: user,
-          );
-        },
-      ).then((value) => {
-            KloudlessWidgetManager<ApplyMode, RequestModel>().syncCalendar(
-              context: context,
-              builder:
-                  KloudlessWidgetBuilder().fromContext<ApplyMode, RequestModel>(
-                context: context,
-                id: requestInvitationModel.requestModel?.id ?? '',
-                model: requestInvitationModel.requestModel!,
-              ),
-            )
-          });
-    },
-    timestamp: notification.timestamp ?? 0,
-  );
-}
-
-Widget _getNotificationCardForGoodsInvitationRequest({
-  required NotificationsModel notification,
-  required UserModel user,
-  required BuildContext context,
-  required RequestInvitationModel requestInvitationModel,
-}) {
-  return NotificationCard(
-    entityName: requestInvitationModel.timebankModel?.name ?? '',
-    isDissmissible: true,
-    onDismissed: () {
-      NotificationsRepository.readUserNotification(
-        notification.id!,
-        user.email!,
-      );
-    },
-    photoUrl: requestInvitationModel.timebankModel?.photoUrl ?? '',
-    subTitle:
-        '${requestInvitationModel.timebankModel?.name ?? ''} ${S.of(context).goods_donation_invite}',
-    title:
-        "${requestInvitationModel.timebankModel?.name ?? ''} ${S.of(context).has_goods_donation}",
-    onPressed: () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) {
-            return DonationView(
-              requestModel: requestInvitationModel.requestModel!,
-              timabankName: requestInvitationModel.timebankModel?.name ?? '',
-              notificationId: notification.id ?? '',
-            );
-          },
-        ),
-      );
-    },
-    timestamp: notification.timestamp ?? 0,
-  );
-}
-
-Widget _getNotificationCardForCashInvitationRequest({
-  required NotificationsModel notification,
-  required UserModel user,
-  required BuildContext context,
-  required RequestInvitationModel requestInvitationModel,
-}) {
-  return NotificationCard(
-    entityName: requestInvitationModel.timebankModel?.name ?? '',
-    isDissmissible: true,
-    onDismissed: () {
-      NotificationsRepository.readUserNotification(
-        notification.id!,
-        user.email!,
-      );
-    },
-    photoUrl: requestInvitationModel.timebankModel?.photoUrl ?? '',
-    subTitle:
-        '${requestInvitationModel.timebankModel?.name ?? ''} ${S.of(context).cash_donation_invite}',
-    title:
-        "${requestInvitationModel.timebankModel?.name ?? ''} ${S.of(context).has_cash_donation}",
-    onPressed: () {
-      Navigator.push(context, MaterialPageRoute(builder: (context) {
-        return DonationView(
-          notificationId: notification.id ?? '',
-          requestModel: requestInvitationModel.requestModel!,
-          timabankName: requestInvitationModel.timebankModel?.name ?? '',
-        );
-      }));
-    },
-    timestamp: notification.timestamp ?? 0,
-  );
-}
-
-Widget getNotificationForRequestAccept({
-  required NotificationsModel notification,
-}) {
-  final model = RequestModel.fromMap(notification.data ?? <dynamic, dynamic>{});
-
-  return FutureBuilder<RequestModel>(
-      future: RequestRepository.getRequestFutureById(model.id ?? ''),
+  Widget getWidgetForAcceptedOfferNotification({
+    required NotificationsModel notification,
+  }) {
+    OfferAcceptedNotificationModel acceptedOffer =
+        OfferAcceptedNotificationModel.fromMap(notification.data!);
+    return FutureBuilder<UserModel>(
+      future: UserRepository.fetchUserById(acceptedOffer.acceptedBy!),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          log('Error request accept');
           return Container();
         }
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return LoadingIndicator();
+          return NotificationShimmer();
         }
+        UserModel? user = snapshot.data;
+        if (user == null) return Container();
 
-        log('request type: ' + (model.requestType?.toString() ?? ''));
-
-        if (snapshot.data == null) return Container();
-
-        return RequestAcceptedWidget(
-          model: snapshot.data!,
-          userId: notification.senderUserId ?? '',
-          notificationId: notification.id ?? '',
+        return NotificationCard(
+          timestamp: notification.timestamp ?? 0,
+          entityName: user.fullname ?? '',
+          isDissmissible: true,
+          onDismissed: () {
+            NotificationsRepository.readUserNotification(
+              notification.id!,
+              user.email!,
+            );
+          },
+          onPressed: () {},
+          photoUrl: user.photoURL ?? '',
+          title: S.of(context).notifications_offer_accepted,
+          subTitle:
+              '${user.fullname?.toLowerCase() ?? ''} ${S.of(context).notifications_shown_interest} ',
         );
-      });
-}
+      },
+    );
+  }
 
-Widget getNotificationForRecurringOffer({
-  required NotificationsModel notification,
-  required NotificationsBloc bloc,
-  required BuildContext context,
-  required UserModel user,
-}) {
-  final eventData =
-      ReccuringOfferUpdated.fromMap(notification.data ?? <String, dynamic>{});
-  return NotificationCard(
-    timestamp: notification.timestamp ?? 0,
-    title: S.of(context).offer_updated,
-    subTitle:
-        "${S.of(context).notifications_signed_up_for} ***eventName ${S.of(context).on} ***eventDate. ${S.of(context).notifications_event_modification} "
-            .replaceFirst('***eventName', eventData.eventName ?? '')
-            .replaceFirst(
-                '***eventDate',
-                DateTime.fromMillisecondsSinceEpoch(
-                  eventData.eventDate ?? 0,
-                ).toString()),
-    entityName: S.of(context).request_updated,
-    photoUrl: eventData.photoUrl ?? '',
-    onDismissed: () {
-      onDismissed(
-        bloc: bloc,
-        notificationId: notification.id ?? '',
-        userEmail: user.email ?? '',
-      );
-    },
-  );
-}
+  Widget getOfferRequestInvitation({
+    required NotificationsModel notification,
+    required UserModel user,
+    required BuildContext context,
+  }) {
+    TimeOfferParticipantsModel timeOfferParticipantsModel =
+        TimeOfferParticipantsModel.fromJSON(notification.data!);
 
-Widget getNotificationForRecurringRequestUpdated({
-  required NotificationsModel notification,
-  required NotificationsBloc bloc,
-  required BuildContext context,
-  required UserModel user,
-}) {
-  final eventData =
-      ReccuringRequestUpdated.fromMap(notification.data ?? <String, dynamic>{});
-  return NotificationCard(
-    timestamp: notification.timestamp ?? 0,
-    title: S.of(context).request_updated,
-    subTitle:
-        "${S.of(context).notifications_signed_up_for} ***eventName ${S.of(context).on} ***eventDate. ${S.of(context).notifications_event_modification} "
-            .replaceFirst('***eventName', eventData.eventName ?? '')
-            .replaceFirst(
-              '***eventDate',
-              DateTime.fromMillisecondsSinceEpoch(
-                eventData.eventDate ?? 0,
-              ).toString(),
-            ),
-    entityName: S.of(context).request_updated,
-    photoUrl: eventData.photoUrl ?? '',
-    onDismissed: () {
-      onDismissed(
-        bloc: bloc,
-        notificationId: notification.id ?? '',
-        userEmail: user.email ?? '',
-      );
-    },
-  );
-}
+    return _getNotificationCardForOfferRequestInvitationRequest(
+      notification: notification,
+      user: user,
+      context: context,
+      timeOfferParticipantsModel: timeOfferParticipantsModel,
+    );
+  }
 
-Future<void> onDismissed({
-  required String notificationId,
-  required String userEmail,
-  required NotificationsBloc bloc,
-}) async {
-  await bloc.clearNotification(
-    notificationId: notificationId,
-    email: userEmail,
-  );
-}
+  Widget getInvitationForRequest({
+    required NotificationsModel notification,
+    required UserModel user,
+    required BuildContext context,
+  }) {
+    RequestInvitationModel requestInvitationModel =
+        RequestInvitationModel.fromMap(notification.data!);
 
-Widget getNotificationForJoinRequest({
-  required NotificationsModel notification,
-}) {
-  final model = JoinRequestNotificationModel.fromMap(
-      notification.data ?? <String, dynamic>{});
-  return FutureBuilder<UserModel>(
-    future: UserRepository.fetchUserById(notification.senderUserId ?? ''),
-    builder: (context, snapshot) {
-      if (snapshot.hasError) {
-        return Container();
-      }
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return NotificationShimmer();
-      }
-      final user = snapshot.data;
-      if (user == null) return Container();
-      return NotificationCard(
-        timestamp: notification.timestamp ?? 0,
-        entityName: user.fullname ?? '',
-        title: S.of(context).notifications_join_request,
-        isDissmissible: true,
-        onDismissed: () {
-          NotificationsRepository.readUserNotification(
-            notification.id ?? '',
-            user.email ?? '',
-          );
-        },
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => JoinRequestView(
-                timebankId: model.timebankId ?? '',
-              ),
-            ),
-          );
-        },
-        photoUrl: user.photoURL ?? '',
-        subTitle:
-            '${user.fullname?.toLowerCase() ?? ''} ${S.of(context).notifications_requested_join} ${model.timebankTitle ?? ''}, ${S.of(context).notifications_tap_to_view} ',
-      );
-    },
-  );
-}
+    switch (requestInvitationModel.requestModel?.requestType) {
+      case RequestType.TIME:
+        return _getNotificationCardForTimeInvitationRequest(
+          notification: notification,
+          user: user,
+          context: context,
+          requestInvitationModel: requestInvitationModel,
+        );
 
-//
+      case RequestType.GOODS:
+        return _getNotificationCardForGoodsInvitationRequest(
+          notification: notification,
+          user: user,
+          context: context,
+          requestInvitationModel: requestInvitationModel,
+        );
+        break;
 
-Widget _getNotificationCardForTimeInvitationRequest({
-  required NotificationsModel notification,
-  required UserModel user,
-  required BuildContext context,
-  required RequestInvitationModel requestInvitationModel,
-}) {
-  return NotificationCard(
-    entityName: requestInvitationModel.timebankModel?.name ?? '',
-    isDissmissible: true,
-    onDismissed: () {
-      NotificationsRepository.readUserNotification(
-        notification.id ?? '',
-        user.email ?? '',
-      );
-    },
-    photoUrl: requestInvitationModel.timebankModel?.photoUrl ?? '',
-    subTitle:
-        '${requestInvitationModel.timebankModel?.name ?? ''} ${S.of(context).notifications_requested_join} ${requestInvitationModel.requestModel?.title ?? ''}, ${S.of(context).notifications_tap_to_view}',
-    title: S.of(context).notifications_join_request,
-    onPressed: () {
-      // if (SevaCore.of(context).loggedInUser.calendarId == null) {
-      //   _settingModalBottomSheet(context, requestInvitationModel,
-      //       notification.timebankId, notification.id, user);
-      // } else {}
+      case RequestType.CASH:
+        return _getNotificationCardForCashInvitationRequest(
+          notification: notification,
+          user: user,
+          context: context,
+          requestInvitationModel: requestInvitationModel,
+        );
 
-      showDialog(
-        context: context,
-        builder: (context) {
-          return JoinRejectDialogView(
-            requestInvitationModel: requestInvitationModel,
-            timeBankId: notification.timebankId ?? '',
-            notificationId: notification.id ?? '',
-            userModel: user,
-          );
-        },
-      ).then((value) => {
-            if (requestInvitationModel.requestModel != null)
+      case RequestType.ONE_TO_MANY_REQUEST:
+        return _getNotificationCardForOneToManyInvitationRequest(
+          notification: notification,
+          user: user,
+          context: context,
+          requestInvitationModel: requestInvitationModel,
+        );
+
+      default:
+        return _getNotificationCardForTimeInvitationRequest(
+          notification: notification,
+          user: user,
+          context: context,
+          requestInvitationModel: requestInvitationModel,
+        );
+    }
+  }
+
+  Widget _getNotificationCardForOneToManyInvitationRequest({
+    required NotificationsModel notification,
+    required UserModel user,
+    required BuildContext context,
+    required RequestInvitationModel requestInvitationModel,
+  }) {
+    return NotificationCard(
+      entityName: requestInvitationModel.timebankModel?.name ?? '',
+      isDissmissible: true,
+      onDismissed: () {
+        NotificationsRepository.readUserNotification(
+          notification.id!,
+          user.email!,
+        );
+      },
+      photoUrl: requestInvitationModel.timebankModel?.photoUrl ?? '',
+      subTitle:
+          '${requestInvitationModel.timebankModel?.name ?? ''} ${S.of(context).notifications_requested_join} ${requestInvitationModel.requestModel?.title ?? ''}, ${S.of(context).notifications_tap_to_view}',
+      title: S.of(context).join_webinar,
+      onPressed: () {
+        //TODO calendar updated please test.
+        // if (SevaCore.of(context).loggedInUser.calendarId == null) {
+        //   _settingModalBottomSheet(context, requestInvitationModel,
+        //       notification.timebankId, notification.id, user);
+        // } else {}
+
+        showDialog(
+          context: context,
+          builder: (context) {
+            return JoinRejectDialogView(
+              requestInvitationModel: requestInvitationModel,
+              timeBankId: notification.timebankId ?? '',
+              notificationId: notification.id ?? '',
+              userModel: user,
+            );
+          },
+        ).then((value) => {
               KloudlessWidgetManager<ApplyMode, RequestModel>().syncCalendar(
                 context: context,
                 builder: KloudlessWidgetBuilder()
@@ -897,51 +656,326 @@ Widget _getNotificationCardForTimeInvitationRequest({
                   model: requestInvitationModel.requestModel!,
                 ),
               )
-          });
-    },
-    timestamp: notification.timestamp ?? 0,
-  );
-}
+            });
+      },
+      timestamp: notification.timestamp ?? 0,
+    );
+  }
 
-Widget _getNotificationCardForOfferRequestInvitationRequest({
-  required NotificationsModel notification,
-  required UserModel user,
-  required BuildContext context,
-  required TimeOfferParticipantsModel timeOfferParticipantsModel,
-}) {
-  return NotificationCard(
-    entityName: timeOfferParticipantsModel.participantDetails.fullname ?? '',
-    isDissmissible: true,
-    onDismissed: () {
-      NotificationsRepository.readUserNotification(
-        notification.id ?? '',
-        user.email ?? '',
-      );
-    },
-    photoUrl: timeOfferParticipantsModel.participantDetails.photourl ?? '',
-    subTitle:
-        '${timeOfferParticipantsModel.participantDetails.fullname ?? ''}${S.of(context).invitation_accepted_subtitle}',
-    title: S.of(context).invitation_accepted,
-    onPressed: () {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return OfferJoinRequestDialog(
-            offerId: timeOfferParticipantsModel.offerId ?? '',
-            requestId: timeOfferParticipantsModel.requestId ?? '',
-            requestStartDate: timeOfferParticipantsModel.requestStartDate ?? 0,
-            requestEndDate: timeOfferParticipantsModel.requestEndDate ?? 0,
-            requestTitle: timeOfferParticipantsModel.requestTitle ?? '',
-            timeBankId: notification.timebankId ?? '',
+  Widget _getNotificationCardForGoodsInvitationRequest({
+    required NotificationsModel notification,
+    required UserModel user,
+    required BuildContext context,
+    required RequestInvitationModel requestInvitationModel,
+  }) {
+    return NotificationCard(
+      entityName: requestInvitationModel.timebankModel?.name ?? '',
+      isDissmissible: true,
+      onDismissed: () {
+        NotificationsRepository.readUserNotification(
+          notification.id!,
+          user.email!,
+        );
+      },
+      photoUrl: requestInvitationModel.timebankModel?.photoUrl ?? '',
+      subTitle:
+          '${requestInvitationModel.timebankModel?.name ?? ''} ${S.of(context).goods_donation_invite}',
+      title:
+          "${requestInvitationModel.timebankModel?.name ?? ''} ${S.of(context).has_goods_donation}",
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) {
+              return DonationView(
+                requestModel: requestInvitationModel.requestModel!,
+                timabankName: requestInvitationModel.timebankModel?.name ?? '',
+                notificationId: notification.id ?? '',
+              );
+            },
+          ),
+        );
+      },
+      timestamp: notification.timestamp ?? 0,
+    );
+  }
+
+  Widget _getNotificationCardForCashInvitationRequest({
+    required NotificationsModel notification,
+    required UserModel user,
+    required BuildContext context,
+    required RequestInvitationModel requestInvitationModel,
+  }) {
+    return NotificationCard(
+      entityName: requestInvitationModel.timebankModel?.name ?? '',
+      isDissmissible: true,
+      onDismissed: () {
+        NotificationsRepository.readUserNotification(
+          notification.id!,
+          user.email!,
+        );
+      },
+      photoUrl: requestInvitationModel.timebankModel?.photoUrl ?? '',
+      subTitle:
+          '${requestInvitationModel.timebankModel?.name ?? ''} ${S.of(context).cash_donation_invite}',
+      title:
+          "${requestInvitationModel.timebankModel?.name ?? ''} ${S.of(context).has_cash_donation}",
+      onPressed: () {
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return DonationView(
             notificationId: notification.id ?? '',
-            userModel: user,
-            timeOfferParticipantsModel: timeOfferParticipantsModel,
+            requestModel: requestInvitationModel.requestModel!,
+            timabankName: requestInvitationModel.timebankModel?.name ?? '',
           );
-        },
-      );
-    },
-    timestamp: notification.timestamp ?? 0,
-  );
+        }));
+      },
+      timestamp: notification.timestamp ?? 0,
+    );
+  }
+
+  Widget getNotificationForRequestAccept({
+    required NotificationsModel notification,
+  }) {
+    final model =
+        RequestModel.fromMap(notification.data ?? <dynamic, dynamic>{});
+
+    return FutureBuilder<RequestModel>(
+        future: RequestRepository.getRequestFutureById(model.id ?? ''),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            log('Error request accept');
+            return Container();
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return LoadingIndicator();
+          }
+
+          log('request type: ' + (model.requestType?.toString() ?? ''));
+
+          if (snapshot.data == null) return Container();
+
+          return RequestAcceptedWidget(
+            model: snapshot.data!,
+            userId: notification.senderUserId ?? '',
+            notificationId: notification.id ?? '',
+          );
+        });
+  }
+
+  Widget getNotificationForRecurringOffer({
+    required NotificationsModel notification,
+    required NotificationsBloc bloc,
+    required BuildContext context,
+    required UserModel user,
+  }) {
+    final eventData =
+        ReccuringOfferUpdated.fromMap(notification.data ?? <String, dynamic>{});
+    return NotificationCard(
+      timestamp: notification.timestamp ?? 0,
+      title: S.of(context).offer_updated,
+      subTitle:
+          "${S.of(context).notifications_signed_up_for} ***eventName ${S.of(context).on} ***eventDate. ${S.of(context).notifications_event_modification} "
+              .replaceFirst('***eventName', eventData.eventName ?? '')
+              .replaceFirst(
+                  '***eventDate',
+                  DateTime.fromMillisecondsSinceEpoch(
+                    eventData.eventDate ?? 0,
+                  ).toString()),
+      entityName: S.of(context).request_updated,
+      photoUrl: eventData.photoUrl ?? '',
+      onDismissed: () {
+        onDismissed(
+          bloc: bloc,
+          notificationId: notification.id ?? '',
+          userEmail: user.email ?? '',
+        );
+      },
+    );
+  }
+
+  Widget getNotificationForRecurringRequestUpdated({
+    required NotificationsModel notification,
+    required NotificationsBloc bloc,
+    required BuildContext context,
+    required UserModel user,
+  }) {
+    final eventData = ReccuringRequestUpdated.fromMap(
+        notification.data ?? <String, dynamic>{});
+    return NotificationCard(
+      timestamp: notification.timestamp ?? 0,
+      title: S.of(context).request_updated,
+      subTitle:
+          "${S.of(context).notifications_signed_up_for} ***eventName ${S.of(context).on} ***eventDate. ${S.of(context).notifications_event_modification} "
+              .replaceFirst('***eventName', eventData.eventName ?? '')
+              .replaceFirst(
+                '***eventDate',
+                DateTime.fromMillisecondsSinceEpoch(
+                  eventData.eventDate ?? 0,
+                ).toString(),
+              ),
+      entityName: S.of(context).request_updated,
+      photoUrl: eventData.photoUrl ?? '',
+      onDismissed: () {
+        onDismissed(
+          bloc: bloc,
+          notificationId: notification.id ?? '',
+          userEmail: user.email ?? '',
+        );
+      },
+    );
+  }
+
+  Future<void> onDismissed({
+    required String notificationId,
+    required String userEmail,
+    required NotificationsBloc bloc,
+  }) async {
+    await bloc.clearNotification(
+      notificationId: notificationId,
+      email: userEmail,
+    );
+  }
+
+  Widget getNotificationForJoinRequest({
+    required NotificationsModel notification,
+  }) {
+    final model = JoinRequestNotificationModel.fromMap(
+        notification.data ?? <String, dynamic>{});
+    return FutureBuilder<UserModel>(
+      future: UserRepository.fetchUserById(notification.senderUserId ?? ''),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Container();
+        }
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return NotificationShimmer();
+        }
+        final user = snapshot.data;
+        if (user == null) return Container();
+        return NotificationCard(
+          timestamp: notification.timestamp ?? 0,
+          entityName: user.fullname ?? '',
+          title: S.of(context).notifications_join_request,
+          isDissmissible: true,
+          onDismissed: () {
+            NotificationsRepository.readUserNotification(
+              notification.id ?? '',
+              user.email ?? '',
+            );
+          },
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => JoinRequestView(
+                  timebankId: model.timebankId ?? '',
+                ),
+              ),
+            );
+          },
+          photoUrl: user.photoURL ?? '',
+          subTitle:
+              '${user.fullname?.toLowerCase() ?? ''} ${S.of(context).notifications_requested_join} ${model.timebankTitle ?? ''}, ${S.of(context).notifications_tap_to_view} ',
+        );
+      },
+    );
+  }
+
+//
+
+  Widget _getNotificationCardForTimeInvitationRequest({
+    required NotificationsModel notification,
+    required UserModel user,
+    required BuildContext context,
+    required RequestInvitationModel requestInvitationModel,
+  }) {
+    return NotificationCard(
+      entityName: requestInvitationModel.timebankModel?.name ?? '',
+      isDissmissible: true,
+      onDismissed: () {
+        NotificationsRepository.readUserNotification(
+          notification.id ?? '',
+          user.email ?? '',
+        );
+      },
+      photoUrl: requestInvitationModel.timebankModel?.photoUrl ?? '',
+      subTitle:
+          '${requestInvitationModel.timebankModel?.name ?? ''} ${S.of(context).notifications_requested_join} ${requestInvitationModel.requestModel?.title ?? ''}, ${S.of(context).notifications_tap_to_view}',
+      title: S.of(context).notifications_join_request,
+      onPressed: () {
+        // if (SevaCore.of(context).loggedInUser.calendarId == null) {
+        //   _settingModalBottomSheet(context, requestInvitationModel,
+        //       notification.timebankId, notification.id, user);
+        // } else {}
+
+        showDialog(
+          context: context,
+          builder: (context) {
+            return JoinRejectDialogView(
+              requestInvitationModel: requestInvitationModel,
+              timeBankId: notification.timebankId ?? '',
+              notificationId: notification.id ?? '',
+              userModel: user,
+            );
+          },
+        ).then((value) => {
+              if (requestInvitationModel.requestModel != null)
+                KloudlessWidgetManager<ApplyMode, RequestModel>().syncCalendar(
+                  context: context,
+                  builder: KloudlessWidgetBuilder()
+                      .fromContext<ApplyMode, RequestModel>(
+                    context: context,
+                    id: requestInvitationModel.requestModel?.id ?? '',
+                    model: requestInvitationModel.requestModel!,
+                  ),
+                )
+            });
+      },
+      timestamp: notification.timestamp ?? 0,
+    );
+  }
+
+  Widget _getNotificationCardForOfferRequestInvitationRequest({
+    required NotificationsModel notification,
+    required UserModel user,
+    required BuildContext context,
+    required TimeOfferParticipantsModel timeOfferParticipantsModel,
+  }) {
+    return NotificationCard(
+      entityName: timeOfferParticipantsModel.participantDetails.fullname ?? '',
+      isDissmissible: true,
+      onDismissed: () {
+        NotificationsRepository.readUserNotification(
+          notification.id ?? '',
+          user.email ?? '',
+        );
+      },
+      photoUrl: timeOfferParticipantsModel.participantDetails.photourl ?? '',
+      subTitle:
+          '${timeOfferParticipantsModel.participantDetails.fullname ?? ''}${S.of(context).invitation_accepted_subtitle}',
+      title: S.of(context).invitation_accepted,
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return OfferJoinRequestDialog(
+              offerId: timeOfferParticipantsModel.offerId ?? '',
+              requestId: timeOfferParticipantsModel.requestId ?? '',
+              requestStartDate:
+                  timeOfferParticipantsModel.requestStartDate ?? 0,
+              requestEndDate: timeOfferParticipantsModel.requestEndDate ?? 0,
+              requestTitle: timeOfferParticipantsModel.requestTitle ?? '',
+              timeBankId: notification.timebankId ?? '',
+              notificationId: notification.id ?? '',
+              userModel: user,
+              timeOfferParticipantsModel: timeOfferParticipantsModel,
+            );
+          },
+        );
+      },
+      timestamp: notification.timestamp ?? 0,
+    );
+  }
 }
 
 class PersonalNotificationsReducerForOffer {
@@ -979,130 +1013,175 @@ class PersonalNotificationsReducerForOffer {
       title: S.of(context).offer_invitation_notification_title,
     );
   }
-}
 
-Widget getNotificationForLendingOfferAccept({
-  required NotificationsModel notification,
-}) {
-  var model = OfferModel.fromMap(notification.data as Map<dynamic, dynamic>);
+  Widget getNotificationForLendingOfferAccept({
+    required NotificationsModel notification,
+  }) {
+    var model = OfferModel.fromMap(notification.data as Map<dynamic, dynamic>);
 
-  return FutureBuilder<UserModel>(
-    future: UserRepository.fetchUserById(notification.senderUserId ?? ''),
-    builder: (context, snapshot) {
-      if (snapshot.hasError) {
-        return Container();
-      }
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return NotificationShimmer();
-      }
-      UserModel? user = snapshot.data;
-      if (user == null) return Container();
-      return NotificationCard(
-        timestamp: notification.timestamp ?? 0,
-        entityName: 'NAME',
-        isDissmissible: true,
-        onPressed: () async {
-          //Implemented by lending offer team
-          LendingOfferAcceptorModel lendingOfferAcceptorModel =
-              await LendingOffersRepo.getBorrowAcceptorModel(
-                  offerId: model.id ?? '', acceptorEmail: user.email ?? '');
-          //Fetch latest offer model
-          OfferModel offerModel =
-              await getOfferFromId(offerId: model.id ?? '') ?? OfferModel();
-
-          //Implemented by lending offer team
-          LendingOfferAcceptorModel? lendingOfferAcceptorModelOfApproved;
-          if ((offerModel.lendingOfferDetailsModel?.approvedUsers?.length ??
-                  0) >
-              0) {
-            lendingOfferAcceptorModelOfApproved =
+    return FutureBuilder<UserModel>(
+      future: UserRepository.fetchUserById(notification.senderUserId ?? ''),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Container();
+        }
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return NotificationShimmer();
+        }
+        UserModel? user = snapshot.data;
+        if (user == null) return Container();
+        return NotificationCard(
+          timestamp: notification.timestamp ?? 0,
+          entityName: 'NAME',
+          isDissmissible: true,
+          onPressed: () async {
+            //Implemented by lending offer team
+            LendingOfferAcceptorModel lendingOfferAcceptorModel =
                 await LendingOffersRepo.getBorrowAcceptorModel(
-                    offerId: model.id ?? '',
-                    acceptorEmail: offerModel
-                        .lendingOfferDetailsModel!.approvedUsers!.first);
-          }
-          //Dialog box also to restrict approving more than one Borrower at a time.
-          bool isCurrentlyLent = false;
-          if ((offerModel.lendingOfferDetailsModel?.approvedUsers?.length ??
-                  0) >
-              0) {
-            isCurrentlyLent = true;
-          }
+                    offerId: model.id ?? '', acceptorEmail: user.email ?? '');
+            //Fetch latest offer model
+            OfferModel offerModel =
+                await getOfferFromId(offerId: model.id ?? '') ?? OfferModel();
 
-          if (isCurrentlyLent) {
-            return showDialog(
-                context: context,
-                builder: (dialogContext) {
-                  return AlertDialog(
-                    content: Container(
-                      height: MediaQuery.of(context).size.width * 0.40,
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              InkWell(
-                                child: Icon(
-                                  Icons.cancel_rounded,
-                                  color: Colors.grey,
+            //Implemented by lending offer team
+            LendingOfferAcceptorModel? lendingOfferAcceptorModelOfApproved;
+            if ((offerModel.lendingOfferDetailsModel?.approvedUsers!.length ??
+                    0) >
+                0) {
+              lendingOfferAcceptorModelOfApproved =
+                  await LendingOffersRepo.getBorrowAcceptorModel(
+                      offerId: model.id ?? '',
+                      acceptorEmail: offerModel
+                          .lendingOfferDetailsModel!.approvedUsers!.first);
+            }
+            //Dialog box also to restrict approving more than one Borrower at a time.
+            bool isCurrentlyLent = false;
+            if ((offerModel.lendingOfferDetailsModel?.approvedUsers?.length ??
+                    0) >
+                0) {
+              isCurrentlyLent = true;
+            }
+
+            if (isCurrentlyLent) {
+              return showDialog(
+                  context: context,
+                  builder: (dialogContext) {
+                    return AlertDialog(
+                      content: Container(
+                        height: MediaQuery.of(context).size.width * 0.40,
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                InkWell(
+                                  child: Icon(
+                                    Icons.cancel_rounded,
+                                    color: Colors.grey,
+                                  ),
+                                  onTap: () =>
+                                      Navigator.of(dialogContext).pop(),
                                 ),
-                                onTap: () => Navigator.of(dialogContext).pop(),
-                              ),
-                            ],
-                          ),
-                          Text((offerModel.lendingOfferDetailsModel
-                                          ?.lendingModel?.lendingType ??
-                                      LendingType.PLACE) ==
-                                  LendingType.PLACE
-                              ? S
-                                  .of(context)
-                                  .cannot_approve_multiple_borrowers_place
-                                  .replaceAll(
-                                      " **name",
-                                      lendingOfferAcceptorModelOfApproved
-                                              ?.acceptorName ??
-                                          '')
-                              : S
-                                  .of(context)
-                                  .cannot_approve_multiple_borrowers_item
-                                  .replaceAll(
-                                      " **name",
-                                      lendingOfferAcceptorModelOfApproved
-                                              ?.acceptorName ??
-                                          '')),
-                        ],
+                              ],
+                            ),
+                            Text((offerModel.lendingOfferDetailsModel
+                                            ?.lendingModel?.lendingType ??
+                                        LendingType.PLACE) ==
+                                    LendingType.PLACE
+                                ? S
+                                    .of(context)
+                                    .cannot_approve_multiple_borrowers_place
+                                    .replaceAll(
+                                        " **name",
+                                        lendingOfferAcceptorModelOfApproved
+                                                ?.acceptorName ??
+                                            '')
+                                : S
+                                    .of(context)
+                                    .cannot_approve_multiple_borrowers_item
+                                    .replaceAll(
+                                        " **name",
+                                        lendingOfferAcceptorModelOfApproved
+                                                ?.acceptorName ??
+                                            '')),
+                          ],
+                        ),
                       ),
-                    ),
-                  );
-                });
-          } else {
-            //if no other member is currently approved
-            //then we can navigate to approve page
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                // fullscreenDialog: true,
-                builder: (context) => ApproveLendingOffer(
-                  offerModel: model,
-                  lendingOfferAcceptorModel: lendingOfferAcceptorModel,
+                    );
+                  });
+            } else {
+              //if no other member is currently approved
+              //then we can navigate to approve page
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  // fullscreenDialog: true,
+                  builder: (context) => ApproveLendingOffer(
+                    offerModel: model,
+                    lendingOfferAcceptorModel: lendingOfferAcceptorModel,
+                  ),
                 ),
-              ),
+              );
+            }
+          },
+          photoUrl: notification.senderPhotoUrl ?? defaultUserImageURL,
+          title: '${model.individualOfferDataModel?.title ?? ''}',
+          subTitle:
+              "${user.fullname ?? ''} ${S.of(context).accepted} ${model.individualOfferDataModel?.title ?? ''}",
+          onDismissed: () {
+            NotificationsRepository.readUserNotification(
+              notification.id ?? '',
+              notification.targetUserId ?? '',
             );
-          }
-        },
-        photoUrl: notification.senderPhotoUrl ?? defaultUserImageURL,
-        title: '${model.individualOfferDataModel?.title ?? ''}',
-        subTitle:
-            "${user.fullname ?? ''} ${S.of(context).accepted} ${model.individualOfferDataModel?.title ?? ''}",
-        onDismissed: () {
-          NotificationsRepository.readUserNotification(
-            notification.id ?? '',
-            notification.targetUserId ?? '',
-          );
-        },
-      );
-    },
-  );
+          },
+        );
+      },
+    );
+  }
+
+  // Add this method to fix the error
+  Widget getNotificationForRecurringOffer({
+    required NotificationsModel notification,
+    required NotificationsBloc bloc,
+    required BuildContext context,
+    required UserModel user,
+  }) {
+    final eventData =
+        ReccuringOfferUpdated.fromMap(notification.data ?? <String, dynamic>{});
+    return NotificationCard(
+      timestamp: notification.timestamp ?? 0,
+      title: S.of(context).offer_updated,
+      subTitle:
+          "${S.of(context).notifications_signed_up_for} ***eventName ${S.of(context).on} ***eventDate. ${S.of(context).notifications_event_modification} "
+              .replaceFirst('***eventName', eventData.eventName ?? '')
+              .replaceFirst(
+                  '***eventDate',
+                  DateTime.fromMillisecondsSinceEpoch(
+                    eventData.eventDate ?? 0,
+                  ).toString()),
+      entityName: S.of(context).request_updated,
+      photoUrl: eventData.photoUrl ?? '',
+      onDismissed: () {
+        onDismissed(
+          bloc: bloc,
+          notificationId: notification.id ?? '',
+          userEmail: user.email ?? '',
+        );
+      },
+    );
+  }
+
+  // Add the missing onDismissed method
+  Future<void> onDismissed({
+    required String notificationId,
+    required String userEmail,
+    required NotificationsBloc bloc,
+  }) async {
+    await bloc.clearNotification(
+      notificationId: notificationId,
+      email: userEmail,
+    );
+  }
 }
 
 class PersonalNotificationsReducerForDonations {

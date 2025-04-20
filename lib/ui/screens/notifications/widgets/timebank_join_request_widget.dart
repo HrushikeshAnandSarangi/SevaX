@@ -13,24 +13,25 @@ import 'package:sevaexchange/ui/screens/notifications/widgets/custom_close_butto
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_shimmer.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/request_accepted_widget.dart';
+import 'package:sevaexchange/ui/screens/offers/pages/bookmarked_offers.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/notifications/notification_utils.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class TimebankJoinRequestWidget extends StatelessWidget {
-  final NotificationsModel notification;
-  final TimebankModel timebankModel;
+  final NotificationsModel? notification;
+  final TimebankModel? timebankModel;
 
   const TimebankJoinRequestWidget(
-      {Key key, this.notification, this.timebankModel})
+      {Key? key, this.notification, this.timebankModel})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
-    JoinRequestModel model = JoinRequestModel.fromMap(notification.data);
+    JoinRequestModel model = JoinRequestModel.fromMap(notification?.data ?? {});
     return FutureBuilder<UserModel>(
-      future:
-          FirestoreManager.getUserForId(sevaUserId: notification.senderUserId),
+      future: FirestoreManager.getUserForId(
+          sevaUserId: notification!.senderUserId!),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Container();
@@ -38,68 +39,68 @@ class TimebankJoinRequestWidget extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return NotificationShimmer();
         }
-        UserModel user = snapshot.data;
+        UserModel user = snapshot.data!;
         return user != null && user.fullname != null
             ? NotificationCard(
-                timestamp: notification.timestamp,
+                timestamp: notification!.timestamp!,
                 title: S.of(context).notifications_join_request,
                 subTitle:
-                    '${user.fullname.toLowerCase()} ${S.of(context).notifications_requested_join} ${model.timebankTitle}.',
+                    '${user.fullname!.toLowerCase()} ${S.of(context).notifications_requested_join} ${model.timebankTitle}.',
                 photoUrl: user.photoURL,
                 entityName: user.fullname,
                 onDismissed: () {
                   dismissTimebankNotification(
                       timebankId: model.entityId,
-                      notificationId: notification.id);
+                      notificationId: notification!.id);
                 },
                 onPressed: () async {
                   await showDialogForJoinRequestApproval(
                     context: context,
                     userModel: user,
                     model: model,
-                    notificationId: notification.id,
+                    notificationId: notification!.id!,
                   ).then((value) async {
                     if (value == null) {
                       return;
                     }
                     if (value) {
                       await addMemberToTimebank(
-                        timebankModel: timebankModel,
-                        timebankId: model.entityId,
+                        timebankModel: timebankModel!,
+                        timebankId: model.entityId!,
                         timebankTitle: model.timebankTitle,
                         joinRequestId: model.id,
-                        memberJoiningSevaUserId: model.userId,
+                        memberJoiningSevaUserId: model.userId!,
                         user: user,
-                        notificaitonId: notification.id,
+                        notificaitonId: notification!.id!,
                         communityId:
-                            SevaCore.of(context).loggedInUser.currentCommunity,
-                        newMemberJoinedEmail: user.email,
+                            SevaCore.of(context).loggedInUser.currentCommunity!,
+                        newMemberJoinedEmail: user.email!,
                         isFromGroup: model.isFromGroup,
-                        adminEmail: SevaCore.of(context).loggedInUser.email,
-                        adminId: SevaCore.of(context).loggedInUser.sevaUserID,
+                        adminEmail: SevaCore.of(context).loggedInUser.email!,
+                        adminId: SevaCore.of(context).loggedInUser.sevaUserID!,
                         adminFullName:
-                            SevaCore.of(context).loggedInUser.fullname,
+                            SevaCore.of(context).loggedInUser.fullname!,
                         adminPhotoUrl:
-                            SevaCore.of(context).loggedInUser.photoURL,
+                            SevaCore.of(context).loggedInUser.photoURL!,
                       ).commit();
                     } else {
                       await showProgressForOnboardingUser(context);
                       rejectMemberJoinRequest(
-                        timebankModel: timebankModel,
-                        timebankId: model.entityId,
+                        timebankModel: timebankModel!,
+                        timebankId: model.entityId!,
                         joinRequestId: model.id,
-                        notificaitonId: notification.id,
+                        notificaitonId: notification!.id!,
                         communityId:
-                            SevaCore.of(context).loggedInUser.currentCommunity,
-                        newMemberJoinedEmail: user.email,
-                        memberJoiningSevaUserId: model.userId,
+                            SevaCore.of(context).loggedInUser.currentCommunity!,
+                        newMemberJoinedEmail: user.email!,
+                        memberJoiningSevaUserId: model.userId!,
                         user: user,
-                        adminEmail: SevaCore.of(context).loggedInUser.email,
-                        adminId: SevaCore.of(context).loggedInUser.sevaUserID,
+                        adminEmail: SevaCore.of(context).loggedInUser.email!,
+                        adminId: SevaCore.of(context).loggedInUser.sevaUserID!,
                         adminFullName:
-                            SevaCore.of(context).loggedInUser.fullname,
+                            SevaCore.of(context).loggedInUser.fullname!,
                         adminPhotoUrl:
-                            SevaCore.of(context).loggedInUser.photoURL,
+                            SevaCore.of(context).loggedInUser.photoURL!,
                         timebankTitle: model.timebankTitle,
                       ).commit();
 
@@ -114,13 +115,13 @@ class TimebankJoinRequestWidget extends StatelessWidget {
   }
 
   Future<bool> showDialogForJoinRequestApproval({
-    BuildContext context,
-    UserModel userModel,
-    JoinRequestModel model,
-    String notificationId,
+    BuildContext? context,
+    UserModel? userModel,
+    JoinRequestModel? model,
+    String? notificationId,
   }) async {
     return await showDialog(
-      context: context,
+      context: context!,
       builder: (BuildContext viewContext) {
         return AlertDialog(
           shape: RoundedRectangleBorder(
@@ -136,7 +137,7 @@ class TimebankJoinRequestWidget extends StatelessWidget {
                   width: 70,
                   child: CircleAvatar(
                     backgroundImage: NetworkImage(
-                      userModel.photoURL ?? defaultUserImageURL,
+                      userModel!.photoURL ?? defaultUserImageURL,
                     ),
                   ),
                 ),
@@ -146,7 +147,7 @@ class TimebankJoinRequestWidget extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.all(4.0),
                   child: Text(
-                    userModel.fullname,
+                    userModel.fullname!,
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
@@ -169,7 +170,7 @@ class TimebankJoinRequestWidget extends StatelessWidget {
                                 fontSize: 13, fontWeight: FontWeight.bold),
                           ),
                         ),
-                      getBio(context, userModel, isScrollable: false),
+                      getBio(context, userModel),
                       Padding(
                         padding: EdgeInsets.all(8.0),
                         child: Text(
@@ -184,7 +185,7 @@ class TimebankJoinRequestWidget extends StatelessWidget {
                       Padding(
                         padding: EdgeInsets.all(4.0),
                         child: Text(
-                          model.reason ?? S.of(context).reason_not_mentioned,
+                          model!.reason ?? S.of(context).reason_not_mentioned,
                         ),
                       ),
                     ],
@@ -201,6 +202,12 @@ class TimebankJoinRequestWidget extends StatelessWidget {
                       width: double.infinity,
                       child: CustomElevatedButton(
                         color: Theme.of(context).primaryColor,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        elevation: 2.0,
+                        textColor: Colors.white,
                         child: Text(
                           S.of(context).allow,
                           style: TextStyle(color: Colors.white),
@@ -213,11 +220,14 @@ class TimebankJoinRequestWidget extends StatelessWidget {
                     ),
                     Padding(
                       padding: EdgeInsets.all(4.0),
-                    ),
-                    Container(
-                      width: double.infinity,
                       child: CustomElevatedButton(
-                        color: Theme.of(context).accentColor,
+                        color: Theme.of(context).colorScheme.secondary,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        elevation: 2.0,
+                        textColor: Colors.white,
                         child: Text(
                           S.of(context).reject,
                           style: TextStyle(color: Colors.white),
@@ -237,8 +247,8 @@ class TimebankJoinRequestWidget extends StatelessWidget {
     );
   }
 
-  void showProgressForOnboardingUser(BuildContext context) {
-    showDialog(
+  Future<void> showProgressForOnboardingUser(BuildContext context) async {
+    return showDialog(
       barrierDismissible: false,
       context: context,
       builder: (createDialogContext) {
@@ -258,20 +268,20 @@ class TimebankJoinRequestWidget extends StatelessWidget {
   }
 
   WriteBatch addMemberToTimebank({
-    String timebankId,
-    String timebankTitle,
-    String memberJoiningSevaUserId,
-    UserModel user,
-    String joinRequestId,
-    String communityId,
-    String newMemberJoinedEmail,
-    String notificaitonId,
-    bool isFromGroup,
-    String adminEmail,
-    String adminId,
-    String adminFullName,
-    String adminPhotoUrl,
-    TimebankModel timebankModel,
+    required String timebankId,
+    required String timebankTitle,
+    required String memberJoiningSevaUserId,
+    required UserModel user,
+    required String joinRequestId,
+    required String communityId,
+    required String newMemberJoinedEmail,
+    required String notificaitonId,
+    required bool isFromGroup,
+    required String adminEmail,
+    required String adminId,
+    required String adminFullName,
+    required String adminPhotoUrl,
+    required TimebankModel timebankModel,
   }) {
     //add to timebank members
 
@@ -301,8 +311,8 @@ class TimebankJoinRequestWidget extends StatelessWidget {
         'communities': FieldValue.arrayUnion([communityId]),
       });
       if (user.communities != null &&
-          user.communities.length == 1 &&
-          user.communities.elementAt(0) == FlavorConfig.values.timebankId) {
+          user.communities!.length == 1 &&
+          user.communities!.elementAt(0) == FlavorConfig.values.timebankId) {
         batch.update(
             newMemberDocumentReference, {'currentCommunity': communityId});
       }
@@ -348,19 +358,19 @@ class TimebankJoinRequestWidget extends StatelessWidget {
   }
 
   WriteBatch rejectMemberJoinRequest({
-    String timebankId,
-    String joinRequestId,
-    String notificaitonId,
-    String communityId,
-    String newMemberJoinedEmail,
-    String memberJoiningSevaUserId,
-    UserModel user,
-    String adminEmail,
-    String adminId,
-    String adminFullName,
-    String adminPhotoUrl,
-    String timebankTitle,
-    TimebankModel timebankModel,
+    required String timebankId,
+    required String joinRequestId,
+    required String notificaitonId,
+    required String communityId,
+    required String newMemberJoinedEmail,
+    required String memberJoiningSevaUserId,
+    required UserModel user,
+    required String adminEmail,
+    required String adminId,
+    required String adminFullName,
+    required String adminPhotoUrl,
+    required String timebankTitle,
+    required TimebankModel timebankModel,
   }) {
     //add to timebank members
 

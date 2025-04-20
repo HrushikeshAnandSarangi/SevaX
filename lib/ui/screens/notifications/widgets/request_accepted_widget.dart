@@ -17,8 +17,8 @@ import 'package:sevaexchange/views/requests/creatorApproveAcceptorAgreement.dart
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class RequestAcceptedWidget extends StatelessWidget {
-  final String ?userId;
-  final String ?notificationId;
+  final String? userId;
+  final String? notificationId;
   final RequestModel? model;
 
   const RequestAcceptedWidget(
@@ -95,9 +95,9 @@ class RequestAcceptedWidget extends StatelessWidget {
 
   void showDialogForApproval({
     BuildContext? context,
-    UserModel ?userModel,
+    UserModel? userModel,
     RequestModel? requestModel,
-    String ?notificationId,
+    String? notificationId,
   }) {
     showDialog(
       context: context!,
@@ -114,8 +114,8 @@ class RequestAcceptedWidget extends StatelessWidget {
                   height: 70,
                   width: 70,
                   child: CircleAvatar(
-                    backgroundImage:
-                        NetworkImage(userModel!.photoURL ?? defaultUserImageURL),
+                    backgroundImage: NetworkImage(
+                        userModel!.photoURL ?? defaultUserImageURL),
                   ),
                 ),
                 Padding(
@@ -174,7 +174,8 @@ class RequestAcceptedWidget extends StatelessWidget {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8.0),
                             ),
-                            padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+                            padding: EdgeInsets.symmetric(
+                                vertical: 12.0, horizontal: 16.0),
                             elevation: 2.0,
                             textColor: Colors.white,
                             child: Text(
@@ -183,7 +184,8 @@ class RequestAcceptedWidget extends StatelessWidget {
                                   color: Colors.white, fontFamily: 'Europa'),
                             ),
                             onPressed: () async {
-                              if (requestModel!.requestType == RequestType.BORROW) {
+                              if (requestModel!.requestType ==
+                                  RequestType.BORROW) {
                                 approveMemberForBorrowRequest(
                                   model: requestModel,
                                   notificationId: notificationId!,
@@ -212,7 +214,8 @@ class RequestAcceptedWidget extends StatelessWidget {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8.0),
                             ),
-                            padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+                            padding: EdgeInsets.symmetric(
+                                vertical: 12.0, horizontal: 16.0),
                             elevation: 2.0,
                             textColor: Colors.white,
                             child: Text(
@@ -248,10 +251,10 @@ class RequestAcceptedWidget extends StatelessWidget {
   }
 
   void declineRequestedMember({
-    RequestModel ?model,
-    UserModel ?user,
+    RequestModel? model,
+    UserModel? user,
     String? notificationId,
-    String ?communityId,
+    String? communityId,
   }) {
     List<String> acceptedUsers = model!.acceptors!;
     Set<String> usersSet = acceptedUsers.toSet();
@@ -273,80 +276,81 @@ class RequestAcceptedWidget extends StatelessWidget {
     String? notificationId,
     String? communityId,
   }) {
-    List<String> approvedUsers = model!.approvedUsers;
+    List<String> approvedUsers = model!.approvedUsers!;
     Set<String> usersSet = approvedUsers.toSet();
 
-    usersSet.add(user.email!);
+    usersSet.add(user!.email!);
     model.approvedUsers = usersSet.toList();
 
-    if (model.numberOfApprovals <= model.approvedUsers.length) {
+    if (model.numberOfApprovals! <= model.approvedUsers!.length) {
       model.accepted = true;
-    FirestoreManager.approveAcceptRequest(
-      requestModel: model,
-      approvedUserId: user.sevaUserID,
-      notificationId: notificationId,
-      communityId: communityId,
-      directToMember: true,
-    );
+      FirestoreManager.approveAcceptRequest(
+        requestModel: model,
+        approvedUserId: user.sevaUserID!,
+        notificationId: notificationId!,
+        communityId: communityId!,
+        directToMember: true,
+      );
+    }
   }
 
   void approveMemberForBorrowRequest({
-    RequestModel model,
-    UserModel user,
-    String notificationId,
-    String communityId,
+    RequestModel? model,
+    UserModel? user,
+    String? notificationId,
+    String? communityId,
   }) {
-    log('TWO' + ' ' + model.approvedUsers.length.toString());
+    log('TWO' + ' ' + model!.approvedUsers!.length.toString());
 
-    List<String> approvedUsers = model.approvedUsers;
+    List<String> approvedUsers = model.approvedUsers!;
     Set<String> usersSet = approvedUsers.toSet();
 
-    usersSet.add(user.email);
+    usersSet.add(user!.email!);
     model.approvedUsers = usersSet.toList();
 
-    if (model.numberOfApprovals <= model.approvedUsers.length) {
+    if (model.numberOfApprovals! <= model.approvedUsers!.length) {
       //approved
       log('THREE');
       model.accepted = true;
       FirestoreManager.approveAcceptRequest(
         requestModel: model,
-        approvedUserId: user.sevaUserID,
-        notificationId: notificationId,
-        communityId: communityId,
+        approvedUserId: user.sevaUserID!,
+        notificationId: notificationId!,
+        communityId: communityId!,
         directToMember: true,
       );
     }
   }
-}
 
-Widget getBio(BuildContext context, UserModel userModel,
-    {bool isScrollable = true}) {
-  if (userModel.bio != null) {
-    if (userModel.bio.trim().length < 100) {
-      return Text(
-        userModel.bio.trim(),
+  Widget getBio(BuildContext context, UserModel userModel,
+      {bool isScrollable = true}) {
+    if (userModel.bio != null) {
+      if (userModel.bio!.trim().length < 100) {
+        return Text(
+          userModel.bio!.trim(),
+          textAlign: TextAlign.center,
+        );
+      }
+      var child = Text(
+        userModel.bio!,
+        maxLines: null,
+        overflow: null,
         textAlign: TextAlign.center,
       );
+      return isScrollable
+          ? Container(
+              height: 150,
+              child: SingleChildScrollView(
+                physics: isScrollable ? null : NeverScrollableScrollPhysics(),
+                scrollDirection: Axis.vertical,
+                child: child,
+              ),
+            )
+          : child;
     }
-    var child = Text(
-      userModel.bio,
-      maxLines: null,
-      overflow: null,
-      textAlign: TextAlign.center,
+    return Padding(
+      padding: EdgeInsets.all(8.0),
+      child: Text(S.of(context).bio_not_updated),
     );
-    return isScrollable
-        ? Container(
-            height: 150,
-            child: SingleChildScrollView(
-              physics: isScrollable ? null : NeverScrollableScrollPhysics(),
-              scrollDirection: Axis.vertical,
-              child: child,
-            ),
-          )
-        : child;
   }
-  return Padding(
-    padding: EdgeInsets.all(8.0),
-    child: Text(S.of(context).bio_not_updated),
-  );
 }

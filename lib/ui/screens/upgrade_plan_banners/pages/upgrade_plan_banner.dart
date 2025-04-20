@@ -15,14 +15,14 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class UpgradePlanBanner extends StatefulWidget {
-  final BannerDetails details;
-  final String activePlanName;
-  final bool isCommunityPrivate;
-  final bool showAppBar;
+  final BannerDetails? details;
+  final String? activePlanName;
+  final bool? isCommunityPrivate;
+  final bool? showAppBar;
 //  final TimebankModel timebankModel;
 
   const UpgradePlanBanner({
-    Key key,
+    Key? key,
     this.details,
     this.activePlanName,
     this.isCommunityPrivate,
@@ -38,14 +38,14 @@ class UpgradePlanBanner extends StatefulWidget {
 class _UpgradePlanBannerState extends State<UpgradePlanBanner> {
   final controller = PageController(initialPage: 999);
   final _pageIndicator = BehaviorSubject<int>();
-  UserModel currentUser = null;
-  TimebankModel timebankModel = null;
-  Timer _timer;
-  BuildContext dialogLoadingContext;
+  UserModel? currentUser = null;
+  TimebankModel? timebankModel = null;
+  Timer? _timer;
+  BuildContext? dialogLoadingContext;
 
   @override
   void initState() {
-    if (widget.details.images.length > 1) {
+    if (widget.details!.images!.length > 1) {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         _timer = Timer.periodic(Duration(seconds: 2), (timer) async {
           await controller.nextPage(
@@ -53,7 +53,7 @@ class _UpgradePlanBannerState extends State<UpgradePlanBanner> {
             curve: Curves.easeInOut,
           );
           _pageIndicator.add(
-            (controller.page).toInt() % widget.details.images.length,
+            (controller.page)!.toInt() % widget.details!.images!.length,
           );
         });
       });
@@ -73,7 +73,7 @@ class _UpgradePlanBannerState extends State<UpgradePlanBanner> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: widget.showAppBar
+      appBar: widget.showAppBar!
           ? AppBar(
               centerTitle: true,
               title: Text(
@@ -82,11 +82,11 @@ class _UpgradePlanBannerState extends State<UpgradePlanBanner> {
               ),
             )
           : null,
-      body: FutureBuilder<TimebankModel>(
+      body: FutureBuilder<TimebankModel?>(
         future: getTimeBankForId(
           timebankId: Provider.of<UserBloc>(context, listen: false)
               .loggedInUser
-              .currentTimebank,
+              .currentTimebank!,
         ),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
@@ -129,8 +129,8 @@ class _UpgradePlanBannerState extends State<UpgradePlanBanner> {
                     // itemCount: widget.details.images.length,
                     itemBuilder: (context, index) {
                       return CachedNetworkImage(
-                        imageUrl: widget.details
-                            .images[index % widget.details.images.length],
+                        imageUrl: widget.details!
+                            .images![index % widget.details!.images!.length],
                         // fit: BoxFit.cover,
                       );
                     },
@@ -142,7 +142,7 @@ class _UpgradePlanBannerState extends State<UpgradePlanBanner> {
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: List.generate(
-                          widget.details.images.length,
+                          widget.details!.images!.length,
                           (index) => Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Container(
@@ -158,12 +158,12 @@ class _UpgradePlanBannerState extends State<UpgradePlanBanner> {
                     }),
                 Spacer(),
                 Text(
-                  widget.details.message,
+                  widget.details!.message!,
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 14),
                 ),
                 Spacer(),
-                timebankModel.creatorId == currentUser.sevaUserID
+                timebankModel!.creatorId == currentUser!.sevaUserID
                     ? Text(
                         S.of(context).upgrade_plan_disable_msg2,
                         textAlign: TextAlign.center,
