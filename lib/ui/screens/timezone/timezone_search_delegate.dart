@@ -6,8 +6,8 @@ import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/profile/timezone.dart';
 
 class TimezoneSearchDelegate extends SearchDelegate<TimeZoneModel> {
-  final List<TimeZoneModel> timezoneList;
-  final String selectedTimezone;
+  final List<TimeZoneModel>? timezoneList;
+  final String? selectedTimezone;
   TimezoneSearchDelegate({
     textStyle,
     this.timezoneList,
@@ -41,7 +41,7 @@ class TimezoneSearchDelegate extends SearchDelegate<TimeZoneModel> {
       icon: Icon(Icons.arrow_back),
       color: Colors.white,
       onPressed: () {
-        close(context, null);
+        close(context, null!);
       },
     );
   }
@@ -57,7 +57,8 @@ class TimezoneSearchDelegate extends SearchDelegate<TimeZoneModel> {
   }
 
   Widget buildSearchResult() {
-    var searchResult = TimezoneListData().searchTimebank(query, timezoneList);
+    var searchResult =
+        TimezoneListData().searchTimebank(query, timezoneList ?? []);
     if (searchResult == null || searchResult.isEmpty) {
       return Center(child: Text('No Timezone found'));
     }
@@ -67,10 +68,10 @@ class TimezoneSearchDelegate extends SearchDelegate<TimeZoneModel> {
         TimeZoneModel timeZoneModel = searchResult[index];
         DateTime timeInUtc = DateTime.now().toUtc();
         DateTime localtime = timeInUtc.add(Duration(
-            hours: timeZoneModel.offsetFromUtc,
-            minutes: timeZoneModel.offsetFromUtcMin));
+            hours: timeZoneModel.offsetFromUtc!,
+            minutes: timeZoneModel.offsetFromUtcMin!));
         return TimezoneCard(
-          title: timeZoneModel.timezoneName,
+          title: timeZoneModel.timezoneName!,
           subTitle: DateFormat(
             'dd/MMM/yyyy HH:mm',
             S.of(context).localeName == 'sn' ? 'en' : S.of(context).localeName,
@@ -78,7 +79,7 @@ class TimezoneSearchDelegate extends SearchDelegate<TimeZoneModel> {
           onTap: () {
             close(context, timeZoneModel);
           },
-          code: timeZoneModel.timezoneAbb,
+          code: timeZoneModel.timezoneAbb!,
           isSelected: selectedTimezone == timeZoneModel.timezoneName,
         );
       },
