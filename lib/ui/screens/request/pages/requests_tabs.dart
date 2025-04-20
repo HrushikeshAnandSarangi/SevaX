@@ -6,11 +6,11 @@ import 'package:sevaexchange/ui/screens/request/pages/request_listing_page.dart'
 import 'package:sevaexchange/ui/screens/request/pages/virtual_requests.dart';
 
 class RequestTabs extends StatelessWidget {
-  final String timebankId;
-  final TimebankModel timebankModel;
-  final bool isFromSettings;
+  final String? timebankId;
+  final TimebankModel? timebankModel;
+  final bool? isFromSettings;
   RequestTabs(
-      {Key key, this.timebankId, this.isFromSettings, this.timebankModel})
+      {Key? key, this.timebankId, this.isFromSettings, this.timebankModel})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -43,8 +43,8 @@ class RequestTabs extends StatelessWidget {
                       timebankModel: timebankModel,
                     ),
                     VirtualRequests(
-                      timebankId: timebankId,
-                      timebankModel: timebankModel,
+                      timebankId: timebankId!,
+                      timebankModel: timebankModel!,
                     ),
                   ],
                 ),

@@ -10,17 +10,17 @@ import 'package:sevaexchange/views/onboarding/interests_view.dart';
 import 'package:sevaexchange/views/spell_check_manager.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_chip.dart';
-import 'package:usage/uuid/uuid.dart';
+import 'package:uuid/uuid.dart';
 
 typedef StringMapCallback = void Function(Map<String, dynamic> items);
 
 class SelectBorrowItem extends StatefulWidget {
   final StringMapCallback onSelectedItems;
-  final Map<String, String> selectedItems;
-  final ValueChanged<String> onRemoveItems;
+  final Map<String, String>? selectedItems;
+  final ValueChanged<String>? onRemoveItems;
 
   SelectBorrowItem(
-      {@required this.onSelectedItems, this.selectedItems, this.onRemoveItems});
+      {required this.onSelectedItems, this.selectedItems, this.onRemoveItems});
   @override
   _SelectBorrowItemState createState() => _SelectBorrowItemState();
 }
