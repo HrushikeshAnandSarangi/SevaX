@@ -1,11 +1,12 @@
 import 'dart:developer';
 
-import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:doseform/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/ui/screens/members/pages/members_page.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/custom_dose_text_field.dart';
 import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/utils/extensions.dart';
@@ -60,15 +61,41 @@ class IndividualOffer extends StatefulWidget {
   final TimebankModel timebankModel;
 
   const IndividualOffer(
-      {Key key,
-      this.offerModel,
-      this.timebankId,
-      this.loggedInMemberUserId,
-      @required this.timebankModel})
+      {Key? key,
+      required this.offerModel,
+      required this.timebankId,
+      required this.loggedInMemberUserId,
+      required this.timebankModel})
       : super(key: key);
 
   @override
   _IndividualOfferState createState() => _IndividualOfferState();
+  Future<void> openPdfViewer(
+      String pdfURL, String documentName, BuildContext context) async {
+    // You may need to adjust this implementation to match your app's PDF viewer and navigation logic.
+    // The following is based on the pattern in agreementForm.dart.
+    // If you have a ProgressDialog or PDFScreen widget, use them here. Otherwise, use your own widgets.
+    // Remove or replace ProgressDialog if not available in your project.
+    // Show loading indicator if needed.
+    // Example assumes you have a PDFScreen widget that takes pdfUrl, docName, and pathPDF.
+    // If not, replace with your actual PDF viewer widget.
+    // You may need to implement createFileOfPdfUrl or use your own file loader.
+    // For now, just open the URL in a new screen.
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Scaffold(
+          appBar: AppBar(
+            title: Text(documentName),
+          ),
+          // Replace the following with your actual PDF viewer widget.
+          body: Center(
+            child: Text('Display PDF from $pdfURL here.'),
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 class _IndividualOfferState extends State<IndividualOffer> {
@@ -78,25 +105,25 @@ class _IndividualOfferState extends State<IndividualOffer> {
   final IndividualOfferBloc _bloc = IndividualOfferBloc();
   final OneToManyOfferBloc _one_to_many_bloc = OneToManyOfferBloc();
 
-  CommunityModel communityModel;
-  String selectedAddress;
-  CustomLocation customLocation;
+  CommunityModel? communityModel;
+  String selectedAddress = '';
+  CustomLocation? customLocation;
   String borrowAgreementLinkFinal = '';
   String agreementIdFinal = '';
-  String documentName;
-  Map<String, dynamic> agreementConfig;
+  String documentName = '';
+  Map<String, dynamic> agreementConfig = {};
 
   // String title = '';
-  String title_hint;
-  String description_hint;
+  String title_hint = '';
+  String description_hint = '';
 
   TextEditingController _titleController = TextEditingController();
   TextEditingController _descriptionController = TextEditingController();
   TextEditingController _availabilityController = TextEditingController();
   TextEditingController _minimumCreditsController = TextEditingController();
   TextEditingController _donationAmountController = TextEditingController();
-  LendingPlaceModel lendingPlaceModel;
-  LendingModel selectedLendingModel;
+  LendingPlaceModel? lendingPlaceModel;
+  LendingModel? selectedLendingModel;
 
   //one_to_many
   TextEditingController _one_to_many_titleController = TextEditingController();
@@ -104,7 +131,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
   TextEditingController _classHourController = TextEditingController();
   TextEditingController _sizeClassController = TextEditingController();
   TextEditingController _classDescriptionController = TextEditingController();
-  End end = End();
+  End end = End(endType: '', on: 0, after: 0);
   String title = '';
   bool closePage = true;
 
@@ -113,9 +140,9 @@ class _IndividualOfferState extends State<IndividualOffer> {
   FocusNode _availability = FocusNode();
   FocusNode _minimumCredits = FocusNode();
   FocusNode _donationFocusNode = FocusNode();
-  List<FocusNode> oneToManyFocusNodes;
+  List<FocusNode>? oneToManyFocusNodes;
   List<CurrencyModel> currencyList = CurrencyModel().getCurrency();
-  RequestType offerType;
+  RequestType? offerType;
   final LayerLink _layerLink = LayerLink();
   int indexSelected = -1;
   bool isDropdownOpened = false;
@@ -133,44 +160,44 @@ class _IndividualOfferState extends State<IndividualOffer> {
       if (widget.offerModel.offerType == OfferType.INDIVIDUAL_OFFER) {
         _bloc.loadData(widget.offerModel);
         _titleController.text =
-            widget.offerModel.individualOfferDataModel.title;
+            widget.offerModel.individualOfferDataModel!.title;
         _descriptionController.text =
-            widget.offerModel.individualOfferDataModel.description;
+            widget.offerModel.individualOfferDataModel!.description;
         _minimumCreditsController.text = widget
-            .offerModel.individualOfferDataModel.minimumCredits
+            .offerModel.individualOfferDataModel!.minimumCredits
             .toString();
         _availabilityController.text =
-            widget.offerModel.individualOfferDataModel.schedule;
+            widget.offerModel.individualOfferDataModel!.schedule;
         _donationAmountController.text =
             widget.offerModel.cashModel?.targetAmount != null
-                ? widget.offerModel.cashModel.targetAmount.toString()
+                ? widget.offerModel.cashModel!.targetAmount.toString()
                 : '';
         offerType = widget.offerModel.type;
-        _bloc.onTypeChanged(widget.offerModel.type);
+        _bloc.onTypeChanged(widget.offerModel.type!);
         if (widget.offerModel.type == RequestType.LENDING_OFFER) {
-          _bloc.lendingOfferType = widget.offerModel.lendingOfferDetailsModel
-                      .lendingModel.lendingType ==
+          _bloc.lendingOfferType = widget.offerModel.lendingOfferDetailsModel!
+                      .lendingModel!.lendingType ==
                   LendingType.PLACE
               ? 0
               : 1;
-          _bloc.lendingOfferTypeMode =
-              widget.offerModel.lendingOfferDetailsModel.lendingOfferTypeMode ==
-                      'SPOT_ON'
-                  ? 0
-                  : 1;
-          if (widget.offerModel.lendingOfferDetailsModel
+          _bloc.lendingOfferTypeMode = widget.offerModel
+                      .lendingOfferDetailsModel!.lendingOfferTypeMode ==
+                  'SPOT_ON'
+              ? 0
+              : 1;
+          if (widget.offerModel.lendingOfferDetailsModel!
                   .lendingOfferAgreementLink !=
               null) {
             borrowAgreementLinkFinal = widget.offerModel
-                    .lendingOfferDetailsModel.lendingOfferAgreementLink ??
+                    .lendingOfferDetailsModel!.lendingOfferAgreementLink ??
                 '';
             agreementIdFinal =
-                widget.offerModel.lendingOfferDetailsModel.agreementId ?? '';
-            documentName = widget.offerModel.lendingOfferDetailsModel
+                widget.offerModel.lendingOfferDetailsModel!.agreementId ?? '';
+            documentName = widget.offerModel.lendingOfferDetailsModel!
                     .lendingOfferAgreementName ??
                 '';
             agreementConfig =
-                widget.offerModel.lendingOfferDetailsModel.agreementConfig ??
+                widget.offerModel.lendingOfferDetailsModel!.agreementConfig ??
                     {};
           }
         }
@@ -178,7 +205,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
         //If a Lending Item Offer is Virtual then show the public checkbox
         if (widget.offerModel.virtual == true &&
             offerType == RequestType.LENDING_OFFER &&
-            widget.offerModel.lendingOfferDetailsModel.lendingModel
+            widget.offerModel.lendingOfferDetailsModel!.lendingModel!
                     .lendingType ==
                 LendingType.ITEM) {
           lendingitemsShowPublic = true;
@@ -187,16 +214,17 @@ class _IndividualOfferState extends State<IndividualOffer> {
       } else {
         _one_to_many_bloc.loadData(widget.offerModel);
         _one_to_many_titleController.text =
-            widget.offerModel.groupOfferDataModel.classTitle;
+            widget.offerModel.groupOfferDataModel!.classTitle;
         _preparationController.text = widget
-            .offerModel.groupOfferDataModel.numberOfPreperationHours
+            .offerModel.groupOfferDataModel!.numberOfPreperationHours
             .toString();
-        _classHourController.text =
-            widget.offerModel.groupOfferDataModel.numberOfClassHours.toString();
+        _classHourController.text = widget
+            .offerModel.groupOfferDataModel!.numberOfClassHours
+            .toString();
         _sizeClassController.text =
-            widget.offerModel.groupOfferDataModel.sizeOfClass.toString();
+            widget.offerModel.groupOfferDataModel!.sizeOfClass.toString();
         _classDescriptionController.text =
-            widget.offerModel.groupOfferDataModel.classDescription;
+            widget.offerModel.groupOfferDataModel!.classDescription;
         offerType = RequestType.ONE_TO_MANY_OFFER;
         _bloc.onTypeChanged(RequestType.ONE_TO_MANY_OFFER);
       }
@@ -242,7 +270,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
   Future<void> getCommunity() async {
     Future.delayed(Duration.zero, () async {
       communityModel = await FirestoreManager.getCommunityDetailsByCommunityId(
-          communityId: SevaCore.of(context).loggedInUser.currentCommunity);
+          communityId: SevaCore.of(context).loggedInUser.currentCommunity!);
 
       if (widget.offerModel == null ||
           (widget.offerModel != null &&
@@ -304,12 +332,14 @@ class _IndividualOfferState extends State<IndividualOffer> {
   }
 
   Widget _optionRadioButton(
-      {String title, value, groupvalue, Function onChanged}) {
+      {String? title, value, groupvalue, Function? onChanged}) {
     return ListTile(
       contentPadding: EdgeInsets.only(left: 0.0, right: 0.0),
-      title: Text(title),
-      leading:
-          Radio(value: value, groupValue: groupvalue, onChanged: onChanged),
+      title: Text(title!),
+      leading: Radio(
+          value: value,
+          groupValue: groupvalue,
+          onChanged: onChanged as ValueChanged<dynamic>?),
     );
   }
 
@@ -336,8 +366,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                       children: <Widget>[
                         ConfigurationCheck(
                           actionType: 'create_time_offers',
-                          role: memberType(widget.timebankModel,
-                              SevaCore.of(context).loggedInUser.sevaUserID),
+                          role: MemberType.SUPER_ADMIN,
                           child: _optionRadioButton(
                             title: S.of(context).request_type_time,
                             value: RequestType.TIME,
@@ -359,13 +388,12 @@ class _IndividualOfferState extends State<IndividualOffer> {
                         ),
                         TransactionsMatrixCheck(
                           upgradeDetails: AppConfig
-                              .upgradePlanBannerModel.cash_goods_offers,
+                              .upgradePlanBannerModel!.cash_goods_offers!,
                           transaction_matrix_type: "cash_goods_offers",
                           comingFrom: ComingFrom.Offers,
                           child: ConfigurationCheck(
                             actionType: 'create_money_offers',
-                            role: memberType(widget.timebankModel,
-                                SevaCore.of(context).loggedInUser.sevaUserID),
+                            role: MemberType.SUPER_ADMIN,
                             child: _optionRadioButton(
                                 title: S.of(context).request_type_cash,
                                 value: RequestType.CASH,
@@ -388,13 +416,12 @@ class _IndividualOfferState extends State<IndividualOffer> {
                         ),
                         TransactionsMatrixCheck(
                           upgradeDetails: AppConfig
-                              .upgradePlanBannerModel.cash_goods_offers,
+                              .upgradePlanBannerModel!.cash_goods_offers!,
                           transaction_matrix_type: "cash_goods_offers",
                           comingFrom: ComingFrom.Offers,
                           child: ConfigurationCheck(
                             actionType: 'create_goods_offers',
-                            role: memberType(widget.timebankModel,
-                                SevaCore.of(context).loggedInUser.sevaUserID),
+                            role: MemberType.SUPER_ADMIN,
                             child: _optionRadioButton(
                                 title: S.of(context).request_type_goods,
                                 value: RequestType.GOODS,
@@ -416,13 +443,12 @@ class _IndividualOfferState extends State<IndividualOffer> {
                         ),
                         TransactionsMatrixCheck(
                           upgradeDetails:
-                              AppConfig.upgradePlanBannerModel.lending_offers,
+                              AppConfig.upgradePlanBannerModel!.lending_offers!,
                           transaction_matrix_type: "lending_offer",
                           comingFrom: ComingFrom.Offers,
                           child: ConfigurationCheck(
                             actionType: 'create_lending_offers',
-                            role: memberType(widget.timebankModel,
-                                SevaCore.of(context).loggedInUser.sevaUserID),
+                            role: MemberType.MEMBER,
                             child: _optionRadioButton(
                                 title: S.of(context).lend_text,
                                 value: RequestType.LENDING_OFFER,
@@ -455,14 +481,13 @@ class _IndividualOfferState extends State<IndividualOffer> {
                           ),
                         ),
                         TransactionsMatrixCheck(
-                          upgradeDetails:
-                              AppConfig.upgradePlanBannerModel.onetomany_offers,
+                          upgradeDetails: AppConfig
+                              .upgradePlanBannerModel!.onetomany_offers!,
                           transaction_matrix_type: "onetomany_offers",
                           comingFrom: ComingFrom.Offers,
                           child: ConfigurationCheck(
                             actionType: 'one_to_many_offer',
-                            role: memberType(widget.timebankModel,
-                                SevaCore.of(context).loggedInUser.sevaUserID),
+                            role: MemberType.MEMBER,
                             child: _optionRadioButton(
                                 title: S.of(context).one_to_many.sentenceCase(),
                                 value: RequestType.ONE_TO_MANY_OFFER,
@@ -499,7 +524,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                 controller: _availabilityController,
                 focusNode: _availability,
                 validator: (val) {
-                  var validate = _bloc.validateAvailabilityField(val);
+                  var validate = _bloc.validateAvailabilityField(val!);
                   return getValidationError(context, validate);
                 },
                 value: snapshot.data,
@@ -518,7 +543,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                 controller: _minimumCreditsController,
                 focusNode: _minimumCredits,
                 validator: (val) {
-                  var validate = _bloc.validateMinimumCredits(val);
+                  var validate = _bloc.validateMinimumCredits(val!);
                   return getValidationError(context, validate);
                 },
                 value: snapshot.data,
@@ -592,7 +617,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                 controller: _donationAmountController,
                 focusNode: _donationFocusNode,
                 validator: (val) {
-                  var validate = _bloc.validateAmount(val);
+                  var validate = _bloc.validateAmount(val!);
                   logger.e(
                       "#validate AMT  ${getValidationError(context, validate)}");
                   return validate == null
@@ -600,11 +625,13 @@ class _IndividualOfferState extends State<IndividualOffer> {
                       : getValidationError(context, validate);
                 },
                 onChanged: (String data) =>
-                    _bloc.onDonationAmountChanged(int.tryParse(data)),
+                    _bloc.onDonationAmountChanged(int.tryParse(data) ?? 0),
                 textCapitalization: TextCapitalization.sentences,
                 decoration: InputDecoration(
                   hintText: S.of(context).add_amount_donate ?? '',
-                  errorText: getValidationError(context, snapshot.error),
+                  errorText: snapshot.error != null
+                      ? getValidationError(context, snapshot.error.toString())
+                      : null,
                   prefixIcon: StreamBuilder<String>(
                       stream: _bloc.offeredCurrency,
                       builder: (context, snapshot) {
@@ -629,8 +656,8 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                           ? "${currencyList[indexSelected].code}"
                                           : widget.offerModel == null
                                               ? defaultOfferCurrenyType
-                                              : widget.offerModel.cashModel
-                                                  .offerCurrencyType,
+                                              : widget.offerModel.cashModel!
+                                                  .offerCurrencyType!,
                                       style: kDropDownChildCurrencyCode,
                                     ),
                                     SizedBox(width: 8),
@@ -643,8 +670,8 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                             child: Image.network(
                                               widget.offerModel == null
                                                   ? defaultImage
-                                                  : widget.offerModel.cashModel
-                                                      .offerCurrencyFlag,
+                                                  : widget.offerModel.cashModel!
+                                                      .offerCurrencyFlag!,
                                               fit: BoxFit.cover,
                                             ),
                                           );
@@ -677,26 +704,26 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                     if (widget.offerModel == null) {
                                       setState(() {
                                         defaultOfferCurrenyType =
-                                            currencyList[indexSelected].code;
+                                            currencyList[indexSelected].code!;
                                         _bloc.offeredCurrencyType(
-                                            currencyList[indexSelected].code);
+                                            currencyList[indexSelected].code!);
                                         defaultImage =
                                             currencyList[indexSelected]
-                                                .imagePath;
+                                                .imagePath!;
                                         _bloc.offerCurrencyflag(
                                             currencyList[indexSelected]
-                                                .imagePath);
+                                                .imagePath!);
                                       });
                                     }
                                     setState(() {
-                                      widget.offerModel.cashModel
+                                      widget.offerModel.cashModel!
                                               .offerCurrencyType =
                                           currencyList[indexSelected].code;
-                                      widget.offerModel.cashModel
+                                      widget.offerModel.cashModel!
                                               .offerCurrencyFlag =
                                           currencyList[indexSelected].imagePath;
                                       _bloc.offeredCurrencyType(
-                                          currencyList[indexSelected].code);
+                                          currencyList[indexSelected].code!);
                                     });
                                   },
                                   child: Container(
@@ -774,7 +801,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                 //     : '',
                 onFieldSubmitted: (v) {
                   _availability.unfocus();
-                  _bloc.onDonationAmountChanged(int.tryParse(v));
+                  _bloc.onDonationAmountChanged(int.tryParse(v ?? '0') ?? 0);
                 },
               );
             },
@@ -798,7 +825,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
           GoodsDynamicSelection(
             goodsbefore: requestGoodsData.requiredGoods ?? {},
             onSelectedGoods: (goods) => {
-              requestGoodsData.requiredGoods = goods,
+              requestGoodsData.requiredGoods = goods.cast<String, String>(),
               _bloc.onGoodsDetailsChanged(requestGoodsData)
             },
           )
@@ -826,7 +853,8 @@ class _IndividualOfferState extends State<IndividualOffer> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: 10),
-              RequestGoodsDescriptionData(GoodsDonationDetails()),
+              RequestGoodsDescriptionData(GoodsDonationDetails(
+                  donors: <String>[], address: '', requiredGoods: {})),
               Center(
                 child: Text(
                   validate == 'add_goods_donate_empty'
@@ -842,7 +870,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 SizedBox(height: 10),
-                RequestGoodsDescriptionData(snapshot.data),
+                RequestGoodsDescriptionData(snapshot.data!),
               ]);
         }
       },
@@ -927,6 +955,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                               : Container(),
                           SizedBox(height: 10),
                           HideWidget(
+                            secondChild: Container(),
                             hide: offerType == RequestType.ONE_TO_MANY_OFFER,
                             child: StreamBuilder<String>(
                               stream: _bloc.title,
@@ -936,7 +965,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                   controller: _titleController,
                                   validator: (val) {
                                     // _bloc.validateTitle(val);
-                                    var titleVal = _bloc.validateTitle(val);
+                                    var titleVal = _bloc.validateTitle(val!);
                                     return titleVal == null
                                         ? null
                                         : getValidationError(context, titleVal);
@@ -966,10 +995,11 @@ class _IndividualOfferState extends State<IndividualOffer> {
                             ),
                           ),
                           HideWidget(
-                              hide:
-                                  offerType == RequestType.ONE_TO_MANY_OFFER ||
-                                      offerType == RequestType.LENDING_OFFER,
-                              child: SizedBox(height: 30)),
+                            hide: offerType == RequestType.ONE_TO_MANY_OFFER ||
+                                offerType == RequestType.LENDING_OFFER,
+                            child: SizedBox(height: 30),
+                            secondChild: SizedBox.shrink(),
+                          ),
                           HideWidget(
                             hide: offerType == RequestType.ONE_TO_MANY_OFFER ||
                                 offerType == RequestType.LENDING_OFFER,
@@ -982,7 +1012,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                   focusNode: _description,
                                   validator: (val) {
                                     var validate =
-                                        _bloc.validateDescription(val);
+                                        _bloc.validateDescription(val!);
                                     return getValidationError(
                                         context, validate);
                                   },
@@ -998,10 +1028,13 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                 );
                               },
                             ),
+                            secondChild: SizedBox.shrink(),
                           ),
                           HideWidget(
-                              hide: offerType == RequestType.ONE_TO_MANY_OFFER,
-                              child: SizedBox(height: 20)),
+                            hide: offerType == RequestType.ONE_TO_MANY_OFFER,
+                            child: SizedBox(height: 20),
+                            secondChild: SizedBox.shrink(),
+                          ),
                           StreamBuilder<RequestType>(
                               stream: _bloc.type,
                               builder: (context, snapshot) {
@@ -1021,15 +1054,17 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                                 : GoodsRequest();
                               }),
                           HideWidget(
-                              hide: offerType == RequestType.ONE_TO_MANY_OFFER,
-                              child: SizedBox(height: 25)),
+                            hide: offerType == RequestType.ONE_TO_MANY_OFFER,
+                            child: SizedBox(height: 25),
+                            secondChild: SizedBox.shrink(),
+                          ),
                           HideWidget(
                             hide: offerType == RequestType.ONE_TO_MANY_OFFER,
                             child: StreamBuilder<CustomLocation>(
                                 stream: _bloc.location,
                                 builder: (context, snapshot) {
                                   return LocationPickerWidget(
-                                    selectedAddress: snapshot.data?.address,
+                                    selectedAddress: snapshot.data!.address!,
                                     location: snapshot.data?.location,
                                     color: snapshot.error == null
                                         ? Colors.green
@@ -1044,8 +1079,10 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                     },
                                   );
                                 }),
+                            secondChild: SizedBox.shrink(),
                           ),
                           HideWidget(
+                              secondChild: SizedBox.shrink(),
                               hide: offerType == RequestType.ONE_TO_MANY_OFFER,
                               child: SizedBox(height: 20)),
                           Align(
@@ -1063,19 +1100,15 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                     builder: (context, snapshot) {
                                       return ConfigurationCheck(
                                         actionType: 'create_virtual_offer',
-                                        role: memberType(
-                                            widget.timebankModel,
-                                            SevaCore.of(context)
-                                                .loggedInUser
-                                                .sevaUserID),
+                                        role: MemberType.MEMBER,
                                         child: OpenScopeCheckBox(
                                             infoType: InfoType.VirtualOffers,
-                                            isChecked: snapshot.data,
+                                            isChecked: snapshot.data!,
                                             checkBoxTypeLabel:
                                                 CheckBoxType.type_VirtualOffers,
-                                            onChangedCB: (bool val) {
+                                            onChangedCB: (bool? val) {
                                               if (snapshot.data != val) {
-                                                _bloc.onOfferMadeVirtual(val);
+                                                _bloc.onOfferMadeVirtual(val!);
                                                 setState(() {});
                                               }
                                             }),
@@ -1085,12 +1118,13 @@ class _IndividualOfferState extends State<IndividualOffer> {
                             ),
                           ),
                           HideWidget(
+                            secondChild: SizedBox.shrink(),
                             hide: showVirtual(_bloc.lendingOfferType),
                             child: StreamBuilder<bool>(
                               initialData: false,
                               stream: _bloc.isPublicVisible,
                               builder: (context, snapshot) {
-                                return snapshot.data &&
+                                return snapshot.data! &&
                                         // ((offerType == RequestType.LENDING_OFFER &&
                                         //     _bloc.lendingOfferType == 0)) ||
                                         // (offerType == RequestType.LENDING_OFFER &&
@@ -1108,18 +1142,14 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                               return TransactionsMatrixCheck(
                                                 comingFrom: ComingFrom.Requests,
                                                 upgradeDetails: AppConfig
-                                                    .upgradePlanBannerModel
-                                                    .public_to_sevax_global,
+                                                    .upgradePlanBannerModel!
+                                                    .public_to_sevax_global!,
                                                 transaction_matrix_type:
                                                     'create_public_offer',
                                                 child: ConfigurationCheck(
                                                   actionType:
                                                       'create_public_offer',
-                                                  role: memberType(
-                                                      widget.timebankModel,
-                                                      SevaCore.of(context)
-                                                          .loggedInUser
-                                                          .sevaUserID),
+                                                  role: MemberType.MEMBER,
                                                   child: Align(
                                                     alignment:
                                                         Alignment.centerLeft,
@@ -1127,17 +1157,17 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                                         infoType: InfoType
                                                             .OpenScopeOffer,
                                                         isChecked:
-                                                            snapshot.data,
+                                                            snapshot.data!,
                                                         checkBoxTypeLabel:
                                                             CheckBoxType
                                                                 .type_Offers,
                                                         onChangedCB:
-                                                            (bool val) {
+                                                            (bool? val) {
                                                           if (snapshot.data !=
                                                               val) {
                                                             _bloc
                                                                 .onOfferMadePublic(
-                                                                    val);
+                                                                    val!);
                                                             setState(() {});
                                                           }
                                                         }),
@@ -1152,17 +1182,26 @@ class _IndividualOfferState extends State<IndividualOffer> {
                           ),
                           SizedBox(height: 20),
                           HideWidget(
+                            secondChild: SizedBox.shrink(),
                             hide: offerType != RequestType.ONE_TO_MANY_OFFER,
                             child: TransactionsMatrixCheck(
                               comingFrom: ComingFrom.Offers,
                               upgradeDetails: AppConfig
-                                  .upgradePlanBannerModel.onetomany_offers,
+                                  .upgradePlanBannerModel!.onetomany_offers!,
                               transaction_matrix_type: "onetomany_offers",
                               child: CustomElevatedButton(
+                                color: Theme.of(context).primaryColor,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 16.0, vertical: 8.0),
+                                elevation: 2.0,
+                                textColor: Colors.white,
                                 onPressed: status.data == Status.LOADING
                                     ? () {}
                                     : () async {
-                                        if (_formKey.currentState.validate()) {
+                                        if (_formKey.currentState!.validate()) {
                                           var connResult = await Connectivity()
                                               .checkConnectivity();
                                           if (connResult ==
@@ -1197,10 +1236,10 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                             _one_to_many_bloc.endTime =
                                                 OfferDurationWidgetState
                                                     .endtimestamp;
-                                            if (_one_to_many_bloc.endTime <=
-                                                _one_to_many_bloc.startTime) {
+                                            if (_one_to_many_bloc.endTime! <=
+                                                _one_to_many_bloc.startTime!) {
                                               Scrollable.ensureVisible(
-                                                  _timeKey.currentContext);
+                                                  _timeKey.currentContext!);
 
                                               errorDialog(
                                                 context: context,
@@ -1216,7 +1255,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                                             .starttimestamp)
                                                 .isBefore(DateTime.now())) {
                                               Scrollable.ensureVisible(
-                                                  _timeKey.currentContext);
+                                                  _timeKey.currentContext!);
 
                                               errorDialog(
                                                   context: context,
@@ -1226,19 +1265,21 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                               return;
                                             }
                                             if (widget.offerModel == null) {
-                                              await createOneToManyOfferFunc();
+                                              createOneToManyOfferFunc();
                                             } else {
                                               if (widget.offerModel
-                                                      .autoGenerated ||
-                                                  widget
-                                                      .offerModel.isRecurring) {
+                                                      .autoGenerated! ||
+                                                  widget.offerModel
+                                                      .isRecurring!) {
                                                 showDialog(
                                                     barrierDismissible: false,
                                                     context: context,
                                                     builder: (BuildContext
                                                         viewContext) {
                                                       return WillPopScope(
-                                                          onWillPop: () {},
+                                                          onWillPop: () async {
+                                                            return false;
+                                                          },
                                                           child: AlertDialog(
                                                               title: Text(S
                                                                   .of(context)
@@ -1265,14 +1306,14 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                                                             .autoGenerated =
                                                                         widget
                                                                             .offerModel
-                                                                            .autoGenerated;
+                                                                            .autoGenerated!;
                                                                     _one_to_many_bloc
                                                                             .isRecurring =
                                                                         widget
                                                                             .offerModel
-                                                                            .isRecurring;
+                                                                            .isRecurring!;
 
-                                                                    await updateOneToManyOfferFunc(
+                                                                    updateOneToManyOfferFunc(
                                                                         0);
                                                                     Navigator.pop(
                                                                         context);
@@ -1299,14 +1340,14 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                                                             .autoGenerated =
                                                                         widget
                                                                             .offerModel
-                                                                            .autoGenerated;
+                                                                            .autoGenerated!;
                                                                     _one_to_many_bloc
                                                                             .isRecurring =
                                                                         widget
                                                                             .offerModel
-                                                                            .isRecurring;
+                                                                            .isRecurring!;
 
-                                                                    await updateOneToManyOfferFunc(
+                                                                    updateOneToManyOfferFunc(
                                                                         1);
 
                                                                     Navigator.pop(
@@ -1342,7 +1383,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                           } else {
                                             FocusScope.of(context).unfocus();
                                             Scrollable.ensureVisible(
-                                                _timeKey.currentContext);
+                                                _timeKey.currentContext!);
                                             errorDialog(
                                               context: context,
                                               error: S
@@ -1389,11 +1430,20 @@ class _IndividualOfferState extends State<IndividualOffer> {
                           ),
                           HideWidget(
                             hide: offerType == RequestType.ONE_TO_MANY_OFFER,
+                            secondChild: Container(),
                             child: CustomElevatedButton(
+                              color: Theme.of(context).primaryColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 16.0, vertical: 8.0),
+                              elevation: 2.0,
+                              textColor: Colors.white,
                               onPressed: status.data == Status.LOADING
                                   ? () {}
                                   : () async {
-                                      if (_formKey.currentState.validate()) {
+                                      if (_formKey.currentState!.validate()) {
                                         var connResult = await Connectivity()
                                             .checkConnectivity();
                                         if (connResult ==
@@ -1430,8 +1480,8 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                               _bloc.endTime =
                                                   OfferDurationWidgetState
                                                       .endtimestamp;
-                                              if (_bloc.endTime <=
-                                                  _bloc.startTime) {
+                                              if (_bloc.endTime! <=
+                                                  _bloc.startTime!) {
                                                 errorDialog(
                                                   context: context,
                                                   error: S
@@ -1455,13 +1505,14 @@ class _IndividualOfferState extends State<IndividualOffer> {
 
                                               if (widget.offerModel == null) {
                                                 if (shouldCreateOffer) {
-                                                  await _bloc.createLendingOffer(
+                                                  _bloc.createLendingOffer(
                                                       user: SevaCore.of(context)
                                                           .loggedInUser,
                                                       timebankId:
                                                           widget.timebankId,
                                                       communityName:
-                                                          communityModel.name ??
+                                                          communityModel!
+                                                                  .name ??
                                                               '',
                                                       lendingAgreementLink:
                                                           borrowAgreementLinkFinal,
@@ -1516,13 +1567,14 @@ class _IndividualOfferState extends State<IndividualOffer> {
 
                                               if (widget.offerModel == null) {
                                                 if (shouldCreateOffer) {
-                                                  await _bloc.createLendingOffer(
+                                                  _bloc.createLendingOffer(
                                                       user: SevaCore.of(context)
                                                           .loggedInUser,
                                                       timebankId:
                                                           widget.timebankId,
                                                       communityName:
-                                                          communityModel.name ??
+                                                          communityModel!
+                                                                  .name ??
                                                               '',
                                                       lendingAgreementLink:
                                                           borrowAgreementLinkFinal,
@@ -1573,13 +1625,13 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                               if (shouldCreateOffer) {
                                                 logger.wtf(
                                                     "createOrUpdateOffer ${shouldCreateOffer}");
-                                                await _bloc.createOrUpdateOffer(
+                                                _bloc.createOrUpdateOffer(
                                                     user: SevaCore.of(context)
                                                         .loggedInUser,
                                                     timebankId:
                                                         widget.timebankId,
                                                     communityName:
-                                                        communityModel.name ??
+                                                        communityModel!.name ??
                                                             '');
                                                 shouldCreateOffer = false;
                                               }
@@ -1588,13 +1640,13 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                               if (shouldCreateOffer) {
                                                 logger.wtf(
                                                     "createOrUpdateOffer ${shouldCreateOffer}");
-                                                await _bloc.createOrUpdateOffer(
+                                                _bloc.createOrUpdateOffer(
                                                     user: SevaCore.of(context)
                                                         .loggedInUser,
                                                     timebankId:
                                                         widget.timebankId,
                                                     communityName:
-                                                        communityModel.name ??
+                                                        communityModel!.name ??
                                                             '');
                                                 shouldCreateOffer = false;
                                               }
@@ -1606,9 +1658,17 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                                       return AddToCalendar(
                                                           isOfferRequest: false,
                                                           offer: _bloc
-                                                              .mainOfferModel,
-                                                          requestModel: null,
-                                                          userModel: null,
+                                                              .mainOfferModel!,
+                                                          requestModel: RequestModel(
+                                                              communityId: SevaCore
+                                                                      .of(
+                                                                          context)
+                                                                  .loggedInUser
+                                                                  .currentCommunity!),
+                                                          userModel:
+                                                              SevaCore.of(
+                                                                      context)
+                                                                  .loggedInUser,
                                                           eventsIdsArr:
                                                               _bloc.offerIds);
                                                     },
@@ -1683,10 +1743,10 @@ class _IndividualOfferState extends State<IndividualOffer> {
             return CustomDoseTextField(
               isRequired: true,
               controller: _one_to_many_titleController,
-              focusNode: oneToManyFocusNodes[0],
-              nextNode: oneToManyFocusNodes[1],
+              focusNode: oneToManyFocusNodes![0],
+              nextNode: oneToManyFocusNodes![1],
               validator: (val) {
-                var validate = _one_to_many_bloc.validateTitle(val);
+                var validate = _one_to_many_bloc.validateTitle(val!);
                 return validate == null
                     ? null
                     : getValidationError(context, validate);
@@ -1709,12 +1769,12 @@ class _IndividualOfferState extends State<IndividualOffer> {
           title: S.of(context).offer_duration,
           startTime: widget.offerModel != null
               ? DateTime.fromMillisecondsSinceEpoch(
-                  widget.offerModel.groupOfferDataModel.startDate,
+                  widget.offerModel.groupOfferDataModel!.startDate,
                 )
               : null,
           endTime: widget.offerModel != null
               ? DateTime.fromMillisecondsSinceEpoch(
-                  widget.offerModel.groupOfferDataModel.endDate,
+                  widget.offerModel.groupOfferDataModel!.endDate,
                 )
               : null,
         ),
@@ -1735,10 +1795,10 @@ class _IndividualOfferState extends State<IndividualOffer> {
             return CustomDoseTextField(
               isRequired: true,
               controller: _preparationController,
-              focusNode: oneToManyFocusNodes[1],
-              nextNode: oneToManyFocusNodes[2],
+              focusNode: oneToManyFocusNodes![1],
+              nextNode: oneToManyFocusNodes![2],
               validator: (val) {
-                var validate = _one_to_many_bloc.validatePrepHours(val);
+                var validate = _one_to_many_bloc.validatePrepHours(val!);
                 return validate == null
                     ? null
                     : getValidationError(context, validate);
@@ -1758,13 +1818,13 @@ class _IndividualOfferState extends State<IndividualOffer> {
             return CustomDoseTextField(
               isRequired: true,
               controller: _classHourController,
-              focusNode: oneToManyFocusNodes[2],
-              nextNode: oneToManyFocusNodes[3],
+              focusNode: oneToManyFocusNodes![2],
+              nextNode: oneToManyFocusNodes![3],
               validator: (val) {
-                var validate = _one_to_many_bloc.validateClassHours(val);
+                var validate = _one_to_many_bloc.validateClassHours(val!);
                 return validate == null
                     ? null
-                    : getValidationError(context, snapshot.error);
+                    : getValidationError(context, snapshot.error.toString());
               },
               value: snapshot.data != null ? snapshot.data : null,
               heading: "${S.of(context).offer_number_class_hours} *",
@@ -1781,13 +1841,13 @@ class _IndividualOfferState extends State<IndividualOffer> {
             return CustomDoseTextField(
               isRequired: true,
               controller: _sizeClassController,
-              focusNode: oneToManyFocusNodes[3],
-              nextNode: oneToManyFocusNodes[4],
+              focusNode: oneToManyFocusNodes![3],
+              nextNode: oneToManyFocusNodes![4],
               validator: (val) {
-                var validate = _one_to_many_bloc.validateClassSize(val);
+                var validate = _one_to_many_bloc.validateClassSize(val!);
                 return validate == null
                     ? null
-                    : getValidationError(context, snapshot.error);
+                    : getValidationError(context, snapshot.error.toString());
               },
               value: snapshot.data != null ? snapshot.data : null,
               heading: "${S.of(context).offer_size_class} *",
@@ -1804,9 +1864,9 @@ class _IndividualOfferState extends State<IndividualOffer> {
             return CustomDoseTextField(
               isRequired: true,
               controller: _classDescriptionController,
-              focusNode: oneToManyFocusNodes[4],
+              focusNode: oneToManyFocusNodes![4],
               validator: (val) {
-                var validate = _one_to_many_bloc.validateDescription(val);
+                var validate = _one_to_many_bloc.validateDescription(val!);
                 return validate == null
                     ? null
                     : getValidationError(context, validate);
@@ -1828,7 +1888,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
             builder: (_, snapshot) {
               return LocationPickerWidget(
                 location: snapshot.data?.location,
-                selectedAddress: snapshot.data?.address,
+                selectedAddress: snapshot.data!.address!,
                 color: snapshot.error == null ? Colors.green : Colors.red,
                 onChanged: (LocationDataModel dataModel) {
                   _one_to_many_bloc.onLocatioChanged(
@@ -1842,6 +1902,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
             }),
         SizedBox(height: 20),
         HideWidget(
+          secondChild: Container(),
           hide: AppConfig.isTestCommunity,
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 10),
@@ -1850,15 +1911,14 @@ class _IndividualOfferState extends State<IndividualOffer> {
                 builder: (context, snapshot) {
                   return ConfigurationCheck(
                     actionType: 'create_virtual_offer',
-                    role: memberType(widget.timebankModel,
-                        SevaCore.of(context).loggedInUser.sevaUserID),
+                    role: MemberType.MEMBER,
                     child: OpenScopeCheckBox(
                         infoType: InfoType.VirtualOffers,
-                        isChecked: snapshot.data,
+                        isChecked: snapshot.data!,
                         checkBoxTypeLabel: CheckBoxType.type_VirtualOffers,
-                        onChangedCB: (bool val) {
+                        onChangedCB: (bool? val) {
                           if (snapshot.data != val) {
-                            _one_to_many_bloc.onOfferMadeVirtual(val);
+                            _one_to_many_bloc.onOfferMadeVirtual(val!);
 
                             logger.e('made virtual ${val}');
                             setState(() {});
@@ -1873,7 +1933,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
             stream: _one_to_many_bloc.isVisible,
             builder: (context, snapshot) {
               logger.e("is public check" + snapshot.data.toString());
-              return snapshot.data
+              return snapshot.data!
                   ? Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10),
                       child: StreamBuilder<bool>(
@@ -1881,24 +1941,20 @@ class _IndividualOfferState extends State<IndividualOffer> {
                           builder: (context, snapshot) {
                             return TransactionsMatrixCheck(
                               comingFrom: ComingFrom.Offers,
-                              upgradeDetails: AppConfig.upgradePlanBannerModel
-                                  .public_to_sevax_global,
+                              upgradeDetails: AppConfig.upgradePlanBannerModel!
+                                  .public_to_sevax_global!,
                               transaction_matrix_type: 'create_public_offer',
                               child: ConfigurationCheck(
                                 actionType: 'create_public_offer',
-                                role: memberType(
-                                    widget.timebankModel,
-                                    SevaCore.of(context)
-                                        .loggedInUser
-                                        .sevaUserID),
+                                role: MemberType.MEMBER,
                                 child: OpenScopeCheckBox(
                                     infoType: InfoType.OpenScopeOffer,
-                                    isChecked: snapshot.data,
+                                    isChecked: snapshot.data!,
                                     checkBoxTypeLabel: CheckBoxType.type_Offers,
-                                    onChangedCB: (bool val) {
+                                    onChangedCB: (bool? val) {
                                       if (snapshot.data != val) {
                                         _one_to_many_bloc
-                                            .onOfferMadePublic(val);
+                                            .onOfferMadePublic(val!);
                                         log('value ${val}');
                                         setState(() {});
                                       }
@@ -1924,10 +1980,10 @@ class _IndividualOfferState extends State<IndividualOffer> {
           : S.of(context).after;
       end.on = end.endType == "on"
           ? RepeatWidgetState.selectedDate.millisecondsSinceEpoch
-          : null;
+          : null!;
       end.after = (end.endType == S.of(context).after
           ? int.parse(RepeatWidgetState.after)
-          : null);
+          : null!);
       _one_to_many_bloc.end = end;
     }
 
@@ -1939,11 +1995,11 @@ class _IndividualOfferState extends State<IndividualOffer> {
     }
 
     _one_to_many_bloc.allowedCalenderEvent = false;
-    await _one_to_many_bloc.createOneToManyOffer(
+    _one_to_many_bloc.createOneToManyOffer(
         context: context,
         user: SevaCore.of(context).loggedInUser,
         timebankId: widget.timebankId,
-        communityName: communityModel.name ?? '');
+        communityName: communityModel!.name ?? '');
     _bloc.offerCreatedBool = true;
   }
 
@@ -1957,10 +2013,10 @@ class _IndividualOfferState extends State<IndividualOffer> {
           : S.of(context).after;
       end.on = end.endType == S.of(context).on
           ? EditRepeatWidgetState.selectedDate.millisecondsSinceEpoch
-          : null;
+          : null!;
       end.after = (end.endType == S.of(context).after
           ? int.parse(EditRepeatWidgetState.after)
-          : null);
+          : null!);
       _one_to_many_bloc.end = end;
     }
 
@@ -1988,7 +2044,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
               nextNode: _availability,
               value: snapshot.data,
               validator: (val) {
-                var validate = _bloc.validateDescription(val);
+                var validate = _bloc.validateDescription(val!);
                 return getValidationError(context, validate);
               },
               heading: "${S.of(context).offer_description}*",
@@ -2010,6 +2066,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               HideWidget(
+                secondChild: Container(),
                 hide: widget.offerModel != null,
                 child: Text(
                   S.of(context).lending_text,
@@ -2022,10 +2079,12 @@ class _IndividualOfferState extends State<IndividualOffer> {
                 ),
               ),
               HideWidget(
+                secondChild: Container(),
                 hide: widget.offerModel != null,
                 child: SizedBox(height: 10),
               ),
               HideWidget(
+                secondChild: Container(),
                 hide: widget.offerModel != null,
                 child: CupertinoSegmentedControl<int>(
                   unselectedColor: Colors.grey[200],
@@ -2052,7 +2111,16 @@ class _IndividualOfferState extends State<IndividualOffer> {
                   groupValue: _bloc.lendingOfferType,
                   onValueChanged: (int val) {
                     if (val != _bloc.lendingOfferType) {
-                      _bloc.onLendingModelAdded(null);
+                      _bloc.onLendingModelAdded(LendingModel(
+                        id: '', // Provide appropriate id
+                        creatorId: '', // Provide appropriate creatorId
+                        email: '', // Provide appropriate email
+                        timestamp: DateTime.now()
+                            .millisecondsSinceEpoch, // Or appropriate timestamp
+                        lendingType: _bloc.lendingOfferType == 0
+                            ? LendingType.PLACE
+                            : LendingType.ITEM, // Or appropriate LendingType
+                      ));
                       setState(() {
                         _bloc.lendingOfferType = val;
                         selectedLendingModel = null;
@@ -2169,11 +2237,19 @@ class _IndividualOfferState extends State<IndividualOffer> {
               if (snapshot.hasError) {
                 return Container();
               }
-              if (snapshot.data.lendingType == LendingType.ITEM) {
+              if (snapshot.data!.lendingType == LendingType.ITEM) {
                 return LendingItemCardWidget(
-                  lendingItemModel: snapshot.data.lendingItemModel,
+                  lendingItemModel: snapshot.data!.lendingItemModel,
                   onDelete: () {
-                    _bloc.onLendingModelAdded(null);
+                    _bloc.onLendingModelAdded(
+                      LendingModel(
+                        id: '',
+                        creatorId: '',
+                        email: '',
+                        timestamp: DateTime.now().millisecondsSinceEpoch,
+                        lendingType: LendingType.ITEM,
+                      ),
+                    );
                     setState(() {
                       selectedLendingModel = null;
                     });
@@ -2195,9 +2271,17 @@ class _IndividualOfferState extends State<IndividualOffer> {
                 );
               } else {
                 return LendingPlaceCardWidget(
-                  lendingPlaceModel: snapshot.data.lendingPlaceModel,
+                  lendingPlaceModel: snapshot.data!.lendingPlaceModel,
                   onDelete: () {
-                    _bloc.onLendingModelAdded(null);
+                    _bloc.onLendingModelAdded(
+                      LendingModel(
+                        id: '',
+                        creatorId: '',
+                        email: '',
+                        timestamp: DateTime.now().millisecondsSinceEpoch,
+                        lendingType: LendingType.PLACE,
+                      ),
+                    );
                     setState(() {
                       selectedLendingModel = null;
                     });
@@ -2226,15 +2310,15 @@ class _IndividualOfferState extends State<IndividualOffer> {
           title: S.of(context).offer_duration,
           startTime: widget.offerModel != null
               ? DateTime.fromMillisecondsSinceEpoch(
-                  widget.offerModel.lendingOfferDetailsModel.startDate,
+                  widget.offerModel.lendingOfferDetailsModel!.startDate!,
                 )
               : null,
           endTime: widget.offerModel != null &&
-                  widget.offerModel.lendingOfferDetailsModel
+                  widget.offerModel.lendingOfferDetailsModel!
                           .lendingOfferTypeMode ==
                       'ONE_TIME'
               ? DateTime.fromMillisecondsSinceEpoch(
-                  widget.offerModel.lendingOfferDetailsModel.endDate,
+                  widget.offerModel.lendingOfferDetailsModel!.endDate!,
                 )
               : null,
         ),
@@ -2298,8 +2382,10 @@ class _IndividualOfferState extends State<IndividualOffer> {
                     onTap: documentName != null
                         ? () async {
                             if (documentName != '') {
-                              await openPdfViewer(borrowAgreementLinkFinal,
-                                  documentName, context);
+                              await widget.openPdfViewer(
+                                  borrowAgreementLinkFinal,
+                                  documentName,
+                                  context);
                             } else {
                               return null;
                             }
@@ -2356,7 +2442,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                       : OfferDurationWidgetState.starttimestamp != 0) {
                     _bloc.startTime = OfferDurationWidgetState.starttimestamp;
                     _bloc.endTime = OfferDurationWidgetState.endtimestamp;
-                    if (_bloc.endTime <= _bloc.startTime &&
+                    if (_bloc.endTime! <= _bloc.startTime! &&
                         _bloc.timeOfferType == 1) {
                       errorDialog(
                         context: context,
@@ -2370,19 +2456,23 @@ class _IndividualOfferState extends State<IndividualOffer> {
                       MaterialPageRoute(
                         fullscreenDialog: true,
                         builder: (context) => AgreementForm(
+                          lendingModelListBorrowRequest: [],
                           endTime: _bloc.lendingOfferTypeMode == 0
                               ? 0
-                              : _bloc.endTime,
-                          startTime: _bloc.startTime,
-                          requestModel: null,
-                          lendingModel: selectedLendingModel,
+                              : _bloc.endTime!,
+                          startTime: _bloc.startTime!,
+                          requestModel: RequestModel(
+                              communityId: SevaCore.of(context)
+                                  .loggedInUser
+                                  .currentCommunity!),
+                          lendingModel: selectedLendingModel!,
                           isOffer: true,
                           placeOrItem: _bloc.lendingOfferType == 0
                               ? LendingType.PLACE.readable
                               : LendingType.ITEM.readable,
                           communityId: SevaCore.of(context)
                               .loggedInUser
-                              .currentCommunity,
+                              .currentCommunity!,
                           timebankId: widget.timebankId,
                           onPdfCreated: (pdfLink, documentNameFinal,
                               agreementConfig2, agreementId) {

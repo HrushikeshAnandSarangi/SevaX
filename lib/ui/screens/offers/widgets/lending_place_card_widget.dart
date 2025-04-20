@@ -6,9 +6,9 @@ import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
 
 class LendingPlaceCardWidget extends StatelessWidget {
-  final LendingPlaceModel lendingPlaceModel;
-  final VoidCallback onEdit;
-  final VoidCallback onDelete;
+  final LendingPlaceModel? lendingPlaceModel;
+  final VoidCallback? onEdit;
+  final VoidCallback? onDelete;
   bool hidden = false;
 
   LendingPlaceCardWidget(
@@ -26,7 +26,7 @@ class LendingPlaceCardWidget extends StatelessWidget {
           Container(
             width: MediaQuery.of(context).size.width,
             height: 186,
-            child: Image.network(lendingPlaceModel.houseImages[0]),
+            child: Image.network(lendingPlaceModel!.houseImages![0]),
           ),
           SizedBox(
             height: 8,
@@ -35,7 +35,7 @@ class LendingPlaceCardWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Text(
-                lendingPlaceModel.placeName,
+                lendingPlaceModel!.placeName!,
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
@@ -53,6 +53,7 @@ class LendingPlaceCardWidget extends StatelessWidget {
                     color: HexColor('#606670'),
                   ),
                 ),
+                secondChild: SizedBox.shrink(),
               ),
               SizedBox(
                 width: 8,
@@ -66,17 +67,18 @@ class LendingPlaceCardWidget extends StatelessWidget {
                     color: HexColor('#BEBEBE'),
                   ),
                 ),
+                secondChild: SizedBox.shrink(),
               )
             ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              title('${lendingPlaceModel.noOfGuests}'
+              title('${lendingPlaceModel!.noOfGuests}'
                   ' ${S.of(context).guests_text} '),
-              title('${lendingPlaceModel.noOfRooms}'
+              title('${lendingPlaceModel!.noOfRooms}'
                   ' ${S.of(context).bed_rooms} .'),
-              title('${lendingPlaceModel.noOfBathRooms}'
+              title('${lendingPlaceModel!.noOfBathRooms}'
                   ' ${S.of(context).bath_rooms} '),
             ],
           )

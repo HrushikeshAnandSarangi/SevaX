@@ -17,9 +17,9 @@ typedef MapListCallback = void Function(
     Map<String, dynamic> _selectedAmenitiesMap);
 
 class SelectAmenities extends StatefulWidget {
-  final String languageCode;
-  final Map<String, dynamic> selectedAmenities;
-  final MapListCallback onSelectedAmenitiesMap;
+  final String? languageCode;
+  final Map<String, dynamic>? selectedAmenities;
+  final MapListCallback? onSelectedAmenitiesMap;
 
   SelectAmenities(
       {this.languageCode, this.selectedAmenities, this.onSelectedAmenitiesMap});
@@ -34,7 +34,7 @@ class _SelectAmenitiesState extends State<SelectAmenities> {
   bool isDataLoaded = false;
   bool hasPellError = false;
   TextEditingController _textEditingController = TextEditingController();
-  SuggestionsBoxController controller = SuggestionsBoxController();
+  SuggestionsController controller = SuggestionsController();
 
   @override
   void initState() {
@@ -42,14 +42,14 @@ class _SelectAmenitiesState extends State<SelectAmenities> {
       querySnapshot.docs.forEach((DocumentSnapshot data) {
         // suggestionText.add(data['name']);
         // suggestionID.add(data.id);
-        if (data['title_' + widget.languageCode] != null) {
-          amenities[data['id']] = data['title_' + widget.languageCode];
+        if (data['title_' + widget.languageCode!] != null) {
+          amenities[data['id']] = data['title_' + widget.languageCode!];
         } else {
           amenities[data['id']] = data['title_en'];
         }
       });
 
-      _selectedAmenities = widget.selectedAmenities;
+      _selectedAmenities = widget.selectedAmenities!;
 
       setState(() {
         isDataLoaded = true;
@@ -66,54 +66,55 @@ class _SelectAmenitiesState extends State<SelectAmenities> {
         children: [
           SizedBox(height: 8),
           TypeAheadField<SuggestedItem>(
-            suggestionsBoxDecoration: SuggestionsBoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-            ),
+            suggestionsController: SuggestionsController(),
             errorBuilder: (context, err) {
               return Text(S.of(context).error_was_thrown);
             },
             debounceDuration: Duration(milliseconds: 600),
             hideOnError: true,
-            textFieldConfiguration: TextFieldConfiguration(
-              style: hasPellError
-                  ? TextStyle(
-                      decoration: TextDecoration.underline,
-                      decorationColor: Colors.red,
-                      decorationStyle: TextDecorationStyle.wavy,
-                      decorationThickness: 3,
-                    )
-                  : TextStyle(),
-              controller: _textEditingController,
-              decoration: InputDecoration(
-                hintText: S.of(context).search,
-                filled: true,
-                fillColor: Colors.grey[300],
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
-                  borderRadius: BorderRadius.circular(25.7),
-                ),
-                enabledBorder: UnderlineInputBorder(
+            builder: (context, textEditingController, focusNode) {
+              return TextField(
+                style: hasPellError
+                    ? TextStyle(
+                        decoration: TextDecoration.underline,
+                        decorationColor: Colors.red,
+                        decorationStyle: TextDecorationStyle.wavy,
+                        decorationThickness: 3,
+                      )
+                    : TextStyle(),
+                controller: _textEditingController,
+                focusNode: focusNode,
+                decoration: InputDecoration(
+                  hintText: S.of(context).search,
+                  filled: true,
+                  fillColor: Colors.grey[300],
+                  focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.white),
-                    borderRadius: BorderRadius.circular(25.7)),
-                contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
-                prefixIcon: Icon(
-                  Icons.search,
-                  color: Colors.grey,
-                ),
-                suffixIcon: InkWell(
-                  splashColor: Colors.transparent,
-                  child: Icon(
-                    Icons.clear,
+                    borderRadius: BorderRadius.circular(25.7),
+                  ),
+                  enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(25.7)),
+                  contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
+                  prefixIcon: Icon(
+                    Icons.search,
                     color: Colors.grey,
                   ),
-                  onTap: () {
-                    _textEditingController.clear();
-                    controller.close();
-                  },
+                  suffixIcon: InkWell(
+                    splashColor: Colors.transparent,
+                    child: Icon(
+                      Icons.clear,
+                      color: Colors.grey,
+                    ),
+                    onTap: () {
+                      _textEditingController.clear();
+                      controller.close();
+                    },
+                  ),
                 ),
-              ),
-            ),
-            suggestionsBoxController: controller,
+              );
+            },
+            // scrollController: controller,
             suggestionsCallback: (pattern) async {
               List<SuggestedItem> dataCopy = [];
               amenities.forEach((k, v) => dataCopy.add(SuggestedItem()
@@ -202,7 +203,7 @@ class _SelectAmenitiesState extends State<SelectAmenities> {
                   return Container();
               }
             },
-            noItemsFoundBuilder: (context) {
+            emptyBuilder: (context) {
               return Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
@@ -218,7 +219,7 @@ class _SelectAmenitiesState extends State<SelectAmenities> {
               //   showLoader: false,
               // );
             },
-            onSuggestionSelected: (SuggestedItem suggestion) {
+            onSelected: (SuggestedItem suggestion) {
               if (ProfanityDetector()
                   .isProfaneString(suggestion.suggesttionTitle)) {
                 return;
@@ -254,7 +255,7 @@ class _SelectAmenitiesState extends State<SelectAmenities> {
                 String id = amenities.keys.firstWhere(
                     (k) => amenities[k] == suggestion.suggesttionTitle);
                 _selectedAmenities[id] = suggestion.suggesttionTitle;
-                widget.onSelectedAmenitiesMap(_selectedAmenities);
+                widget.onSelectedAmenitiesMap!(_selectedAmenities);
 
                 setState(() {});
               }
@@ -290,19 +291,19 @@ class _SelectAmenitiesState extends State<SelectAmenities> {
   }
 
   FutureBuilder<SpellCheckResult> searchUserDefinedEntity({
-    String keyword,
-    String language,
-    SuggestionMode suggestionMode,
-    bool showLoader,
+    String? keyword,
+    String? language,
+    SuggestionMode? suggestionMode,
+    bool? showLoader,
   }) {
     return FutureBuilder<SpellCheckResult>(
       future: SpellCheckManager.evaluateSpellingFor(
-        keyword,
+        keyword!,
         language: language,
       ),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return showLoader
+          return showLoader!
               ? getLoading
               : LinearProgressIndicator(
                   backgroundColor:

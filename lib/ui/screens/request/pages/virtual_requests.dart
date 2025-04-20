@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
 import 'package:intl/intl.dart';
@@ -30,8 +31,8 @@ import 'package:sevaexchange/widgets/tag_view.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 
 class VirtualRequests extends StatefulWidget {
-  final String timebankId;
-  final TimebankModel timebankModel;
+  final String? timebankId;
+  final TimebankModel? timebankModel;
 
   VirtualRequests({this.timebankId, this.timebankModel});
 
@@ -40,27 +41,37 @@ class VirtualRequests extends StatefulWidget {
 }
 
 class _VirtualRequestsState extends State<VirtualRequests> {
-  Future<Coordinates> currentCoords;
+  late Future<GeoPoint> currentCoords;
 
   bool isAdmin = false;
   @override
   void initState() {
     // TODO: implement initState
-    currentCoords = LocationHelper.getCoordinates();
-
+    final user = SevaCore.of(context).loggedInUser;
+    // Parse latitude and longitude from the lat_lng string
+    double latitude = 0.0;
+    double longitude = 0.0;
+    if (user.lat_lng != null) {
+      List<String> latLngList = user.lat_lng!.split(',');
+      if (latLngList.length == 2) {
+        latitude = double.tryParse(latLngList[0]) ?? 0.0;
+        longitude = double.tryParse(latLngList[1]) ?? 0.0;
+      }
+    }
+    currentCoords = Future.value(GeoPoint(latitude, longitude));
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    String loggedintimezone = SevaCore.of(context).loggedInUser.timezone;
+    String loggedintimezone = SevaCore.of(context).loggedInUser.timezone!;
 
-    return FutureBuilder<Coordinates>(
+    return FutureBuilder<GeoPoint>(
         future: currentCoords,
         builder: (context, currentLocation) {
           return StreamBuilder<List<RequestModel>>(
             stream: FirestoreManager.getAllVirtualRequestListStream(
-                timebankid: widget.timebankId),
+                timebankid: widget.timebankId!),
             builder: (context, snapshot) {
               if (snapshot.hasError) {
                 logger.e(snapshot.error);
@@ -71,7 +82,7 @@ class _VirtualRequestsState extends State<VirtualRequests> {
                 return LoadingIndicator();
               }
               if (snapshot.hasData) {
-                List<RequestModel> requestModelList = snapshot.data;
+                List<RequestModel> requestModelList = snapshot.data!;
                 requestModelList = filterBlockedRequestsContent(
                     context: context, requestModelList: requestModelList);
 
@@ -88,11 +99,11 @@ class _VirtualRequestsState extends State<VirtualRequests> {
                 var consolidatedList =
                     GroupRequestCommons.groupAndConsolidateRequests(
                         requestModelList,
-                        SevaCore.of(context).loggedInUser.sevaUserID);
+                        SevaCore.of(context).loggedInUser.sevaUserID!);
                 return formatListFrom(
                   consolidatedList: consolidatedList,
                   loggedintimezone: loggedintimezone,
-                  userEmail: SevaCore.of(context).loggedInUser.email,
+                  userEmail: SevaCore.of(context).loggedInUser.email!,
                   currentCoords: currentLocation.data,
                 );
               } else if (snapshot.hasError) {
@@ -104,7 +115,7 @@ class _VirtualRequestsState extends State<VirtualRequests> {
         });
   }
 
-  Widget emptyData({String msg}) {
+  Widget emptyData({String? msg}) {
     return Container(
       alignment: Alignment.topCenter,
       child: Column(
@@ -123,7 +134,7 @@ class _VirtualRequestsState extends State<VirtualRequests> {
                 height: 20,
               ),
               Text(
-                msg,
+                msg!,
                 style: TextStyle(
                   fontSize: 22,
                   color: Colors.black,
@@ -138,20 +149,20 @@ class _VirtualRequestsState extends State<VirtualRequests> {
   }
 
   List<RequestModel> filterBlockedRequestsContent({
-    List<RequestModel> requestModelList,
-    BuildContext context,
+    List<RequestModel>? requestModelList,
+    BuildContext? context,
   }) {
     List<RequestModel> filteredList = [];
 
-    requestModelList.forEach(
+    requestModelList!.forEach(
       (request) {
-        if (!(SevaCore.of(context)
+        if (!(SevaCore.of(context!)
                 .loggedInUser
-                .blockedMembers
+                .blockedMembers!
                 .contains(request.sevaUserId) ||
             SevaCore.of(context)
                 .loggedInUser
-                .blockedBy
+                .blockedBy!
                 .contains(request.sevaUserId))) {
           filteredList.add(request);
         }
@@ -162,16 +173,16 @@ class _VirtualRequestsState extends State<VirtualRequests> {
   }
 
   Widget formatListFrom({
-    List<RequestModelList> consolidatedList,
-    String loggedintimezone,
-    String userEmail,
-    Coordinates currentCoords,
+    List<RequestModelList>? consolidatedList,
+    String? loggedintimezone,
+    String? userEmail,
+    GeoPoint? currentCoords,
   }) {
     return Expanded(
       child: Container(
           child: ListView.builder(
         shrinkWrap: true,
-        itemCount: consolidatedList.length + 1,
+        itemCount: consolidatedList!.length + 1,
         itemBuilder: (context, index) {
           if (index >= consolidatedList.length) {
             return Container(
@@ -179,18 +190,18 @@ class _VirtualRequestsState extends State<VirtualRequests> {
               height: 65,
             );
           }
-          return getRequestView(consolidatedList[index], loggedintimezone,
-              userEmail, currentCoords);
+          return getRequestView(consolidatedList[index], loggedintimezone!,
+              userEmail!, currentCoords!);
         },
       )),
     );
   }
 
   Widget getRequestView(RequestModelList model, String loggedintimezone,
-      String userEmail, Coordinates currentCoords) {
+      String userEmail, GeoPoint currentCoords) {
     switch (model.getType()) {
       case RequestModelList.TITLE:
-        var isMyContent = (model as GroupTitle).groupTitle.contains("My");
+        var isMyContent = (model as GroupTitle).groupTitle!.contains("My");
 
         return Container(
           height: !isMyContent ? 18 : 0,
@@ -200,13 +211,13 @@ class _VirtualRequestsState extends State<VirtualRequests> {
                 groupKey: (model as GroupTitle).groupTitle,
                 context: context,
                 isGroup: !isPrimaryTimebank(
-                    parentTimebankId: widget.timebankModel.parentTimebankId)),
+                    parentTimebankId: widget.timebankModel!.parentTimebankId)),
           ),
         );
 
       case RequestModelList.REQUEST:
         return getRequestListViewHolder(
-            model: (model as RequestItem).requestModel,
+            model: (model as RequestItem).requestModel!,
             loggedintimezone: loggedintimezone,
             userEmail: userEmail,
             currentCoords: currentCoords);
@@ -244,19 +255,19 @@ class _VirtualRequestsState extends State<VirtualRequests> {
       } else if (l.length >= 1) {
         return "${l[0]}";
       } else {
-        return null;
+        return null!;
       }
     } else {
-      return null;
+      return null!;
     }
   }
 
   Widget getFromNormalRequest(
-      {RequestModel model,
-      String loggedintimezone,
-      String userEmail,
-      Coordinates currentCoords}) {
-    var requestLocation = getLocation(model.address);
+      {RequestModel? model,
+      String? loggedintimezone,
+      String? userEmail,
+      GeoPoint? currentCoords}) {
+    var requestLocation = getLocation(model!.address!);
 
     return Container(
       decoration: RequestViewClassifer.containerDecorationR,
@@ -265,7 +276,7 @@ class _VirtualRequestsState extends State<VirtualRequests> {
         color: Colors.white,
         elevation: 2,
         child: InkWell(
-          onTap: () => editRequest(model: model),
+          onTap: () => editRequest(model: model!),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
             child: Column(
@@ -273,7 +284,7 @@ class _VirtualRequestsState extends State<VirtualRequests> {
               children: [
                 SevaCore.of(context)
                         .loggedInUser
-                        .curatedRequestIds
+                        .curatedRequestIds!
                         .contains(model.id)
                     ? Row(
                         mainAxisAlignment: MainAxisAlignment.end,
@@ -302,21 +313,23 @@ class _VirtualRequestsState extends State<VirtualRequests> {
                     model.location != null &&
                             model.sevaUserId !=
                                 SevaCore.of(context).loggedInUser.sevaUserID
-                        ? DistanceFromCurrentLocation(
-                            currentLocation: currentCoords,
-                            coordinates: Coordinates(model.location.latitude,
-                                model.location.longitude),
-                            isKm: true,
-                          )
+                        ? (model.location != null
+                            ? DistanceFromCurrentLocation(
+                                currentLocation: currentCoords,
+                                coordinates: GeoPoint(model.location!.latitude,
+                                    model.location!.longitude),
+                                isKm: true,
+                              )
+                            : Container())
                         : Container(),
                     Spacer(),
                     Text(
                       timeAgo
                           .format(
                               DateTime.fromMillisecondsSinceEpoch(
-                                  model.postTimestamp),
-                              locale: Locale(AppConfig.prefs
-                                      .getString('language_code'))
+                                  model.postTimestamp!),
+                              locale: Locale(AppConfig.prefs!
+                                      .getString('language_code')!)
                                   .toLanguageTag())
                           .replaceAll('hours ago', 'hr'),
                       style: TextStyle(
@@ -339,7 +352,7 @@ class _VirtualRequestsState extends State<VirtualRequests> {
                           placeholder: 'lib/assets/images/profile.png',
                           image: model.photoUrl == null
                               ? defaultUserImageURL
-                              : model.photoUrl,
+                              : model.photoUrl!,
                         ),
                       ),
                     ),
@@ -351,7 +364,7 @@ class _VirtualRequestsState extends State<VirtualRequests> {
                         children: <Widget>[
                           Row(
                             children: [
-                              getAppropriateTag(model.requestType),
+                              getAppropriateTag(model.requestType!),
                               Visibility(
                                 visible: model.virtualRequest ?? false,
                                 child: Container(
@@ -386,10 +399,11 @@ class _VirtualRequestsState extends State<VirtualRequests> {
                             children: <Widget>[
                               Expanded(
                                 child: Text(
-                                  model.title,
+                                  model.title!,
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 1,
-                                  style: Theme.of(context).textTheme.subtitle1,
+                                  style:
+                                      Theme.of(context).textTheme.titleMedium,
                                 ),
                               ),
                               Container(
@@ -397,7 +411,7 @@ class _VirtualRequestsState extends State<VirtualRequests> {
                                     EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
                                 child: Center(
                                   child: Visibility(
-                                    visible: model.isRecurring,
+                                    visible: model.isRecurring!,
                                     child: InkWell(
                                       onTap: () {
                                         Navigator.push(
@@ -425,13 +439,13 @@ class _VirtualRequestsState extends State<VirtualRequests> {
                           ),
                           SizedBox(height: 4),
                           Visibility(
-                            visible: !model.isRecurring,
+                            visible: !model.isRecurring!,
                             child: Wrap(
                               crossAxisAlignment: WrapCrossAlignment.center,
                               children: <Widget>[
                                 Text(
                                   getTimeFormattedString(
-                                      model.requestEnd, loggedintimezone),
+                                      model.requestEnd!, loggedintimezone!),
                                   style: TextStyle(
                                       fontSize: 12, color: Colors.grey),
                                 ),
@@ -444,7 +458,7 @@ class _VirtualRequestsState extends State<VirtualRequests> {
                                 SizedBox(width: 2),
                                 Text(
                                   getTimeFormattedString(
-                                      model.requestEnd, loggedintimezone),
+                                      model.requestEnd!, loggedintimezone),
                                   style: TextStyle(
                                       fontSize: 12, color: Colors.grey),
                                 ),
@@ -455,10 +469,10 @@ class _VirtualRequestsState extends State<VirtualRequests> {
                           Container(
                             width: MediaQuery.of(context).size.width * 0.7,
                             child: Text(
-                              model.description,
+                              model.description!,
                               maxLines: 3,
                               overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context).textTheme.subtitle2,
+                              style: Theme.of(context).textTheme.bodySmall,
                             ),
                           ),
                           // Visibility(
@@ -481,8 +495,8 @@ class _VirtualRequestsState extends State<VirtualRequests> {
                             mainAxisSize: MainAxisSize.max,
                             children: <Widget>[
                               model.email != userEmail &&
-                                      (model.acceptors.contains(userEmail) ||
-                                          model.approvedUsers
+                                      (model.acceptors!.contains(userEmail) ||
+                                          model.approvedUsers!
                                               .contains(userEmail))
                                   ? Container(
                                       margin:
@@ -521,20 +535,20 @@ class _VirtualRequestsState extends State<VirtualRequests> {
     );
   }
 
-  void editRequest({RequestModel model}) {
+  void editRequest({RequestModel? model}) {
     timeBankBloc.setSelectedRequest(model);
     timeBankBloc.setSelectedTimeBankDetails(widget.timebankModel);
-    if (model.requestMode == RequestMode.PERSONAL_REQUEST) {
+    if (model!.requestMode == RequestMode.PERSONAL_REQUEST) {
       isAdmin = model.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID
           ? true
           : false;
     } else {
       isAdmin = isAccessAvailable(
-          widget.timebankModel, SevaCore.of(context).loggedInUser.sevaUserID);
+          widget.timebankModel!, SevaCore.of(context).loggedInUser.sevaUserID!);
     }
     timeBankBloc.setIsAdmin(isAdmin);
 
-    if (model.isRecurring) {
+    if (model.isRecurring!) {
       Navigator.push(
           context,
           MaterialPageRoute(
@@ -549,15 +563,16 @@ class _VirtualRequestsState extends State<VirtualRequests> {
                   )));
     } else if (model.sevaUserId ==
             SevaCore.of(context).loggedInUser.sevaUserID ||
-        isAccessAvailable(widget.timebankModel,
-            SevaCore.of(context).loggedInUser.sevaUserID)) {
+        isAccessAvailable(widget.timebankModel!,
+            SevaCore.of(context).loggedInUser.sevaUserID!)) {
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (_context) => BlocProvider(
             bloc: BlocProvider.of<HomeDashBoardBloc>(context),
             child: RequestTabHolder(
-              //communityModel: BlocProvider.of<HomeDashBoardBloc>(context).selectedCommunityModel,
+              communityModel: BlocProvider.of<HomeDashBoardBloc>(context)!
+                  .selectedCommunityModel!,
               isAdmin: true,
             ),
           ),
@@ -594,10 +609,10 @@ class _VirtualRequestsState extends State<VirtualRequests> {
   }
 
   Widget getRequestListViewHolder(
-      {RequestModel model,
-      String loggedintimezone,
-      String userEmail,
-      Coordinates currentCoords}) {
+      {RequestModel? model,
+      String? loggedintimezone,
+      String? userEmail,
+      GeoPoint? currentCoords}) {
     return getFromNormalRequest(
         model: model,
         loggedintimezone: loggedintimezone,

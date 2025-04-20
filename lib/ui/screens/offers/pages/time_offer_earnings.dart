@@ -14,10 +14,10 @@ import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class TimeOfferEarnings extends StatelessWidget {
-  final OfferModel offerModel;
-  final TimebankModel timebankModel;
+  final OfferModel? offerModel;
+  final TimebankModel? timebankModel;
 
-  const TimeOfferEarnings({Key key, this.offerModel, this.timebankModel})
+  const TimeOfferEarnings({Key? key, this.offerModel, this.timebankModel})
       : super(key: key);
 
   @override
@@ -28,12 +28,12 @@ class TimeOfferEarnings extends StatelessWidget {
       body: Padding(
         padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
         child: StreamBuilder<List<TimeOfferParticipantsModel>>(
-          stream: _bloc.completedParticipants,
+          stream: _bloc!.completedParticipants,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return LoadingIndicator();
             }
-            if (snapshot.data == null || snapshot.data.isEmpty) {
+            if (snapshot.data == null || snapshot.data!.isEmpty) {
               return Container(
                 margin: EdgeInsets.only(top: 20, left: 10),
                 child: Row(
@@ -68,35 +68,35 @@ class TimeOfferEarnings extends StatelessWidget {
                       Expanded(
                         child: ListView.separated(
                           shrinkWrap: true,
-                          itemCount: snapshot.data.length,
+                          itemCount: snapshot.data!.length,
                           itemBuilder: (context, index) {
                             return MemberCardWithSingleAction(
                               name: snapshot
-                                  .data[index].participantDetails.fullname,
+                                  .data![index].participantDetails.fullname!,
                               timestamp: DateFormat.MMMd().format(
                                 DateTime.fromMillisecondsSinceEpoch(
-                                  snapshot.data[index].timestamp,
+                                  snapshot.data![index].timestamp,
                                 ),
                               ),
                               onImageTap: () {
                                 Navigator.of(context)
                                     .push(MaterialPageRoute(builder: (context) {
                                   return ProfileViewer(
-                                    timebankId: timebankModel.id,
-                                    entityName: timebankModel.name,
+                                    timebankId: timebankModel!.id,
+                                    entityName: timebankModel!.name,
                                     isFromTimebank: isPrimaryTimebank(
                                         parentTimebankId:
-                                            timebankModel.parentTimebankId),
+                                            timebankModel!.parentTimebankId),
                                     userEmail: snapshot
-                                        .data[index].participantDetails.email,
+                                        .data![index].participantDetails.email,
                                   );
                                 }));
                               },
                               onMessagePressed: () {},
                               action: () {},
-                              status: snapshot.data[index].status.readable,
+                              status: snapshot.data![index].status.readable,
                               photoUrl: snapshot
-                                  .data[index].participantDetails.photourl,
+                                  .data![index].participantDetails.photourl!,
                               buttonColor: Colors.green,
                             );
                           },

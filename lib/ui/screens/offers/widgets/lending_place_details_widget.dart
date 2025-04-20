@@ -10,7 +10,7 @@ import 'lending_place_card_widget.dart';
 class LendingPlaceDetailsWidget extends StatelessWidget {
   final LendingModel lendingModel;
 
-  LendingPlaceDetailsWidget({@required this.lendingModel});
+  LendingPlaceDetailsWidget({required this.lendingModel});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,7 @@ class LendingPlaceDetailsWidget extends StatelessWidget {
 class AmenitiesAndHouseRules extends StatefulWidget {
   final LendingModel lendingModel;
 
-  AmenitiesAndHouseRules({@required this.lendingModel});
+  AmenitiesAndHouseRules({required this.lendingModel});
 
   @override
   _AmenitiesAndHouseRulesState createState() => _AmenitiesAndHouseRulesState();
@@ -52,7 +52,7 @@ class _AmenitiesAndHouseRulesState extends State<AmenitiesAndHouseRules> {
             crossAxisSpacing: 0.0,
             mainAxisSpacing: 5.0,
             physics: NeverScrollableScrollPhysics(),
-            children: widget.lendingModel.lendingPlaceModel.amenities.values
+            children: widget.lendingModel.lendingPlaceModel!.amenities!.values
                 .map((title) => Row(
                       children: [
                         Container(
@@ -82,7 +82,7 @@ class _AmenitiesAndHouseRulesState extends State<AmenitiesAndHouseRules> {
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
         Text(
-          widget.lendingModel.lendingPlaceModel.houseRules ?? '',
+          widget.lendingModel.lendingPlaceModel!.houseRules ?? '',
           style: TextStyle(fontSize: 16, color: Colors.grey),
         ),
         SizedBox(

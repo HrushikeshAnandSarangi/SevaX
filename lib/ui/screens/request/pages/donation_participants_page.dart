@@ -138,6 +138,7 @@ class DonationParticipantPage extends StatelessWidget {
                                     notificationId: model.notificationId ?? '',
                                     convertedAmountRaised:
                                         convertedOfferAmount ?? 0.0,
+                                    convertedAmount: 0.0,
                                     currency: offermodel
                                             ?.cashModel?.offerCurrencyType ??
                                         '',
@@ -295,6 +296,9 @@ class DonationParticipantPage extends StatelessWidget {
                 builder: (context) => RequestDonationDisputePage(
                   model: model,
                   notificationId: model.notificationId ?? '',
+                  convertedAmount: 0.0,
+                  currency: '',
+                  convertedAmountRaised: 0.0,
                 ),
               ),
             );

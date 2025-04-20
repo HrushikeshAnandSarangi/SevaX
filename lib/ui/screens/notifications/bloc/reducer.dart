@@ -1240,6 +1240,9 @@ class PersonalNotificationsReducerForDonations {
                 MaterialPageRoute(
                   builder: (context) => RequestDonationDisputePage(
                     convertedAmount: amount,
+                    convertedAmountRaised:
+                        donationModel.cashDetails?.cashDetails?.amountRaised ??
+                            0.0,
                     currency: donationModel.requestIdType == 'offer'
                         ? donationModel.cashDetails?.cashDetails
                                 ?.offerDonatedCurrencyType ??
@@ -1316,7 +1319,8 @@ class PersonalNotificationsReducerForDonations {
                   builder: (context) => RequestDonationDisputePage(
                     notificationId: notification.id ?? '',
                     model: donationModel,
-                    convertedAmountRaised: amount,
+                    convertedAmount: 0.0,
+                    convertedAmountRaised: 0.0,
                     currency: donationModel
                             .cashDetails?.cashDetails?.offerCurrencyType ??
                         '',
@@ -1385,6 +1389,7 @@ class PersonalNotificationsReducerForDonations {
               convertedAmount: holder.requestIdType == 'offer'
                   ? (amount ?? 0.0)
                   : (holder.cashDetails?.pledgedAmount ?? 0.0),
+              convertedAmountRaised: 0.0,
               currency: holder.requestIdType == 'offer'
                   ? holder.cashDetails?.cashDetails?.offerDonatedCurrencyType ??
                       ''
@@ -1456,6 +1461,7 @@ class PersonalNotificationsReducerForDonations {
               convertedAmount: holder.requestIdType == 'offer'
                   ? (holder.cashDetails?.pledgedAmount ?? 0.0)
                   : (amount ?? 0.0),
+              convertedAmountRaised: 0.0,
               currency: holder.requestIdType == 'offer'
                   ? holder.cashDetails?.cashDetails?.offerCurrencyType ?? ''
                   : holder.cashDetails?.cashDetails?.requestDonatedCurrency ??

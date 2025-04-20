@@ -16,9 +16,9 @@ import '../../../../flavor_config.dart';
 import '../../../../labels.dart';
 
 class LendingOfferBorrowerUpdateWidget extends StatefulWidget {
-  final OfferModel offerModel;
-  final LendingOfferAcceptorModel lendingOfferAcceptorModel;
-  final BuildContext parentContext;
+  final OfferModel? offerModel;
+  final LendingOfferAcceptorModel? lendingOfferAcceptorModel;
+  final BuildContext? parentContext;
   LendingOfferBorrowerUpdateWidget({
     this.offerModel,
     this.lendingOfferAcceptorModel,
@@ -34,13 +34,13 @@ class _LendingOfferBorrowerUpdateWidgetState
     extends State<LendingOfferBorrowerUpdateWidget> {
   _LendingOfferBorrowerUpdateWidgetState();
 
-  BuildContext progressContext;
-  LendingOfferStatus lendingOfferStatus;
+  late BuildContext progressContext;
+  late LendingOfferStatus lendingOfferStatus;
 
   @override
   Widget build(BuildContext context) {
     logger.e('MODEL CHECK 1000 ---> ' +
-        widget.lendingOfferAcceptorModel.startDate.toString());
+        widget.lendingOfferAcceptorModel!.startDate.toString());
     return AlertDialog(
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(25.0))),
@@ -53,7 +53,7 @@ class _LendingOfferBorrowerUpdateWidgetState
             Padding(
               padding: EdgeInsets.all(4.0),
               child: Text(
-                widget.offerModel.individualOfferDataModel.title ??
+                widget.offerModel!.individualOfferDataModel!.title ??
                     S.of(context).anonymous,
                 style: TextStyle(
                   fontSize: 18,
@@ -64,7 +64,7 @@ class _LendingOfferBorrowerUpdateWidgetState
             Padding(
               padding: EdgeInsets.all(8.0),
               child: Text(
-                widget.offerModel.individualOfferDataModel.description ??
+                widget.offerModel!.individualOfferDataModel!.description ??
                     S.of(context).description_not_updated,
                 maxLines: 5,
                 overflow: TextOverflow.ellipsis,
@@ -74,7 +74,7 @@ class _LendingOfferBorrowerUpdateWidgetState
             Padding(
               padding: EdgeInsets.all(8.0),
               child: Text(
-                widget.offerModel.selectedAdrress ?? '',
+                widget.offerModel!.selectedAdrress ?? '',
                 maxLines: 5,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
@@ -88,10 +88,10 @@ class _LendingOfferBorrowerUpdateWidgetState
                         .format(
                       getDateTimeAccToUserTimezone(
                           dateTime: DateTime.fromMillisecondsSinceEpoch(
-                              widget.lendingOfferAcceptorModel.startDate),
-                          timezoneAbb: SevaCore.of(widget.parentContext)
+                              widget.lendingOfferAcceptorModel!.startDate!),
+                          timezoneAbb: SevaCore.of(widget.parentContext!)
                               .loggedInUser
-                              .timezone),
+                              .timezone!),
                     ),
                 style: TextStyle(
                   fontStyle: FontStyle.italic,
@@ -105,10 +105,10 @@ class _LendingOfferBorrowerUpdateWidgetState
                         .format(
                       getDateTimeAccToUserTimezone(
                           dateTime: DateTime.fromMillisecondsSinceEpoch(
-                              widget.lendingOfferAcceptorModel.endDate),
-                          timezoneAbb: SevaCore.of(widget.parentContext)
+                              widget.lendingOfferAcceptorModel!.endDate!),
+                          timezoneAbb: SevaCore.of(widget.parentContext!)
                               .loggedInUser
-                              .timezone),
+                              .timezone!),
                     ),
                 style: TextStyle(
                   fontStyle: FontStyle.italic,
@@ -124,6 +124,11 @@ class _LendingOfferBorrowerUpdateWidgetState
                   width: double.infinity,
                   child: CustomElevatedButton(
                     color: Theme.of(context).primaryColor,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8)),
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    elevation: 2,
+                    textColor: Colors.white,
                     child: Text(
                       getButtonLabel(),
                       style:
@@ -133,9 +138,9 @@ class _LendingOfferBorrowerUpdateWidgetState
                       showProgressDialog(context, S.of(context).updating);
                       await LendingOffersRepo.updateLendingOfferStatus(
                           lendingOfferAcceptorModel:
-                              widget.lendingOfferAcceptorModel,
+                              widget.lendingOfferAcceptorModel!,
                           lendingOfferStatus: lendingOfferStatus,
-                          offerModel: widget.offerModel);
+                          offerModel: widget.offerModel!);
 
                       if (progressContext != null) {
                         Navigator.of(progressContext).pop();
@@ -145,12 +150,14 @@ class _LendingOfferBorrowerUpdateWidgetState
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.all(4.0),
-                ),
-                Container(
-                  width: double.infinity,
+                  padding: EdgeInsets.all(5.0),
                   child: CustomElevatedButton(
-                    color: Theme.of(context).accentColor,
+                    color: Theme.of(context).colorScheme.secondary,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8)),
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    elevation: 2,
+                    textColor: Colors.white,
                     child: Text(
                       S.of(context).cancel,
                       style:
@@ -170,25 +177,27 @@ class _LendingOfferBorrowerUpdateWidgetState
   }
 
   String getButtonLabel() {
-    if (widget.lendingOfferAcceptorModel.status ==
+    if (widget.lendingOfferAcceptorModel!.status ==
             LendingOfferStatus.APPROVED &&
-        widget.offerModel.lendingOfferDetailsModel.lendingModel.lendingType ==
+        widget.offerModel!.lendingOfferDetailsModel!.lendingModel!
+                .lendingType! ==
             LendingType.PLACE) {
       lendingOfferStatus = LendingOfferStatus.CHECKED_IN;
       return S.of(context).check_in_text;
-    } else if (widget.lendingOfferAcceptorModel.status ==
+    } else if (widget.lendingOfferAcceptorModel!.status ==
             LendingOfferStatus.APPROVED &&
-        widget.offerModel.lendingOfferDetailsModel.lendingModel.lendingType ==
+        widget.offerModel!.lendingOfferDetailsModel!.lendingModel!
+                .lendingType ==
             LendingType.ITEM) {
       lendingOfferStatus = LendingOfferStatus.ITEMS_COLLECTED;
 
       return S.of(context).collect_items;
-    } else if (widget.lendingOfferAcceptorModel.status ==
+    } else if (widget.lendingOfferAcceptorModel!.status ==
         LendingOfferStatus.CHECKED_IN) {
       lendingOfferStatus = LendingOfferStatus.CHECKED_OUT;
 
       return S.of(context).check_out_text;
-    } else if (widget.lendingOfferAcceptorModel.status ==
+    } else if (widget.lendingOfferAcceptorModel!.status ==
         LendingOfferStatus.ITEMS_COLLECTED) {
       lendingOfferStatus = LendingOfferStatus.ITEMS_RETURNED;
 

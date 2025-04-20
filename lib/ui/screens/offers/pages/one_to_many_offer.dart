@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sevaexchange/components/common_help_icon.dart';
@@ -12,6 +12,7 @@ import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/ui/screens/calendar/add_to_calander.dart';
+import 'package:sevaexchange/ui/screens/members/pages/members_page.dart';
 import 'package:sevaexchange/ui/screens/offers/bloc/one_to_many_offer_bloc.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/custom_dialog.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/custom_textfield.dart';
@@ -30,17 +31,17 @@ import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/widgets/open_scope_checkbox_widget.dart';
 
 class OneToManyOffer extends StatefulWidget {
-  final OfferModel offerModel;
-  final String timebankId;
-  final String loggedInMemberUserId;
-  final TimebankModel timebankModel;
+  final OfferModel? offerModel;
+  final String? timebankId;
+  final String? loggedInMemberUserId;
+  final TimebankModel? timebankModel;
 
   const OneToManyOffer({
-    Key key,
+    Key? key,
     this.offerModel,
     this.timebankId,
-    @required this.loggedInMemberUserId,
-    @required this.timebankModel,
+    required this.loggedInMemberUserId,
+    required this.timebankModel,
   }) : super(key: key);
   @override
   _OneToManyOfferState createState() => _OneToManyOfferState();
@@ -49,14 +50,14 @@ class OneToManyOffer extends StatefulWidget {
 class _OneToManyOfferState extends State<OneToManyOffer> {
   final OneToManyOfferBloc _bloc = OneToManyOfferBloc();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
-  End end = End();
-  String selectedAddress;
+  End end = End(endType: '', on: 0, after: 0);
+  String? selectedAddress;
   String title = '';
-  CustomLocation customLocation;
+  CustomLocation? customLocation;
   bool closePage = true;
-  CommunityModel communityModel;
+  CommunityModel? communityModel;
 
-  List<FocusNode> focusNodes;
+  List<FocusNode>? focusNodes;
 
   TextEditingController _titleController = TextEditingController();
   TextEditingController _preparationController = TextEditingController();
@@ -68,17 +69,18 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
   void initState() {
     focusNodes = List.generate(5, (_) => FocusNode());
     if (widget.offerModel != null) {
-      _bloc.loadData(widget.offerModel);
-      _titleController.text = widget.offerModel.groupOfferDataModel.classTitle;
+      _bloc.loadData(widget.offerModel!);
+      _titleController.text =
+          widget.offerModel!.groupOfferDataModel!.classTitle;
       _preparationController.text = widget
-          .offerModel.groupOfferDataModel.numberOfPreperationHours
+          .offerModel!.groupOfferDataModel!.numberOfPreperationHours
           .toString();
       _classHourController.text =
-          widget.offerModel.groupOfferDataModel.numberOfClassHours.toString();
+          widget.offerModel!.groupOfferDataModel!.numberOfClassHours.toString();
       _sizeClassController.text =
-          widget.offerModel.groupOfferDataModel.sizeOfClass.toString();
+          widget.offerModel!.groupOfferDataModel!.sizeOfClass.toString();
       _classDescriptionController.text =
-          widget.offerModel.groupOfferDataModel.classDescription;
+          widget.offerModel!.groupOfferDataModel!.classDescription;
     }
     super.initState();
     getCommunity();
@@ -96,13 +98,13 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
 
   Future<void> getCommunity() async {
     communityModel = await FirestoreManager.getCommunityDetailsByCommunityId(
-        communityId: widget.timebankModel.communityId);
+        communityId: widget.timebankModel!.communityId);
     setState(() {});
   }
 
   @override
   void dispose() {
-    focusNodes.forEach((node) => node.dispose());
+    focusNodes!.forEach((node) => node.dispose());
     _bloc.dispose();
     _titleController.dispose();
     _preparationController.dispose();
@@ -180,8 +182,8 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                             builder: (_, snapshot) {
                               return CustomTextField(
                                 controller: _titleController,
-                                currentNode: focusNodes[0],
-                                nextNode: focusNodes[1],
+                                currentNode: focusNodes![0],
+                                nextNode: focusNodes![1],
                                 // formatters: <TextInputFormatter>[
                                 //   WhitelistingTextInputFormatter(
                                 //       RegExp("[a-zA-Z0-9_ ]*"))
@@ -193,8 +195,8 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                 onChanged: _bloc.onTitleChanged,
                                 hint: S.of(context).one_to_many_offer_hint,
                                 maxLength: null,
-                                error:
-                                    getValidationError(context, snapshot.error),
+                                error: getValidationError(
+                                    context, snapshot.error?.toString() ?? ''),
                               );
                             },
                           ),
@@ -203,14 +205,14 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                             title: S.of(context).offer_duration,
                             startTime: widget.offerModel != null
                                 ? DateTime.fromMillisecondsSinceEpoch(
-                                    widget.offerModel.groupOfferDataModel
+                                    widget!.offerModel!.groupOfferDataModel!
                                         .startDate,
                                   )
                                 : null,
                             endTime: widget.offerModel != null
                                 ? DateTime.fromMillisecondsSinceEpoch(
-                                    widget
-                                        .offerModel.groupOfferDataModel.endDate,
+                                    widget.offerModel!.groupOfferDataModel!
+                                        .endDate,
                                   )
                                 : null,
                           ),
@@ -224,16 +226,16 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                             builder: (_, snapshot) {
                               return CustomTextField(
                                 controller: _preparationController,
-                                currentNode: focusNodes[1],
-                                nextNode: focusNodes[2],
+                                currentNode: focusNodes![1],
+                                nextNode: focusNodes![2],
                                 value: snapshot.data != null
                                     ? snapshot.data
                                     : null,
                                 heading: "${S.of(context).offer_prep_hours} *",
                                 onChanged: _bloc.onPreparationHoursChanged,
                                 hint: S.of(context).offer_prep_hours_required,
-                                error:
-                                    getValidationError(context, snapshot.error),
+                                error: getValidationError(
+                                    context, snapshot.error?.toString() ?? ''),
                                 keyboardType: TextInputType.number,
                               );
                             },
@@ -244,8 +246,8 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                             builder: (_, snapshot) {
                               return CustomTextField(
                                 controller: _classHourController,
-                                currentNode: focusNodes[2],
-                                nextNode: focusNodes[3],
+                                currentNode: focusNodes![2],
+                                nextNode: focusNodes![3],
                                 value: snapshot.data != null
                                     ? snapshot.data
                                     : null,
@@ -255,8 +257,8 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                 hint: S
                                     .of(context)
                                     .offer_number_class_hours_required,
-                                error:
-                                    getValidationError(context, snapshot.error),
+                                error: getValidationError(
+                                    context, snapshot.error?.toString() ?? ''),
                                 keyboardType: TextInputType.number,
                               );
                             },
@@ -267,16 +269,16 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                             builder: (_, snapshot) {
                               return CustomTextField(
                                 controller: _sizeClassController,
-                                currentNode: focusNodes[3],
-                                nextNode: focusNodes[4],
+                                currentNode: focusNodes![3],
+                                nextNode: focusNodes![4],
                                 value: snapshot.data != null
                                     ? snapshot.data
                                     : null,
                                 heading: "${S.of(context).offer_size_class} *",
                                 onChanged: _bloc.onClassSizeChanged,
                                 hint: S.of(context).offer_enter_participants,
-                                error:
-                                    getValidationError(context, snapshot.error),
+                                error: getValidationError(
+                                    context, snapshot.error?.toString() ?? ''),
                                 keyboardType: TextInputType.number,
                               );
                             },
@@ -287,7 +289,7 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                             builder: (_, snapshot) {
                               return CustomTextField(
                                 controller: _classDescriptionController,
-                                currentNode: focusNodes[4],
+                                currentNode: focusNodes![4],
                                 value: snapshot.data != null
                                     ? snapshot.data
                                     : null,
@@ -296,8 +298,8 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                 onChanged: _bloc.onclassDescriptionChanged,
                                 hint: S.of(context).offer_description_error,
                                 maxLength: 500,
-                                error:
-                                    getValidationError(context, snapshot.error),
+                                error: getValidationError(
+                                    context, snapshot.error?.toString() ?? ''),
                                 keyboardType: TextInputType.multiline,
                               );
                             },
@@ -310,7 +312,7 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                               builder: (_, snapshot) {
                                 return LocationPickerWidget(
                                   location: snapshot.data?.location,
-                                  selectedAddress: snapshot.data?.address,
+                                  selectedAddress: snapshot.data!.address!,
                                   color: snapshot.error == null
                                       ? Colors.green
                                       : Colors.red,
@@ -326,6 +328,7 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                               }),
                           SizedBox(height: 20),
                           HideWidget(
+                            secondChild: SizedBox.shrink(),
                             hide: AppConfig.isTestCommunity,
                             child: Padding(
                               padding: const EdgeInsets.symmetric(vertical: 10),
@@ -335,21 +338,17 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                     return ConfigurationCheck(
                                       actionType: 'create_virtual_offer',
                                       // S.of(context).create_virtual_offer,
-                                      role: memberType(
-                                          widget.timebankModel,
-                                          SevaCore.of(context)
-                                              .loggedInUser
-                                              .sevaUserID),
+                                      role: MemberType.MEMBER,
                                       child: OpenScopeCheckBox(
                                           infoType: InfoType.VirtualOffers,
-                                          isChecked: snapshot.data,
+                                          isChecked: snapshot.data!,
                                           checkBoxTypeLabel:
                                               CheckBoxType.type_VirtualOffers,
-                                          onChangedCB: (bool val) {
+                                          onChangedCB: (bool? val) {
                                             logger.e(
                                                 'value for virtual offer $val');
                                             if (snapshot.data != val) {
-                                              _bloc.onOfferMadeVirtual(val);
+                                              _bloc.onOfferMadeVirtual(val!);
                                               log('value ${val}');
                                               setState(() {});
                                             }
@@ -362,7 +361,7 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                               initialData: false,
                               stream: _bloc.isVisible,
                               builder: (context, snapshot) {
-                                return snapshot.data
+                                return snapshot.data!
                                     ? Padding(
                                         padding: const EdgeInsets.symmetric(
                                             vertical: 10),
@@ -373,23 +372,19 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                                 actionType:
                                                     'create_public_offer',
                                                 // S.of(context).create_public_offer,
-                                                role: memberType(
-                                                    widget.timebankModel,
-                                                    SevaCore.of(context)
-                                                        .loggedInUser
-                                                        .sevaUserID),
+                                                role: MemberType.MEMBER,
                                                 child: OpenScopeCheckBox(
                                                     infoType:
                                                         InfoType.OpenScopeOffer,
-                                                    isChecked: snapshot.data,
+                                                    isChecked: snapshot.data!,
                                                     checkBoxTypeLabel:
                                                         CheckBoxType
                                                             .type_Offers,
-                                                    onChangedCB: (bool val) {
+                                                    onChangedCB: (bool? val) {
                                                       if (snapshot.data !=
                                                           val) {
                                                         _bloc.onOfferMadePublic(
-                                                            val);
+                                                            val!);
                                                         log('value ${val}');
                                                         setState(() {});
                                                       }
@@ -403,9 +398,17 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                           TransactionsMatrixCheck(
                             comingFrom: ComingFrom.Offers,
                             upgradeDetails: AppConfig
-                                .upgradePlanBannerModel.onetomany_offers,
+                                .upgradePlanBannerModel!.onetomany_offers!,
                             transaction_matrix_type: "onetomany_offers",
                             child: CustomElevatedButton(
+                              color: Theme.of(context).primaryColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 16.0, horizontal: 32.0),
+                              elevation: 2.0,
+                              textColor: Colors.white,
                               onPressed: status.data == Status.LOADING
                                   ? () {}
                                   : () async {
@@ -440,7 +443,8 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                                 .starttimestamp;
                                         _bloc.endTime = OfferDurationWidgetState
                                             .endtimestamp;
-                                        if (_bloc.endTime <= _bloc.startTime) {
+                                        if (_bloc.endTime! <=
+                                            _bloc.startTime!) {
                                           errorDialog(
                                             context: context,
                                             error: S
@@ -450,17 +454,19 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                           return;
                                         }
                                         if (widget.offerModel == null) {
-                                          await createOneToManyOfferFunc();
+                                          createOneToManyOfferFunc();
                                         } else {
-                                          if (widget.offerModel.autoGenerated ||
-                                              widget.offerModel.isRecurring) {
+                                          if (widget
+                                                  .offerModel!.autoGenerated! ||
+                                              widget.offerModel!.isRecurring!) {
                                             showDialog(
                                                 barrierDismissible: false,
                                                 context: context,
                                                 builder:
                                                     (BuildContext viewContext) {
                                                   return WillPopScope(
-                                                      onWillPop: () {},
+                                                      onWillPop: () async =>
+                                                          false,
                                                       child: AlertDialog(
                                                           title: Text(S
                                                               .of(context)
@@ -484,13 +490,13 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                                                 Navigator.pop(
                                                                     viewContext);
                                                                 _bloc.autoGenerated = widget
-                                                                    .offerModel
-                                                                    .autoGenerated;
+                                                                    .offerModel!
+                                                                    .autoGenerated!;
                                                                 _bloc.isRecurring = widget
-                                                                    .offerModel
-                                                                    .isRecurring;
+                                                                    .offerModel!
+                                                                    .isRecurring!;
 
-                                                                await updateOneToManyOfferFunc(
+                                                                updateOneToManyOfferFunc(
                                                                     0);
                                                                 Navigator.pop(
                                                                     context);
@@ -514,13 +520,13 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                                                 Navigator.pop(
                                                                     viewContext);
                                                                 _bloc.autoGenerated = widget
-                                                                    .offerModel
-                                                                    .autoGenerated;
+                                                                    .offerModel!
+                                                                    .autoGenerated!;
                                                                 _bloc.isRecurring = widget
-                                                                    .offerModel
-                                                                    .isRecurring;
+                                                                    .offerModel!
+                                                                    .isRecurring!;
 
-                                                                await updateOneToManyOfferFunc(
+                                                                updateOneToManyOfferFunc(
                                                                     1);
 
                                                                 Navigator.pop(
@@ -618,10 +624,10 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
           : S.of(context).after;
       end.on = end.endType == S.of(context).on
           ? RepeatWidgetState.selectedDate.millisecondsSinceEpoch
-          : null;
+          : null!;
       end.after = (end.endType == S.of(context).after
           ? int.parse(RepeatWidgetState.after)
-          : null);
+          : null!);
       _bloc.end = end;
     }
 
@@ -635,19 +641,19 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
     if (SevaCore.of(context).loggedInUser.calendarId != null) {
       _bloc.allowedCalenderEvent = true;
 
-      await _bloc.createOneToManyOffer(
+      _bloc.createOneToManyOffer(
           context: context,
           user: SevaCore.of(context).loggedInUser,
           timebankId: widget.timebankId,
-          communityName: communityModel.name ?? '');
+          communityName: communityModel!.name ?? '');
     } else {
       _bloc.allowedCalenderEvent = false;
 
-      await _bloc.createOneToManyOffer(
+      _bloc.createOneToManyOffer(
           context: context,
           user: SevaCore.of(context).loggedInUser,
           timebankId: widget.timebankId,
-          communityName: communityModel.name ?? '');
+          communityName: communityModel!.name ?? '');
       log("creation statusss - ${_bloc.offerCreatedBool}");
       if (_bloc.offerCreatedBool) {
         log("inside if with ${_bloc.offerCreatedBool}");
@@ -656,10 +662,13 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
           MaterialPageRoute(
             builder: (context) {
               return AddToCalendar(
-                  isOfferRequest: null,
+                  isOfferRequest: true,
                   offer: _bloc.mainOfferModel,
-                  requestModel: null,
-                  userModel: null,
+                  requestModel: RequestModel(
+                      communityId: widget.timebankModel!
+                          .communityId), // Provide required communityId
+                  userModel: SevaCore.of(context)
+                      .loggedInUser, // Replace with a valid UserModel instance if needed
                   eventsIdsArr: _bloc.offerIds);
             },
           ),
@@ -673,16 +682,16 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
   void updateOneToManyOfferFunc(int editType) async {
     if (_bloc.isRecurring || _bloc.autoGenerated) {
       _bloc.recurringDays = EditRepeatWidgetState.getRecurringdays();
-      _bloc.occurenceCount = widget.offerModel.occurenceCount;
+      _bloc.occurenceCount = widget.offerModel!.occurenceCount;
       end.endType = EditRepeatWidgetState.endType == 0
           ? S.of(context).on
           : S.of(context).after;
       end.on = end.endType == S.of(context).on
           ? EditRepeatWidgetState.selectedDate.millisecondsSinceEpoch
-          : null;
+          : null!;
       end.after = (end.endType == S.of(context).after
           ? int.parse(EditRepeatWidgetState.after)
-          : null);
+          : null!);
       _bloc.end = end;
     }
 
@@ -693,6 +702,6 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
       }
     }
 
-    _bloc.updateOneToManyOffer(widget.offerModel, editType);
+    _bloc.updateOneToManyOffer(widget.offerModel!, editType);
   }
 }

@@ -7,16 +7,18 @@ import 'package:sevaexchange/ui/screens/reported_members/widgets/reported_member
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class ReportedMembersPage extends StatefulWidget {
-  final TimebankModel timebankModel;
-  final String communityId;
-  final bool isFromTimebank;
+  final TimebankModel? timebankModel;
+  final String? communityId;
+  final bool? isFromTimebank;
 
   const ReportedMembersPage(
-      {Key key, this.timebankModel, this.communityId, this.isFromTimebank})
+      {Key? key, this.timebankModel, this.communityId, this.isFromTimebank})
       : super(key: key);
 
   static Route<dynamic> route(
-      {TimebankModel timebankModel, String communityId, bool isFromTimebank}) {
+      {TimebankModel? timebankModel,
+      String? communityId,
+      bool? isFromTimebank}) {
     return MaterialPageRoute(
       builder: (BuildContext context) => ReportedMembersPage(
         timebankModel: timebankModel,
@@ -36,9 +38,9 @@ class _ReportedMembersPageState extends State<ReportedMembersPage> {
   @override
   void initState() {
     _bloc.fetchReportedMembers(
-      widget.timebankModel.id,
-      widget.communityId,
-      widget.isFromTimebank,
+      widget.timebankModel!.id,
+      widget.communityId!,
+      widget.isFromTimebank!,
     );
     super.initState();
   }
@@ -67,16 +69,16 @@ class _ReportedMembersPageState extends State<ReportedMembersPage> {
               return LoadingIndicator();
             }
 
-            if (snapshot.data == null || snapshot.data.isEmpty) {
+            if (snapshot.data == null || snapshot.data!.isEmpty) {
               return Center(child: Text(S.of(context).no_data));
             }
 
             return ListView.builder(
               padding: EdgeInsets.all(12),
-              itemCount: snapshot.data.length,
+              itemCount: snapshot.data!.length,
               itemBuilder: (_, index) {
                 return ReportedMemberCard(
-                  model: snapshot.data[index],
+                  model: snapshot.data![index],
                   isFromTimebank: widget.isFromTimebank,
                   timebankModel: widget.timebankModel,
                 );

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
 class ReportedMemberChip extends StatelessWidget {
-  final int count;
-  final String title;
+  final int? count;
+  final String? title;
 
-  const ReportedMemberChip({Key key, this.count, this.title}) : super(key: key);
+  const ReportedMemberChip({Key? key, this.count, this.title})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -25,7 +26,7 @@ class ReportedMemberChip extends StatelessWidget {
             ),
             SizedBox(width: 4),
             Text(
-              title,
+              title!,
               style: TextStyle(color: Colors.white),
             ),
             SizedBox(width: 8),

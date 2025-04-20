@@ -78,8 +78,8 @@ class AddUpdatePlaceBloc extends BlocBase {
   Function(Map<String, dynamic>) get amenitiesChanged => _amenities.sink.add;
 
   void loadData(LendingModel lendingModel) {
-    _house_images.add(lendingModel.lendingPlaceModel.houseImages.toList());
-    _amenities.add(lendingModel.lendingPlaceModel.amenities);
+    _house_images.add(lendingModel.lendingPlaceModel!.houseImages!.toList());
+    _amenities.add(lendingModel.lendingPlaceModel!.amenities!);
   }
 
   Map<String, dynamic> getSelectedAmenities() {
@@ -90,7 +90,7 @@ class AddUpdatePlaceBloc extends BlocBase {
     return _model.value;
   }
 
-  void createLendingOfferPlace({UserModel creator}) {
+  void createLendingOfferPlace({UserModel? creator}) {
     LendingModel lendingModel;
     if (!validateForm()) {
       if (_amenities.value.values == null ||
@@ -102,8 +102,8 @@ class AddUpdatePlaceBloc extends BlocBase {
 
         lendingModel = LendingModel(
             id: Utils.getUuid(),
-            creatorId: creator.sevaUserID,
-            email: creator.email,
+            creatorId: creator!.sevaUserID!,
+            email: creator.email!,
             timestamp: timestamp,
             lendingType: LendingType.PLACE,
             lendingPlaceModel: LendingPlaceModel(
@@ -125,28 +125,28 @@ class AddUpdatePlaceBloc extends BlocBase {
     }
   }
 
-  void updateLendingOfferPlace({LendingModel model}) async {
-    LendingModel lendingModel = model;
+  void updateLendingOfferPlace({LendingModel? model}) async {
+    LendingModel lendingModel = model!;
     if (!validateForm()) {
       if (_amenities.value.values == null ||
           _amenities.value.values.length < 1) {
         _message.add('amenities');
       } else {
-        lendingModel.lendingPlaceModel.amenities = _amenities.value;
-        lendingModel.lendingPlaceModel.placeName = _placeName.value;
-        lendingModel.lendingPlaceModel.houseImages =
+        lendingModel.lendingPlaceModel!.amenities = _amenities.value;
+        lendingModel.lendingPlaceModel!.placeName = _placeName.value;
+        lendingModel.lendingPlaceModel!.houseImages =
             _house_images.value.toList();
-        lendingModel.lendingPlaceModel.noOfRooms =
+        lendingModel.lendingPlaceModel!.noOfRooms =
             int.parse(_no_of_rooms.value);
-        lendingModel.lendingPlaceModel.noOfGuests =
+        lendingModel.lendingPlaceModel!.noOfGuests =
             int.parse(_no_of_guests.value);
-        lendingModel.lendingPlaceModel.noOfBathRooms =
+        lendingModel.lendingPlaceModel!.noOfBathRooms =
             int.parse(_no_of_bathRooms.value);
-        lendingModel.lendingPlaceModel.commonSpace = _commonSpaces.value;
-        lendingModel.lendingPlaceModel.houseRules = _house_rules.value;
-        lendingModel.lendingPlaceModel.estimatedValue =
+        lendingModel.lendingPlaceModel!.commonSpace = _commonSpaces.value;
+        lendingModel.lendingPlaceModel!.houseRules = _house_rules.value;
+        lendingModel.lendingPlaceModel!.estimatedValue =
             int.parse(_estimated_value.value);
-        lendingModel.lendingPlaceModel.contactInformation =
+        lendingModel.lendingPlaceModel!.contactInformation =
             _contactInformation.value;
 
         LendingOffersRepo.updateNewLendingPlace(model: lendingModel).then((_) {
@@ -169,7 +169,7 @@ class AddUpdatePlaceBloc extends BlocBase {
       _placeName.addError(AddPlaceValidationErrors.profanityError);
       return AddPlaceValidationErrors.profanityError;
     }
-    return null;
+    return null!;
   }
 
   String validateGuest(String val) {
@@ -181,7 +181,7 @@ class AddUpdatePlaceBloc extends BlocBase {
       _no_of_guests.addError(AddPlaceValidationErrors.no_guests_error);
       return AddPlaceValidationErrors.no_guests_error;
     }
-    return null;
+    return null!;
   }
 
   String validateRooms(String val) {
@@ -192,7 +192,7 @@ class AddUpdatePlaceBloc extends BlocBase {
       _no_of_rooms.addError(AddPlaceValidationErrors.no_rooms_error);
       return AddPlaceValidationErrors.no_rooms_error;
     }
-    return null;
+    return null!;
   }
 
   String validateBathroom(String val) {
@@ -202,7 +202,7 @@ class AddUpdatePlaceBloc extends BlocBase {
       _no_of_bathRooms.addError(AddPlaceValidationErrors.bath_rooms_error);
       return AddPlaceValidationErrors.bath_rooms_error;
     }
-    return null;
+    return null!;
   }
 
   String validateCommonSpace(String val) {
@@ -210,7 +210,7 @@ class AddUpdatePlaceBloc extends BlocBase {
       _commonSpaces.addError(AddPlaceValidationErrors.commonSpaces_error);
       return AddPlaceValidationErrors.commonSpaces_error;
     }
-    return null;
+    return null!;
   }
 
   String validateHouseRule(String val) {
@@ -222,7 +222,7 @@ class AddUpdatePlaceBloc extends BlocBase {
       _amenities.addError(AddPlaceValidationErrors.amenities_error);
       return AddPlaceValidationErrors.amenities_error;
     }*/
-    return null;
+    return null!;
   }
 
   String validateEstimatedValue(String val) {
@@ -232,7 +232,7 @@ class AddUpdatePlaceBloc extends BlocBase {
       _estimated_value.addError(AddPlaceValidationErrors.estimated_value_error);
       return AddPlaceValidationErrors.estimated_value_error;
     }
-    return null;
+    return null!;
   }
 
   bool validateForm() {
@@ -363,7 +363,7 @@ String getAddPlaceValidationError(BuildContext context, String errorCode) {
       break;
 
     default:
-      return null;
+      return null!;
       break;
   }
 }

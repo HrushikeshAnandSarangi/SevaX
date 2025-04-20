@@ -9,16 +9,16 @@ import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class UserCircleAvatarList extends StatelessWidget {
-  final int sizeOfClass;
+  final int? sizeOfClass;
 
-  const UserCircleAvatarList({Key key, this.sizeOfClass}) : super(key: key);
+  const UserCircleAvatarList({Key? key, this.sizeOfClass}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     final _bloc = BlocProvider.of<OfferBloc>(context);
     return StreamBuilder<List<OfferParticipantsModel>>(
-      stream: _bloc.participants,
+      stream: _bloc!.participants,
       builder: (context, snapshot) {
-        if (snapshot.data == null || snapshot.data.isEmpty) {
+        if (snapshot.data == null || snapshot.data!.isEmpty) {
           return Container();
         }
 
@@ -30,15 +30,15 @@ class UserCircleAvatarList extends StatelessWidget {
           children: <Widget>[
             Text(
                 sizeOfClass == null
-                    ? "${snapshot.data.length} ${S.of(context).people_signed_up_text}"
-                    : "${snapshot.data.length}/$sizeOfClass ${S.of(context).people_signed_up_text}",
+                    ? "${snapshot.data!.length} ${S.of(context).people_signed_up_text}"
+                    : "${snapshot.data!.length}/$sizeOfClass ${S.of(context).people_signed_up_text}",
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
             Container(
               height: 50,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 shrinkWrap: true,
-                itemCount: snapshot.data.length,
+                itemCount: snapshot.data!.length,
                 itemBuilder: (BuildContext context, int index) {
                   return Padding(
                     padding: EdgeInsets.all(4),
@@ -46,7 +46,7 @@ class UserCircleAvatarList extends StatelessWidget {
                       aspectRatio: 1,
                       child: ClipOval(
                         child: CustomNetworkImage(
-                          snapshot.data[index].participantDetails.photourl ??
+                          snapshot.data![index].participantDetails!.photourl ??
                               defaultUserImageURL,
                           fit: BoxFit.cover,
                         ),

@@ -26,7 +26,7 @@ class SelectBorrowItem extends StatefulWidget {
 }
 
 class _SelectBorrowItemState extends State<SelectBorrowItem> {
-  SuggestionsBoxController controller = SuggestionsBoxController();
+  SuggestionsController controller = SuggestionsController();
   TextEditingController _textEditingController = TextEditingController();
   Map<String, String> items = {};
   Map<String, String> selectedItems = {};
@@ -58,48 +58,46 @@ class _SelectBorrowItemState extends State<SelectBorrowItem> {
       children: <Widget>[
         SizedBox(height: 8),
         TypeAheadField<SuggestedItem>(
-          suggestionsBoxDecoration: SuggestionsBoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-          ),
+          suggestionsController: SuggestionsController(),
           errorBuilder: (context, err) {
             return Text(S.of(context).error_occured);
           },
           hideOnError: true,
-          textFieldConfiguration: TextFieldConfiguration(
-            controller: _textEditingController,
-            decoration: InputDecoration(
-              hintText: S.of(context).search,
-              filled: true,
-              fillColor: Colors.grey[300],
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.white),
-                borderRadius: BorderRadius.circular(25.7),
-              ),
-              enabledBorder: UnderlineInputBorder(
+          builder: (context, textEditingController, focusNode) {
+            return TextField(
+              controller: _textEditingController,
+              focusNode: focusNode,
+              decoration: InputDecoration(
+                hintText: S.of(context).search,
+                filled: true,
+                fillColor: Colors.grey[300],
+                focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.white),
-                  borderRadius: BorderRadius.circular(25.7)),
-              contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
-              prefixIcon: Icon(
-                Icons.search,
-                color: Colors.grey,
-              ),
-              suffixIcon: InkWell(
-                splashColor: Colors.transparent,
-                child: Icon(
-                  Icons.clear,
-                  color: Colors.grey,
-                  // color: _textEditingController.text.length > 1
-                  //     ? Colors.black
-                  //     : Colors.grey,
+                  borderRadius: BorderRadius.circular(25.7),
                 ),
-                onTap: () {
-                  _textEditingController.clear();
-                  controller.close();
-                },
+                enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white),
+                    borderRadius: BorderRadius.circular(25.7)),
+                contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
+                prefixIcon: Icon(
+                  Icons.search,
+                  color: Colors.grey,
+                ),
+                suffixIcon: InkWell(
+                  splashColor: Colors.transparent,
+                  child: Icon(
+                    Icons.clear,
+                    color: Colors.grey,
+                  ),
+                  onTap: () {
+                    _textEditingController.clear();
+                    controller.close();
+                  },
+                ),
               ),
-            ),
-          ),
-          suggestionsBoxController: controller,
+            );
+          },
+          // scrollController: controller,
           suggestionsCallback: (pattern) async {
             List<SuggestedItem> dataCopy = [];
             items.forEach(
@@ -118,14 +116,14 @@ class _SelectBorrowItemState extends State<SelectBorrowItem> {
                   await SpellCheckManager.evaluateSpellingFor(pattern,
                       language:
                           SevaCore.of(context).loggedInUser.language ?? 'en');
-              if (spellCheckResult.hasErros) {
+              if (spellCheckResult.hasErros!) {
                 dataCopy.add(SuggestedItem()
                   ..suggestionMode = SuggestionMode.USER_DEFINED
                   ..suggesttionTitle = pattern);
               } else if (spellCheckResult.correctSpelling != pattern) {
                 dataCopy.add(SuggestedItem()
                   ..suggestionMode = SuggestionMode.SUGGESTED
-                  ..suggesttionTitle = spellCheckResult.correctSpelling);
+                  ..suggesttionTitle = spellCheckResult.correctSpelling!);
 
                 dataCopy.add(SuggestedItem()
                   ..suggestionMode = SuggestionMode.USER_DEFINED
@@ -188,13 +186,15 @@ class _SelectBorrowItemState extends State<SelectBorrowItem> {
                 return Container();
             }
           },
-          noItemsFoundBuilder: (context) {
+          emptyBuilder: (context) {
             return searchUserDefinedEntity(
                 keyword: _textEditingController.text,
                 language: S.of(context).localeName ?? 'en',
                 showLoader: false);
           },
-          onSuggestionSelected: (suggestion) {
+          // onSuggestionSelected removed: use onSelected instead
+          onSelected: (suggestion) {
+            // Forward to the same logic as onSuggestionSelected
             if (ProfanityDetector()
                 .isProfaneString(suggestion.suggesttionTitle)) {
               return;
@@ -202,7 +202,7 @@ class _SelectBorrowItemState extends State<SelectBorrowItem> {
 
             switch (suggestion.suggestionMode) {
               case SuggestionMode.SUGGESTED:
-                var newItemId = Uuid().generateV4();
+                var newItemId = Uuid().v4();
                 addItemsToDb(
                   itemsId: newItemId,
                   itemsLanguage: S.of(context).localeName ?? 'en',
@@ -212,7 +212,7 @@ class _SelectBorrowItemState extends State<SelectBorrowItem> {
                 break;
 
               case SuggestionMode.USER_DEFINED:
-                var goodId = Uuid().generateV4();
+                var goodId = Uuid().v4();
                 addItemsToDb(
                   itemsId: goodId,
                   itemsLanguage: S.of(context).localeName ?? 'en',
@@ -224,8 +224,6 @@ class _SelectBorrowItemState extends State<SelectBorrowItem> {
               case SuggestionMode.FROM_DB:
                 break;
             }
-            // controller.close();
-
             _textEditingController.clear();
             if (!selectedItems.containsValue(suggestion)) {
               controller.close();
@@ -266,36 +264,36 @@ class _SelectBorrowItemState extends State<SelectBorrowItem> {
   }
 
   FutureBuilder<SpellCheckResult> searchUserDefinedEntity({
-    String keyword,
-    String language,
-    SuggestionMode suggestionMode,
-    bool showLoader,
+    String? keyword,
+    String? language,
+    SuggestionMode? suggestionMode,
+    bool? showLoader,
   }) {
     return FutureBuilder<SpellCheckResult>(
       future: SpellCheckManager.evaluateSpellingFor(
-        keyword,
+        keyword!,
         language: language,
       ),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return showLoader ? getLinearLoading : LinearProgressIndicator();
+          return showLoader! ? getLinearLoading : LinearProgressIndicator();
         }
 
         return getSuggestionLayout(
           suggestion: keyword,
-          suggestionMode: suggestionMode,
+          suggestionMode: suggestionMode!,
         );
       },
     );
   }
 
   static Future<void> addItemsToDb({
-    String itemsId,
-    String itemsTitle,
-    String itemsLanguage,
+    String? itemsId,
+    String? itemsTitle,
+    String? itemsLanguage,
   }) async {
     await CollectionRef.borrowItems.add(
-      {'title_' + itemsLanguage: itemsTitle?.firstWordUpperCase()},
+      {'title_' + itemsLanguage!: itemsTitle?.firstWordUpperCase()},
     );
   }
 
@@ -312,8 +310,8 @@ class _SelectBorrowItemState extends State<SelectBorrowItem> {
   }
 
   Padding getSuggestionLayout({
-    String suggestion,
-    SuggestionMode suggestionMode,
+    String? suggestion,
+    SuggestionMode? suggestionMode,
   }) {
     return Padding(
       padding: const EdgeInsets.all(10.0),

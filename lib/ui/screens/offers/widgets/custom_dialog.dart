@@ -3,15 +3,15 @@ import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 
-Future<void> errorDialog({BuildContext context, String error}) async {
+Future<void> errorDialog({BuildContext? context, String? error}) async {
   await showDialog(
-    context: context,
+    context: context!,
     builder: (BuildContext viewContext) {
       return AlertDialog(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
-        title: Text(error),
+        title: Text(error!),
         actions: <Widget>[
           CustomTextButton(
             shape: StadiumBorder(),
@@ -31,22 +31,21 @@ Future<void> errorDialog({BuildContext context, String error}) async {
       );
     },
   );
-  return true;
 }
 
 Future<bool> confirmationDialog(
-    {BuildContext context, String title, Function onConfirmed}) async {
+    {BuildContext? context, String? title, Function? onConfirmed}) async {
   await showDialog(
-    context: context,
+    context: context!,
     builder: (BuildContext viewContext) {
       return AlertDialog(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
-        title: Text(title),
+        title: Text(title!),
         actions: <Widget>[
           CustomTextButton(
-            color: Theme.of(context).accentColor,
+            color: Theme.of(context).colorScheme.secondary,
             textColor: Colors.white,
             shape: StadiumBorder(),
             child: Text(
@@ -72,7 +71,7 @@ Future<bool> confirmationDialog(
 
                     onConfirmed();
                   }
-                : null,
+                : null!,
           ),
         ],
       );

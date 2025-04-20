@@ -19,9 +19,9 @@ import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'lending_offer_participants.dart';
 
 class BorrowerAcceptLendingOffer extends StatefulWidget {
-  final String timeBankId;
-  final OfferModel offerModel;
-  String notificationId;
+  final String? timeBankId;
+  final OfferModel? offerModel;
+  String? notificationId;
 
   BorrowerAcceptLendingOffer({
     this.timeBankId,
@@ -33,6 +33,20 @@ class BorrowerAcceptLendingOffer extends StatefulWidget {
   @override
   _BorrowerAcceptLendingOfferState createState() =>
       _BorrowerAcceptLendingOfferState();
+  Future<void> openPdfViewer(
+      String pdfUrl, String title, BuildContext context) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Scaffold(
+          appBar: AppBar(
+            title: Text(title),
+          ),
+          body: SfPdfViewer.network(pdfUrl),
+        ),
+      ),
+    );
+  }
 }
 
 class _BorrowerAcceptLendingOfferState
@@ -55,8 +69,8 @@ class _BorrowerAcceptLendingOfferState
           ),
           centerTitle: true,
           title: Text(
-            widget.offerModel.lendingOfferDetailsModel.lendingModel
-                        .lendingType ==
+            widget.offerModel!.lendingOfferDetailsModel!.lendingModel!
+                        .lendingType! ==
                     LendingType.PLACE
                 ? S.of(context).accept_place_lending_offer
                 : S.of(context).accept_item_lending_offer,
@@ -80,11 +94,11 @@ class _BorrowerAcceptLendingOfferState
           children: <Widget>[
             SizedBox(height: 10),
             offerAgreementFormComponent,
-            widget.offerModel.lendingOfferDetailsModel
-                            .lendingOfferAgreementLink !=
+            widget.offerModel?.lendingOfferDetailsModel
+                            ?.lendingOfferAgreementLink !=
                         null &&
-                    widget.offerModel.lendingOfferDetailsModel
-                            .lendingOfferAgreementLink !=
+                    widget.offerModel?.lendingOfferDetailsModel
+                            ?.lendingOfferAgreementLink !=
                         ''
                 ? termsAcknowledegmentText
                 : Container(),
@@ -143,76 +157,93 @@ class _BorrowerAcceptLendingOfferState
           child: CustomElevatedButton(
             padding: EdgeInsets.only(left: 11, right: 11),
             color: Theme.of(context).primaryColor,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+            elevation: 2.0,
+            textColor: Colors.white,
             child: Text(
               S.of(context).accept,
               style: TextStyle(color: Colors.white, fontFamily: 'Europa'),
             ),
             onPressed: () async {
-              if (widget.offerModel.lendingOfferDetailsModel.lendingModel
+              if (widget.offerModel!.lendingOfferDetailsModel!.lendingModel!
                       .lendingType ==
                   LendingType.PLACE) {
                 await LendingOffersRepo.storeAcceptorDataLendingOffer(
-                    model: widget.offerModel,
-                    lendingOfferAcceptorModel: LendingOfferAcceptorModel(
-                        id: Utils.getUuid(),
-                        communityId:
-                            SevaCore.of(context).loggedInUser.currentCommunity,
-                        acceptorphotoURL:
-                            SevaCore.of(context).loggedInUser.photoURL ??
-                                defaultUserImageURL,
-                        isApproved: false,
-                        borrowedPlaceId: widget.offerModel
-                            .lendingOfferDetailsModel.lendingModel.id,
-                        borrowedItemsIds: null,
-                        borrowAgreementLink: widget
-                                    .offerModel
-                                    .lendingOfferDetailsModel
-                                    .lendingOfferAgreementLink !=
-                                null
-                            ? widget.offerModel.lendingOfferDetailsModel
-                                .lendingOfferAgreementLink
-                            : '',
-                        timestamp: DateTime.now().millisecondsSinceEpoch,
-                        acceptorEmail: SevaCore.of(context).loggedInUser.email,
-                        acceptorId:
-                            SevaCore.of(context).loggedInUser.sevaUserID,
-                        acceptorMobile: '',
-                        acceptorName:
-                            SevaCore.of(context).loggedInUser.fullname,
-                        selectedAddress: widget.offerModel.selectedAdrress,
-                        status: LendingOfferStatus.ACCEPTED));
-                Navigator.of(context).pop();
-              } else {
-                await LendingOffersRepo.storeAcceptorDataLendingOffer(
-                    model: widget.offerModel,
+                    model: widget.offerModel!,
                     lendingOfferAcceptorModel: LendingOfferAcceptorModel(
                       id: Utils.getUuid(),
                       communityId:
-                          SevaCore.of(context).loggedInUser.currentCommunity,
+                          SevaCore.of(context).loggedInUser.currentCommunity!,
                       acceptorphotoURL:
                           SevaCore.of(context).loggedInUser.photoURL ??
                               defaultUserImageURL,
                       isApproved: false,
-                      borrowedPlaceId: null,
-                      borrowedItemsIds: [
-                        widget
-                            .offerModel.lendingOfferDetailsModel.lendingModel.id
-                      ],
+                      borrowedPlaceId: widget.offerModel!
+                          .lendingOfferDetailsModel!.lendingModel!.id!,
+                      borrowedItemsIds: [],
                       borrowAgreementLink: widget
-                                  .offerModel
-                                  .lendingOfferDetailsModel
+                                  .offerModel!
+                                  .lendingOfferDetailsModel!
                                   .lendingOfferAgreementLink !=
                               null
-                          ? widget.offerModel.lendingOfferDetailsModel
-                              .lendingOfferAgreementLink
+                          ? widget.offerModel!.lendingOfferDetailsModel!
+                              .lendingOfferAgreementLink!
                           : '',
                       timestamp: DateTime.now().millisecondsSinceEpoch,
-                      acceptorEmail: SevaCore.of(context).loggedInUser.email,
-                      acceptorId: SevaCore.of(context).loggedInUser.sevaUserID,
+                      acceptorEmail: SevaCore.of(context).loggedInUser.email!,
+                      acceptorId: SevaCore.of(context).loggedInUser.sevaUserID!,
                       acceptorMobile: '',
-                      acceptorName: SevaCore.of(context).loggedInUser.fullname,
-                      selectedAddress: widget.offerModel.selectedAdrress,
+                      acceptorName: SevaCore.of(context).loggedInUser.fullname!,
+                      selectedAddress: widget!.offerModel!.selectedAdrress!,
                       status: LendingOfferStatus.ACCEPTED,
+                      notificationId: widget.notificationId ?? '',
+                      additionalInstructions: '',
+                      isLenderGaveReview: false,
+                      isBorrowerGaveReview: false,
+                      startDate: DateTime.now().millisecondsSinceEpoch,
+                      endDate: DateTime.now().millisecondsSinceEpoch,
+                      approvedAgreementId: '',
+                    ));
+                Navigator.of(context).pop();
+              } else {
+                await LendingOffersRepo.storeAcceptorDataLendingOffer(
+                    model: widget.offerModel!,
+                    lendingOfferAcceptorModel: LendingOfferAcceptorModel(
+                      startDate: DateTime.now().millisecondsSinceEpoch,
+                      endDate: DateTime.now().millisecondsSinceEpoch,
+                      id: Utils.getUuid(),
+                      communityId:
+                          SevaCore.of(context).loggedInUser.currentCommunity!,
+                      acceptorphotoURL:
+                          SevaCore.of(context).loggedInUser.photoURL ??
+                              defaultUserImageURL,
+                      isApproved: false,
+                      borrowedPlaceId: '',
+                      borrowedItemsIds: [
+                        widget.offerModel!.lendingOfferDetailsModel!
+                            .lendingModel!.id
+                      ],
+                      borrowAgreementLink: widget
+                                  .offerModel!
+                                  .lendingOfferDetailsModel!
+                                  .lendingOfferAgreementLink !=
+                              null
+                          ? widget.offerModel!.lendingOfferDetailsModel!
+                              .lendingOfferAgreementLink!
+                          : '',
+                      timestamp: DateTime.now().millisecondsSinceEpoch,
+                      acceptorEmail: SevaCore.of(context).loggedInUser.email!,
+                      acceptorId: SevaCore.of(context).loggedInUser.sevaUserID!,
+                      acceptorMobile: '',
+                      acceptorName: SevaCore.of(context).loggedInUser.fullname!,
+                      selectedAddress: widget.offerModel!.selectedAdrress!,
+                      status: LendingOfferStatus.ACCEPTED,
+                      notificationId: widget.notificationId ?? '',
+                      additionalInstructions: '',
+                      isLenderGaveReview: false,
+                      isBorrowerGaveReview: false,
+                      approvedAgreementId: '',
                     ));
                 Navigator.of(context).pop();
               }
@@ -222,12 +253,15 @@ class _BorrowerAcceptLendingOfferState
         Padding(
           padding: EdgeInsets.all(4.0),
         ),
-        SizedBox(width: 5),
         Container(
           height: 32,
           child: CustomElevatedButton(
             padding: EdgeInsets.only(left: 11, right: 11),
-            color: Theme.of(context).accentColor,
+            color: Theme.of(context).colorScheme.secondary,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+            elevation: 2.0,
+            textColor: Colors.white,
             child: Text(
               S.of(context).cancel,
               style: TextStyle(color: Colors.white, fontFamily: 'Europa'),
@@ -240,12 +274,15 @@ class _BorrowerAcceptLendingOfferState
         Padding(
           padding: EdgeInsets.all(4.0),
         ),
-        SizedBox(width: 5),
         Container(
           height: 32,
           child: CustomElevatedButton(
             padding: EdgeInsets.only(left: 11, right: 11),
-            color: Colors.grey[300],
+            color: Colors.grey[300]!,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+            elevation: 2.0,
+            textColor: Colors.black,
             child: Text(
               S.of(context).message,
               style: TextStyle(color: Colors.black, fontFamily: 'Europa'),
@@ -261,18 +298,22 @@ class _BorrowerAcceptLendingOfferState
               );
 
               ParticipantInfo reciever = ParticipantInfo(
-                id: widget.offerModel.sevaUserId,
-                name: widget.offerModel.fullName,
+                id: widget.offerModel!.sevaUserId,
+                name: widget.offerModel!.fullName,
                 photoUrl:
-                    widget.offerModel.photoUrlImage ?? defaultUserImageURL,
+                    widget.offerModel!.photoUrlImage ?? defaultUserImageURL,
                 type: ChatType.TYPE_PERSONAL,
               );
 
               createAndOpenChat(
                 context: context,
-                communityId: loggedInUser.currentCommunity,
+                communityId: loggedInUser.currentCommunity!,
                 sender: sender,
                 reciever: reciever,
+                timebankId: widget.timeBankId ?? '',
+                feedId: '',
+                showToCommunities: [],
+                entityId: widget.offerModel?.id ?? '',
                 onChatCreate: () {
                   //Navigator.of(context).pop();
                 },
@@ -303,11 +344,11 @@ class _BorrowerAcceptLendingOfferState
             Container(
               width: MediaQuery.of(context).size.width * 0.68,
               child: Text(
-                widget.offerModel.lendingOfferDetailsModel
-                                .lendingOfferAgreementLink !=
+                widget.offerModel?.lendingOfferDetailsModel
+                                ?.lendingOfferAgreementLink !=
                             null &&
-                        widget.offerModel.lendingOfferDetailsModel
-                                .lendingOfferAgreementLink !=
+                        widget.offerModel?.lendingOfferDetailsModel
+                                ?.lendingOfferAgreementLink !=
                             ''
                     ? S.of(context).review_before_proceding_text
                     : S.of(context).lender_not_created_agreement,
@@ -323,28 +364,30 @@ class _BorrowerAcceptLendingOfferState
           ],
         ),
         SizedBox(height: 20),
-        widget.offerModel.lendingOfferDetailsModel.lendingOfferAgreementLink !=
+        widget.offerModel!.lendingOfferDetailsModel!
+                        .lendingOfferAgreementLink !=
                     null &&
-                widget.offerModel.lendingOfferDetailsModel
+                widget.offerModel!.lendingOfferDetailsModel!
                         .lendingOfferAgreementLink !=
                     ''
             ? Container(
                 decoration:
-                    BoxDecoration(border: Border.all(color: Colors.grey[200])),
+                    BoxDecoration(border: Border.all(color: Colors.grey[200]!)),
                 alignment: Alignment.center,
                 width: 300,
                 height: 360,
                 child: SfPdfViewer.network(
-                  widget.offerModel.lendingOfferDetailsModel
-                      .lendingOfferAgreementLink,
+                  widget!.offerModel!.lendingOfferDetailsModel!
+                      .lendingOfferAgreementLink!,
                   canShowPaginationDialog: false,
                 ),
               )
             : Container(),
         SizedBox(height: 20),
-        widget.offerModel.lendingOfferDetailsModel.lendingOfferAgreementLink !=
+        widget.offerModel!.lendingOfferDetailsModel!
+                        .lendingOfferAgreementLink !=
                     null &&
-                widget.offerModel.lendingOfferDetailsModel
+                widget.offerModel!.lendingOfferDetailsModel!
                         .lendingOfferAgreementLink !=
                     ''
             ? Container(
@@ -357,10 +400,10 @@ class _BorrowerAcceptLendingOfferState
                     borderRadius: BorderRadius.circular(20),
                   ),
                   padding: EdgeInsets.all(0),
-                  color: widget.offerModel.lendingOfferDetailsModel
+                  color: widget.offerModel!.lendingOfferDetailsModel!
                                   .lendingOfferAgreementLink !=
                               null &&
-                          widget.offerModel.lendingOfferDetailsModel
+                          widget.offerModel!.lendingOfferDetailsModel!
                                   .lendingOfferAgreementLink !=
                               '' &&
                           isPressed == false
@@ -371,10 +414,10 @@ class _BorrowerAcceptLendingOfferState
                       SizedBox(width: 1),
                       Spacer(),
                       Text(
-                        widget.offerModel.lendingOfferDetailsModel
+                        widget.offerModel!.lendingOfferDetailsModel!
                                         .lendingOfferAgreementLink !=
                                     null &&
-                                widget.offerModel.lendingOfferDetailsModel
+                                widget.offerModel!.lendingOfferDetailsModel!
                                         .lendingOfferAgreementLink !=
                                     ''
                             ? S.of(context).review_agreement
@@ -390,21 +433,21 @@ class _BorrowerAcceptLendingOfferState
                     ],
                   ),
                   onPressed: isPressed
-                      ? null
+                      ? null!
                       : () async {
                           setState(() {
                             isPressed = true;
                           });
                           logger.e(" bool isPressed = $isPressed");
-                          if (widget.offerModel.lendingOfferDetailsModel
+                          if (widget.offerModel!.lendingOfferDetailsModel!
                                       .lendingOfferAgreementLink !=
                                   null &&
-                              widget.offerModel.lendingOfferDetailsModel
+                              widget.offerModel!.lendingOfferDetailsModel!
                                       .lendingOfferAgreementLink !=
                                   '') {
-                            await openPdfViewer(
-                                widget.offerModel.lendingOfferDetailsModel
-                                    .lendingOfferAgreementLink,
+                            await widget.openPdfViewer(
+                                widget.offerModel!.lendingOfferDetailsModel!
+                                    .lendingOfferAgreementLink!,
                                 'Review Agreement',
                                 context);
                             setState(() {

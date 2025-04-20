@@ -6,7 +6,7 @@ import 'package:doseform/main.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:progress_dialog/progress_dialog.dart';
+import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
 import 'package:sevaexchange/components/pdf_screen.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
@@ -50,16 +50,16 @@ class AgreementForm extends StatefulWidget {
       Map<String, dynamic> agreementConfig, String agreementId) onPdfCreated;
 
   AgreementForm({
-    this.requestModel,
-    this.isOffer, // @required this.isOffer,
-    this.placeOrItem, // @required this.placeOrItem,
-    this.timebankId, // @required this.timebankId,
-    this.communityId, // @required this.communityId,
-    @required this.onPdfCreated,
-    this.lendingModel,
-    this.lendingModelListBorrowRequest,
-    this.startTime,
-    this.endTime,
+    required this.requestModel,
+    required this.isOffer,
+    required this.placeOrItem,
+    required this.timebankId,
+    required this.communityId,
+    required this.onPdfCreated,
+    required this.lendingModel,
+    required this.lendingModelListBorrowRequest,
+    required this.startTime,
+    required this.endTime,
   });
 
   @override
@@ -74,15 +74,15 @@ class _OfferAgreementFormState extends State<AgreementForm> {
       TextEditingController();
   prefix0.TextEditingController documentNameController =
       TextEditingController();
-  Color primaryColor = FlavorConfig.values.theme.primaryColor;
-  AgreementTemplateModel selectedAgreementTemplate;
+  Color primaryColor = FlavorConfig.values.theme!.primaryColor;
+  AgreementTemplateModel? selectedAgreementTemplate;
   AgreementTemplateModel agreementTemplateModel = AgreementTemplateModel();
   AgreementFormSelectionModel agreementFormSelectionModel =
       AgreementFormSelectionModel();
   bool saveAsTemplate = false;
   String templateName = '';
   bool templateFound = false;
-  int value;
+  int? value;
   FocusNode documentNameNode = FocusNode();
   FocusNode specificConditionNode = FocusNode();
   FocusNode searchFocusNode = FocusNode();
@@ -309,16 +309,17 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                                 checkColor: Colors.white,
                                 activeColor: Colors.green,
                                 value: selectedAgreementTemplate != null
-                                    ? selectedAgreementTemplate
+                                    ? selectedAgreementTemplate!
                                             .isDamageLiability ??
                                         isDamageLiability
                                     : isDamageLiability,
-                                onChanged: (value) {
+                                onChanged: (bool? newValue) {
                                   setState(() {
-                                    isDamageLiability = value;
+                                    isDamageLiability = newValue ?? false;
                                     if (selectedAgreementTemplate != null) {
-                                      selectedAgreementTemplate
-                                          .isDamageLiability = value;
+                                      selectedAgreementTemplate!
+                                              .isDamageLiability =
+                                          newValue ?? false;
                                     }
                                   });
                                 },
@@ -347,15 +348,15 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                                 checkColor: Colors.white,
                                 activeColor: Colors.green,
                                 value: selectedAgreementTemplate != null
-                                    ? selectedAgreementTemplate
+                                    ? selectedAgreementTemplate!
                                             .isUseDisclaimer ??
                                         isUseDisclaimer
                                     : isUseDisclaimer,
                                 onChanged: (value) {
                                   setState(() {
-                                    isUseDisclaimer = value;
+                                    isUseDisclaimer = value!;
                                     if (selectedAgreementTemplate != null) {
-                                      selectedAgreementTemplate
+                                      selectedAgreementTemplate!
                                           .isUseDisclaimer = value;
                                     }
                                   });
@@ -387,16 +388,16 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                                       checkColor: Colors.white,
                                       activeColor: Colors.green,
                                       value: selectedAgreementTemplate != null
-                                          ? selectedAgreementTemplate
+                                          ? selectedAgreementTemplate!
                                                   .isDeliveryReturn ??
                                               isDeliveryReturn
                                           : isDeliveryReturn,
                                       onChanged: (value) {
                                         setState(() {
-                                          isDeliveryReturn = value;
+                                          isDeliveryReturn = value!;
                                           if (selectedAgreementTemplate !=
                                               null) {
-                                            selectedAgreementTemplate
+                                            selectedAgreementTemplate!
                                                 .isDeliveryReturn = value;
                                           }
                                         });
@@ -427,16 +428,16 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                                       checkColor: Colors.white,
                                       activeColor: Colors.green,
                                       value: selectedAgreementTemplate != null
-                                          ? selectedAgreementTemplate
+                                          ? selectedAgreementTemplate!
                                                   .isRefundDepositNeeded ??
                                               isRefundDepositNeeded
                                           : isRefundDepositNeeded,
                                       onChanged: (value) {
                                         setState(() {
-                                          isRefundDepositNeeded = value;
+                                          isRefundDepositNeeded = value!;
                                           if (selectedAgreementTemplate !=
                                               null) {
-                                            selectedAgreementTemplate
+                                            selectedAgreementTemplate!
                                                 .isRefundDepositNeeded = value;
                                           }
                                         });
@@ -468,16 +469,16 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                                       checkColor: Colors.white,
                                       activeColor: Colors.green,
                                       value: selectedAgreementTemplate != null
-                                          ? selectedAgreementTemplate
+                                          ? selectedAgreementTemplate!
                                                   .isMaintainRepair ??
                                               isMaintainRepair
                                           : isMaintainRepair,
                                       onChanged: (value) {
                                         setState(() {
-                                          isMaintainRepair = value;
+                                          isMaintainRepair = value!;
                                           if (selectedAgreementTemplate !=
                                               null) {
-                                            selectedAgreementTemplate
+                                            selectedAgreementTemplate!
                                                 .isMaintainRepair = value;
                                           }
                                         });
@@ -508,16 +509,16 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                                       checkColor: Colors.white,
                                       activeColor: Colors.green,
                                       value: selectedAgreementTemplate != null
-                                          ? selectedAgreementTemplate
+                                          ? selectedAgreementTemplate!
                                                   .isMaintainAndclean ??
                                               isMaintainAndclean
                                           : isMaintainAndclean,
                                       onChanged: (value) {
                                         setState(() {
-                                          isMaintainAndclean = value;
+                                          isMaintainAndclean = value!;
                                           if (selectedAgreementTemplate !=
                                               null) {
-                                            selectedAgreementTemplate
+                                            selectedAgreementTemplate!
                                                 .isMaintainAndclean = value;
                                           }
                                         });
@@ -583,25 +584,19 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                                 padding: const EdgeInsets.only(top: 15),
                                 child: Checkbox(
                                   value: saveAsTemplate,
-                                  onChanged: (bool value) {
-                                    if (saveAsTemplate) {
-                                      setState(() {
-                                        saveAsTemplate = false;
-                                      });
-                                    } else {
-                                      _showSaveAsTemplateDialog()
-                                          .then((templateName) {
-                                        if (templateName != null) {
-                                          setState(() {
-                                            saveAsTemplate = true;
-                                          });
-                                        } else {
-                                          setState(() {
-                                            saveAsTemplate = false;
-                                          });
-                                        }
-                                      });
-                                    }
+                                  onChanged: (bool? value) {
+                                    _showSaveAsTemplateDialog()
+                                        .then((templateName) {
+                                      if (templateName != null) {
+                                        setState(() {
+                                          saveAsTemplate = value ?? false;
+                                        });
+                                      } else {
+                                        setState(() {
+                                          saveAsTemplate = false;
+                                        });
+                                      }
+                                    });
                                   },
                                 ),
                               ),
@@ -729,7 +724,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
           ),
           keyboardType: TextInputType.text,
           validator: (value) {
-            if (value.isEmpty) {
+            if (value!.isEmpty) {
               return S.of(context).please_enter_doc_name;
             } else {
               documentName = value;
@@ -819,6 +814,11 @@ class _OfferAgreementFormState extends State<AgreementForm> {
           child: CustomElevatedButton(
               padding: EdgeInsets.only(left: 11, right: 11),
               color: Theme.of(context).primaryColor,
+              textColor: Colors.white,
+              elevation: 2,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5),
+              ),
               child: Text(
                 S.of(context).use.sentenceCase(),
                 style: TextStyle(color: Colors.white, fontSize: 16),
@@ -848,7 +848,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                       widget.lendingModel,
                       widget.lendingModelListBorrowRequest != null
                           ? widget.lendingModelListBorrowRequest
-                          : null,
+                          : null!,
                       '',
                       documentName,
                       widget.isOffer,
@@ -878,7 +878,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
 
                     Navigator.of(context).pop();
                   } else {
-                    if (formKey.currentState.validate()) {
+                    if (formKey.currentState!.validate()) {
                       // <<<-- First - Check and Save Template
                       if (saveAsTemplate) {
                         agreementTemplateModel.documentName = documentName;
@@ -931,7 +931,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                         widget.lendingModel,
                         widget.lendingModelListBorrowRequest != null
                             ? widget.lendingModelListBorrowRequest
-                            : null,
+                            : null!,
                         '',
                         documentName,
                         widget.isOffer,
@@ -992,19 +992,20 @@ class _OfferAgreementFormState extends State<AgreementForm> {
     );
   }
 
-  Future openPdfViewer(String pdfURL, String documentName) {
+  Future<void> openPdfViewer(String pdfURL, String documentName) async {
     progressDialog = ProgressDialog(
       context,
-      type: ProgressDialogType.Normal,
+      type: ProgressDialogType.normal,
       isDismissible: true,
     );
-    progressDialog.show();
+    progressDialog!.show();
     createFileOfPdfUrl(pdfURL, documentName).then((f) {
-      progressDialog.hide();
+      progressDialog!.hide();
       Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) => PDFScreen(
+                  pdfUrl: pdfURL,
                   docName: documentName,
                   pathPDF: f.path,
                   isFromFeeds: false,
@@ -1012,11 +1013,12 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                 )),
       );
     });
+    return;
   }
 
   void showTermsPage() {
     var dynamicLinks = json.decode(
-      AppConfig.remoteConfig.getString(
+      AppConfig.remoteConfig!.getString(
         "links_" + S.of(context).localeName,
       ),
     );
@@ -1031,7 +1033,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
 
   void showPrivacyPolicyPage() {
     var dynamicLinks = json.decode(
-      AppConfig.remoteConfig.getString(
+      AppConfig.remoteConfig!.getString(
         "links_" + S.of(context).localeName,
       ),
     );
@@ -1045,7 +1047,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
 
   void showPaymentPolicyPage() {
     var dynamicLinks = json.decode(
-      AppConfig.remoteConfig.getString(
+      AppConfig.remoteConfig!.getString(
         "links_" + S.of(context).localeName,
       ),
     );
@@ -1058,21 +1060,21 @@ class _OfferAgreementFormState extends State<AgreementForm> {
   }
 
   Widget _optionRadioButtonMain<T>({
-    String title,
-    T value,
-    T groupvalue,
-    Function onChanged,
+    String? title,
+    T? value,
+    T? groupvalue,
+    Function? onChanged,
     bool isEnabled = true,
   }) {
     return ListTile(
       key: UniqueKey(),
       contentPadding: EdgeInsets.only(left: 0.0, right: 0.0),
-      title: Text(title),
+      title: Text(title!),
       leading: Radio<T>(
         activeColor: Theme.of(context).primaryColor,
-        value: value,
+        value: value!,
         groupValue: groupvalue,
-        onChanged: (isEnabled ?? true) ? onChanged : null,
+        onChanged: isEnabled ? onChanged as ValueChanged<T?>? : null,
       ),
     );
   }
@@ -1179,7 +1181,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
             );
           }
 
-          List<AgreementTemplateModel> agreementTemplateList = snapshot.data;
+          List<AgreementTemplateModel> agreementTemplateList = snapshot.data!;
 
           if (agreementTemplateList == null ||
               agreementTemplateList.length == 0) {
@@ -1201,12 +1203,12 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                     value = index;
                     selectedAgreementTemplate = agreementTemplateList[index];
                     documentNameController.text =
-                        selectedAgreementTemplate.documentName;
-                    documentName = selectedAgreementTemplate.documentName;
+                        selectedAgreementTemplate!.documentName!;
+                    documentName = selectedAgreementTemplate!.documentName!;
                     specificConditionsController.text =
-                        selectedAgreementTemplate.specificConditions;
+                        selectedAgreementTemplate!.specificConditions!;
                   }),
-                  title: Text(borrowAgreementTemplateModel.templateName),
+                  title: Text(borrowAgreementTemplateModel.templateName!),
                 ),
               );
             },
@@ -1247,7 +1249,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
     );
   }
 
-  Future<String> _showSaveAsTemplateDialog() {
+  Future<String?> _showSaveAsTemplateDialog() {
     return showDialog<String>(
         context: context,
         builder: (BuildContext viewContext) {
@@ -1312,7 +1314,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                               value;
                         },
                         validator: (value) {
-                          if (value.isEmpty) {
+                          if (value == null || value.isEmpty) {
                             return S.of(context).validation_error_template_name;
                           } else if (templateFound) {
                             return S
@@ -1332,7 +1334,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
-                      FlatButton(
+                      TextButton(
                         onPressed: () {
                           Navigator.pop(viewContext);
                         },
@@ -1342,19 +1344,21 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Europa'),
                         ),
-                        textColor: Colors.grey,
+                        style:
+                            TextButton.styleFrom(foregroundColor: Colors.grey),
                       ),
-                      FlatButton(
+                      TextButton(
                         child: Text(S.of(context).save,
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontFamily: 'Europa')),
-                        textColor: Theme.of(context).primaryColor,
+                        style: TextButton.styleFrom(
+                            foregroundColor: Theme.of(context).primaryColor),
                         onPressed: () async {
-                          if (!_formDialogKey.currentState.validate()) {
-                            return;
+                          if (_formDialogKey.currentState?.validate() ??
+                              false) {
+                            Navigator.pop(viewContext, templateName);
                           }
-                          Navigator.pop(viewContext, templateName);
                         },
                       )
                     ],

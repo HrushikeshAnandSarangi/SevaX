@@ -16,22 +16,22 @@ import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/participant_card.dart';
 
 class TimeOfferParticipants extends StatelessWidget {
-  final OfferModel offerModel;
-  final TimebankModel timebankModel;
+  final OfferModel? offerModel;
+  final TimebankModel? timebankModel;
 
-  const TimeOfferParticipants({Key key, this.offerModel, this.timebankModel})
+  const TimeOfferParticipants({Key? key, this.offerModel, this.timebankModel})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
     final _bloc = BlocProvider.of<OfferBloc>(context);
     return SingleChildScrollView(
       child: StreamBuilder<List<TimeOfferParticipantsModel>>(
-        stream: _bloc.timeOfferParticipants,
+        stream: _bloc!.timeOfferParticipants,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return LoadingIndicator();
           }
-          if (snapshot.data == null || snapshot.data.isEmpty) {
+          if (snapshot.data == null || snapshot.data!.isEmpty) {
             return Container(
               height: MediaQuery.of(context).size.height * 0.75,
               alignment: Alignment.center,
@@ -40,25 +40,27 @@ class TimeOfferParticipants extends StatelessWidget {
           }
           return ListView.builder(
             shrinkWrap: true,
-            itemCount: snapshot.data.length,
+            itemCount: snapshot.data!.length,
             physics: NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
               return Column(
                 children: [
                   ParticipantCard(
-                    name: snapshot.data[index].participantDetails.fullname,
-                    imageUrl: snapshot.data[index].participantDetails.photourl,
-                    bio: snapshot.data[index].participantDetails.bio,
+                    name: snapshot.data![index].participantDetails.fullname!,
+                    imageUrl:
+                        snapshot.data![index].participantDetails.photourl!,
+                    bio: snapshot.data![index].participantDetails.bio,
                     onImageTap: () {
                       Navigator.of(context)
                           .push(MaterialPageRoute(builder: (context) {
                         return ProfileViewer(
-                          timebankId: timebankModel.id,
-                          entityName: timebankModel.name,
+                          timebankId: timebankModel!.id,
+                          entityName: timebankModel!.name,
                           isFromTimebank: isPrimaryTimebank(
-                              parentTimebankId: timebankModel.parentTimebankId),
+                              parentTimebankId:
+                                  timebankModel!.parentTimebankId),
                           userEmail:
-                              snapshot.data[index].participantDetails.email,
+                              snapshot.data![index].participantDetails.email,
                         );
                       }));
                     },
@@ -67,9 +69,9 @@ class TimeOfferParticipants extends StatelessWidget {
                       onMessageClick(
                         context,
                         SevaCore.of(context).loggedInUser,
-                        snapshot.data[index].participantDetails,
-                        offerModel.timebankId,
-                        offerModel.communityId,
+                        snapshot.data![index].participantDetails,
+                        offerModel!.timebankId!,
+                        offerModel!.communityId!,
                       );
                     },
                     buttonsContainer: Container(
@@ -79,13 +81,13 @@ class TimeOfferParticipants extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: getActions(
                           bloc: _bloc,
-                          acceptorDoumentId: snapshot.data[index].id,
-                          offerId: snapshot.data[index].offerId,
-                          status: snapshot.data[index].status,
+                          acceptorDoumentId: snapshot.data![index].id,
+                          offerId: snapshot.data![index].offerId,
+                          status: snapshot.data![index].status,
                           notificationId:
-                              snapshot.data[index].acceptorNotificationId,
-                          hostEmail: snapshot.data[index].hostEmail,
-                          timeOfferParticipantsModel: snapshot.data[index],
+                              snapshot.data![index].acceptorNotificationId,
+                          hostEmail: snapshot.data![index].hostEmail,
+                          timeOfferParticipantsModel: snapshot.data![index],
                           context: context,
                           user: SevaCore.of(context).loggedInUser,
                         ),
@@ -102,15 +104,15 @@ class TimeOfferParticipants extends StatelessWidget {
   }
 
   List<Widget> getActions({
-    OfferAcceptanceStatus status,
-    OfferBloc bloc,
-    String offerId,
-    String acceptorDoumentId,
-    String notificationId,
-    String hostEmail,
-    TimeOfferParticipantsModel timeOfferParticipantsModel,
-    BuildContext context,
-    UserModel user,
+    OfferAcceptanceStatus? status,
+    OfferBloc? bloc,
+    String? offerId,
+    String? acceptorDoumentId,
+    String? notificationId,
+    String? hostEmail,
+    TimeOfferParticipantsModel? timeOfferParticipantsModel,
+    BuildContext? context,
+    UserModel? user,
   }) {
     switch (status) {
       case OfferAcceptanceStatus.ACCEPTED:
@@ -119,17 +121,18 @@ class TimeOfferParticipants extends StatelessWidget {
             color: Colors.green,
             onPressed: () {},
             child: Text(
-              S.of(context).approved,
+              S.of(context!).approved,
               style: TextStyle(color: Colors.white),
             ),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            elevation: 2,
+            textColor: Colors.white,
           ),
           SizedBox(
             width: 5,
           ),
-        ];
-
-      case OfferAcceptanceStatus.REJECTED:
-        return [
           CustomElevatedButton(
             color: Colors.red,
             onPressed: () {},
@@ -137,52 +140,51 @@ class TimeOfferParticipants extends StatelessWidget {
               S.of(context).declined,
               style: TextStyle(color: Colors.white),
             ),
-          )
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            elevation: 2,
+            textColor: Colors.white,
+          ),
         ];
-
       case OfferAcceptanceStatus.REQUESTED:
         return [
           CustomElevatedButton(
             color: Colors.green,
             onPressed: () {
               showDialog(
-                context: context,
+                context: context!,
                 builder: (context) {
                   return OfferJoinRequestDialog(
-                    offerId: timeOfferParticipantsModel.offerId,
+                    offerId: timeOfferParticipantsModel!.offerId,
                     requestId: timeOfferParticipantsModel.requestId,
                     requestStartDate:
                         timeOfferParticipantsModel.requestStartDate,
                     requestEndDate: timeOfferParticipantsModel.requestEndDate,
                     requestTitle: timeOfferParticipantsModel.requestTitle,
                     timeBankId: timeOfferParticipantsModel.timebankId,
-                    notificationId: notificationId,
-                    userModel: user,
+                    notificationId: notificationId!,
+                    userModel: user!,
                     timeOfferParticipantsModel: timeOfferParticipantsModel,
                   );
                 },
               );
-
-              // bloc.updateOfferAcceptorAction(
-              //   notificationId: notificationId,
-              //   acceptorDocumentId: acceptorDoumentId,
-              //   offerId: offerId,
-              //   action: OfferAcceptanceStatus.ACCEPTED,
-              //   hostEmail: hostEmail,
-              // );
             },
             child: Text(
-              S.of(context).approve,
+              S.of(context!).approve,
               style: TextStyle(color: Colors.white),
             ),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            elevation: 2,
+            textColor: Colors.white,
           ),
-          SizedBox(
-            width: 5,
-          ),
+          SizedBox(width: 5),
           CustomElevatedButton(
             color: Colors.red,
             onPressed: () {
-              bloc.updateOfferAcceptorAction(
+              bloc?.updateOfferAcceptorAction(
                 notificationId: notificationId,
                 acceptorDocumentId: acceptorDoumentId,
                 offerId: offerId,
@@ -194,8 +196,31 @@ class TimeOfferParticipants extends StatelessWidget {
               S.of(context).decline,
               style: TextStyle(color: Colors.white),
             ),
-          )
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            elevation: 2,
+            textColor: Colors.white,
+          ),
         ];
+      case OfferAcceptanceStatus.REJECTED:
+        return [
+          CustomElevatedButton(
+            color: Colors.red,
+            onPressed: () {},
+            child: Text(
+              S.of(context!).declined,
+              style: TextStyle(color: Colors.white),
+            ),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            elevation: 2,
+            textColor: Colors.white,
+          ),
+        ];
+      default:
+        return [];
     }
   }
 
@@ -222,10 +247,10 @@ class TimeOfferParticipants extends StatelessWidget {
 
     List<String> showToCommunities = [];
     try {
-      String communityId1 = loggedInUser.currentCommunity;
+      String communityId1 = loggedInUser.currentCommunity!;
 
       String communityId2 =
-          offerModel.participantDetails[user.sevauserid]['communityId'];
+          offerModel!.participantDetails![user.sevauserid]['communityId'];
 
       if (communityId1 != null &&
           communityId2 != null &&
@@ -246,8 +271,11 @@ class TimeOfferParticipants extends StatelessWidget {
       sender: sender,
       reciever: reciever,
       showToCommunities:
-          showToCommunities.isNotEmpty ? showToCommunities : null,
+          showToCommunities.isNotEmpty ? showToCommunities : null!,
       interCommunity: showToCommunities.isNotEmpty,
+      feedId: '', // Provide the appropriate feedId if available
+      entityId: offerModel?.id ?? '', // Provide the appropriate entityId
+      onChatCreate: () {}, // Provide a callback or leave empty if not needed
     );
   }
 }
@@ -310,20 +338,20 @@ class TimeOfferParticipantsModel {
   int requestEndDate;
 
   TimeOfferParticipantsModel({
-    this.requestId,
-    this.requestTitle,
-    this.requestStartDate,
-    this.requestEndDate,
-    this.id,
-    this.timebankId,
-    this.status,
-    this.communityId,
-    this.acceptorNotificationId,
-    this.participantDetails,
-    this.acceptorDocumentId,
-    this.timestamp,
-    this.offerId,
-    this.hostEmail,
+    required this.requestId,
+    required this.requestTitle,
+    required this.requestStartDate,
+    required this.requestEndDate,
+    required this.id,
+    required this.timebankId,
+    required this.status,
+    required this.communityId,
+    required this.acceptorNotificationId,
+    required this.participantDetails,
+    required this.acceptorDocumentId,
+    required this.timestamp,
+    required this.offerId,
+    required this.hostEmail,
   });
 
   factory TimeOfferParticipantsModel.fromJSON(Map<String, dynamic> json) =>

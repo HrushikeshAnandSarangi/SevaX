@@ -7,20 +7,20 @@ class MemberCardWithSingleAction extends StatelessWidget {
   final String name;
   final String timestamp;
   final String photoUrl;
-  final Function onMessagePressed;
-  final Function onImageTap;
-  final Function action;
+  final Function? onMessagePressed;
+  final Function? onImageTap;
+  final VoidCallback action;
   final String status;
   final Color buttonColor;
   const MemberCardWithSingleAction({
-    Key key,
-    this.name,
-    this.timestamp,
-    this.photoUrl,
+    Key? key,
+    required this.name,
+    required this.timestamp,
+    required this.photoUrl,
     this.onMessagePressed,
-    this.action,
-    this.status,
-    this.buttonColor,
+    required this.action,
+    required this.status,
+    required this.buttonColor,
     this.onImageTap,
   }) : super(key: key);
 
@@ -37,7 +37,7 @@ class MemberCardWithSingleAction extends StatelessWidget {
               child: CustomNetworkImage(
                 photoUrl ?? defaultUserImageURL,
                 fit: BoxFit.cover,
-                onTap: onImageTap,
+                onTap: onImageTap as void Function()?,
               ),
             ),
           ),
@@ -72,6 +72,8 @@ class MemberCardWithSingleAction extends StatelessWidget {
               shape: StadiumBorder(),
               padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
               color: buttonColor,
+              elevation: 0,
+              textColor: Colors.white,
               child: Text(status),
               onPressed: action,
             ),

@@ -5,11 +5,11 @@ import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/ui/screens/reported_members/widgets/zoom_image.dart';
 
 class Attachment extends StatelessWidget {
-  final String attachment;
+  final String? attachment;
 
-  const Attachment({Key key, this.attachment}) : super(key: key);
+  const Attachment({Key? key, this.attachment}) : super(key: key);
 
-  static Route<dynamic> route({String attachment}) {
+  static Route<dynamic> route({String? attachment}) {
     return MaterialPageRoute(
       builder: (context) => Attachment(
         attachment: attachment,
@@ -29,7 +29,8 @@ class Attachment extends StatelessWidget {
       ),
       body: Center(
         child: ZoomableImage(
-          CachedNetworkImageProvider(attachment),
+          CachedNetworkImageProvider(attachment!),
+          scale: 1.0,
         ),
       ),
     );

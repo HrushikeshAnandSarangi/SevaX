@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:progress_dialog/progress_dialog.dart';
+import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
@@ -23,40 +23,40 @@ import 'package:sevaexchange/views/timebanks/transfer_ownership_view.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class ReportedMemberCard extends StatelessWidget {
-  final ReportedMembersModel model;
-  final TimebankModel timebankModel;
-  final bool isFromTimebank;
+  final ReportedMembersModel? model;
+  final TimebankModel? timebankModel;
+  final bool? isFromTimebank;
   const ReportedMemberCard(
-      {Key key, this.model, this.isFromTimebank, this.timebankModel})
+      {Key? key, this.model, this.isFromTimebank, this.timebankModel})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
-    bool canRemove =
-        !(isPrimaryTimebank(parentTimebankId: timebankModel.parentTimebankId) &&
-            timebankModel.creatorId == model.reportedId);
-    int userCount = reportedByCount(model, isFromTimebank);
+    bool canRemove = !(isPrimaryTimebank(
+            parentTimebankId: timebankModel!.parentTimebankId) &&
+        timebankModel!.creatorId == model!.reportedId);
+    int userCount = reportedByCount(model!, isFromTimebank!);
     return InkWell(
       onTap: () {
         Navigator.of(context).push(
           ReportedMemberInfo.route(
-            model: model,
-            isFromTimebank: isFromTimebank,
-            removeMember: () => isFromTimebank
+            model: model!,
+            isFromTimebank: isFromTimebank!,
+            removeMember: () => isFromTimebank!
                 ? removeMemberTimebankFn(
                     context,
-                    SevaCore.of(context).loggedInUser.email,
-                    SevaCore.of(context).loggedInUser.sevaUserID,
-                    SevaCore.of(context).loggedInUser.fullname,
-                    SevaCore.of(context).loggedInUser.photoURL,
-                    timebankModel.name,
-                    timebankModel.id)
+                    SevaCore.of(context).loggedInUser.email!,
+                    SevaCore.of(context).loggedInUser.sevaUserID!,
+                    SevaCore.of(context).loggedInUser.fullname!,
+                    SevaCore.of(context).loggedInUser.photoURL!,
+                    timebankModel!.name,
+                    timebankModel!.id)
                 : removeMemberGroupFn(context),
             canRemove: canRemove,
             messageMember: () => messageMember(
               context: context,
-              timebankModel: timebankModel,
-              communityId: model.communityId,
-              model: model,
+              timebankModel: timebankModel!,
+              communityId: model!.communityId!,
+              model: model!,
             ),
           ),
         );
@@ -77,11 +77,11 @@ class ReportedMemberCard extends StatelessWidget {
                     Navigator.of(context)
                         .push(MaterialPageRoute(builder: (context) {
                       return ProfileViewer(
-                        timebankId: timebankModel.id,
-                        entityName: timebankModel.name,
+                        timebankId: timebankModel!.id,
+                        entityName: timebankModel!.name,
                         isFromTimebank: isPrimaryTimebank(
-                            parentTimebankId: timebankModel.parentTimebankId),
-                        userEmail: model.reportedUserEmail,
+                            parentTimebankId: timebankModel!.parentTimebankId),
+                        userEmail: model!.reportedUserEmail,
                       );
                     }));
                   }
@@ -96,14 +96,14 @@ class ReportedMemberCard extends StatelessWidget {
                   child: CircleAvatar(
                     radius: 30,
                     child: Offstage(
-                      offstage: model.reportedUserImage != null,
+                      offstage: model!.reportedUserImage != null,
                       child: CustomAvatar(
                           radius: 30,
-                          name: model.reportedUserName,
+                          name: model!.reportedUserName,
                           onTap: () {}),
                     ),
                     backgroundImage: CachedNetworkImageProvider(
-                        model.reportedUserImage ?? ''),
+                        model!.reportedUserImage ?? ''),
                   ),
                 ),
               ),
@@ -113,7 +113,7 @@ class ReportedMemberCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      model.reportedUserName,
+                      model!.reportedUserName!,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -147,9 +147,9 @@ class ReportedMemberCard extends StatelessWidget {
                 ),
                 onTap: () => messageMember(
                   context: context,
-                  timebankModel: timebankModel,
-                  communityId: model.communityId,
-                  model: model,
+                  timebankModel: timebankModel!,
+                  communityId: model!.communityId!,
+                  model: model!,
                 ),
               ),
               SizedBox(width: 16),
@@ -164,20 +164,20 @@ class ReportedMemberCard extends StatelessWidget {
                   onTap: () {
                     progressDialog = ProgressDialog(
                       context,
-                      type: ProgressDialogType.Normal,
+                      type: ProgressDialogType.normal,
                       isDismissible: false,
                     );
-                    progressDialog.show();
+                    progressDialog!.show();
 
-                    isFromTimebank
+                    isFromTimebank!
                         ? removeMemberTimebankFn(
                             context,
-                            SevaCore.of(context).loggedInUser.email,
-                            SevaCore.of(context).loggedInUser.sevaUserID,
-                            SevaCore.of(context).loggedInUser.fullname,
-                            SevaCore.of(context).loggedInUser.photoURL,
-                            timebankModel.name,
-                            timebankModel.id)
+                            SevaCore.of(context).loggedInUser.email!,
+                            SevaCore.of(context).loggedInUser.sevaUserID!,
+                            SevaCore.of(context).loggedInUser.fullname!,
+                            SevaCore.of(context).loggedInUser.photoURL!,
+                            timebankModel!.name,
+                            timebankModel!.id)
                         : removeMemberGroupFn(context);
                   },
                 ),
@@ -191,10 +191,10 @@ class ReportedMemberCard extends StatelessWidget {
 
   int reportedByCount(ReportedMembersModel model, bool isFromTimebank) {
     if (isFromTimebank) {
-      return model.reporterIds.length;
+      return model.reporterIds!.length;
     } else {
       int count = 0;
-      model.reports.forEach((Report report) {
+      model.reports!.forEach((Report report) {
         if (report.isTimebankReport == isFromTimebank) {
           count++;
         }
@@ -204,10 +204,10 @@ class ReportedMemberCard extends StatelessWidget {
   }
 
   void messageMember({
-    @required BuildContext context,
-    @required TimebankModel timebankModel,
-    @required String communityId,
-    @required ReportedMembersModel model,
+    required BuildContext context,
+    required TimebankModel timebankModel,
+    required String communityId,
+    required ReportedMembersModel model,
   }) {
     ParticipantInfo reciever = ParticipantInfo(
       id: model.reportedId,
@@ -227,16 +227,20 @@ class ReportedMemberCard extends StatelessWidget {
       timebankId: timebankModel.id,
       sender: sender,
       reciever: reciever,
-      communityId: model.communityId,
+      communityId: model.communityId!,
       isTimebankMessage: true,
+      feedId: '',
+      onChatCreate: () {},
+      showToCommunities: [],
+      entityId: timebankModel.id,
     );
   }
 
   void removeMemberGroupFn(BuildContext context) async {
     log(S.of(context).remove_member);
     Map<String, dynamic> responseData = await removeMemberFromGroup(
-        sevauserid: model.reportedId, groupId: timebankModel.id);
-    progressDialog.hide();
+        sevauserid: model!.reportedId, groupId: timebankModel!.id);
+    progressDialog!.hide();
 
     if (responseData['deletable'] == true) {
       showDialog(
@@ -252,7 +256,7 @@ class ReportedMemberCard extends StatelessWidget {
                 textColor: Colors.red,
                 onPressed: () async {
                   await CollectionRef.reportedUsersList
-                      .doc(model.reportedId + "*" + model.communityId)
+                      .doc(model!.reportedId! + "*" + model!.communityId!)
                       .delete();
                   Navigator.of(context).pop();
                 },
@@ -322,7 +326,7 @@ class ReportedMemberCard extends StatelessWidget {
       String timebankTitle,
       String timebankId) async {
     Map<String, dynamic> responseData = await removeMemberFromTimebank(
-        sevauserid: model.reportedId, timebankId: timebankModel.id);
+        sevauserid: model!.reportedId, timebankId: timebankModel!.id);
     progressDialog?.hide();
 
     if (responseData['deletable'] == true) {
@@ -339,7 +343,7 @@ class ReportedMemberCard extends StatelessWidget {
                 child: Text(S.of(context).close),
                 onPressed: () async {
                   await CollectionRef.reportedUsersList
-                      .doc(model.reportedId + "*" + model.communityId)
+                      .doc(model!.reportedId! + "*" + model!.communityId!)
                       .delete();
 
                   await CollectionRef.timebank
@@ -350,16 +354,16 @@ class ReportedMemberCard extends StatelessWidget {
                     'mode': ExitJoinType.EXIT.readable,
                     'modeType': ExitMode.REPORTED_IN_COMMUNITY.readable,
                     'timestamp': DateTime.now().millisecondsSinceEpoch,
-                    'communityId': model.communityId,
-                    'isGroup': timebankModel.parentTimebankId ==
+                    'communityId': model!.communityId,
+                    'isGroup': timebankModel!.parentTimebankId ==
                             FlavorConfig.values.timebankId
                         ? false
                         : true,
                     'memberDetails': {
-                      'email': model.reportedUserEmail,
-                      'id': model.reportedId,
-                      'fullName': model.reportedUserName,
-                      'photoUrl': model.reportedUserImage,
+                      'email': model!.reportedUserEmail!,
+                      'id': model!.reportedId,
+                      'fullName': model!.reportedUserName,
+                      'photoUrl': model!.reportedUserImage,
                     },
                     'adminDetails': {
                       'email': adminEmail,
@@ -413,11 +417,12 @@ class ReportedMemberCard extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => TransferOwnerShipView(
-              timebankId: timebankModel.id,
+              timebankId: timebankModel!.id,
               responseData: responseData,
-              memberName: model.reportedUserName,
-              memberSevaUserId: model.reportedId,
-              memberPhotUrl: model.reportedUserImage,
+              memberName: model!.reportedUserName!,
+              memberSevaUserId: model!.reportedId!,
+              memberPhotUrl: model!.reportedUserImage!,
+              memberEmail: model!.reportedUserEmail!,
               isComingFromExit: false,
             ),
           ),

@@ -22,10 +22,11 @@ import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/lending_participants_card.dart';
 
 class LendingOfferParticipants extends StatelessWidget {
-  final OfferModel offerModel;
-  final TimebankModel timebankModel;
+  final OfferModel? offerModel;
+  final TimebankModel? timebankModel;
 
-  const LendingOfferParticipants({Key key, this.offerModel, this.timebankModel})
+  const LendingOfferParticipants(
+      {Key? key, this.offerModel, this.timebankModel})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -33,19 +34,19 @@ class LendingOfferParticipants extends StatelessWidget {
     return SingleChildScrollView(
       child: StreamBuilder<List<LendingOfferAcceptorModel>>(
         stream:
-            LendingOffersRepo.getLendingOfferAcceptors(offerId: offerModel.id),
+            LendingOffersRepo.getLendingOfferAcceptors(offerId: offerModel!.id),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return LoadingIndicator();
           }
-          if (snapshot.data == null || snapshot.data.isEmpty) {
+          if (snapshot.data == null || snapshot.data!.isEmpty) {
             return Container(
               height: MediaQuery.of(context).size.height * 0.75,
               alignment: Alignment.center,
               child: Center(child: Text(S.of(context).no_participants_yet)),
             );
           }
-          List<LendingOfferAcceptorModel> acceptorsList = snapshot.data;
+          List<LendingOfferAcceptorModel> acceptorsList = snapshot.data!;
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -59,7 +60,7 @@ class LendingOfferParticipants extends StatelessWidget {
               SizedBox(height: 17),
               ListView.builder(
                 shrinkWrap: true,
-                itemCount: snapshot.data.length,
+                itemCount: snapshot.data!.length,
                 physics: NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
                   LendingOfferAcceptorModel acceptorModel =
@@ -67,8 +68,8 @@ class LendingOfferParticipants extends StatelessWidget {
                   return Column(
                     children: [
                       LendingParticipantCard(
-                        name: acceptorModel.acceptorName,
-                        acceptTime: acceptorModel.timestamp,
+                        name: acceptorModel.acceptorName!,
+                        acceptTime: acceptorModel.timestamp!,
                         imageUrl: acceptorModel.acceptorphotoURL ??
                             'https://www.pngitem.com/pimgs/m/404-4042710_circle-profile-picture-png-transparent-png.png',
                         onImageTap: () {
@@ -76,11 +77,11 @@ class LendingOfferParticipants extends StatelessWidget {
                             MaterialPageRoute(
                               builder: (context) {
                                 return ProfileViewer(
-                                  timebankId: timebankModel.id,
-                                  entityName: timebankModel.name,
+                                  timebankId: timebankModel!.id,
+                                  entityName: timebankModel!.name,
                                   isFromTimebank: isPrimaryTimebank(
                                       parentTimebankId:
-                                          timebankModel.parentTimebankId),
+                                          timebankModel!.parentTimebankId),
                                   userEmail: acceptorModel.acceptorEmail,
                                 );
                               },
@@ -98,8 +99,8 @@ class LendingOfferParticipants extends StatelessWidget {
                                 name: acceptorModel.acceptorName,
                                 type: ChatType.TYPE_PERSONAL,
                                 communityId: acceptorModel.communityId),
-                            offerModel.timebankId,
-                            offerModel.communityId,
+                            offerModel!.timebankId!,
+                            offerModel!.communityId!,
                           );
                         },
                         buttonsContainer: Container(
@@ -108,13 +109,13 @@ class LendingOfferParticipants extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: getActions(
-                              bloc: _bloc,
+                              bloc: _bloc!,
                               acceptorDoumentId: acceptorModel.acceptorEmail,
-                              offerId: offerModel.id,
-                              status: snapshot.data[index].status,
+                              offerId: offerModel!.id!,
+                              status: acceptorModel.status,
                               notificationId:
                                   acceptorModel.notificationId ?? '',
-                              hostEmail: offerModel.email,
+                              hostEmail: offerModel!.email!,
                               lendingOfferAcceptorModel: acceptorModel,
                               context: context,
                               user: SevaCore.of(context).loggedInUser,
@@ -179,15 +180,15 @@ class LendingOfferParticipants extends StatelessWidget {
   }
 
   List<Widget> getActions({
-    LendingOfferStatus status,
-    OfferBloc bloc,
-    String offerId,
-    String acceptorDoumentId,
-    String notificationId,
-    String hostEmail,
-    LendingOfferAcceptorModel lendingOfferAcceptorModel,
-    BuildContext context,
-    UserModel user,
+    LendingOfferStatus? status,
+    OfferBloc? bloc,
+    String? offerId,
+    String? acceptorDoumentId,
+    String? notificationId,
+    String? hostEmail,
+    LendingOfferAcceptorModel? lendingOfferAcceptorModel,
+    BuildContext? context,
+    UserModel? user,
   }) {
     switch (status) {
       case LendingOfferStatus.APPROVED:
@@ -195,6 +196,11 @@ class LendingOfferParticipants extends StatelessWidget {
           CustomElevatedButton(
             color: HexColor('#FAFAFA'),
             onPressed: () async {},
+            padding: EdgeInsets.all(0),
+            elevation: 0,
+            textColor: Colors.black,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
             child: Text(
               'Approved',
               style: TextStyle(color: Colors.black),
@@ -203,13 +209,14 @@ class LendingOfferParticipants extends StatelessWidget {
           SizedBox(
             width: 5,
           ),
-        ];
-
-      case LendingOfferStatus.REJECTED:
-        return [
           CustomElevatedButton(
             color: HexColor('#FAFAFA'),
             onPressed: () {},
+            padding: EdgeInsets.all(0),
+            elevation: 0,
+            textColor: Colors.black,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
             child: Text(
               'Rejected',
               style: TextStyle(color: Colors.black),
@@ -221,21 +228,26 @@ class LendingOfferParticipants extends StatelessWidget {
           CustomElevatedButton(
             color: HexColor('#FAFAFA'),
             onPressed: () {
-              if (!lendingOfferAcceptorModel.isLenderGaveReview) {
+              if (!lendingOfferAcceptorModel!.isLenderGaveReview!) {
                 handleFeedBackNotificationLendingOffer(
-                    offerModel: offerModel,
-                    notificationId: null,
-                    context: context,
-                    email: SevaCore.of(context).loggedInUser.email,
+                    offerModel: offerModel!,
+                    notificationId: "",
+                    context: context!,
+                    email: SevaCore.of(context).loggedInUser!.email!,
                     feedbackType:
                         FeedbackType.FEEDBACK_FOR_BORROWER_FROM_LENDER,
                     lendingOfferAcceptorModel: lendingOfferAcceptorModel);
               }
             },
+            padding: EdgeInsets.all(0),
+            elevation: 0,
+            textColor: Colors.black,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
             child: Text(
-              !lendingOfferAcceptorModel.isLenderGaveReview
-                  ? S.of(context).review
-                  : S.of(context).returned_items,
+              !lendingOfferAcceptorModel!.isLenderGaveReview!
+                  ? S.of(context!).review
+                  : S.of(context!).returned_items,
               style: TextStyle(color: Colors.black),
             ),
           )
@@ -245,8 +257,13 @@ class LendingOfferParticipants extends StatelessWidget {
           CustomElevatedButton(
             color: HexColor('#FAFAFA'),
             onPressed: () {},
+            padding: EdgeInsets.all(0),
+            elevation: 0,
+            textColor: Colors.black,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
             child: Text(
-              S.of(context).items_collected,
+              S.of(context!).items_collected,
               style: TextStyle(color: Colors.black),
             ),
           )
@@ -256,8 +273,13 @@ class LendingOfferParticipants extends StatelessWidget {
           CustomElevatedButton(
             color: HexColor('#FAFAFA'),
             onPressed: () {},
+            padding: EdgeInsets.all(0),
+            elevation: 0,
+            textColor: Colors.black,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
             child: Text(
-              S.of(context).checked_in_text,
+              S.of(context!).checked_in_text,
               style: TextStyle(color: Colors.black),
             ),
           )
@@ -267,21 +289,26 @@ class LendingOfferParticipants extends StatelessWidget {
           CustomElevatedButton(
             color: HexColor('#FAFAFA'),
             onPressed: () {
-              if (!lendingOfferAcceptorModel.isLenderGaveReview) {
+              if (!lendingOfferAcceptorModel!.isLenderGaveReview!) {
                 handleFeedBackNotificationLendingOffer(
-                    offerModel: offerModel,
-                    notificationId: null,
-                    context: context,
-                    email: SevaCore.of(context).loggedInUser.email,
+                    offerModel: offerModel!,
+                    notificationId: '',
+                    context: context!,
+                    email: SevaCore.of(context).loggedInUser.email!,
                     feedbackType:
                         FeedbackType.FEEDBACK_FOR_BORROWER_FROM_LENDER,
                     lendingOfferAcceptorModel: lendingOfferAcceptorModel);
               }
             },
+            padding: EdgeInsets.all(0),
+            elevation: 0,
+            textColor: Colors.black,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
             child: Text(
-              !lendingOfferAcceptorModel.isLenderGaveReview
-                  ? S.of(context).review
-                  : S.of(context).departed_text,
+              !lendingOfferAcceptorModel!.isLenderGaveReview!
+                  ? S.of(context!).review
+                  : S.of(context!).departed_text,
               style: TextStyle(color: Colors.black),
             ),
           )
@@ -298,63 +325,64 @@ class LendingOfferParticipants extends StatelessWidget {
             onPressed: () {
               onMessageClick(
                 context,
-                SevaCore.of(context).loggedInUser,
+                SevaCore.of(context!).loggedInUser,
                 ParticipantInfo(
-                    id: lendingOfferAcceptorModel.acceptorId,
+                    id: lendingOfferAcceptorModel!.acceptorId,
                     photoUrl: lendingOfferAcceptorModel.acceptorphotoURL,
                     name: lendingOfferAcceptorModel.acceptorName,
                     type: ChatType.TYPE_PERSONAL,
                     communityId: lendingOfferAcceptorModel.communityId),
-                offerModel.timebankId,
-                offerModel.communityId,
+                offerModel!.timebankId!,
+                offerModel!.communityId!,
               );
             },
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              primary: Colors.grey[300],
+              backgroundColor: Colors.grey[300],
               shape: StadiumBorder(),
             ),
             onPressed: () async {
               //Dialog box also to rsestrict approving more than one Borrower at a time.
               bool isCurrentlyLent = false;
-              if (offerModel.lendingOfferDetailsModel.approvedUsers != null &&
-                  offerModel.lendingOfferDetailsModel.approvedUsers.length >
+              if (offerModel!.lendingOfferDetailsModel!.approvedUsers != null &&
+                  offerModel!.lendingOfferDetailsModel!.approvedUsers.length >
                       0) {
                 isCurrentlyLent = true;
               }
 
-              LendingOfferAcceptorModel lendingOfferAcceptorModelOfApproved;
-              if (offerModel.lendingOfferDetailsModel.approvedUsers.length >
+              LendingOfferAcceptorModel? lendingOfferAcceptorModelOfApproved;
+              if (offerModel!.lendingOfferDetailsModel!.approvedUsers.length >
                   0) {
                 lendingOfferAcceptorModelOfApproved =
                     await LendingOffersRepo.getBorrowAcceptorModel(
-                        offerId: offerModel.id,
-                        acceptorEmail: offerModel
-                            .lendingOfferDetailsModel.approvedUsers.first);
+                        offerId: offerModel!.id!,
+                        acceptorEmail: offerModel!
+                            .lendingOfferDetailsModel!.approvedUsers.first);
               }
 
-              if (isCurrentlyLent) {
+              if (isCurrentlyLent &&
+                  lendingOfferAcceptorModelOfApproved != null) {
                 await cannotApproveMultipleDialog(
-                    context,
+                    context!,
                     lendingOfferAcceptorModelOfApproved.acceptorName ?? '',
-                    offerModel
-                        .lendingOfferDetailsModel.lendingModel.lendingType);
+                    offerModel!
+                        .lendingOfferDetailsModel!.lendingModel!.lendingType);
               } else {
                 Navigator.push(
-                  context,
+                  context!,
                   MaterialPageRoute(
                     // fullscreenDialog: true,
                     builder: (context) => ApproveLendingOffer(
-                      offerModel: offerModel,
-                      lendingOfferAcceptorModel: lendingOfferAcceptorModel,
+                      offerModel: offerModel!,
+                      lendingOfferAcceptorModel: lendingOfferAcceptorModel!,
                     ),
                   ),
                 );
               }
             },
             child: Text(
-              S.of(context).approve,
+              S.of(context!).approve,
               style: TextStyle(color: Colors.black, fontSize: 11),
             ),
           ),
@@ -363,14 +391,14 @@ class LendingOfferParticipants extends StatelessWidget {
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              primary: Colors.grey[300],
+              backgroundColor: Colors.grey[300],
               shape: StadiumBorder(),
             ),
             onPressed: () {
               LendingOffersRepo.updateOfferAcceptorActionRejected(
-                lendingOfferAcceptorModel: lendingOfferAcceptorModel,
+                lendingOfferAcceptorModel: lendingOfferAcceptorModel!,
                 action: OfferAcceptanceStatus.REJECTED,
-                model: offerModel,
+                model: offerModel!,
               );
             },
             child: Padding(
@@ -380,9 +408,10 @@ class LendingOfferParticipants extends StatelessWidget {
                 style: TextStyle(color: Colors.black, fontSize: 11.5),
               ),
             ),
-          )
+          ),
         ];
     }
+    return [];
   }
 
   void onMessageClick(
@@ -401,9 +430,9 @@ class LendingOfferParticipants extends StatelessWidget {
 
     List<String> showToCommunities = [];
     try {
-      String communityId1 = loggedInUser.currentCommunity;
+      String communityId1 = loggedInUser.currentCommunity!;
 
-      String communityId2 = receiver.communityId;
+      String communityId2 = receiver.communityId!;
 
       if (communityId1 != null &&
           communityId2 != null &&
@@ -424,56 +453,60 @@ class LendingOfferParticipants extends StatelessWidget {
       sender: sender,
       reciever: receiver,
       showToCommunities:
-          showToCommunities.isNotEmpty ? showToCommunities : null,
+          showToCommunities.isNotEmpty ? showToCommunities : <String>[],
       interCommunity: showToCommunities.isNotEmpty,
+      feedId: '', // Provide appropriate value if needed
+      onChatCreate: () {}, // Provide appropriate callback if needed
+      entityId: '', // Provide appropriate value if needed
     );
   }
 }
 
 class LendingOfferAcceptorModel {
-  String id;
-  String acceptorEmail;
-  String acceptorId;
-  String acceptorName;
-  String acceptorMobile;
-  String borrowAgreementLink;
-  String selectedAddress;
-  bool isApproved;
-  List<String> borrowedItemsIds;
-  String borrowedPlaceId;
-  String notificationId;
-  int timestamp;
-  String acceptorphotoURL;
-  LendingOfferStatus status;
-  String communityId;
-  String additionalInstructions;
-  bool isLenderGaveReview;
-  bool isBorrowerGaveReview;
-  int startDate;
-  int endDate;
-  String approvedAgreementId;
+  String? id;
+  String? acceptorEmail;
+  String? acceptorId;
+  String? acceptorName;
+  String? acceptorMobile;
+  String? borrowAgreementLink;
+  String? selectedAddress;
+  bool? isApproved;
+  List<String>? borrowedItemsIds;
+  String? borrowedPlaceId;
+  String? notificationId;
+  int? timestamp;
+  String? acceptorphotoURL;
+  LendingOfferStatus? status;
+  String? communityId;
+  String? additionalInstructions;
+  bool? isLenderGaveReview;
+  bool? isBorrowerGaveReview;
+  int? startDate;
+  int? endDate;
+  String? approvedAgreementId;
 
   LendingOfferAcceptorModel({
-    this.id,
-    this.acceptorEmail,
-    this.acceptorId,
-    this.acceptorName,
-    this.acceptorMobile,
-    this.borrowAgreementLink,
-    this.selectedAddress,
-    this.isApproved,
-    this.borrowedItemsIds,
-    this.borrowedPlaceId,
-    this.notificationId,
-    this.timestamp,
-    this.acceptorphotoURL,
-    this.status,
-    this.communityId,
-    this.additionalInstructions,
-    this.isLenderGaveReview,
-    this.isBorrowerGaveReview,
-    this.startDate,
-    this.endDate,
+    required this.id,
+    required this.acceptorEmail,
+    required this.acceptorId,
+    required this.acceptorName,
+    required this.acceptorMobile,
+    required this.borrowAgreementLink,
+    required this.selectedAddress,
+    required this.isApproved,
+    required this.borrowedItemsIds,
+    required this.borrowedPlaceId,
+    required this.notificationId,
+    required this.timestamp,
+    required this.acceptorphotoURL,
+    required this.status,
+    required this.communityId,
+    required this.additionalInstructions,
+    required this.isLenderGaveReview,
+    required this.isBorrowerGaveReview,
+    required this.startDate,
+    required this.endDate,
+    required this.approvedAgreementId,
   });
 
   factory LendingOfferAcceptorModel.fromMap(Map<String, dynamic> json) =>
@@ -517,6 +550,9 @@ class LendingOfferAcceptorModel {
             : json["isBorrowerGaveReview"],
         startDate: json["startDate"] == null ? null : json["startDate"],
         endDate: json["endDate"] == null ? null : json["endDate"],
+        approvedAgreementId: json["approvedAgreementId"] == null
+            ? ''
+            : json["approvedAgreementId"],
       );
 
   Map<String, dynamic> toMap() => {
@@ -531,7 +567,7 @@ class LendingOfferAcceptorModel {
         "isApproved": isApproved == null ? null : isApproved,
         "borrowedItemsIds": borrowedItemsIds == null
             ? []
-            : List<dynamic>.from(borrowedItemsIds.map((x) => x)),
+            : List<dynamic>.from(borrowedItemsIds!.map((x) => x)),
         "borrowedPlaceId": borrowedPlaceId == null ? null : borrowedPlaceId,
         "timestamp": timestamp == null ? null : timestamp,
         "acceptorphotoURL": acceptorphotoURL == null ? null : acceptorphotoURL,
@@ -539,7 +575,7 @@ class LendingOfferAcceptorModel {
         "communityId": communityId == null ? null : communityId,
         "additionalInstructions":
             additionalInstructions == null ? null : additionalInstructions,
-        "status": status == null ? null : status.readable,
+        "status": status == null ? null : status?.readable,
         "isBorrowerGaveReview":
             isBorrowerGaveReview == null ? false : isBorrowerGaveReview,
         "isLenderGaveReview":

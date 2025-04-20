@@ -616,9 +616,14 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                       MaterialPageRoute(
                         builder: (context) {
                           return RequestDonationDisputePage(
-                            convertedAmount: amount,
-                            currency: donationModel
-                                .cashDetails!.cashDetails!.requestCurrencyType!,
+                            convertedAmount:
+                                donationModel.cashDetails!.pledgedAmount ?? 0.0,
+                            convertedAmountRaised: donationModel
+                                    .cashDetails!.cashDetails!.amountRaised ??
+                                0.0,
+                            currency: donationModel.cashDetails!.cashDetails!
+                                    .requestCurrencyType ??
+                                '',
                             model: donationModel,
                             notificationId: notification.id!,
                           );
@@ -662,6 +667,14 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                           return RequestDonationDisputePage(
                             model: donationModel,
                             notificationId: notification.id!,
+                            convertedAmount:
+                                donationModel.cashDetails?.pledgedAmount ?? 0.0,
+                            convertedAmountRaised: donationModel
+                                    .cashDetails?.cashDetails?.amountRaised ??
+                                0.0,
+                            currency: donationModel.cashDetails?.cashDetails
+                                    ?.requestCurrencyType ??
+                                '',
                           );
                         },
                       ),

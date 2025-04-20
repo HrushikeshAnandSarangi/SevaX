@@ -8,6 +8,7 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart'; // Add this import
+import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/screens/request/bloc/request_bloc.dart';
@@ -307,10 +308,10 @@ class _RequestListingPageState extends State<RequestListingPage> {
 }
 
 class RequestListBuilder extends StatelessWidget {
-  final Coordinates coords;
-  final TimebankModel timebankModel;
+  final GeoPoint? coords;
+  final TimebankModel? timebankModel;
 
-  const RequestListBuilder({Key key, this.coords, this.timebankModel})
+  const RequestListBuilder({Key? key, this.coords, this.timebankModel})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -328,11 +329,12 @@ class RequestListBuilder extends StatelessWidget {
           );
         }
 
-        if (snapshot.data == null || snapshot.data.isEmpty) {
+        if (snapshot.data == null || snapshot.data!.isEmpty) {
           return Center(
             child: EmptyWidget(
               sub_title: S.of(context).no_content_common_description,
               title: S.of(context).no_requests_title,
+              titleFontSize: 18, // Add a suitable font size value
             ),
           );
         }
@@ -343,7 +345,7 @@ class RequestListBuilder extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               HideWidget(
-                hide: snapshot.data.myRequests.isEmpty,
+                hide: snapshot.data!.myRequests.isEmpty,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -356,7 +358,7 @@ class RequestListBuilder extends StatelessWidget {
                         ),
                       ),
                     ),
-                    ...snapshot.data.myRequests
+                    ...snapshot.data!.myRequests
                         .map(
                           (model) => RequestCard(
                             model: model,
@@ -370,9 +372,10 @@ class RequestListBuilder extends StatelessWidget {
                         .toList(),
                   ],
                 ),
+                secondChild: SizedBox.shrink(),
               ),
               HideWidget(
-                hide: snapshot.data.communityRequests.isEmpty,
+                hide: snapshot.data!.communityRequests.isEmpty,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -385,7 +388,7 @@ class RequestListBuilder extends StatelessWidget {
                         ),
                       ),
                     ),
-                    ...snapshot.data.communityRequests
+                    ...snapshot.data!.communityRequests
                         .map(
                           (model) => RequestCard(
                             model: model,
@@ -399,6 +402,7 @@ class RequestListBuilder extends StatelessWidget {
                         .toList(),
                   ],
                 ),
+                secondChild: SizedBox.shrink(),
               ),
             ],
           ),
@@ -407,23 +411,24 @@ class RequestListBuilder extends StatelessWidget {
     );
   }
 
-  void editRequest({BuildContext context, RequestModel model}) {
+  void editRequest({BuildContext? context, required RequestModel model}) {
     bool isAdmin = false;
     timeBankBloc.setSelectedRequest(model);
     timeBankBloc.setSelectedTimeBankDetails(timebankModel);
     if (model.requestMode == RequestMode.PERSONAL_REQUEST) {
-      isAdmin = model.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID
-          ? true
-          : false;
+      isAdmin =
+          model.sevaUserId == SevaCore.of(context!).loggedInUser.sevaUserID
+              ? true
+              : false;
     } else {
       isAdmin = isAccessAvailable(
-        timebankModel,
-        SevaCore.of(context).loggedInUser.sevaUserID,
+        timebankModel!,
+        SevaCore.of(context!).loggedInUser.sevaUserID!,
       );
     }
     timeBankBloc.setIsAdmin(isAdmin);
 
-    if (model.isRecurring) {
+    if (model.isRecurring!) {
       Navigator.push(
           context,
           MaterialPageRoute(
@@ -439,14 +444,15 @@ class RequestListBuilder extends StatelessWidget {
     } else if (model.sevaUserId ==
             SevaCore.of(context).loggedInUser.sevaUserID ||
         isAccessAvailable(
-            timebankModel, SevaCore.of(context).loggedInUser.sevaUserID)) {
+            timebankModel!, SevaCore.of(context).loggedInUser.sevaUserID!)) {
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (_context) => BlocProvider(
             bloc: BlocProvider.of<HomeDashBoardBloc>(context),
             child: RequestTabHolder(
-              //communityModel: BlocProvider.of<HomeDashBoardBloc>(context).selectedCommunityModel,
+              communityModel: BlocProvider.of<HomeDashBoardBloc>(context)!
+                  .selectedCommunityModel,
               isAdmin: true,
             ),
           ),
@@ -525,20 +531,20 @@ class RequestViewClassifer {
       } else if (l.length >= 1) {
         return "${l[0]}";
       } else {
-        return null;
+        return null!;
       }
     } else {
-      return null;
+      return null!;
     }
   }
 
-  static String getTimeInText({int postTimeStamp}) {
+  static String getTimeInText({int? postTimeStamp}) {
     return timeAgo
         .format(
             DateTime.fromMillisecondsSinceEpoch(
-              postTimeStamp,
+              postTimeStamp!,
             ),
-            locale: Locale(AppConfig.prefs.getString('language_code'))
+            locale: Locale(AppConfig.prefs!.getString('language_code')!)
                 .toLanguageTag())
         .replaceAll('hours ago', 'hr');
   }

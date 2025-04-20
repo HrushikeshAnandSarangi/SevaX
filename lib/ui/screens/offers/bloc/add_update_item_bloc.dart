@@ -41,14 +41,14 @@ class AddUpdateItemBloc extends BlocBase {
   Function(List<String> value) get onItemImageAdded => _item_images.sink.add;
 
   void loadData(LendingItemModel lendingPlaceModel) {
-    _item_images.add(lendingPlaceModel.itemImages.toList());
+    _item_images.add(lendingPlaceModel.itemImages!.toList());
   }
 
   LendingModel getLendingItemModel() {
     return _model.value;
   }
 
-  void createLendingOfferPlace({UserModel creator}) {
+  void createLendingOfferPlace({UserModel? creator}) {
     LendingModel lendingModel;
     if (!validateForm()) {
       _message.add('create');
@@ -61,8 +61,8 @@ class AddUpdateItemBloc extends BlocBase {
           estimatedValue: int.parse(_estimated_value.value),
           itemImages: _item_images.value.toList(),
         ),
-        creatorId: creator.sevaUserID,
-        email: creator.email,
+        creatorId: creator!.sevaUserID!,
+        email: creator!.email!,
         timestamp: timestamp,
         lendingType: LendingType.ITEM,
       );
@@ -73,13 +73,14 @@ class AddUpdateItemBloc extends BlocBase {
     }
   }
 
-  void updateLendingOfferPlace({LendingModel model}) async {
+  void updateLendingOfferPlace({LendingModel? model}) async {
+    if (model == null) return;
     LendingModel lendingModel = model;
     if (!validateForm()) {
-      lendingModel.lendingItemModel.itemName = _itemName.value;
-      lendingModel.lendingItemModel.estimatedValue =
+      lendingModel.lendingItemModel!.itemName = _itemName.value;
+      lendingModel.lendingItemModel!.estimatedValue =
           int.parse(_estimated_value.value);
-      lendingModel.lendingItemModel.itemImages = _item_images.value.toList();
+      lendingModel.lendingItemModel!.itemImages = _item_images.value.toList();
 
       LendingOffersRepo.updateNewLendingItem(model: lendingModel).then((_) {
         _model.add(lendingModel);
@@ -100,7 +101,7 @@ class AddUpdateItemBloc extends BlocBase {
       _itemName.addError(AddItemValidationErrors.profanityError);
       return AddItemValidationErrors.profanityError;
     }
-    return null;
+    return null!;
   }
 
   String validateEstimatedVal(String val) {
@@ -111,7 +112,7 @@ class AddUpdateItemBloc extends BlocBase {
       _estimated_value.addError(AddItemValidationErrors.estimated_value_error);
       return AddItemValidationErrors.estimated_value_error;
     }
-    return null;
+    return null!;
   }
 
   bool validateForm() {
@@ -176,7 +177,7 @@ String getAddItemValidationError(BuildContext context, String errorCode) {
       break;
 
     default:
-      return null;
+      return null!;
       break;
   }
 }

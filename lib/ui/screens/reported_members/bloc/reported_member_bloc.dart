@@ -27,10 +27,10 @@ class ReportedMembersBloc {
     query.snapshots().listen((QuerySnapshot event) {
       List<ReportedMembersModel> members = [];
       event.docs.forEach((DocumentSnapshot element) {
-        ReportedMembersModel member =
-            ReportedMembersModel.fromMap(element.data());
+        ReportedMembersModel member = ReportedMembersModel.fromMap(
+            element.data() as Map<String, dynamic>);
         members.add(member);
-        log(member.reportedId);
+        log(member.reportedId!);
       });
       if (!_reportedMembers.isClosed) {
         _reportedMembers.add(members);

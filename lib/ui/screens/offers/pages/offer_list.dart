@@ -26,9 +26,9 @@ import 'package:sevaexchange/widgets/hide_widget.dart';
 import 'package:sevaexchange/utils/extensions.dart';
 
 class OfferList extends StatefulWidget {
-  final TimebankModel timebankModel;
+  final TimebankModel? timebankModel;
 
-  const OfferList({Key key, this.timebankModel}) : super(key: key);
+  const OfferList({Key? key, this.timebankModel}) : super(key: key);
 
   @override
   _OfferListState createState() => _OfferListState();
@@ -41,7 +41,7 @@ class _OfferListState extends State<OfferList> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       bloc.init(
-        widget.timebankModel.id,
+        widget.timebankModel!.id,
         SevaCore.of(context).loggedInUser,
       );
     });
@@ -77,21 +77,21 @@ class _OfferListState extends State<OfferList> {
             ),
             TransactionLimitCheck(
               comingFrom: ComingFrom.Offers,
-              timebankId: widget.timebankModel.id,
-              isSoftDeleteRequested: widget.timebankModel.requestedSoftDelete,
+              timebankId: widget.timebankModel!.id,
+              isSoftDeleteRequested: widget.timebankModel!.requestedSoftDelete,
               child: GestureDetector(
                 onTap: () {
-                  if (widget.timebankModel.id ==
+                  if (widget.timebankModel!.id ==
                           FlavorConfig.values.timebankId &&
                       !isAccessAvailable(
-                          widget.timebankModel, user.sevaUserID)) {
+                          widget.timebankModel!, user.sevaUserID!)) {
                     showAdminAccessMessage(context: context);
                   } else {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => CreateOffer(
-                          timebankId: widget.timebankModel.id,
+                          timebankId: widget.timebankModel!.id,
                           timebankModel: widget.timebankModel,
                         ),
                       ),
@@ -126,11 +126,12 @@ class _OfferListState extends State<OfferList> {
                 );
               }
 
-              if (snapshot.data == null || snapshot.data.isEmpty) {
+              if (snapshot.data == null || snapshot.data!.isEmpty) {
                 return Center(
                   child: EmptyWidget(
                     sub_title: S.of(context).no_content_common_description,
                     title: S.of(context).no_offers_title,
+                    titleFontSize: 18, // or any appropriate font size
                   ),
                 );
               }
@@ -141,7 +142,8 @@ class _OfferListState extends State<OfferList> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     HideWidget(
-                      hide: snapshot.data.myOffers.isEmpty,
+                      secondChild: SizedBox(height: 8),
+                      hide: snapshot.data!.myOffers.isEmpty,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -154,11 +156,11 @@ class _OfferListState extends State<OfferList> {
                               ),
                             ),
                           ),
-                          ...snapshot.data.myOffers
+                          ...snapshot.data!.myOffers
                               .map(
                                 (model) => getOfferCard(
                                   model,
-                                  widget.timebankModel,
+                                  widget.timebankModel!,
                                 ),
                               )
                               .toList(),
@@ -166,7 +168,8 @@ class _OfferListState extends State<OfferList> {
                       ),
                     ),
                     HideWidget(
-                      hide: snapshot.data.communityoffers.isEmpty,
+                      secondChild: SizedBox(height: 8),
+                      hide: snapshot.data!.communityoffers.isEmpty,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -179,11 +182,11 @@ class _OfferListState extends State<OfferList> {
                               ),
                             ),
                           ),
-                          ...snapshot.data.communityoffers
+                          ...snapshot.data!.communityoffers
                               .map(
                                 (model) => getOfferCard(
                                   model,
-                                  widget.timebankModel,
+                                  widget.timebankModel!,
                                 ),
                               )
                               .toList(),
@@ -214,11 +217,11 @@ class _OfferListState extends State<OfferList> {
               SizedBox(width: 10),
               CustomChip(
                 label: S.of(context).time,
-                isSelected: filter.timeOffer,
+                isSelected: filter!.timeOffer,
                 onTap: () {
                   bloc.onFilterChange(
-                    snapshot.data.copyWith(
-                      timeOffer: !snapshot.data.timeOffer,
+                    snapshot.data!.copyWith(
+                      timeOffer: !snapshot.data!.timeOffer,
                     ),
                   );
                 },
@@ -229,8 +232,8 @@ class _OfferListState extends State<OfferList> {
                 isSelected: filter.cashOffer,
                 onTap: () {
                   bloc.onFilterChange(
-                    snapshot.data.copyWith(
-                      cashOffer: !snapshot.data.cashOffer,
+                    snapshot.data!.copyWith(
+                      cashOffer: !snapshot.data!.cashOffer,
                     ),
                   );
                 },
@@ -241,8 +244,8 @@ class _OfferListState extends State<OfferList> {
                 isSelected: filter.goodsOffer,
                 onTap: () {
                   bloc.onFilterChange(
-                    snapshot.data.copyWith(
-                      goodsOffer: !snapshot.data.goodsOffer,
+                    snapshot.data!.copyWith(
+                      goodsOffer: !snapshot.data!.goodsOffer,
                     ),
                   );
                 },
@@ -253,8 +256,8 @@ class _OfferListState extends State<OfferList> {
                 isSelected: filter.oneToManyOffer,
                 onTap: () {
                   bloc.onFilterChange(
-                    snapshot.data.copyWith(
-                      oneToManyOffer: !snapshot.data.oneToManyOffer,
+                    snapshot.data!.copyWith(
+                      oneToManyOffer: !snapshot.data!.oneToManyOffer,
                     ),
                   );
                 },
@@ -265,8 +268,8 @@ class _OfferListState extends State<OfferList> {
                 isSelected: filter.lendingOffer,
                 onTap: () {
                   bloc.onFilterChange(
-                    snapshot.data.copyWith(
-                      lendingOffer: !snapshot.data.lendingOffer,
+                    snapshot.data!.copyWith(
+                      lendingOffer: !snapshot.data!.lendingOffer,
                     ),
                   );
                 },
@@ -277,8 +280,8 @@ class _OfferListState extends State<OfferList> {
                 isSelected: filter.publicOffer,
                 onTap: () {
                   bloc.onFilterChange(
-                    snapshot.data.copyWith(
-                      publicOffer: !snapshot.data.publicOffer,
+                    snapshot.data!.copyWith(
+                      publicOffer: !snapshot.data!.publicOffer,
                     ),
                   );
                 },
@@ -289,8 +292,8 @@ class _OfferListState extends State<OfferList> {
                 isSelected: filter.virtualOffer,
                 onTap: () {
                   bloc.onFilterChange(
-                    snapshot.data.copyWith(
-                      virtualOffer: !snapshot.data.virtualOffer,
+                    snapshot.data!.copyWith(
+                      virtualOffer: !snapshot.data!.virtualOffer,
                     ),
                   );
                 },
@@ -308,24 +311,24 @@ class _OfferListState extends State<OfferList> {
     return OfferCard(
       isCardVisible: isOfferVisible(
         model,
-        user.sevaUserID,
+        user.sevaUserID!,
       ),
-      requestType: model.type,
-      public: model.public,
-      virtual: model.virtual,
-      userCoordinates: model.currentUserLocation,
-      offerCoordinates: model.location?.coords,
+      requestType: model.type!,
+      public: model.public!,
+      virtual: model.virtual!,
+      // userCoordinates: model.currentUserLocation, // Removed or replace with the correct property if available
+      offerCoordinates: model.location?.geopoint,
       isAutoGenerated: model.autoGenerated,
       isRecurring: model.isRecurring,
       type: model.type,
       isCreator: model.email == user.email,
       title: getOfferTitle(offerDataModel: model),
       subtitle: getOfferDescription(offerDataModel: model),
-      offerType: model.offerType,
+      offerType: model.offerType!,
       startDate: model?.groupOfferDataModel?.startDate,
       timestamp: model?.timestamp,
       selectedAddress: model.selectedAdrress,
-      actionButtonLabel: getButtonLabel(context, model, user.sevaUserID),
+      actionButtonLabel: getButtonLabel(context, model, user.sevaUserID!),
       buttonColor:
           (model.type == RequestType.CASH || model.type == RequestType.GOODS)
               ? Theme.of(context).primaryColor
@@ -333,7 +336,7 @@ class _OfferListState extends State<OfferList> {
                   ? Colors.grey
                   : Theme.of(context).primaryColor,
       onCardPressed: () async {
-        if (model.isRecurring) {
+        if (model.isRecurring!) {
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -341,7 +344,7 @@ class _OfferListState extends State<OfferList> {
                 comingFrom: ComingFrom.Offers,
                 offerModel: model,
                 timebankModel: null,
-                requestModel: null,
+                requestModel: RequestModel(communityId: timebankModel.id),
               ),
             ),
           );
@@ -356,7 +359,7 @@ class _OfferListState extends State<OfferList> {
         if (model.type != RequestType.TIME &&
             !isAccessAvailable(
               timebankModel,
-              user.sevaUserID,
+              user.sevaUserID!,
             )) {
           CustomDialogs.generalDialogWithCloseButton(
             context,

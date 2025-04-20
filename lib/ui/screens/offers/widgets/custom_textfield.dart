@@ -3,28 +3,28 @@ import 'package:flutter/services.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
 
 class CustomTextField extends StatelessWidget {
-  final String heading;
-  final String value;
-  final ValueChanged<String> onChanged;
-  final String hint;
-  final int maxLength;
-  final String error;
+  final String? heading;
+  final String? value;
+  final ValueChanged<String>? onChanged;
+  final String? hint;
+  final int? maxLength;
+  final String? error;
   final TextInputType keyboardType;
-  final TextInputAction textInputAction;
-  final FocusNode currentNode;
-  final FocusNode nextNode;
-  final List<TextInputFormatter> formatters;
-  final TextEditingController controller;
-  final Function(String) validator;
-  final bool autovalidate;
+  final TextInputAction? textInputAction;
+  final FocusNode? currentNode;
+  final FocusNode? nextNode;
+  final List<TextInputFormatter>? formatters;
+  final TextEditingController? controller;
+  final Function(String)? validator;
+  final bool? autovalidate;
   final textCapitalization;
   final int maxLines;
   final int minLines;
-  final int errorMaxLines;
-  final void Function(String) onSaved;
-  final InputDecoration decoration;
+  final int? errorMaxLines;
+  final void Function(String)? onSaved;
+  final InputDecoration? decoration;
   CustomTextField({
-    Key key,
+    Key? key,
     this.heading,
     this.onChanged,
     this.hint,
@@ -45,7 +45,7 @@ class CustomTextField extends StatelessWidget {
     this.onSaved,
     this.controller,
     this.decoration,
-  }) : super(key: key);
+  });
 
   final TextStyle titleStyle = TextStyle(
     fontSize: 16,
@@ -75,7 +75,7 @@ class CustomTextField extends StatelessWidget {
       children: <Widget>[
         heading != null
             ? Text(
-                heading,
+                heading!,
                 style: titleStyle,
               )
             : Container(),
@@ -104,13 +104,13 @@ class CustomTextField extends StatelessWidget {
               nextNode != null ? TextInputAction.next : TextInputAction.done,
           style: subTitleStyle,
           onFieldSubmitted: (v) {
-            currentNode.unfocus();
+            currentNode!.unfocus();
             nextNode != null
-                ? nextNode.requestFocus()
+                ? nextNode!.requestFocus()
                 : FocusScope.of(context).unfocus();
           },
-          validator: validator,
-          onSaved: onSaved,
+          validator: validator! as String? Function(String?)?,
+          onSaved: onSaved as void Function(String?)?,
           maxLines: maxLines,
           minLines: minLines,
         ),

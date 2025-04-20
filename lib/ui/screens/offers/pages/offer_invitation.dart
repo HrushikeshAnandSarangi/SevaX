@@ -18,9 +18,9 @@ import 'package:sevaexchange/views/requests/offer_card_widget.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class FindVolunteersViewForOffer extends StatefulWidget {
-  final String timebankId;
-  final String sevaUserId;
-  final OfferModel offerModel;
+  final String? timebankId;
+  final String? sevaUserId;
+  final OfferModel? offerModel;
 
   FindVolunteersViewForOffer({
     this.timebankId,
@@ -35,7 +35,7 @@ class FindVolunteersViewForOffer extends StatefulWidget {
 
 class _FindVolunteersViewStateForOffer
     extends State<FindVolunteersViewForOffer> {
-  TimebankModel timebankModel;
+  TimebankModel? timebankModel;
   TimebankParticipantsDataHolder timebankParticipantsDataHolder =
       TimebankParticipantsDataHolder();
   final TextEditingController searchTextController = TextEditingController();
@@ -54,7 +54,7 @@ class _FindVolunteersViewStateForOffer
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       FirestoreManager.getAllTimebankIdStream(
-        timebankId: widget.timebankId,
+        timebankId: widget.timebankId!,
       ).then((onValue) {
         setState(() {
           timebankParticipantsDataHolder = onValue;
@@ -140,12 +140,11 @@ class _FindVolunteersViewStateForOffer
           Expanded(
             child: ElasticSearchResultsHolder(
               searchTextController,
-              widget.timebankId,
-              timebankParticipantsDataHolder.listOfElement,
-              widget.offerModel.id,
-              timebankParticipantsDataHolder.timebankModel,
-              // users,
-              widget.sevaUserId,
+              widget.timebankId!,
+              timebankParticipantsDataHolder.listOfElement!,
+              widget.offerModel!.id!,
+              timebankParticipantsDataHolder.timebankModel!,
+              widget.sevaUserId!,
             ),
           ),
         ],
@@ -186,12 +185,12 @@ class _ElasticSearchResultsHolderState
   }
 
   bool isAdmin = false;
-  OfferModel offerModel;
+  OfferModel? offerModel;
   bool isBookMarked = false;
-  UserModel loggedinUser;
+  UserModel? loggedinUser;
 
-  List<String> offerAcceptors;
-  List<String> offerInvites;
+  List<String>? offerAcceptors;
+  List<String>? offerInvites;
 
   @override
   void initState() {
@@ -204,10 +203,10 @@ class _ElasticSearchResultsHolderState
     }
 
     CollectionRef.offers.doc(widget.offerId).snapshots().listen((model) {
-      offerModel = OfferModel.fromMap(model.data());
+      offerModel = OfferModel.fromMap(model.data() as Map<String, dynamic>);
 
-      offerAcceptors = offerModel.individualOfferDataModel.offerAcceptors;
-      offerInvites = offerModel.individualOfferDataModel.offerInvites;
+      offerAcceptors = offerModel!.individualOfferDataModel?.offerAcceptors;
+      offerInvites = offerModel!.individualOfferDataModel?.offerInvites;
 
       try {
         logger.i("UPDATE==============================");
@@ -255,10 +254,10 @@ class _ElasticSearchResultsHolderState
             );
           }
 
-          List<UserModel> userList = snapshot.data;
+          List<UserModel> userList = snapshot.data!;
           userList.removeWhere((user) =>
               user.sevaUserID == widget.sevaUserId ||
-              user.sevaUserID == offerModel.sevaUserId);
+              user.sevaUserID == offerModel!.sevaUserId);
 
           if (userList.length == 0) {
             return getEmptyWidget(S.of(context).no_user_found);
@@ -273,9 +272,9 @@ class _ElasticSearchResultsHolderState
                 userModel: user,
                 timebankModel: widget.timebankModel,
                 memberInvited: false,
-                offerAcceptors: offerAcceptors,
-                offerInvites: offerInvites,
-                offerModel: offerModel,
+                offerAcceptors: offerAcceptors!,
+                offerInvites: offerInvites!,
+                offerModel: offerModel!,
               );
             },
           );
@@ -286,7 +285,7 @@ class _ElasticSearchResultsHolderState
 
   void refresh() {
     CollectionRef.offers.doc(widget.offerId).snapshots().listen((model) {
-      offerModel = OfferModel.fromMap(model.data());
+      offerModel = OfferModel.fromMap(model.data() as Map<String, dynamic>);
       try {
         setState(() {
           buildWidget();

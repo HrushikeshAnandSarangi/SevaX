@@ -4,9 +4,9 @@ import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
 
 class LendingItemCardWidget extends StatelessWidget {
-  final LendingItemModel lendingItemModel;
-  final VoidCallback onEdit;
-  final VoidCallback onDelete;
+  final LendingItemModel? lendingItemModel;
+  final VoidCallback? onEdit;
+  final VoidCallback? onDelete;
   bool hidden = false;
 
   LendingItemCardWidget(
@@ -21,14 +21,14 @@ class LendingItemCardWidget extends StatelessWidget {
           Container(
             width: 92,
             height: 62,
-            child: Image.network(lendingItemModel.itemImages[0]),
+            child: Image.network(lendingItemModel!.itemImages![0]),
           ),
           SizedBox(
             width: 15,
           ),
           Expanded(
             child: Text(
-              lendingItemModel.itemName,
+              lendingItemModel!.itemName!,
               style: TextStyle(
                 fontSize: 16,
                 //fontWeight: FontWeight.bold,
@@ -49,6 +49,7 @@ class LendingItemCardWidget extends StatelessWidget {
                 color: HexColor('#606670'),
               ),
             ),
+            secondChild: SizedBox.shrink(),
           ),
           SizedBox(
             width: 8,
@@ -62,6 +63,7 @@ class LendingItemCardWidget extends StatelessWidget {
                 color: HexColor('#BEBEBE'),
               ),
             ),
+            secondChild: SizedBox.shrink(),
           )
         ],
       ),

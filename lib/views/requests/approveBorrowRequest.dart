@@ -58,7 +58,23 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
         builder: (context) => AgreementForm(
           onPdfCreated: (String pdfLink, String documentNameFinal,
               dynamic agreementConfig, String agreementId) {},
-          lendingModel: null!,
+          lendingModel: selectedLendingPlaceModel ??
+              LendingModel(
+                id: '', // Provide appropriate default or fetch from context
+                creatorId:
+                    '', // Provide appropriate default or fetch from context
+                email: '', // Provide appropriate default or fetch from context
+                timestamp: DateTime.now().millisecondsSinceEpoch,
+                lendingType: LendingType.PLACE, // or LendingType.ITEM as needed
+              ),
+          requestModel: widget.requestModel,
+          isOffer: false,
+          placeOrItem: widget.requestModel.roomOrTool!,
+          timebankId: widget.requestModel.timebankId!,
+          communityId: widget.requestModel.communityId!,
+          lendingModelListBorrowRequest: [],
+          startTime: widget.requestModel.requestStart!,
+          endTime: widget.requestModel.requestEnd!,
         ),
       ),
     );

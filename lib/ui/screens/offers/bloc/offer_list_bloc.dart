@@ -22,13 +22,15 @@ class OfferListBloc extends BlocBase {
 
   void init(String timebankId, UserModel user) {
     var userId = user.sevaUserID;
-    var allOffers = getOffersStream(timebankId: timebankId).asBroadcastStream();
+    var allOffers = getOffersStream(
+            timebankId: timebankId, loggedInMemberSevaUserId: userId!)
+        .asBroadcastStream();
 
     CombineLatestStream.combine2<List<OfferModel>, OfferFilter, OfferLists>(
         allOffers, filter, (models, filter) {
       OfferLists offerLists = OfferLists([], []);
       models.forEach((model) {
-        if (!HideBlockedContent.checkIfBlocked(model.sevaUserId, user)) {
+        if (!HideBlockedContent.checkIfBlocked(model.sevaUserId!, user)) {
           if (filter.checkFilter(model)) {
             offerLists.addOffer(userId, model);
           }
@@ -87,13 +89,13 @@ class OfferFilter {
   });
 
   OfferFilter copyWith({
-    bool timeOffer,
-    bool goodsOffer,
-    bool cashOffer,
-    bool publicOffer,
-    bool virtualOffer,
-    bool oneToManyOffer,
-    bool lendingOffer,
+    bool? timeOffer,
+    bool? goodsOffer,
+    bool? cashOffer,
+    bool? publicOffer,
+    bool? virtualOffer,
+    bool? oneToManyOffer,
+    bool? lendingOffer,
   }) =>
       OfferFilter(
         timeOffer: timeOffer ?? this.timeOffer,
@@ -148,9 +150,9 @@ class OfferFilter {
           model.offerType == OfferType.INDIVIDUAL_OFFER &&
           model.type == RequestType.LENDING_OFFER) {
         return true;
-      } else if (publicOffer && model.public) {
+      } else if (publicOffer && model.public!) {
         return true;
-      } else if (virtualOffer && model.virtual) {
+      } else if (virtualOffer && model.virtual!) {
         return true;
       } else {
         return false;

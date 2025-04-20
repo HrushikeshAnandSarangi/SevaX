@@ -16,31 +16,31 @@ class ReportedMemberInfo extends StatelessWidget {
   final bool canRemove;
 
   const ReportedMemberInfo({
-    Key key,
-    this.model,
-    this.isFromTimebank,
-    this.removeMember,
-    this.messageMember,
-    this.canRemove,
+    Key? key,
+    required this.model,
+    required this.isFromTimebank,
+    required this.removeMember,
+    required this.messageMember,
+    required this.canRemove,
   })  : assert(isFromTimebank != null),
         assert(model != null),
         assert(canRemove != null),
         super(key: key);
 
   static Route<dynamic> route({
-    ReportedMembersModel model,
-    bool isFromTimebank,
-    VoidCallback removeMember,
-    VoidCallback messageMember,
-    bool canRemove,
+    ReportedMembersModel? model,
+    bool? isFromTimebank,
+    VoidCallback? removeMember,
+    VoidCallback? messageMember,
+    bool? canRemove,
   }) {
     return MaterialPageRoute(
       builder: (BuildContext context) => ReportedMemberInfo(
-        model: model,
-        isFromTimebank: isFromTimebank,
-        removeMember: removeMember,
-        messageMember: messageMember,
-        canRemove: canRemove,
+        model: model!,
+        isFromTimebank: isFromTimebank!,
+        removeMember: removeMember!,
+        messageMember: messageMember!,
+        canRemove: canRemove!,
       ),
     );
   }
@@ -112,9 +112,9 @@ class ReportedMemberInfo extends StatelessWidget {
               physics: NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-              itemCount: model.reports.length,
+              itemCount: model.reports!.length,
               itemBuilder: (context, index) {
-                Report report = model.reports[index];
+                Report report = model.reports![index];
                 return (isFromTimebank
                         ? true
                         : report.isTimebankReport == isFromTimebank)
@@ -125,7 +125,7 @@ class ReportedMemberInfo extends StatelessWidget {
                     : Container();
               },
               separatorBuilder: (_, index) {
-                Report report = model.reports[index];
+                Report report = model.reports![index];
                 return (isFromTimebank
                         ? true
                         : report.isTimebankReport == isFromTimebank)
@@ -144,12 +144,10 @@ class ReportedMemberInfo extends StatelessWidget {
 
 Map<String, int> countReports(ReportedMembersModel model) {
   Map<String, int> map = {};
-  model.reports.forEach((Report report) {
-    if (map.containsKey(report.entityName)) {
-      map[report.isTimebankReport ? "Seva Community" : report.entityName] += 1;
-    } else {
-      map[report.isTimebankReport ? "Seva Community" : report.entityName] = 1;
-    }
+  model.reports!.forEach((Report report) {
+    String key =
+        report.isTimebankReport! ? "Seva Community" : report.entityName!;
+    map[key] = (map[key] ?? 0) + 1;
   });
   return map;
 }

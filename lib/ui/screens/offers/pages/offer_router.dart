@@ -6,10 +6,10 @@ import 'package:sevaexchange/ui/screens/offers/pages/offer_list.dart';
 import 'package:sevaexchange/views/core.dart';
 
 class OfferRouter extends StatelessWidget {
-  final String timebankId;
-  final TimebankModel timebankModel;
+  final String? timebankId;
+  final TimebankModel? timebankModel;
 
-  const OfferRouter({Key key, this.timebankId, this.timebankModel})
+  const OfferRouter({Key? key, this.timebankId, this.timebankModel})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,7 @@ class OfferRouter extends StatelessWidget {
                 child: TabBarView(
                   children: <Widget>[
                     OfferList(
-                      timebankModel: timebankModel,
+                      timebankModel: timebankModel!,
                     ),
                     BookmarkedOffers(
                       sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,

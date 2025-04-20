@@ -51,15 +51,15 @@ class ReportMemberBloc {
   }
 
   Future<bool> createReport({
-    UserModel reportedUserModel,
-    UserModel reportingUserModel,
-    String timebankId,
-    bool isTimebankReport,
-    String entityName,
+    UserModel? reportedUserModel,
+    UserModel? reportingUserModel,
+    String? timebankId,
+    bool? isTimebankReport,
+    String? entityName,
   }) async {
     _buttonStatus.add(false);
     String filePath = DateTime.now().toString();
-    String attachmentUrl;
+    String attachmentUrl = '';
     if (_file.value != null) {
       UploadTask _uploadTask =
           _storage.ref().child("reports/$filePath.png").putFile(_file.value);
@@ -68,7 +68,7 @@ class ReportMemberBloc {
           .getDownloadURL();
     }
     Report report = Report(
-      reporterId: reportingUserModel.sevaUserID,
+      reporterId: reportingUserModel!.sevaUserID,
       attachment: attachmentUrl,
       message: _message.value.trim(),
       reporterImage: reportingUserModel.photoURL,
@@ -81,7 +81,7 @@ class ReportMemberBloc {
     try {
       await CollectionRef.reportedUsersList
           .doc(
-              "${reportedUserModel.sevaUserID}*${reportingUserModel.currentCommunity}")
+              "${reportedUserModel!.sevaUserID}*${reportingUserModel.currentCommunity}")
           .set(
         {
           "communityId": reportingUserModel.currentCommunity,
@@ -99,11 +99,12 @@ class ReportMemberBloc {
     } catch (e) {
       _buttonStatus.add(true);
       // FirebaseCrashlytics.instance.log(e);
+      return false;
     }
   }
 
   void clearImage() {
-    _file.add(null);
+    _file.add(null!);
   }
 
   void dispose() {

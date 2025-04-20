@@ -9,21 +9,21 @@ import 'package:sevaexchange/utils/bloc_provider.dart';
 
 class TimeOfferBloc extends BlocBase {
   final _participants = BehaviorSubject<List<TimeOfferParticipantsModel>>();
-  OfferModel offerModel;
+  OfferModel? offerModel;
 
   Stream<List<TimeOfferParticipantsModel>> get participants =>
       _participants.stream;
 
   void init() {
     CollectionRef.offers
-        .doc(offerModel.id)
+        .doc(offerModel!.id)
         .collection("offerParticipants")
         .snapshots()
         .listen((QuerySnapshot snap) {
       List<TimeOfferParticipantsModel> offer = [];
       snap.docs.forEach((DocumentSnapshot doc) {
-        TimeOfferParticipantsModel model =
-            TimeOfferParticipantsModel.fromJSON(doc.data());
+        TimeOfferParticipantsModel model = TimeOfferParticipantsModel.fromJSON(
+            doc.data() as Map<String, dynamic>);
         model.id = doc.id;
         offer.add(model);
       });
@@ -33,7 +33,7 @@ class TimeOfferBloc extends BlocBase {
 
   void handleRequestActions(context, index, ParticipantStatus status) {
     DocumentReference ref = CollectionRef.offers
-        .doc(offerModel.id)
+        .doc(offerModel!.id)
         .collection("offerParticipants")
         .doc(_participants.value[index].id);
 

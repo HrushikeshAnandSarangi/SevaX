@@ -20,7 +20,7 @@ class OfferBloc extends BlocBase {
       BehaviorSubject<List<TimeOfferParticipantsModel>>();
   final _totalEarnings = BehaviorSubject<num>.seeded(0.0);
 
-  OfferModel offerModel;
+  OfferModel? offerModel;
 
   Stream<List<OfferParticipantsModel>> get participants => _participants.stream;
 
@@ -34,14 +34,14 @@ class OfferBloc extends BlocBase {
 
   void init() {
     CollectionRef.offers
-        .doc(offerModel.id)
+        .doc(offerModel!.id)
         .collection("offerParticipants")
         .snapshots()
         .listen((QuerySnapshot snap) {
       List<OfferParticipantsModel> offer = [];
       snap.docs.forEach((DocumentSnapshot doc) {
         OfferParticipantsModel model =
-            OfferParticipantsModel.fromJson(doc.data());
+            OfferParticipantsModel.fromJson(doc.data() as Map<String, dynamic>);
         model.id = doc.id;
         offer.add(model);
       });
@@ -49,21 +49,21 @@ class OfferBloc extends BlocBase {
     });
 
     CollectionRef.offers
-        .doc(offerModel.id)
+        .doc(offerModel!.id!)
         .collection("offerAcceptors")
         .snapshots()
         .listen((QuerySnapshot snap) async {
       List<TransactionModel> completedParticipantsTransactions =
           await getCompletedMembersTransaction(
-              associatedOfferId: offerModel.id);
+              associatedOfferId: offerModel!.id!);
 
       List<TimeOfferParticipantsModel> offer = [];
       List<TimeOfferParticipantsModel> completedParticipants = [];
       _totalEarnings.value = 0;
 
       for (int i = 0; i < snap.docs.length; i++) {
-        TimeOfferParticipantsModel model =
-            TimeOfferParticipantsModel.fromJSON(snap.docs[i].data());
+        TimeOfferParticipantsModel model = TimeOfferParticipantsModel.fromJSON(
+            snap.docs[i].data() as Map<String, dynamic>);
         offer.add(model);
 
         for (int j = 0; j < completedParticipantsTransactions.length; j++) {
@@ -72,7 +72,7 @@ class OfferBloc extends BlocBase {
               completedParticipantsTransactions[j].from == model.timebankId) {
             completedParticipants.add(model);
             _totalEarnings.value +=
-                completedParticipantsTransactions[j].credits;
+                completedParticipantsTransactions[j].credits!;
             completedParticipantsTransactions.removeAt(j);
           }
         }
@@ -83,7 +83,7 @@ class OfferBloc extends BlocBase {
   }
 
   Future<List<TransactionModel>> getCompletedMembersTransaction({
-    String associatedOfferId,
+    String? associatedOfferId,
   }) async {
     var completedParticipants = <TransactionModel>[];
 
@@ -94,7 +94,8 @@ class OfferBloc extends BlocBase {
           (value) => {
             logger.i(" >>>>>>>> " + value.docs.length.toString()),
             value.docs.forEach((map) {
-              var model = TransactionModel.fromMap(map.data());
+              var model =
+                  TransactionModel.fromMap(map.data() as Map<String, dynamic>);
               completedParticipants.add(model);
             })
           },
@@ -104,7 +105,7 @@ class OfferBloc extends BlocBase {
 
   void handleRequestActions(context, index, ParticipantStatus status) {
     DocumentReference ref = CollectionRef.offers
-        .doc(offerModel.id)
+        .doc(offerModel!.id)
         .collection("offerParticipants")
         .doc(_participants.value[index].id);
 
@@ -136,11 +137,11 @@ class OfferBloc extends BlocBase {
   }
 
   void updateOfferAcceptorAction({
-    OfferAcceptanceStatus action,
-    String offerId,
-    String acceptorDocumentId,
-    String notificationId,
-    @required String hostEmail,
+    OfferAcceptanceStatus? action,
+    String? offerId,
+    String? acceptorDocumentId,
+    String? notificationId,
+    required String? hostEmail,
   }) {
     var batch = CollectionRef.batch;
 
@@ -149,7 +150,7 @@ class OfferBloc extends BlocBase {
             .doc(offerId)
             .collection("offerAcceptors")
             .doc(acceptorDocumentId),
-        {"status": action.readable});
+        {"status": action?.readable});
 
     batch.delete(CollectionRef.users
         .doc(hostEmail)

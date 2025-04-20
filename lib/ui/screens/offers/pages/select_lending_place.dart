@@ -13,11 +13,11 @@ import 'package:sevaexchange/utils/extensions.dart';
 import 'add_update_lending_place.dart';
 
 class SelectLendingPlaceItem extends StatefulWidget {
-  final Function(LendingModel) onSelected;
-  final LendingType lendingType;
+  final Function(LendingModel)? onSelected;
+  final LendingType? lendingType;
 
   const SelectLendingPlaceItem({
-    Key key,
+    Key? key,
     this.onSelected,
     this.lendingType,
   }) : super(key: key);
@@ -30,20 +30,20 @@ class _SelectLendingPlaceItemState extends State<SelectLendingPlaceItem> {
   // LendingModel selectedModel = LendingModel();
 
   // List<CommunityCategoryModel> availableCategories = [];
-  SuggestionsBoxController controller = SuggestionsBoxController();
+  SuggestionsController controller = SuggestionsController();
   TextEditingController _textEditingController = TextEditingController();
   FocusNode suggestionFocusNode = FocusNode();
-  Future<List<LendingModel>> itemsFuture;
-  Future<List<LendingModel>> placesFuture;
+  Future<List<LendingModel>>? itemsFuture;
+  Future<List<LendingModel>>? placesFuture;
   bool isDataLoaded = false;
 
   @override
   void initState() {
     Future.delayed(Duration.zero, () {
       itemsFuture = LendingOffersRepo.getAllLendingItemModels(
-          creatorId: SevaCore.of(context).loggedInUser.sevaUserID);
+          creatorId: SevaCore.of(context).loggedInUser.sevaUserID!);
       placesFuture = LendingOffersRepo.getAllLendingPlaces(
-          creatorId: SevaCore.of(context).loggedInUser.sevaUserID);
+          creatorId: SevaCore.of(context).loggedInUser.sevaUserID!);
       // setState(() {});
     });
     super.initState();
@@ -67,48 +67,48 @@ class _SelectLendingPlaceItemState extends State<SelectLendingPlaceItem> {
                 });
               }
               return TypeAheadField<LendingModel>(
-                suggestionsBoxDecoration: SuggestionsBoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                ),
+                suggestionsController: SuggestionsController(),
                 errorBuilder: (context, err) {
                   return Text(S.of(context).error_occured);
                 },
                 hideOnError: true,
-                textFieldConfiguration: TextFieldConfiguration(
-                  focusNode: suggestionFocusNode,
-                  controller: _textEditingController,
-                  maxLength: 100,
-                  decoration: InputDecoration(
-                    hintText: S.of(context).search,
-                    filled: true,
-                    fillColor: Colors.grey[300],
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                      borderRadius: BorderRadius.circular(25.7),
-                    ),
-                    enabledBorder: UnderlineInputBorder(
+                builder: (context, textFieldController, focusNode) {
+                  return TextField(
+                    focusNode: suggestionFocusNode,
+                    controller: _textEditingController,
+                    maxLength: 100,
+                    decoration: InputDecoration(
+                      hintText: S.of(context).search,
+                      filled: true,
+                      fillColor: Colors.grey[300],
+                      focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.white),
-                        borderRadius: BorderRadius.circular(25.7)),
-                    contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
-                    prefixIcon: Icon(
-                      Icons.search,
-                      color: Colors.grey,
-                    ),
-                    suffixIcon: InkWell(
-                      splashColor: Colors.transparent,
-                      child: Icon(
-                        Icons.clear,
+                        borderRadius: BorderRadius.circular(25.7),
+                      ),
+                      enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                          borderRadius: BorderRadius.circular(25.7)),
+                      contentPadding:
+                          EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
+                      prefixIcon: Icon(
+                        Icons.search,
                         color: Colors.grey,
                       ),
-                      onTap: () {
-                        _textEditingController.clear();
-                        controller.close();
-                      },
+                      suffixIcon: InkWell(
+                        splashColor: Colors.transparent,
+                        child: Icon(
+                          Icons.clear,
+                          color: Colors.grey,
+                        ),
+                        onTap: () {
+                          _textEditingController.clear();
+                          controller.close();
+                        },
+                      ),
                     ),
-                  ),
-                ),
-                suggestionsBoxController: controller,
-                noItemsFoundBuilder: (context) {
+                  );
+                },
+                emptyBuilder: (context) {
                   return getSuggestionLayout(
                     suggestion: _textEditingController.text,
                     add: S.of(context).add + ' ',
@@ -119,25 +119,26 @@ class _SelectLendingPlaceItemState extends State<SelectLendingPlaceItem> {
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       widget.lendingType == LendingType.ITEM
-                          ? itemData.lendingItemModel.itemName
-                          : itemData.lendingPlaceModel.placeName,
+                          ? itemData.lendingItemModel!.itemName!
+                          : itemData.lendingPlaceModel!.placeName!,
                       style: TextStyle(fontSize: 16),
                     ),
                   );
                 },
-                onSuggestionSelected: (suggestion) {
-                  widget.onSelected(suggestion);
+                onSelected: (LendingModel suggestion) {
+                  widget.onSelected?.call(suggestion);
                 },
                 suggestionsCallback: (String pattern) async {
-                  var dataCopy = List<LendingModel>.from(snapshot.data);
+                  var dataCopy =
+                      List<LendingModel>.from(snapshot.data! as List);
                   if (widget.lendingType == LendingType.ITEM) {
                     dataCopy.retainWhere((s) =>
-                        s.lendingItemModel.itemName.toLowerCase().contains(
+                        s.lendingItemModel!.itemName!.toLowerCase().contains(
                               pattern.toLowerCase(),
                             ));
                   } else {
                     dataCopy.retainWhere((s) =>
-                        s.lendingPlaceModel.placeName.toLowerCase().contains(
+                        s.lendingPlaceModel!.placeName!.toLowerCase().contains(
                               pattern.toLowerCase(),
                             ));
                   }
@@ -151,8 +152,8 @@ class _SelectLendingPlaceItemState extends State<SelectLendingPlaceItem> {
   }
 
   Widget getSuggestionLayout({
-    String suggestion,
-    String add,
+    String? suggestion,
+    String? add,
   }) {
     return suggestion == ''
         ? Padding(padding: const EdgeInsets.all(0))
@@ -166,16 +167,16 @@ class _SelectLendingPlaceItemState extends State<SelectLendingPlaceItem> {
                     builder: (context) {
                       return AddUpdateLendingItem(
                         lendingModel: null,
-                        enteredTitle: suggestion.firstWordUpperCase(),
+                        enteredTitle: suggestion!.firstWordUpperCase(),
                         onItemCreateUpdate: (LendingModel model) {
-                          widget.onSelected(model);
+                          widget.onSelected!(model);
                         },
                       );
                     },
                   ),
                 ).then((_) {
                   itemsFuture = LendingOffersRepo.getAllLendingItemModels(
-                      creatorId: SevaCore.of(context).loggedInUser.sevaUserID);
+                      creatorId: SevaCore.of(context).loggedInUser.sevaUserID!);
                   setState(() {});
                 });
               } else {
@@ -184,16 +185,16 @@ class _SelectLendingPlaceItemState extends State<SelectLendingPlaceItem> {
                     builder: (context) {
                       return AddUpdateLendingPlace(
                         lendingModel: null,
-                        enteredTitle: suggestion.firstWordUpperCase(),
+                        enteredTitle: suggestion!.firstWordUpperCase(),
                         onPlaceCreateUpdate: (LendingModel model) {
-                          widget.onSelected(model);
+                          widget.onSelected!(model);
                         },
                       );
                     },
                   ),
                 ).then((_) {
                   placesFuture = LendingOffersRepo.getAllLendingPlaces(
-                      creatorId: SevaCore.of(context).loggedInUser.sevaUserID);
+                      creatorId: SevaCore.of(context).loggedInUser.sevaUserID!);
                   setState(() {});
                 });
               }

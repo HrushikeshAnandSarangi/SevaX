@@ -13,10 +13,10 @@ import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class OfferEarnings extends StatelessWidget {
-  final OfferModel offerModel;
-  final TimebankModel timebankModel;
+  final OfferModel? offerModel;
+  final TimebankModel? timebankModel;
 
-  const OfferEarnings({Key key, this.offerModel, this.timebankModel})
+  const OfferEarnings({Key? key, this.offerModel, this.timebankModel})
       : super(key: key);
 
   @override
@@ -27,9 +27,9 @@ class OfferEarnings extends StatelessWidget {
       body: Padding(
         padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
         child: StreamBuilder<List<OfferParticipantsModel>>(
-          stream: _bloc.participants,
+          stream: _bloc!.participants,
           builder: (context, snapshot) {
-            if (snapshot.data == null || snapshot.data.isEmpty) {
+            if (snapshot.data == null || snapshot.data!.isEmpty) {
               return Center(
                 child: Text(S.of(context).no_offers),
               );
@@ -38,7 +38,7 @@ class OfferEarnings extends StatelessWidget {
               return LoadingIndicator();
             }
             DateTime _endTime = DateTime.fromMillisecondsSinceEpoch(
-              offerModel.groupOfferDataModel.endDate,
+              offerModel!.groupOfferDataModel!.endDate,
             );
             // Duration _durationLeft = _endTime.difference(DateTime.now());
             bool _isOfferOver = DateTime.now().isAfter(_endTime);
@@ -50,20 +50,21 @@ class OfferEarnings extends StatelessWidget {
                   children: <Widget>[
                     SevaCoinStarWidget(
                       title: S.of(context).your_earnings,
-                      amount: offerModel.groupOfferDataModel.creditStatus == 1
-                          ? (offerModel.groupOfferDataModel.numberOfClassHours +
-                                  offerModel.groupOfferDataModel
+                      amount: offerModel!.groupOfferDataModel!.creditStatus == 1
+                          ? (offerModel!
+                                      .groupOfferDataModel!.numberOfClassHours +
+                                  offerModel!.groupOfferDataModel!
                                       .numberOfPreperationHours)
                               .toString()
                           : '0',
                     ),
                     SevaCoinStarWidget(
                       title: S.of(context).timebank_earnings,
-                      amount: offerModel.groupOfferDataModel.creditStatus == 1
-                          ? (offerModel.groupOfferDataModel.creditsApproved -
-                                  (offerModel.groupOfferDataModel
+                      amount: offerModel!.groupOfferDataModel!.creditStatus == 1
+                          ? (offerModel!.groupOfferDataModel!.creditsApproved -
+                                  (offerModel!.groupOfferDataModel!
                                           .numberOfClassHours +
-                                      offerModel.groupOfferDataModel
+                                      offerModel!.groupOfferDataModel!
                                           .numberOfPreperationHours))
                               .toString()
                           : '0',
@@ -74,13 +75,13 @@ class OfferEarnings extends StatelessWidget {
                 Expanded(
                   child: ListView.separated(
                     shrinkWrap: true,
-                    itemCount: snapshot.data.length,
+                    itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
                       ParticipantStatus status = ParticipantStatus.values
                           .firstWhere((v) =>
                               v.toString() ==
                               'ParticipantStatus.' +
-                                  snapshot.data[index].status);
+                                  snapshot.data![index].status!);
 
                       if (_isOfferOver == true &&
                           status ==
@@ -89,23 +90,24 @@ class OfferEarnings extends StatelessWidget {
                         status = ParticipantStatus.NO_ACTION_FROM_CREATOR;
                       }
                       return MemberCardWithSingleAction(
-                        name: snapshot.data[index].participantDetails.fullname,
+                        name:
+                            snapshot.data![index].participantDetails!.fullname!,
                         timestamp: DateFormat.MMMd().format(
                           DateTime.fromMillisecondsSinceEpoch(
-                            snapshot.data[index].timestamp,
+                            snapshot.data![index].timestamp!,
                           ),
                         ),
                         onImageTap: () {
                           Navigator.of(context)
                               .push(MaterialPageRoute(builder: (context) {
                             return ProfileViewer(
-                              timebankId: timebankModel.id,
-                              entityName: timebankModel.name,
+                              timebankId: timebankModel!.id,
+                              entityName: timebankModel!.name,
                               isFromTimebank: isPrimaryTimebank(
                                   parentTimebankId:
-                                      timebankModel.parentTimebankId),
-                              userEmail:
-                                  snapshot.data[index].participantDetails.email,
+                                      timebankModel!.parentTimebankId),
+                              userEmail: snapshot
+                                  .data![index].participantDetails!.email,
                             );
                           }));
                         },
@@ -125,7 +127,7 @@ class OfferEarnings extends StatelessWidget {
                         status: getParticipantStatus(ParticipantStatus
                             .MEMBER_SIGNED_UP_FOR_ONE2_MANY_OFFER),
                         photoUrl:
-                            snapshot.data[index].participantDetails.photourl,
+                            snapshot.data![index].participantDetails!.photourl!,
                         buttonColor: getStatusColor(ParticipantStatus
                             .MEMBER_SIGNED_UP_FOR_ONE2_MANY_OFFER),
                       );
@@ -179,10 +181,10 @@ class OfferEarnings extends StatelessWidget {
 }
 
 class OfferDonationRequest extends StatelessWidget {
-  final OfferModel offerModel;
-  final TimebankModel timebankModel;
+  final OfferModel? offerModel;
+  final TimebankModel? timebankModel;
 
-  const OfferDonationRequest({Key key, this.offerModel, this.timebankModel})
+  const OfferDonationRequest({Key? key, this.offerModel, this.timebankModel})
       : super(key: key);
 
   @override
@@ -193,9 +195,9 @@ class OfferDonationRequest extends StatelessWidget {
       body: Padding(
         padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
         child: StreamBuilder<List<OfferParticipantsModel>>(
-          stream: _bloc.participants,
+          stream: _bloc!.participants,
           builder: (context, snapshot) {
-            if (snapshot.data == null || snapshot.data.isEmpty) {
+            if (snapshot.data == null || snapshot.data!.isEmpty) {
               return Center(
                 child: Text(S.of(context).no_offers),
               );
@@ -204,7 +206,7 @@ class OfferDonationRequest extends StatelessWidget {
               return LoadingIndicator();
             }
             DateTime _endTime = DateTime.fromMillisecondsSinceEpoch(
-              offerModel.groupOfferDataModel.endDate,
+              offerModel!.groupOfferDataModel!.endDate,
             );
             // Duration _durationLeft = _endTime.difference(DateTime.now());
             bool _isOfferOver = DateTime.now().isAfter(_endTime);
@@ -216,20 +218,21 @@ class OfferDonationRequest extends StatelessWidget {
                   children: <Widget>[
                     SevaCoinStarWidget(
                       title: S.of(context).your_earnings,
-                      amount: offerModel.groupOfferDataModel.creditStatus == 1
-                          ? (offerModel.groupOfferDataModel.numberOfClassHours +
-                                  offerModel.groupOfferDataModel
+                      amount: offerModel!.groupOfferDataModel!.creditStatus == 1
+                          ? (offerModel!
+                                      .groupOfferDataModel!.numberOfClassHours +
+                                  offerModel!.groupOfferDataModel!
                                       .numberOfPreperationHours)
                               .toString()
                           : '0',
                     ),
                     SevaCoinStarWidget(
                       title: S.of(context).timebank_earnings,
-                      amount: offerModel.groupOfferDataModel.creditStatus == 1
-                          ? (offerModel.groupOfferDataModel.creditsApproved -
-                                  (offerModel.groupOfferDataModel
+                      amount: offerModel!.groupOfferDataModel!.creditStatus == 1
+                          ? (offerModel!.groupOfferDataModel!.creditsApproved -
+                                  (offerModel!.groupOfferDataModel!
                                           .numberOfClassHours +
-                                      offerModel.groupOfferDataModel
+                                      offerModel!.groupOfferDataModel!
                                           .numberOfPreperationHours))
                               .toString()
                           : '0',
@@ -240,13 +243,13 @@ class OfferDonationRequest extends StatelessWidget {
                 Expanded(
                   child: ListView.separated(
                     shrinkWrap: true,
-                    itemCount: snapshot.data.length,
+                    itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
                       ParticipantStatus status = ParticipantStatus.values
                           .firstWhere((v) =>
                               v.toString() ==
                               'ParticipantStatus.' +
-                                  snapshot.data[index].status);
+                                  snapshot.data![index].status!);
 
                       if (_isOfferOver == true &&
                           status ==
@@ -255,23 +258,24 @@ class OfferDonationRequest extends StatelessWidget {
                         status = ParticipantStatus.NO_ACTION_FROM_CREATOR;
                       }
                       return MemberCardWithSingleAction(
-                        name: snapshot.data[index].participantDetails.fullname,
+                        name:
+                            snapshot.data![index].participantDetails!.fullname!,
                         timestamp: DateFormat.MMMd().format(
                           DateTime.fromMillisecondsSinceEpoch(
-                            snapshot.data[index].timestamp,
+                            snapshot.data![index].timestamp!,
                           ),
                         ),
                         onImageTap: () {
                           Navigator.of(context)
                               .push(MaterialPageRoute(builder: (context) {
                             return ProfileViewer(
-                              timebankId: timebankModel.id,
-                              entityName: timebankModel.name,
+                              timebankId: timebankModel!.id,
+                              entityName: timebankModel!.name,
                               isFromTimebank: isPrimaryTimebank(
                                   parentTimebankId:
-                                      timebankModel.parentTimebankId),
-                              userEmail:
-                                  snapshot.data[index].participantDetails.email,
+                                      timebankModel!.parentTimebankId),
+                              userEmail: snapshot
+                                  .data![index].participantDetails!.email,
                             );
                           }));
                         },
@@ -291,7 +295,7 @@ class OfferDonationRequest extends StatelessWidget {
                         status: getParticipantStatus(ParticipantStatus
                             .MEMBER_SIGNED_UP_FOR_ONE2_MANY_OFFER),
                         photoUrl:
-                            snapshot.data[index].participantDetails.photourl,
+                            snapshot.data![index].participantDetails!.photourl!,
                         buttonColor: getStatusColor(ParticipantStatus
                             .MEMBER_SIGNED_UP_FOR_ONE2_MANY_OFFER),
                       );

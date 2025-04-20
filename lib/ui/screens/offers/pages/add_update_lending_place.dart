@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:doseform/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -21,9 +21,9 @@ import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/full_screen_widget.dart';
 
 class AddUpdateLendingPlace extends StatefulWidget {
-  final LendingModel lendingModel;
-  final String enteredTitle;
-  final Function(LendingModel lendingModel) onPlaceCreateUpdate;
+  final LendingModel? lendingModel;
+  final String? enteredTitle;
+  final Function(LendingModel lendingModel)? onPlaceCreateUpdate;
 
   AddUpdateLendingPlace(
       {this.lendingModel, this.onPlaceCreateUpdate, this.enteredTitle});
@@ -61,50 +61,51 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
   void initState() {
     super.initState();
     if (widget.lendingModel != null) {
-      _bloc.loadData(widget.lendingModel);
+      _bloc.loadData(widget.lendingModel!);
 
       _placeNameController.text =
-          widget.lendingModel.lendingPlaceModel.placeName;
-      _bloc.onPlaceNameChanged(widget.lendingModel.lendingPlaceModel.placeName);
+          widget.lendingModel!.lendingPlaceModel!.placeName!;
+      _bloc.onPlaceNameChanged(
+          widget.lendingModel!.lendingPlaceModel!.placeName!);
 
       _guestsController.text =
-          widget.lendingModel.lendingPlaceModel.noOfGuests.toString();
+          widget.lendingModel!.lendingPlaceModel!.noOfGuests.toString();
       _bloc.onNoOfGuestsChanged(
-          widget.lendingModel.lendingPlaceModel.noOfGuests.toString());
+          widget.lendingModel!.lendingPlaceModel!.noOfGuests.toString());
 
       _roomsController.text =
-          widget.lendingModel.lendingPlaceModel.noOfRooms.toString();
+          widget.lendingModel!.lendingPlaceModel!.noOfRooms.toString();
       _bloc.onNoOfRoomsChanged(
-          widget.lendingModel.lendingPlaceModel.noOfRooms.toString());
+          widget.lendingModel!.lendingPlaceModel!.noOfRooms.toString());
 
       _bathroomsController.text =
-          widget.lendingModel.lendingPlaceModel.noOfBathRooms.toString();
+          widget.lendingModel!.lendingPlaceModel!.noOfBathRooms.toString();
       _bloc.onBathRoomsChanged(
-          widget.lendingModel.lendingPlaceModel.noOfBathRooms.toString());
+          widget.lendingModel!.lendingPlaceModel!.noOfBathRooms.toString());
 
       _commonSpaceController.text =
-          widget.lendingModel.lendingPlaceModel.commonSpace;
+          widget.lendingModel!.lendingPlaceModel!.commonSpace!;
       _bloc.onCommonSpacesChanged(
-          widget.lendingModel.lendingPlaceModel.commonSpace);
+          widget.lendingModel!.lendingPlaceModel!.commonSpace!);
 
       _houseRulesController.text =
-          widget.lendingModel.lendingPlaceModel.houseRules.toString();
+          widget.lendingModel!.lendingPlaceModel!.houseRules.toString();
       _bloc.onHouseRulesChanged(
-          widget.lendingModel.lendingPlaceModel.houseRules.toString());
+          widget.lendingModel!.lendingPlaceModel!.houseRules.toString());
 
       _estimatedValueController.text =
-          widget.lendingModel.lendingPlaceModel.estimatedValue.toString();
+          widget.lendingModel!.lendingPlaceModel!.estimatedValue.toString();
       _bloc.onEstimatedValueChanged(
-          widget.lendingModel.lendingPlaceModel.estimatedValue.toString());
+          widget.lendingModel!.lendingPlaceModel!.estimatedValue.toString());
 
       _contactInformationController.text =
-          widget.lendingModel.lendingPlaceModel.contactInformation;
+          widget.lendingModel!.lendingPlaceModel!.contactInformation!;
       _bloc.onContactInformationChanged(
-          widget.lendingModel.lendingPlaceModel.contactInformation);
+          widget.lendingModel!.lendingPlaceModel!.contactInformation!);
     } else {
       if (widget.enteredTitle != null) {
-        _placeNameController.text = widget.enteredTitle;
-        _bloc.onPlaceNameChanged(widget.enteredTitle);
+        _placeNameController.text = widget.enteredTitle!;
+        _bloc.onPlaceNameChanged(widget.enteredTitle!);
       }
     }
     setState(() {});
@@ -142,7 +143,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
           builder: (context, status) {
             if (status.data == Status.COMPLETE) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
-                widget.onPlaceCreateUpdate(_bloc.getLendingPlaceModel());
+                widget.onPlaceCreateUpdate!(_bloc.getLendingPlaceModel());
                 if (shouldPop) {
                   shouldPop = false;
                   Navigator.pop(context);
@@ -199,7 +200,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             nextNode: _guests,
                             value: snapshot.data,
                             validator: (val) {
-                              var validate = _bloc.validatePlaceName(val);
+                              var validate = _bloc.validatePlaceName(val!);
                               return validate == null
                                   ? null
                                   : getAddPlaceValidationError(
@@ -229,6 +230,9 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                                       imagesList.add(link);
                                       _bloc.onHouseImageAdded(imagesList);
                                     },
+                                    storeImageFile: (file) {},
+                                    storPdfFile: (file) {},
+                                    color: Theme.of(context).primaryColor,
                                   );
                                 });
                           },
@@ -265,7 +269,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                               !snapshot.hasData) {
                             return Container();
                           }
-                          imagesList = snapshot.data;
+                          imagesList = snapshot.data!;
                           return Container(
                             height: 100,
                             child: ListView(
@@ -370,7 +374,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             nextNode: _rooms,
                             value: snapshot.data,
                             validator: (val) {
-                              var validate = _bloc.validateGuest(val);
+                              var validate = _bloc.validateGuest(val!);
                               return validate == null
                                   ? null
                                   : getAddPlaceValidationError(
@@ -402,7 +406,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             nextNode: _bathrooms,
                             value: snapshot.data,
                             validator: (val) {
-                              var validate = _bloc.validateRooms(val);
+                              var validate = _bloc.validateRooms(val!);
                               return validate == null
                                   ? null
                                   : getAddPlaceValidationError(
@@ -434,7 +438,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             nextNode: _commonSPace,
                             value: snapshot.data,
                             validator: (val) {
-                              var validate = _bloc.validateBathroom(val);
+                              var validate = _bloc.validateBathroom(val!);
                               return validate == null
                                   ? null
                                   : getAddPlaceValidationError(
@@ -466,7 +470,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             nextNode: _houseRules,
                             value: snapshot.data,
                             validator: (val) {
-                              var validate = _bloc.validateCommonSpace(val);
+                              var validate = _bloc.validateCommonSpace(val!);
                               return validate == null
                                   ? null
                                   : getAddPlaceValidationError(
@@ -492,7 +496,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                             focusNode: _houseRules,
                             value: snapshot.data,
                             validator: (val) {
-                              var validate = _bloc.validateHouseRule(val);
+                              var validate = _bloc.validateHouseRule(val!);
                               return validate == null
                                   ? null
                                   : getAddPlaceValidationError(
@@ -527,12 +531,12 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                                         .estimated_value_place_hint +
                                     S.of(context).estimated_value_hint_place,
                                 errorText: getAddPlaceValidationError(
-                                    context, snapshot.error)),
+                                    context, snapshot.error! as String)),
                             controller: _estimatedValueController,
                             focusNode: _estimatedValue,
                             value: snapshot.data,
                             validator: (val) {
-                              var validate = _bloc.validateEstimatedValue(val);
+                              var validate = _bloc.validateEstimatedValue(val!);
                               return validate == null
                                   ? null
                                   : getAddPlaceValidationError(
@@ -570,13 +574,16 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                               _bloc.onContactInformationChanged(value);
                             },
                             keyboardType: TextInputType.text,
-                            error: getAddPlaceValidationError(
-                                context, snapshot.error),
-                            validator: (String value) {
+                            error: snapshot.error != null
+                                ? getAddPlaceValidationError(
+                                    context, snapshot.error as String)
+                                : null,
+                            validator: (String? value) {
                               // if (value.isEmpty) {
                               //   return null;   // not mandatory field now as told by anitha
                               // }
-                              if (!Regex.emailAndPhoneRegex.hasMatch(value) &&
+                              if (value != null &&
+                                  !Regex.emailAndPhoneRegex.hasMatch(value) &&
                                   value.isNotEmpty) {
                                 return 'Please enter a valid Email or Phone Number';
                               }
@@ -591,8 +598,13 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                           height: 50,
                           width: 200,
                           child: CustomElevatedButton(
+                            color: Theme.of(context).primaryColor,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 10),
+                            elevation: 2.0,
+                            textColor: Colors.white,
                             onPressed: () async {
-                              if (!_formKey.currentState.validate()) {
+                              if (!_formKey.currentState!.validate()) {
                                 return;
                               }
 
@@ -621,7 +633,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                                         S.of(context).please_add_amenities);
                                 FocusScope.of(context).unfocus();
                                 Scrollable.ensureVisible(
-                                    _searchKey.currentContext);
+                                    _searchKey.currentContext!);
                                 return;
                               }
 
@@ -632,7 +644,7 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
                                     message: S.of(context).add_images_to_place);
                                 FocusScope.of(context).unfocus();
                                 Scrollable.ensureVisible(
-                                    _imageKey.currentContext);
+                                    _imageKey.currentContext!);
                               } else {
                                 if (widget.lendingModel == null) {
                                   _bloc.createLendingOfferPlace(
@@ -697,13 +709,13 @@ class _AddUpdateLendingPlaceState extends State<AddUpdateLendingPlace> {
   }
 }
 
-void showAlertMessage({BuildContext context, String message}) {
+void showAlertMessage({BuildContext? context, String? message}) {
   showDialog(
-    context: context,
+    context: context!,
     builder: (dialogContext) {
       return AlertDialog(
         title: Text(S.of(context).alert),
-        content: Text(message),
+        content: Text(message!),
         actions: [
           CustomTextButton(
               onPressed: () {

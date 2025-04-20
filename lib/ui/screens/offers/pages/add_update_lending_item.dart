@@ -1,4 +1,4 @@
-import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:doseform/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -21,9 +21,9 @@ import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/full_screen_widget.dart';
 
 class AddUpdateLendingItem extends StatefulWidget {
-  final LendingModel lendingModel;
-  final String enteredTitle;
-  final Function(LendingModel lendingModel) onItemCreateUpdate;
+  final LendingModel? lendingModel;
+  final String? enteredTitle;
+  final Function(LendingModel lendingModel)? onItemCreateUpdate;
 
   AddUpdateLendingItem(
       {this.lendingModel, this.onItemCreateUpdate, this.enteredTitle});
@@ -47,18 +47,20 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
   void initState() {
     super.initState();
     if (widget.lendingModel != null) {
-      _bloc.loadData(widget.lendingModel.lendingItemModel);
-      _itemNameController.text = widget.lendingModel.lendingItemModel.itemName;
-      _bloc.onPlaceNameChanged(widget.lendingModel.lendingItemModel.itemName);
+      _bloc.loadData(widget.lendingModel!.lendingItemModel!);
+      _itemNameController.text =
+          widget.lendingModel!.lendingItemModel!.itemName!;
+      _bloc
+          .onPlaceNameChanged(widget.lendingModel!.lendingItemModel!.itemName!);
 
       _estimatedValueController.text =
-          widget.lendingModel.lendingItemModel.estimatedValue.toString();
+          widget.lendingModel!.lendingItemModel!.estimatedValue.toString();
       _bloc.onEstimatedValueChanged(
-          widget.lendingModel.lendingItemModel.estimatedValue.toString());
+          widget.lendingModel!.lendingItemModel!.estimatedValue.toString());
     } else {
       if (widget.enteredTitle != null) {
-        _itemNameController.text = widget.enteredTitle;
-        _bloc.onPlaceNameChanged(widget.enteredTitle);
+        _itemNameController.text = widget.enteredTitle!;
+        _bloc.onPlaceNameChanged(widget.enteredTitle!);
       }
     }
     setState(() {});
@@ -96,7 +98,7 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
           builder: (context, status) {
             if (status.data == Status.COMPLETE) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
-                widget.onItemCreateUpdate(_bloc.getLendingItemModel());
+                widget.onItemCreateUpdate!(_bloc.getLendingItemModel());
                 if (shouldPop) {
                   shouldPop = false;
                   Navigator.pop(context);
@@ -153,7 +155,7 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                             nextNode: null,
                             value: snapshot.data,
                             validator: (val) {
-                              var validate = _bloc.validateName(val);
+                              var validate = _bloc.validateName(val!);
                               return validate == null
                                   ? null
                                   : getAddItemValidationError(
@@ -179,7 +181,7 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                             decoration: InputDecoration(
                                 prefixIcon: Icon(Icons.attach_money),
                                 errorText: getAddItemValidationError(
-                                    context, snapshot.error),
+                                    context, snapshot.error! as String),
                                 hintText: S
                                         .of(context)
                                         .estimated_value_item_hint +
@@ -187,7 +189,7 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                             controller: _estimatedValueController,
                             focusNode: _estimatedValue,
                             validator: (val) {
-                              var validate = _bloc.validateEstimatedVal(val);
+                              var validate = _bloc.validateEstimatedVal(val!);
                               return validate == null
                                   ? null
                                   : getAddItemValidationError(
@@ -220,6 +222,9 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                                       imagesList.add(link);
                                       _bloc.onItemImageAdded(imagesList);
                                     },
+                                    storeImageFile: (file) {},
+                                    storPdfFile: (file) {},
+                                    color: Theme.of(context).primaryColor,
                                   );
                                 });
                           },
@@ -255,7 +260,7 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                               !snapshot.hasData) {
                             return Container();
                           }
-                          imagesList = snapshot.data;
+                          imagesList = snapshot.data as List<String>;
                           return Container(
                             height: 100,
                             child: ListView(
@@ -322,8 +327,13 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
                           height: 50,
                           width: 200,
                           child: CustomElevatedButton(
+                            color: Theme.of(context).primaryColor,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 10),
+                            elevation: 3.0,
+                            textColor: Colors.white,
                             onPressed: () async {
-                              if (_formKey.currentState.validate()) {
+                              if (_formKey.currentState!.validate()) {
                                 var connResult =
                                     await Connectivity().checkConnectivity();
                                 if (connResult == ConnectivityResult.none) {
@@ -400,13 +410,13 @@ class _AddUpdateLendingItemState extends State<AddUpdateLendingItem> {
   }
 }
 
-void showAlertMessage({BuildContext context, String message}) {
+void showAlertMessage({BuildContext? context, String? message}) {
   showDialog(
-    context: context,
+    context: context!,
     builder: (dialogContext) {
       return AlertDialog(
         title: Text(S.of(context).alert),
-        content: Text(message),
+        content: Text(message!),
         actions: [
           CustomTextButton(
               onPressed: () {

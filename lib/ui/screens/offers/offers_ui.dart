@@ -24,10 +24,10 @@ import 'package:sevaexchange/widgets/custom_list_tile.dart';
 
 @deprecated
 class OfferCardView extends StatefulWidget {
-  final OfferModel offerModel;
-  TimebankModel timebankModel;
-  String sevaUserIdOffer;
-  bool isAdmin = false;
+  final OfferModel? offerModel;
+  TimebankModel? timebankModel;
+  String? sevaUserIdOffer;
+  bool? isAdmin = false;
   OfferCardView({this.offerModel, this.timebankModel});
   @override
   State<StatefulWidget> createState() {
@@ -39,11 +39,12 @@ class OfferCardViewState extends State<OfferCardView> {
   @override
   void initState() {
     super.initState();
-    FirestoreManager.getTimeBankForId(timebankId: widget.offerModel.timebankId)
+    FirestoreManager.getTimeBankForId(
+            timebankId: widget.offerModel!.timebankId!)
         .then((timebank) {
       widget.timebankModel = timebank;
       if (isAccessAvailable(
-              timebank, SevaCore.of(context).loggedInUser.sevaUserID) ||
+              timebank!, SevaCore.of(context).loggedInUser.sevaUserID!) ||
           timebank.coordinators
               .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
         if (widget.isAdmin == false) {
@@ -66,10 +67,11 @@ class OfferCardViewState extends State<OfferCardView> {
   );
   @override
   Widget build(BuildContext context) {
-    FirestoreManager.getTimeBankForId(timebankId: widget.offerModel.timebankId)
+    FirestoreManager.getTimeBankForId(
+            timebankId: widget.offerModel!.timebankId!)
         .then((timebank) {
       if (isAccessAvailable(
-              timebank, SevaCore.of(context).loggedInUser.sevaUserID) ||
+              timebank!, SevaCore.of(context).loggedInUser.sevaUserID!) ||
           timebank.coordinators
               .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {}
     });
@@ -132,7 +134,7 @@ class OfferCardViewState extends State<OfferCardView> {
       // ),
       body: FutureBuilder<Object>(
           future: FirestoreManager.getUserForId(
-              sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
+              sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID!),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
@@ -140,8 +142,8 @@ class OfferCardViewState extends State<OfferCardView> {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return LoadingIndicator();
             }
-            UserModel userModel = snapshot.data;
-            String usertimezone = userModel.timezone;
+            UserModel userModel = snapshot.data! as UserModel;
+            String usertimezone = userModel.timezone!;
             return SafeArea(
               child: Column(
                 children: <Widget>[
@@ -152,7 +154,7 @@ class OfferCardViewState extends State<OfferCardView> {
                         padding: EdgeInsets.all(14.0),
                         child: Container(
                           padding: EdgeInsets.all(0),
-                          color: widget.offerModel.color,
+                          color: widget.offerModel!.color,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -169,7 +171,7 @@ class OfferCardViewState extends State<OfferCardView> {
                                           Text(
                                             getOfferTitle(
                                                 offerDataModel:
-                                                    widget.offerModel),
+                                                    widget.offerModel!),
                                             style: TextStyle(
                                               fontSize: 20,
                                               fontWeight: FontWeight.bold,
@@ -190,20 +192,20 @@ class OfferCardViewState extends State<OfferCardView> {
                                             subtitle: Text(
                                               DateFormat(
                                                       'EEEEEEE, MMMM dd h:mm a',
-                                                      Locale(AppConfig.prefs
+                                                      Locale(AppConfig.prefs!
                                                               .getString(
-                                                                  'language_code'))
+                                                                  'language_code')!)
                                                           .toLanguageTag())
                                                   .format(
                                                 getDateTimeAccToUserTimezone(
                                                     dateTime: DateTime
                                                         .fromMillisecondsSinceEpoch(
-                                                            widget.offerModel
-                                                                .timestamp),
+                                                            widget.offerModel!
+                                                                .timestamp!),
                                                     timezoneAbb:
                                                         SevaCore.of(context)
                                                             .loggedInUser
-                                                            .timezone),
+                                                            .timezone!),
                                               ),
                                               style: subTitleStyle,
                                               maxLines: 1,
@@ -211,29 +213,32 @@ class OfferCardViewState extends State<OfferCardView> {
                                             ),
                                             trailing: Offstage(
                                               offstage: widget
-                                                      .offerModel.sevaUserId !=
+                                                      .offerModel!.sevaUserId !=
                                                   SevaCore.of(context)
                                                       .loggedInUser
                                                       .sevaUserID,
                                               child: Container(
                                                 height: 30,
                                                 width: 80,
-                                                child: CustomTextButton(
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            20),
-                                                  ),
-                                                  color: Color.fromRGBO(
-                                                      44, 64, 140, 1),
-                                                  child: Text(
-                                                    'Edit',
-                                                    style: TextStyle(
-                                                        color: Colors.white),
+                                                child: TextButton(
+                                                  style: TextButton.styleFrom(
+                                                    backgroundColor:
+                                                        Color.fromRGBO(
+                                                      44,
+                                                      64,
+                                                      140,
+                                                      1,
+                                                    ),
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              20),
+                                                    ),
                                                   ),
                                                   onPressed: () {
-                                                    switch (widget
-                                                        .offerModeferType) {
+                                                    switch (widget.offerModel!
+                                                        .offerType) {
                                                       case OfferType
                                                           .INDIVIDUAL_OFFER:
                                                         Navigator.of(context)
@@ -242,15 +247,17 @@ class OfferCardViewState extends State<OfferCardView> {
                                                             builder: (context) =>
                                                                 IndividualOffer(
                                                               offerModel: widget
-                                                                  .offerModel,
+                                                                  .offerModel!,
                                                               timebankId: widget
-                                                                  .offerModel
-                                                                  .timebankId,
+                                                                  .offerModel!
+                                                                  .timebankId!,
+                                                              timebankModel: widget
+                                                                  .timebankModel!,
                                                               loggedInMemberUserId:
                                                                   SevaCore.of(
                                                                           context)
                                                                       .loggedInUser
-                                                                      .sevaUserID,
+                                                                      .sevaUserID!,
                                                             ),
                                                           ),
                                                         );
@@ -265,8 +272,10 @@ class OfferCardViewState extends State<OfferCardView> {
                                                               offerModel: widget
                                                                   .offerModel,
                                                               timebankId: widget
-                                                                  .offerModel
-                                                                  .timebankId,
+                                                                  .offerModel!
+                                                                  .timebankId!,
+                                                              timebankModel: widget
+                                                                  .timebankModel,
                                                               loggedInMemberUserId:
                                                                   SevaCore.of(
                                                                           context)
@@ -278,6 +287,11 @@ class OfferCardViewState extends State<OfferCardView> {
                                                         break;
                                                     }
                                                   },
+                                                  child: Text(
+                                                    'Edit',
+                                                    style: TextStyle(
+                                                        color: Colors.white),
+                                                  ),
                                                 ),
                                               ),
                                             ),
@@ -293,7 +307,8 @@ class OfferCardViewState extends State<OfferCardView> {
                                               maxLines: 1,
                                             ),
                                             subtitle: Text(
-                                              widget.offerModel.selectedAdrress,
+                                              widget
+                                                  .offerModel!.selectedAdrress!,
                                               style: subTitleStyle,
                                               maxLines: 1,
                                             ),
@@ -304,7 +319,7 @@ class OfferCardViewState extends State<OfferCardView> {
                                               color: Colors.grey,
                                             ),
                                             title: Text(
-                                              "Offered by ${widget.offerModel.fullName}",
+                                              "Offered by ${widget.offerModel!.fullName}",
                                               style: titleStyle,
                                               maxLines: 1,
                                             ),
@@ -314,7 +329,7 @@ class OfferCardViewState extends State<OfferCardView> {
                                             child: RichTextView(
                                                 text: getOfferDescription(
                                                     offerDataModel:
-                                                        widget.offerModel)),
+                                                        widget.offerModel!)),
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.all(8.0),
@@ -344,7 +359,7 @@ class OfferCardViewState extends State<OfferCardView> {
     );
   }
 
-  String offerStatusLabel;
+  String? offerStatusLabel;
   // Future _makePostRequest(OfferModel offerModel) async {
   //   String url = '${FlavorConfig.values.cloudFunctionBaseURL}/acceptOffer';
   //   Map<String, String> headers = {"Content-type": "application/json"};
@@ -372,10 +387,10 @@ class OfferCardViewState extends State<OfferCardView> {
   // }
 
   bool isAccepted = false;
-  BuildContext dialogContext;
+  BuildContext? dialogContext;
   Widget getBottombar() {
     isAccepted =
-        getOfferParticipants(offerDataModel: widget.offerModel).contains(
+        getOfferParticipants(offerDataModel: widget.offerModel!).contains(
       SevaCore.of(context).loggedInUser.sevaUserID,
     );
 
@@ -383,7 +398,7 @@ class OfferCardViewState extends State<OfferCardView> {
       padding: const EdgeInsets.symmetric(horizontal: 0),
       child: Container(
         decoration: BoxDecoration(color: Colors.white54, boxShadow: [
-          BoxShadow(color: Colors.grey[300], offset: Offset(2.0, 2.0))
+          BoxShadow(color: Colors.grey[300]!, offset: Offset(2.0, 2.0))
         ]),
         child: Padding(
           padding: const EdgeInsets.only(top: 20.0, left: 20, bottom: 20),
@@ -398,7 +413,7 @@ class OfferCardViewState extends State<OfferCardView> {
                       style: TextStyle(color: Colors.black),
                       children: [
                         TextSpan(
-                          text: widget.offerModel.sevaUserId !=
+                          text: widget.offerModel!.sevaUserId !=
                                   SevaCore.of(context).loggedInUser.sevaUserID
                               ? 'You have${isAccepted ? '' : " not yet"} accepted this offer.'
                               : "You created this offer",
@@ -413,19 +428,21 @@ class OfferCardViewState extends State<OfferCardView> {
                 ),
               ),
               Offstage(
-                offstage: widget.offerModel.sevaUserId ==
+                offstage: widget.offerModel!.sevaUserId ==
                         SevaCore.of(context).loggedInUser.sevaUserID ||
-                    getOfferParticipants(offerDataModel: widget.offerModel)
+                    getOfferParticipants(offerDataModel: widget.offerModel!)
                         .contains(SevaCore.of(context).loggedInUser.sevaUserID),
                 child: Container(
                   width: 100,
                   height: 32,
-                  child: CustomTextButton(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      backgroundColor: Color.fromRGBO(44, 64, 140, 0.7),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      padding: EdgeInsets.all(0),
                     ),
-                    padding: EdgeInsets.all(0),
-                    color: Color.fromRGBO(44, 64, 140, 0.7),
                     child: Row(
                       children: <Widget>[
                         SizedBox(width: 1),
@@ -444,7 +461,7 @@ class OfferCardViewState extends State<OfferCardView> {
                         Spacer(),
                         Text(
                           getOfferParticipants(
-                                      offerDataModel: widget.offerModel)
+                                      offerDataModel: widget.offerModel!)
                                   .contains(SevaCore.of(context)
                                       .loggedInUser
                                       .sevaUserID)
@@ -464,13 +481,13 @@ class OfferCardViewState extends State<OfferCardView> {
                         confirmationDialog(
                           context: context,
                           title:
-                              "You are signing up for this ${widget.offerModel.groupOfferDataModel.classTitle.trim()}. Doing so will debit a total of ${widget.offerModel.groupOfferDataModel.numberOfClassHours} credits from you after you say OK.",
+                              "You are signing up for this ${widget.offerModel!.groupOfferDataModel!.classTitle.trim()}. Doing so will debit a total of ${widget.offerModel!.groupOfferDataModel!.numberOfClassHours} credits from you after you say OK.",
                           onConfirmed: () {
                             var myUserID =
                                 SevaCore.of(context).loggedInUser.sevaUserID;
-                            CollectionRef
-                                offers
-                                .doc(widget.offerModel.id)
+                            FirebaseFirestore.instance
+                                .collection('offers')
+                                .doc(widget.offerModel!.id)
                                 .update({
                               'groupOfferDataModel.signedUpMembers':
                                   FieldValue.arrayUnion(
@@ -544,10 +561,10 @@ class OfferCardViewState extends State<OfferCardView> {
   }
 
   Future<void> deleteOffer({
-    @required OfferModel offerModel,
+    required OfferModel offerModel,
   }) async {
-    return await CollectionRef
-        .offers
+    return await FirebaseFirestore.instance
+        .collection('offers')
         .doc(offerModel.id)
         .delete();
   }

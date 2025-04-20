@@ -15,12 +15,12 @@ import 'offer_accepted_admin_router.dart';
 import 'offer_details.dart';
 
 class OfferDetailsRouter extends StatefulWidget {
-  final OfferModel offerModel;
+  final OfferModel? offerModel;
   final ComingFrom comingFrom;
   const OfferDetailsRouter({
-    Key key,
+    Key? key,
     this.offerModel,
-    @required this.comingFrom,
+    required this.comingFrom,
   }) : super(key: key);
 
   @override
@@ -42,9 +42,12 @@ class _OfferDetailsRouterState extends State<OfferDetailsRouter> {
   }
 
   Future<void> getTimebank() async {
-    timebankModel = await FirestoreManager.getTimeBankForId(
-        timebankId: widget.offerModel.timebankId);
-    setState(() {});
+    if (widget.offerModel != null && widget.offerModel!.timebankId != null) {
+      timebankModel = (await FirestoreManager.getTimeBankForId(
+        timebankId: widget.offerModel!.timebankId!,
+      ))!;
+      setState(() {});
+    }
   }
 
   @override
@@ -128,7 +131,7 @@ class _OfferDetailsRouterState extends State<OfferDetailsRouter> {
 
   @override
   Widget build(BuildContext context) {
-    bool _isCreator = widget.offerModel.sevaUserId ==
+    bool _isCreator = widget.offerModel!.sevaUserId ==
         SevaCore.of(context).loggedInUser.sevaUserID;
     return BlocProvider(
         bloc: _bloc,
@@ -178,20 +181,20 @@ class _OfferDetailsRouterState extends State<OfferDetailsRouter> {
                       children: _isCreator
                           ? <Widget>[
                               OfferDetails(
-                                offerModel: widget.offerModel,
+                                offerModel: widget.offerModel!,
                                 comingFrom: widget.comingFrom,
                                 timebankModel: timebankModel,
                               ),
-                              widget.offerModel.type == RequestType.TIME
+                              widget.offerModel!.type == RequestType.TIME
                                   ? OfferAcceptedAdminRouter(
                                       offerModel: widget.offerModel,
                                       timebankModel: timebankModel,
                                     )
-                                  : widget.offerModel.type ==
+                                  : widget.offerModel!.type ==
                                           RequestType.LENDING_OFFER
                                       ? LendingOfferParticipants(
                                           timebankModel: timebankModel,
-                                          offerModel: widget.offerModel,
+                                          offerModel: widget.offerModel!,
                                         )
                                       : DonationAcceptedPage(
                                           offermodel: widget.offerModel,
@@ -199,7 +202,7 @@ class _OfferDetailsRouterState extends State<OfferDetailsRouter> {
                             ]
                           : <Widget>[
                               OfferDetails(
-                                offerModel: widget.offerModel,
+                                offerModel: widget.offerModel!,
                                 comingFrom: widget.comingFrom,
                                 timebankModel: timebankModel,
                               ),

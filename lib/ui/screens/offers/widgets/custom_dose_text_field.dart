@@ -10,29 +10,29 @@ import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
 ///
 class CustomDoseTextField extends DoseTextField {
   final bool isRequired;
-  final String heading;
-  final String value;
-  final ValueChanged<String> onChanged;
-  final String hint;
-  final int maxLength;
-  final String error;
+  final String? heading;
+  final String? value;
+  final ValueChanged<String>? onChanged;
+  final String? hint;
+  final int? maxLength;
+  final String? error;
   final TextInputType keyboardType;
-  final TextInputAction textInputAction;
-  final FocusNode focusNode;
-  final FocusNode nextNode;
-  final List<TextInputFormatter> formatters;
-  final TextEditingController controller;
-  final String Function(String) validator;
-  final bool autovalidate;
-  final textCapitalization;
+  final TextInputAction? textInputAction;
+  final FocusNode? focusNode;
+  final FocusNode? nextNode;
+  final List<TextInputFormatter>? formatters;
+  final TextEditingController? controller;
+  final String? Function(String?)? validator;
+  final bool? autovalidate;
+  final TextCapitalization textCapitalization;
   final int maxLines;
   final int minLines;
-  final int errorMaxLines;
-  final void Function(String) onSaved;
-  final InputDecoration decoration;
+  final int? errorMaxLines;
+  final void Function(String?)? onSaved;
+  final InputDecoration? decoration;
 
   CustomDoseTextField(
-      {this.isRequired,
+      {required this.isRequired,
       this.heading,
       this.onChanged,
       this.hint,
@@ -46,7 +46,7 @@ class CustomDoseTextField extends DoseTextField {
       this.validator,
       this.autovalidate,
       this.textInputAction,
-      this.textCapitalization,
+      this.textCapitalization = TextCapitalization.sentences,
       this.maxLines = 1,
       this.minLines = 1,
       this.errorMaxLines,
@@ -72,7 +72,7 @@ class CustomDoseTextField extends DoseTextField {
       children: <Widget>[
         heading != null
             ? Text(
-                heading,
+                heading!,
                 style: titleStyle,
               )
             : Container(),
@@ -102,9 +102,9 @@ class CustomDoseTextField extends DoseTextField {
               nextNode != null ? TextInputAction.next : TextInputAction.done,
           style: subTitleStyle,
           onSaved: (v) {
-            focusNode.unfocus();
+            focusNode!.unfocus();
             nextNode != null
-                ? nextNode.requestFocus()
+                ? nextNode!.requestFocus()
                 : FocusScope.of(context).unfocus();
           },
           validator: validator,

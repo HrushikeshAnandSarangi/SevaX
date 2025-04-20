@@ -8,11 +8,11 @@ import 'package:sevaexchange/utils/app_config.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 
 class ReportInfoCard extends StatelessWidget {
-  final Report report;
-  final double radius = 8;
-  final bool isFromTimebank;
+  final Report? report;
+  final double? radius = 8;
+  final bool? isFromTimebank;
 
-  const ReportInfoCard({Key key, this.report, this.isFromTimebank})
+  const ReportInfoCard({Key? key, this.report, this.isFromTimebank})
       : assert(report != null),
         assert(isFromTimebank != null),
         super(key: key);
@@ -27,13 +27,13 @@ class ReportInfoCard extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                report.reporterImage != null
+                report!.reporterImage != null
                     ? CustomNetworkImage(
-                        report.reporterImage,
+                        report!.reporterImage!,
                         fit: BoxFit.fitWidth,
                         size: 60,
                       )
-                    : CustomAvatar(name: report.reporterName),
+                    : CustomAvatar(name: report!.reporterName),
                 SizedBox(width: 8),
                 Expanded(
                   child: Column(
@@ -41,21 +41,21 @@ class ReportInfoCard extends StatelessWidget {
                     children: <Widget>[
                       SizedBox(height: 6),
                       Text(
-                        report.reporterName,
+                        report!.reporterName!,
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       Text(
-                        report.timestamp == null
+                        report!.timestamp == null
                             ? "" //error message when timestamp is null
                             : timeAgo.format(
                                 DateTime.fromMillisecondsSinceEpoch(
-                                  report.timestamp,
+                                  report!.timestamp!,
                                 ),
-                                locale: Locale(AppConfig.prefs
-                                        .getString('language_code'))
+                                locale: Locale(AppConfig.prefs!
+                                        .getString('language_code')!)
                                     .toLanguageTag()),
                         style: TextStyle(
                           fontSize: 14,
@@ -63,9 +63,9 @@ class ReportInfoCard extends StatelessWidget {
                         ),
                       ),
                       Offstage(
-                        offstage: !isFromTimebank,
+                        offstage: !isFromTimebank!,
                         child: Text(
-                          'Reported within ${report.isTimebankReport ? "Seva Community" : "Group : ${report.entityName}"}',
+                          'Reported within ${report!.isTimebankReport! ? "Seva Community" : "Group : ${report!.entityName}"}',
                           style: TextStyle(
                             fontSize: 14,
                             color: Colors.red,
@@ -73,9 +73,9 @@ class ReportInfoCard extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: 20),
-                      Text("${report.message}"),
+                      Text("${report!.message}"),
                       SizedBox(height: 20),
-                      report.attachment == null
+                      report!.attachment == null
                           ? Container()
                           : LayoutBuilder(
                               builder: (context, constraints) =>
@@ -83,14 +83,14 @@ class ReportInfoCard extends StatelessWidget {
                                 onTap: () {
                                   Navigator.of(context).push(
                                     Attachment.route(
-                                      attachment: report.attachment,
+                                      attachment: report!.attachment!,
                                     ),
                                   );
                                 },
                                 child: Container(
                                   width: constraints.maxWidth / 2,
                                   child: CachedNetworkImage(
-                                    imageUrl: report.attachment,
+                                    imageUrl: report!.attachment!,
                                   ),
                                 ),
                               ),

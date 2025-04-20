@@ -14,18 +14,18 @@ import '../../../../labels.dart';
 /// Pulic
 /// Virtual
 class OfferFilters extends StatelessWidget {
-  final Stream<OfferFilter> stream;
-  final ValueChanged<OfferFilter> onTap;
-  final List<bool> hideFilters;
+  final Stream<OfferFilter>? stream;
+  final ValueChanged<OfferFilter>? onTap;
+  final List<bool>? hideFilters;
 
-  const OfferFilters({Key key, this.stream, this.onTap, this.hideFilters})
-      : assert(hideFilters.length == 7),
-        super(key: key);
+  const OfferFilters({Key? key, this.stream, this.onTap, this.hideFilters})
+      : super(key: key);
 
   @override
+  @override
   Widget build(BuildContext context) {
+    assert(hideFilters!.length == 7);
     return StreamBuilder<OfferFilter>(
-      initialData: OfferFilter(),
       stream: stream,
       builder: (context, snapshot) {
         var filter = snapshot.data;
@@ -33,85 +33,85 @@ class OfferFilters extends StatelessWidget {
           spacing: 8.0,
           children: [
             CustomChipExploreFilter(
-              isHidden: hideFilters[0],
+              isHidden: hideFilters![0],
               label: S.of(context).time,
-              isSelected: filter.timeOffer,
+              isSelected: filter!.timeOffer,
               onTap: () {
-                onTap(
-                  snapshot.data.copyWith(
-                    timeOffer: !snapshot.data.timeOffer,
+                onTap!(
+                  snapshot.data!.copyWith(
+                    timeOffer: !snapshot.data!.timeOffer,
                   ),
                 );
               },
             ),
             CustomChipExploreFilter(
-              isHidden: hideFilters[1],
+              isHidden: hideFilters![1],
               label: S.of(context).cash,
               isSelected: filter.cashOffer,
               onTap: () {
-                onTap(
-                  snapshot.data.copyWith(
-                    cashOffer: !snapshot.data.cashOffer,
+                onTap!(
+                  snapshot.data!.copyWith(
+                    cashOffer: !snapshot.data!.cashOffer,
                   ),
                 );
               },
             ),
             CustomChipExploreFilter(
-              isHidden: hideFilters[2],
+              isHidden: hideFilters![2],
               label: S.of(context).goods,
               isSelected: filter.goodsOffer,
               onTap: () {
-                onTap(
-                  snapshot.data.copyWith(
-                    goodsOffer: !snapshot.data.goodsOffer,
+                onTap!(
+                  snapshot.data!.copyWith(
+                    goodsOffer: !snapshot.data!.goodsOffer,
                   ),
                 );
               },
             ),
             CustomChipExploreFilter(
-              isHidden: hideFilters[3],
+              isHidden: hideFilters![3],
               label: S.of(context).one_to_many.sentenceCase(),
               isSelected: filter.oneToManyOffer,
               onTap: () {
-                onTap(
-                  snapshot.data.copyWith(
-                    oneToManyOffer: !snapshot.data.oneToManyOffer,
+                onTap!(
+                  snapshot.data!.copyWith(
+                    oneToManyOffer: !snapshot.data!.oneToManyOffer,
                   ),
                 );
               },
             ),
             CustomChipExploreFilter(
-              isHidden: hideFilters[4],
+              isHidden: hideFilters![4],
               label: S.of(context).public,
               isSelected: filter.publicOffer,
               onTap: () {
-                onTap(
-                  snapshot.data.copyWith(
-                    publicOffer: !snapshot.data.publicOffer,
+                onTap!(
+                  snapshot.data!.copyWith(
+                    publicOffer: !snapshot.data!.publicOffer,
                   ),
                 );
               },
             ),
             CustomChipExploreFilter(
-              isHidden: hideFilters[5],
+              isHidden: hideFilters![5],
               label: S.of(context).virtual,
               isSelected: filter.virtualOffer,
               onTap: () {
-                onTap(
-                  snapshot.data.copyWith(
-                    virtualOffer: !snapshot.data.virtualOffer,
+                onTap!(
+                  snapshot.data!.copyWith(
+                    virtualOffer: !snapshot.data!.virtualOffer,
                   ),
                 );
               },
             ),
             CustomChipExploreFilter(
-              isHidden: hideFilters[6],
+              isHidden: hideFilters![6],
               label: S.of(context).lending_text,
               isSelected: filter.lendingOffer,
               onTap: () {
-                onTap(
-                  snapshot.data.copyWith(
-                    lendingOffer: !snapshot.data.lendingOffer,
+                onTap!(
+                  snapshot.data!.copyWith(
+                    lendingOffer: !snapshot.data!.lendingOffer,
                   ),
                 );
               },

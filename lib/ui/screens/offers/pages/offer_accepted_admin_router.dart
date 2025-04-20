@@ -15,47 +15,48 @@ import 'offer_earnings.dart';
 import 'offer_participants.dart';
 
 class OfferAcceptedAdminRouter extends StatelessWidget {
-  final OfferModel offerModel;
-  final TimebankModel timebankModel;
+  final OfferModel? offerModel;
+  final TimebankModel? timebankModel;
 
-  const OfferAcceptedAdminRouter({Key key, this.offerModel, this.timebankModel})
+  const OfferAcceptedAdminRouter(
+      {Key? key, this.offerModel, this.timebankModel})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
     List<Widget> tabslist;
-    offerModel.type == RequestType.TIME
-        ? tabslist = offerModel.offerType == OfferType.INDIVIDUAL_OFFER
+    offerModel!.type == RequestType.TIME
+        ? tabslist = offerModel!.offerType == OfferType.INDIVIDUAL_OFFER
             ? [
                 TimeOfferParticipants(
                   //LendingOfferParticipants
                   //above lending offer widget to be integrated
-                  offerModel: offerModel,
-                  timebankModel: timebankModel,
+                  offerModel: offerModel!,
+                  timebankModel: timebankModel!,
                 ),
                 FindVolunteersViewForOffer(
-                  sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
-                  timebankId: timebankModel.id,
-                  offerModel: offerModel,
+                  sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID!,
+                  timebankId: timebankModel!.id,
+                  offerModel: offerModel!,
                 ),
                 TimeOfferEarnings(
-                    offerModel: offerModel, timebankModel: timebankModel),
+                    offerModel: offerModel!, timebankModel: timebankModel!),
               ]
             : [
                 OfferParticipants(
-                  offerModel: offerModel,
-                  timebankModel: timebankModel,
+                  offerModel: offerModel!,
+                  timebankModel: timebankModel!,
                 ),
                 OfferEarnings(
-                    offerModel: offerModel, timebankModel: timebankModel),
+                    offerModel: offerModel!, timebankModel: timebankModel!),
               ]
         : tabslist = [
             OfferParticipants(
-              offerModel: offerModel,
-              timebankModel: timebankModel,
+              offerModel: offerModel!,
+              timebankModel: timebankModel!,
             ),
             OfferDonationRequest(
-              offerModel: offerModel,
-              timebankModel: timebankModel,
+              offerModel: offerModel!,
+              timebankModel: timebankModel!,
             ),
           ];
     return Scaffold(
@@ -70,8 +71,8 @@ class OfferAcceptedAdminRouter extends StatelessWidget {
                   unselectedLabelStyle: TextStyle(
                     fontWeight: FontWeight.normal,
                   ),
-                  tabs: offerModel.type == RequestType.TIME
-                      ? offerModel.offerType == OfferType.INDIVIDUAL_OFFER
+                  tabs: offerModel!.type == RequestType.TIME
+                      ? offerModel!.offerType == OfferType.INDIVIDUAL_OFFER
                           ? <Widget>[
                               Tab(
                                 child: Text(S.of(context).participants),

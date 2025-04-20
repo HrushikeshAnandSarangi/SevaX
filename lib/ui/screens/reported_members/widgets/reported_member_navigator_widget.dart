@@ -8,12 +8,12 @@ import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/reported_members/pages/reported_member_page.dart';
 
 class ReportedMemberNavigatorWidget extends StatefulWidget {
-  final bool isTimebankReport;
-  final TimebankModel timebankModel;
-  final String communityId;
+  final bool? isTimebankReport;
+  final TimebankModel? timebankModel;
+  final String? communityId;
 
   const ReportedMemberNavigatorWidget({
-    Key key,
+    Key? key,
     this.isTimebankReport,
     this.timebankModel,
     this.communityId,
@@ -33,7 +33,7 @@ class _ReportedMemberNavigatorWidgetState
       builder: (context, snapshot) {
         log("result--> ${snapshot.data}");
         return Offstage(
-          offstage: !(snapshot.data ?? false),
+          offstage: !((snapshot.data as bool?) ?? false),
           child: Container(
             color: Color(0xFFFFAFAFA),
             child: ListTile(
@@ -44,9 +44,9 @@ class _ReportedMemberNavigatorWidgetState
                 Navigator.of(context)
                     .push(
                       ReportedMembersPage.route(
-                        timebankModel: widget.timebankModel,
-                        communityId: widget.communityId,
-                        isFromTimebank: widget.isTimebankReport,
+                        timebankModel: widget.timebankModel!,
+                        communityId: widget.communityId!,
+                        isFromTimebank: widget.isTimebankReport!,
                       ),
                     )
                     .then((_) => setState(() {}));
@@ -62,10 +62,10 @@ class _ReportedMemberNavigatorWidgetState
     bool flag = false;
     QuerySnapshot snapshot = await CollectionRef.reportedUsersList
         .where(
-          widget.isTimebankReport ? "communityId" : "timebankIds",
-          isEqualTo: widget.isTimebankReport ? widget.communityId : null,
+          widget.isTimebankReport! ? "communityId" : "timebankIds",
+          isEqualTo: widget.isTimebankReport! ? widget.communityId : null,
           arrayContains:
-              widget.isTimebankReport ? null : widget.timebankModel.id,
+              widget.isTimebankReport! ? null : widget.timebankModel!.id,
         )
         .get();
     if (snapshot.docs.length > 0) {

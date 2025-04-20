@@ -14,22 +14,22 @@ import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/participant_card.dart';
 
 class OfferParticipants extends StatelessWidget {
-  final OfferModel offerModel;
-  final TimebankModel timebankModel;
+  final OfferModel? offerModel;
+  final TimebankModel? timebankModel;
 
-  const OfferParticipants({Key key, this.offerModel, this.timebankModel})
+  const OfferParticipants({Key? key, this.offerModel, this.timebankModel})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
     final _bloc = BlocProvider.of<OfferBloc>(context);
     return SingleChildScrollView(
       child: StreamBuilder<List<OfferParticipantsModel>>(
-        stream: _bloc.participants,
+        stream: _bloc!.participants,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return LoadingIndicator();
           }
-          if (snapshot.data == null || snapshot.data.isEmpty) {
+          if (snapshot.data == null || snapshot.data!.isEmpty) {
             return Container(
               height: MediaQuery.of(context).size.height * 0.75,
               alignment: Alignment.center,
@@ -38,22 +38,23 @@ class OfferParticipants extends StatelessWidget {
           }
           return ListView.builder(
             shrinkWrap: true,
-            itemCount: snapshot.data.length,
+            itemCount: snapshot.data!.length,
             physics: NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
               return ParticipantCard(
-                name: snapshot.data[index].participantDetails.fullname,
-                imageUrl: snapshot.data[index].participantDetails.photourl,
-                bio: snapshot.data[index].participantDetails.bio,
+                name: snapshot.data![index].participantDetails!.fullname!,
+                imageUrl: snapshot.data![index].participantDetails!.photourl!,
+                bio: snapshot.data![index].participantDetails!.bio,
                 onImageTap: () {
                   Navigator.of(context)
                       .push(MaterialPageRoute(builder: (context) {
                     return ProfileViewer(
-                      timebankId: timebankModel.id,
-                      entityName: timebankModel.name,
+                      timebankId: timebankModel!.id,
+                      entityName: timebankModel!.name,
                       isFromTimebank: isPrimaryTimebank(
-                          parentTimebankId: timebankModel.parentTimebankId),
-                      userEmail: snapshot.data[index].participantDetails.email,
+                          parentTimebankId: timebankModel!.parentTimebankId),
+                      userEmail:
+                          snapshot.data![index].participantDetails!.email,
                     );
                   }));
                 },
@@ -62,9 +63,9 @@ class OfferParticipants extends StatelessWidget {
                   onMessageClick(
                     context,
                     SevaCore.of(context).loggedInUser,
-                    snapshot.data[index].participantDetails,
-                    offerModel.timebankId,
-                    offerModel.communityId,
+                    snapshot.data![index].participantDetails!,
+                    offerModel!.timebankId!,
+                    offerModel!.communityId!,
                   );
                 },
               );
@@ -98,14 +99,12 @@ class OfferParticipants extends StatelessWidget {
 
     List<String> showToCommunities = [];
     try {
-      String communityId1 = loggedInUser.currentCommunity;
+      String communityId1 = loggedInUser.currentCommunity!;
 
       String communityId2 =
-          offerModel.participantDetails[user.sevauserid]['communityId'];
+          offerModel!.participantDetails![user.sevauserid]['communityId']!;
 
-      if (communityId1 != null &&
-          communityId2 != null &&
-          communityId1.isNotEmpty &&
+      if (communityId1.isNotEmpty &&
           communityId2.isNotEmpty &&
           communityId1 != communityId2) {
         showToCommunities.add(communityId1);
@@ -122,8 +121,11 @@ class OfferParticipants extends StatelessWidget {
       sender: sender,
       reciever: reciever,
       showToCommunities:
-          showToCommunities.isNotEmpty ? showToCommunities : null,
+          showToCommunities.isNotEmpty ? showToCommunities : <String>[],
       interCommunity: showToCommunities.isNotEmpty,
+      feedId: '', // TODO: Replace with actual feedId if available
+      entityId: '', // TODO: Replace with actual entityId if available
+      onChatCreate: () {}, // TODO: Replace with actual callback if needed
     );
   }
 }

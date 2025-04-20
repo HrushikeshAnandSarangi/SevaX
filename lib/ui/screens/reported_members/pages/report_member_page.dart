@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:progress_dialog/progress_dialog.dart';
+import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -17,14 +17,14 @@ import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/image_picker_widget.dart';
 
 class ReportMemberPage extends StatefulWidget {
-  final UserModel reportingUserModel;
-  final UserModel reportedUserModel;
-  final String timebankId;
-  final String entityName;
-  final bool isFromTimebank;
+  final UserModel? reportingUserModel;
+  final UserModel? reportedUserModel;
+  final String? timebankId;
+  final String? entityName;
+  final bool? isFromTimebank;
 
   const ReportMemberPage({
-    Key key,
+    Key? key,
     this.reportingUserModel,
     this.reportedUserModel,
     this.timebankId,
@@ -38,12 +38,12 @@ class ReportMemberPage extends StatefulWidget {
         super(key: key);
 
   static Route<dynamic> route({
-    Key key,
-    UserModel reportingUserModel,
-    UserModel reportedUserModel,
-    String timebankId,
-    String entityName,
-    bool isFromTimebank,
+    Key? key,
+    UserModel? reportingUserModel,
+    UserModel? reportedUserModel,
+    String? timebankId,
+    String? entityName,
+    bool? isFromTimebank,
   }) =>
       MaterialPageRoute(
         builder: (BuildContext context) => ReportMemberPage(
@@ -122,9 +122,11 @@ class _ReportMemberPageState extends State<ReportMemberPage> {
                     enabledBorder: InputBorder.none,
                     errorBorder: InputBorder.none,
                     disabledBorder: InputBorder.none,
-                    errorText: snapshot.error.toString().contains('profanity')
-                        ? S.of(context).profanity_text_alert
-                        : snapshot.error,
+                    errorText: snapshot.hasError
+                        ? (snapshot.error.toString().contains('profanity')
+                            ? S.of(context).profanity_text_alert
+                            : snapshot.error.toString())
+                        : null,
                   ),
                   maxLines: null,
                   keyboardType: TextInputType.multiline,
@@ -176,7 +178,7 @@ class _ReportMemberPageState extends State<ReportMemberPage> {
                             children: <Widget>[
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child: Image.file(snapshot.data),
+                                child: Image.file(snapshot.data!),
                               ),
                               Align(
                                 alignment: Alignment.topRight,
@@ -210,6 +212,12 @@ class _ReportMemberPageState extends State<ReportMemberPage> {
                 bool isEnabled =
                     snapshot.data ?? false; //(snapshot.data?.length ?? 0) > 10;
                 return CustomElevatedButton(
+                  color: Theme.of(context).primaryColor,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)),
+                  padding: EdgeInsets.symmetric(vertical: 12),
+                  elevation: 2,
+                  textColor: Colors.white,
                   child: Text(
                     S.of(context).report,
                   ),
@@ -238,7 +246,7 @@ class _ReportMemberPageState extends State<ReportMemberPage> {
                                 S.of(context).member_reporting_failed);
                           });
                         }
-                      : null,
+                      : () {},
                 );
               },
             )
@@ -249,36 +257,36 @@ class _ReportMemberPageState extends State<ReportMemberPage> {
   }
 
   Future<void> profanityCheck({
-    File file,
-    ReportMemberBloc bloc,
+    File? file,
+    ReportMemberBloc? bloc,
   }) async {
     progressDialog = ProgressDialog(
       context,
-      type: ProgressDialogType.Normal,
+      type: ProgressDialogType.normal,
       isDismissible: false,
     );
     // _newsImageURL = imageURL;
-    progressDialog.show();
+    progressDialog!.show();
 
     String filePath = DateTime.now().toString();
     if (file == null) {
-      progressDialog.hide();
+      progressDialog!.hide();
     }
     UploadTask _uploadTask =
-        _storage.ref().child("reports/$filePath.png").putFile(file);
+        _storage.ref().child("reports/$filePath.png").putFile(file!);
     String imageURL =
         await (await _uploadTask.whenComplete(() => null)).ref.getDownloadURL();
     profanityImageModel = await checkProfanityForImage(imageUrl: imageURL);
     if (profanityImageModel == null) {
-      progressDialog.hide();
+      progressDialog!.hide();
 
       showFailedLoadImage(context: context).then((value) {});
     } else {
       profanityStatusModel =
           await getProfanityStatus(profanityImageModel: profanityImageModel);
 
-      if (profanityStatusModel.isProfane) {
-        progressDialog.hide();
+      if (profanityStatusModel.isProfane!) {
+        progressDialog!.hide();
 
         showProfanityImageAlert(
                 context: context, content: profanityStatusModel.category)
@@ -293,8 +301,8 @@ class _ReportMemberPageState extends State<ReportMemberPage> {
         deleteFireBaseImage(imageUrl: imageURL).then((value) {
           if (value) {}
         }).catchError((e) => log(e));
-        bloc.uploadImage(file);
-        progressDialog.hide();
+        bloc!.uploadImage(file);
+        progressDialog!.hide();
       }
     }
   }
@@ -314,7 +322,7 @@ class _ReportMemberPageState extends State<ReportMemberPage> {
                     width: 20,
                     child: CircularProgressIndicator(
                       valueColor: AlwaysStoppedAnimation<Color>(
-                        Theme.of(context).accentColor,
+                        Theme.of(context).colorScheme.secondary,
                       ),
                     ),
                   )

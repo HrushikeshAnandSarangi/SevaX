@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class SevaCoinStarWidget extends StatelessWidget {
-  final String title;
-  final String amount;
+  final String? title;
+  final String? amount;
   const SevaCoinStarWidget({
-    Key key,
+    Key? key,
     this.title,
     this.amount,
   }) : super(key: key);
@@ -15,7 +15,7 @@ class SevaCoinStarWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          title,
+          title!,
           style: TextStyle(
             color: Colors.grey,
             fontWeight: FontWeight.bold,
@@ -50,7 +50,7 @@ class SevaCoinStarWidget extends StatelessWidget {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 10),
               child: Text(
-                amount,
+                amount!,
                 style: TextStyle(
                   fontSize: 40,
                   fontWeight: FontWeight.w900,
