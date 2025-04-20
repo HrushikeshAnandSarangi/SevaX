@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/flavor_config.dart';
 
 class CustomChip extends StatelessWidget {
-  final bool isSelected;
-  final VoidCallback onTap;
-  final String label;
+  final bool? isSelected;
+  final VoidCallback? onTap;
+  final String? label;
 
-  const CustomChip({Key key, this.isSelected, this.onTap, this.label})
+  const CustomChip({Key? key, this.isSelected, this.onTap, this.label})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
       child: Chip(
-        avatar: isSelected
+        avatar: isSelected!
             ? Padding(
                 padding: EdgeInsets.only(left: 2.0),
                 child: Container(
@@ -32,16 +32,17 @@ class CustomChip extends StatelessWidget {
               )
             : null,
         label: Text(
-          label,
+          label!,
           style: TextStyle(
               color:
-                  isSelected ? Colors.white : Theme.of(context).primaryColor),
+                  isSelected! ? Colors.white : Theme.of(context).primaryColor),
         ),
         side: BorderSide(
-          color: isSelected ? Theme.of(context).primaryColor : Colors.grey[300],
+          color:
+              isSelected! ? Theme.of(context).primaryColor : Colors.grey[300]!,
         ),
         backgroundColor:
-            isSelected ? Theme.of(context).primaryColor : Colors.transparent,
+            isSelected! ? Theme.of(context).primaryColor : Colors.transparent,
       ),
     );
   }

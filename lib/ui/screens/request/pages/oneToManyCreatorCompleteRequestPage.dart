@@ -28,7 +28,7 @@ class OneToManyCreatorCompleteRequestPage extends StatefulWidget {
 
   // TODO needs flow correction to tasks model
   OneToManyCreatorCompleteRequestPage(
-      {@required this.requestModel, @required this.onFinish});
+      {required this.requestModel, required this.onFinish});
 
   @override
   OneToManyCreatorCompleteRequestPageState createState() =>
@@ -37,7 +37,7 @@ class OneToManyCreatorCompleteRequestPage extends StatefulWidget {
 
 class OneToManyCreatorCompleteRequestPageState
     extends State<OneToManyCreatorCompleteRequestPage> {
-  RequestModel requestModel;
+  late RequestModel requestModel;
 
   List tempAttendeesList = [];
   List attendeesList = [];
@@ -78,7 +78,7 @@ class OneToManyCreatorCompleteRequestPageState
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          requestModel.title,
+          requestModel.title!,
           style: TextStyle(fontSize: 18),
         ),
       ),
@@ -120,17 +120,18 @@ class OneToManyCreatorCompleteRequestPageState
                                         children: [
                                           CircleAvatar(
                                               backgroundImage: NetworkImage(
-                                                  (requestModel.selectedInstructor
+                                                  (requestModel.selectedInstructor!
                                                                   .photoURL ==
                                                               '' ||
                                                           requestModel
-                                                                  .selectedInstructor
+                                                                  .selectedInstructor!
                                                                   .photoURL ==
                                                               null)
                                                       ? defaultUserImageURL
                                                       : requestModel
-                                                          .selectedInstructor
-                                                          .photoURL),
+                                                              .selectedInstructor!
+                                                              .photoURL ??
+                                                          defaultUserImageURL),
                                               minRadius: 32.0),
                                         ],
                                       ),
@@ -142,19 +143,20 @@ class OneToManyCreatorCompleteRequestPageState
                                           children: [
                                             SizedBox(height: 12),
                                             Text(
-                                                (requestModel.selectedInstructor
+                                                (requestModel.selectedInstructor!
                                                                 .fullname ==
                                                             '' ||
                                                         requestModel
-                                                                .selectedInstructor
+                                                                .selectedInstructor!
                                                                 .fullname ==
                                                             null)
                                                     ? S
                                                         .of(context)
                                                         .name_not_available
                                                     : requestModel
-                                                        .selectedInstructor
-                                                        .fullname,
+                                                            .selectedInstructor!
+                                                            .fullname ??
+                                                        '',
                                                 style: TextStyle(
                                                     fontSize: 20,
                                                     fontWeight:
@@ -163,7 +165,7 @@ class OneToManyCreatorCompleteRequestPageState
                                                     TextOverflow.ellipsis),
                                             SizedBox(height: 13),
                                             Text(
-                                              requestModel.selectedSpeakerTimeDetails
+                                              requestModel.selectedSpeakerTimeDetails!
                                                           .speakingTime ==
                                                       null
                                                   ? S
@@ -174,13 +176,13 @@ class OneToManyCreatorCompleteRequestPageState
                                                           .of(context)
                                                           .duration_of_session +
                                                       requestModel
-                                                          .selectedSpeakerTimeDetails
+                                                          .selectedSpeakerTimeDetails!
                                                           .speakingTime
                                                           .toString() +
                                                       ' ' +
                                                       ((requestModel
-                                                                  .selectedSpeakerTimeDetails
-                                                                  .speakingTime >
+                                                                  .selectedSpeakerTimeDetails!
+                                                                  .speakingTime! >
                                                               1.0)
                                                           ? S.of(context).hours
                                                           : S.of(context).hour),
@@ -191,7 +193,7 @@ class OneToManyCreatorCompleteRequestPageState
                                             ),
                                             SizedBox(height: 5),
                                             Text(
-                                              requestModel.selectedSpeakerTimeDetails
+                                              requestModel.selectedSpeakerTimeDetails!
                                                           .prepTime ==
                                                       null
                                                   ? '0'
@@ -199,13 +201,13 @@ class OneToManyCreatorCompleteRequestPageState
                                                           .of(context)
                                                           .time_to_prepare +
                                                       requestModel
-                                                          .selectedSpeakerTimeDetails
+                                                          .selectedSpeakerTimeDetails!
                                                           .prepTime
                                                           .toString() +
                                                       ' ' +
                                                       ((requestModel
-                                                                  .selectedSpeakerTimeDetails
-                                                                  .prepTime >
+                                                                  .selectedSpeakerTimeDetails!
+                                                                  .prepTime! >
                                                               1)
                                                           ? S.of(context).hours
                                                           : S.of(context).hour),
@@ -357,7 +359,7 @@ class OneToManyCreatorCompleteRequestPageState
                                     .replaceAll(
                                         'speaker_name',
                                         requestModel
-                                            .selectedInstructor.fullname),
+                                            .selectedInstructor!.fullname!),
                                 style: TextStyle(
                                     color: Colors.grey, fontSize: 14)),
                             SizedBox(height: 15),
@@ -379,6 +381,13 @@ class OneToManyCreatorCompleteRequestPageState
                           alignment: Alignment.center,
                           padding: EdgeInsets.all(5.0),
                           child: CustomElevatedButton(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
+                            padding: EdgeInsets.all(0),
+                            textColor: Colors.black,
+                            elevation: 0,
+                            color: Colors.grey[200]!,
                             onPressed: () async {
                               showDialog(
                                   context: context,
@@ -389,7 +398,9 @@ class OneToManyCreatorCompleteRequestPageState
                                           .oneToManyRequestCreatorCompletingRequestDialog),
                                       actions: <Widget>[
                                         CustomTextButton(
-                                          color: Theme.of(context).accentColor,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .secondary,
                                           child: Text(
                                             S.of(context).no,
                                             style: TextStyle(
@@ -436,37 +447,38 @@ class OneToManyCreatorCompleteRequestPageState
 
                                             //give credits to timebank, then to speaker and attendees
                                             double totalCredits = ((requestModel
-                                                        .maxCredits *
+                                                        .maxCredits! *
                                                     tempAttendeesList.length) +
-                                                requestModel
-                                                    .selectedSpeakerTimeDetails
-                                                    .prepTime +
+                                                requestModel!
+                                                    .selectedSpeakerTimeDetails!
+                                                    .prepTime! +
                                                 (requestModel
-                                                            .selectedSpeakerTimeDetails
+                                                            .selectedSpeakerTimeDetails!
                                                             .speakingTime ==
                                                         null
                                                     ? 0.0
                                                     : requestModel
-                                                        .selectedSpeakerTimeDetails
-                                                        .speakingTime));
+                                                            .selectedSpeakerTimeDetails!
+                                                            .speakingTime ??
+                                                        0.0));
 
                                             log('Total Credits: ' +
                                                 totalCredits.toString());
 
                                             double creditsToSpeaker = requestModel
-                                                    .selectedSpeakerTimeDetails
-                                                    .prepTime +
-                                                (requestModel
-                                                            .selectedSpeakerTimeDetails
-                                                            .speakingTime ==
+                                                    .selectedSpeakerTimeDetails!
+                                                    .prepTime! +
+                                                (requestModel!
+                                                            .selectedSpeakerTimeDetails!
+                                                            .speakingTime! ==
                                                         null
                                                     ? 0.0
                                                     : requestModel
-                                                        .selectedSpeakerTimeDetails
-                                                        .speakingTime);
+                                                        .selectedSpeakerTimeDetails!
+                                                        .speakingTime!);
 
                                             //Sevax global to timebank
-                                            await TransactionBloc()
+                                            TransactionBloc()
                                                 .createNewTransaction(
                                               FlavorConfig.values.timebankId,
                                               //sevax global timebank id
@@ -480,19 +492,19 @@ class OneToManyCreatorCompleteRequestPageState
                                               null,
                                               requestModel.id,
                                               communityId:
-                                                  requestModel.communityId,
+                                                  requestModel.communityId!,
                                               toEmailORId:
-                                                  requestModel.timebankId,
+                                                  requestModel.timebankId!,
                                               fromEmailORId: FlavorConfig
                                                   .values.timebankId,
                                             );
 
                                             //to speaker and attendees
-                                            await TransactionBloc()
+                                            TransactionBloc()
                                                 .createNewTransaction(
                                                     requestModel.timebankId,
                                                     requestModel
-                                                        .selectedInstructor
+                                                        .selectedInstructor!
                                                         .sevaUserID,
                                                     //speaker user id
                                                     DateTime.now()
@@ -503,16 +515,16 @@ class OneToManyCreatorCompleteRequestPageState
                                                     null,
                                                     requestModel.id,
                                                     communityId: requestModel
-                                                        .communityId,
+                                                        .communityId!,
                                                     toEmailORId: requestModel
-                                                        .selectedInstructor
-                                                        .email,
+                                                        .selectedInstructor!
+                                                        .email!,
                                                     fromEmailORId:
-                                                        requestModel.email);
+                                                        requestModel.email!);
 
                                             for (var attendee
                                                 in tempAttendeesList) {
-                                              await TransactionBloc()
+                                              TransactionBloc()
                                                   .createNewTransaction(
                                                 requestModel.timebankId,
                                                 attendee['sevaUserID'],
@@ -525,10 +537,10 @@ class OneToManyCreatorCompleteRequestPageState
                                                 null,
                                                 requestModel.id,
                                                 communityId:
-                                                    requestModel.communityId,
+                                                    requestModel.communityId!,
                                                 toEmailORId: attendee['email'],
                                                 fromEmailORId:
-                                                    requestModel.email,
+                                                    requestModel.email!,
                                               );
                                               log('Sent credit to:  ' +
                                                   attendee['fullname']);
@@ -610,8 +622,6 @@ class OneToManyCreatorCompleteRequestPageState
                                   fontWeight: FontWeight.w600,
                                   color: Colors.black),
                             ),
-                            elevation: 0,
-                            color: Colors.grey[200],
                           ),
                         ),
                         SizedBox(width: 12),
@@ -619,6 +629,11 @@ class OneToManyCreatorCompleteRequestPageState
                           alignment: Alignment.center,
                           padding: EdgeInsets.all(8.0),
                           child: CustomElevatedButton(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
+                            padding: EdgeInsets.all(0),
+                            textColor: Colors.black,
                             onPressed: () {
                               UserModel loggedInUser =
                                   SevaCore.of(context).loggedInUser;
@@ -631,19 +646,23 @@ class OneToManyCreatorCompleteRequestPageState
                               );
 
                               ParticipantInfo reciever = ParticipantInfo(
-                                id: requestModel.selectedInstructor.sevaUserID,
-                                name: requestModel.selectedInstructor.fullname,
+                                id: requestModel.selectedInstructor!.sevaUserID,
+                                name: requestModel.selectedInstructor!.fullname,
                                 photoUrl:
-                                    requestModel.selectedInstructor.photoURL,
+                                    requestModel.selectedInstructor!.photoURL,
                                 type: ChatType.TYPE_PERSONAL,
                               );
 
                               createAndOpenChat(
                                 isTimebankMessage: true,
                                 context: context,
-                                communityId: loggedInUser.currentCommunity,
+                                communityId: loggedInUser.currentCommunity!,
                                 sender: sender,
                                 reciever: reciever,
+                                timebankId: requestModel.timebankId!,
+                                feedId: requestModel.id!,
+                                showToCommunities: [requestModel.communityId!],
+                                entityId: requestModel.id!,
                                 onChatCreate: () {
                                   //Navigator.of(context).pop();
                                 },
@@ -656,7 +675,7 @@ class OneToManyCreatorCompleteRequestPageState
                                   color: Colors.black),
                             ),
                             elevation: 0,
-                            color: Colors.grey[200],
+                            color: Colors.grey[200]!,
                           ),
                         ),
                       ],
@@ -671,7 +690,7 @@ class OneToManyCreatorCompleteRequestPageState
     );
   }
 
-  BuildContext creditRequestDialogContext;
+  BuildContext? creditRequestDialogContext;
 
   void showProgressForCreditRetrieval() {
     showDialog(

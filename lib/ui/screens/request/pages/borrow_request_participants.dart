@@ -24,10 +24,10 @@ class BorrowRequestParticipants extends StatelessWidget {
   final RequestModel requestModel;
 
   const BorrowRequestParticipants({
-    Key key,
-    this.userModelList,
-    this.timebankModel,
-    this.requestModel,
+    Key? key,
+    required this.userModelList,
+    required this.timebankModel,
+    required this.requestModel,
   }) : super(key: key);
 
   @override
@@ -38,7 +38,7 @@ class BorrowRequestParticipants extends StatelessWidget {
         padding: const EdgeInsets.all(12.0),
         child: StreamBuilder<List<BorrowAcceptorModel>>(
           stream: FirestoreManager.getBorrowRequestAcceptorsModelStream(
-            requestId: requestModel.id,
+            requestId: requestModel.id!,
           ),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -52,7 +52,7 @@ class BorrowRequestParticipants extends StatelessWidget {
                 child: Text(S.of(context).error_loading_data),
               );
             }
-            List<BorrowAcceptorModel> borrowAcceptorModel = snapshot.data;
+            List<BorrowAcceptorModel> borrowAcceptorModel = snapshot.data!;
 
             logger.e('borrowAcceptorModel length 2: ' +
                 borrowAcceptorModel.length.toString());
@@ -106,7 +106,7 @@ class BorrowRequestParticipants extends StatelessWidget {
                                     return Container();
                                   }
                                   List<LendingModel> lendingModelList =
-                                      snapshot.data;
+                                      snapshot.data!;
 
                                   return Container(
                                     margin: EdgeInsets.symmetric(
@@ -142,20 +142,20 @@ class BorrowRequestParticipants extends StatelessWidget {
                                           }));
                                         },
                                         buttonsContainer:
-                                            ((requestModel.borrowModel
-                                                        .itemsCollected) &&
-                                                    requestModel.approvedUsers
+                                            ((requestModel.borrowModel!
+                                                        .itemsCollected!) &&
+                                                    requestModel.approvedUsers!
                                                         .contains(
                                                             borrowAcceptorModel[
                                                                     index]
                                                                 .acceptorEmail))
                                                 ? Chip(
                                                     label: Text(
-                                                      (requestModel.borrowModel
-                                                                  .itemsCollected &&
+                                                      (requestModel.borrowModel!
+                                                                  .itemsCollected! &&
                                                               requestModel
-                                                                  .borrowModel
-                                                                  .itemsReturned)
+                                                                  .borrowModel!
+                                                                  .itemsReturned!)
                                                           ? S
                                                               .of(context)
                                                               .items_returned
@@ -179,17 +179,17 @@ class BorrowRequestParticipants extends StatelessWidget {
                                                               .center,
                                                       children: [
                                                         !requestModel
-                                                                    .borrowModel
-                                                                    .itemsCollected &&
+                                                                    .borrowModel!
+                                                                    .itemsCollected! &&
                                                                 !requestModel
-                                                                    .borrowModel
-                                                                    .itemsReturned
+                                                                    .borrowModel!
+                                                                    .itemsReturned!
                                                             ? ElevatedButton(
                                                                 style: ElevatedButton
                                                                     .styleFrom(
-                                                                  primary: Colors
-                                                                          .grey[
-                                                                      300],
+                                                                  backgroundColor:
+                                                                      Colors.grey[
+                                                                          300],
                                                                   shape:
                                                                       new RoundedRectangleBorder(
                                                                     borderRadius:
@@ -201,7 +201,7 @@ class BorrowRequestParticipants extends StatelessWidget {
                                                                 onPressed:
                                                                     () async {
                                                                   if (requestModel
-                                                                          .approvedUsers
+                                                                          .approvedUsers!
                                                                           .length <=
                                                                       0) {
                                                                     var notificationId = await readBorrowerRequestAcceptNotification(
@@ -226,15 +226,15 @@ class BorrowRequestParticipants extends StatelessWidget {
                                                                           requestModel:
                                                                               requestModel,
                                                                           timeBankId:
-                                                                              requestModel.timebankId,
+                                                                              requestModel.timebankId!,
                                                                           userId: SevaCore.of(context)
                                                                               .loggedInUser
-                                                                              .sevaUserID,
+                                                                              .sevaUserID!,
                                                                           parentContext:
                                                                               context,
                                                                           acceptorUserModel: getUserModel(
                                                                               userModelList,
-                                                                              borrowAcceptorModel[index].acceptorEmail),
+                                                                              borrowAcceptorModel[index].acceptorEmail!),
                                                                           notificationId:
                                                                               notificationId,
                                                                         ),
@@ -245,12 +245,12 @@ class BorrowRequestParticipants extends StatelessWidget {
                                                                     await alreadyAcceptedLenderDialog(
                                                                         context,
                                                                         requestModel
-                                                                            .roomOrTool);
+                                                                            .roomOrTool!);
                                                                   }
                                                                 },
                                                                 child: Text(
                                                                   requestModel
-                                                                          .approvedUsers
+                                                                          .approvedUsers!
                                                                           .contains(borrowAcceptorModel[index]
                                                                               .acceptorEmail)
                                                                       ? S
@@ -261,7 +261,7 @@ class BorrowRequestParticipants extends StatelessWidget {
                                                                           .of(context)
                                                                           .accept,
                                                                   style: TextStyle(
-                                                                      color: requestModel.approvedUsers.length > 0
+                                                                      color: requestModel.approvedUsers!.length > 0
                                                                           ? Colors
                                                                               .grey
                                                                           : Colors
@@ -281,7 +281,7 @@ class BorrowRequestParticipants extends StatelessWidget {
                             : FutureBuilder<LendingModel>(
                                 future: LendingOffersRepo.getLendingModel(
                                     lendingId: borrowAcceptorModel[index]
-                                        .borrowedPlaceId),
+                                        .borrowedPlaceId!),
                                 builder: (context, snapshot) {
                                   if (snapshot.connectionState ==
                                       ConnectionState.waiting) {
@@ -290,7 +290,8 @@ class BorrowRequestParticipants extends StatelessWidget {
                                   if (snapshot.data == null) {
                                     return Container();
                                   }
-                                  LendingModel lendingModelList = snapshot.data;
+                                  LendingModel lendingModelList =
+                                      snapshot.data!;
 
                                   return Container(
                                     margin: EdgeInsets.symmetric(
@@ -324,20 +325,20 @@ class BorrowRequestParticipants extends StatelessWidget {
                                           }));
                                         },
                                         buttonsContainer:
-                                            ((requestModel.borrowModel
-                                                        .isCheckedIn) &&
-                                                    requestModel.approvedUsers
+                                            ((requestModel.borrowModel!
+                                                        .isCheckedIn!) &&
+                                                    requestModel.approvedUsers!
                                                         .contains(
                                                             borrowAcceptorModel[
                                                                     index]
                                                                 .acceptorEmail))
                                                 ? Chip(
                                                     label: Text(
-                                                      (requestModel.borrowModel
-                                                                  .isCheckedIn &&
+                                                      (requestModel.borrowModel!
+                                                                  .isCheckedIn! &&
                                                               requestModel
-                                                                  .borrowModel
-                                                                  .isCheckedOut)
+                                                                  .borrowModel!
+                                                                  .isCheckedOut!)
                                                           ? S
                                                               .of(context)
                                                               .checked_out_text
@@ -361,17 +362,17 @@ class BorrowRequestParticipants extends StatelessWidget {
                                                               .center,
                                                       children: [
                                                         !requestModel
-                                                                    .borrowModel
-                                                                    .isCheckedIn &&
+                                                                    .borrowModel!
+                                                                    .isCheckedIn! &&
                                                                 !requestModel
-                                                                    .borrowModel
-                                                                    .isCheckedOut
+                                                                    .borrowModel!
+                                                                    .isCheckedOut!
                                                             ? ElevatedButton(
                                                                 style: ElevatedButton
                                                                     .styleFrom(
-                                                                  primary: Colors
-                                                                          .grey[
-                                                                      300],
+                                                                  backgroundColor:
+                                                                      Colors.grey[
+                                                                          300],
                                                                   shape:
                                                                       new RoundedRectangleBorder(
                                                                     borderRadius:
@@ -383,7 +384,7 @@ class BorrowRequestParticipants extends StatelessWidget {
                                                                 onPressed:
                                                                     () async {
                                                                   if (requestModel
-                                                                          .approvedUsers
+                                                                          .approvedUsers!
                                                                           .length <=
                                                                       0) {
                                                                     var notificationId = await readBorrowerRequestAcceptNotification(
@@ -408,15 +409,15 @@ class BorrowRequestParticipants extends StatelessWidget {
                                                                           requestModel:
                                                                               requestModel,
                                                                           timeBankId:
-                                                                              requestModel.timebankId,
+                                                                              requestModel.timebankId!,
                                                                           userId: SevaCore.of(context)
                                                                               .loggedInUser
-                                                                              .sevaUserID,
+                                                                              .sevaUserID!,
                                                                           parentContext:
                                                                               context,
                                                                           acceptorUserModel: getUserModel(
                                                                               userModelList,
-                                                                              borrowAcceptorModel[index].acceptorEmail),
+                                                                              borrowAcceptorModel[index].acceptorEmail!),
                                                                           notificationId:
                                                                               notificationId,
                                                                         ),
@@ -427,12 +428,12 @@ class BorrowRequestParticipants extends StatelessWidget {
                                                                     await alreadyAcceptedLenderDialog(
                                                                         context,
                                                                         requestModel
-                                                                            .roomOrTool);
+                                                                            .roomOrTool!);
                                                                   }
                                                                 },
                                                                 child: Text(
                                                                   requestModel
-                                                                          .approvedUsers
+                                                                          .approvedUsers!
                                                                           .contains(borrowAcceptorModel[index]
                                                                               .acceptorEmail)
                                                                       ? S
@@ -443,7 +444,7 @@ class BorrowRequestParticipants extends StatelessWidget {
                                                                           .of(context)
                                                                           .accept,
                                                                   style: TextStyle(
-                                                                      color: requestModel.approvedUsers.length > 0
+                                                                      color: requestModel.approvedUsers!.length > 0
                                                                           ? Colors
                                                                               .grey
                                                                           : Colors

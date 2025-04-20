@@ -6,10 +6,10 @@ import 'package:sevaexchange/widgets/edit_custom_request_category.dart';
 
 class EditRequestCategoryCard extends StatelessWidget {
   final CategoryModel categoryModel;
-  final UserModel userModel;
+  final UserModel? userModel;
 
   const EditRequestCategoryCard(
-      {Key key, @required this.categoryModel, this.userModel})
+      {Key? key, required this.categoryModel, this.userModel})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -44,10 +44,11 @@ class EditRequestCategoryCard extends StatelessWidget {
               builder: (BuildContext newCategoryDialog) {
                 return EditRequestCustomCategory(
                   categoryModel: categoryModel,
-                  // onCategoryEdited:
-                  //     () {},
+                  onCategoryEdited: () {
+                    Navigator.of(context).pop();
+                  },
                   primaryColor: Theme.of(context).primaryColor,
-                  userModel: userModel,
+                  userModel: userModel!,
                 );
               },
             );

@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 
 class PledgedAmountCard extends StatelessWidget {
-  final String name;
-  final String currency;
-  final String amount;
-  final String title;
+  final String? name;
+  final String? currency;
+  final String? amount;
+  final String? title;
   const PledgedAmountCard({
-    Key key,
+    Key? key,
     this.title,
     this.name,
     this.currency,
@@ -28,7 +28,7 @@ class PledgedAmountCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Text(
-                  title,
+                  title!,
                   style: TextStyle(color: Colors.grey, fontSize: 16),
                 ),
                 Text(

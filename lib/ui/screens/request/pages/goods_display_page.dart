@@ -11,12 +11,12 @@ class GoodsDisplayPage extends StatelessWidget {
   final String message;
 
   const GoodsDisplayPage({
-    Key key,
-    this.label,
-    this.name,
-    this.photoUrl,
-    this.goods,
-    this.message,
+    Key? key,
+    required this.label,
+    required this.name,
+    required this.photoUrl,
+    required this.goods,
+    required this.message,
   }) : super(key: key);
 
   @override

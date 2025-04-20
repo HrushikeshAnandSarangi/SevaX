@@ -19,14 +19,14 @@ import 'package:sevaexchange/widgets/custom_buttons.dart';
 class OneToManySpeakerTimeEntryComplete extends StatefulWidget {
   final RequestModel requestModel;
   final VoidCallback onFinish;
-  final UserModel userModel;
+  final UserModel? userModel;
   final bool isFromtasks;
 
   OneToManySpeakerTimeEntryComplete(
-      {@required this.requestModel,
-      @required this.onFinish,
+      {required this.requestModel,
+      required this.onFinish,
       this.userModel,
-      @required this.isFromtasks});
+      required this.isFromtasks});
 
   @override
   OneToManySpeakerTimeEntryCompleteState createState() =>
@@ -39,8 +39,8 @@ class OneToManySpeakerTimeEntryCompleteState
 
   // int speakingTime = 0;
 
-  RequestModel requestModel;
-  BuildContext dialogContext;
+  RequestModel? requestModel;
+  BuildContext? dialogContext;
 
   @override
   void initState() {
@@ -68,7 +68,7 @@ class OneToManySpeakerTimeEntryCompleteState
         ),
         backgroundColor: Theme.of(context).primaryColor,
         title: Text(
-          requestModel.title,
+          requestModel!.title!,
           style: TextStyle(fontSize: 18),
         ),
       ),
@@ -83,7 +83,7 @@ class OneToManySpeakerTimeEntryCompleteState
               alignment: Alignment.topCenter,
               width: MediaQuery.of(context).size.width * 0.9,
               padding: EdgeInsets.only(top: 25.0, left: 35),
-              color: requestModel.color,
+              color: requestModel!.color,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -275,7 +275,7 @@ class OneToManySpeakerTimeEntryCompleteState
                           padding: EdgeInsets.all(5.0),
                           child: CustomElevatedButton(
                             onPressed: () async {
-                              if (_formKey.currentState.validate()) {
+                              if (_formKey.currentState!.validate()) {
                                 showDialog(
                                     barrierDismissible: false,
                                     context: context,
@@ -296,25 +296,25 @@ class OneToManySpeakerTimeEntryCompleteState
                                     });
 
                                 //store form input to map in requestModel
-                                requestModel.selectedSpeakerTimeDetails
+                                requestModel!.selectedSpeakerTimeDetails!
                                     .prepTime = prepTime;
                                 // requestModel.selectedSpeakerTimeDetails
                                 //     .speakingTime = speakingTime;
 
                                 Set<String> approvedUsersList =
-                                    Set.from(requestModel.approvedUsers);
+                                    Set.from(requestModel!.approvedUsers!);
                                 approvedUsersList.add(
-                                    SevaCore.of(context).loggedInUser.email);
-                                requestModel.approvedUsers =
+                                    SevaCore.of(context).loggedInUser.email!);
+                                requestModel!.approvedUsers =
                                     approvedUsersList.toList();
 
                                 await CollectionRef.requests
-                                    .doc(requestModel.id)
-                                    .update(requestModel.toMap());
+                                    .doc(requestModel!.id)
+                                    .update(requestModel!.toMap());
 
                                 //Navigator.of(creditRequestDialogContext).pop();
 
-                                Navigator.of(dialogContext)
+                                Navigator.of(dialogContext!)
                                     .pop(); //this is to pop loader
 
                                 widget.onFinish();
@@ -322,10 +322,10 @@ class OneToManySpeakerTimeEntryCompleteState
                                 if (widget.isFromtasks) {
                                   await FirestoreManager
                                       .readUserNotificationOneToManyWhenSpeakerIsRejectedCompletion(
-                                          requestModel: requestModel,
+                                          requestModel: requestModel!,
                                           userEmail: SevaCore.of(context)
                                               .loggedInUser
-                                              .email,
+                                              .email!,
                                           fromNotification: false);
 
                                   // Navigator.of(context).pop();
@@ -345,7 +345,13 @@ class OneToManySpeakerTimeEntryCompleteState
                                   color: Colors.black),
                             ),
                             elevation: 0,
-                            color: Colors.grey[200],
+                            color: Colors.grey[200]!,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 16.0, vertical: 8.0),
+                            textColor: Colors.black,
                           ),
                         ),
                         SizedBox(width: 12),
@@ -366,9 +372,9 @@ class OneToManySpeakerTimeEntryCompleteState
                               );
 
                               ParticipantInfo reciever = ParticipantInfo(
-                                id: requestModel.sevaUserId,
-                                name: requestModel.fullName,
-                                photoUrl: requestModel.photoUrl,
+                                id: requestModel!.sevaUserId,
+                                name: requestModel!.fullName,
+                                photoUrl: requestModel!.photoUrl,
                                 type: ChatType.TYPE_TIMEBANK,
                               );
 
@@ -377,8 +383,8 @@ class OneToManySpeakerTimeEntryCompleteState
                                 context: context,
                                 communityId: SevaCore.of(context)
                                     .loggedInUser
-                                    .currentCommunity,
-                                timebankId: requestModel.timebankId,
+                                    .currentCommunity!,
+                                timebankId: requestModel!.timebankId!,
                                 sender: sender,
                                 reciever: reciever,
                                 isFromRejectCompletion: false,
@@ -386,6 +392,11 @@ class OneToManySpeakerTimeEntryCompleteState
                                 onChatCreate: () {
                                   //Navigator.of(context).pop();
                                 },
+                                feedId: requestModel!
+                                    .id!, // or another appropriate value
+                                showToCommunities: [], // or another appropriate value
+                                entityId: requestModel!
+                                    .id!, // or another appropriate value
                               );
                             },
                             child: Text(
@@ -395,7 +406,13 @@ class OneToManySpeakerTimeEntryCompleteState
                                   color: Colors.black),
                             ),
                             elevation: 0,
-                            color: Colors.grey[200],
+                            color: Colors.grey[200]!,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 16.0, vertical: 8.0),
+                            textColor: Colors.black,
                           ),
                         ),
                       ],
@@ -410,7 +427,7 @@ class OneToManySpeakerTimeEntryCompleteState
     );
   }
 
-  BuildContext creditRequestDialogContext;
+  BuildContext? creditRequestDialogContext;
 
   void showProgressForCreditRetrieval() {
     showDialog(

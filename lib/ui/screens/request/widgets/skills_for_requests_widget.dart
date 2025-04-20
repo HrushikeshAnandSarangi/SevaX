@@ -16,9 +16,9 @@ typedef MapListCallback = void Function(
     Map<String, dynamic> _selectedSkillsMap);
 
 class SkillsForRequests extends StatefulWidget {
-  final String languageCode;
-  final Map<String, dynamic> selectedSkills;
-  final MapListCallback onSelectedSkillsMap;
+  final String? languageCode;
+  final Map<String, dynamic>? selectedSkills;
+  final MapListCallback? onSelectedSkillsMap;
 
   SkillsForRequests(
       {this.languageCode, this.selectedSkills, this.onSelectedSkillsMap});
@@ -33,7 +33,7 @@ class _SkillsForRequestsState extends State<SkillsForRequests> {
   bool isDataLoaded = false;
   bool hasPellError = false;
   TextEditingController _textEditingController = TextEditingController();
-  SuggestionsBoxController controller = SuggestionsBoxController();
+  SuggestionsController controller = SuggestionsController();
 
   @override
   void initState() {
@@ -43,16 +43,17 @@ class _SkillsForRequestsState extends State<SkillsForRequests> {
           .get()
           .then((QuerySnapshot querySnapshot) {
         querySnapshot.docs.forEach((DocumentSnapshot data) {
-          if (data.data()[widget.languageCode] != null) {
-            skills[data.data()['id']] = data.data()[widget.languageCode];
+          final dataMap = data.data() as Map<String, dynamic>;
+          if (dataMap[widget.languageCode!] != null) {
+            skills[dataMap['id']] = dataMap[widget.languageCode];
           } else {
-            skills[data.data()['id']] = data.data()['name'];
+            skills[dataMap['id']] = dataMap['name'];
           }
         });
 
         log("len ${skills.values.length}");
-        if (widget.selectedSkills.values != null) {
-          _selectedSkills = widget.selectedSkills;
+        if (widget.selectedSkills!.values != null) {
+          _selectedSkills = widget.selectedSkills!;
         }
         setState(() {
           isDataLoaded = true;
@@ -70,59 +71,58 @@ class _SkillsForRequestsState extends State<SkillsForRequests> {
         children: [
           SizedBox(height: 8),
           TypeAheadField<SuggestedItem>(
-            suggestionsBoxDecoration: SuggestionsBoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              hasScrollbar: false,
-            ),
+            suggestionsController: SuggestionsController(),
             errorBuilder: (context, err) {
               return Text('No result found');
             },
             debounceDuration: Duration(milliseconds: 300),
-            textFieldConfiguration: TextFieldConfiguration(
-              onTap: () {
-                controller.open();
-                controller.resize();
-              },
-              style: hasPellError
-                  ? TextStyle(
-                      decoration: TextDecoration.underline,
-                      decorationColor: Colors.red,
-                      decorationStyle: TextDecorationStyle.wavy,
-                      decorationThickness: 3,
-                    )
-                  : TextStyle(),
-              controller: _textEditingController,
-              decoration: InputDecoration(
-                hintText: S.of(context).search,
-                hintStyle: TextStyle(color: Colors.grey),
-                filled: true,
-                fillColor: Colors.grey[300],
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
-                  borderRadius: BorderRadius.circular(25.7),
-                ),
-                enabledBorder: UnderlineInputBorder(
+            builder: (context, textEditingController, focusNode) {
+              return TextField(
+                onTap: () {
+                  controller.open();
+                  controller.resize();
+                },
+                style: hasPellError
+                    ? TextStyle(
+                        decoration: TextDecoration.underline,
+                        decorationColor: Colors.red,
+                        decorationStyle: TextDecorationStyle.wavy,
+                        decorationThickness: 3,
+                      )
+                    : TextStyle(),
+                controller: _textEditingController,
+                focusNode: focusNode,
+                decoration: InputDecoration(
+                  hintText: S.of(context).search,
+                  hintStyle: TextStyle(color: Colors.grey),
+                  filled: true,
+                  fillColor: Colors.grey[300],
+                  focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.white),
-                    borderRadius: BorderRadius.circular(25.7)),
-                contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
-                prefixIcon: Icon(
-                  Icons.search,
-                  color: Colors.black,
-                ),
-                suffixIcon: InkWell(
-                  splashColor: Colors.transparent,
-                  child: Icon(
-                    Icons.clear,
-                    color: Colors.grey,
+                    borderRadius: BorderRadius.circular(25.7),
                   ),
-                  onTap: () {
-                    _textEditingController.clear();
-                    controller.close();
-                  },
+                  enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(25.7)),
+                  contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
+                  prefixIcon: Icon(
+                    Icons.search,
+                    color: Colors.black,
+                  ),
+                  suffixIcon: InkWell(
+                    splashColor: Colors.transparent,
+                    child: Icon(
+                      Icons.clear,
+                      color: Colors.grey,
+                    ),
+                    onTap: () {
+                      _textEditingController.clear();
+                      controller.close();
+                    },
+                  ),
                 ),
-              ),
-            ),
-            suggestionsBoxController: controller,
+              );
+            },
             suggestionsCallback: (pattern) async {
               List<SuggestedItem> dataCopy = [];
               skills.forEach((k, v) => dataCopy.add(SuggestedItem()
@@ -141,14 +141,14 @@ class _SkillsForRequestsState extends State<SkillsForRequests> {
                     await SpellCheckManager.evaluateSpellingFor(pattern,
                         language: widget.languageCode);
 
-                if (spellCheckResult.hasErros) {
+                if (spellCheckResult.hasErros!) {
                   dataCopy.add(SuggestedItem()
                     ..suggestionMode = SuggestionMode.USER_DEFINED
                     ..suggesttionTitle = pattern);
                 } else if (spellCheckResult.correctSpelling != pattern) {
                   dataCopy.add(SuggestedItem()
                     ..suggestionMode = SuggestionMode.SUGGESTED
-                    ..suggesttionTitle = spellCheckResult.correctSpelling);
+                    ..suggesttionTitle = spellCheckResult.correctSpelling!);
 
                   dataCopy.add(SuggestedItem()
                     ..suggestionMode = SuggestionMode.USER_DEFINED
@@ -187,7 +187,7 @@ class _SkillsForRequestsState extends State<SkillsForRequests> {
                   }
                   return searchUserDefinedEntity(
                     keyword: suggestedItem.suggesttionTitle,
-                    language: widget.languageCode,
+                    language: widget.languageCode!,
                     suggestionMode: suggestedItem.suggestionMode,
                     showLoader: true,
                   );
@@ -218,7 +218,7 @@ class _SkillsForRequestsState extends State<SkillsForRequests> {
                   return Container();
               }
             },
-            noItemsFoundBuilder: (context) {
+            emptyBuilder: (context) {
               return getSuggestionLayout(
                 suggestion: _textEditingController.text,
                 add: S.of(context).add + ' ',
@@ -230,7 +230,7 @@ class _SkillsForRequestsState extends State<SkillsForRequests> {
               //   showLoader: false,
               // );
             },
-            onSuggestionSelected: (SuggestedItem suggestion) async {
+            onSelected: (SuggestedItem suggestion) async {
               if (ProfanityDetector()
                   .isProfaneString(suggestion.suggesttionTitle)) {
                 return;
@@ -241,7 +241,7 @@ class _SkillsForRequestsState extends State<SkillsForRequests> {
                   var skillId = Uuid().generateV4();
                   SkillsAndInterestBloc.addSkillToDb(
                       skillId: skillId,
-                      skillLanguage: widget.languageCode,
+                      skillLanguage: widget.languageCode!,
                       skillTitle: suggestion.suggesttionTitle);
                   skills[skillId] = suggestion.suggesttionTitle;
 
@@ -252,7 +252,7 @@ class _SkillsForRequestsState extends State<SkillsForRequests> {
                       (k) => skills[k] == suggestion.suggesttionTitle,
                     );
                     _selectedSkills[id] = suggestion.suggesttionTitle;
-                    widget.onSelectedSkillsMap(_selectedSkills);
+                    widget.onSelectedSkillsMap!(_selectedSkills);
 
                     setState(() {});
                   }
@@ -262,7 +262,7 @@ class _SkillsForRequestsState extends State<SkillsForRequests> {
                   var skillId = Uuid().generateV4();
                   SkillsAndInterestBloc.addSkillToDb(
                     skillId: skillId,
-                    skillLanguage: widget.languageCode,
+                    skillLanguage: widget.languageCode!,
                     skillTitle: _textEditingController.text,
                   );
                   skills[skillId] = _textEditingController.text;
@@ -273,7 +273,7 @@ class _SkillsForRequestsState extends State<SkillsForRequests> {
                       (k) => skills[k] == _textEditingController.text,
                     );
                     _selectedSkills[id] = _textEditingController.text;
-                    widget.onSelectedSkillsMap(_selectedSkills);
+                    widget.onSelectedSkillsMap!(_selectedSkills);
                     setState(() {});
                   }
                   break;
@@ -286,7 +286,7 @@ class _SkillsForRequestsState extends State<SkillsForRequests> {
                       (k) => skills[k] == suggestion.suggesttionTitle,
                     );
                     _selectedSkills[id] = suggestion.suggesttionTitle;
-                    widget.onSelectedSkillsMap(_selectedSkills);
+                    widget.onSelectedSkillsMap!(_selectedSkills);
 
                     setState(() {});
                   }
@@ -325,19 +325,19 @@ class _SkillsForRequestsState extends State<SkillsForRequests> {
   }
 
   FutureBuilder<SpellCheckResult> searchUserDefinedEntity({
-    String keyword,
-    String language,
-    SuggestionMode suggestionMode,
-    bool showLoader,
+    String? keyword,
+    String? language,
+    SuggestionMode? suggestionMode,
+    bool? showLoader,
   }) {
     return FutureBuilder<SpellCheckResult>(
       future: SpellCheckManager.evaluateSpellingFor(
-        keyword,
+        keyword!,
         language: language,
       ),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return showLoader
+          return showLoader!
               ? getLoading
               : LinearProgressIndicator(
                   backgroundColor:
@@ -350,7 +350,7 @@ class _SkillsForRequestsState extends State<SkillsForRequests> {
 
         return getSuggestionLayout(
           suggestion: keyword,
-          suggestionMode: suggestionMode,
+          suggestionMode: suggestionMode!,
           add: S.of(context).add + ' ',
         );
       },
@@ -365,9 +365,9 @@ class _SkillsForRequestsState extends State<SkillsForRequests> {
   }
 
   Padding getSuggestionLayout({
-    String suggestion,
-    SuggestionMode suggestionMode,
-    String add,
+    String? suggestion,
+    SuggestionMode? suggestionMode,
+    String? add,
   }) {
     return suggestion == ''
         ? Padding(padding: const EdgeInsets.all(0))

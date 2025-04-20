@@ -21,11 +21,22 @@ AlertDialog requestDonationAcknowledgementDialog(BuildContext context) {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             CustomElevatedButton(
+              color: Colors.blue,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              elevation: 2,
+              textColor: Colors.white,
               child: Text(S.of(context).ack),
               onPressed: () {},
             ),
             CustomElevatedButton(
               color: Colors.red,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              elevation: 2,
+              textColor: Colors.white,
               child: Text(S.of(context).cancel),
               onPressed: () {
                 Navigator.of(context, rootNavigator: true).pop();

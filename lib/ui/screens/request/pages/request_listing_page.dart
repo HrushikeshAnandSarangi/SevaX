@@ -1,11 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:sevaexchange/components/repeat_availability/recurring_listing.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/request_model.dart';
+import 'package:sevaexchange/models/user_model.dart'; // Add this import
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/screens/request/bloc/request_bloc.dart';
@@ -34,11 +36,11 @@ import 'package:sevaexchange/widgets/tag_view.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 
 class RequestListingPage extends StatefulWidget {
-  final TimebankModel timebankModel;
-  final bool isFromSettings;
+  final TimebankModel? timebankModel;
+  final bool? isFromSettings;
 
   const RequestListingPage({
-    Key key,
+    Key? key,
     this.isFromSettings = false,
     this.timebankModel,
   }) : super(key: key);
@@ -47,15 +49,29 @@ class RequestListingPage extends StatefulWidget {
 }
 
 class _RequestListingPageState extends State<RequestListingPage> {
-  Future<Coordinates> currentCoords;
+  late Future<GeoPoint> currentCoords;
   final RequestBloc _bloc = RequestBloc();
+
+  Future<GeoPoint> _getGeoPoint() async {
+    final latLng = SevaCore.of(context).loggedInUser.lat_lng;
+    if (latLng != null && latLng.isNotEmpty) {
+      final latLngList = latLng.split(',');
+      if (latLngList.length == 2) {
+        final latitude = double.tryParse(latLngList[0]) ?? 0.0;
+        final longitude = double.tryParse(latLngList[1]) ?? 0.0;
+        return GeoPoint(latitude, longitude);
+      }
+    }
+    return GeoPoint(0.0, 0.0);
+  }
+
   @override
   void initState() {
-    currentCoords = LocationHelper.getCoordinates();
+    currentCoords = _getGeoPoint();
     Future.delayed(Duration.zero, () {
       _bloc.init(
-        widget.timebankModel.id,
-        SevaCore.of(context).loggedInUser.sevaUserID,
+        widget.timebankModel!.id!,
+        SevaCore.of(context).loggedInUser.sevaUserID!,
       );
     });
     super.initState();
@@ -69,7 +85,7 @@ class _RequestListingPageState extends State<RequestListingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: widget.isFromSettings ? AppBar() : null,
+      appBar: widget.isFromSettings! ? AppBar() : null,
       body: Provider<RequestBloc>(
         create: (context) => _bloc,
         dispose: (c, b) => b.dispose(),
@@ -93,12 +109,12 @@ class _RequestListingPageState extends State<RequestListingPage> {
                   type: InfoType.REQUESTS,
                 ),
                 HideWidget(
-                  hide: widget.isFromSettings,
+                  hide: widget.isFromSettings!,
                   child: TransactionLimitCheck(
                     comingFrom: ComingFrom.Requests,
-                    timebankId: widget.timebankModel.id,
+                    timebankId: widget.timebankModel!.id,
                     isSoftDeleteRequested:
-                        widget.timebankModel.requestedSoftDelete,
+                        widget.timebankModel!.requestedSoftDelete,
                     child: GestureDetector(
                       child: Container(
                         margin: EdgeInsets.only(left: 0),
@@ -107,28 +123,29 @@ class _RequestListingPageState extends State<RequestListingPage> {
                           color: Theme.of(context).primaryColor,
                         ),
                       ),
-                      onTap: () => onCreateButtonTap(widget.timebankModel),
+                      onTap: () => onCreateButtonTap(widget.timebankModel!),
                     ),
                   ),
+                  secondChild: SizedBox.shrink(),
                 ),
               ],
             ),
             buildFilterView(),
             SizedBox(height: 8),
-            FutureBuilder<Coordinates>(
+            FutureBuilder<GeoPoint>(
               future: currentCoords,
-              builder: (context, AsyncSnapshot<Coordinates> currentLocation) {
+              builder: (context, AsyncSnapshot<GeoPoint> currentLocation) {
                 if (currentLocation.connectionState ==
                     ConnectionState.waiting) {
                   return LoadingIndicator();
                 }
 
-                if (!widget.isFromSettings) {
+                if (!widget.isFromSettings!) {
                   return Expanded(
                     child: SingleChildScrollView(
                       child: RequestListBuilder(
                         coords: currentLocation.data,
-                        timebankModel: widget.timebankModel,
+                        timebankModel: widget.timebankModel!,
                       ),
                     ),
                   );
@@ -159,11 +176,11 @@ class _RequestListingPageState extends State<RequestListingPage> {
               SizedBox(width: 10),
               CustomChip(
                 label: 'Time',
-                isSelected: filter.timeRequest,
+                isSelected: filter!.timeRequest!,
                 onTap: () {
                   _bloc.onFilterChange(
-                    snapshot.data.copyWith(
-                      timeRequest: !snapshot.data.timeRequest,
+                    snapshot.data!.copyWith(
+                      timeRequest: !snapshot.data!.timeRequest,
                     ),
                   );
                 },
@@ -174,8 +191,8 @@ class _RequestListingPageState extends State<RequestListingPage> {
                 isSelected: filter.cashRequest,
                 onTap: () {
                   _bloc.onFilterChange(
-                    snapshot.data.copyWith(
-                      cashRequest: !snapshot.data.cashRequest,
+                    snapshot.data!.copyWith(
+                      cashRequest: !snapshot.data!.cashRequest,
                     ),
                   );
                 },
@@ -186,8 +203,8 @@ class _RequestListingPageState extends State<RequestListingPage> {
                 isSelected: filter.goodsRequest,
                 onTap: () {
                   _bloc.onFilterChange(
-                    snapshot.data.copyWith(
-                      goodsRequest: !snapshot.data.goodsRequest,
+                    snapshot.data!.copyWith(
+                      goodsRequest: !snapshot.data!.goodsRequest,
                     ),
                   );
                 },
@@ -198,8 +215,8 @@ class _RequestListingPageState extends State<RequestListingPage> {
                 isSelected: filter.oneToManyRequest,
                 onTap: () {
                   _bloc.onFilterChange(
-                    snapshot.data.copyWith(
-                      oneToManyRequest: !snapshot.data.oneToManyRequest,
+                    snapshot.data!.copyWith(
+                      oneToManyRequest: !snapshot.data!.oneToManyRequest,
                     ),
                   );
                 },
@@ -210,8 +227,8 @@ class _RequestListingPageState extends State<RequestListingPage> {
                 isSelected: filter.borrowRequest,
                 onTap: () {
                   _bloc.onFilterChange(
-                    snapshot.data.copyWith(
-                      borrowRequest: !snapshot.data.borrowRequest,
+                    snapshot.data!.copyWith(
+                      borrowRequest: !snapshot.data!.borrowRequest,
                     ),
                   );
                 },
@@ -222,8 +239,8 @@ class _RequestListingPageState extends State<RequestListingPage> {
                 isSelected: filter.publicRequest,
                 onTap: () {
                   _bloc.onFilterChange(
-                    snapshot.data.copyWith(
-                      publicRequest: !snapshot.data.publicRequest,
+                    snapshot.data!.copyWith(
+                      publicRequest: !snapshot.data!.publicRequest,
                     ),
                   );
                 },
@@ -234,8 +251,8 @@ class _RequestListingPageState extends State<RequestListingPage> {
                 isSelected: filter.virtualRequest,
                 onTap: () {
                   _bloc.onFilterChange(
-                    snapshot.data.copyWith(
-                      virtualRequest: !snapshot.data.virtualRequest,
+                    snapshot.data!.copyWith(
+                      virtualRequest: !snapshot.data!.virtualRequest,
                     ),
                   );
                 },
@@ -251,7 +268,7 @@ class _RequestListingPageState extends State<RequestListingPage> {
   void onCreateButtonTap(TimebankModel timebankModel) {
     bool _isAccessAvailable = isAccessAvailable(
       timebankModel,
-      SevaCore.of(context).loggedInUser.sevaUserID,
+      SevaCore.of(context).loggedInUser.sevaUserID!,
     );
     if (timebankModel.protected) {
       if (_isAccessAvailable) {
@@ -278,8 +295,11 @@ class _RequestListingPageState extends State<RequestListingPage> {
       MaterialPageRoute(
         builder: (context) => CreateRequest(
           comingFrom: ComingFrom.Requests,
+          userModel: UserModel(),
+          projectModel: ProjectModel(),
+          requestModel: RequestModel(communityId: timebankId),
           timebankId: timebankId,
-          projectId: '',
+          projectId: '', // Provide the appropriate projectId here
         ),
       ),
     );

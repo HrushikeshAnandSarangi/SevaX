@@ -1,5 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/components/repeat_availability/recurring_listing.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
@@ -19,17 +20,17 @@ import 'package:sevaexchange/widgets/tag_view.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 
 class RequestCard extends StatelessWidget {
-  final RequestModel model;
-  final Coordinates coords;
-  final VoidCallback onTap;
+  final RequestModel? model;
+  final GeoPoint? coords;
+  final VoidCallback? onTap;
 
-  const RequestCard({Key key, this.model, this.coords, this.onTap})
+  const RequestCard({Key? key, this.model, this.coords, this.onTap})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     var user = SevaCore.of(context).loggedInUser;
-    var requestLocation = RequestViewClassifer.getLocation(model.address);
+    var requestLocation = RequestViewClassifer.getLocation(model!.address!);
     return Container(
       decoration: RequestViewClassifer.containerDecorationR,
       margin: EdgeInsets.symmetric(horizontal: 5, vertical: 0),
@@ -43,7 +44,7 @@ class RequestCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                user.curatedRequestIds.contains(model.id)
+                user.curatedRequestIds!.contains(model!.id)
                     ? Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
@@ -68,13 +69,13 @@ class RequestCard extends StatelessWidget {
                           )
                         : Container(),
                     SizedBox(width: 10),
-                    model.location != null &&
-                            model.sevaUserId !=
+                    model!.location != null &&
+                            model!.sevaUserId !=
                                 SevaCore.of(context).loggedInUser.sevaUserID
                         ? DistanceFromCurrentLocation(
                             currentLocation: coords,
-                            coordinates: Coordinates(model.location.latitude,
-                                model.location.longitude),
+                            coordinates: GeoPoint(model!.location!.latitude,
+                                model!.location!.longitude),
                             isKm: true,
                           )
                         : Container(),
@@ -83,9 +84,9 @@ class RequestCard extends StatelessWidget {
                       timeAgo
                           .format(
                               DateTime.fromMillisecondsSinceEpoch(
-                                  model.postTimestamp),
+                                  model!.postTimestamp!),
                               locale: Locale(
-                                AppConfig.prefs.getString('language_code'),
+                                AppConfig.prefs!.getString('language_code')!,
                               ).toLanguageTag())
                           .replaceAll('hours ago', 'hr'),
                       style: TextStyle(
@@ -106,9 +107,9 @@ class RequestCard extends StatelessWidget {
                         child: FadeInImage.assetNetwork(
                           fit: BoxFit.cover,
                           placeholder: 'lib/assets/images/profile.png',
-                          image: model.photoUrl == null
-                              ? defaultUserImageURL
-                              : model.photoUrl,
+                          image: model!.photoUrl! == null
+                              ? defaultUserImageURL!
+                              : model!.photoUrl!,
                         ),
                       ),
                     ),
@@ -120,9 +121,9 @@ class RequestCard extends StatelessWidget {
                         children: <Widget>[
                           Wrap(
                             children: [
-                              getAppropriateTag(context, model.requestType),
+                              getAppropriateTag(context, model!.requestType!),
                               Visibility(
-                                visible: model.virtualRequest ?? false,
+                                visible: model!.virtualRequest ?? false,
                                 child: Container(
                                   margin: EdgeInsets.only(right: 10),
                                   child: TagView(
@@ -131,7 +132,7 @@ class RequestCard extends StatelessWidget {
                                 ),
                               ),
                               Visibility(
-                                visible: model.public ?? false,
+                                visible: model!.public ?? false,
                                 child: Container(
                                   margin: EdgeInsets.only(right: 10),
                                   child: TagView(
@@ -140,7 +141,7 @@ class RequestCard extends StatelessWidget {
                                 ),
                               ),
                               Visibility(
-                                visible: model.isRecurring ?? false,
+                                visible: model!.isRecurring ?? false,
                                 child: Container(
                                   margin: EdgeInsets.only(right: 10),
                                   child: TagView(
@@ -155,10 +156,11 @@ class RequestCard extends StatelessWidget {
                             children: <Widget>[
                               Expanded(
                                 child: Text(
-                                  model.title,
+                                  model!.title!,
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 1,
-                                  style: Theme.of(context).textTheme.subtitle1,
+                                  style:
+                                      Theme.of(context).textTheme.titleMedium,
                                 ),
                               ),
                               Container(
@@ -166,7 +168,7 @@ class RequestCard extends StatelessWidget {
                                     EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
                                 child: Center(
                                   child: Visibility(
-                                    visible: model.isRecurring ?? false,
+                                    visible: model!.isRecurring ?? false,
                                     child: InkWell(
                                       onTap: () {
                                         Navigator.push(
@@ -177,7 +179,7 @@ class RequestCard extends StatelessWidget {
                                                   HomeDashBoardBloc>(context),
                                               child: RecurringListing(
                                                 comingFrom: ComingFrom.Requests,
-                                                requestModel: model,
+                                                requestModel: model!,
                                                 offerModel: null,
                                                 timebankModel: null,
                                               ),
@@ -194,7 +196,7 @@ class RequestCard extends StatelessWidget {
                           ),
                           SizedBox(height: 4),
                           Visibility(
-                            visible: !(model.isRecurring ?? false),
+                            visible: !(model!.isRecurring ?? false),
                             child: Wrap(
                               crossAxisAlignment: WrapCrossAlignment.center,
                               children: <Widget>[
@@ -203,10 +205,10 @@ class RequestCard extends StatelessWidget {
                                         getDateTimeAccToUserTimezone(
                                           dateTime: DateTime
                                               .fromMillisecondsSinceEpoch(
-                                                  model.requestStart),
+                                                  model!.requestStart!),
                                           timezoneAbb: SevaCore.of(context)
                                               .loggedInUser
-                                              .timezone,
+                                              .timezone!,
                                         ),
                                       ),
                                   // RequestViewClassifer.getTimeFormattedString(
@@ -228,10 +230,10 @@ class RequestCard extends StatelessWidget {
                                         getDateTimeAccToUserTimezone(
                                           dateTime: DateTime
                                               .fromMillisecondsSinceEpoch(
-                                                  model.requestEnd),
+                                                  model!.requestEnd!),
                                           timezoneAbb: SevaCore.of(context)
                                               .loggedInUser
-                                              .timezone,
+                                              .timezone!,
                                         ),
                                       ),
                                   // RequestViewClassifer.getTimeFormattedString(
@@ -248,10 +250,10 @@ class RequestCard extends StatelessWidget {
                           Container(
                             width: MediaQuery.of(context).size.width * 0.7,
                             child: Text(
-                              "${model.description}",
+                              "${model!.description}",
                               maxLines: 3,
                               overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context).textTheme.subtitle2,
+                              style: Theme.of(context).textTheme.bodyMedium,
                             ),
                           ),
                           // Visibility(
@@ -273,11 +275,11 @@ class RequestCard extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.end,
                             mainAxisSize: MainAxisSize.max,
                             children: <Widget>[
-                              model.email != user.email &&
-                                      (model.acceptors.contains(user.email) ||
-                                          model.approvedUsers
+                              model!.email != user.email &&
+                                      (model!.acceptors!.contains(user.email) ||
+                                          model!.approvedUsers!
                                               .contains(user.email) ||
-                                          model.oneToManyRequestAttenders
+                                          model!.oneToManyRequestAttenders!
                                               .contains(user.email))
                                   ? Container(
                                       margin:
@@ -291,12 +293,12 @@ class RequestCard extends StatelessWidget {
                                         ),
                                         padding: EdgeInsets.all(0),
                                         color: Colors.green,
-                                        child: (model.requestType ==
+                                        child: (model!.requestType ==
                                                     RequestType
                                                         .ONE_TO_MANY_REQUEST &&
-                                                model.acceptors
+                                                model!.acceptors!
                                                     .contains(user.email) &&
-                                                !model.approvedUsers
+                                                !model!.approvedUsers!
                                                     .contains(user.email))
                                             ? Text(
                                                 S.of(context).invited,
@@ -304,10 +306,10 @@ class RequestCard extends StatelessWidget {
                                                   color: Colors.white,
                                                 ),
                                               )
-                                            : (model.requestType ==
+                                            : (model!.requestType ==
                                                         RequestType
                                                             .ONE_TO_MANY_REQUEST &&
-                                                    model.approvedUsers
+                                                    model!.approvedUsers!
                                                         .contains(user.email))
                                                 ? Text(
                                                     S.of(context).accepted,

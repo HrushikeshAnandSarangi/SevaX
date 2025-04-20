@@ -12,10 +12,10 @@ import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class DonationCompletedPage extends StatelessWidget {
-  final RequestModel requestModel;
-  final OfferModel offermodel;
+  final RequestModel? requestModel;
+  final OfferModel? offermodel;
 
-  const DonationCompletedPage({Key key, this.requestModel, this.offermodel})
+  const DonationCompletedPage({Key? key, this.requestModel, this.offermodel})
       : super(key: key);
 
   @override
@@ -23,12 +23,12 @@ class DonationCompletedPage extends StatelessWidget {
     final _bloc = BlocProvider.of<DonationAcceptedBloc>(context);
     final _blocOffer = BlocProvider.of<DonationAcceptedOfferBloc>(context);
     return StreamBuilder(
-      stream: requestModel != null ? _bloc.donations : _blocOffer.donations,
+      stream: requestModel != null ? _bloc!.donations : _blocOffer!.donations,
       builder: (BuildContext _, AsyncSnapshot<List<DonationModel>> snapshot) {
         var type = requestModel != null
-            ? requestModel.requestType
+            ? requestModel!.requestType
             : offermodel != null
-                ? offermodel.type
+                ? offermodel!.type
                 : '';
         if (snapshot.data == null ||
             snapshot.connectionState == ConnectionState.waiting) {
@@ -40,18 +40,18 @@ class DonationCompletedPage extends StatelessWidget {
 
         List<DonationModel> donations = [];
         double totalQuantity = 0;
-        String currency;
-        snapshot.data.forEach((donation) {
+        String? currency;
+        snapshot.data!.forEach((donation) {
           if (donation.donationStatus == DonationStatus.ACKNOWLEDGED) {
             if (type == RequestType.CASH) {
               totalQuantity += donation.requestIdType == 'offer'
-                  ? donation.cashDetails.pledgedAmount
-                  : donation.cashDetails.pledgedAmount;
+                  ? donation.cashDetails!.pledgedAmount!
+                  : donation.cashDetails!.pledgedAmount!;
               currency = donation.requestIdType == 'offer'
-                  ? donation.cashDetails.cashDetails.offerCurrencyType
-                  : donation.cashDetails.cashDetails.requestCurrencyType;
+                  ? donation.cashDetails!.cashDetails!.offerCurrencyType!
+                  : donation.cashDetails!.cashDetails!.requestCurrencyType!;
             } else {
-              totalQuantity += donation.goodsDetails.donatedGoods.length;
+              totalQuantity += donation.goodsDetails!.donatedGoods!.length;
             }
             donations.add(donation);
           }
@@ -67,7 +67,7 @@ class DonationCompletedPage extends StatelessWidget {
           child: Column(
             children: [
               _DonationProgressWidget(
-                currency: currency,
+                currency: currency ?? '',
                 type: requestModel != null ? 'request' : 'offer',
                 isCashDonation: type == RequestType.CASH,
                 quantity: totalQuantity
@@ -86,22 +86,29 @@ class DonationCompletedPage extends StatelessWidget {
                 itemBuilder: (_, index) {
                   DonationModel model = donations[index];
                   log('goods --->' +
-                      model.goodsDetails.donatedGoods.toString());
+                      model.goodsDetails!.donatedGoods.toString());
                   return DonationParticipantCard(
-                    amount: model.cashDetails.pledgedAmount.toString(),
+                    amount: model.cashDetails!.pledgedAmount.toString(),
                     currency: model.requestIdType == 'offer'
-                        ? model.cashDetails.cashDetails.offerCurrencyType
-                        : model.cashDetails.cashDetails.requestCurrencyType,
-                    name: model.donorDetails.name,
+                        ? model.cashDetails!.cashDetails!.offerCurrencyType!
+                        : model.cashDetails!.cashDetails!.requestCurrencyType!,
+                    name: model.donorDetails!.name!,
                     isCashDonation: model.donationType == RequestType.CASH,
                     goods: model.goodsDetails?.donatedGoods != null
                         ? List<String>.from(
-                            model.goodsDetails.donatedGoods.values,
+                            model.goodsDetails!.donatedGoods!.values,
                           )
                         : [],
-                    photoUrl: model.donorDetails.photoUrl,
-                    timestamp: model.timestamp,
-                    comments: model.goodsDetails.comments,
+                    photoUrl: model.donorDetails!.photoUrl!,
+                    timestamp: model.timestamp!,
+                    comments:
+                        '', // Replace with the correct property if available, or leave as empty string
+                    type: model.donationType!
+                        .toString(), // Add the required 'type' parameter as String
+                    status: model
+                        .donationStatus!, // Add the required 'status' parameter
+                    child: const SizedBox
+                        .shrink(), // Provide a placeholder for 'child'
                   );
                 },
                 separatorBuilder: (_, index) {
@@ -117,13 +124,13 @@ class DonationCompletedPage extends StatelessWidget {
 }
 
 class _DonationProgressWidget extends StatelessWidget {
-  final bool isCashDonation;
-  final String quantity;
-  final String type;
-  final String currency;
+  final bool? isCashDonation;
+  final String? quantity;
+  final String? type;
+  final String? currency;
 
   const _DonationProgressWidget({
-    Key key,
+    Key? key,
     this.type,
     this.isCashDonation,
     this.quantity,
@@ -136,7 +143,7 @@ class _DonationProgressWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '${S.of(context).total} ${isCashDonation ? '${S.of(context).donations}' : S.of(context).goods} ${this.type == 'request' ? S.of(context).received : S.of(context).offered}',
+          '${S.of(context).total} ${isCashDonation! ? '${S.of(context).donations}' : S.of(context).goods} ${this.type == 'request' ? S.of(context).received : S.of(context).offered}',
           style: TextStyle(
             fontSize: 18,
             color: Colors.grey,
@@ -146,14 +153,14 @@ class _DonationProgressWidget extends StatelessWidget {
         Row(
           children: [
             Image.asset(
-              isCashDonation
+              isCashDonation!
                   ? SevaAssetIcon.donateCash
                   : SevaAssetIcon.donateGood,
               width: 35,
               height: 35,
             ),
             SizedBox(width: 12),
-            isCashDonation
+            isCashDonation!
                 ? Text(
                     '${currency} $quantity',
                     style: TextStyle(

@@ -8,10 +8,10 @@ import 'package:sevaexchange/ui/screens/request/pages/donation_participants_page
 import 'package:sevaexchange/utils/bloc_provider.dart';
 
 class DonationAcceptedPage extends StatefulWidget {
-  final RequestModel model;
-  final OfferModel offermodel;
+  final RequestModel? model;
+  final OfferModel? offermodel;
 
-  const DonationAcceptedPage({Key key, this.model, this.offermodel})
+  const DonationAcceptedPage({Key? key, this.model, this.offermodel})
       : super(key: key);
 
   @override
@@ -25,9 +25,9 @@ class _DonationAcceptedPageState extends State<DonationAcceptedPage> {
   @override
   void initState() {
     if (widget.offermodel != null) {
-      _offerBloc.init(widget.offermodel.id);
+      _offerBloc.init(widget.offermodel!.id!);
     } else {
-      _bloc.init(widget.model.id);
+      _bloc.init(widget.model!.id!);
     }
     ;
     super.initState();
@@ -63,12 +63,12 @@ class _DonationAcceptedPageState extends State<DonationAcceptedPage> {
               child: TabBarView(
                 children: [
                   DonationParticipantPage(
-                    requestModel: widget.model,
-                    offermodel: widget.offermodel,
+                    requestModel: widget.model!,
+                    offermodel: widget.offermodel!,
                   ),
                   DonationCompletedPage(
-                    requestModel: widget.model,
-                    offermodel: widget.offermodel,
+                    requestModel: widget.model!,
+                    offermodel: widget.offermodel!,
                   ),
                 ],
               ),

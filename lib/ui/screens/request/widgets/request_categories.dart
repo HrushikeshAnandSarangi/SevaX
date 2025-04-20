@@ -5,10 +5,10 @@ import 'package:sevaexchange/ui/screens/explore/widgets/explore_browse_card.dart
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class RequestCategories extends StatelessWidget {
-  final Stream<List<CategoryModel>> stream;
-  final ValueChanged<CategoryModel> onTap;
+  final Stream<List<CategoryModel>>? stream;
+  final ValueChanged<CategoryModel>? onTap;
 
-  const RequestCategories({Key key, this.stream, @required this.onTap})
+  const RequestCategories({Key? key, this.stream, @required this.onTap})
       : super(key: key);
 
   @override
@@ -34,12 +34,12 @@ class RequestCategories extends StatelessWidget {
             childAspectRatio: 6,
           ),
           children: List.generate(
-            snapshot.data.length,
+            snapshot.data!.length,
             (index) => ExploreBrowseCard(
-              imageUrl: snapshot.data[index].logo ??
+              imageUrl: snapshot.data![index].logo ??
                   'https://firebasestorage.googleapis.com/v0/b/sevax-dev-project-for-sevax.appspot.com/o/explore_cards_test_images%2Fexplore%20browse%20card%20image.JPG?alt=media&token=48eda7bf-0089-40f4-8b04-0efcb3a881bd',
-              title: snapshot.data[index].getCategoryName(context),
-              onTap: () => onTap(snapshot.data[index]),
+              title: snapshot.data![index].getCategoryName(context),
+              onTap: () => onTap!(snapshot.data![index]),
             ),
           ),
         );

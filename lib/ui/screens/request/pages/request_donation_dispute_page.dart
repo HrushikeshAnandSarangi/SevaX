@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:progress_dialog/progress_dialog.dart';
+import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/donation_model.dart';
@@ -38,12 +38,12 @@ class RequestDonationDisputePage extends StatefulWidget {
   final double convertedAmountRaised;
 
   const RequestDonationDisputePage({
-    Key key,
-    @required this.model,
-    this.notificationId,
-    this.convertedAmount,
-    this.currency,
-    this.convertedAmountRaised,
+    Key? key,
+    required this.model,
+    required this.notificationId,
+    required this.convertedAmount,
+    required this.currency,
+    required this.convertedAmountRaised,
   }) : super(key: key);
 
   @override
@@ -54,13 +54,13 @@ class RequestDonationDisputePage extends StatefulWidget {
 class _RequestDonationDisputePageState
     extends State<RequestDonationDisputePage> {
   final RequestDonationDisputeBloc _bloc = RequestDonationDisputeBloc();
-  int AMOUNT_NOT_DEFINED = null;
-  _AckType ackType;
-  OperatingMode operatingMode;
+  int? AMOUNT_NOT_DEFINED = null;
+  late _AckType ackType;
+  late OperatingMode operatingMode;
   final _key = GlobalKey<ScaffoldState>();
-  ChatModeForDispute chatModeForDispute;
-  TimebankModel timebankModel;
-  ProgressDialog progressDialog;
+  late ChatModeForDispute chatModeForDispute;
+  late TimebankModel timebankModel;
+  late ProgressDialog progressDialog;
 
   final TextStyle titleStyle = TextStyle(
     fontSize: 16,
@@ -74,7 +74,7 @@ class _RequestDonationDisputePageState
   void showProgress(String message) {
     progressDialog = ProgressDialog(
       context,
-      type: ProgressDialogType.Normal,
+      type: ProgressDialogType.normal,
       isDismissible: false,
     );
     progressDialog.style(
@@ -97,13 +97,13 @@ class _RequestDonationDisputePageState
         ? _AckType.CASH
         : _AckType.GOODS;
     super.initState();
-    FirestoreManager.getTimeBankForId(timebankId: widget.model.timebankId)
+    FirestoreManager.getTimeBankForId(timebankId: widget.model.timebankId!)
         .then((value) {
       setState(() {
-        timebankModel = value;
+        timebankModel = value!;
       });
     });
-    _bloc.initGoodsReceived(widget.model.goodsDetails.donatedGoods);
+    _bloc.initGoodsReceived(widget.model.goodsDetails!.donatedGoods!);
   }
 
   @override
@@ -155,7 +155,7 @@ class _RequestDonationDisputePageState
 
       ProgressDialog progressDialogNew = ProgressDialog(
         context,
-        type: ProgressDialogType.Normal,
+        type: ProgressDialogType.normal,
         isDismissible: false,
       );
       progressDialogNew.style(
@@ -166,7 +166,7 @@ class _RequestDonationDisputePageState
         message: S.of(context).please_wait,
       );
 
-      var amount = widget.model.cashDetails.pledgedAmount == null
+      var amount = widget.model.cashDetails!.pledgedAmount == null
           ? AMOUNT_NOT_DEFINED
           : widget.model.minimumAmount;
       switch (ackType) {
@@ -180,7 +180,7 @@ class _RequestDonationDisputePageState
             amount = 0;
           }
 
-          if (widget.model.cashDetails.pledgedAmount != null) {
+          if (widget.model.cashDetails!.pledgedAmount != null) {
             bool validatorRes = await _bloc.validateAmount(
                 minmumAmount: amount == AMOUNT_NOT_DEFINED ? 0 : amount);
 
@@ -196,12 +196,12 @@ class _RequestDonationDisputePageState
               // showProgress(S.of(context).please_wait);
               bool disputeRes = await _bloc.disputeCash(
                 pledgedAmount:
-                    widget.model.cashDetails.pledgedAmount.toDouble(),
+                    widget.model.cashDetails!.pledgedAmount!.toDouble(),
                 operationMode: operatingMode,
                 donationId: widget.model.id,
                 donationModel: widget.model,
                 notificationId: widget.model.notificationId,
-                requestMode: widget.model.donatedToTimebank
+                requestMode: widget.model.donatedToTimebank!
                     ? RequestMode.TIMEBANK_REQUEST
                     : RequestMode.PERSONAL_REQUEST,
               );
@@ -215,7 +215,7 @@ class _RequestDonationDisputePageState
                 ScaffoldMessenger.of(context).hideCurrentSnackBar();
                 if (widget.model.minimumAmount != null &&
                     int.parse(_bloc.cashAmoutVal) <
-                        widget.model.minimumAmount) {
+                        widget.model.minimumAmount!) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                         content: Text(
@@ -237,7 +237,7 @@ class _RequestDonationDisputePageState
             _bloc
                 .validateAmount(
                     minmumAmount: widget
-                        .model.cashDetails.cashDetails.amountRaised
+                        .model.cashDetails!.cashDetails!.amountRaised!
                         .toInt())
                 .then((value) {
               if (value) {
@@ -251,7 +251,7 @@ class _RequestDonationDisputePageState
                       donationId: widget.model.id,
                       donationModel: widget.model,
                       notificationId: widget.model.notificationId,
-                      requestMode: widget.model.donatedToTimebank
+                      requestMode: widget.model.donatedToTimebank!
                           ? RequestMode.TIMEBANK_REQUEST
                           : RequestMode.PERSONAL_REQUEST,
                     )
@@ -285,12 +285,12 @@ class _RequestDonationDisputePageState
           }
           _bloc
               .disputeGoods(
-            donatedGoods: widget.model.goodsDetails.donatedGoods,
+            donatedGoods: widget.model.goodsDetails!.donatedGoods,
             donationId: widget.model.id,
             donationModel: widget.model,
             notificationId: widget.model.notificationId,
             operationMode: operatingMode,
-            requestMode: widget.model.donatedToTimebank
+            requestMode: widget.model.donatedToTimebank!
                 ? RequestMode.TIMEBANK_REQUEST
                 : RequestMode.PERSONAL_REQUEST,
           )
@@ -318,12 +318,12 @@ class _RequestDonationDisputePageState
     var toWhom;
     if (widget.model.requestIdType == 'offer' &&
         widget.model.donationStatus == DonationStatus.REQUESTED) {
-      name = widget.model.receiverDetails.name;
+      name = widget.model.receiverDetails!.name;
     } else {
-      name = widget.model.donorDetails.name;
+      name = widget.model.donorDetails!.name;
       toWhom = operatingMode == OperatingMode.USER
-          ? widget.model.receiverDetails.name
-          : widget.model.donorDetails.name;
+          ? widget.model.receiverDetails!.name
+          : widget.model.donorDetails!.name;
     }
     return Scaffold(
       key: _key,
@@ -348,44 +348,44 @@ class _RequestDonationDisputePageState
                   ? _CashFlow(
                       model: widget.model,
                       scaffoldKey: _key,
-                      to: widget.model.cashDetails.pledgedAmount != null
+                      to: widget.model.cashDetails!.pledgedAmount != null
                           ? widget.model.requestIdType == 'offer'
                               ? toWhom
-                              : widget.model.donationAssociatedTimebankDetails
+                              : widget.model.donationAssociatedTimebankDetails!
                                   .timebankTitle
                           : name,
-                      title: widget.model.cashDetails.pledgedAmount != null
+                      title: widget.model.cashDetails!.pledgedAmount != null
                           ? '$name ${S.of(context).pledged_to_donate}'
                           : '$name ${S.of(context).requested.toLowerCase()}',
                       status: widget.model.donationStatus,
-                      requestMode: widget.model.donatedToTimebank
+                      requestMode: widget.model.donatedToTimebank!
                           ? RequestMode.TIMEBANK_REQUEST
                           : RequestMode.PERSONAL_REQUEST,
                       timebankName: widget.model
-                          .donationAssociatedTimebankDetails.timebankTitle,
-                      creatorName: SevaCore.of(context).loggedInUser.fullname,
+                          .donationAssociatedTimebankDetails!.timebankTitle!,
+                      creatorName: SevaCore.of(context).loggedInUser.fullname!,
                       operatingMode: operatingMode,
                       bloc: _bloc,
                       name: name,
                       currency: '${widget.currency}',
-                      amount: widget.model.cashDetails.pledgedAmount != null
+                      amount: widget.model.cashDetails!.pledgedAmount != null
                           ? widget.convertedAmount.toString()
                           : widget.convertedAmountRaised.toString(),
-                      minAmount: widget.model.cashDetails.pledgedAmount != null
+                      minAmount: widget.model.cashDetails!.pledgedAmount != null
                           ? widget.model.minimumAmount.toString()
-                          : widget.model.cashDetails.cashDetails.amountRaised
+                          : widget.model.cashDetails!.cashDetails!.amountRaised
                               .toString(),
-                      others: widget.model.cashDetails.cashDetails.others,
+                      others: widget.model.cashDetails!.cashDetails!.others!,
                     )
                   : _GoodsFlow(
                       status: widget.model.donationStatus,
                       operatingMode: operatingMode,
                       bloc: _bloc,
-                      comments: widget.model.goodsDetails.comments,
+                      comments: widget.model.goodsDetails!.comments!,
                       // goods: Map<String, String>.from(
                       //   widget.model.goodsDetails.donatedGoods,
                       // ),
-                      requiredGoods: widget.model.goodsDetails.requiredGoods,
+                      requiredGoods: widget.model.goodsDetails!.requiredGoods!,
                     ),
               widget.model.donationStatus == DonationStatus.REQUESTED &&
                       widget.model.donationType == RequestType.GOODS
@@ -400,7 +400,7 @@ class _RequestDonationDisputePageState
                         maxLines: 1,
                       ),
                       subtitle: Text(
-                        widget.model.goodsDetails.toAddress ?? '',
+                        widget.model.goodsDetails!.toAddress ?? '',
                         style: subTitleStyle,
                         maxLines: 1,
                       ),
@@ -417,16 +417,28 @@ class _RequestDonationDisputePageState
                             ? S.of(context).donate
                             : S.of(context).acknowledge),
                     onPressed: () => actionExecute(_key),
+                    color: Theme.of(context).primaryColor,
+                    textColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    elevation: 2.0,
                   ),
                   SizedBox(width: 12),
                   CustomElevatedButton(
                     child: Text(S.of(context).message),
                     color: Colors.orange,
                     textColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    elevation: 2.0,
                     onPressed: () async {
                       var a = getOperatingMode(
                         operatingMode,
-                        widget.model.donatedToTimebank,
+                        widget.model.donatedToTimebank!,
                       );
 
                       logger.wtf(widget.model.toMap());
@@ -435,20 +447,18 @@ class _RequestDonationDisputePageState
                           var loggedInUser = SevaCore.of(context).loggedInUser;
                           String recieverId = widget.model.donorSevaUserId ==
                                   loggedInUser.sevaUserID
-                              ? widget.model.donatedTo
-                              : widget.model.donorSevaUserId;
+                              ? widget.model.donatedTo!
+                              : widget.model.donorSevaUserId!;
 
                           UserModel fundRaiserDetails =
                               await FirestoreManager.getUserForId(
                             sevaUserId:
                                 recieverId != null && !recieverId.contains('-')
                                     ? recieverId
-                                    : widget.model.donatedTo,
+                                    : widget.model.donatedTo!,
                           );
-                          logger.wtf(
-                              widget.model.donorDetails.communityId !=
-                                  widget.model.receiverDetails.communityId,
-                              'offer1');
+                          logger.wtf(widget.model.donorDetails!.communityId !=
+                              widget.model.receiverDetails!.communityId);
 
                           await HandlerForModificationManager
                               .createChatForDispute(
@@ -465,55 +475,55 @@ class _RequestDonationDisputePageState
                               type: ChatType.TYPE_PERSONAL,
                             ),
                             context: context,
-                            timeBankId: widget.model.timebankId,
+                            timeBankId: widget.model.timebankId!,
                             isTimebankMessage: false,
-                            communityId: loggedInUser.currentCommunity,
-                            entityId: widget.model.id,
+                            communityId: loggedInUser.currentCommunity!,
+                            entityId: widget.model.id!,
                             showToCommunities: widget.model.requestIdType ==
                                     'offer'
                                 ? [
-                                    widget.model.donorDetails.communityId,
-                                    widget.model.receiverDetails.communityId,
+                                    widget.model.donorDetails!.communityId!,
+                                    widget.model.receiverDetails!.communityId!,
                                   ]
                                 : [
-                                    widget.model.donorDetails.communityId,
+                                    widget.model.donorDetails!.communityId!,
                                     timebankModel.communityId
                                   ],
-                            interCommunity:
-                                widget.model.requestIdType == 'offer'
-                                    ? widget.model.donorDetails.communityId !=
-                                        widget.model.receiverDetails.communityId
-                                    : widget.model.donorDetails.communityId !=
-                                        timebankModel.communityId,
+                            interCommunity: widget.model.requestIdType ==
+                                    'offer'
+                                ? widget.model.donorDetails!.communityId !=
+                                    widget.model.receiverDetails!.communityId
+                                : widget.model.donorDetails!.communityId !=
+                                    timebankModel.communityId,
                           );
                           break;
 
                         case ChatModeForDispute.MEMBER_TO_TIMEBANK:
-                          TimebankModel timebankModel = await getTimeBankForId(
-                            timebankId: widget.model.timebankId,
-                          );
+                          TimebankModel timebankModel = (await getTimeBankForId(
+                            timebankId: widget.model.timebankId!,
+                          ))!;
                           var loggedInUser = SevaCore.of(context).loggedInUser;
 
                           await HandlerForModificationManager
                               .createChatForDispute(
-                            entityId: widget.model.id,
+                            entityId: widget.model.id!,
                             showToCommunities: widget.model.requestIdType ==
                                     'offer'
                                 ? [
-                                    widget.model.donorDetails.communityId,
-                                    widget.model.receiverDetails.communityId,
+                                    widget.model.donorDetails!.communityId!,
+                                    widget.model.receiverDetails!.communityId!,
                                   ]
                                 : [
-                                    widget.model.donorDetails.communityId,
+                                    widget.model.donorDetails!.communityId!,
                                     timebankModel.communityId
                                   ],
-                            interCommunity:
-                                widget.model.requestIdType == 'offer'
-                                    ? widget.model.donorDetails.communityId !=
-                                        widget.model.receiverDetails.communityId
-                                    : widget.model.donorDetails.communityId !=
-                                        timebankModel.communityId,
-                            communityId: loggedInUser.currentCommunity,
+                            interCommunity: widget.model.requestIdType ==
+                                    'offer'
+                                ? widget.model.donorDetails!.communityId !=
+                                    widget.model.receiverDetails!.communityId
+                                : widget.model.donorDetails!.communityId !=
+                                    timebankModel.communityId,
+                            communityId: loggedInUser.currentCommunity!,
                             sender: ParticipantInfo(
                               id: loggedInUser.sevaUserID,
                               name: loggedInUser.fullname,
@@ -531,26 +541,26 @@ class _RequestDonationDisputePageState
                               photoUrl: timebankModel.photoUrl,
                             ),
                             context: context,
-                            timeBankId: widget.model.timebankId,
+                            timeBankId: widget.model.timebankId!,
                             isTimebankMessage: true,
                           );
                           break;
 
                         case ChatModeForDispute.TIMEBANK_TO_MEMBER:
-                          TimebankModel timebankModel = await getTimeBankForId(
-                            timebankId: widget.model.timebankId,
-                          );
+                          TimebankModel timebankModel = (await getTimeBankForId(
+                            timebankId: widget.model.timebankId!,
+                          ))!;
 
                           var loggedInUser = SevaCore.of(context).loggedInUser;
 
                           await HandlerForModificationManager
                               .createChatForDispute(
-                            communityId: loggedInUser.currentCommunity,
+                            communityId: loggedInUser.currentCommunity!,
                             isTimebankMessage: true,
                             receiver: ParticipantInfo(
                               id: widget.model.donorSevaUserId,
-                              name: widget.model.donorDetails.name,
-                              photoUrl: widget.model.donorDetails.photoUrl,
+                              name: widget.model.donorDetails!.name,
+                              photoUrl: widget.model.donorDetails!.photoUrl,
                               type: ChatType.TYPE_PERSONAL,
                             ),
                             sender: ParticipantInfo(
@@ -564,24 +574,24 @@ class _RequestDonationDisputePageState
                               photoUrl: timebankModel.photoUrl,
                             ),
                             context: context,
-                            timeBankId: widget.model.timebankId,
-                            entityId: widget.model.id,
+                            timeBankId: widget.model.timebankId!,
+                            entityId: widget.model.id!,
                             showToCommunities: widget.model.requestIdType ==
                                     'offer'
                                 ? [
-                                    widget.model.donorDetails.communityId,
-                                    widget.model.receiverDetails.communityId,
+                                    widget.model.donorDetails!.communityId!,
+                                    widget.model.receiverDetails!.communityId!,
                                   ]
                                 : [
-                                    widget.model.donorDetails.communityId,
+                                    widget.model.donorDetails!.communityId!,
                                     timebankModel.communityId
                                   ],
-                            interCommunity:
-                                widget.model.requestIdType == 'offer'
-                                    ? widget.model.donorDetails.communityId !=
-                                        widget.model.receiverDetails.communityId
-                                    : widget.model.donorDetails.communityId !=
-                                        timebankModel.communityId,
+                            interCommunity: widget.model.requestIdType ==
+                                    'offer'
+                                ? widget.model.donorDetails!.communityId !=
+                                    widget.model.receiverDetails!.communityId
+                                : widget.model.donorDetails!.communityId !=
+                                    timebankModel.communityId,
                           );
                           break;
                       }
@@ -626,22 +636,22 @@ enum ChatModeForDispute {
 
 class _CashFlow extends StatelessWidget {
   const _CashFlow({
-    Key key,
-    @required RequestDonationDisputeBloc bloc,
+    Key? key,
+    required RequestDonationDisputeBloc bloc,
     this.model,
     this.scaffoldKey,
     this.title,
     this.to,
     this.status,
-    this.name,
-    this.amount,
-    this.currency,
-    this.operatingMode,
-    this.timebankName,
-    this.creatorName,
-    this.requestMode,
-    this.minAmount,
-    this.others,
+    required this.name,
+    required this.amount,
+    required this.currency,
+    required this.operatingMode,
+    required this.timebankName,
+    required this.creatorName,
+    required this.requestMode,
+    required this.minAmount,
+    required this.others,
   })  : _bloc = bloc,
         super(key: key);
   final model;
@@ -702,8 +712,8 @@ class _CashFlow extends StatelessWidget {
         default:
           return "";
       }
-      return "";
     }
+    return "";
   }
 
   getDonationLink(BuildContext context) {
@@ -782,6 +792,7 @@ class _CashFlow extends StatelessWidget {
                     color: Colors.black,
                     fontWeight: FontWeight.bold),
               ),
+              secondChild: SizedBox.shrink(),
             ),
             SizedBox(
               height: 5,
@@ -911,9 +922,9 @@ class _CashFlow extends StatelessWidget {
                   ),
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: (value) {
-                    if (value.isEmpty) {
+                    if (value!.isEmpty) {
                       return S.of(context).add_amount_donate_empty;
-                    } else if (double.parse(value) <= 0) {
+                    } else if (double.parse(value!) <= 0) {
                       return S.of(context).minmum_amount + ' ${currency} 1';
                     } else {
                       return null;
@@ -945,14 +956,14 @@ class _CashFlow extends StatelessWidget {
 }
 
 class _GoodsFlow extends StatelessWidget {
-  _GoodsFlow({
-    Key key,
-    @required RequestDonationDisputeBloc bloc,
+  const _GoodsFlow({
+    Key? key,
+    required RequestDonationDisputeBloc bloc,
     // this.goods,
     this.status,
-    this.requiredGoods,
-    this.operatingMode,
-    this.comments,
+    required this.requiredGoods,
+    required this.operatingMode,
+    required this.comments,
   })  : _bloc = bloc,
         super(key: key);
   final status;
@@ -1007,7 +1018,7 @@ class _GoodsFlow extends StatelessWidget {
                   onChanged: (value) {
                     _bloc.toggleGoodsReceived(
                       key,
-                      requiredGoods[key],
+                      requiredGoods[key]!,
                     );
                   },
                   text: requiredGoods[keys[index]].toString(),

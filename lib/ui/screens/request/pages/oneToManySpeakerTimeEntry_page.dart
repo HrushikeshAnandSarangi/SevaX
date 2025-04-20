@@ -28,7 +28,7 @@ class OneToManySpeakerTimeEntry extends StatefulWidget {
   final VoidCallback onFinish;
   // TODO needs flow correction to tasks model
   OneToManySpeakerTimeEntry(
-      {@required this.requestModel, @required this.onFinish});
+      {required this.requestModel, required this.onFinish});
 
   @override
   OneToManySpeakerTimeEntryState createState() =>
@@ -39,7 +39,7 @@ class OneToManySpeakerTimeEntryState extends State<OneToManySpeakerTimeEntry> {
   int prepTime = 0;
   // double speakingTime = 0;
 
-  RequestModel requestModel;
+  RequestModel? requestModel;
 
   @override
   void initState() {
@@ -62,7 +62,7 @@ class OneToManySpeakerTimeEntryState extends State<OneToManySpeakerTimeEntry> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          requestModel.title,
+          requestModel!.title!,
           style: TextStyle(fontSize: 18),
         ),
       ),
@@ -76,7 +76,7 @@ class OneToManySpeakerTimeEntryState extends State<OneToManySpeakerTimeEntry> {
             child: Container(
               width: MediaQuery.of(context).size.width * 0.90,
               padding: EdgeInsets.only(top: 25.0, left: 32),
-              color: requestModel.color,
+              color: requestModel!.color,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -114,7 +114,7 @@ class OneToManySpeakerTimeEntryState extends State<OneToManySpeakerTimeEntry> {
                                           selectedHoursPrepTimeController,
                                       keyboardType: TextInputType.number,
                                       inputFormatters: [
-                                        BlacklistingTextInputFormatter(
+                                        FilteringTextInputFormatter.deny(
                                           RegExp('[\\.|\\,|\\ |\\-]'),
                                         ),
                                       ],
@@ -249,26 +249,22 @@ class OneToManySpeakerTimeEntryState extends State<OneToManySpeakerTimeEntry> {
                       Container(
                         alignment: Alignment.center,
                         padding: EdgeInsets.all(5.0),
-                        child: CustomElevatedButton(
+                        child: ElevatedButton(
                           onPressed: () async {
-                            if (_formKey.currentState.validate()) {
+                            if (_formKey.currentState!.validate()) {
                               LinearProgressIndicator();
                               //store form input to map in requestModel
-                              requestModel.selectedSpeakerTimeDetails.prepTime =
-                                  prepTime;
+                              requestModel!.selectedSpeakerTimeDetails!
+                                  .prepTime = prepTime;
                               // requestModel.selectedSpeakerTimeDetails
                               //     .speakingTime = speakingTime;
 
                               Set<String> approvedUsersList =
-                                  Set.from(requestModel.approvedUsers);
-                              approvedUsersList
-                                  .add(SevaCore.of(context).loggedInUser.email);
-                              requestModel.approvedUsers =
+                                  Set.from(requestModel!.approvedUsers!);
+                              approvedUsersList.add(
+                                  SevaCore.of(context).loggedInUser.email!);
+                              requestModel!.approvedUsers =
                                   approvedUsersList.toList();
-
-                              await CollectionRef.requests
-                                  .doc(requestModel.id)
-                                  .update(requestModel.toMap());
 
                               widget.onFinish();
 
@@ -281,15 +277,15 @@ class OneToManySpeakerTimeEntryState extends State<OneToManySpeakerTimeEntry> {
                             S.of(context).accept,
                             style: TextStyle(fontWeight: FontWeight.w600),
                           ),
-                          elevation: 0,
-                          color: Colors.grey[200],
+                          style: ElevatedButton.styleFrom(
+                            elevation: 0,
+                            backgroundColor: Colors.grey[200],
+                          ),
                         ),
                       ),
                       SizedBox(width: 12),
                       Container(
-                        alignment: Alignment.center,
-                        padding: EdgeInsets.all(8.0),
-                        child: CustomElevatedButton(
+                        child: ElevatedButton(
                           onPressed: () {
                             UserModel loggedInUser =
                                 SevaCore.of(context).loggedInUser;
@@ -302,18 +298,22 @@ class OneToManySpeakerTimeEntryState extends State<OneToManySpeakerTimeEntry> {
                             );
 
                             ParticipantInfo reciever = ParticipantInfo(
-                              id: requestModel.sevaUserId,
-                              name: requestModel.fullName,
-                              photoUrl: requestModel.photoUrl,
+                              id: requestModel!.sevaUserId,
+                              name: requestModel!.fullName,
+                              photoUrl: requestModel!.photoUrl,
                               type: ChatType.TYPE_TIMEBANK,
                             );
 
                             createAndOpenChat(
                               isTimebankMessage: true,
                               context: context,
-                              communityId: loggedInUser.currentCommunity,
+                              communityId: loggedInUser.currentCommunity!,
                               sender: sender,
                               reciever: reciever,
+                              timebankId: requestModel!.timebankId!,
+                              feedId: requestModel!.id!,
+                              showToCommunities: [requestModel!.communityId!],
+                              entityId: requestModel!.id!,
                               onChatCreate: () {
                                 //Navigator.of(context).pop();
                               },
@@ -323,9 +323,12 @@ class OneToManySpeakerTimeEntryState extends State<OneToManySpeakerTimeEntry> {
                             S.of(context).message,
                             style: TextStyle(fontWeight: FontWeight.w600),
                           ),
-                          elevation: 0,
-                          color: Colors.grey[200],
+                          style: ElevatedButton.styleFrom(
+                            elevation: 0,
+                            backgroundColor: Colors.grey[200],
+                          ),
                         ),
+                        color: Colors.grey[200],
                       ),
                     ],
                   ),
@@ -338,7 +341,7 @@ class OneToManySpeakerTimeEntryState extends State<OneToManySpeakerTimeEntry> {
     );
   }
 
-  BuildContext creditRequestDialogContext;
+  BuildContext? creditRequestDialogContext;
   void showProgressForCreditRetrieval() {
     showDialog(
         barrierDismissible: false,
