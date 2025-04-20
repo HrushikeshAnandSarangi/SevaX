@@ -24,7 +24,7 @@ class RequestBloc {
       if (filter.isFilterSelected) {
         for (var model in models) {
           if (filter.timeRequest && model.requestType == RequestType.TIME) {
-            if (!model.isFromOfferRequest)
+            if (!model.isFromOfferRequest!)
               requestLists.addRequest(userId, model);
             continue;
           }
@@ -48,18 +48,19 @@ class RequestBloc {
             requestLists.addRequest(userId, model);
             continue;
           }
-          if (filter.publicRequest && model.public ?? false) {
+          if (filter.publicRequest && model.public! ?? false) {
             requestLists.addRequest(userId, model);
             continue;
           }
-          if (filter.virtualRequest && model.virtualRequest) {
+          if (filter.virtualRequest && model.virtualRequest!) {
             requestLists.addRequest(userId, model);
             continue;
           }
         }
       } else {
         models.forEach((model) {
-          if (!model.isFromOfferRequest) requestLists.addRequest(userId, model);
+          if (!model.isFromOfferRequest!)
+            requestLists.addRequest(userId, model);
         });
       }
       return requestLists;
@@ -112,13 +113,13 @@ class RequestFilter {
   });
 
   RequestFilter copyWith({
-    bool timeRequest,
-    bool goodsRequest,
-    bool cashRequest,
-    bool oneToManyRequest,
-    bool borrowRequest,
-    bool publicRequest,
-    bool virtualRequest,
+    bool? timeRequest,
+    bool? goodsRequest,
+    bool? cashRequest,
+    bool? oneToManyRequest,
+    bool? borrowRequest,
+    bool? publicRequest,
+    bool? virtualRequest,
   }) =>
       RequestFilter(
         timeRequest: timeRequest ?? this.timeRequest,
@@ -166,9 +167,9 @@ class RequestFilter {
         return true;
       } else if (borrowRequest && model.requestType == RequestType.BORROW) {
         return true;
-      } else if (publicRequest && model.public) {
+      } else if (publicRequest && model.public!) {
         return true;
-      } else if (virtualRequest && model.virtualRequest) {
+      } else if (virtualRequest && model.virtualRequest!) {
         return true;
       } else {
         return false;

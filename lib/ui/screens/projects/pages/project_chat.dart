@@ -24,7 +24,7 @@ class _ProjectChatViewState extends State<ProjectChatView> {
   Widget build(BuildContext context) {
     final bloc = BlocProvider.of<ProjectDescriptionBloc>(context);
     return StreamBuilder<ChatModel>(
-      stream: bloc.chatModel,
+      stream: bloc!.chatModel,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Center(
@@ -35,18 +35,20 @@ class _ProjectChatViewState extends State<ProjectChatView> {
           return Center(child: LoadingIndicator());
         }
         var user = SevaCore.of(context).loggedInUser;
-        bool isMember = snapshot.data.participants.contains(user.sevaUserID);
+        bool isMember = snapshot.data!.participants!.contains(user.sevaUserID);
         // isMember = false;
         return Stack(
           fit: StackFit.expand,
           children: <Widget>[
             ChatPage(
-              chatModel: snapshot.data,
+              key: ValueKey(snapshot.data!.id),
+              feedId: snapshot.data!.id!,
+              chatModel: snapshot.data!,
               isAdminMessage: false,
               showAppBar: false,
-              senderId: SevaCore.of(context).loggedInUser.sevaUserID,
+              senderId: SevaCore.of(context).loggedInUser.sevaUserID!,
               chatViewContext: ChatViewContext.PROJECT,
-              timebankId: user.currentTimebank,
+              timebankId: user.currentTimebank!,
             ),
             isMember
                 ? Container()
@@ -66,10 +68,17 @@ class _ProjectChatViewState extends State<ProjectChatView> {
                 children: [
                   Text(S.of(context).join_community_to_view_updates),
                   CustomElevatedButton(
+                    color: Colors.blue,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    elevation: 5,
+                    textColor: Colors.white,
                     child: Text(S.of(context).join_chat),
                     onPressed: () {
                       ChatsRepository.addMember(
-                        snapshot.data.id,
+                        snapshot.data!.id!,
                         ParticipantInfo(
                           id: user.sevaUserID,
                           name: user.fullname,

@@ -9,25 +9,25 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class NewsCard extends StatelessWidget {
-  final String id;
-  final String imageUrl;
-  final String title;
-  final String userImageUrl;
-  final String address;
-  final String documentUrl;
-  final String documentName;
-  final String userName;
-  final int timestamp;
+  final String? id;
+  final String? imageUrl;
+  final String? title;
+  final String? userImageUrl;
+  final String? address;
+  final String? documentUrl;
+  final String? documentName;
+  final String? userName;
+  final int? timestamp;
   final bool isFavorite;
-  final bool isAdmin;
+  final bool? isAdmin;
   final bool isBookMarked;
   final double radius;
-  final Function onShare;
-  final Function onFavorite;
-  final Function onBookMark;
+  final Function? onShare;
+  final Function? onFavorite;
+  final Function? onBookMark;
 
   const NewsCard({
-    Key key,
+    Key? key,
     this.imageUrl,
     this.title,
     this.userImageUrl,
@@ -48,7 +48,7 @@ class NewsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String loggedinemail = SevaCore.of(context).loggedInUser.email;
+    String loggedinemail = SevaCore.of(context).loggedInUser.email!;
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
@@ -67,11 +67,11 @@ class NewsCard extends StatelessWidget {
                     Icons.location_on,
                     color: Theme.of(context).primaryColor,
                   ),
-                  Text(address),
+                  Text(address!),
                   Spacer(),
                   Text(
                     timeago.format(
-                        DateTime.fromMillisecondsSinceEpoch(timestamp),
+                        DateTime.fromMillisecondsSinceEpoch(timestamp!),
                         locale: Locale(getLangTag()).toLanguageTag()),
                     style: TextStyle(color: Colors.grey),
                   ),
@@ -93,7 +93,7 @@ class NewsCard extends StatelessWidget {
                           margin: EdgeInsets.only(top: 5),
                           child: Linkify(
                               text: title != null && title != "NoData"
-                                  ? title.trim()
+                                  ? title!.trim()
                                   : S.of(context).title,
                               onOpen: (url) async {
                                 // if (await canLaunch(url)) {
@@ -135,7 +135,7 @@ class NewsCard extends StatelessWidget {
                         ),
                         Text(
                           userName != null
-                              ? userName.trim()
+                              ? userName!.trim()
                               : S.of(context).user_name_not_availble,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 7,
@@ -158,7 +158,7 @@ class NewsCard extends StatelessWidget {
             //feed image
             imageUrl == null || imageUrl == "NoData"
                 ? Offstage()
-                : getImageView(id, imageUrl),
+                : getImageView(id!, imageUrl!),
             SizedBox(
               height: 8,
             ),
@@ -264,7 +264,7 @@ class NewsCard extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
         InkWell(
-          onTap: onBookMark,
+          onTap: onBookMark as void Function()?,
           child: Icon(
             isBookMarked ? Icons.flag : Icons.outlined_flag,
             // color: isBookMarked ? Colors.red : null,
@@ -273,7 +273,7 @@ class NewsCard extends StatelessWidget {
         SizedBox(width: 10),
 
         InkWell(
-          onTap: onFavorite,
+          onTap: onFavorite as void Function()?,
           child: Icon(
             isFavorite ? Icons.favorite : Icons.favorite_border,
             color: isFavorite ? Colors.red : null,
@@ -281,7 +281,7 @@ class NewsCard extends StatelessWidget {
         ),
         SizedBox(width: 10),
         InkWell(
-          onTap: onShare,
+          onTap: onShare as void Function()?,
           child: Icon(Icons.share),
         ),
         SizedBox(width: 15),

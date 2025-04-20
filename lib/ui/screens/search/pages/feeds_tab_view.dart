@@ -23,7 +23,7 @@ import 'package:sevaexchange/widgets/custom_buttons.dart';
 import '../../../../flavor_config.dart';
 
 class FeedsTabView extends StatefulWidget {
-  CommunityModel communityModel;
+  CommunityModel? communityModel;
   FeedsTabView({this.communityModel});
 
   @override
@@ -38,22 +38,22 @@ class _FeedsTabViewState extends State<FeedsTabView>
     final _bloc = BlocProvider.of<SearchBloc>(context);
     return Container(
       child: StreamBuilder<String>(
-        stream: _bloc.searchText,
+        stream: _bloc!.searchText,
         builder: (context, search) {
           if (search.data == null || search.data == "") {
             return Center(child: Text(S.of(context).search_something));
           }
           return StreamBuilder<List<NewsModel>>(
             stream: Searches.searchFeeds(
-              queryString: search.data,
-              loggedInUser: _bloc.user,
-              currentCommunityOfUser: _bloc.community,
+              queryString: search.data!,
+              loggedInUser: _bloc.user!,
+              currentCommunityOfUser: _bloc.community!,
             ),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return LoadingIndicator();
               }
-              if (snapshot.data == null || snapshot.data.isEmpty) {
+              if (snapshot.data == null || snapshot.data!.isEmpty) {
                 return Center(
                   child: Text(S.of(context).search_something),
                 );
@@ -61,9 +61,9 @@ class _FeedsTabViewState extends State<FeedsTabView>
               return ListView.builder(
                 padding: EdgeInsets.symmetric(horizontal: 10),
                 shrinkWrap: true,
-                itemCount: snapshot.data.length,
+                itemCount: snapshot.data!.length,
                 itemBuilder: (context, index) {
-                  final news = snapshot.data[index];
+                  final news = snapshot.data![index];
                   return InkWell(
                     onTap: () {
                       Navigator.push(
@@ -87,23 +87,23 @@ class _FeedsTabViewState extends State<FeedsTabView>
                       id: news.id,
                       imageUrl: news.newsImageUrl ?? news.imageScraped,
                       title: news.title != null && news.title != "NoData"
-                          ? news.title.trim()
-                          : news.subheading.trim(),
+                          ? news.title!.trim()
+                          : news.subheading!.trim(),
                       userImageUrl: news.userPhotoURL ?? defaultUserImageURL,
                       userName: news.fullName,
                       timestamp: news.postTimestamp,
                       onShare: () => _share(context, news),
-                      isFavorite: news.likes
+                      isFavorite: news.likes!
                           .contains(SevaCore.of(context).loggedInUser.email),
                       onFavorite: () =>
-                          _like(news, SevaCore.of(context).loggedInUser.email),
-                      isAdmin: isAccessAvailable(_bloc.timebank,
-                          SevaCore.of(context).loggedInUser.sevaUserID),
-                      address: getLocation(news.placeAddress) ??
+                          _like(news, SevaCore.of(context).loggedInUser.email!),
+                      isAdmin: isAccessAvailable(_bloc.timebank!,
+                          SevaCore.of(context).loggedInUser.sevaUserID!),
+                      address: getLocation(news.placeAddress!) ??
                           "location not updated",
                       documentName: news.newsDocumentName,
                       documentUrl: news.newsDocumentUrl,
-                      isBookMarked: news.reports.contains(
+                      isBookMarked: news.reports!.contains(
                           SevaCore.of(context).loggedInUser.sevaUserID),
                       onBookMark: () => _report(news: news, mContext: context),
                     ),
@@ -134,7 +134,7 @@ class _FeedsTabViewState extends State<FeedsTabView>
   }
 
   void _share(BuildContext context, NewsModel news) {
-    if (SevaCore.of(context).loggedInUser.associatedWithTimebanks > 1) {
+    if (SevaCore.of(context).loggedInUser.associatedWithTimebanks! > 1) {
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -159,8 +159,8 @@ class _FeedsTabViewState extends State<FeedsTabView>
   }
 
   void _like(NewsModel news, String email) async {
-    Set<String> likesList = Set.from(news.likes);
-    news.likes != null && news.likes.contains(email)
+    Set<String> likesList = Set.from(news.likes!);
+    news.likes != null && news.likes!.contains(email)
         ? likesList.remove(email)
         : likesList.add(email);
     news.likes = likesList.toList();
@@ -171,8 +171,9 @@ class _FeedsTabViewState extends State<FeedsTabView>
     setState(() {});
   }
 
-  void _report({NewsModel news, BuildContext mContext}) {
-    if (news.reports.contains(SevaCore.of(mContext).loggedInUser.sevaUserID)) {
+  void _report({NewsModel? news, BuildContext? mContext}) {
+    if (news!.reports!
+        .contains(SevaCore.of(mContext!).loggedInUser.sevaUserID)) {
       showDialog(
         context: mContext,
         builder: (BuildContext viewContextS) {
@@ -218,7 +219,7 @@ class _FeedsTabViewState extends State<FeedsTabView>
                 },
               ),
               CustomTextButton(
-                color: Theme.of(mContext).accentColor,
+                color: Theme.of(mContext).colorScheme.secondary,
                 textColor: Colors.white,
                 child: Text(
                   S.of(context).report_feed,
@@ -227,14 +228,14 @@ class _FeedsTabViewState extends State<FeedsTabView>
                   ),
                 ),
                 onPressed: () {
-                  if (news.reports.contains(
+                  if (news.reports!.contains(
                       SevaCore.of(mContext).loggedInUser.sevaUserID)) {
                   } else {
-                    if (news.reports.isEmpty) {
+                    if (news.reports!.isEmpty) {
                       news.reports = [];
                     }
-                    news.reports
-                        .add(SevaCore.of(mContext).loggedInUser.sevaUserID);
+                    news.reports!
+                        .add(SevaCore.of(mContext).loggedInUser.sevaUserID!);
                     CollectionRef.feeds
                         .doc(news.id)
                         .update({'reports': news.reports});

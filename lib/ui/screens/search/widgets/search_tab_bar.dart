@@ -4,8 +4,8 @@ import 'package:sevaexchange/utils/extensions.dart';
 
 class SearchTabBar extends StatelessWidget {
   const SearchTabBar({
-    Key key,
-    @required TabController tabController,
+    Key? key,
+    required TabController tabController,
   })  : _tabController = tabController,
         super(key: key);
 

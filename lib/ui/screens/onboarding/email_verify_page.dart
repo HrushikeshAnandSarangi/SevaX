@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:progress_dialog/progress_dialog.dart';
-import 'package:sevaexchange/auth/auth_provider.dart';
+import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
+import 'package:sevaexchange/auth/auth_provider.dart' as SevaAuthProvider;
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
@@ -13,12 +13,12 @@ import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/empty_text_span.dart';
 
 class VerifyEmail extends StatefulWidget {
-  final User firebaseUser;
-  final String email;
-  final bool emailSent;
+  final User? firebaseUser;
+  final String? email;
+  final bool? emailSent;
 
   const VerifyEmail(
-      {Key key, this.firebaseUser, this.email, this.emailSent = false})
+      {Key? key, this.firebaseUser, this.email, this.emailSent = false})
       : super(key: key);
 
   @override
@@ -27,19 +27,19 @@ class VerifyEmail extends StatefulWidget {
 
 class _VerifyEmailState extends State<VerifyEmail> {
   GlobalKey<ScaffoldState> _key = GlobalKey();
-  ProgressDialog progressDialog;
+  ProgressDialog? progressDialog;
 
   @override
   void initState() {
-    if (!widget.emailSent) {
+    if (!widget.emailSent!) {
       CollectionRef.users
           .doc(widget.email)
           .set({'emailSent': true}, SetOptions(merge: true)).then(
-        (_) => widget.firebaseUser
+        (_) => widget.firebaseUser!
             .sendEmailVerification()
             .then((onValue) => {
-                  logger
-                      .i("Email successfully sent ${widget.firebaseUser.email}")
+                  logger.i(
+                      "Email successfully sent ${widget.firebaseUser!.email}")
                 })
             .catchError((err) => {logger.e("Email not sent due to $err")}),
       );
@@ -47,7 +47,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
     super.initState();
   }
 
-  void sendVerificationEmail(User user, {VoidCallback onSuccess}) {
+  void sendVerificationEmail(User user, {VoidCallback? onSuccess}) {
     user?.sendEmailVerification()?.then((onValue) {
       onSuccess?.call();
     })?.catchError((onError) {
@@ -145,14 +145,14 @@ class _VerifyEmailState extends State<VerifyEmail> {
                         ),
                         isDismissible: false,
                       );
-                      progressDialog.show();
-                      widget.firebaseUser
+                      progressDialog!.show();
+                      widget.firebaseUser!
                           .sendEmailVerification()
                           .then((onValue) {
-                        progressDialog.hide();
+                        progressDialog!.hide();
                         showVerificationEmailDialog();
                       }).catchError((onError) {
-                        progressDialog.hide();
+                        progressDialog!.hide();
                         final snackBar =
                             SnackBar(content: Text(onError.message));
                         ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -184,6 +184,13 @@ class _VerifyEmailState extends State<VerifyEmail> {
             right: 40,
             bottom: 20,
             child: CustomElevatedButton(
+              color: Colors.blue, // Replace with your desired color
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(
+                      8)), // Replace with your desired shape
+              padding: EdgeInsets.all(16), // Replace with your desired padding
+              elevation: 5, // Replace with your desired elevation
+              textColor: Colors.white, // Replace with your desired text color
               child: Text(S.of(context).sign_in),
               onPressed: () {
                 _signOut(context);
@@ -196,7 +203,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
   }
 
   Future<void> _signOut(BuildContext context) async {
-    var auth = AuthProvider.of(context).auth;
+    var auth = SevaAuthProvider.AuthProvider.of(context).auth;
 
     auth.signOut().then(
           (_) => Navigator.of(context).pushAndRemoveUntil(

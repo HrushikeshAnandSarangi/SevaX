@@ -3,9 +3,9 @@ import 'package:sevaexchange/l10n/l10n.dart';
 
 class AmountRaisedProgressIndicator extends StatelessWidget {
   const AmountRaisedProgressIndicator({
-    Key key,
-    @required this.totalAmountRaised,
-    @required this.targetAmount,
+    Key? key,
+    required this.totalAmountRaised,
+    required this.targetAmount,
   }) : super(key: key);
 
   final int totalAmountRaised;

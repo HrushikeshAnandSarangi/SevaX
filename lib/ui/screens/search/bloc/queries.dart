@@ -17,11 +17,11 @@ import 'package:sevaexchange/utils/search_manager.dart';
 
 class Searches {
   static Future<http.Response> makePostRequest({
-    @required String url,
-    Map<String, String> headers,
+    required String url,
+    Map<String, String>? headers,
     dynamic body,
   }) async {
-    var result = await http.post(url, body: body, headers: headers);
+    var result = await http.post(Uri.parse(url), body: body, headers: headers);
     return result;
   }
 
@@ -51,9 +51,9 @@ class Searches {
 
   // Feeds DONE
   static Stream<List<NewsModel>> searchFeeds(
-      {@required String queryString,
-      @required UserModel loggedInUser,
-      @required CommunityModel currentCommunityOfUser}) async* {
+      {required String queryString,
+      required UserModel loggedInUser,
+      required CommunityModel currentCommunityOfUser}) async* {
     List<String> timebanksIdArr = [];
     QuerySnapshot timebankSnap = await CollectionRef.timebank
         .where('members', arrayContains: loggedInUser.sevaUserID)
@@ -100,14 +100,14 @@ class Searches {
     List<NewsModel> feedsList = [];
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
-      if (loggedInUser.blockedBy.length == 0 &&
+      if (loggedInUser.blockedBy!.length == 0 &&
           sourceMap['softDelete'] == false) {
         NewsModel news = NewsModel.fromMapElasticSearch(sourceMap);
         news.id = map['_id'];
         feedsList.add(news);
       } else {
         if (sourceMap['softDelete'] == false &&
-            !loggedInUser.blockedBy.contains(sourceMap["sevauserid"])) {
+            !loggedInUser.blockedBy!.contains(sourceMap["sevauserid"])) {
           NewsModel news = NewsModel.fromMapElasticSearch(sourceMap);
           news.id = map['_id'];
           feedsList.add(news);
@@ -126,9 +126,9 @@ class Searches {
   // Offers DONE
 
   static Stream<List<OfferModel>> searchOffers(
-      {@required queryString,
-      @required UserModel loggedInUser,
-      @required CommunityModel currentCommunityOfUser}) async* {
+      {required queryString,
+      required UserModel loggedInUser,
+      required CommunityModel currentCommunityOfUser}) async* {
     List<String> timebanksIdArr = [];
     QuerySnapshot timebankSnap = await CollectionRef.timebank
         .where('members', arrayContains: loggedInUser.sevaUserID)
@@ -217,12 +217,12 @@ class Searches {
     List<OfferModel> offersList = [];
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
-      if (loggedInUser.blockedBy.length == 0 &&
+      if (loggedInUser.blockedBy!.length == 0 &&
           sourceMap['softDelete'] == false) {
         try {
           OfferModel model = OfferModel.fromMapElasticSearch(sourceMap);
           if (model.associatedRequest == null ||
-              model.associatedRequest.isEmpty) {
+              model.associatedRequest!.isEmpty) {
             offersList.add(model);
           }
         } catch (e) {
@@ -230,10 +230,10 @@ class Searches {
         }
       } else {
         if (sourceMap['softDelete'] == false &&
-            !loggedInUser.blockedBy.contains(sourceMap["sevauserId"])) {
+            !loggedInUser.blockedBy!.contains(sourceMap["sevauserId"])) {
           OfferModel model = OfferModel.fromMapElasticSearch(sourceMap);
           if (model.associatedRequest == null ||
-              model.associatedRequest.isEmpty) {
+              model.associatedRequest!.isEmpty) {
             offersList.add(model);
           }
         }
@@ -245,9 +245,9 @@ class Searches {
   // Projects DONE
 
   static Stream<List<ProjectModel>> searchProjects(
-      {@required String queryString,
-      @required UserModel loggedInUser,
-      @required CommunityModel currentCommunityOfUser}) async* {
+      {required String queryString,
+      required UserModel loggedInUser,
+      required CommunityModel currentCommunityOfUser}) async* {
     List<String> timebanksIdArr = [];
     QuerySnapshot timebankSnap = await CollectionRef.timebank
         .where('members', arrayContains: loggedInUser.sevaUserID)
@@ -292,27 +292,27 @@ class Searches {
     List<ProjectModel> projectsList = [];
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
-      if (loggedInUser.blockedBy.length == 0 &&
+      if (loggedInUser.blockedBy!.length == 0 &&
           sourceMap['softDelete'] == false) {
         ProjectModel model = ProjectModel.fromMap(sourceMap);
         projectsList.add(model);
       } else {
         if (sourceMap['softDelete'] == false &&
-            !loggedInUser.blockedBy.contains(sourceMap["creator_id"])) {
+            !loggedInUser.blockedBy!.contains(sourceMap["creator_id"])) {
           ProjectModel model = ProjectModel.fromMap(sourceMap);
           projectsList.add(model);
         }
       }
     });
-    projectsList.sort((a, b) => a.name.compareTo(b.name));
+    projectsList.sort((a, b) => a.name!.compareTo(b.name!));
     yield projectsList;
   }
 
   static Stream<List<ProjectModel>> searchProjectsToAssignRequest(
-      {@required String queryString,
-      @required UserModel loggedInUser,
-      @required String mode,
-      @required String timebankId}) async* {
+      {required String queryString,
+      required UserModel loggedInUser,
+      required String mode,
+      required String timebankId}) async* {
     String url = FlavorConfig.values.elasticSearchBaseURL +
         '//elasticsearch/sevaxprojects/_doc/_search';
     dynamic body = json.encode(
@@ -350,7 +350,7 @@ class Searches {
         projectsList.add(model);
       }
     });
-    projectsList.sort((a, b) => a.name.compareTo(b.name));
+    projectsList.sort((a, b) => a.name!.compareTo(b.name!));
     yield projectsList;
   }
 //get public projects for explre
@@ -377,7 +377,7 @@ class Searches {
         projectsList.add(model);
       }
     });
-    projectsList.sort((a, b) => a.name.compareTo(b.name));
+    projectsList.sort((a, b) => a.name!.compareTo(b.name!));
     yield projectsList;
   }
 
@@ -402,7 +402,7 @@ class Searches {
         requestsList.add(model);
       }
     });
-    requestsList.sort((a, b) => a.title.compareTo(b.title));
+    requestsList.sort((a, b) => a.title!.compareTo(b.title!));
     yield requestsList;
   }
 
@@ -439,7 +439,7 @@ class Searches {
       RequestModel model = RequestModel.fromMap(sourceMap);
       models.add(model);
     });
-    models.sort((a, b) => a.title.compareTo(b.title));
+    models.sort((a, b) => a.title!.compareTo(b.title!));
     return models;
   }
 
@@ -448,7 +448,7 @@ class Searches {
 
   //get public requests
   static Stream<List<CommunityModel>> getNearBYCommunities(
-      {GeoPoint geoPoint}) async* {
+      {GeoPoint? geoPoint}) async* {
     if (geoPoint == null) {
       yield [];
     } else {
@@ -543,9 +543,9 @@ class Searches {
   // Requests DONE
 
   static Stream<List<RequestModel>> searchRequests(
-      {@required String queryString,
-      @required UserModel loggedInUser,
-      @required CommunityModel currentCommunityOfUser}) async* {
+      {required String queryString,
+      required UserModel loggedInUser,
+      required CommunityModel currentCommunityOfUser}) async* {
     List<String> timebanksIdArr = [];
     QuerySnapshot timebankSnap = await CollectionRef.timebank
         .where('members', arrayContains: loggedInUser.sevaUserID)
@@ -597,13 +597,13 @@ class Searches {
       logger.i(">>> sourceMap <<<" + "${sourceMap}");
 
       if (sourceMap['softDelete'] == false &&
-          loggedInUser.blockedBy.length == 0 &&
+          loggedInUser.blockedBy!.length == 0 &&
           sourceMap['autoGenerated'] == false) {
         RequestModel model = RequestModel.fromMapElasticSearch(sourceMap);
         if (model.accepted == false) requestsList.add(model);
       } else {
         if (sourceMap['softDelete'] == false &&
-            !loggedInUser.blockedBy.contains(sourceMap["sevauserId"])) {
+            !loggedInUser.blockedBy!.contains(sourceMap["sevauserId"])) {
           RequestModel model = RequestModel.fromMapElasticSearch(sourceMap);
           if (model.accepted == false) requestsList.add(model);
         }
@@ -616,9 +616,9 @@ class Searches {
   // Groups DONE
 
   static Stream<List<TimebankModel>> searchGroups(
-      {@required String queryString,
-      @required UserModel loggedInUser,
-      @required CommunityModel currentCommunityOfUser}) async* {
+      {required String queryString,
+      required UserModel loggedInUser,
+      required CommunityModel currentCommunityOfUser}) async* {
     String url = FlavorConfig.values.elasticSearchBaseURL +
         "//elasticsearch/sevaxtimebanks/sevaxtimebank/_search";
     dynamic body = json.encode({
@@ -653,12 +653,12 @@ class Searches {
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
       if (sourceMap['softDelete'] == false &&
-          loggedInUser.blockedBy.length == 0) {
+          loggedInUser.blockedBy!.length == 0) {
         var timeBank = TimebankModel.fromMap(sourceMap);
         timeBanksList.add(timeBank);
       } else {
         if (sourceMap['softDelete'] == false &&
-            !loggedInUser.blockedBy.contains(sourceMap["creator_id"])) {
+            !loggedInUser.blockedBy!.contains(sourceMap["creator_id"])) {
           var timeBank = TimebankModel.fromMap(sourceMap);
           timeBanksList.add(timeBank);
         }
@@ -671,10 +671,10 @@ class Searches {
   // Members DONE
 
   static Stream<List<UserModel>> searchMembersOfTimebank({
-    @required queryString,
-    @required String languageCode,
-    @required UserModel loggedInUser,
-    @required CommunityModel currentCommunityOfUser,
+    required queryString,
+    required String languageCode,
+    required UserModel loggedInUser,
+    required CommunityModel currentCommunityOfUser,
     // QuerySnapshot skillsListSnap,
     //QuerySnapshot interestsListSnap,
   }) async* {
@@ -733,13 +733,13 @@ class Searches {
 
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
-      if (loggedInUser.blockedBy.length == 0) {
+      if (loggedInUser.blockedBy!.length == 0) {
         if (loggedInUser.sevaUserID != sourceMap['sevauserid']) {
           UserModel user = UserModel.fromMap(sourceMap, 'queries');
           usersList.add(user);
         }
       } else {
-        if (!loggedInUser.blockedBy.contains(sourceMap['sevauserid']) &&
+        if (!loggedInUser.blockedBy!.contains(sourceMap['sevauserid']) &&
             loggedInUser.sevaUserID != sourceMap['sevauserid']) {
           UserModel user = UserModel.fromMap(sourceMap, 'queries');
           usersList.add(user);
@@ -830,7 +830,7 @@ class Searches {
   }
 
   static Future<List<TimebankModel>> getGroupsUnderCommunity(
-      {@required communityId}) async {
+      {required communityId}) async {
     String url =
         '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/sevaxtimebanks/sevaxtimebank/_search';
     dynamic body = json.encode({
@@ -858,7 +858,7 @@ class Searches {
   }
 
   static Future<List<RequestModel>> getPublicRequestsUnderTimebank(
-      {@required communityId}) async {
+      {required communityId}) async {
     String url =
         '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/requests/request/_search';
     dynamic body = json.encode({
@@ -892,7 +892,7 @@ class Searches {
   }
 
   static Future<List<ProjectModel>> getPublicEventsUnderTimebank(
-      {@required communityId}) async {
+      {required communityId}) async {
     String url =
         '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/sevaxprojects/_doc/_search';
 
@@ -930,7 +930,7 @@ class Searches {
   }
 
   static Future<CommunityModel> getCommunityDetails(
-      {@required communityId}) async {
+      {required communityId}) async {
     String url =
         '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/sevaxcommunities/_doc/_search';
     dynamic body = json.encode({
@@ -946,16 +946,16 @@ class Searches {
     });
     List<Map<String, dynamic>> hitList =
         await _makeElasticSearchPostRequest(url, body);
-    CommunityModel communityModel;
-
-    for (var map in hitList) {
-      Map<String, dynamic> sourceMap = map['_source'];
-      communityModel = CommunityModel(sourceMap);
+    if (hitList.isEmpty) {
+      throw Exception('Community not found');
     }
+
+    Map<String, dynamic> sourceMap = hitList.first['_source'];
+    CommunityModel communityModel = CommunityModel(sourceMap);
     return communityModel;
   }
 
-  static Future<UserModel> getUserElastic({@required userId}) async {
+  static Future<UserModel> getUserElastic({required userId}) async {
     String url =
         '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/sevaxusers/sevaxuser/_search';
     dynamic body = json.encode({
@@ -971,16 +971,17 @@ class Searches {
     });
     List<Map<String, dynamic>> hitList =
         await _makeElasticSearchPostRequest(url, body);
-    UserModel userModel;
 
-    for (var map in hitList) {
-      Map<String, dynamic> sourceMap = map['_source'];
-      userModel = UserModel.fromMap(sourceMap, "elastic");
+    if (hitList.isEmpty) {
+      throw Exception('User not found');
     }
+
+    Map<String, dynamic> sourceMap = hitList.first['_source'];
+    UserModel userModel = UserModel.fromMap(sourceMap, "elastic");
     return userModel;
   }
 
-  static Future<UserModel> getUserByEmailElastic({@required userEmail}) async {
+  static Future<UserModel> getUserByEmailElastic({required userEmail}) async {
     String url =
         '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/sevaxusers/sevaxuser/_search';
     dynamic body = json.encode({
@@ -996,12 +997,13 @@ class Searches {
     });
     List<Map<String, dynamic>> hitList =
         await _makeElasticSearchPostRequest(url, body);
-    UserModel userModel;
 
-    for (var map in hitList) {
-      Map<String, dynamic> sourceMap = map['_source'];
-      userModel = UserModel.fromMap(sourceMap, "elastic");
+    if (hitList.isEmpty) {
+      throw Exception('User not found');
     }
+
+    Map<String, dynamic> sourceMap = hitList.first['_source'];
+    UserModel userModel = UserModel.fromMap(sourceMap, "elastic");
     return userModel;
   }
 }

@@ -6,14 +6,14 @@ import 'package:flutter/material.dart';
 ///
 /// [text] is the title shown in the row
 class CheckboxWithText extends StatelessWidget {
-  final bool value;
+  final bool? value;
   final String text;
-  final ValueChanged<bool> onChanged;
+  final ValueChanged<bool?>? onChanged;
 
   const CheckboxWithText({
-    Key key,
+    Key? key,
     this.value = false,
-    @required this.text,
+    required this.text,
     this.onChanged,
   }) : super(key: key);
   @override

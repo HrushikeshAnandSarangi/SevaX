@@ -23,22 +23,22 @@ class _ProjectsTabViewState extends State<ProjectsTabView> {
     final _bloc = BlocProvider.of<SearchBloc>(context);
     return Container(
       child: StreamBuilder<String>(
-        stream: _bloc.searchText,
+        stream: _bloc!.searchText,
         builder: (context, search) {
           if (search.data == null || search.data == "") {
             return Center(child: Text(S.of(context).search_something));
           }
           return StreamBuilder<List<ProjectModel>>(
             stream: Searches.searchProjects(
-              queryString: search.data,
-              loggedInUser: _bloc.user,
-              currentCommunityOfUser: _bloc.community,
+              queryString: search.data!,
+              loggedInUser: _bloc.user!,
+              currentCommunityOfUser: _bloc.community!,
             ),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return LoadingIndicator();
               }
-              if (snapshot.data == null || snapshot.data.isEmpty) {
+              if (snapshot.data == null || snapshot.data!.isEmpty) {
                 return Center(
                   child: Text(S.of(context).no_search_result_found),
                 );
@@ -47,13 +47,13 @@ class _ProjectsTabViewState extends State<ProjectsTabView> {
               return Center(
                 child: ListView.builder(
                   padding: EdgeInsets.symmetric(horizontal: 10),
-                  itemCount: snapshot.data.length,
+                  itemCount: snapshot.data!.length,
                   itemBuilder: (context, index) {
-                    ProjectModel project = snapshot.data[index];
+                    ProjectModel project = snapshot.data![index];
                     int totalTask = project.completedRequests != null &&
                             project.pendingRequests != null
-                        ? project.pendingRequests.length +
-                            project.completedRequests.length
+                        ? project.pendingRequests!.length +
+                            project.completedRequests!.length
                         : 0;
                     return ProjectsCard(
                       timestamp: project.createdAt,
@@ -66,7 +66,7 @@ class _ProjectsTabViewState extends State<ProjectsTabView> {
                       tasks: totalTask,
                       pendingTask: project.pendingRequests?.length,
                       onTap: () =>
-                          onTap(timebank: _bloc.timebank, project: project),
+                          onTap(timebank: _bloc.timebank!, project: project),
                     );
                   },
                 ),
@@ -78,7 +78,7 @@ class _ProjectsTabViewState extends State<ProjectsTabView> {
     );
   }
 
-  void onTap({TimebankModel timebank, ProjectModel project}) {
+  void onTap({TimebankModel? timebank, ProjectModel? project}) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -86,8 +86,8 @@ class _ProjectsTabViewState extends State<ProjectsTabView> {
           bloc: BlocProvider.of<HomeDashBoardBloc>(context),
           child: ProjectRequests(
             ComingFrom.Projects,
-            timebankId: timebank.id,
-            projectModel: project,
+            timebankId: timebank!.id,
+            projectModel: project!,
             timebankModel: timebank,
           ),
         ),

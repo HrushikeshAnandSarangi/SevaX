@@ -22,14 +22,14 @@ import 'projects_tab_view.dart';
 import 'requests_tab_view.dart';
 
 class SearchPage extends StatefulWidget {
-  final HomeDashBoardBloc bloc;
-  final TimebankModel timebank;
-  final CommunityModel community;
+  final HomeDashBoardBloc? bloc;
+  final TimebankModel? timebank;
+  final CommunityModel? community;
 
-  final UserModel user;
+  final UserModel? user;
 
   const SearchPage({
-    Key key,
+    Key? key,
     this.bloc,
     this.timebank,
     this.community,
@@ -41,10 +41,10 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage>
     with SingleTickerProviderStateMixin {
-  SearchBloc _bloc;
+  SearchBloc? _bloc;
   TextEditingController _controller = TextEditingController();
-  TabController _tabController;
-  String selectedCommunity;
+  TabController? _tabController;
+  String? selectedCommunity;
 
   @override
   void initState() {
@@ -64,13 +64,13 @@ class _SearchPageState extends State<SearchPage>
 
   @override
   void dispose() {
-    _bloc.dispose();
+    _bloc!.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    log("${_bloc.community}");
+    log("${_bloc!.community}");
     return BlocProvider(
       bloc: _bloc,
       child: Scaffold(
@@ -79,7 +79,7 @@ class _SearchPageState extends State<SearchPage>
           backgroundColor: Theme.of(context).primaryColor,
           automaticallyImplyLeading: false,
           title: Text(
-            widget.community.name,
+            widget.community!.name,
             style: TextStyle(fontSize: 18),
           ),
           actions: <Widget>[
@@ -96,7 +96,7 @@ class _SearchPageState extends State<SearchPage>
             SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: SearchField(bloc: _bloc, controller: _controller),
+              child: SearchField(bloc: _bloc!, controller: _controller),
             ),
             SizedBox(height: 10),
             Divider(
@@ -106,7 +106,7 @@ class _SearchPageState extends State<SearchPage>
             ),
             Padding(
               padding: const EdgeInsets.only(left: 10.0),
-              child: SearchTabBar(tabController: _tabController),
+              child: SearchTabBar(tabController: _tabController!),
             ),
             Expanded(
               child: TabBarView(
@@ -116,7 +116,7 @@ class _SearchPageState extends State<SearchPage>
                     communityModel: widget.community,
                   ),
                   RequestsTabView(
-                    communityModel: widget.community,
+                    communityModel: widget.community!,
                   ),
                   OffersTabView(),
                   ProjectsTabView(),

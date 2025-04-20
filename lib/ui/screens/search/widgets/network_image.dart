@@ -6,17 +6,17 @@ import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class CustomNetworkImage extends StatelessWidget {
   final String imageUrl;
-  final Widget placeholder;
-  final Widget error;
-  final BoxFit fit;
+  final Widget? placeholder;
+  final Widget? error;
+  final BoxFit? fit;
   final double size;
   final bool clipOval;
-  final String entityName;
-  final VoidCallback onTap;
+  final String? entityName;
+  final VoidCallback? onTap;
 
   const CustomNetworkImage(
     this.imageUrl, {
-    Key key,
+    Key? key,
     this.placeholder,
     this.error,
     this.fit,
@@ -24,7 +24,7 @@ class CustomNetworkImage extends StatelessWidget {
     this.clipOval = true,
     this.entityName,
     this.onTap,
-  }) : super(key: key);
+  });
   @override
   Widget build(BuildContext context) {
     final child = SizedBox(

@@ -49,7 +49,7 @@ class RequestDonationDisputeBloc {
     _goodsRecieved.add(Map.from(initialValue));
   }
 
-  Future<bool> validateAmount({int minmumAmount}) async {
+  Future<bool> validateAmount({int? minmumAmount}) async {
     if (_cashAmount.value == '' || _cashAmount.value == null) {
       _cashAmount.addError('amount1');
       return false;
@@ -65,12 +65,12 @@ class RequestDonationDisputeBloc {
   }
 
   Future<bool> callDonateOfferCreatorPledge({
-    OperatingMode operationMode,
-    double pledgedAmount,
-    String donationId,
-    String notificationId,
-    DonationModel donationModel,
-    RequestMode requestMode,
+    OperatingMode? operationMode,
+    double? pledgedAmount,
+    String? donationId,
+    String? notificationId,
+    DonationModel? donationModel,
+    RequestMode? requestMode,
   }) async {
     log("Inside callDonateOfferCreatorPledge");
 
@@ -80,8 +80,8 @@ class RequestDonationDisputeBloc {
 
       _cashAmount.addError('amount1');
       return false;
-    } else if (donationModel.minimumAmount != null &&
-        int.parse(_cashAmount.value) < donationModel.minimumAmount) {
+    } else if (donationModel!.minimumAmount != null &&
+        int.parse(_cashAmount.value) < donationModel.minimumAmount!) {
       log("Inside min");
 
       _cashAmount.addError('min');
@@ -94,22 +94,22 @@ class RequestDonationDisputeBloc {
       donationModel.minimumAmount = 0;
       return await _donationsRepository
           .donateOfferCreatorPledge(
-            operatoreMode: operationMode,
-            requestType: donationModel.donationType,
-            donationStatus: donationModel.donationStatus,
+            operatoreMode: operationMode!,
+            requestType: donationModel.donationType!,
+            donationStatus: donationModel.donationStatus!,
             associatedId: operationMode == OperatingMode.CREATOR &&
-                    donationModel.donatedToTimebank
-                ? donationModel.timebankId
-                : donationModel.donorDetails.email,
-            donationId: donationId,
+                    donationModel.donatedToTimebank!
+                ? donationModel.timebankId!
+                : donationModel.donorDetails!.email!,
+            donationId: donationId!,
             isTimebankNotification: operationMode == OperatingMode.CREATOR &&
-                donationModel.donatedToTimebank,
-            notificationId: notificationId,
+                donationModel.donatedToTimebank!,
+            notificationId: notificationId!,
             acknowledgementNotification: getAcknowlegementNotification(
               updatedAmount: double.parse(_cashAmount.value),
               model: donationModel,
               operatorMode: operationMode,
-              requestMode: requestMode,
+              requestMode: requestMode!,
               notificationType:
                   donationModel.donationStatus == DonationStatus.PLEDGED
                       ? NotificationType.ACKNOWLEDGE_DONOR_DONATION
@@ -122,41 +122,41 @@ class RequestDonationDisputeBloc {
   }
 
   Future<bool> disputeCash({
-    OperatingMode operationMode,
-    double pledgedAmount,
-    String donationId,
-    String notificationId,
-    DonationModel donationModel,
-    RequestMode requestMode,
+    OperatingMode? operationMode,
+    double? pledgedAmount,
+    String? donationId,
+    String? notificationId,
+    DonationModel? donationModel,
+    RequestMode? requestMode,
   }) async {
-    double convertedRate;
-    double rate;
-    if (donationModel.requestIdType == 'offer') {
+    double convertedRate = 0.0;
+    double rate = 0.0;
+    if (donationModel!.requestIdType == 'offer') {
       rate = operationMode == OperatingMode.USER
-          ? pledgedAmount
+          ? pledgedAmount ?? 0.0
           : await currencyConversion(
               fromCurrency:
-                  donationModel?.cashDetails?.cashDetails?.offerCurrencyType ??
-                      "",
+                  donationModel.cashDetails?.cashDetails?.offerCurrencyType ??
+                      "USD",
               toCurrency: donationModel
-                      ?.cashDetails?.cashDetails?.offerDonatedCurrencyType ??
-                  "",
+                      .cashDetails?.cashDetails?.offerDonatedCurrencyType ??
+                  "USD",
               amount: pledgedAmount ?? 0.0);
     }
     if (donationModel.requestIdType == 'request') {
       rate = operationMode != OperatingMode.USER
-          ? pledgedAmount
+          ? pledgedAmount ?? 0.0
           : await currencyConversion(
-              fromCurrency: donationModel
-                      ?.cashDetails?.cashDetails?.requestCurrencyType ??
-                  "",
+              fromCurrency:
+                  donationModel.cashDetails!.cashDetails!.requestCurrencyType ??
+                      "",
               toCurrency: donationModel
-                      ?.cashDetails?.cashDetails?.requestDonatedCurrency ??
+                      .cashDetails!.cashDetails!.requestDonatedCurrency ??
                   "",
-              amount: pledgedAmount ?? "");
+              amount: pledgedAmount ?? 0.0);
     }
 
-    var status = rate == double.parse(_cashAmount?.value) ?? 0.0;
+    var status = rate == double.parse(_cashAmount.value ?? "0.0");
     if (operationMode == OperatingMode.USER) {
       convertedRate = await currencyConversion(
           fromCurrency: donationModel.requestIdType == 'offer'
@@ -200,22 +200,22 @@ class RequestDonationDisputeBloc {
     else {
       return await _donationsRepository
           .acknowledgeDonation(
-            operatoreMode: operationMode,
-            requestType: donationModel.donationType,
+            operatoreMode: operationMode!,
+            requestType: donationModel.donationType!,
             donationStatus:
                 status ? DonationStatus.ACKNOWLEDGED : DonationStatus.MODIFIED,
             associatedId: operationMode == OperatingMode.CREATOR &&
-                    donationModel.donatedToTimebank
-                ? donationModel.timebankId
+                    donationModel.donatedToTimebank == true
+                ? donationModel.timebankId ?? ''
                 : donationModel.requestIdType == 'offer'
                     ? operationMode != OperatingMode.CREATOR
-                        ? donationModel.donorDetails.email
-                        : donationModel.receiverDetails.email
-                    : donationModel.donorDetails.email,
-            donationId: donationId,
+                        ? donationModel.donorDetails?.email ?? ''
+                        : donationModel.receiverDetails?.email ?? ''
+                    : donationModel.donorDetails?.email ?? '',
+            donationId: donationId!,
             isTimebankNotification: operationMode == OperatingMode.CREATOR &&
-                donationModel.donatedToTimebank,
-            notificationId: notificationId,
+                donationModel!.donatedToTimebank!,
+            notificationId: notificationId!,
             acknowledgementNotification: getAcknowlegementNotification(
               updatedAmount: operationMode == OperatingMode.USER ||
                       operationMode != OperatingMode.USER
@@ -223,7 +223,7 @@ class RequestDonationDisputeBloc {
                   : double.parse(_cashAmount.value),
               model: donationModel,
               operatorMode: operationMode,
-              requestMode: requestMode,
+              requestMode: requestMode!,
               notificationType: status
                   ? NotificationType.CASH_DONATION_COMPLETED_SUCCESSFULLY
                   : operationMode == OperatingMode.CREATOR
@@ -237,20 +237,20 @@ class RequestDonationDisputeBloc {
   }
 
   NotificationsModel getAcknowlegementNotification({
-    double updatedAmount,
-    DonationModel model,
-    OperatingMode operatorMode,
-    RequestMode requestMode,
-    NotificationType notificationType,
-    Map<String, String> customSelection,
+    double? updatedAmount,
+    DonationModel? model,
+    OperatingMode? operatorMode,
+    RequestMode? requestMode,
+    NotificationType? notificationType,
+    Map<String, String>? customSelection,
   }) {
     var notificationId = Uuid().generateV4();
     bool isTimebankNotification =
-        model.donatedToTimebank && operatorMode == OperatingMode.USER;
+        model!.donatedToTimebank! && operatorMode == OperatingMode.USER;
     if (model.donationType == RequestType.CASH)
-      model.cashDetails.pledgedAmount = updatedAmount;
+      model.cashDetails!.pledgedAmount = updatedAmount;
     else if (model.donationType == RequestType.GOODS)
-      model.goodsDetails.donatedGoods = customSelection;
+      model.goodsDetails!.donatedGoods = customSelection;
 
     model.notificationId = notificationId;
 
@@ -259,10 +259,10 @@ class RequestDonationDisputeBloc {
     if (model.requestIdType == 'offer') {
       communityId = getCommunitySpecificNotificationForOffer(
         model: model,
-        type: notificationType,
+        type: notificationType!,
       );
     } else {
-      communityId = model.donorDetails.communityId;
+      communityId = model.donorDetails!.communityId;
     }
 
     return NotificationsModel(
@@ -285,28 +285,28 @@ class RequestDonationDisputeBloc {
   }
 
   String getCommunitySpecificNotificationForOffer(
-      {NotificationType type, DonationModel model}) {
+      {NotificationType? type, DonationModel? model}) {
     switch (type) {
       case NotificationType.CASH_DONATION_MODIFIED_BY_CREATOR:
       case NotificationType.GOODS_DONATION_MODIFIED_BY_CREATOR:
       case NotificationType.CASH_DONATION_COMPLETED_SUCCESSFULLY:
       case NotificationType.GOODS_DONATION_COMPLETED_SUCCESSFULLY:
-        return model.donorDetails.communityId;
+        return model!.donorDetails!.communityId!;
 
       default:
-        return model.receiverDetails.communityId;
+        return model!.receiverDetails!.communityId!;
     }
   }
 
   Future<bool> disputeGoods({
-    OperatingMode operationMode,
-    String donationId,
-    String notificationId,
-    DonationModel donationModel,
-    RequestMode requestMode,
-    Map<String, String> donatedGoods,
+    OperatingMode? operationMode,
+    String? donationId,
+    String? notificationId,
+    DonationModel? donationModel,
+    RequestMode? requestMode,
+    Map<String, String>? donatedGoods,
   }) async {
-    var x = List.from(donatedGoods.keys);
+    var x = List.from(donatedGoods!.keys);
     var y = List.from(_goodsRecieved.value.keys);
     DonationStatus donationStatus;
 
@@ -315,11 +315,11 @@ class RequestDonationDisputeBloc {
     var status = listEquals(x, y);
     donationStatus =
         status ? DonationStatus.ACKNOWLEDGED : DonationStatus.MODIFIED;
-    donationModel.donationStatus = donationStatus;
+    donationModel!.donationStatus = donationStatus;
 
     await _donationsRepository.acknowledgeDonation(
-      requestType: donationModel.donationType,
-      operatoreMode: operationMode,
+      requestType: donationModel.donationType!,
+      operatoreMode: operationMode!,
       donationStatus: donationStatus,
 
       acknowledgementNotification: getAcknowlegementNotification(
@@ -334,21 +334,21 @@ class RequestDonationDisputeBloc {
         customSelection: _goodsRecieved.value,
       ),
       associatedId: operationMode == OperatingMode.CREATOR &&
-              donationModel.donatedToTimebank
-          ? donationModel.timebankId
+              (donationModel.donatedToTimebank ?? false)
+          ? donationModel.timebankId ?? ''
           : donationModel.requestIdType == 'offer'
               ? operationMode != OperatingMode.CREATOR
-                  ? donationModel.donorDetails.email
-                  : donationModel.receiverDetails.email
-              : donationModel.donorDetails.email,
-      donationId: donationId,
+                  ? donationModel.donorDetails?.email ?? ''
+                  : donationModel.receiverDetails?.email ?? ''
+              : donationModel.donorDetails?.email ?? '',
+      donationId: donationId!,
 
       // if status is true that means the notification will go to user only as the request is acknowledged
       // if true then we check whether it should go to timebank or user
       //TODO: check the condition for all scenario
       isTimebankNotification: operationMode == OperatingMode.CREATOR &&
-          donationModel.donatedToTimebank,
-      notificationId: notificationId,
+          donationModel.donatedToTimebank!,
+      notificationId: notificationId!,
     );
     return true;
   }

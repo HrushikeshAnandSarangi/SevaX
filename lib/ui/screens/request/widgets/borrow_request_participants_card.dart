@@ -14,17 +14,17 @@ import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/widgets/custom_list_tile.dart';
 
 class BorrowRequestParticipantsCard extends StatelessWidget {
-  final Padding padding;
-  final Function onImageTap;
-  final Widget buttonsContainer;
-  final RequestModel requestModel;
-  final BorrowAcceptorModel borrowAcceptorModel;
-  final BuildContext context;
-  final List<LendingModel> lendingModelList;
-  final LendingModel lendingPlaceModel;
+  final EdgeInsetsGeometry? padding;
+  final Function? onImageTap;
+  final Widget? buttonsContainer;
+  final RequestModel? requestModel;
+  final BorrowAcceptorModel? borrowAcceptorModel;
+  final BuildContext? context;
+  final List<LendingModel>? lendingModelList;
+  final LendingModel? lendingPlaceModel;
 
   const BorrowRequestParticipantsCard(
-      {Key key,
+      {Key? key,
       this.padding,
       this.onImageTap,
       this.buttonsContainer = const SizedBox(),
@@ -36,7 +36,7 @@ class BorrowRequestParticipantsCard extends StatelessWidget {
       : super(key: key);
   @override
   Widget build(BuildContext context) {
-    logger.e('requestModel.roomOrTool: ' + requestModel.roomOrTool.toString());
+    logger.e('requestModel.roomOrTool: ' + requestModel!.roomOrTool.toString());
     return Padding(
       padding: padding ?? EdgeInsets.symmetric(horizontal: 2, vertical: 6),
       child: Container(
@@ -53,12 +53,12 @@ class BorrowRequestParticipantsCard extends StatelessWidget {
                     child: AspectRatio(
                       aspectRatio: 1,
                       child: CustomNetworkImage(
-                        (borrowAcceptorModel.acceptorphotoURL != null &&
-                                borrowAcceptorModel.acceptorphotoURL != '')
-                            ? borrowAcceptorModel.acceptorphotoURL
-                            : defaultUserImageURL,
+                        (borrowAcceptorModel!.acceptorphotoURL != null &&
+                                borrowAcceptorModel!.acceptorphotoURL != '')
+                            ? borrowAcceptorModel!.acceptorphotoURL!
+                            : defaultUserImageURL!,
                         fit: BoxFit.cover,
-                        onTap: onImageTap,
+                        onTap: onImageTap as VoidCallback?,
                         size: 40,
                       ),
                     ),
@@ -72,7 +72,7 @@ class BorrowRequestParticipantsCard extends StatelessWidget {
                     Container(
                       width: 115,
                       child: Text(
-                        borrowAcceptorModel.acceptorName,
+                        borrowAcceptorModel!.acceptorName!,
                         maxLines: 3,
                         overflow: TextOverflow.ellipsis,
                         softWrap: true,
@@ -84,11 +84,11 @@ class BorrowRequestParticipantsCard extends StatelessWidget {
                     ),
                     SizedBox(height: 4),
                     Text(
-                      requestModel.roomOrTool == LendingType.PLACE.readable
-                          ? lendingPlaceModel
-                                  .lendingPlaceModel.contactInformation ??
+                      requestModel!.roomOrTool == LendingType.PLACE.readable
+                          ? lendingPlaceModel!
+                                  .lendingPlaceModel!.contactInformation ??
                               ''
-                          : borrowAcceptorModel.acceptorEmail ??
+                          : borrowAcceptorModel!.acceptorEmail ??
                               '', //add date on which potential borrower requested
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -102,26 +102,26 @@ class BorrowRequestParticipantsCard extends StatelessWidget {
                 ),
                 Spacer(),
                 SizedBox(width: 8),
-                buttonsContainer
+                buttonsContainer!
               ],
             ),
             SizedBox(height: 20),
             Row(
               children: [
-                requestModel.roomOrTool == LendingType.ITEM.readable
+                requestModel!.roomOrTool == LendingType.ITEM.readable
                     //borrowAcceptorModel.borrowedItemsIds need to fetch data using the ids
                     ? Container(
                         // height: 400,
                         width: 300,
                         child: ListView.builder(
                             shrinkWrap: true,
-                            itemCount: lendingModelList.length ?? 0,
+                            itemCount: lendingModelList!.length ?? 0,
                             itemBuilder: (BuildContext context, int index) {
                               return Column(
                                 children: [
                                   LendingItemCardWidget(
-                                    lendingItemModel: lendingModelList[index]
-                                        .lendingItemModel,
+                                    lendingItemModel: lendingModelList![index]
+                                        .lendingItemModel!,
                                     hidden: true,
                                   ),
                                   SizedBox(height: 10),
@@ -135,7 +135,7 @@ class BorrowRequestParticipantsCard extends StatelessWidget {
                           child: Column(
                             children: [
                               LendingPlaceDetailsWidget(
-                                lendingModel: lendingPlaceModel,
+                                lendingModel: lendingPlaceModel!,
                               ),
                               SizedBox(height: 10),
                             ],
@@ -150,10 +150,11 @@ class BorrowRequestParticipantsCard extends StatelessWidget {
               children: [
                 Chip(
                   label: Text(
-                    requestModel.approvedUsers
-                            .contains(borrowAcceptorModel.acceptorEmail)
-                        ? (borrowAcceptorModel.borrowAgreementLink == '' ||
-                                borrowAcceptorModel.borrowAgreementLink == null)
+                    requestModel!.approvedUsers!
+                            .contains(borrowAcceptorModel!.acceptorEmail)
+                        ? (borrowAcceptorModel!.borrowAgreementLink == '' ||
+                                borrowAcceptorModel!.borrowAgreementLink ==
+                                    null)
                             ? S.of(context).agreement_accepted
                             : S.of(context).agreement_signed
                         : S.of(context).agreement_to_be_signed,
@@ -176,7 +177,7 @@ class BorrowRequestParticipantsCard extends StatelessWidget {
   }
 
   Widget get addressComponent {
-    return requestModel.address != null
+    return requestModel!.address != null
         ? CustomListTile(
             leading: Padding(
               padding: const EdgeInsets.only(top: 4),
@@ -186,15 +187,15 @@ class BorrowRequestParticipantsCard extends StatelessWidget {
               ),
             ),
             title: Text(
-              S.of(context).location,
+              S.of(context!).location,
               style: TextStyle(
                 fontSize: 18,
                 color: Colors.black,
               ),
               maxLines: 1,
             ),
-            subtitle: borrowAcceptorModel.selectedAddress != null
-                ? Text(borrowAcceptorModel.selectedAddress)
+            subtitle: borrowAcceptorModel!.selectedAddress != null
+                ? Text(borrowAcceptorModel!.selectedAddress!)
                 : Text(''),
           )
         : Container();

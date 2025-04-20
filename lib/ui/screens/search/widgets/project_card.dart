@@ -7,20 +7,20 @@ import 'package:sevaexchange/widgets/tag_view.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class ProjectsCard extends StatelessWidget {
-  final String location;
-  final int timestamp;
-  final String photoUrl;
-  final String title;
-  final String description;
-  final int startTime;
-  final int endTime;
-  final int tasks;
-  final int pendingTask;
-  final Function onTap;
-  final bool isRecurring;
+  final String? location;
+  final int? timestamp;
+  final String? photoUrl;
+  final String? title;
+  final String? description;
+  final int? startTime;
+  final int? endTime;
+  final int? tasks;
+  final int? pendingTask;
+  final Function? onTap;
+  final bool? isRecurring;
 
   const ProjectsCard({
-    Key key,
+    Key? key,
     this.isRecurring,
     this.location,
     this.timestamp,
@@ -43,13 +43,13 @@ class ProjectsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var projectLocation = getLocation(location);
-    String loggedintimezone = SevaCore.of(context).loggedInUser != null
-        ? SevaCore.of(context).loggedInUser.timezone
+    var projectLocation = getLocation(location!);
+    String loggedintimezone = SevaCore.of(context).loggedInUser! != null
+        ? SevaCore.of(context).loggedInUser.timezone!
         : 'IST';
 
     return InkWell(
-      onTap: onTap,
+      onTap: onTap as void Function()?,
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
@@ -73,7 +73,7 @@ class ProjectsCard extends StatelessWidget {
                   Expanded(
                     child: Text(
                       timeago.format(
-                        DateTime.fromMillisecondsSinceEpoch(timestamp),
+                        DateTime.fromMillisecondsSinceEpoch(timestamp!),
                         locale: S.of(context).localeName == 'sn'
                             ? 'en'
                             : S.of(context).localeName,
@@ -100,7 +100,7 @@ class ProjectsCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          title,
+                          title!,
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold),
                         ),
@@ -124,7 +124,7 @@ class ProjectsCard extends StatelessWidget {
                                 S.of(context).localeName,
                               )*/
                               getTimeZoneFormattedString(
-                                startTime,
+                                startTime!,
                                 loggedintimezone,
                               ),
                               style:
@@ -144,7 +144,7 @@ class ProjectsCard extends StatelessWidget {
                               ),*/
 
                               getTimeZoneFormattedString(
-                                endTime,
+                                endTime!,
                                 loggedintimezone,
                               ),
                               style:
@@ -153,7 +153,7 @@ class ProjectsCard extends StatelessWidget {
                           ],
                         ),
                         Text(
-                          description,
+                          description!,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 4,
                           style: TextStyle(
@@ -204,10 +204,10 @@ class ProjectsCard extends StatelessWidget {
       } else if (l.length >= 1) {
         return "${l[0]}";
       } else {
-        return null;
+        return null!;
       }
     } else {
-      return null;
+      return null!;
     }
   }
 }

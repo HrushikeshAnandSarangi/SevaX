@@ -33,7 +33,7 @@ class _GroupTabViewState extends State<GroupTabView> {
     return Padding(
       padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
       child: StreamBuilder<String>(
-        stream: _bloc.searchText,
+        stream: _bloc!.searchText,
         builder: (context, search) {
           if (search.data == null || search.data == "") {
             return Center(child: Text(S.of(context).search_something));
@@ -41,21 +41,21 @@ class _GroupTabViewState extends State<GroupTabView> {
           return StreamBuilder<GroupData>(
             stream: CombineLatestStream.combine2(
               Searches.searchGroups(
-                queryString: search.data,
-                loggedInUser: _bloc.user,
-                currentCommunityOfUser: _bloc.community,
+                queryString: search.data!,
+                loggedInUser: _bloc.user!,
+                currentCommunityOfUser: _bloc.community!,
               ),
               CollectionRef.joinRequests
-                  .where("user_id", isEqualTo: _bloc.user.sevaUserID)
+                  .where("user_id", isEqualTo: _bloc.user!.sevaUserID)
                   .snapshots(),
-              (x, y) => GroupData(x, y),
+              (x, y) => GroupData(x as List<TimebankModel>, y as QuerySnapshot),
             ),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return LoadingIndicator();
               }
-              if (snapshot.data.timebanks == null ||
-                  snapshot.data.timebanks.isEmpty) {
+              if (snapshot.data!.timebanks == null ||
+                  snapshot.data!.timebanks.isEmpty) {
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.max,
@@ -69,13 +69,13 @@ class _GroupTabViewState extends State<GroupTabView> {
                 padding: EdgeInsets.symmetric(vertical: 10),
                 // physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: snapshot.data.timebanks.length,
+                itemCount: snapshot.data!.timebanks.length,
                 itemBuilder: (context, index) {
-                  final group = snapshot.data.timebanks[index];
+                  final group = snapshot.data!.timebanks[index];
                   JoinStatus joinStatus = status(
                     group,
-                    _bloc.user.sevaUserID,
-                    snapshot.data.requests,
+                    _bloc.user!.sevaUserID!,
+                    snapshot.data!.requests!,
                   );
                   return InkWell(
                     onTap: () {
@@ -102,7 +102,7 @@ class _GroupTabViewState extends State<GroupTabView> {
                       status: joinStatus,
                       onPressed: joinStatus == JoinStatus.JOIN
                           ? () {
-                              joinTimebank(_bloc.user, group);
+                              joinTimebank(_bloc.user!, group);
                             }
                           : null,
                     ),
@@ -136,16 +136,18 @@ class _GroupTabViewState extends State<GroupTabView> {
     if (querySnapshot != null) {
       for (int i = 0; i < querySnapshot.docs.length; i++) {
         DocumentSnapshot snap = querySnapshot.docs[i];
-        if (timebank.id == snap.data()['entity_id']) {
-          if (snap.data()["accepted"] == false &&
-              snap.data()["operation_taken"] == false) {
+        if (timebank.id == (snap.data() as Map<String, dynamic>)['entity_id']) {
+          if ((snap.data() as Map<String, dynamic>)["accepted"] == false &&
+              (snap.data() as Map<String, dynamic>)["operation_taken"] ==
+                  false) {
             return JoinStatus.REQUESTED;
           }
-          if (snap.data()["accepted"] == false &&
-              snap.data()["operation_taken"] == true) {
+          if ((snap.data() as Map<String, dynamic>)["accepted"] == false &&
+              (snap.data() as Map<String, dynamic>)["operation_taken"] ==
+                  true) {
             return JoinStatus.REJECTED;
           }
-          if (snap.data()["accepted"] == true) {
+          if ((snap.data() as Map<String, dynamic>)["accepted"] == true) {
             return JoinStatus.JOINED;
           }
         }
@@ -158,7 +160,7 @@ class _GroupTabViewState extends State<GroupTabView> {
     await _assembleAndSendRequest(
       subTimebankId: timebank.id,
       subTimebankLabel: timebank.name,
-      userIdForNewMember: user.sevaUserID,
+      userIdForNewMember: user.sevaUserID!,
     );
 
     setState(() {
@@ -168,14 +170,14 @@ class _GroupTabViewState extends State<GroupTabView> {
   }
 
   Future _assembleAndSendRequest({
-    String userIdForNewMember,
-    String subTimebankLabel,
-    String subTimebankId,
+    String? userIdForNewMember,
+    String? subTimebankLabel,
+    String? subTimebankId,
   }) async {
     var joinRequestModel = _assembleJoinRequestModel(
-      userIdForNewMember: userIdForNewMember,
-      subTimebankLabel: subTimebankLabel,
-      subtimebankId: subTimebankId,
+      userIdForNewMember: userIdForNewMember!,
+      subTimebankLabel: subTimebankLabel!,
+      subtimebankId: subTimebankId!,
     );
 
     var notification = _assembleNotificationForJoinRequest(
@@ -193,9 +195,9 @@ class _GroupTabViewState extends State<GroupTabView> {
   }
 
   WriteBatch createAndSendJoinJoinRequest({
-    String subtimebankId,
-    NotificationsModel notification,
-    JoinRequestModel joinRequestModel,
+    String? subtimebankId,
+    NotificationsModel? notification,
+    JoinRequestModel? joinRequestModel,
   }) {
     WriteBatch batchWrite = CollectionRef.batch;
     batchWrite.set(
@@ -204,21 +206,21 @@ class _GroupTabViewState extends State<GroupTabView> {
               subtimebankId,
             )
             .collection("notifications")
-            .doc(notification.id),
-        notification.toMap());
+            .doc(notification!.id),
+        notification!.toMap());
 
-    batchWrite.set(CollectionRef.joinRequests.doc(joinRequestModel.id),
-        joinRequestModel.toMap());
+    batchWrite.set(CollectionRef.joinRequests.doc(joinRequestModel!.id),
+        joinRequestModel!.toMap());
     return batchWrite;
   }
 
   JoinRequestModel _assembleJoinRequestModel({
-    String userIdForNewMember,
-    String subTimebankLabel,
-    String subtimebankId,
+    String? userIdForNewMember,
+    String? subTimebankLabel,
+    String? subtimebankId,
   }) {
     return JoinRequestModel(
-      timebankTitle: subTimebankLabel,
+      timebankTitle: subTimebankLabel!,
       accepted: false,
       entityId: subtimebankId,
       entityType: prefix0.EntityType.Timebank,
@@ -232,14 +234,14 @@ class _GroupTabViewState extends State<GroupTabView> {
   }
 
   NotificationsModel _assembleNotificationForJoinRequest({
-    String userIdForNewMember,
-    JoinRequestModel joinRequestModel,
-    String subTimebankId,
-    String creatorId,
+    String? userIdForNewMember,
+    JoinRequestModel? joinRequestModel,
+    String? subTimebankId,
+    String? creatorId,
   }) {
     return NotificationsModel(
       timebankId: subTimebankId,
-      id: joinRequestModel.notificationId,
+      id: joinRequestModel!.notificationId,
       targetUserId: creatorId,
       senderUserId: userIdForNewMember,
       type: NotificationType.JoinRequest,

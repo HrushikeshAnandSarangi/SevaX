@@ -21,7 +21,7 @@ import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 class RequestsTabView extends StatelessWidget {
   final CommunityModel communityModel;
 
-  const RequestsTabView({Key key, @required this.communityModel})
+  const RequestsTabView({Key? key, required this.communityModel})
       : super(key: key);
 
   @override
@@ -29,22 +29,22 @@ class RequestsTabView extends StatelessWidget {
     final _bloc = BlocProvider.of<SearchBloc>(mcontext);
     return Container(
       child: StreamBuilder<String>(
-        stream: _bloc.searchText,
+        stream: _bloc!.searchText,
         builder: (context, search) {
           if (search.data == null || search.data == "") {
             return Center(child: Text(S.of(context).search_something));
           }
           return StreamBuilder<List<RequestModel>>(
             stream: Searches.searchRequests(
-              queryString: search.data,
-              loggedInUser: _bloc.user,
-              currentCommunityOfUser: _bloc.community,
+              queryString: search.data!,
+              loggedInUser: _bloc.user!,
+              currentCommunityOfUser: _bloc.community!,
             ),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return LoadingIndicator();
               }
-              if (snapshot.data == null || snapshot.data.isEmpty) {
+              if (snapshot.data == null || snapshot.data!.isEmpty) {
                 return Center(
                   child: Text(
                     S.of(context).no_timeline_found,
@@ -55,13 +55,13 @@ class RequestsTabView extends StatelessWidget {
               return ListView.builder(
                 padding: EdgeInsets.symmetric(horizontal: 10),
                 shrinkWrap: true,
-                itemCount: snapshot.data.length,
+                itemCount: snapshot.data!.length,
                 itemBuilder: (context, index) {
-                  RequestModel request = snapshot.data[index];
+                  RequestModel request = snapshot.data![index];
                   return InkWell(
                     onTap: () => _navigateToRequest(
                       context: mcontext,
-                      timebankModel: _bloc.timebank,
+                      timebankModel: _bloc.timebank!,
                       requestModel: request,
                     ),
                     child: TimebankRequestCard(
@@ -73,9 +73,9 @@ class RequestsTabView extends StatelessWidget {
                       subtitle: request.description,
                       startTime: request.requestStart,
                       endTime: request.requestEnd,
-                      isApplied: request.acceptors.contains(
+                      isApplied: request.acceptors!.contains(
                               SevaCore.of(context).loggedInUser.email) ||
-                          request.approvedUsers.contains(
+                          request.approvedUsers!.contains(
                               SevaCore.of(context).loggedInUser.email) ||
                           false,
                     ),
@@ -90,19 +90,19 @@ class RequestsTabView extends StatelessWidget {
   }
 
   void _navigateToRequest(
-      {BuildContext context,
-      RequestModel requestModel,
-      TimebankModel timebankModel}) {
+      {BuildContext? context,
+      RequestModel? requestModel,
+      TimebankModel? timebankModel}) {
     var isAdmin;
-    if (requestModel.requestMode == RequestMode.PERSONAL_REQUEST) {
+    if (requestModel!.requestMode == RequestMode.PERSONAL_REQUEST) {
       isAdmin = requestModel.sevaUserId ==
-          SevaCore.of(context).loggedInUser.sevaUserID;
+          SevaCore.of(context!).loggedInUser.sevaUserID;
     } else {
       isAdmin = isAccessAvailable(
-          timebankModel, SevaCore.of(context).loggedInUser.sevaUserID);
+          timebankModel!, SevaCore.of(context!).loggedInUser.sevaUserID!);
     }
 
-    if (requestModel.isRecurring) {
+    if (requestModel.isRecurring!) {
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -117,7 +117,7 @@ class RequestsTabView extends StatelessWidget {
       if (requestModel.sevaUserId ==
               SevaCore.of(context).loggedInUser.sevaUserID ||
           isAccessAvailable(
-              timebankModel, SevaCore.of(context).loggedInUser.sevaUserID)) {
+              timebankModel!, SevaCore.of(context).loggedInUser.sevaUserID!)) {
         timeBankBloc.setSelectedRequest(requestModel);
         timeBankBloc.setSelectedTimeBankDetails(timebankModel);
         timeBankBloc.setIsAdmin(isAdmin);

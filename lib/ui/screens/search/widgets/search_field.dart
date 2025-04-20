@@ -4,9 +4,9 @@ import 'package:sevaexchange/ui/screens/search/bloc/search_bloc.dart';
 
 class SearchField extends StatelessWidget {
   SearchField({
-    Key key,
-    @required SearchBloc bloc,
-    @required TextEditingController controller,
+    Key? key,
+    required SearchBloc bloc,
+    required TextEditingController controller,
   })  : _bloc = bloc,
         _controller = controller,
         super(key: key);
@@ -31,7 +31,7 @@ class SearchField extends StatelessWidget {
             onChanged: _bloc.onSearchChange,
             decoration: InputDecoration(
               contentPadding: EdgeInsets.only(bottom: 15, top: 10),
-              errorText: snapshot.error,
+              errorText: snapshot.error as String?,
               hintText: S.of(context).search,
               prefixIcon: Icon(Icons.search),
               suffixIcon: Offstage(
@@ -44,7 +44,7 @@ class SearchField extends StatelessWidget {
                     WidgetsBinding.instance.addPostFrameCallback(
                       (_) {
                         _controller.clear();
-                        _bloc.onSearchChange(null);
+                        _bloc.onSearchChange(null!);
                       },
                     );
                   },

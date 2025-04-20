@@ -197,11 +197,6 @@ class _ChatPageState extends State<ChatPage> {
               groupDetails: isGroupMessage
                   ? (chatModel.groupDetails ?? MultiUserMessagingModel())
                   : MultiUserMessagingModel(),
-              clearChat: () {
-                exitFromChatPage = true;
-                _bloc.clearChat(chatModel.id ?? '', widget.senderId);
-                Navigator.pop(context);
-              },
               blockUser: () {
                 _bloc.blockMember(
                   loggedInUserEmail:

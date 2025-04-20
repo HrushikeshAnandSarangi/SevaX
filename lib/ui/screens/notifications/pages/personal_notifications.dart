@@ -2034,13 +2034,9 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
 
   void checkForReviewBorrowRequests() async {
     Map results = await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (BuildContext context) {
-          return MaterialPageRoute(
-              builder: (context) =>
-                  BorrowRequestFeedBackView(requestModel: requestModelNew));
-        },
-      ),
+      MaterialPageRoute(builder: (BuildContext context) {
+        return BorrowRequestFeedBackView(requestModel: requestModelNew!);
+      }),
     );
 
     if (results != null && results.containsKey('selection')) {
@@ -2103,10 +2099,10 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
       );
 
       ParticipantInfo sender = ParticipantInfo(
-        id: loggedInUser.sevaUserID,
+        id: loggedInUser!.sevaUserID,
         photoUrl: loggedInUser.photoURL,
         name: loggedInUser.fullname,
-        type: requestModelNew.requestMode == RequestMode.PERSONAL_REQUEST
+        type: requestModelNew!.requestMode == RequestMode.PERSONAL_REQUEST
             ? ChatType.TYPE_PERSONAL
             : timebankModel.parentTimebankId == FlavorConfig.values.timebankId
                 ? ChatType.TYPE_TIMEBANK
@@ -2114,7 +2110,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
       );
       await sendBackgroundMessage(
           messageContent: utils.getReviewMessage(
-            requestTitle: requestModelNew.title,
+            requestTitle: requestModelNew!.title,
             context: context,
             userName: loggedInUser.fullname,
             isForCreator: true,
@@ -2122,11 +2118,11 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
           ),
           reciever: receiver,
           isTimebankMessage:
-              requestModelNew.requestMode == RequestMode.PERSONAL_REQUEST
+              requestModelNew!.requestMode == RequestMode.PERSONAL_REQUEST
                   ? false
                   : true,
-          timebankId: requestModelNew.timebankId,
-          communityId: loggedInUser.currentCommunity,
+          timebankId: requestModelNew!.timebankId!,
+          communityId: loggedInUser.currentCommunity!,
           sender: sender);
     }
   }
@@ -2141,14 +2137,14 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
     // requestModelNew.accepted =
     //     true; //so that we can know that this request has completed
 
-    if (requestModelNew.requestType == RequestType.BORROW) {
+    if (requestModelNew!.requestType == RequestType.BORROW) {
       if (SevaCore.of(context).loggedInUser.sevaUserID ==
-          requestModelNew.sevaUserId) {
+          requestModelNew!.sevaUserId) {
         FirestoreManager.borrowRequestFeedbackBorrowerUpdate(
-            model: requestModelNew);
+            model: requestModelNew!);
       } else {
         FirestoreManager.borrowRequestFeedbackLenderUpdate(
-            model: requestModelNew);
+            model: requestModelNew!);
       }
     }
 
@@ -2170,11 +2166,11 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
     //   ),
     // );
 
-    Navigator.of(creditRequestDialogContext).pop();
+    Navigator.of(creditRequestDialogContext!).pop();
     //Navigator.of(context).pop();
   }
 
-  BuildContext creditRequestDialogContext;
+  BuildContext? creditRequestDialogContext;
 
   void showProgressForCreditRetrieval() {
     showDialog(
@@ -2268,17 +2264,15 @@ Widget getOfferRequestInvitation({
       // Implement navigation or action for offer request invitation
     },
     photoUrl: notification.data?['photoUrl'] ?? null,
-    title:
-        S.of(context).offer_request_invite_title ?? 'Offer Request Invitation',
-    subTitle: S.of(context).offer_request_invite_subtitle ??
-        'You have received an offer request invitation.',
+    title: 'Offer Request Invitation',
+    subTitle: 'You have received an offer request invitation.',
   );
 }
 
 class WithdrawnRequestBody {
-  String fullName;
-  String requestId;
-  String requestTite;
+  String? fullName;
+  String? requestId;
+  String? requestTite;
 
   WithdrawnRequestBody.fromMap(Map<dynamic, dynamic> body) {
     if (body.containsKey('fullName')) {
@@ -2311,8 +2305,9 @@ Future oneToManySpeakerInviteAcceptedPersonalNotifications(
         );
       });
 
-  Set<String> approvedUsersList = Set.from(oneToManyRequestModel.approvedUsers);
-  approvedUsersList.add(SevaCore.of(context).loggedInUser.email);
+  Set<String> approvedUsersList =
+      Set.from(oneToManyRequestModel.approvedUsers!);
+  approvedUsersList.add(SevaCore.of(context).loggedInUser.email!);
   // oneToManyRequestModel.approvedUsers = approvedUsersList.toList();
 
   await CollectionRef.requests.doc(oneToManyRequestModel.id).update({
@@ -2338,12 +2333,12 @@ Future oneToManySpeakerInviteAcceptedPersonalNotifications(
 
   await FirestoreManager.readUserNotificationOneToManyWhenSpeakerIsInvited(
     requestModel: oneToManyRequestModel,
-    userEmail: SevaCore.of(context).loggedInUser.email,
+    userEmail: SevaCore.of(context).loggedInUser.email!,
     fromNotification: false,
   );
 
   if (dialogContext != null) {
-    Navigator.of(dialogContext).pop();
+    Navigator.of(dialogContext!).pop();
   }
 }
 
@@ -2382,9 +2377,9 @@ Future oneToManySpeakerInviteRejectedPersonalNotifications(
       .doc(notificationModel.id)
       .set(notificationModel.toMap())
       .then((e) async {
-    Set<String> acceptorsList = Set.from(oneToManyRequestModel.acceptors);
+    Set<String> acceptorsList = Set.from(oneToManyRequestModel.acceptors!);
     acceptorsList.remove(SevaCore.of(context).loggedInUser.email);
-    acceptorsList.add(oneToManyRequestModel.email);
+    acceptorsList.add(oneToManyRequestModel.email!);
     oneToManyRequestModel.acceptors = acceptorsList.toList();
     oneToManyRequestModel.selectedInstructor = BasicUserDetails(
       fullname: oneToManyRequestModel.requestCreatorName,
@@ -2399,7 +2394,7 @@ Future oneToManySpeakerInviteRejectedPersonalNotifications(
   });
 
   if (dialogContext != null) {
-    Navigator.of(dialogContext).pop();
+    Navigator.of(dialogContext!).pop();
   }
 
   log('sent timebank notif to 1 to many creator abt rejection!');
@@ -2426,12 +2421,12 @@ Future oneToManySpeakerInviteAccepted(
   //make the relevant notification is read true
   await FirestoreManager.readUserNotificationOneToManyWhenSpeakerIsInvited(
     requestModel: requestModel,
-    userEmail: SevaCore.of(context).loggedInUser.email,
+    userEmail: SevaCore.of(context).loggedInUser.email!,
     fromNotification: false,
   );
 
-  Set<String> approvedUsersList = Set.from(requestModel.approvedUsers);
-  approvedUsersList.add(SevaCore.of(context).loggedInUser.email);
+  Set<String> approvedUsersList = Set.from(requestModel.approvedUsers!);
+  approvedUsersList.add(SevaCore.of(context).loggedInUser.email!);
   // requestModel.approvedUsers = approvedUsersList.toList();
 
   await CollectionRef.requests.doc(requestModel.id).update({
@@ -2460,12 +2455,12 @@ Future oneToManySpeakerInviteAccepted(
   //make the relevant notification is read true
   await FirestoreManager.readUserNotificationOneToManyWhenSpeakerIsInvited(
     requestModel: requestModel,
-    userEmail: SevaCore.of(context).loggedInUser.email,
+    userEmail: SevaCore.of(context).loggedInUser.email!,
     fromNotification: false,
   );
 
   if (dialogContext != null) {
-    Navigator.of(dialogContext).pop();
+    Navigator.of(dialogContext!).pop();
   }
 }
 
@@ -2504,24 +2499,24 @@ Future oneToManySpeakerInviteRejected(
       .doc(notificationModel.id)
       .set(notificationModel.toMap());
 
-  Set<String> acceptorsList = Set.from(requestModel.acceptors);
+  Set<String> acceptorsList = Set.from(requestModel.acceptors!);
   acceptorsList.remove(SevaCore.of(context).loggedInUser.email);
-  acceptorsList.add(requestModel.email);
+  acceptorsList.add(requestModel.email!);
   requestModel.acceptors = acceptorsList.toList();
 
   //if already approved
-  Set<String> approvedUsersList = Set.from(requestModel.approvedUsers);
+  Set<String> approvedUsersList = Set.from(requestModel.approvedUsers!);
   approvedUsersList.remove(SevaCore.of(context).loggedInUser.email);
   requestModel.approvedUsers = approvedUsersList.toList();
 
   //So that if a speaker withdraws and a new speaker is invited, before they accept,
   //it will show previously invited speakers time details
-  requestModel.selectedSpeakerTimeDetails.prepTime = null;
+  requestModel.selectedSpeakerTimeDetails!.prepTime = null;
   // requestModel.selectedSpeakerTimeDetails.speakingTime = null;
 
   //below is to fetch creator of request details and set as speaker by default
   var creatorUserModel =
-      await FirestoreManager.getUserForEmail(emailAddress: requestModel.email);
+      await FirestoreManager.getUserForEmail(emailAddress: requestModel.email!);
 
   requestModel.selectedInstructor = BasicUserDetails(
     fullname: creatorUserModel.fullname,
@@ -2539,12 +2534,12 @@ Future oneToManySpeakerInviteRejected(
   //make the relevant notification is read true
   await FirestoreManager.readUserNotificationOneToManyWhenSpeakerIsInvited(
     requestModel: requestModel,
-    userEmail: SevaCore.of(context).loggedInUser.email,
+    userEmail: SevaCore.of(context).loggedInUser.email!,
     fromNotification: false,
   );
 
   if (dialogContext != null) {
-    Navigator.of(dialogContext).pop();
+    Navigator.of(dialogContext!).pop();
   }
 
   log('sends timebank notif to 1 to many creator abt rejection!');
@@ -2590,13 +2585,30 @@ Future oneToManySpeakerRequestCompleted(
   });
 
   if (dialogContext != null) {
-    Navigator.of(dialogContext).pop();
+    Navigator.of(dialogContext!).pop();
   }
 
   await FirestoreManager
       .readUserNotificationOneToManyWhenSpeakerIsRejectedCompletion(
     requestModel: requestModel,
-    userEmail: SevaCore.of(context).loggedInUser.email,
+    userEmail: SevaCore.of(context).loggedInUser.email!,
     fromNotification: false,
   );
+}
+
+class BorrowRequestFeedBackView extends StatelessWidget {
+  final dynamic requestModel;
+
+  const BorrowRequestFeedBackView({Key? key, required this.requestModel})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Borrow Request Feedback')),
+      body: Center(
+        child: Text('Feedback for ${requestModel.toString()}'),
+      ),
+    );
+  }
 }

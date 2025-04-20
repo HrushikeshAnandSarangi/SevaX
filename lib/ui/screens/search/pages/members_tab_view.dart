@@ -18,8 +18,8 @@ class MembersTabView extends StatefulWidget {
 }
 
 class _MembersTabViewState extends State<MembersTabView> {
-  QuerySnapshot skillsListSnap;
-  QuerySnapshot interestsListSnap;
+  QuerySnapshot? skillsListSnap;
+  QuerySnapshot? interestsListSnap;
 
   @override
   void initState() {
@@ -37,7 +37,7 @@ class _MembersTabViewState extends State<MembersTabView> {
     final _bloc = BlocProvider.of<SearchBloc>(context);
     return Container(
       child: StreamBuilder<String>(
-        stream: _bloc.searchText,
+        stream: _bloc!.searchText,
         builder: (context, search) {
           if (search.data == null || search.data == "") {
             return Center(child: Text(S.of(context).search_something));
@@ -45,17 +45,17 @@ class _MembersTabViewState extends State<MembersTabView> {
           return StreamBuilder<List<UserModel>>(
             stream: Searches.searchMembersOfTimebank(
               queryString: search.data,
-              loggedInUser: _bloc.user,
-              currentCommunityOfUser: _bloc.community,
+              loggedInUser: _bloc.user!,
+              currentCommunityOfUser: _bloc.community!,
               //skillsListSnap: skillsListSnap,
               //interestsListSnap: interestsListSnap,
-              languageCode: SevaCore.of(context).loggedInUser.language,
+              languageCode: SevaCore.of(context).loggedInUser.language!,
             ),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return LoadingIndicator();
               }
-              if (snapshot.data == null || snapshot.data.isEmpty) {
+              if (snapshot.data == null || snapshot.data!.isEmpty) {
                 return Center(
                   child: Text(S.of(context).no_search_result_found),
                 );
@@ -63,25 +63,25 @@ class _MembersTabViewState extends State<MembersTabView> {
               return ListView.builder(
                 padding: EdgeInsets.symmetric(horizontal: 10),
                 shrinkWrap: true,
-                itemCount: snapshot.data.length,
+                itemCount: snapshot.data!.length,
                 itemBuilder: (context, index) {
-                  final user = snapshot.data[index];
+                  final user = snapshot.data![index];
                   return InkWell(
                     onTap: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => ProfileViewer(
                             userEmail: user.email,
-                            timebankId: _bloc.timebank.id,
+                            timebankId: _bloc.timebank!.id,
                             isFromTimebank: false,
-                            entityName: _bloc.timebank.id,
+                            entityName: _bloc.timebank!.id,
                           ),
                         ),
                       );
                     },
                     child: MembersCard(
-                      name: user.fullname,
-                      photoUrl: user.photoURL,
+                      name: user.fullname!,
+                      photoUrl: user.photoURL!,
                     ),
                   );
                 },
@@ -95,10 +95,10 @@ class _MembersTabViewState extends State<MembersTabView> {
 }
 
 class MembersCard extends StatelessWidget {
-  final String name;
-  final String photoUrl;
+  final String? name;
+  final String? photoUrl;
 
-  const MembersCard({Key key, this.name, this.photoUrl})
+  const MembersCard({Key? key, this.name, this.photoUrl})
       : assert(name != null),
         super(key: key);
 
@@ -120,7 +120,7 @@ class MembersCard extends StatelessWidget {
                 child: Padding(
                   padding: EdgeInsets.only(left: 10, right: 10),
                   child: Text(
-                    name,
+                    name!,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       fontSize: 17,

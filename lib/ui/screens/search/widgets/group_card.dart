@@ -4,20 +4,20 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class GroupCard extends StatelessWidget {
-  final String image;
-  final String title;
-  final String subtitle;
-  final Function onPressed;
+  final String? image;
+  final String? title;
+  final String? subtitle;
+  final VoidCallback? onPressed;
   final JoinStatus status;
 
   const GroupCard({
-    Key key,
+    Key? key,
     this.image,
     this.title,
-    A this.subtitle,
+    this.subtitle,
     this.onPressed,
     this.status = JoinStatus.JOIN,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -43,14 +43,14 @@ class GroupCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        title,
+                        title!,
                         style: TextStyle(
                           fontSize: 16,
                           color: Colors.black,
                         ),
                       ),
                       Text(
-                        subtitle,
+                        subtitle!,
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.grey,
@@ -67,7 +67,7 @@ class GroupCard extends StatelessWidget {
                     color: Colors.grey[300],
                     textColor: Theme.of(context).primaryColor,
                     child: Text(status.toString().split('.')[1]),
-                    onPressed: onPressed,
+                    onPressed: onPressed!,
                   ),
                 ),
               ],

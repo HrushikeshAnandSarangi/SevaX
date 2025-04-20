@@ -69,12 +69,12 @@ import 'package:sevaexchange/widgets/custom_buttons.dart';
 import '../../../../labels.dart';
 
 class TimebankNotifications extends StatefulWidget {
-  final TimebankModel timebankModel;
-  final ScrollPhysics physics;
-  final UserModel userModel;
+  final TimebankModel? timebankModel;
+  final ScrollPhysics? physics;
+  final UserModel? userModel;
 
   const TimebankNotifications(
-      {Key key, this.timebankModel, this.physics, this.userModel})
+      {Key? key, this.timebankModel, this.physics, this.userModel})
       : super(key: key);
 
   @override
@@ -83,8 +83,8 @@ class TimebankNotifications extends StatefulWidget {
 
 class _TimebankNotificationsState extends State<TimebankNotifications> {
   final subjectBorrow = ReplaySubject<int>();
-  RequestModel requestModelNew;
-  OfferModel offerModelNew;
+  RequestModel? requestModelNew;
+  OfferModel? offerModelNew;
 
   @override
   void initState() {
@@ -103,14 +103,14 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
     // });
   }
 
-  BuildContext parentContext;
+  BuildContext? parentContext;
 
   @override
   Widget build(BuildContext context) {
     parentContext = context;
     final _bloc = BlocProvider.of<NotificationsBloc>(context);
     return StreamBuilder(
-      stream: _bloc.timebankNotifications,
+      stream: _bloc!.timebankNotifications,
       builder: (_, AsyncSnapshot<TimebankNotificationData> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting ||
             snapshot.data == null) {
@@ -118,7 +118,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
         }
 
         List<NotificationsModel> notifications =
-            snapshot.data.notifications[widget.timebankModel.id] ?? [];
+            snapshot.data!.notifications[widget.timebankModel!.id] ?? [];
 
         if (notifications.isEmpty) {
           return Center(
@@ -139,9 +139,9 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
             switch (notification.type) {
               case NotificationType.TYPE_MEMBER_HAS_INSUFFICENT_CREDITS:
                 UserInsufficentCreditsModel userInsufficientModel =
-                    UserInsufficentCreditsModel.fromMap(notification.data);
+                    UserInsufficentCreditsModel.fromMap(notification.data!);
                 return NotificationCard(
-                  timestamp: notification.timestamp,
+                  timestamp: notification.timestamp!,
                   title: "${userInsufficientModel.senderName}" +
                       S.of(context).adminNotificationInsufficientCredits,
                   subTitle: S
@@ -179,26 +179,29 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                             createAndOpenChat(
                               isTimebankMessage: true,
                               context: context,
-                              timebankId: userInsufficientModel.timebankId,
+                              timebankId: userInsufficientModel.timebankId!,
                               communityId: SevaCore.of(context)
                                   .loggedInUser
-                                  .currentCommunity,
+                                  .currentCommunity!,
                               sender: sender,
                               reciever: reciever,
                               isFromRejectCompletion: false,
-                              // onChatCreate: () {
-                              //   Navigator.of(context).pop();
-                              // },
+                              feedId: '',
+                              onChatCreate: () {
+                                Navigator.of(context).pop();
+                              },
+                              showToCommunities: [],
+                              entityId: '',
                             );
 
                             Navigator.pop(_context);
                           },
                           onDonateClick: () async {
                             Navigator.pop(_context);
-                            await _showFontSizePickerDialog(
+                            _showFontSizePickerDialog(
                                 context,
-                                notification.senderUserId,
-                                widget.timebankModel,
+                                notification.senderUserId!,
+                                widget.timebankModel!,
                                 userInsufficientModel);
                           },
                         );
@@ -215,9 +218,9 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 break;
               case NotificationType.TypeMemberJoinViaCode:
                 UserAddedModel userAddedModel =
-                    UserAddedModel.fromMap(notification.data);
+                    UserAddedModel.fromMap(notification.data!);
                 return NotificationCard(
-                  timestamp: notification.timestamp,
+                  timestamp: notification.timestamp!,
                   entityName: userAddedModel.adminName,
                   isDissmissible: true,
                   onDismissed: () async {
@@ -229,14 +232,14 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   onPressed: null,
                   photoUrl: userAddedModel.timebankImage,
                   title: S.of(context).member_joined_via_code_title.replaceAll(
-                      '**communityName**', userAddedModel.timebankName),
+                      '**communityName**', userAddedModel.timebankName!),
                   subTitle: S
                       .of(context)
                       .member_joined_via_code_subtitle
                       .replaceAll(
-                          '**communityName**', userAddedModel.timebankName)
+                          '**communityName**', userAddedModel.timebankName!)
                       .replaceAll(
-                          '**fullName**', userAddedModel.addedMemberName),
+                          '**fullName**', userAddedModel.addedMemberName!),
                 );
                 break;
 
@@ -264,11 +267,11 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
               //   break;
 
               case NotificationType.OneToManyRequestInviteAccepted:
-                Map oneToManyRequestModel = notification.data;
+                Map oneToManyRequestModel = notification.data!;
                 RequestModel model =
-                    new RequestModel.fromMap(notification.data);
+                    new RequestModel.fromMap(notification.data!);
                 return NotificationCard(
-                    timestamp: notification.timestamp,
+                    timestamp: notification.timestamp!,
                     entityName: null,
                     isDissmissible: true,
                     onDismissed: () {
@@ -286,16 +289,16 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                         .of(context)
                         .speaker_accepted_invite_notification
                         .replaceAll('**speakerName',
-                            model.selectedInstructor.fullname));
+                            model.selectedInstructor!.fullname!));
 
                 break;
 
               case NotificationType.OneToManyRequestInviteRejected:
-                Map oneToManyRequestModel = notification.data;
+                Map oneToManyRequestModel = notification.data!;
                 RequestModel model =
-                    new RequestModel.fromMap(notification.data);
+                    new RequestModel.fromMap(notification.data!);
                 return NotificationCard(
-                    timestamp: notification.timestamp,
+                    timestamp: notification.timestamp!,
                     entityName: null,
                     isDissmissible: true,
                     onDismissed: () async {
@@ -305,14 +308,17 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                       );
                     },
                     onPressed: () async {
-                      RequestModel newRequestModel;
+                      RequestModel newRequestModel = RequestModel(
+                          communityId: SevaCore.of(context)
+                              .loggedInUser
+                              .currentCommunity);
                       await CollectionRef.requests
                           .doc(model.id)
                           .get()
                           .then((returnedModel) {
-                        newRequestModel =
-                            RequestModel.fromMap(returnedModel.data());
-                        log("request returned is: ${returnedModel.data()['title']}");
+                        newRequestModel = RequestModel.fromMap(
+                            returnedModel.data() as Map<String, dynamic>);
+                        log("request returned is: ${(returnedModel.data() as Map<String, dynamic>)['title']}");
                         setState(() {});
                       });
 
@@ -333,19 +339,19 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                         timebankId: notification.timebankId,
                       );
                     },
-                    photoUrl: model.selectedInstructor.photoURL,
+                    photoUrl: model.selectedInstructor!.photoURL,
                     title: S.of(context).speaker_rejected,
-                    subTitle: model.selectedInstructor.fullname +
+                    subTitle: model.selectedInstructor!.fullname! +
                         S.of(context).speakerRejectedNotificationLabel +
-                        model.title);
+                        model.title!);
 
                 break;
 
               case NotificationType.OneToManyRequestCompleted:
-                Map oneToManyRequestModel = notification.data;
-                RequestModel model = RequestModel.fromMap(notification.data);
+                Map oneToManyRequestModel = notification.data!;
+                RequestModel model = RequestModel.fromMap(notification.data!);
                 return NotificationCardOneToManyCompletedApproval(
-                  timestamp: notification.timestamp,
+                  timestamp: notification.timestamp!,
                   entityName: 'NAME',
                   isDissmissible: false,
                   onDismissed: () async {
@@ -401,7 +407,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                                 },
                               ),
                               CustomTextButton(
-                                color: Theme.of(context).accentColor,
+                                color: Theme.of(context).colorScheme.secondary,
                                 child: Text(
                                   S.of(context).no,
                                   style: TextStyle(
@@ -417,16 +423,16 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   },
                   photoUrl: oneToManyRequestModel['selectedInstructor']
                       ['photoURL'],
-                  title: model.title,
+                  title: model.title!,
                   subTitle:
                       S.of(context).speaker_requested_completion_notification,
                 );
                 break;
 
               case NotificationType.OneToManyRequestAccept:
-                Map<dynamic, dynamic> oneToManyModel = notification.data;
+                Map<dynamic, dynamic> oneToManyModel = notification.data!;
                 return NotificationCard(
-                  timestamp: notification.timestamp,
+                  timestamp: notification.timestamp!,
                   entityName: 'NAME',
                   isDissmissible: true,
                   onDismissed: () async {
@@ -444,10 +450,10 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 break;
 
               case NotificationType.NOTIFICATION_TO_LENDER_RECEIVED_BACK_CHECK:
-                var model = RequestModel.fromMap(notification.data);
+                var model = RequestModel.fromMap(notification.data!);
                 requestModelNew = model;
                 return NotificationCard(
-                  timestamp: notification.timestamp,
+                  timestamp: notification.timestamp!,
                   entityName: 'NAME',
                   isDissmissible: false,
                   // onDismissed: () {
@@ -460,7 +466,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                     showDialog(
                       context: context,
                       builder: (_context) => AlertDialog(
-                        title: Text(requestModelNew.roomOrTool ==
+                        title: Text(requestModelNew!.roomOrTool ==
                                 LendingType.PLACE.readable
                             ? S
                                 .of(context)
@@ -478,7 +484,8 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                               S.of(context).not_yet,
                               style: TextStyle(
                                   fontSize: 17,
-                                  color: Theme.of(context).accentColor),
+                                  color:
+                                      Theme.of(context).colorScheme.secondary),
                             ),
                           ),
                           CustomTextButton(
@@ -487,19 +494,20 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
 
                               //Update request to complete it
                               //requestModelNew.approvedUsers = [];
-                              requestModelNew.acceptors = [];
-                              requestModelNew.accepted =
+                              requestModelNew!.acceptors = [];
+                              requestModelNew!.accepted =
                                   true; //so that we can know that this request has completed
-                              if (requestModelNew.roomOrTool ==
+                              if (requestModelNew?.roomOrTool ==
                                   LendingType.ITEM.readable) {
-                                requestModelNew.borrowModel.itemsReturned =
+                                requestModelNew?.borrowModel?.itemsReturned =
                                     true;
                               } else {
-                                requestModelNew.borrowModel.isCheckedOut = true;
+                                requestModelNew?.borrowModel?.isCheckedOut =
+                                    true;
                               }
                               await lenderReceivedBackCheck(
                                   notification: notification,
-                                  requestModelUpdated: requestModelNew);
+                                  requestModelUpdated: requestModelNew!);
                             },
                             child: Text(
                               S.of(context).yes,
@@ -518,10 +526,10 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 break;
 
               case NotificationType.NOTIFICATION_TO_LENDER_COMPLETION_RECEIPT:
-                var model = RequestModel.fromMap(notification.data);
+                var model = RequestModel.fromMap(notification.data!);
                 requestModelNew = model;
                 return NotificationCard(
-                  timestamp: notification.timestamp,
+                  timestamp: notification.timestamp!,
                   entityName: 'NAME',
                   isDissmissible: true,
                   onDismissed: () async {
@@ -544,10 +552,10 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
 
               case NotificationType
                   .NOTIFICATION_TO_BORROWER_COMPLETION_FEEDBACK:
-                var model = RequestModel.fromMap(notification.data);
+                var model = RequestModel.fromMap(notification.data!);
                 requestModelNew = model;
                 return NotificationCard(
-                  timestamp: notification.timestamp,
+                  timestamp: notification.timestamp!,
                   entityName: 'NAME',
                   isDissmissible: true,
                   onDismissed: () async {
@@ -560,8 +568,8 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                     logger.e("PRESSED ONE");
                     handleFeedBackNotificationBorrowRequest(
                       context,
-                      requestModelNew,
-                      notification.id,
+                      requestModelNew!,
+                      notification.id!,
                     );
                   },
                   photoUrl: model.photoUrl,
@@ -571,7 +579,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 break;
 
               case NotificationType.RequestAccept:
-                RequestModel model = RequestModel.fromMap(notification.data);
+                RequestModel model = RequestModel.fromMap(notification.data!);
                 return TimebankRequestWidget(
                   model: model,
                   notification: notification,
@@ -580,21 +588,21 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
 
               case NotificationType.ACKNOWLEDGE_DONOR_DONATION:
                 DonationModel donationModel =
-                    DonationModel.fromMap(notification.data);
-                double amount;
+                    DonationModel.fromMap(notification.data!);
+                double amount = 0;
                 if (donationModel.requestIdType == 'offer' &&
                     donationModel.donationStatus == DonationStatus.REQUESTED) {
-                  amount = donationModel.cashDetails.cashDetails.amountRaised
+                  amount = donationModel.cashDetails!.cashDetails!.amountRaised!
                       .toDouble();
                 } else if (donationModel.requestIdType == 'offer' &&
                     donationModel.donationStatus == DonationStatus.PLEDGED) {
                   donationModel.notificationId = notification.id;
                 } else {
-                  amount = donationModel.cashDetails.pledgedAmount;
+                  amount = donationModel.cashDetails!.pledgedAmount!;
                 }
                 return NotificationCard(
-                  timestamp: notification.timestamp,
-                  entityName: donationModel.donorDetails.name,
+                  timestamp: notification.timestamp!,
+                  entityName: donationModel.donorDetails!.name,
                   isDissmissible: true,
                   onDismissed: () {
                     FirestoreManager.readTimeBankNotification(
@@ -610,34 +618,35 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                           return RequestDonationDisputePage(
                             convertedAmount: amount,
                             currency: donationModel
-                                .cashDetails.cashDetails.requestCurrencyType,
+                                .cashDetails!.cashDetails!.requestCurrencyType!,
                             model: donationModel,
-                            notificationId: notification.id,
+                            notificationId: notification.id!,
                           );
                         },
                       ),
                     );
                   },
-                  photoUrl: donationModel.donorDetails.photoUrl,
+                  photoUrl: donationModel.donorDetails!.photoUrl,
                   subTitle:
-                      "${donationModel.donorDetails.name}  ${S.of(context).pledged_to_donate} ${donationModel.donationType == RequestType.CASH ? "${donationModel.cashDetails.cashDetails.requestCurrencyType} ${amount}" : "goods/supplies"}, ${S.of(context).tap_to_view_details}",
+                      "${donationModel.donorDetails!.name}  ${S.of(context).pledged_to_donate} ${donationModel.donationType == RequestType.CASH ? "${donationModel.cashDetails!.cashDetails!.requestCurrencyType} ${amount}" : "goods/supplies"}, ${S.of(context).tap_to_view_details}",
                   title: S.of(context).donations_received,
                 );
                 break;
               case NotificationType.GOODS_DONATION_REQUEST:
                 DonationModel donationModel =
-                    DonationModel.fromMap(notification.data);
+                    DonationModel.fromMap(notification.data!);
                 var amount;
                 if (donationModel.requestIdType == 'offer' &&
                     donationModel.donationStatus == DonationStatus.REQUESTED) {
-                  amount = donationModel.cashDetails.cashDetails.amountRaised;
+                  amount =
+                      donationModel.cashDetails!.cashDetails!.amountRaised!;
                 } else {
-                  amount = donationModel.cashDetails.pledgedAmount;
+                  amount = donationModel.cashDetails!.pledgedAmount;
                 }
                 logger.i("==============<<<<<<<<<<<<<<<>>>>>>>>> $amount");
                 return NotificationCard(
-                  timestamp: notification.timestamp,
-                  entityName: donationModel.donorDetails.name,
+                  timestamp: notification.timestamp!,
+                  entityName: donationModel.donorDetails!.name,
                   isDissmissible: true,
                   onDismissed: () {
                     FirestoreManager.readTimeBankNotification(
@@ -652,27 +661,27 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                         builder: (context) {
                           return RequestDonationDisputePage(
                             model: donationModel,
-                            notificationId: notification.id,
+                            notificationId: notification.id!,
                           );
                         },
                       ),
                     );
                   },
-                  photoUrl: donationModel.donorDetails.photoUrl,
+                  photoUrl: donationModel.donorDetails!.photoUrl,
                   subTitle:
-                      "${donationModel.donorDetails.name}  ${S.of(context).requested.toLowerCase()} ${donationModel.donationType == RequestType.CASH ? "\$${amount}" : "goods/supplies"}, ${S.of(context).tap_to_view_details}",
+                      "${donationModel.donorDetails!.name}  ${S.of(context).requested.toLowerCase()} ${donationModel.donationType == RequestType.CASH ? "\$${amount}" : "goods/supplies"}, ${S.of(context).tap_to_view_details}",
                   title: S.of(context).donations_requested,
                 );
                 break;
 
               case NotificationType.TypeMemberExitTimebank:
                 UserExitModel userExitModel =
-                    UserExitModel.fromMap(notification.data);
+                    UserExitModel.fromMap(notification.data!);
                 return NotificationCard(
-                  timestamp: notification.timestamp,
+                  timestamp: notification.timestamp!,
                   title: S.of(context).timebank_exit,
                   subTitle:
-                      '${userExitModel.userName.toLowerCase()} ${S.of(context).has_exited_from} ${userExitModel.timebank}, ${S.of(context).tap_to_view_details}',
+                      '${userExitModel.userName!.toLowerCase()} ${S.of(context).has_exited_from} ${userExitModel.timebank}, ${S.of(context).tap_to_view_details}',
                   photoUrl: userExitModel.userPhotoUrl ?? defaultUserImageURL,
                   onDismissed: () {
                     FirestoreManager.readTimeBankNotification(
@@ -706,12 +715,12 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 break;
 
               case NotificationType.RequestCompleted:
-                Map<dynamic, dynamic> oneToManyModel = notification.data;
+                Map<dynamic, dynamic> oneToManyModel = notification.data!;
                 // log('One TO Many Data check:  ' +
                 //     oneToManyModel['creatorName']);
                 if (oneToManyModel['requestType'] == 'ONE_TO_MANY_REQUEST') {
                   return OneToManyCreatorApproveCompletionCard(
-                    timestamp: notification.timestamp,
+                    timestamp: notification.timestamp!,
                     entityName: 'NAME',
                     isDissmissible: true,
                     onDismissed: () {
@@ -739,16 +748,16 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 break;
 
               case NotificationType.RequestApprove:
-                RequestModel model = RequestModel.fromMap(notification.data);
+                RequestModel model = RequestModel.fromMap(notification.data!);
                 return NotificationCard(
-                  timestamp: notification.timestamp,
+                  timestamp: notification.timestamp!,
                   entityName: null,
                   isDissmissible: true,
                   onDismissed: () {
                     log('REQUEST REJECT:   ' +
-                        notification.id +
+                        notification.id! +
                         ' ' +
-                        notification.timebankId);
+                        notification.timebankId!);
                     FirestoreManager.readTimeBankNotification(
                       notificationId: notification.id,
                       timebankId: notification.timebankId,
@@ -757,24 +766,24 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   onPressed: null,
                   // TO BE MADE
                   photoUrl: model.photoUrl,
-                  title: model.title,
+                  title: model.title!,
                   subTitle:
                       '${S.of(context).notifications_approved_by} ${model.fullName}',
                 );
                 break;
 
               case NotificationType.RequestReject:
-                RequestModel model = RequestModel.fromMap(notification.data);
+                RequestModel model = RequestModel.fromMap(notification.data!);
                 return NotificationCard(
-                  timestamp: notification.timestamp,
+                  timestamp: notification.timestamp!,
                   entityName: model.fullName,
-                  title: model.title,
+                  title: model.title!,
                   isDissmissible: true,
                   onDismissed: () {
                     log('REQUEST REJECT:   ' +
-                        notification.id +
+                        notification.id! +
                         ' ' +
-                        notification.timebankId);
+                        notification.timebankId!);
                     FirestoreManager.readTimeBankNotification(
                       notificationId: notification.id,
                       timebankId: notification.timebankId,
@@ -789,21 +798,21 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
 
               case NotificationType.TYPE_DEBIT_FULFILMENT_FROM_TIMEBANK:
                 OneToManyNotificationDataModel data =
-                    OneToManyNotificationDataModel.fromJson(notification.data);
+                    OneToManyNotificationDataModel.fromJson(notification.data!);
                 return NotificationCard(
-                  timestamp: notification.timestamp,
+                  timestamp: notification.timestamp!,
                   title: S.of(context).notifications_debited,
-                  subTitle:
-                      TimebankNotificationMessage.DEBIT_FULFILMENT_FROM_TIMEBANK
-                          .replaceFirst(
-                            '*n',
-                            (data.classDetails.numberOfClassHours +
-                                    data.classDetails.numberOfPreperationHours)
-                                .toString(),
-                          )
-                          .replaceFirst('*name', data.classDetails.classHost)
-                          .replaceFirst('*class', data.classDetails.classTitle),
-                  entityName: data.classDetails.classHost,
+                  subTitle: TimebankNotificationMessage
+                      .DEBIT_FULFILMENT_FROM_TIMEBANK
+                      .replaceFirst(
+                        '*n',
+                        (data.classDetails!.numberOfClassHours! +
+                                data.classDetails!.numberOfPreperationHours!)
+                            .toString(),
+                      )
+                      .replaceFirst('*name', data.classDetails!.classHost!)
+                      .replaceFirst('*class', data.classDetails!.classTitle!),
+                  entityName: data.classDetails!.classHost!,
                   onDismissed: () {
                     dismissTimebankNotification(
                       notificationId: notification.id,
@@ -815,17 +824,17 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
 
               case NotificationType.TYPE_CREDIT_FROM_OFFER_APPROVED:
                 OneToManyNotificationDataModel data =
-                    OneToManyNotificationDataModel.fromJson(notification.data);
+                    OneToManyNotificationDataModel.fromJson(notification.data!);
                 return NotificationCard(
-                  timestamp: notification.timestamp,
+                  timestamp: notification.timestamp!,
                   title: S.of(context).notifications_credited,
                   subTitle: TimebankNotificationMessage
                       .CREDIT_FROM_OFFER_APPROVED
-                      .replaceFirst(
-                          '*n', data.classDetails.numberOfClassHours.toString())
-                      .replaceFirst('*class', data.classDetails.classTitle),
+                      .replaceFirst('*n',
+                          data.classDetails!.numberOfClassHours.toString())
+                      .replaceFirst('*class', data.classDetails!.classTitle!),
                   // photoUrl: data.participantDetails.photourl,
-                  entityName: data.participantDetails.fullname,
+                  entityName: data.participantDetails!.fullname,
                   onDismissed: () {
                     dismissTimebankNotification(
                       notificationId: notification.id,
@@ -837,9 +846,9 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
 
               case NotificationType.TYPE_DELETION_REQUEST_OUTPUT:
                 var requestData =
-                    SoftDeleteRequestDataHolder.fromMap(notification.data);
+                    SoftDeleteRequestDataHolder.fromMap(notification.data!);
                 return NotificationCard(
-                  timestamp: notification.timestamp,
+                  timestamp: notification.timestamp!,
                   entityName:
                       requestData.entityTitle ?? S.of(context).deletion_request,
                   photoUrl: null,
@@ -869,12 +878,12 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
 
               case NotificationType.TYPE_REPORT_MEMBER:
                 ReportedMemberNotificationModel data =
-                    ReportedMemberNotificationModel.fromMap(notification.data);
+                    ReportedMemberNotificationModel.fromMap(notification.data!);
                 return NotificationCard(
-                  timestamp: notification.timestamp,
+                  timestamp: notification.timestamp!,
                   title: S.of(context).member_reported_title,
                   subTitle: TimebankNotificationMessage.MEMBER_REPORT
-                      .replaceFirst('*name', data.reportedUserName),
+                      .replaceFirst('*name', data.reportedUserName!),
                   photoUrl: data.reportedUserImage,
                   entityName: data.reportedUserName,
                   onDismissed: () {
@@ -885,9 +894,9 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 );
 
               case NotificationType.APPROVED_MEMBER_WITHDRAWING_REQUEST:
-                var body = WithdrawnRequestBody.fromMap(notification.data);
+                var body = WithdrawnRequestBody.fromMap(notification.data!);
                 return NotificationCard(
-                  timestamp: notification.timestamp,
+                  timestamp: notification.timestamp!,
                   entityName: body.fullName,
                   photoUrl: null,
                   title:
@@ -902,7 +911,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 );
               case NotificationType.CASH_DONATION_MODIFIED_BY_DONOR:
               case NotificationType.GOODS_DONATION_MODIFIED_BY_DONOR:
-                return PersonalNotificationsRedcerForDonations
+                return PersonalNotificationsReducerForDonations
                     .getWidgetForDonationsModifiedByDonor(
                   context: context,
                   onDismissed: () {
@@ -915,7 +924,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
 
               case NotificationType.DEBITED_SEVA_COINS_TIMEBANK:
                 return NotificationCard(
-                  timestamp: notification.timestamp,
+                  timestamp: notification.timestamp!,
                   title: S.of(context).credits_debited,
                   subTitle: S.of(context).credits_debited,
                   photoUrl: null,
@@ -929,11 +938,11 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
 
               case NotificationType.SEVA_COINS_CREDITED:
                 return NotificationCard(
-                  timestamp: notification.timestamp,
+                  timestamp: notification.timestamp!,
                   entityName: "CR",
                   photoUrl: null,
                   title: S.of(context).notifications_credited,
-                  subTitle: notification.data['credits'].toString() +
+                  subTitle: notification.data!['credits'].toString() +
                       " " +
                       S.of(context).seva_credits +
                       ' ' +
@@ -947,11 +956,11 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
 
               case NotificationType.SEVA_COINS_DEBITED:
                 return NotificationCard(
-                  timestamp: notification.timestamp,
+                  timestamp: notification.timestamp!,
                   entityName: "CR",
                   photoUrl: null,
                   title: S.of(context).credits_debited,
-                  subTitle: notification.data['credits'].toString() +
+                  subTitle: notification.data!['credits'].toString() +
                       " " +
                       S.of(context).credits_debited_msg,
                   onDismissed: () {
@@ -962,25 +971,25 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 );
               case NotificationType.MANUAL_TIME_CLAIM:
                 var body = ManualTimeModel.fromMap(
-                    Map<String, dynamic>.from(notification.data));
+                    Map<String, dynamic>.from(notification.data!));
 
                 return NotificationCard(
-                  timestamp: notification.timestamp,
-                  entityName: body.userDetails.name,
-                  photoUrl: body.userDetails.photoUrl,
+                  timestamp: notification.timestamp!,
+                  entityName: body.userDetails!.name,
+                  photoUrl: body.userDetails!.photoUrl,
                   title: S.of(context).manual_notification_title,
                   subTitle: S
                       .of(context)
                       .manual_notification_subtitle
-                      .replaceAll('**name', body.userDetails.name)
-                      .replaceAll('**number', '${body.claimedTime / 60}')
+                      .replaceAll('**name', body.userDetails!.name!)
+                      .replaceAll('**number', '${body.claimedTime! / 60}')
                       .replaceAll('**communityName', body.communityName ?? ' '),
                   isDissmissible: false,
                   onPressed: () {
                     manualTimeActionDialog(
                       context,
-                      notification.id,
-                      notification.timebankId,
+                      notification.id!,
+                      notification.timebankId!,
                       body,
                     );
                   },
@@ -988,10 +997,10 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
               case NotificationType.COMMUNITY_ADDED_TO_MESSAGE_ROOM:
                 var data = notification.data;
                 Map<String, dynamic> map =
-                    Map<String, dynamic>.from(data['creatorDetails']);
+                    Map<String, dynamic>.from(data!['creatorDetails']);
                 ParticipantInfo creatorDetails = ParticipantInfo.fromMap(map);
                 return NotificationCard(
-                  timestamp: notification.timestamp,
+                  timestamp: notification.timestamp!,
                   entityName: creatorDetails.name,
                   isDissmissible: true,
                   onDismissed: () {
@@ -1004,16 +1013,16 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   photoUrl: creatorDetails.photoUrl ?? defaultGroupImageURL,
                   title: 'Community chat join',
                   subTitle:
-                      '${creatorDetails.name.toLowerCase()} ${S.of(context).notifications_added_you} ${data['messageRoomName']} ${S.of(context).community_chat}.',
+                      '${creatorDetails.name!.toLowerCase()} ${S.of(context).notifications_added_you} ${data['messageRoomName']} ${S.of(context).community_chat}.',
                 );
                 break;
               case NotificationType.COMMUNITY_REMOVED_FROM_MESSAGE_ROOM:
                 var data = notification.data;
                 Map<String, dynamic> map =
-                    Map<String, dynamic>.from(data['creatorDetails']);
+                    Map<String, dynamic>.from(data!['creatorDetails']);
                 ParticipantInfo creatorDetails = ParticipantInfo.fromMap(map);
                 return NotificationCard(
-                  timestamp: notification.timestamp,
+                  timestamp: notification.timestamp!,
                   entityName: creatorDetails.name,
                   isDissmissible: true,
                   onDismissed: () {
@@ -1026,15 +1035,15 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   photoUrl: creatorDetails.photoUrl,
                   title: 'Community chat remove',
                   subTitle:
-                      '${creatorDetails.name.toLowerCase()} removed you from ${data['messageRoomName']}.',
+                      '${creatorDetails.name!.toLowerCase()} removed you from ${data['messageRoomName']}.',
                 );
                 break;
 
               case NotificationType.LendingOfferIdleFirstWarning:
-                OfferModel model = OfferModel.fromMap(notification.data);
+                OfferModel model = OfferModel.fromMap(notification.data!);
                 offerModelNew = model;
                 return NotificationCard(
-                  timestamp: notification.timestamp,
+                  timestamp: notification.timestamp!,
                   entityName: 'NAME',
                   isDissmissible: true,
                   onDismissed: () async {
@@ -1045,7 +1054,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   },
                   onPressed: () {},
                   photoUrl: model.photoUrlImage,
-                  title: model.individualOfferDataModel.title +
+                  title: model.individualOfferDataModel!.title +
                       S.of(context).idle_for_2_weeks,
                   subTitle: S
                       .of(context)
@@ -1055,10 +1064,10 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 break;
 
               case NotificationType.LendingOfferIdleSecondWarning:
-                OfferModel model = OfferModel.fromMap(notification.data);
+                OfferModel model = OfferModel.fromMap(notification.data!);
                 offerModelNew = model;
                 return NotificationCard(
-                  timestamp: notification.timestamp,
+                  timestamp: notification.timestamp!,
                   entityName: 'NAME',
                   isDissmissible: true,
                   onDismissed: () async {
@@ -1069,7 +1078,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   },
                   onPressed: () {},
                   photoUrl: model.photoUrlImage,
-                  title: model.individualOfferDataModel.title +
+                  title: model.individualOfferDataModel!.title +
                       S.of(context).idle_for_4_weeks,
                   subTitle: S
                       .of(context)
@@ -1079,10 +1088,10 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 break;
 
               case NotificationType.LendingOfferIdleSoftDeleted:
-                OfferModel model = OfferModel.fromMap(notification.data);
+                OfferModel model = OfferModel.fromMap(notification.data!);
                 offerModelNew = model;
                 return NotificationCard(
-                  timestamp: notification.timestamp,
+                  timestamp: notification.timestamp!,
                   entityName: 'NAME',
                   isDissmissible: true,
                   onDismissed: () async {
@@ -1093,7 +1102,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   },
                   onPressed: () {},
                   photoUrl: model.photoUrlImage,
-                  title: model.individualOfferDataModel.title +
+                  title: model.individualOfferDataModel!.title +
                       ' ' +
                       S
                           .of(context)
@@ -1105,10 +1114,10 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 break;
 
               case NotificationType.BorrowRequestIdleFirstWarning:
-                var model = RequestModel.fromMap(notification.data);
+                var model = RequestModel.fromMap(notification.data!);
                 requestModelNew = model;
                 return NotificationCard(
-                  timestamp: notification.timestamp,
+                  timestamp: notification.timestamp!,
                   entityName: 'NAME',
                   isDissmissible: true,
                   onDismissed: () async {
@@ -1119,7 +1128,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   },
                   onPressed: () {},
                   photoUrl: model.photoUrl,
-                  title: model.title + S.of(context).idle_for_2_weeks,
+                  title: model.title! + S.of(context).idle_for_2_weeks,
                   subTitle: S
                       .of(context)
                       .idle_borrow_request_first_warning
@@ -1128,10 +1137,10 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 break;
 
               case NotificationType.BorrowRequestIdleSecondWarning:
-                var model = RequestModel.fromMap(notification.data);
+                var model = RequestModel.fromMap(notification.data!);
                 requestModelNew = model;
                 return NotificationCard(
-                  timestamp: notification.timestamp,
+                  timestamp: notification.timestamp!,
                   entityName: 'NAME',
                   isDissmissible: true,
                   onDismissed: () async {
@@ -1142,7 +1151,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   },
                   onPressed: () {},
                   photoUrl: model.photoUrl,
-                  title: model.title + S.of(context).idle_for_4_weeks,
+                  title: model.title! + S.of(context).idle_for_4_weeks,
                   subTitle: S
                       .of(context)
                       .idle_borrow_request_second_warning
@@ -1151,10 +1160,10 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 break;
 
               case NotificationType.BorrowRequestIdleSoftDeleted:
-                var model = RequestModel.fromMap(notification.data);
+                var model = RequestModel.fromMap(notification.data!);
                 requestModelNew = model;
                 return NotificationCard(
-                  timestamp: notification.timestamp,
+                  timestamp: notification.timestamp!,
                   entityName: 'NAME',
                   isDissmissible: true,
                   onDismissed: () async {
@@ -1165,7 +1174,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   },
                   onPressed: () {},
                   photoUrl: model.photoUrl,
-                  title: model.title +
+                  title: model.title! +
                       ' ' +
                       S
                           .of(context)
@@ -1180,17 +1189,17 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
 //Feature name: Create Notification for community receiving donation //1.9 Release Feature
               case NotificationType.COMMUNITY_RECEIVED_CREDITS_DONATION:
                 return NotificationCard(
-                  timestamp: notification.timestamp,
+                  timestamp: notification.timestamp!,
                   entityName: "CR",
-                  photoUrl: notification.data['donorPhotoUrl'] ?? null,
+                  photoUrl: notification.data!['donorPhotoUrl'] ?? null,
                   title: S.of(context).seva_credits_donated_text,
                   subTitle: S.of(context).you_have_recieved +
-                      notification.data['credits'].toStringAsFixed(1) +
+                      notification.data!['credits'].toStringAsFixed(1) +
                       " " +
                       S.of(context).seva_credits_from_text +
                       " " +
-                      (notification.data['donorName'] != null
-                          ? (notification.data[
+                      (notification.data!['donorName'] != null
+                          ? (notification.data![
                               'donorName']) //or can use notification.data['communityName']
                           : '') +
                       " " +
@@ -1237,7 +1246,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
       return;
     }
 
-    if (widget.timebankModel.balance <= 0) {
+    if (widget.timebankModel!.balance <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(S.of(context).insufficient_credits_to_donate),
@@ -1258,7 +1267,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
       context: context,
       builder: (context) => InputDonateDialog(
           donateAmount: donateAmount,
-          maxAmount: widget.timebankModel.balance.toDouble(),
+          maxAmount: widget.timebankModel!.balance.toDouble(),
           creditsNeeded: userInsufficientModel.creditsNeeded),
     );
 
@@ -1268,11 +1277,11 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
     // (back button or pressed outside of the dialog)
     if (donateAmount_Received != null) {
       donateAmount = donateAmount_Received;
-      widget.timebankModel.balance =
-          widget.timebankModel.balance - donateAmount_Received;
+      widget.timebankModel!.balance =
+          widget.timebankModel!.balance - donateAmount_Received;
 
       //from, to, timestamp, credits, isApproved, type, typeid, timebankid
-      await TransactionBloc().createNewTransaction(
+      TransactionBloc().createNewTransaction(
         model.id,
         userId,
         DateTime.now().millisecondsSinceEpoch,
@@ -1288,9 +1297,9 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
 
       //SEND DONATION NOTIFICATION TO MEMBER
       UserModel userModel = await FirestoreManager.getUserForId(
-          sevaUserId: userInsufficientModel.senderId);
+          sevaUserId: userInsufficientModel.senderId!);
       final DonationsRepository _donationsRepository = DonationsRepository();
-      await _donationsRepository.donationCreditedNotificationToMember(
+      await _donationsRepository!.donationCreditedNotificationToMember(
         context: context,
         donateAmount: donateAmount,
         model: model,
@@ -1307,35 +1316,35 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
   }
 
   Future lenderReceivedBackCheck({
-    NotificationsModel notification,
-    RequestModel requestModelUpdated,
+    NotificationsModel? notification,
+    RequestModel? requestModelUpdated,
   }) async {
-    showProgressForCreditRetrieval(parentContext);
+    showProgressForCreditRetrieval(parentContext!);
 
     //Send Receipt Email to Lender & Borrowr
     await MailBorrowRequestReceipts.sendBorrowRequestReceipts(
-        requestModelUpdated);
+        requestModelUpdated!);
     log('Sent receipts to lender and borrower api');
 
     //Send Notification To Lender to let them know it's acknowledged
     await sendNotificationLenderReceipt(
-        communityId: requestModelNew.communityId,
-        timebankId: requestModelNew.timebankId,
-        sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
-        userEmail: SevaCore.of(context).loggedInUser.email,
-        requestModel: requestModelNew);
+        communityId: requestModelNew!.communityId!,
+        timebankId: requestModelNew!.timebankId!,
+        sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID!,
+        userEmail: SevaCore.of(context).loggedInUser.email!,
+        requestModel: requestModelNew!);
 
     //NOTIFICATION_TO_BORROWER _COMPLETION_FEEDBACK
     await sendNotificationBorrowerRequestCompletedFeedback(
-        communityId: requestModelNew.communityId,
-        timebankId: requestModelNew.timebankId,
-        sevaUserId: requestModelNew.sevaUserId,
-        userEmail: requestModelNew.email,
-        requestModel: requestModelNew);
+        communityId: requestModelNew!.communityId!,
+        timebankId: requestModelNew!.timebankId!,
+        sevaUserId: requestModelNew!.sevaUserId!,
+        userEmail: requestModelNew!.email!,
+        requestModel: requestModelNew!);
 
     //Make this notification isRead: true
-    log('notification id:' + notification.id);
-    log('timebank id:' + notification.timebankId);
+    log('notification id:' + notification!.id!);
+    log('timebank id:' + notification.timebankId!);
 
     //Make this notification isRead: true
     FirestoreManager.readTimeBankNotification(
@@ -1343,15 +1352,15 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
       timebankId: notification.timebankId,
     );
 
-    FirestoreManager.requestComplete(model: requestModelNew);
+    FirestoreManager.requestComplete(model: requestModelNew!);
 
-    Navigator.of(creditRequestDialogContext).pop();
+    Navigator.of(parentContext!).pop();
   }
 
   void checkForReviewBorrowRequests(NotificationsModel notification) async {
     logger.e('COMES BACK HERE 2');
 
-    Map results = await Navigator.of(parentContext).push(
+    Map results = await Navigator.of(parentContext!).push(
       MaterialPageRoute(
         builder: (BuildContext context) {
           return BorrowRequestFeedBackView(requestModel: requestModelNew);
@@ -1361,7 +1370,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
 
     if (results != null && results.containsKey('selection')) {
       log('after feedback here 1');
-      showProgressForCreditRetrieval(parentContext);
+      showProgressForCreditRetrieval(parentContext!);
 
       onActivityResult(
           results, SevaCore.of(context).loggedInUser, notification);
@@ -1378,10 +1387,10 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
       logger.i('here 1');
       await CollectionRef.reviews.add({
         "reviewer": SevaCore.of(context).loggedInUser.email,
-        "reviewed": requestModelNew.email,
+        "reviewed": requestModelNew!.email,
         "ratings": results['selection'],
         "device_info": results['device_info'],
-        "requestId": requestModelNew.id,
+        "requestId": requestModelNew!.id,
         "comments":
             (results['didComment'] ? results['comment'] : "No comments"),
       });
@@ -1402,18 +1411,18 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
       // requestModelNew.accepted =
       //     true; //so that we can know that this request has completed
 
-      if (requestModelNew.requestType == RequestType.BORROW) {
+      if (requestModelNew!.requestType! == RequestType.BORROW) {
         log('UID CHECK borrower:  ' +
-            SevaCore.of(context).loggedInUser.sevaUserID +
+            SevaCore.of(context).loggedInUser.sevaUserID! +
             ' | ' +
-            requestModelNew.sevaUserId);
+            requestModelNew!.sevaUserId!);
         if (SevaCore.of(context).loggedInUser.sevaUserID ==
-            requestModelNew.sevaUserId) {
+            requestModelNew!.sevaUserId!) {
           FirestoreManager.borrowRequestFeedbackBorrowerUpdate(
-              model: requestModelNew);
+              model: requestModelNew!);
         } else {
           FirestoreManager.borrowRequestFeedbackLenderUpdate(
-              model: requestModelNew);
+              model: requestModelNew!);
         }
       }
 
@@ -1436,7 +1445,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
       //   ),
       // );
 
-      Navigator.pop(creditRequestDialogContext);
+      Navigator.pop(parentContext!);
       FirestoreManager.readTimeBankNotification(
         notificationId: notification.id,
         timebankId: notification.timebankId,
@@ -1448,66 +1457,68 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
   }
 
   Future<void> sendMessageToMember({
-    UserModel loggedInUser,
-    String message,
+    UserModel? loggedInUser,
+    String? message,
   }) async {
-    TimebankModel timebankModel =
-        await getTimeBankForId(timebankId: requestModelNew.timebankId);
-    UserModel userModel = await FirestoreManager.getUserForId(
-        sevaUserId: requestModelNew.sevaUserId);
-    if (userModel != null && timebankModel != null) {
-      ParticipantInfo receiver = ParticipantInfo(
-        id: requestModelNew.requestMode == RequestMode.PERSONAL_REQUEST
-            ? userModel.sevaUserID
-            : requestModelNew.timebankId,
-        photoUrl: requestModelNew.requestMode == RequestMode.PERSONAL_REQUEST
-            ? userModel.photoURL
-            : timebankModel.photoUrl,
-        name: requestModelNew.requestMode == RequestMode.PERSONAL_REQUEST
-            ? userModel.fullname
-            : timebankModel.name,
-        type: requestModelNew.requestMode == RequestMode.PERSONAL_REQUEST
-            ? ChatType.TYPE_PERSONAL
-            : timebankModel.parentTimebankId == FlavorConfig.values.timebankId
-                ? ChatType.TYPE_TIMEBANK
-                : ChatType.TYPE_GROUP,
-      );
+    if (requestModelNew != null && requestModelNew!.timebankId != null) {
+      TimebankModel timebankModel =
+          (await getTimeBankForId(timebankId: requestModelNew!.timebankId!))
+              as TimebankModel;
+      UserModel userModel = await FirestoreManager.getUserForId(
+          sevaUserId: requestModelNew!.sevaUserId!);
+      if (userModel != null && timebankModel != null) {
+        ParticipantInfo receiver = ParticipantInfo(
+          id: requestModelNew!.requestMode == RequestMode.PERSONAL_REQUEST
+              ? userModel.sevaUserID
+              : requestModelNew!.timebankId,
+          photoUrl: requestModelNew!.requestMode == RequestMode.PERSONAL_REQUEST
+              ? userModel.photoURL
+              : timebankModel.photoUrl,
+          name: requestModelNew!.requestMode == RequestMode.PERSONAL_REQUEST
+              ? userModel.fullname
+              : timebankModel.name,
+          type: requestModelNew!.requestMode == RequestMode.PERSONAL_REQUEST
+              ? ChatType.TYPE_PERSONAL
+              : timebankModel.parentTimebankId == FlavorConfig.values.timebankId
+                  ? ChatType.TYPE_TIMEBANK
+                  : ChatType.TYPE_GROUP,
+        );
 
-      ParticipantInfo sender = ParticipantInfo(
-        id: loggedInUser.sevaUserID,
-        photoUrl: loggedInUser.photoURL,
-        name: loggedInUser.fullname,
-        type: requestModelNew.requestMode == RequestMode.PERSONAL_REQUEST
-            ? ChatType.TYPE_PERSONAL
-            : timebankModel.parentTimebankId == FlavorConfig.values.timebankId
-                ? ChatType.TYPE_TIMEBANK
-                : ChatType.TYPE_GROUP,
-      );
-      await sendBackgroundMessage(
-          messageContent: utils.getReviewMessage(
-            requestTitle: requestModelNew.title,
-            context: context,
-            userName: loggedInUser.fullname,
-            isForCreator: true,
-            reviewMessage: message,
-          ),
-          reciever: receiver,
-          isTimebankMessage:
-              requestModelNew.requestMode == RequestMode.PERSONAL_REQUEST
-                  ? false
-                  : true,
-          timebankId: requestModelNew.timebankId,
-          communityId: loggedInUser.currentCommunity,
-          sender: sender);
+        ParticipantInfo sender = ParticipantInfo(
+          id: loggedInUser!.sevaUserID,
+          photoUrl: loggedInUser.photoURL,
+          name: loggedInUser.fullname,
+          type: requestModelNew!.requestMode == RequestMode.PERSONAL_REQUEST
+              ? ChatType.TYPE_PERSONAL
+              : timebankModel.parentTimebankId == FlavorConfig.values.timebankId
+                  ? ChatType.TYPE_TIMEBANK
+                  : ChatType.TYPE_GROUP,
+        );
+        await sendBackgroundMessage(
+            messageContent: utils.getReviewMessage(
+              requestTitle: requestModelNew!.title,
+              userName: loggedInUser!.fullname,
+              isForCreator: true,
+              reviewMessage: message,
+            ),
+            reciever: receiver,
+            isTimebankMessage:
+                requestModelNew!.requestMode == RequestMode.PERSONAL_REQUEST
+                    ? false
+                    : true,
+            timebankId: requestModelNew!.timebankId!,
+            communityId: loggedInUser!.currentCommunity!,
+            sender: sender);
+      }
     }
   }
 
-  BuildContext creditRequestDialogContext;
+  BuildContext? creditRequestDialogContext;
 
-  void showProgressForCreditRetrieval(BuildContext parentContext) {
+  void showProgressForCreditRetrieval(BuildContext context) {
     showDialog(
         barrierDismissible: true,
-        context: parentContext,
+        context: parentContext!,
         builder: (BuildContext context) {
           creditRequestDialogContext = context;
           return AlertDialog(
@@ -1545,14 +1556,14 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
   }
 
   Future<void> sendNotificationLenderReceipt(
-      {String communityId,
-      String sevaUserId,
-      String timebankId,
-      String userEmail,
-      RequestModel requestModel}) async {
+      {String? communityId,
+      String? sevaUserId,
+      String? timebankId,
+      String? userEmail,
+      RequestModel? requestModel}) async {
     NotificationsModel notification = NotificationsModel(
         isTimebankNotification:
-            requestModel.requestMode == RequestMode.TIMEBANK_REQUEST,
+            requestModel!.requestMode == RequestMode.TIMEBANK_REQUEST,
         id: Utils.getUuid(),
         timebankId: FlavorConfig.values.timebankId,
         data: requestModel.toMap(),
@@ -1572,14 +1583,14 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
   }
 
   Future<void> sendNotificationBorrowerRequestCompletedFeedback(
-      {String communityId,
-      String sevaUserId,
-      String timebankId,
-      String userEmail,
-      RequestModel requestModel}) async {
+      {String? communityId,
+      String? sevaUserId,
+      String? timebankId,
+      String? userEmail,
+      RequestModel? requestModel}) async {
     NotificationsModel notification = NotificationsModel(
         isTimebankNotification:
-            requestModel.requestMode == RequestMode.TIMEBANK_REQUEST,
+            requestModel!.requestMode == RequestMode.TIMEBANK_REQUEST,
         id: Utils.getUuid(),
         timebankId: timebankId,
         data: requestModel.toMap(),
@@ -1617,7 +1628,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
       CollectionRef.reviews.add(
         {
           "reviewer": SevaCore.of(context).loggedInUser.email,
-          "reviewed": requestModel.approvedUsers.first, //TODO
+          "reviewed": requestModel.approvedUsers!.first, //TODO
           "ratings": results['selection'],
           "requestId": requestModel.id,
           "comments":
@@ -1634,21 +1645,24 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
           requestModel,
           SevaCore.of(context).loggedInUser);
 
-      TimebankModel timebankModel =
-          await getTimeBankForId(timebankId: requestModelNew.timebankId);
       BorrowAcceptorModel userModel = await getBorrowRequestAcceptorModel(
-          requestId: requestModel.id,
-          acceptorEmail: requestModel.approvedUsers.first);
-      if (userModel != null && timebankModel != null) {
+          requestId: requestModel.id!,
+          acceptorEmail: requestModel.approvedUsers!.first);
+      if (userModel != null &&
+          requestModelNew != null &&
+          requestModelNew!.timebankId != null) {
+        TimebankModel timebankModel =
+            (await getTimeBankForId(timebankId: requestModelNew!.timebankId!))
+                as TimebankModel;
         ParticipantInfo sender = ParticipantInfo(
           id: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-              ? loggedInUser.sevaUserID
+              ? loggedInUser!.sevaUserID
               : requestModel.timebankId,
           photoUrl: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-              ? loggedInUser.photoURL
+              ? loggedInUser!.photoURL
               : timebankModel.photoUrl,
           name: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-              ? loggedInUser.fullname
+              ? loggedInUser!.fullname
               : timebankModel.name,
           type: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
               ? ChatType.TYPE_PERSONAL
@@ -1671,8 +1685,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
             messageContent: getReviewMessage(
               isForCreator: false,
               requestTitle: requestModel.title,
-              context: context,
-              userName: loggedInUser.fullname,
+              userName: loggedInUser!.fullname,
               reviewMessage:
                   results['didComment'] ? results['comment'] : "No comments",
             ),
@@ -1681,8 +1694,8 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 requestModel.requestMode == RequestMode.PERSONAL_REQUEST
                     ? false
                     : true,
-            timebankId: requestModel.timebankId,
-            communityId: loggedInUser.currentCommunity,
+            timebankId: requestModel.timebankId!,
+            communityId: loggedInUser!.currentCommunity!,
             sender: sender);
       }
       FirestoreManager.readTimeBankNotification(
